@@ -14,7 +14,7 @@ export default function Home() {
           Bienvenue sur PawThera, l&apos;application qui fait gagner du temps aux indépendants du secteur animalier
         </p>
         <Input
-          type="text"
+          type="email"
           placeholder="john.doe@icloud.com"
           className="rounded-lg border border-neutral-800 focus:ring-2 focus:ring-teal-500  w-full relative z-10 mt-4 text-white bg-neutral-950 placeholder:text-neutral-700"
         />
