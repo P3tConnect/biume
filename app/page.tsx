@@ -1,4 +1,5 @@
 import { BackgroundBeams } from "@/components/background-beams";
+import ShimmerButton from "@/components/shimmer-button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
@@ -13,11 +14,18 @@ export default function Home() {
         <p className="text-neutral-500 max-w-lg mx-auto my-2 text-sm text-center relative z-10">
           Bienvenue sur PawThera, l&apos;application qui fait gagner du temps aux indépendants du secteur animalier
         </p>
-        <Input
-          type="email"
-          placeholder="john.doe@icloud.com"
-          className="rounded-lg border border-neutral-800 focus:ring-2 focus:ring-teal-500  w-full relative z-10 mt-4 text-white bg-neutral-950 placeholder:text-neutral-700"
-        />
+        <div className="flex flex-col items-center gap-5">
+          <Input
+            type="email"
+            placeholder="john.doe@icloud.com"
+            className="rounded-lg border border-neutral-800 focus:ring-2 focus:ring-teal-500  w-full relative z-10 mt-4 text-white bg-neutral-950 placeholder:text-neutral-700"
+          />
+          <ShimmerButton className="shadow-2xl">
+            <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
+              Je m&apos;inscrit
+            </span>
+          </ShimmerButton>
+        </div>
       </div>
       <BackgroundBeams />
     </div>
