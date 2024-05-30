@@ -9,7 +9,7 @@ const footerSocials = [
     icon: <LinkedInLogoIcon className="h-4 w-4" />,
   },
   {
-    href: "",
+    href: "https://www.instagram.com/pawthera",
     name: "Instagram",
     icon: <InstagramLogoIcon className="h-4 w-4" />,
   },
