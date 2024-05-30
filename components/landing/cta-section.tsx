@@ -177,7 +177,7 @@ export default function CallToActionSection() {
               </div>
               <div className="z-10 mt-4 flex flex-col items-center text-center text-primary">
                 <h1 className="text-3xl font-bold lg:text-4xl">
-                  Vous êtes hypé pour utiliser notre application ?
+                  Notre application vous plait ?
                 </h1>
                 <p className="mt-2">
                   Rejoignez-nous et inscrivez-vous sur la liste d&apos;attente
