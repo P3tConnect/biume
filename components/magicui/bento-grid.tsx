@@ -70,7 +70,7 @@ const BentoCard = ({
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="ghost" asChild size="sm" className="pointer-events-auto">
-            <div>
+            <div className="cursor-pointer">
               {cta}
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </div>

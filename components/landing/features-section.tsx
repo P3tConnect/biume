@@ -1,9 +1,7 @@
 "use client"
 
-import { cn } from "@/src/lib/utils";
-import React, { useRef } from "react";
-import { AnimatedBeam } from "../magicui/animated-beam";
-import { BellIcon, BrainCircuit, CalendarIcon, GlobeIcon, ReceiptEuro, ScrollText } from 'lucide-react'
+import React from "react";
+import { BellIcon, BrainCircuit, CalendarIcon, ReceiptEuro, ScrollText } from 'lucide-react'
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 
 export default function FeaturesSection() {
