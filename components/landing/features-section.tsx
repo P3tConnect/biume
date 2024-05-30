@@ -48,7 +48,7 @@ export default function FeaturesSection() {
     {
       Icon: CalendarIcon,
       name: "Calendrier",
-      description: "Gérer votre calendrier comme jamais.",
+      description: "Contrôlez votre calendrier à la baguette !",
       href: "/",
       cta: "En savoir plus",
       points: [
@@ -74,7 +74,7 @@ export default function FeaturesSection() {
 
   return (
     <section id="features">
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-14 md:px-8">
+      <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-32 md:px-8">
         <div className="mx-auto max-w-5xl text-center">
           <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
             Notre application
