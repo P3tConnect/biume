@@ -10,7 +10,18 @@ export const metadata: Metadata = {
   robots: {
     follow: true,
     index: true,
-  }
+  },
+  keywords: [
+    "osteopathe animalier",
+    "animaux",
+    "animaux de companie",
+    "naturopathe animalier",
+    "nac",
+    "comportementaliste animalier",
+    "chien",
+    "chat",
+    ""
+  ],
 };
 
 export default function RootLayout({
@@ -19,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <link rel="icon" href="/app/favicon.ico" sizes="any" />
         <link
