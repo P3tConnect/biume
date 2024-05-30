@@ -12,7 +12,7 @@ export const SphereMask = ({ reverse = false }: { reverse?: boolean }) => {
         "[mask-image:radial-gradient(ellipse_at_center_center,#000,transparent_50%)]",
 
         // reverse
-        reverse ? "my-[-22rem] rotate-180 md:mt-[-30rem]" : "my-[-18.8rem]",
+        reverse ? "my-[-5rem] rotate-180 md:mt-[-30rem]" : "my-[-18.8rem]",
 
         // before
         "before:absolute before:inset-0 before:h-full before:w-full before:opacity-40 before:[background-image:radial-gradient(circle_at_bottom_center,var(--color),transparent_70%)]",

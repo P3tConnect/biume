@@ -4,6 +4,7 @@ import { BorderBeam } from "../magicui/border-beam";
 import TextShimmer from "@/components/magicui/text-shimmer";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -25,9 +26,11 @@ export default function HeroSection() {
         Simplifiez la gestion de votre entreprise animalière avec PawThera.
         <br className="hidden md:block" /> Et consacrez votre énergie sur nos amis a quatre pattes.
       </p>
-      <Button className="translate-y-[-1rem] animate-fade-in gap-1 rounded-lg text-black opacity-0 ease-in-out [--animation-delay:600ms]">
-        <span>Répondez a notre enquête</span>
-        <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
+      <Button className="translate-y-[-1rem] animate-fade-in gap-1 rounded-lg text-black opacity-0 ease-in-out [--animation-delay:600ms]" asChild>
+        <Link href="https://forms.gle/k1wZwzPw77zE5Pj19" target="_blank">
+          <span>Répondez a notre enquête</span>
+          <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
+        </Link>
       </Button>
     </section>
   );
