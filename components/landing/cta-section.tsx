@@ -10,11 +10,12 @@ import {
   File,
   Globe,
   HeartHandshake,
+  Loader,
   Rss,
   Shield,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { newSubWaitlist } from "@/src/actions/mail.action";
 
@@ -114,6 +115,7 @@ export default function CallToActionSection() {
   const [randomTiles2, setRandomTiles2] = useState<typeof tiles>([]);
   const [randomTiles3, setRandomTiles3] = useState<typeof tiles>([]);
   const [randomTiles4, setRandomTiles4] = useState<typeof tiles>([]);
+  const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -183,18 +185,21 @@ export default function CallToActionSection() {
                 <p className="mt-2">
                   Rejoignez-nous et inscrivez-vous sur la liste d&apos;attente
                 </p>
-                <form className="w-full gap-3 flex flex-col items-center justify-center" action={async (formData) => {
-                  const email = formData.get("email") as string
-                  await newSubWaitlist(email)
+                <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
+                  startTransition(async () => {
+                    const email = formData.get("email") as string
+                    await newSubWaitlist(email)
+                  })
                 }}>
                   <Input
                     placeholder="Email"
                     name="email"
                     className="mt-10 border border-gray-400/70 rounded-lg"
                   />
-                  <Button variant="outline" type="submit" className="w-32 rounded-xl">
+                  {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
                     Je m&apos;inscrit
-                  </Button>
+                  </Button>}
+
                 </form>
               </div>
               <div className="absolute inset-0 -z-10 rounded-full  bg-backtround opacity-40 blur-xl dark:bg-background" />
