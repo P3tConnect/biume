@@ -34,7 +34,7 @@ export default function FeaturesSection() {
         "Une gestion des dépenses et des revenus centralisé",
         "Un suivi des paiements détaillé pour plus de clartée",
         "Une facturation et devis personnalisable et qui peuvent être envoyés directement à votre client de manière automatique après sa prise de rendez-vous",
-        "Créez et éditez des fiches clients/patients à volonté"
+        "Créez et éditez des fiches clients/patients riches et détaillées à volonté"
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
       className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
