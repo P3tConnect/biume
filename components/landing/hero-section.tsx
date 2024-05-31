@@ -1,6 +1,5 @@
 "use client";
 
-import { BorderBeam } from "../magicui/border-beam";
 import TextShimmer from "@/components/magicui/text-shimmer";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";

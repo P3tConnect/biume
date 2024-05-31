@@ -10,7 +10,6 @@ import {
   File,
   Globe,
   HeartHandshake,
-  Loader,
   Rss,
   Shield,
 } from "lucide-react";
@@ -18,6 +17,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { newSubWaitlist } from "@/src/actions/mail.action";
+import Loader from "../loader";
 
 const tiles = [
   {
@@ -185,22 +185,28 @@ export default function CallToActionSection() {
                 <p className="mt-2">
                   Rejoignez-nous et inscrivez-vous sur la liste d&apos;attente
                 </p>
-                <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
-                  startTransition(async () => {
-                    const email = formData.get("email") as string
-                    await newSubWaitlist(email)
-                  })
-                }}>
-                  <Input
-                    placeholder="Email"
-                    name="email"
-                    className="mt-10 border border-gray-400/70 rounded-lg"
-                  />
-                  {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
-                    Je m&apos;inscrit
-                  </Button>}
+                {localStorage.getItem("alreadySub") ?
+                  <div className="mt-5">
+                    <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
+                  </div>
+                  :
+                  <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
+                    startTransition(async () => {
+                      const email = formData.get("email") as string
+                      await newSubWaitlist(email)
+                      localStorage.setItem("alreadySub", "true")
+                    })
+                  }}>
+                    <Input
+                      placeholder="Email"
+                      name="email"
+                      className="mt-10 border border-gray-400/70 rounded-lg"
+                    />
+                    {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
+                      Je m&apos;inscrit
+                    </Button>}
 
-                </form>
+                  </form>}
               </div>
               <div className="absolute inset-0 -z-10 rounded-full  bg-backtround opacity-40 blur-xl dark:bg-background" />
             </div>
@@ -208,6 +214,6 @@ export default function CallToActionSection() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }
