@@ -15,8 +15,8 @@ export default function FeaturesSection() {
       cta: "En savoir plus",
       points: [
         "Nous proposerons une intégration avec l'organisation de votre journée en fonction du chemin le plus court ou le plus efficace à parcourir pour vous",
-        "L'IA proposera également aux les créneaux adéquates en fonction de la position des clients qui ont déjà réservés",
-        "Nous souhaitons également vous proposer une fonctionnalité de Speach-To-Text sur notre future application mobile qui vous permettras de vous concentrer sur la séance avec l'animal",
+        "L'IA proposera également aux clients des créneaux adaptés en fonction de leur position géographique",
+        "Nous souhaitons également vous proposer une fonctionnalité de Speach-To-Text sur notre future application mobile qui vous permettra de vous concentrer sur la séance avec l'animal",
         "Grâce a la reconnaissance d'images vous pourrez scanner et enregistrer les reçus de vos achats pour votre entreprise",
         "Une fois enregistrés ces reçus seront catégorisés de manière automatique grâce à l'intelligence artificielle",
       ],
@@ -47,8 +47,8 @@ export default function FeaturesSection() {
       cta: "En savoir plus",
       points: [
         "Vos clients pourrons voir en temps réel les créneaux disponibles",
-        "Vous aurez la liberté de planifier des délais de retractation pour vous permettre de vous garantir un revenu quand à l'annulation au dernier moment de votre client",
-        "Si une consultation demandée est a domicile les frais de déplacements seront apportés directement dans la facturation",
+        "Vous aurez la liberté de planifier des délais de retractation afin de vous garantir un revenu en cas d'annulation au dernier moment de votre client",
+        "Si une consultation demandée est à domicile les frais de déplacements seront inscrits directement dans la facturation",
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
       className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
@@ -74,7 +74,7 @@ export default function FeaturesSection() {
       href: "/",
       cta: "En savoir plus",
       points: [
-        "Vous pourrez envoyer des mails, notifications ou sms à vos clients pour plus qu'ils ne manquent leur rendez-vous",
+        "Vous pourrez envoyer des mails, notifications ou sms à vos clients pour pas qu'ils ne manquent leur rendez-vous",
         "Une gestion automatique des rappels et de ces notifications avec un système de planification",
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
