@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   keywords: [
     "osteopathe animalier",
     "animaux",
+    "animal",
     "animaux de companie",
     "naturopathe animalier",
     "nac",
@@ -29,7 +30,12 @@ export const metadata: Metadata = {
     "chat",
     "cheval",
     "pawthera",
-    "pawtera"
+    "pawtera",
+    "pwthera",
+    "indépendant",
+    "indépendant animalier",
+    "auto-entreprise animale",
+    "gestion",
   ],
 };
 
