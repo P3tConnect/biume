@@ -1,7 +1,7 @@
 "use client";
 
 import Marquee from "@/components/magicui/marquee";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { Input } from "../ui/input";
+import { newSubWaitlist } from "@/src/actions/mail.action";
 
 const tiles = [
   {
@@ -182,10 +183,19 @@ export default function CallToActionSection() {
                 <p className="mt-2">
                   Rejoignez-nous et inscrivez-vous sur la liste d&apos;attente
                 </p>
-                <Input
-                  placeholder="john.doe@icloud.com"
-                  className="mt-10 border border-gray-400/70 rounded-lg"
-                />
+                <form className="w-full gap-3 flex flex-col items-center justify-center" action={async (formData) => {
+                  const email = formData.get("email") as string
+                  await newSubWaitlist(email)
+                }}>
+                  <Input
+                    placeholder="Email"
+                    name="email"
+                    className="mt-10 border border-gray-400/70 rounded-lg"
+                  />
+                  <Button variant="outline" type="submit" className="w-32 rounded-xl">
+                    Je m&apos;inscrit
+                  </Button>
+                </form>
               </div>
               <div className="absolute inset-0 -z-10 rounded-full  bg-backtround opacity-40 blur-xl dark:bg-background" />
             </div>

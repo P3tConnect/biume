@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/src/lib/utils";
 import { ThemeProvider } from "@/src/context/theme-provider";
 
@@ -26,7 +25,9 @@ export const metadata: Metadata = {
     "comportementaliste animalier",
     "chien",
     "chat",
-    "cheval"
+    "cheval",
+    "pawthera",
+    "pawtera"
   ],
 };
 
