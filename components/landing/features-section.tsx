@@ -75,7 +75,8 @@ export default function FeaturesSection() {
       href: "/",
       cta: "En savoir plus",
       points: [
-
+        "Vous pourrez envoyer des mails, notifications ou sms à vos clients pour plus qu'ils ne manquent leur rendez-vous",
+        "Une gestion automatique des rappels et de ces notifications avec un système de planification",
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
       className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
@@ -93,6 +94,10 @@ export default function FeaturesSection() {
           <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
             Les fonctionnalités
           </h2>
+
+          <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white">
+            Ce sont les fonctionnalités que nous avons prévus, aidez-nous à l&apos;améliorer pour en faire <strong>votre outil !</strong>
+          </p>
         </div>
 
         <BentoGrid className="lg:grid-rows-3">
