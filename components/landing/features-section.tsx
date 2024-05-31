@@ -14,8 +14,8 @@ export default function FeaturesSection() {
       href: "/",
       cta: "En savoir plus",
       points: [
-        "Nous proposerons une intégration avec l'organisation de votre journée en fonction du chemin le plus court ou le plus efficace à parcourir pour vous",
-        "L'IA proposera également aux clients des créneaux adaptés en fonction de leur position géographique",
+        "Pour vos visites a domicile l'intelligence artificielle vous fera une proposition de votre journée en fonction du chemin le plus court ou le plus efficace à parcourir pour vous",
+        "L'IA fera également une suggestion aux clients des créneaux adaptés en fonction de leur position géographique",
         "Nous souhaitons également vous proposer une fonctionnalité de Speach-To-Text sur notre future application mobile qui vous permettra de vous concentrer sur la séance avec l'animal",
         "Grâce a la reconnaissance d'images vous pourrez scanner et enregistrer les reçus de vos achats pour votre entreprise",
         "Une fois enregistrés ces reçus seront catégorisés de manière automatique grâce à l'intelligence artificielle",
