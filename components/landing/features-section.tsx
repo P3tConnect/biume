@@ -49,7 +49,6 @@ export default function FeaturesSection() {
         "Vos clients pourrons voir en temps réel les créneaux disponibles",
         "Vous aurez la liberté de planifier des délais de retractation pour vous permettre de vous garantir un revenu quand à l'annulation au dernier moment de votre client",
         "Si une consultation demandée est a domicile les frais de déplacements seront apportés directement dans la facturation",
-        ""
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
       className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
