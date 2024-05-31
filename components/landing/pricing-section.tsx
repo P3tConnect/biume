@@ -36,7 +36,7 @@ const demoPrices = [
     name: "Premium",
     description: "Le stade supérieur pour la sécurité et faire grandir votre entreprise",
     features: [
-      "Abonnement Basic et",
+      "Abonnement Basic +",
       "Réservation client",
       "Paiement en ligne",
       "notifications et rappels automatiques",
@@ -52,7 +52,7 @@ const demoPrices = [
     name: "Ultimate",
     description: "Le plan ultime pour ceux qui veulent gagner encore plus de temps",
     features: [
-      "Abonnement Premium et",
+      "Abonnement Premium +",
       "Fonctionnalités avec Intelligence Artificielle",
       "Rapports de performances",
       "Communication centralisée"
