@@ -12,7 +12,7 @@ export default function Home() {
       <HeroSection />
       <SphereMask />
       <FeaturesSection />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <CallToActionSection />
       <SiteFooter />
       <Particles
