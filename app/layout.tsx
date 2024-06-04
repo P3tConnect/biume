@@ -10,10 +10,24 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PawThera",
-  description: "The PawThera App",
+  description: "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
   icons: {
     icon: "/app/favicon.ico"
   },
+  appleWebApp: {
+    title: 'PawThera',
+  },
+  applicationName: "PawThera",
+  authors: [
+    {
+      name: "Mathieu Chambaud",
+      url: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/"
+    },
+    {
+      name: "Graig Kolodziejczyk",
+      url: "https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/"
+    }
+  ],
   robots: {
     follow: true,
     index: true,
