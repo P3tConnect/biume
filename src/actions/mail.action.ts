@@ -3,6 +3,9 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitList";
 import { resend } from "../utils/resend";
 import { redirect } from "next/navigation";
+import { db } from "../utils/db";
+import { user } from "../db/user";
+import { eq } from "drizzle-orm";
 
 export const newSubWaitlist = async (subEmail: string) => {
   const mail = await resend.emails.send({
@@ -19,3 +22,5 @@ export const newSubWaitlist = async (subEmail: string) => {
     redirect("/waitlist");
   }
 };
+
+async function request() {}

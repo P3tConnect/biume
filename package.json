@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.2.0",
     "@hookform/resolvers": "^3.4.2",
     "@lemonsqueezy/lemonsqueezy.js": "^3.0.0",
     "@neondatabase/serverless": "^0.9.3",
@@ -27,6 +28,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.31.1",
     "drizzle-zod": "^0.5.1",
     "framer-motion": "^11.2.6",
