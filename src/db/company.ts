@@ -1,5 +1,6 @@
 import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./user";
+import { cancelPolicies } from "./cancelPolicies";
 
 export const company = pgTable("company", {
   id: serial("id").primaryKey(),
@@ -14,6 +15,10 @@ export const company = pgTable("company", {
   siren: text("siren").notNull(),
   atHome: boolean("atHome").notNull(),
   nac: text("nac"),
+  cancelPoliciesId: text("cancelPoliciesId").references(
+    () => cancelPolicies.id,
+    { onDelete: "cascade" },
+  ),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
 });
