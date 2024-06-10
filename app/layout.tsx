@@ -60,6 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <head>
+        <script defer src="https://woyage.app/track.js" data-website-id="c5d0f8b4-19fe-4359-a525-4268ac2d4ef0"></script>
+      </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.className)}>
         <ThemeProvider
           attribute="class"

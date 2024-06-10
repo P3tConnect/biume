@@ -1,7 +1,7 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { pro_session } from "./pro_session";
 
-export const invoice = pgTable("invoice", {
+export const estimate = pgTable("estimate", {
   id: serial("id").primaryKey(),
   sessionId: text("sessionId").references(() => pro_session.id, {
     onDelete: "cascade",
