@@ -1,6 +1,7 @@
 import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { cancelPolicies } from "./cancelPolicies";
+import { relations } from "drizzle-orm";
 
 export const company = pgTable("company", {
   id: serial("id").primaryKey(),
@@ -22,3 +23,7 @@ export const company = pgTable("company", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
 });
+
+export const companyRelations = relations(company, ({ one, many }) => ({
+  employees: many(user),
+}));

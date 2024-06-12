@@ -2,6 +2,7 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { alertsTypes } from "./alertTypes";
 import { company } from "./company";
 import { user } from "./user";
+import { relations } from "drizzle-orm";
 
 export const alerts = pgTable("alerts", {
   id: serial("id").primaryKey(),
@@ -15,3 +16,18 @@ export const alerts = pgTable("alerts", {
   createdAt: timestamp("createdAt", { mode: "date" }),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const alertsRelations = relations(alerts, ({ one }) => ({
+  alertType: one(alertsTypes, {
+    fields: [alerts.alertType],
+    references: [alertsTypes.id],
+  }),
+  from: one(user, {
+    fields: [alerts.from],
+    references: [user.id],
+  }),
+  to: one(user, {
+    fields: [alerts.to],
+    references: [user.id],
+  }),
+}));

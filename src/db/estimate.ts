@@ -1,5 +1,6 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { pro_session } from "./pro_session";
+import { relations } from "drizzle-orm";
 
 export const estimate = pgTable("estimate", {
   id: serial("id").primaryKey(),
@@ -12,3 +13,5 @@ export const estimate = pgTable("estimate", {
     .notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const estimateRelations = relations(estimate, ({ one, many }) => ({}));
