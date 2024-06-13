@@ -13,7 +13,7 @@ import {
   Rss,
   Shield,
 } from "lucide-react";
-import { useActionState, useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { newSubWaitlist } from "@/src/actions/mail.action";
 import Loader from "../loader";
@@ -117,10 +117,9 @@ export default function CallToActionSection() {
   const [randomTiles4, setRandomTiles4] = useState<typeof tiles>([]);
   const [isLoading, startTransition] = useTransition();
 
-  const [state, action, pending] = useActionState(newSubWaitlist, null);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
+      // Ensures this runs client-side
       setRandomTiles1(shuffleArray([...tiles]));
       setRandomTiles2(shuffleArray([...tiles]));
       setRandomTiles3(shuffleArray([...tiles]));
@@ -191,14 +190,22 @@ export default function CallToActionSection() {
                     <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
                   </div>
                   : */}
-                <form className="w-full gap-3 flex flex-col items-center justify-center" action={action}>
+                <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
+                  startTransition(async () => {
+                    const email = await newSubWaitlist(formData)
+
+                    if (email?.error) {
+                      toast.error(email.error as string)
+                    }
+                    // localStorage.setItem("alreadySub", "true")
+                  })
+                }}>
                   <Input
                     placeholder="Email"
                     name="email"
                     className="mt-10 border border-gray-400/70 rounded-lg"
                   />
-                  {state?.error.subEmail ? <p className="font-semibold text-red-400 text-lg">{state.error.subEmail}</p> : null}
-                  {pending ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
+                  {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
                     Je m&apos;inscrit
                   </Button>}
 

@@ -9,7 +9,7 @@ const emailSchema = z.object({
   subEmail: z.string().email(),
 });
 
-export const newSubWaitlist = async (state: any, formData: FormData) => {
+export const newSubWaitlist = async (formData: FormData) => {
   const validateSchema = emailSchema.safeParse(formData);
 
   if (!validateSchema.success) {
