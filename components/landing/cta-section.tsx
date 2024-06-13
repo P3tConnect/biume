@@ -17,6 +17,7 @@ import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { newSubWaitlist } from "@/src/actions/mail.action";
 import Loader from "../loader";
+import { toast } from "sonner";
 
 const tiles = [
   {
@@ -191,8 +192,11 @@ export default function CallToActionSection() {
                   : */}
                 <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
                   startTransition(async () => {
-                    const email = formData.get("email") as string
-                    await newSubWaitlist(email)
+                    const email = await newSubWaitlist(formData)
+
+                    if (email?.error) {
+                      toast.error(email.error as string)
+                    }
                     // localStorage.setItem("alreadySub", "true")
                   })
                 }}>

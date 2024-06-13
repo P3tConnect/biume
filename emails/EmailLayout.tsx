@@ -1,8 +1,8 @@
 import { Body, Container, Head, Html, Tailwind, Img, Preview, Section } from "@react-email/components";
 import * as React from 'react';
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+const baseUrl = process.env.APP_URL
+  ? `https://${process.env.APP_URL}`
   : `http://localhost:3000`;
 
 export const EmailLayout = ({ preview, children }: React.PropsWithChildren<{ preview?: string }>) => {

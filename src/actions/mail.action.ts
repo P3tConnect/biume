@@ -3,16 +3,26 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitList";
 import { resend } from "../utils/resend";
 import { redirect } from "next/navigation";
-import { db } from "../utils/db";
-import { user } from "../db/user";
-import { eq } from "drizzle-orm";
+import { z } from "zod";
 
-export const newSubWaitlist = async (subEmail: string) => {
+const emailSchema = z.object({
+  subEmail: z.string().email(),
+});
+
+export const newSubWaitlist = async (formData: FormData) => {
+  const validateSchema = emailSchema.safeParse(formData);
+
+  if (!validateSchema.success) {
+    return {
+      error: validateSchema.error.flatten().fieldErrors,
+    };
+  }
+
   const mail = await resend.emails.send({
     from: "PawThera<contact@pawthera.com>",
     subject: "New person in the WaitList",
     to: ["mathieu.chambaud@pawthera.com", "graig.kolodziejczyk@pawthera.com"],
-    react: NewPersonWaitList({ subEmail }),
+    react: NewPersonWaitList({ subEmail: validateSchema.data.subEmail }),
   });
 
   if (mail.error) {
@@ -22,5 +32,3 @@ export const newSubWaitlist = async (subEmail: string) => {
     redirect("/waitlist");
   }
 };
-
-async function request() {}
