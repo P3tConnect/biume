@@ -3,13 +3,13 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitList";
 import { resend } from "../utils/resend";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import { any, z } from "zod";
 
 const emailSchema = z.object({
   subEmail: z.string().email(),
 });
 
-export const newSubWaitlist = async (formData: FormData) => {
+export const newSubWaitlist = async (state: any, formData: FormData) => {
   const validateSchema = emailSchema.safeParse(formData);
 
   if (!validateSchema.success) {
