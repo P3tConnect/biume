@@ -1,19 +1,22 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { company } from "./company";
 
 export const intolerences = pgTable("intolerences", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").references(() => company.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const intolerencesRelations = relations(
-  intolerences,
-  ({ one, many }) => ({}),
-);
+export const intolerencesRelations = relations(intolerences, ({ one }) => ({
+  owner: one(company),
+}));

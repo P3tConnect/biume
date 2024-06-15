@@ -1,6 +1,9 @@
 import { relations } from "drizzle-orm";
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
+import { pets } from "./pets";
+import { employeeCompany } from "./employeeCompany";
+import { ratings } from "./ratings";
+import { projectsInvitees } from "./projectsInvitees";
 
 export const role = pgEnum("role", [
   "CLIENT",
@@ -14,6 +17,8 @@ export const role = pgEnum("role", [
   "MASSEUR",
 ]);
 
+export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
+
 export const user = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -24,7 +29,14 @@ export const user = pgTable("user", {
   image: text("image"),
   phone: text("phone"),
   address: text("address").notNull(),
-  plan: text("plan"),
+  plan: plan("plan").default("NONE"),
   role: role("role").default("CLIENT"),
   isPro: boolean("isPro").default(false),
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+  pets: many(pets),
+  employeeOf: many(employeeCompany),
+  ratingsAuthor: many(ratings),
+  projectInvitees: many(projectsInvitees),
+}));

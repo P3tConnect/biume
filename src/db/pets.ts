@@ -7,6 +7,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
+import { relations } from "drizzle-orm";
 
 export const petType = pgEnum("petType", [
   "Dog",
@@ -17,7 +18,9 @@ export const petType = pgEnum("petType", [
 ]);
 
 export const pets = pgTable("pets", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   type: petType("type").default("Dog").notNull(),
   weight: integer("weight"),
@@ -29,3 +32,10 @@ export const pets = pgTable("pets", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt"),
 });
+
+export const petsRelations = relations(pets, ({ one, many }) => ({
+  owner: one(user, {
+    fields: [pets.ownerId],
+    references: [user.id],
+  }),
+}));

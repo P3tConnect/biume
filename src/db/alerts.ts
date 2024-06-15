@@ -1,11 +1,20 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  primaryKey,
+} from "drizzle-orm/pg-core";
 import { alertsTypes } from "./alertTypes";
 import { company } from "./company";
 import { user } from "./user";
 import { relations } from "drizzle-orm";
 
 export const alerts = pgTable("alerts", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   description: text("description"),
   alertType: text("alertType").references(() => alertsTypes.id, {
     onDelete: "cascade",

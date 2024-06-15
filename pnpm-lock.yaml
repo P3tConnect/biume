@@ -42,8 +42,8 @@ dependencies:
     specifier: ^0.0.18
     version: 0.0.18(react@18.3.1)
   '@trigger.dev/sdk':
-    specifier: 3.0.0-beta.36
-    version: 3.0.0-beta.36(typescript@5.4.5)
+    specifier: 3.0.0-beta.37
+    version: 3.0.0-beta.37(typescript@5.4.5)
   '@uploadthing/react':
     specifier: ^6.6.0
     version: 6.6.0(next@14.2.3)(react@18.3.1)(uploadthing@6.12.0)
@@ -1010,7 +1010,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.13
-      '@types/node': 20.12.12
+      '@types/node': 20.14.2
     dev: false
 
   /@grpc/proto-loader@0.7.13:
@@ -3078,15 +3078,15 @@ packages:
       '@swc/counter': 0.1.3
     dev: false
 
-  /@trigger.dev/core-backend@3.0.0-beta.36:
-    resolution: {integrity: sha512-v/DpxIVMqjXCSIPoTvoO41ZWzY6csl8B0vQokgAvUimbPT3XPMH3cQZJi4WkTXnf0pd/D4OAfRbRVdJJdWcR0w==}
+  /@trigger.dev/core-backend@3.0.0-beta.37:
+    resolution: {integrity: sha512-cXmQJmu6phQoY8rQUbC+Ay1MevmtVgalXFMcAOmTVhgq7xGrZHMdqCdkAFoBe5pI7k+Cdsvl595Xx3ZbInNL5g==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.9.0
     dev: false
 
-  /@trigger.dev/core@3.0.0-beta.36:
-    resolution: {integrity: sha512-hXKKHTlEVEb/7uOoVkOqdGynfeFVF9IZJFwPlbMw5r2MDIWUVBsvR0j4CafMwuif4hmknmDOwfYFz414bDVo9A==}
+  /@trigger.dev/core@3.0.0-beta.37:
+    resolution: {integrity: sha512-4TRqd9g6tqfa6/Fl4PxlYWqkwCKYFhadOo6LWt4CUtCSR6er2o7mpQY2cGqm1zd4KUSSxGQlWwiWfp0AjjncAA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@google-cloud/precise-date': 4.0.0
@@ -3115,15 +3115,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@trigger.dev/sdk@3.0.0-beta.36(typescript@5.4.5):
-    resolution: {integrity: sha512-RsI2pzZK7+FKazVxdw7YsXXxkEkUZH5g8ets8KHKYbq241eXs1ZUNTmcZzcvSlsXhJkj2L/RJkKjFLM/1r3BgA==}
+  /@trigger.dev/sdk@3.0.0-beta.37(typescript@5.4.5):
+    resolution: {integrity: sha512-lHrGrWG8Lmek2radQxlaKZEEsG1m8I4MPx2gfcGuMJIyVUjFdoB7t8Khb52KS5ymKpgANdYrfrB58UzuSZSE1A==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.25.0
-      '@trigger.dev/core': 3.0.0-beta.36
-      '@trigger.dev/core-backend': 3.0.0-beta.36
+      '@trigger.dev/core': 3.0.0-beta.37
+      '@trigger.dev/core-backend': 3.0.0-beta.37
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.4
@@ -6614,7 +6614,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.12.12
+      '@types/node': 20.14.2
       long: 5.2.3
     dev: false
 

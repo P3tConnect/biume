@@ -20,5 +20,14 @@ export const estimateOptions = pgTable(
 
 export const estimateOptionsRelations = relations(
   estimateOptions,
-  ({ many }) => ({}),
+  ({ one }) => ({
+    estimate: one(estimate, {
+      fields: [estimateOptions.estimateId],
+      references: [estimate.id],
+    }),
+    option: one(options, {
+      fields: [estimateOptions.optionId],
+      references: [options.id],
+    }),
+  }),
 );

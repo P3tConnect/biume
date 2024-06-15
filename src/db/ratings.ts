@@ -2,18 +2,33 @@ import {
   boolean,
   integer,
   pgTable,
-  serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { company } from "./company";
+import { relations } from "drizzle-orm";
+import { user } from "./user";
 
 export const ratings = pgTable("ratings", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   rate: integer("rate").notNull(),
   comment: text("comment"),
   proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
+  writerId: text("writerId").references(() => user.id, { onDelete: "cascade" }),
   isRecommanded: boolean("isRecommanded").default(false).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const ratingsRelations = relations(ratings, ({ one, many }) => ({
+  writer: one(user, {
+    fields: [ratings.writerId],
+    references: [user.id],
+  }),
+  for: one(company, {
+    fields: [ratings.proId],
+    references: [company.id],
+  }),
+}));

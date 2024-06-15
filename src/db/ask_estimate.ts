@@ -3,12 +3,13 @@ import {
   date,
   pgEnum,
   pgTable,
-  serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { sessionType } from "./pro_session";
+import { relations } from "drizzle-orm";
+import { askEstimateOptions } from "./askEstimateOptions";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
   "PENDING",
@@ -18,7 +19,9 @@ export const askEstimateStatus = pgEnum("askEstimateStatus", [
 ]);
 
 export const askEstimate = pgTable("ask_estimate", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   status: askEstimateStatus("status").default("PENDING"),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
@@ -28,3 +31,7 @@ export const askEstimate = pgTable("ask_estimate", {
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updateAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
+  askEstimateOptions: many(askEstimateOptions),
+}));

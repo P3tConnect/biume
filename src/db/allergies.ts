@@ -1,7 +1,10 @@
+import { relations } from "drizzle-orm";
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const allergies = pgTable("allergies", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
   createdAt: timestamp("createdAt", { mode: "date" })
@@ -9,3 +12,5 @@ export const allergies = pgTable("allergies", {
     .notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const allergiesRelations = relations(allergies, ({ one, many }) => ({}));
