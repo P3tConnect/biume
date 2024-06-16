@@ -22,7 +22,7 @@ export const ratings = pgTable("ratings", {
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const ratingsRelations = relations(ratings, ({ one, many }) => ({
+export const ratingsRelations = relations(ratings, ({ one }) => ({
   writer: one(user, {
     fields: [ratings.writerId],
     references: [user.id],
