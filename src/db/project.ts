@@ -36,3 +36,6 @@ export const projectRelations = relations(project, ({ one, many }) => ({
   }),
   invitees: many(projectsInvitees),
 }));
+
+export type Project = typeof project.$inferSelect;
+export type CreateProject = typeof project.$inferInsert;

@@ -39,3 +39,7 @@ export const companyDisponibilitiesRelations = relations(
     }),
   }),
 );
+
+export type CompanyDisponibilities = typeof companyDisponibilities.$inferSelect;
+export type CreateCompanyDisponibilities =
+  typeof companyDisponibilities.$inferInsert;

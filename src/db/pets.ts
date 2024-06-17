@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { relations } from "drizzle-orm";
+import { proSession } from "./pro_session";
 
 export const petType = pgEnum("petType", [
   "Dog",
@@ -38,4 +39,8 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
     fields: [pets.ownerId],
     references: [user.id],
   }),
+  sessions: many(proSession),
 }));
+
+export type Pet = typeof pets.$inferSelect;
+export type CreatePet = typeof pets.$inferInsert;

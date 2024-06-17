@@ -22,3 +22,6 @@ export const sessionOptionsRelations = relations(sessionOptions, ({ one }) => ({
     references: [options.id],
   }),
 }));
+
+export type SessionOption = typeof sessionOptions.$inferSelect;
+export type CreateSessionOption = typeof sessionOptions.$inferInsert;

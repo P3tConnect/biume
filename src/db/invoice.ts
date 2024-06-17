@@ -25,3 +25,6 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
     references: [proSession.id],
   }),
 }));
+
+export type Invoice = typeof invoice.$inferSelect;
+export type CreateInvoice = typeof invoice.$inferInsert;

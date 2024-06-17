@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { company } from "./company";
+import { user } from "./user";
 
 export const intolerences = pgTable("intolerences", {
   id: text("id")
@@ -8,7 +8,7 @@ export const intolerences = pgTable("intolerences", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => company.id, {
+  ownerId: text("ownerId").references(() => user.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt", { mode: "date" })
@@ -18,5 +18,8 @@ export const intolerences = pgTable("intolerences", {
 });
 
 export const intolerencesRelations = relations(intolerences, ({ one }) => ({
-  owner: one(company),
+  owner: one(user),
 }));
+
+export type Intolerence = typeof intolerences.$inferSelect;
+export type CreateIntolerence = typeof intolerences.$inferInsert;

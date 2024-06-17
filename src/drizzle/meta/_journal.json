@@ -57,6 +57,13 @@
       "when": 1718468875583,
       "tag": "0007_sudden_rockslide",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1718651221732,
+      "tag": "0008_conscious_odin",
+      "breakpoints": true
     }
   ]
 }

@@ -24,3 +24,6 @@ export const newsletterRelations = relations(newsletter, ({ one, many }) => ({
     references: [company.id],
   }),
 }));
+
+export type Newsletter = typeof newsletter.$inferSelect;
+export type CreateNewsletter = typeof newsletter.$inferInsert;

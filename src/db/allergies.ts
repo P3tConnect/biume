@@ -14,3 +14,6 @@ export const allergies = pgTable("allergies", {
 });
 
 export const allergiesRelations = relations(allergies, ({ one, many }) => ({}));
+
+export type Allergy = typeof allergies.$inferSelect;
+export type CreateAllergy = typeof allergies.$inferInsert;

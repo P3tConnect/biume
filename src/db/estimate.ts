@@ -24,3 +24,6 @@ export const estimateRelations = relations(estimate, ({ one, many }) => ({
   }),
   estimateOptions: many(estimateOptions),
 }));
+
+export type Estimate = typeof estimate.$inferSelect;
+export type CreateEstimate = typeof estimate.$inferInsert;

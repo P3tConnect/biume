@@ -15,3 +15,6 @@ export const progression = pgTable("progression", {
 export const progressionRelations = relations(progression, ({ one, many }) => ({
   company: one(company),
 }));
+
+export type Progression = typeof progression.$inferSelect;
+export type CreateProgression = typeof progression.$inferInsert;

@@ -31,3 +31,6 @@ export const employeeCompanyRelations = relations(
     }),
   }),
 );
+
+export type EmployeeCompany = typeof employeeCompany.$inferSelect;
+export type CreateEmployeeCompany = typeof employeeCompany.$inferInsert;

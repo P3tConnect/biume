@@ -32,3 +32,6 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     references: [company.id],
   }),
 }));
+
+export type Rating = typeof ratings.$inferSelect;
+export type CreateRating = typeof ratings.$inferInsert;

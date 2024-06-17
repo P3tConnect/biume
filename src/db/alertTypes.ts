@@ -24,3 +24,6 @@ export const alertTypesRelations = relations(alertsTypes, ({ one, many }) => ({
   }),
   alert: one(alerts),
 }));
+
+export type AlertsType = typeof alertsTypes.$inferSelect;
+export type CreateAlertsType = typeof alertsTypes.$inferInsert;

@@ -23,3 +23,6 @@ export const servicesRelations = relations(service, ({ one, many }) => ({
     references: [company.id],
   }),
 }));
+
+export type Service = typeof service.$inferSelect;
+export type CreateService = typeof service.$inferInsert;

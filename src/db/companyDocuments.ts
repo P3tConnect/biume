@@ -17,3 +17,6 @@ export const companyDocumentsRelations = relations(
     company: one(company),
   }),
 );
+
+export type CompanyDocuments = typeof companyDocuments.$inferSelect;
+export type CreateCompanyDocuments = typeof company.$inferInsert;

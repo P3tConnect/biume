@@ -30,3 +30,5 @@ export * from "./progression";
 export * from "./companyDocuments";
 export * from "./projectsInvitees";
 export * from "./sessionOptions";
+export * from "./report";
+export * from "./observation";

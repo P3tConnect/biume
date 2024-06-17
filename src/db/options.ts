@@ -32,3 +32,6 @@ export const optionsRelations = relations(options, ({ one, many }) => ({
     references: [company.id],
   }),
 }));
+
+export type Option = typeof options.$inferSelect;
+export type CreateOption = typeof options.$inferInsert;
