@@ -1,7 +1,7 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { alerts } from "./alerts";
+import { company } from "./company";
 
 export const alertsTypes = pgTable("alerts_types", {
   id: text("id")

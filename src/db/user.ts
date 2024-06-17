@@ -6,37 +6,38 @@ import { ratings } from "./ratings";
 import { projectsInvitees } from "./projectsInvitees";
 
 export const role = pgEnum("role", [
-  "CLIENT",
-  "COMMUNICATION",
-  "VETERINARY",
-  "OSTEOPATH",
-  "NATUROPATH",
-  "EDUCATOR",
-  "COMPORTEMENTALIST",
-  "TOILLETEUR",
-  "MASSEUR",
+    "CLIENT",
+    "COMMUNICATION",
+    "VETERINARY",
+    "OSTEOPATH",
+    "NATUROPATH",
+    "EDUCATOR",
+    "COMPORTEMENTALIST",
+    "GROOMER",
+    "MASSAGER",
 ]);
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
 export const user = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").unique().notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  phone: text("phone"),
-  address: text("address").notNull(),
-  plan: plan("plan").default("NONE"),
-  role: role("role").default("CLIENT"),
-  isPro: boolean("isPro").default(false),
+    id: text("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    email: text("email").unique().notNull(),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    image: text("image"),
+    phone: text("phone"),
+    stripeId: text("stripeId"),
+    address: text("address").notNull(),
+    plan: plan("plan").default("NONE"),
+    role: role("role").default("CLIENT"),
+    isPro: boolean("isPro").default(false),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
-  pets: many(pets),
-  employeeOf: many(employeeCompany),
-  ratingsAuthor: many(ratings),
-  projectInvitees: many(projectsInvitees),
+    pets: many(pets),
+    employeeOf: many(employeeCompany),
+    ratingsAuthor: many(ratings),
+    projectInvitees: many(projectsInvitees),
 }));
