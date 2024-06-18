@@ -16,6 +16,7 @@ import { receipt } from "./receipts";
 import { receiptProduct } from "./receiptProducts";
 import { product } from "./products";
 import { topic } from "./topic";
+import { createInsertSchema } from "drizzle-zod";
 
 export const company = pgTable("company", {
     id: text("id")
@@ -66,3 +67,5 @@ export const companyRelations = relations(company, ({ one, many }) => ({
 
 export type Company = typeof company.$inferSelect;
 export type CreateCompany = typeof company.$inferInsert;
+
+export const CreateCompanySchema = createInsertSchema(company);

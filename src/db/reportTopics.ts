@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { topic } from "./topic";
 import { report } from "./report";
+import { createInsertSchema } from "drizzle-zod";
 
 export const reportTopic = pgTable("report_topic", {
     reportId: text("reportId").references(() => report.id, {
@@ -25,3 +26,5 @@ export const reportTopicRelations = relations(reportTopic, ({ one, many }) => ({
 
 export type ReportTopic = typeof reportTopic.$inferSelect;
 export type CreateReportTopic = typeof reportTopic.$inferInsert;
+
+export const CreateReportTopicSchema = createInsertSchema(reportTopic);

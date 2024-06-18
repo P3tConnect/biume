@@ -10,6 +10,7 @@ import {
 import { askEstimateOptions } from "./askEstimateOptions";
 import { sessionType } from "./pro_session";
 import { user } from "./user";
+import { createInsertSchema } from "drizzle-zod";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
     "PENDING",
@@ -40,3 +41,5 @@ export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
 
 export type AskEstimate = typeof askEstimate.$inferSelect;
 export type CreateAskEstimate = typeof askEstimate.$inferInsert;
+
+export const CreateAskEstimateSchema = createInsertSchema(askEstimate);

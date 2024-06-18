@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { receipt } from "./receipts";
 import { product } from "./products";
+import { createInsertSchema } from "drizzle-zod";
 
 export const receiptProduct = pgTable("receipt_product", {
     receiptId: text("receiptId").references(() => receipt.id, {
@@ -22,3 +23,5 @@ export const receiptProductRelations = relations(receiptProduct, ({ one }) => ({
 
 export type ReceiptProduct = typeof receiptProduct.$inferSelect;
 export type CreateReceiptProduct = typeof receiptProduct.$inferInsert;
+
+export const CreateReceiptProductSchema = createInsertSchema(receiptProduct);

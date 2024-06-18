@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { receiptProduct } from "./receiptProducts";
 import { company } from "./company";
+import { createInsertSchema } from "drizzle-zod";
 
 export const receipt = pgTable("receipt", {
     id: text("id")
@@ -26,3 +27,5 @@ export const receiptRelations = relations(receipt, ({ one, many }) => ({
 
 export type Receipt = typeof receipt.$inferSelect;
 export type CreateReceipt = typeof receipt.$inferInsert;
+
+export const CreateReceiptSchema = createInsertSchema(receipt);

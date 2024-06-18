@@ -13,6 +13,7 @@ import { ratings } from "./ratings";
 import { projectsInvitees } from "./projectsInvitees";
 import { allergies } from "./allergies";
 import { intolerences } from "./intolerences";
+import { createInsertSchema } from "drizzle-zod";
 
 export const role = pgEnum("role", [
     "CLIENT",
@@ -59,3 +60,5 @@ export const userRelations = relations(user, ({ many }) => ({
 
 export type User = typeof user.$inferSelect;
 export type CreateUser = typeof user.$inferInsert;
+
+export const CreateUserSchema = createInsertSchema(user);

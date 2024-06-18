@@ -1,9 +1,19 @@
 "use server";
 
+import { z } from "zod";
+import { proAction } from "../utils/action";
+import { CreateAlertsTypeSchema } from "../db/alertTypes";
+
 export async function getAlertsTypes() {}
 
-export async function createAlertsTypes() {}
+export const createAlertsTypes = proAction(
+    CreateAlertsTypeSchema,
+    async (params, _) => {},
+);
 
-export async function updateAlertsTypes() {}
+export const updateAlertsTypes = proAction(
+    CreateAlertsTypeSchema,
+    async (params, _) => {},
+);
 
-export async function deleteAlertsTypes() {}
+export const deleteAlertsTypes = proAction(z.string(), async (params, _) => {});

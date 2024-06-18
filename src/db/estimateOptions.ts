@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import { estimate } from "./estimate";
 import { options } from "./options";
+import { createInsertSchema } from "drizzle-zod";
 
 export const estimateOptions = pgTable("estimate_options", {
     estimateId: text("estimateId").references(() => estimate.id, {
@@ -28,3 +29,5 @@ export const estimateOptionsRelations = relations(
 
 export type EstimateOption = typeof estimateOptions.$inferSelect;
 export type CreateEstimateOption = typeof estimateOptions.$inferInsert;
+
+export const CreateEstimateOptionSchema = createInsertSchema(estimateOptions);
