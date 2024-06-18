@@ -1,28 +1,27 @@
-import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
-import { receiptProduct } from "./receiptProducts";
 import { company } from "./company";
+import { relations } from "drizzle-orm";
+import { receiptProduct } from "./receiptProducts";
 
-export const receipt = pgTable("receipt", {
+export const product = pgTable("product", {
     id: text("id")
         .primaryKey()
         .$defaultFn(() => crypto.randomUUID()),
-    image: text("image"),
+    title: text("title").notNull(),
+    description: text("description"),
+    quantity: integer("quantity").notNull(),
     companyId: text("companyId").references(() => company.id, {
         onDelete: "cascade",
     }),
-    totalPrice: integer("totalPrice"),
+    unitPrice: integer("unitPrice").notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
     updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const receiptRelations = relations(receipt, ({ one, many }) => ({
-    products: many(receiptProduct),
+export const productRelations = relations(product, ({ one, many }) => ({
+    receipts: many(receiptProduct),
     company: one(company, {
-        fields: [receipt.companyId],
+        fields: [product.companyId],
         references: [company.id],
     }),
 }));
-
-export type Receipt = typeof receipt.$inferSelect;
-export type CreateReceipt = typeof receipt.$inferInsert;
