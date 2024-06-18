@@ -2,23 +2,23 @@ import { User } from "../db";
 import { auth } from "./auth";
 
 export const currentUser = async () => {
-  const session = await auth();
+    const session = await auth();
 
-  if (!session?.user) {
-    return null;
-  }
+    if (!session?.user) {
+        return null;
+    }
 
-  const user = session.user as User;
+    const user = session.user as unknown as User;
 
-  return user;
+    return user;
 };
 
 export const requiredCurrentUser = async () => {
-  const user = await currentUser();
+    const user = await currentUser();
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+    if (!user) {
+        throw new Error("User not found");
+    }
 
-  return user;
+    return user;
 };
