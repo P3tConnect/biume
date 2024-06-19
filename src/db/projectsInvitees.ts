@@ -28,4 +28,4 @@ export const projectInviteesRelations = relations(
 export type ProjectInvitee = typeof projectsInvitees.$inferSelect;
 export type CreateProjectInvitee = typeof projectsInvitees.$inferInsert;
 
-export const CreateProjectInvitee = createInsertSchema(projectsInvitees);
+export const CreateProjectInviteeSchema = createInsertSchema(projectsInvitees);

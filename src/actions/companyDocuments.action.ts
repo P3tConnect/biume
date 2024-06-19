@@ -1,12 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction } from "../utils/action";
-import { db } from "../utils/db";
-import { eq } from "drizzle-orm";
-import { CreateCompanyDocumentsSchema, companyDocuments } from "../db";
+import { proAction } from "../utils/action";
+import { CreateCompanyDocumentsSchema } from "../db";
 
-export async function getCompanyDocuments() {}
+export async function getCompanyDocuments(companyId: string) {}
 
 export const createCompanyDocuments = proAction(
     CreateCompanyDocumentsSchema,

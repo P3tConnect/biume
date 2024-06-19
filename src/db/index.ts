@@ -32,3 +32,7 @@ export * from "./projectsInvitees";
 export * from "./sessionOptions";
 export * from "./report";
 export * from "./observation";
+export * from "./reportTopics";
+export * from "./receipts";
+export * from "./receiptProducts";
+export * from "./topic";

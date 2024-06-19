@@ -6,6 +6,10 @@ import { proAction } from "../utils/action";
 
 export async function getEstimates() {}
 
+export async function getEstimatesByCustomer() {}
+
+export async function getEstimatesByCompany() {}
+
 export const createEstimate = proAction(
     CreateEstimateSchema,
     async (params, _) => {},

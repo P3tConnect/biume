@@ -6,6 +6,8 @@ import { CreateCancelPolicySchema } from "../db";
 
 export async function getCancelPolicies() {}
 
+export async function getCancelPoliciesByCompany() {}
+
 export const createCancelPolicies = proAction(
     CreateCancelPolicySchema,
     async (params, _) => {},
