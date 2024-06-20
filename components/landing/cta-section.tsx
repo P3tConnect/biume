@@ -206,7 +206,7 @@ export default function CallToActionSection() {
                     className="mt-10 border border-gray-400/70 rounded-lg"
                   />
                   {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
-                    Je m&apos;inscrit
+                    Je m&apos;inscris
                   </Button>}
 
                 </form>
