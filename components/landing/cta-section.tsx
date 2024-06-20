@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Marquee from "@/components/magicui/marquee";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -15,9 +15,14 @@ import {
 } from "lucide-react";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { Input } from "../ui/input";
-import { newSubWaitlist } from "@/src/actions/mail.action";
+import { newSubWaitList } from "@/src/actions";
 import Loader from "../loader";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { redirect } from "next/navigation";
+import { emailSchema } from "@/src/utils/schema";
 
 const tiles = [
   {
@@ -115,7 +120,8 @@ export default function CallToActionSection() {
   const [randomTiles2, setRandomTiles2] = useState<typeof tiles>([]);
   const [randomTiles3, setRandomTiles3] = useState<typeof tiles>([]);
   const [randomTiles4, setRandomTiles4] = useState<typeof tiles>([]);
-  const [isLoading, startTransition] = useTransition();
+  // const [isLoading, startTransition] = useTransition();
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -126,6 +132,23 @@ export default function CallToActionSection() {
       setRandomTiles4(shuffleArray([...tiles]));
     }
   }, []);
+
+  const { register, handleSubmit, formState: { errors, isLoading }, reset } = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: "",
+    }
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await newSubWaitList({ email: data.email });
+
+    if (response?.serverError) {
+      toast.error(response.serverError)
+    } else {
+      reset()
+    }
+  })
 
   return (
     <section id="cta">
@@ -190,21 +213,14 @@ export default function CallToActionSection() {
                     <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
                   </div>
                   : */}
-                <form className="w-full gap-3 flex flex-col items-center justify-center" action={(formData) => {
-                  startTransition(async () => {
-                    const email = await newSubWaitlist(formData)
-
-                    if (email?.error) {
-                      toast.error(email.error as string)
-                    }
-                    // localStorage.setItem("alreadySub", "true")
-                  })
-                }}>
+                <form className="w-full gap-3 flex flex-col items-center justify-center" onSubmit={onSubmit}>
                   <Input
                     placeholder="Email"
-                    name="email"
                     className="mt-10 border border-gray-400/70 rounded-lg"
+                    type="email"
+                    {...register("email")}
                   />
+                  {errors.email ? <p className="font-medium text-red-400">{errors.email.message}</p> : null}
                   {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
                     Je m&apos;inscris
                   </Button>}
