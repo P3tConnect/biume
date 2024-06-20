@@ -6,6 +6,8 @@ import { proAction } from "../utils/action";
 
 export async function getCompanies() {}
 
+export async function getCompanyById() {}
+
 export const createCompany = proAction(
     CreateCompanySchema,
     async (params, _) => {},

@@ -1,11 +1,11 @@
 import {
-    boolean,
-    date,
-    pgEnum,
-    pgTable,
-    serial,
-    text,
-    timestamp,
+  boolean,
+  date,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 import { company } from "./company";
 import { relations } from "drizzle-orm";
@@ -20,53 +20,51 @@ import { createInsertSchema } from "drizzle-zod";
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
 export const sessionStatusType = pgEnum("session_status_type", [
-    "PAYED",
-    "IN PROGRESS",
-    "WAITING FROM CLIENT",
-    "REFUND",
+  "PAYED",
+  "IN PROGRESS",
+  "WAITING FROM CLIENT",
+  "REFUND",
 ]);
 
 export const proSession = pgTable("pro_session", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
-    clientId: text("clientId").references(() => pets.id, {
-        onDelete: "cascade",
-    }),
-    reportId: text("reportId").references(() => report.id, {
-        onDelete: "cascade",
-    }),
-    observationId: text("observationId").references(() => observation.id, {
-        onDelete: "cascade",
-    }),
-    beginAt: date("beginAt").notNull(),
-    endAt: date("endAt").notNull(),
-    status: sessionStatusType("status").default("IN PROGRESS").notNull(),
-    atHome: boolean("atHome").default(false).notNull(),
-    type: sessionType("type").default("oneToOne").notNull(),
-    createdAt: timestamp("createdAt", { mode: "date" })
-        .default(new Date())
-        .notNull(),
-    updated: timestamp("updatedAt", { mode: "date" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
+  clientId: text("clientId").references(() => pets.id, {
+    onDelete: "cascade",
+  }),
+  reportId: text("reportId").references(() => report.id, {
+    onDelete: "cascade",
+  }),
+  observationId: text("observationId").references(() => observation.id, {
+    onDelete: "cascade",
+  }),
+  beginAt: date("beginAt").notNull(),
+  endAt: date("endAt").notNull(),
+  status: sessionStatusType("status").default("IN PROGRESS").notNull(),
+  atHome: boolean("atHome").default(false).notNull(),
+  type: sessionType("type").default("oneToOne").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+  updated: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const proSessionRelations = relations(proSession, ({ one, many }) => ({
-    estimate: one(estimate),
-    invoice: one(invoice),
-    options: many(sessionOptions),
-    pet: one(pets, {
-        fields: [proSession.clientId],
-        references: [pets.id],
-    }),
-    report: one(report, {
-        fields: [proSession.reportId],
-        references: [report.id],
-    }),
-    observation: one(observation, {
-        fields: [proSession.observationId],
-        references: [observation.id],
-    }),
+  estimate: one(estimate),
+  invoice: one(invoice),
+  options: many(sessionOptions),
+  pet: one(pets, {
+    fields: [proSession.clientId],
+    references: [pets.id],
+  }),
+  report: one(report, {
+    fields: [proSession.reportId],
+    references: [report.id],
+  }),
+  observation: one(observation, {
+    fields: [proSession.observationId],
+    references: [observation.id],
+  }),
 }));
 
 export type ProSession = typeof proSession.$inferSelect;

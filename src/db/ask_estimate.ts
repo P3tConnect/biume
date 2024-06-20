@@ -11,6 +11,7 @@ import { askEstimateOptions } from "./askEstimateOptions";
 import { sessionType } from "./pro_session";
 import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
+import { company } from "./company";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
     "PENDING",
@@ -29,6 +30,7 @@ export const askEstimate = pgTable("ask_estimate", {
     creator: text("creator").references(() => user.id, {
         onDelete: "cascade",
     }),
+    for: text("for").references(() => company.id, { onDelete: "cascade" }),
     atHome: boolean("atHome").default(false),
     //sessionType: sessionType("sessionType").default("oneToOne"),
     createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),

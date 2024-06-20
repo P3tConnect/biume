@@ -1,19 +1,32 @@
 "use server";
 
 import { z } from "zod";
-import { userAction } from "../utils/action";
-import { CreateAskEstimateSchema } from "../db";
+import { ActionError, userAction } from "../utils/action";
+import { CreateAskEstimateSchema, askEstimate } from "../db";
+import { db } from "../utils/db";
 
-export async function getAskEstimates() {}
+export async function getAskEstimates() {
+    const res = await db.query.askEstimate.findMany();
+
+    return res;
+}
 
 export const createAskEstimate = userAction(
     CreateAskEstimateSchema,
-    async (params, _) => {},
+    async (params, _) => {
+        const res = await db.insert(askEstimate).values(params);
+
+        if (!res) {
+            throw new ActionError("Can't create Ask Estimate");
+        }
+    },
 );
 
 export const updateAskEstimate = userAction(
     CreateAskEstimateSchema,
-    async (params, _) => {},
+    async (params, _) => {
+        const res = await db;
+    },
 );
 
 export const deleteAskEstimate = userAction(
