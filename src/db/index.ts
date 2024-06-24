@@ -36,3 +36,5 @@ export * from "./reportTopics";
 export * from "./receipts";
 export * from "./receiptProducts";
 export * from "./topic";
+export * from "./job";
+export * from "./usersJobs";
