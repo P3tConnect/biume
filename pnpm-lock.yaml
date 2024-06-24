@@ -11,9 +11,6 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.4.2
     version: 3.4.2(react-hook-form@7.51.5)
-  '@lemonsqueezy/lemonsqueezy.js':
-    specifier: ^3.0.0
-    version: 3.0.0
   '@neondatabase/serverless':
     specifier: ^0.9.3
     version: 0.9.3
@@ -1325,11 +1322,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  /@lemonsqueezy/lemonsqueezy.js@3.0.0:
-    resolution: {integrity: sha512-EomAGkJLisI0/ptpe6a0plB++1Pqoe+FgMip4etfg2de05y58dkI+OA+HSdaFyXxpn1g0OtB50ofNVVoYQJX5A==}
-    engines: {node: '>=20'}
-    dev: false
 
   /@mswjs/cookies@1.1.0:
     resolution: {integrity: sha512-0ZcCVQxifZmhwNBoQIrystCb+2sWBY2Zw8lpfJBPCHGCA/HWqehITeCRVIv4VMy8MPlaHo2w2pTHFV2pFfqKPw==}
