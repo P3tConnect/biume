@@ -15,6 +15,7 @@ import { allergies } from "./allergies";
 import { intolerences } from "./intolerences";
 import { createInsertSchema } from "drizzle-zod";
 import { usersJobs } from "./usersJobs";
+import { deseases } from "./deseases";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -43,6 +44,7 @@ export const userRelations = relations(user, ({ many }) => ({
     allergies: many(allergies),
     intolerences: many(intolerences),
     jobs: many(usersJobs),
+    deseases: many(deseases),
 }));
 
 export type User = typeof user.$inferSelect;

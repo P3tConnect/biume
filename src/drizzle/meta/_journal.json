@@ -15,6 +15,13 @@
       "when": 1718871059458,
       "tag": "0001_cheerful_junta",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1719230983166,
+      "tag": "0002_empty_joystick",
+      "breakpoints": true
     }
   ]
 }

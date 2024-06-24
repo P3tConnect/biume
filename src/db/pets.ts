@@ -10,6 +10,9 @@ import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { proSession } from "./pro_session";
 import { createInsertSchema } from "drizzle-zod";
+import { petsDeseases } from "./petsDeseases";
+import { allergies } from "./allergies";
+import { intolerences } from "./intolerences";
 
 export const petType = pgEnum("petType", [
     "Dog",
@@ -41,6 +44,9 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
         references: [user.id],
     }),
     sessions: many(proSession),
+    deseases: many(petsDeseases),
+    allergies: many(allergies),
+    intolerences: many(intolerences),
 }));
 
 export type Pet = typeof pets.$inferSelect;

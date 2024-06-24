@@ -1,22 +1,23 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 import { alertsTypes } from "./alertTypes";
 import { cancelPolicies } from "./cancelPolicies";
 import { companyDocuments } from "./companyDocuments";
 import { employeeCompany } from "./employeeCompany";
+import { newsletter } from "./newsletter";
 import { options } from "./options";
+import { product } from "./products";
 import { progression } from "./progression";
 import { project } from "./project";
 import { ratings } from "./ratings";
-import { service } from "./service";
-import { user } from "./user";
-import { newsletter } from "./newsletter";
-import { task } from "./task";
-import { receipt } from "./receipts";
 import { receiptProduct } from "./receiptProducts";
-import { product } from "./products";
+import { receipt } from "./receipts";
+import { service } from "./service";
+import { task } from "./task";
 import { topic } from "./topic";
-import { createInsertSchema } from "drizzle-zod";
+import { user } from "./user";
+import { category } from "./category";
 
 export const company = pgTable("company", {
     id: text("id")
@@ -27,6 +28,8 @@ export const company = pgTable("company", {
     coverImage: text("coverImage"),
     description: text("description"),
     address: text("address").notNull(),
+    openAt: date("openAt"),
+    closeAt: date("closeAt"),
     email: text("email").notNull().unique(),
     ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
     atHome: boolean("atHome").notNull(),
@@ -63,6 +66,7 @@ export const companyRelations = relations(company, ({ one, many }) => ({
     receiptsProducts: many(receiptProduct),
     products: many(product),
     topics: many(topic),
+    categories: many(category),
 }));
 
 export type Company = typeof company.$inferSelect;

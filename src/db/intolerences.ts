@@ -2,6 +2,7 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
+import { petsIntolerences } from "./petsIntolerences";
 
 export const intolerences = pgTable("intolerences", {
     id: text("id")
@@ -18,9 +19,13 @@ export const intolerences = pgTable("intolerences", {
     updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const intolerencesRelations = relations(intolerences, ({ one }) => ({
-    owner: one(user),
-}));
+export const intolerencesRelations = relations(
+    intolerences,
+    ({ one, many }) => ({
+        owner: one(user),
+        pets: many(petsIntolerences),
+    }),
+);
 
 export type Intolerence = typeof intolerences.$inferSelect;
 export type CreateIntolerence = typeof intolerences.$inferInsert;
