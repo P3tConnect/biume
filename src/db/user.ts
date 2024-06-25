@@ -17,6 +17,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { usersJobs } from "./usersJobs";
 import { deseases } from "./deseases";
 import { company } from "./company";
+import { address } from "./addresses";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -32,15 +33,17 @@ export const user = pgTable("user", {
     image: text("image"),
     phone: text("phone"),
     stripeId: text("stripeId"),
-    address: text("address").notNull(),
+    addressId: text("address").references(() => address.id, {
+        onDelete: "cascade",
+    }),
     plan: plan("plan").default("NONE"),
     isPro: boolean("isPro").default(false),
     createdAt: timestamp("createdAt").default(new Date()),
     updatedAt: timestamp("updateAt"),
 });
 
-export const userRelations = relations(user, ({ many }) => ({
-    companies: many(company),
+export const userRelations = relations(user, ({ one, many }) => ({
+    companiesOwner: many(company),
     pets: many(pets),
     employeeOf: many(employeeCompany),
     ratingsAuthor: many(ratings),
@@ -49,6 +52,10 @@ export const userRelations = relations(user, ({ many }) => ({
     intolerences: many(intolerences),
     jobs: many(usersJobs),
     deseases: many(deseases),
+    address: one(address, {
+        fields: [user.addressId],
+        references: [address.id],
+    }),
 }));
 
 export type User = typeof user.$inferSelect;
