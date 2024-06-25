@@ -16,6 +16,7 @@ import { intolerences } from "./intolerences";
 import { createInsertSchema } from "drizzle-zod";
 import { usersJobs } from "./usersJobs";
 import { deseases } from "./deseases";
+import { company } from "./company";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -34,9 +35,12 @@ export const user = pgTable("user", {
     address: text("address").notNull(),
     plan: plan("plan").default("NONE"),
     isPro: boolean("isPro").default(false),
+    createdAt: timestamp("createdAt").default(new Date()),
+    updatedAt: timestamp("updateAt"),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
+    companies: many(company),
     pets: many(pets),
     employeeOf: many(employeeCompany),
     ratingsAuthor: many(ratings),

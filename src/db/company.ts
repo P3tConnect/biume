@@ -45,6 +45,10 @@ export const company = pgTable("company", {
 });
 
 export const companyRelations = relations(company, ({ one, many }) => ({
+    owner: one(user, {
+        fields: [company.ownerId],
+        references: [user.id],
+    }),
     employees: many(employeeCompany),
     progression: one(progression, {
         fields: [company.progressionId],
