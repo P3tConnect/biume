@@ -22,7 +22,10 @@ export const sessionStatusType = pgEnum("session_status_type", [
     "PAYED",
     "IN PROGRESS",
     "WAITING FROM CLIENT",
-    "REFUND",
+    "WAITING FOR REFUND",
+    "REFUNDED",
+    "CANCELED",
+    "POSTPAWNED",
 ]);
 
 export const proSession = pgTable("pro_session", {

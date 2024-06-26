@@ -19,7 +19,7 @@ export const invoice = pgTable("invoice", {
 });
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
-    invoiceOptions: many(invoiceOptions),
+    options: many(invoiceOptions),
     session: one(proSession, {
         fields: [invoice.sessionId],
         references: [proSession.id],

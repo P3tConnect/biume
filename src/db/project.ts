@@ -1,11 +1,4 @@
-import {
-    boolean,
-    date,
-    pgTable,
-    serial,
-    text,
-    timestamp,
-} from "drizzle-orm/pg-core";
+import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { projectsInvitees } from "./projectsInvitees";

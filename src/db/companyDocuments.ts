@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
 
@@ -10,6 +10,8 @@ export const companyDocuments = pgTable("company_documents", {
     siren: text("siren"),
     siret: text("siret"),
     certifications: text("certifications"),
+    createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+    updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const companyDocumentsRelations = relations(

@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
+import { createInsertSchema } from "drizzle-zod";
 
 export const companyAddress = pgTable("company_address", {
     id: text("id")
@@ -17,3 +18,8 @@ export const companyAddress = pgTable("company_address", {
 export const companyAddressRelations = relations(companyAddress, ({ one }) => ({
     company: one(company),
 }));
+
+export type CompanyAddress = typeof companyAddress.$inferSelect;
+export type CreateCompanyAddress = typeof companyAddress.$inferInsert;
+
+export const CreateCompanyAddressSchema = createInsertSchema(companyAddress);
