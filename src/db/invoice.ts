@@ -2,7 +2,6 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { proSession } from "./pro_session";
 import { relations } from "drizzle-orm";
 import { invoiceOptions } from "./invoiceOptions";
-import { sessions } from "./session";
 import { createInsertSchema } from "drizzle-zod";
 
 export const invoice = pgTable("invoice", {
@@ -20,7 +19,7 @@ export const invoice = pgTable("invoice", {
 });
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
-    invoiceOptions: many(invoiceOptions),
+    options: many(invoiceOptions),
     session: one(proSession, {
         fields: [invoice.sessionId],
         references: [proSession.id],

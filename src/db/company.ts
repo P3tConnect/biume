@@ -18,6 +18,7 @@ import { task } from "./task";
 import { topic } from "./topic";
 import { user } from "./user";
 import { category } from "./category";
+import { companyAddress } from "./companyAddress";
 
 export const company = pgTable("company", {
     id: text("id")
@@ -27,7 +28,9 @@ export const company = pgTable("company", {
     logo: text("logo"),
     coverImage: text("coverImage"),
     description: text("description"),
-    address: text("address").notNull(),
+    addressId: text("address").references(() => companyAddress.id, {
+        onDelete: "cascade",
+    }),
     openAt: date("openAt"),
     closeAt: date("closeAt"),
     email: text("email").notNull().unique(),
@@ -45,6 +48,10 @@ export const company = pgTable("company", {
 });
 
 export const companyRelations = relations(company, ({ one, many }) => ({
+    owner: one(user, {
+        fields: [company.ownerId],
+        references: [user.id],
+    }),
     employees: many(employeeCompany),
     progression: one(progression, {
         fields: [company.progressionId],
@@ -67,6 +74,10 @@ export const companyRelations = relations(company, ({ one, many }) => ({
     products: many(product),
     topics: many(topic),
     categories: many(category),
+    address: one(companyAddress, {
+        fields: [company.addressId],
+        references: [companyAddress.id],
+    }),
 }));
 
 export type Company = typeof company.$inferSelect;
