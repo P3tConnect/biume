@@ -1,24 +1,6 @@
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 const config = {
-<<<<<<< HEAD
-  darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "./emails/**/*.{ts,tsx"
-  ],
-  prefix: "",
-  theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-=======
     darkMode: ["class"],
     content: [
         "./pages/**/*.{ts,tsx}",
@@ -164,7 +146,6 @@ const config = {
                     "marquee-vertical var(--duration) linear infinite",
             },
         },
->>>>>>> 1f8bd704988a805c0ea984a788a40882f04c8d72
     },
     plugins: [require("tailwindcss-animate"), addVariablesForColors],
 };
