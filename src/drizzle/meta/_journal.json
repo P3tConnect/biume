@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1718700378831,
-      "tag": "0000_youthful_the_call",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1718871059458,
-      "tag": "0001_cheerful_junta",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1719230983166,
-      "tag": "0002_empty_joystick",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1719301736474,
-      "tag": "0003_windy_imperial_guard",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1719775680797,
-      "tag": "0004_hard_eddie_brock",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1719821743548,
-      "tag": "0005_silent_scorpion",
+      "when": 1719847204949,
+      "tag": "0000_chilly_nextwave",
       "breakpoints": true
     }
   ]

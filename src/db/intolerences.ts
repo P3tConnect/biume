@@ -5,26 +5,26 @@ import { createInsertSchema } from "drizzle-zod";
 import { petsIntolerences } from "./petsIntolerences";
 
 export const intolerences = pgTable("intolerences", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    title: text("title"),
-    description: text("description"),
-    ownerId: text("ownerId").references(() => user.id, {
-        onDelete: "cascade",
-    }),
-    createdAt: timestamp("createdAt", { mode: "date" })
-        .default(new Date())
-        .notNull(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title"),
+  description: text("description"),
+  ownerId: text("ownerId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
+  createdAt: timestamp("createdAt", { mode: "date" })
+    .default(new Date())
+    .notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const intolerencesRelations = relations(
-    intolerences,
-    ({ one, many }) => ({
-        owner: one(user),
-        pets: many(petsIntolerences),
-    }),
+  intolerences,
+  ({ one, many }) => ({
+    owner: one(user),
+    pets: many(petsIntolerences),
+  }),
 );
 
 export type Intolerence = typeof intolerences.$inferSelect;

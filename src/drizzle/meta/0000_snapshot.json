@@ -1,5 +1,5 @@
 {
-  "id": "03656db9-7eba-4c0c-bf1b-07d2d9142b66",
+  "id": "e33cd0c9-27cc-4650-bcfe-61b1530487ae",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -102,6 +102,132 @@
       },
       "uniqueConstraints": {}
     },
+    "public.address": {
+      "name": "address",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lat": {
+          "name": "lat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lng": {
+          "name": "lng",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zip": {
+          "name": "zip",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postalAddress": {
+          "name": "postalAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cntryCode": {
+          "name": "cntryCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.872'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.alerts_types": {
+      "name": "alerts_types",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.873'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "alerts_types_ownerId_company_id_fk": {
+          "name": "alerts_types_ownerId_company_id_fk",
+          "tableFrom": "alerts_types",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.alerts": {
       "name": "alerts",
       "schema": "",
@@ -200,72 +326,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.alerts_types": {
-      "name": "alerts_types",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "alerts_types_ownerId_company_id_fk": {
-          "name": "alerts_types_ownerId_company_id_fk",
-          "tableFrom": "alerts_types",
-          "tableTo": "company",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.allergies": {
       "name": "allergies",
       "schema": "",
@@ -288,74 +348,18 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'2024-06-18 08:46:18.815'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.ask_estimate": {
-      "name": "ask_estimate",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "askEstimateStatus",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'PENDING'"
-        },
-        "beginAt": {
-          "name": "beginAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "endAt": {
-          "name": "endAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "creator": {
-          "name": "creator",
+        "ownerId": {
+          "name": "ownerId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "atHome": {
-          "name": "atHome",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.796'"
+          "default": "'2024-07-01 15:20:04.876'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -366,12 +370,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ask_estimate_creator_user_id_fk": {
-          "name": "ask_estimate_creator_user_id_fk",
-          "tableFrom": "ask_estimate",
+        "allergies_ownerId_user_id_fk": {
+          "name": "allergies_ownerId_user_id_fk",
+          "tableFrom": "allergies",
           "tableTo": "user",
           "columnsFrom": [
-            "creator"
+            "ownerId"
           ],
           "columnsTo": [
             "id"
@@ -432,6 +436,101 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.ask_estimate": {
+      "name": "ask_estimate",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "askEstimateStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'PENDING'"
+        },
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creator": {
+          "name": "creator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "for": {
+          "name": "for",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atHome": {
+          "name": "atHome",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.879'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ask_estimate_creator_user_id_fk": {
+          "name": "ask_estimate_creator_user_id_fk",
+          "tableFrom": "ask_estimate",
+          "tableTo": "user",
+          "columnsFrom": [
+            "creator"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ask_estimate_for_company_id_fk": {
+          "name": "ask_estimate_for_company_id_fk",
+          "tableFrom": "ask_estimate",
+          "tableTo": "company",
+          "columnsFrom": [
+            "for"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.cancel_policies": {
       "name": "cancel_policies",
       "schema": "",
@@ -465,7 +564,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.791'"
+          "default": "'2024-07-01 15:20:04.881'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -482,6 +581,67 @@
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.category": {
+      "name": "category",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.882'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "category_ownerId_company_id_fk": {
+          "name": "category_ownerId_company_id_fk",
+          "tableFrom": "category",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
           ],
           "columnsTo": [
             "id"
@@ -531,7 +691,19 @@
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "openAt": {
+          "name": "openAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "closeAt": {
+          "name": "closeAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
         },
         "email": {
           "name": "email",
@@ -584,6 +756,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "company_address_company_address_id_fk": {
+          "name": "company_address_company_address_id_fk",
+          "tableFrom": "company",
+          "tableTo": "company_address",
+          "columnsFrom": [
+            "address"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "company_ownerId_user_id_fk": {
           "name": "company_ownerId_user_id_fk",
           "tableFrom": "company",
@@ -635,6 +820,59 @@
         }
       }
     },
+    "public.company_address": {
+      "name": "company_address",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lat": {
+          "name": "lat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lng": {
+          "name": "lng",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zip": {
+          "name": "zip",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postalAddress": {
+          "name": "postalAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.884'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.company_documents": {
       "name": "company_documents",
       "schema": "",
@@ -660,6 +898,19 @@
         "certifications": {
           "name": "certifications",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.886'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -710,7 +961,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.818'"
+          "default": "'2024-07-01 15:20:04.888'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -743,6 +994,54 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.deseases": {
+      "name": "deseases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "deseases_ownerId_user_id_fk": {
+          "name": "deseases_ownerId_user_id_fk",
+          "tableFrom": "deseases",
+          "tableTo": "user",
+          "columnsFrom": [
+            "ownerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.employee_company": {
@@ -829,7 +1128,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-06-18 08:46:18.800'"
+          "default": "'2024-07-01 15:20:04.892'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -972,7 +1271,7 @@
         },
         "emailVerified": {
           "name": "emailVerified",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -998,7 +1297,7 @@
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "plan": {
           "name": "plan",
@@ -1008,24 +1307,43 @@
           "notNull": false,
           "default": "'NONE'"
         },
-        "role": {
-          "name": "role",
-          "type": "role",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'CLIENT'"
-        },
         "isPro": {
           "name": "isPro",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.935'"
+        },
+        "updateAt": {
+          "name": "updateAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "user_address_address_id_fk": {
+          "name": "user_address_address_id_fk",
+          "tableFrom": "user",
+          "tableTo": "address",
+          "columnsFrom": [
+            "address"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "user_email_unique": {
@@ -1186,7 +1504,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-06-18 08:46:18.817'"
+          "default": "'2024-07-01 15:20:04.900'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1241,7 +1559,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-06-18 08:46:18.798'"
+          "default": "'2024-07-01 15:20:04.902'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1308,7 +1626,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.807'"
+          "default": "'2024-07-01 15:20:04.905'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1501,8 +1819,8 @@
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'2024-06-18 08:46:18.814'"
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.914'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1639,7 +1957,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.804'"
+          "default": "'2024-07-01 15:20:04.917'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1713,7 +2031,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.804'"
+          "default": "'2024-07-01 15:20:04.920'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1799,7 +2117,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.805'"
+          "default": "'2024-07-01 15:20:04.928'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1884,7 +2202,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.808'"
+          "default": "'2024-07-01 15:20:04.931'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2049,7 +2367,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-06-18 08:46:18.801'"
+          "default": "'2024-07-01 15:20:04.907'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2246,7 +2564,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.813'"
+          "default": "'2024-07-01 15:20:04.925'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2287,7 +2605,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.814'"
+          "default": "'2024-07-01 15:20:04.906'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2301,8 +2619,57 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.product": {
-      "name": "product",
+    "public.report_topic": {
+      "name": "report_topic",
+      "schema": "",
+      "columns": {
+        "reportId": {
+          "name": "reportId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topicId": {
+          "name": "topicId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "report_topic_reportId_report_id_fk": {
+          "name": "report_topic_reportId_report_id_fk",
+          "tableFrom": "report_topic",
+          "tableTo": "report",
+          "columnsFrom": [
+            "reportId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "report_topic_topicId_topic__fk": {
+          "name": "report_topic_topicId_topic__fk",
+          "tableFrom": "report_topic",
+          "tableTo": "topic",
+          "columnsFrom": [
+            "topicId"
+          ],
+          "columnsTo": [
+            ""
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.receipt": {
+      "name": "receipt",
       "schema": "",
       "columns": {
         "id": {
@@ -2311,23 +2678,11 @@
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
+        "image": {
+          "name": "image",
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
         },
         "companyId": {
           "name": "companyId",
@@ -2335,18 +2690,18 @@
           "primaryKey": false,
           "notNull": false
         },
-        "unitPrice": {
-          "name": "unitPrice",
+        "totalPrice": {
+          "name": "totalPrice",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.811'"
+          "default": "'2024-07-01 15:20:04.924'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2357,9 +2712,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "product_companyId_company_id_fk": {
-          "name": "product_companyId_company_id_fk",
-          "tableFrom": "product",
+        "receipt_companyId_company_id_fk": {
+          "name": "receipt_companyId_company_id_fk",
+          "tableFrom": "receipt",
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
@@ -2423,116 +2778,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.receipt": {
-      "name": "receipt",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "companyId": {
-          "name": "companyId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "totalPrice": {
-          "name": "totalPrice",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-06-18 08:46:18.811'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "receipt_companyId_company_id_fk": {
-          "name": "receipt_companyId_company_id_fk",
-          "tableFrom": "receipt",
-          "tableTo": "company",
-          "columnsFrom": [
-            "companyId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.report_topic": {
-      "name": "report_topic",
-      "schema": "",
-      "columns": {
-        "reportId": {
-          "name": "reportId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "topicId": {
-          "name": "topicId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "report_topic_reportId_report_id_fk": {
-          "name": "report_topic_reportId_report_id_fk",
-          "tableFrom": "report_topic",
-          "tableTo": "report",
-          "columnsFrom": [
-            "reportId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "report_topic_topicId_topic__fk": {
-          "name": "report_topic_topicId_topic__fk",
-          "tableFrom": "report_topic",
-          "tableTo": "topic",
-          "columnsFrom": [
-            "topicId"
-          ],
-          "columnsTo": [
-            ""
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.topic": {
       "name": "topic",
       "schema": "",
@@ -2566,7 +2811,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-06-18 08:46:18.813'"
+          "default": "'2024-07-01 15:20:04.932'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2580,6 +2825,399 @@
         "topic_companyId_company_id_fk": {
           "name": "topic_companyId_company_id_fk",
           "tableFrom": "topic",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.job": {
+      "name": "job",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users_jobs": {
+      "name": "users_jobs",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jobId": {
+          "name": "jobId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_jobs_userId_user_id_fk": {
+          "name": "users_jobs_userId_user_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_jobs_jobId_job_id_fk": {
+          "name": "users_jobs_jobId_job_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "job",
+          "columnsFrom": [
+            "jobId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.receip_category": {
+      "name": "receip_category",
+      "schema": "",
+      "columns": {
+        "receiptId": {
+          "name": "receiptId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "categoryId": {
+          "name": "categoryId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "receip_category_receiptId_receipt_id_fk": {
+          "name": "receip_category_receiptId_receipt_id_fk",
+          "tableFrom": "receip_category",
+          "tableTo": "receipt",
+          "columnsFrom": [
+            "receiptId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "receip_category_categoryId_category_id_fk": {
+          "name": "receip_category_categoryId_category_id_fk",
+          "tableFrom": "receip_category",
+          "tableTo": "category",
+          "columnsFrom": [
+            "categoryId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.pets_allergies": {
+      "name": "pets_allergies",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "allergyId": {
+          "name": "allergyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pets_allergies_petId_pets_id_fk": {
+          "name": "pets_allergies_petId_pets_id_fk",
+          "tableFrom": "pets_allergies",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_allergies_allergyId_allergies_id_fk": {
+          "name": "pets_allergies_allergyId_allergies_id_fk",
+          "tableFrom": "pets_allergies",
+          "tableTo": "allergies",
+          "columnsFrom": [
+            "allergyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.pets_deseases": {
+      "name": "pets_deseases",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deseaseId": {
+          "name": "deseaseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pets_deseases_petId_pets_id_fk": {
+          "name": "pets_deseases_petId_pets_id_fk",
+          "tableFrom": "pets_deseases",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_deseases_deseaseId_deseases_id_fk": {
+          "name": "pets_deseases_deseaseId_deseases_id_fk",
+          "tableFrom": "pets_deseases",
+          "tableTo": "deseases",
+          "columnsFrom": [
+            "deseaseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.pets_intolerences": {
+      "name": "pets_intolerences",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intolerenceId": {
+          "name": "intolerenceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pets_intolerences_petId_pets_id_fk": {
+          "name": "pets_intolerences_petId_pets_id_fk",
+          "tableFrom": "pets_intolerences",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_intolerences_intolerenceId_intolerences_id_fk": {
+          "name": "pets_intolerences_intolerenceId_intolerences_id_fk",
+          "tableFrom": "pets_intolerences",
+          "tableTo": "intolerences",
+          "columnsFrom": [
+            "intolerenceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.transaction": {
+      "name": "transaction",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "from": {
+          "name": "from",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to": {
+          "name": "to",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.933'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.product": {
+      "name": "product",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unitPrice": {
+          "name": "unitPrice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 15:20:04.915'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "product_companyId_company_id_fk": {
+          "name": "product_companyId_company_id_fk",
+          "tableFrom": "product",
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
@@ -2616,21 +3254,6 @@
         "NONE"
       ]
     },
-    "public.role": {
-      "name": "role",
-      "schema": "public",
-      "values": [
-        "CLIENT",
-        "COMMUNICATION",
-        "VETERINARY",
-        "OSTEOPATH",
-        "NATUROPATH",
-        "EDUCATOR",
-        "COMPORTEMENTALIST",
-        "GROOMER",
-        "MASSAGER"
-      ]
-    },
     "public.petType": {
       "name": "petType",
       "schema": "public",
@@ -2642,6 +3265,14 @@
         "NAC"
       ]
     },
+    "public.session_type": {
+      "name": "session_type",
+      "schema": "public",
+      "values": [
+        "oneToOne",
+        "multiple"
+      ]
+    },
     "public.session_status_type": {
       "name": "session_status_type",
       "schema": "public",
@@ -2649,15 +3280,10 @@
         "PAYED",
         "IN PROGRESS",
         "WAITING FROM CLIENT",
-        "REFUND"
-      ]
-    },
-    "public.session_type": {
-      "name": "session_type",
-      "schema": "public",
-      "values": [
-        "oneToOne",
-        "multiple"
+        "WAITING FOR REFUND",
+        "REFUNDED",
+        "CANCELED",
+        "POSTPAWNED"
       ]
     }
   },

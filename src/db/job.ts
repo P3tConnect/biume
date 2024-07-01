@@ -4,15 +4,15 @@ import { usersJobs } from "./usersJobs";
 import { createInsertSchema } from "drizzle-zod";
 
 export const job = pgTable("job", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    title: text("title").notNull(),
-    description: text("description").notNull(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
 });
 
 export const jobRelations = relations(job, ({ many }) => ({
-    users: many(usersJobs),
+  users: many(usersJobs),
 }));
 
 export type Job = typeof job.$inferSelect;

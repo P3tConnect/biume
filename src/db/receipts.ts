@@ -6,25 +6,25 @@ import { createInsertSchema } from "drizzle-zod";
 import { category } from "./category";
 
 export const receipt = pgTable("receipt", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    image: text("image"),
-    companyId: text("companyId").references(() => company.id, {
-        onDelete: "cascade",
-    }),
-    totalPrice: integer("totalPrice"),
-    createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
-    updatedAt: timestamp("updatedAt", { mode: "date" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  image: text("image"),
+  companyId: text("companyId").references(() => company.id, {
+    onDelete: "cascade",
+  }),
+  totalPrice: integer("totalPrice"),
+  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+  updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const receiptRelations = relations(receipt, ({ one, many }) => ({
-    products: many(receiptProduct),
-    company: one(company, {
-        fields: [receipt.companyId],
-        references: [company.id],
-    }),
-    categories: many(category),
+  products: many(receiptProduct),
+  company: one(company, {
+    fields: [receipt.companyId],
+    references: [company.id],
+  }),
+  categories: many(category),
 }));
 
 export type Receipt = typeof receipt.$inferSelect;

@@ -5,21 +5,21 @@ import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const petsDeseases = pgTable("pets_deseases", {
-    petId: text("petId").references(() => pets.id, { onDelete: "cascade" }),
-    deseaseId: text("deseaseId").references(() => deseases.id, {
-        onDelete: "cascade",
-    }),
+  petId: text("petId").references(() => pets.id, { onDelete: "cascade" }),
+  deseaseId: text("deseaseId").references(() => deseases.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const petsDeseasesRelations = relations(petsDeseases, ({ one }) => ({
-    pet: one(pets, {
-        fields: [petsDeseases.petId],
-        references: [pets.id],
-    }),
-    desease: one(deseases, {
-        fields: [petsDeseases.deseaseId],
-        references: [deseases.id],
-    }),
+  pet: one(pets, {
+    fields: [petsDeseases.petId],
+    references: [pets.id],
+  }),
+  desease: one(deseases, {
+    fields: [petsDeseases.deseaseId],
+    references: [deseases.id],
+  }),
 }));
 
 export type PetsDesease = typeof petsDeseases.$inferSelect;

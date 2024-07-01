@@ -11,25 +11,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."role" AS ENUM('CLIENT', 'COMMUNICATION', 'VETERINARY', 'OSTEOPATH', 'NATUROPATH', 'EDUCATOR', 'COMPORTEMENTALIST', 'GROOMER', 'MASSAGER');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  CREATE TYPE "public"."petType" AS ENUM('Dog', 'Cat', 'Bird', 'Horse', 'NAC');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."session_status_type" AS ENUM('PAYED', 'IN PROGRESS', 'WAITING FROM CLIENT', 'REFUND');
+ CREATE TYPE "public"."session_type" AS ENUM('oneToOne', 'multiple');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."session_type" AS ENUM('oneToOne', 'multiple');
+ CREATE TYPE "public"."session_status_type" AS ENUM('PAYED', 'IN PROGRESS', 'WAITING FROM CLIENT', 'WAITING FOR REFUND', 'REFUNDED', 'CANCELED', 'POSTPAWNED');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -49,6 +43,27 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 	CONSTRAINT "accounts_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "address" (
+	"id" text PRIMARY KEY NOT NULL,
+	"lat" integer,
+	"lng" integer,
+	"zip" integer,
+	"postalAddress" text NOT NULL,
+	"cntryCode" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.872',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "alerts_types" (
+	"id" text PRIMARY KEY NOT NULL,
+	"title" text,
+	"description" text,
+	"color" text,
+	"ownerId" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.873',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "alerts" (
 	"id" text PRIMARY KEY NOT NULL,
 	"description" text,
@@ -60,32 +75,12 @@ CREATE TABLE IF NOT EXISTS "alerts" (
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "alerts_types" (
-	"id" text PRIMARY KEY NOT NULL,
-	"title" text,
-	"description" text,
-	"color" text,
-	"ownerId" text,
-	"createdAt" timestamp NOT NULL,
-	"updatedAt" timestamp NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "allergies" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text,
 	"description" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.815' NOT NULL,
-	"updatedAt" timestamp
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "ask_estimate" (
-	"id" text PRIMARY KEY NOT NULL,
-	"status" "askEstimateStatus" DEFAULT 'PENDING',
-	"beginAt" date NOT NULL,
-	"endAt" date NOT NULL,
-	"creator" text,
-	"atHome" boolean DEFAULT false,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.796',
+	"ownerId" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.876',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -94,12 +89,33 @@ CREATE TABLE IF NOT EXISTS "ask_estimate_options" (
 	"optionId" text
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "ask_estimate" (
+	"id" text PRIMARY KEY NOT NULL,
+	"status" "askEstimateStatus" DEFAULT 'PENDING',
+	"beginAt" date NOT NULL,
+	"endAt" date NOT NULL,
+	"creator" text,
+	"for" text,
+	"atHome" boolean DEFAULT false,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.879',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "cancel_policies" (
 	"id" text PRIMARY KEY NOT NULL,
 	"daysBefore" integer NOT NULL,
 	"refundPercent" integer NOT NULL,
 	"companyId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.791',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.881',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "category" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text,
+	"ownerId" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.882',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -109,7 +125,9 @@ CREATE TABLE IF NOT EXISTS "company" (
 	"logo" text,
 	"coverImage" text,
 	"description" text,
-	"address" text NOT NULL,
+	"address" text,
+	"openAt" date,
+	"closeAt" date,
 	"email" text NOT NULL,
 	"ownerId" text,
 	"atHome" boolean NOT NULL,
@@ -121,11 +139,23 @@ CREATE TABLE IF NOT EXISTS "company" (
 	CONSTRAINT "company_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "company_address" (
+	"id" text PRIMARY KEY NOT NULL,
+	"lat" integer,
+	"lng" integer,
+	"zip" integer,
+	"postalAddress" text NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.884',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "company_documents" (
 	"id" text PRIMARY KEY NOT NULL,
 	"siren" text,
 	"siret" text,
-	"certifications" text
+	"certifications" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.886',
+	"updatedAt" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "company_disponibilities" (
@@ -134,9 +164,16 @@ CREATE TABLE IF NOT EXISTS "company_disponibilities" (
 	"endAt" date NOT NULL,
 	"sessionType" "session_type" DEFAULT 'oneToOne',
 	"companyId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.818',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.888',
 	"updatedAt" timestamp,
 	CONSTRAINT "company_disponibilities_companyId_pk" PRIMARY KEY("companyId")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "deseases" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text NOT NULL,
+	"ownerId" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "employee_company" (
@@ -149,7 +186,7 @@ CREATE TABLE IF NOT EXISTS "estimate" (
 	"id" text PRIMARY KEY NOT NULL,
 	"sessionId" text,
 	"total" integer,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.800' NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.892' NOT NULL,
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -168,14 +205,15 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text,
 	"email" text NOT NULL,
-	"emailVerified" date,
+	"emailVerified" timestamp,
 	"image" text,
 	"phone" text,
 	"stripeId" text,
-	"address" text NOT NULL,
+	"address" text,
 	"plan" "plan" DEFAULT 'NONE',
-	"role" "role" DEFAULT 'CLIENT',
 	"isPro" boolean DEFAULT false,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.935',
+	"updateAt" timestamp,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -203,7 +241,7 @@ CREATE TABLE IF NOT EXISTS "intolerences" (
 	"title" text,
 	"description" text,
 	"ownerId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.817' NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.900' NOT NULL,
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -211,7 +249,7 @@ CREATE TABLE IF NOT EXISTS "invoice" (
 	"id" text PRIMARY KEY NOT NULL,
 	"sessionId" text,
 	"total" integer,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.798' NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.902' NOT NULL,
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -221,7 +259,7 @@ CREATE TABLE IF NOT EXISTS "newsletter" (
 	"images" text[],
 	"title" text,
 	"content" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.807',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.905',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -250,7 +288,7 @@ CREATE TABLE IF NOT EXISTS "pro_session" (
 	"status" "session_status_type" DEFAULT 'IN PROGRESS' NOT NULL,
 	"atHome" boolean DEFAULT false NOT NULL,
 	"type" "session_type" DEFAULT 'oneToOne' NOT NULL,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.814' NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.914',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -265,7 +303,7 @@ CREATE TABLE IF NOT EXISTS "project" (
 	"isImportant" boolean DEFAULT false,
 	"note" text,
 	"link" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.804',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.917',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -276,7 +314,7 @@ CREATE TABLE IF NOT EXISTS "ratings" (
 	"proId" text,
 	"writerId" text,
 	"isRecommanded" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.804',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.920',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -287,7 +325,7 @@ CREATE TABLE IF NOT EXISTS "service" (
 	"description" text,
 	"price" integer,
 	"proId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.805',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.928',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -300,7 +338,7 @@ CREATE TABLE IF NOT EXISTS "task" (
 	"location" text,
 	"beginAt" date,
 	"endAt" date,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.808',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.931',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -320,7 +358,7 @@ CREATE TABLE IF NOT EXISTS "options" (
 	"description" text,
 	"price" integer NOT NULL,
 	"companyId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.801' NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.907' NOT NULL,
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -346,7 +384,7 @@ CREATE TABLE IF NOT EXISTS "report" (
 	"id" text PRIMARY KEY NOT NULL,
 	"image" text,
 	"title" text NOT NULL,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.813',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.925',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -354,7 +392,75 @@ CREATE TABLE IF NOT EXISTS "observations" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
 	"content" text NOT NULL,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.814',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.906',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "report_topic" (
+	"reportId" text,
+	"topicId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "receipt" (
+	"id" text PRIMARY KEY NOT NULL,
+	"image" text,
+	"companyId" text,
+	"totalPrice" integer,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.924',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "receipt_product" (
+	"receiptId" text,
+	"productId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "topic" (
+	"" text PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
+	"description" text NOT NULL,
+	"companyId" text,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.932',
+	"updatedAt" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "job" (
+	"id" text PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
+	"description" text NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users_jobs" (
+	"userId" text,
+	"jobId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "receip_category" (
+	"receiptId" text,
+	"categoryId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pets_allergies" (
+	"petId" text,
+	"allergyId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pets_deseases" (
+	"petId" text,
+	"deseaseId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pets_intolerences" (
+	"petId" text,
+	"intolerenceId" text
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "transaction" (
+	"id" text PRIMARY KEY NOT NULL,
+	"amount" integer NOT NULL,
+	"from" text NOT NULL,
+	"to" text NOT NULL,
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.933',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
@@ -365,40 +471,18 @@ CREATE TABLE IF NOT EXISTS "product" (
 	"quantity" integer NOT NULL,
 	"companyId" text,
 	"unitPrice" integer NOT NULL,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.811',
-	"updatedAt" timestamp
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "receipt_product" (
-	"receiptId" text,
-	"productId" text
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "receipt" (
-	"id" text PRIMARY KEY NOT NULL,
-	"image" text,
-	"companyId" text,
-	"totalPrice" integer,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.811',
-	"updatedAt" timestamp
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "report_topic" (
-	"reportId" text,
-	"topicId" text
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "topic" (
-	"" text PRIMARY KEY NOT NULL,
-	"title" text NOT NULL,
-	"description" text NOT NULL,
-	"companyId" text,
-	"createdAt" timestamp DEFAULT '2024-06-18 08:46:18.813',
+	"createdAt" timestamp DEFAULT '2024-07-01 15:20:04.915',
 	"updatedAt" timestamp
 );
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "alerts_types" ADD CONSTRAINT "alerts_types_ownerId_company_id_fk" FOREIGN KEY ("ownerId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -422,13 +506,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "alerts_types" ADD CONSTRAINT "alerts_types_ownerId_company_id_fk" FOREIGN KEY ("ownerId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "ask_estimate" ADD CONSTRAINT "ask_estimate_creator_user_id_fk" FOREIGN KEY ("creator") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "allergies" ADD CONSTRAINT "allergies_ownerId_user_id_fk" FOREIGN KEY ("ownerId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -446,7 +524,31 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "ask_estimate" ADD CONSTRAINT "ask_estimate_creator_user_id_fk" FOREIGN KEY ("creator") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "ask_estimate" ADD CONSTRAINT "ask_estimate_for_company_id_fk" FOREIGN KEY ("for") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "cancel_policies" ADD CONSTRAINT "cancel_policies_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "category" ADD CONSTRAINT "category_ownerId_company_id_fk" FOREIGN KEY ("ownerId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "company" ADD CONSTRAINT "company_address_company_address_id_fk" FOREIGN KEY ("address") REFERENCES "public"."company_address"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -471,6 +573,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "company_disponibilities" ADD CONSTRAINT "company_disponibilities_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "deseases" ADD CONSTRAINT "deseases_ownerId_user_id_fk" FOREIGN KEY ("ownerId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -507,6 +615,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user" ADD CONSTRAINT "user_address_address_id_fk" FOREIGN KEY ("address") REFERENCES "public"."address"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -650,7 +764,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "product" ADD CONSTRAINT "product_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "report_topic" ADD CONSTRAINT "report_topic_reportId_report_id_fk" FOREIGN KEY ("reportId") REFERENCES "public"."report"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "report_topic" ADD CONSTRAINT "report_topic_topicId_topic__fk" FOREIGN KEY ("topicId") REFERENCES "public"."topic"("") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "receipt" ADD CONSTRAINT "receipt_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -668,25 +794,73 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "receipt" ADD CONSTRAINT "receipt_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "report_topic" ADD CONSTRAINT "report_topic_reportId_report_id_fk" FOREIGN KEY ("reportId") REFERENCES "public"."report"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "report_topic" ADD CONSTRAINT "report_topic_topicId_topic__fk" FOREIGN KEY ("topicId") REFERENCES "public"."topic"("") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "topic" ADD CONSTRAINT "topic_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "users_jobs" ADD CONSTRAINT "users_jobs_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "users_jobs" ADD CONSTRAINT "users_jobs_jobId_job_id_fk" FOREIGN KEY ("jobId") REFERENCES "public"."job"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "receip_category" ADD CONSTRAINT "receip_category_receiptId_receipt_id_fk" FOREIGN KEY ("receiptId") REFERENCES "public"."receipt"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "receip_category" ADD CONSTRAINT "receip_category_categoryId_category_id_fk" FOREIGN KEY ("categoryId") REFERENCES "public"."category"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_allergies" ADD CONSTRAINT "pets_allergies_petId_pets_id_fk" FOREIGN KEY ("petId") REFERENCES "public"."pets"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_allergies" ADD CONSTRAINT "pets_allergies_allergyId_allergies_id_fk" FOREIGN KEY ("allergyId") REFERENCES "public"."allergies"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_deseases" ADD CONSTRAINT "pets_deseases_petId_pets_id_fk" FOREIGN KEY ("petId") REFERENCES "public"."pets"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_deseases" ADD CONSTRAINT "pets_deseases_deseaseId_deseases_id_fk" FOREIGN KEY ("deseaseId") REFERENCES "public"."deseases"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_intolerences" ADD CONSTRAINT "pets_intolerences_petId_pets_id_fk" FOREIGN KEY ("petId") REFERENCES "public"."pets"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pets_intolerences" ADD CONSTRAINT "pets_intolerences_intolerenceId_intolerences_id_fk" FOREIGN KEY ("intolerenceId") REFERENCES "public"."intolerences"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "product" ADD CONSTRAINT "product_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

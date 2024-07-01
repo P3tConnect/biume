@@ -5,30 +5,30 @@ import { options } from "./options";
 import { createInsertSchema } from "drizzle-zod";
 
 export const askEstimateOptions = pgTable("ask_estimate_options", {
-    askEstimateId: text("askEstimateId").references(() => askEstimate.id, {
-        onDelete: "cascade",
-    }),
-    optionId: text("optionId").references(() => options.id, {
-        onDelete: "cascade",
-    }),
+  askEstimateId: text("askEstimateId").references(() => askEstimate.id, {
+    onDelete: "cascade",
+  }),
+  optionId: text("optionId").references(() => options.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const askEstimateOptionsRelations = relations(
-    askEstimateOptions,
-    ({ one }) => ({
-        askEstimate: one(askEstimate, {
-            fields: [askEstimateOptions.askEstimateId],
-            references: [askEstimate.id],
-        }),
-        option: one(options, {
-            fields: [askEstimateOptions.optionId],
-            references: [options.id],
-        }),
+  askEstimateOptions,
+  ({ one }) => ({
+    askEstimate: one(askEstimate, {
+      fields: [askEstimateOptions.askEstimateId],
+      references: [askEstimate.id],
     }),
+    option: one(options, {
+      fields: [askEstimateOptions.optionId],
+      references: [options.id],
+    }),
+  }),
 );
 
 export type AskEstimateOption = typeof askEstimateOptions.$inferSelect;
 export type CreateAskEstimateOption = typeof askEstimateOptions.$inferInsert;
 
 export const CreateAskEstimateOptionSchema =
-    createInsertSchema(askEstimateOptions);
+  createInsertSchema(askEstimateOptions);

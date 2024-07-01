@@ -5,20 +5,20 @@ import { product } from "./products";
 import { createInsertSchema } from "drizzle-zod";
 
 export const receiptProduct = pgTable("receipt_product", {
-    receiptId: text("receiptId").references(() => receipt.id, {
-        onDelete: "cascade",
-    }),
-    productId: text("productId").references(() => product.id, {
-        onDelete: "cascade",
-    }),
+  receiptId: text("receiptId").references(() => receipt.id, {
+    onDelete: "cascade",
+  }),
+  productId: text("productId").references(() => product.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const receiptProductRelations = relations(receiptProduct, ({ one }) => ({
-    receipt: one(receipt),
-    company: one(product, {
-        fields: [receiptProduct.productId],
-        references: [product.id],
-    }),
+  receipt: one(receipt),
+  company: one(product, {
+    fields: [receiptProduct.productId],
+    references: [product.id],
+  }),
 }));
 
 export type ReceiptProduct = typeof receiptProduct.$inferSelect;
