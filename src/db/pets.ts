@@ -14,6 +14,8 @@ import { petsDeseases } from "./petsDeseases";
 import { allergies } from "./allergies";
 import { intolerences } from "./intolerences";
 import { z } from "zod";
+import { petsAllergies } from "./petsAllergies";
+import { petsIntolerences } from "./petsIntolerences";
 
 export const petType = pgEnum("petType", [
   "Dog",
@@ -46,8 +48,8 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
   }),
   sessions: many(proSession),
   deseases: many(petsDeseases),
-  allergies: many(allergies),
-  intolerences: many(intolerences),
+  allergies: many(petsAllergies),
+  intolerences: many(petsIntolerences),
 }));
 
 export type Pet = typeof pets.$inferSelect;

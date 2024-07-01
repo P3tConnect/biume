@@ -14,8 +14,11 @@ export const receiptProduct = pgTable("receipt_product", {
 });
 
 export const receiptProductRelations = relations(receiptProduct, ({ one }) => ({
-  receipt: one(receipt),
-  company: one(product, {
+  receipt: one(receipt, {
+    fields: [receiptProduct.receiptId],
+    references: [receipt.id],
+  }),
+  product: one(product, {
     fields: [receiptProduct.productId],
     references: [product.id],
   }),

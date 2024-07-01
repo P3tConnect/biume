@@ -22,7 +22,10 @@ export const intolerences = pgTable("intolerences", {
 export const intolerencesRelations = relations(
   intolerences,
   ({ one, many }) => ({
-    owner: one(user),
+    owner: one(user, {
+      fields: [intolerences.ownerId],
+      references: [user.id],
+    }),
     pets: many(petsIntolerences),
   }),
 );

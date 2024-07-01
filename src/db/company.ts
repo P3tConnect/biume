@@ -70,7 +70,6 @@ export const companyRelations = relations(company, ({ one, many }) => ({
   options: many(options),
   newslettersWritter: many(newsletter),
   receipts: many(receipt),
-  receiptsProducts: many(receiptProduct),
   products: many(product),
   topics: many(topic),
   categories: many(category),

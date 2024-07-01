@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db-generate": "drizzle-kit generate",
-    "db-migrate": "tsc src/utils/db.ts",
+    "db-migrate": "drizzle-kit migrate",
+    "db-preview": "drizzle-kit studio",
     "email-dev": "email dev --port=3001",
     "email-build": "email build --packageManager=pnpm",
     "email-start": "email start"

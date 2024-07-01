@@ -3,7 +3,7 @@ import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { receiptProduct } from "./receiptProducts";
 import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
-import { category } from "./category";
+import { receiptCategory } from "./receiptCategory";
 
 export const receipt = pgTable("receipt", {
   id: text("id")
@@ -24,7 +24,7 @@ export const receiptRelations = relations(receipt, ({ one, many }) => ({
     fields: [receipt.companyId],
     references: [company.id],
   }),
-  categories: many(category),
+  categories: many(receiptCategory),
 }));
 
 export type Receipt = typeof receipt.$inferSelect;

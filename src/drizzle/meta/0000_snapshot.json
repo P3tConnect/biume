@@ -1,5 +1,5 @@
 {
-  "id": "e33cd0c9-27cc-4650-bcfe-61b1530487ae",
+  "id": "6ef5f689-51e3-46ab-ab99-dc08800db137",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -147,7 +147,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.872'"
+          "default": "'2024-07-01 18:58:35.769'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -158,73 +158,6 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.alerts_types": {
-      "name": "alerts_types",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-07-01 15:20:04.873'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "alerts_types_ownerId_company_id_fk": {
-          "name": "alerts_types_ownerId_company_id_fk",
-          "tableFrom": "alerts_types",
-          "tableTo": "company",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -326,6 +259,73 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.alerts_types": {
+      "name": "alerts_types",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-07-01 18:58:35.679'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "alerts_types_ownerId_company_id_fk": {
+          "name": "alerts_types_ownerId_company_id_fk",
+          "tableFrom": "alerts_types",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.allergies": {
       "name": "allergies",
       "schema": "",
@@ -359,7 +359,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.876'"
+          "default": "'2024-07-01 18:58:35.759'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -376,55 +376,6 @@
           "tableTo": "user",
           "columnsFrom": [
             "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.ask_estimate_options": {
-      "name": "ask_estimate_options",
-      "schema": "",
-      "columns": {
-        "askEstimateId": {
-          "name": "askEstimateId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "optionId": {
-          "name": "optionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "ask_estimate_options_askEstimateId_ask_estimate_id_fk": {
-          "name": "ask_estimate_options_askEstimateId_ask_estimate_id_fk",
-          "tableFrom": "ask_estimate_options",
-          "tableTo": "ask_estimate",
-          "columnsFrom": [
-            "askEstimateId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "ask_estimate_options_optionId_options_id_fk": {
-          "name": "ask_estimate_options_optionId_options_id_fk",
-          "tableFrom": "ask_estimate_options",
-          "tableTo": "options",
-          "columnsFrom": [
-            "optionId"
           ],
           "columnsTo": [
             "id"
@@ -490,7 +441,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.879'"
+          "default": "'2024-07-01 18:58:35.705'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -520,6 +471,55 @@
           "tableTo": "company",
           "columnsFrom": [
             "for"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.ask_estimate_options": {
+      "name": "ask_estimate_options",
+      "schema": "",
+      "columns": {
+        "askEstimateId": {
+          "name": "askEstimateId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ask_estimate_options_askEstimateId_ask_estimate_id_fk": {
+          "name": "ask_estimate_options_askEstimateId_ask_estimate_id_fk",
+          "tableFrom": "ask_estimate_options",
+          "tableTo": "ask_estimate",
+          "columnsFrom": [
+            "askEstimateId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ask_estimate_options_optionId_options_id_fk": {
+          "name": "ask_estimate_options_optionId_options_id_fk",
+          "tableFrom": "ask_estimate_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
           ],
           "columnsTo": [
             "id"
@@ -564,7 +564,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.881'"
+          "default": "'2024-07-01 18:58:35.685'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -625,7 +625,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.882'"
+          "default": "'2024-07-01 18:58:35.724'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -859,7 +859,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.884'"
+          "default": "'2024-07-01 18:58:35.747'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -906,7 +906,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.886'"
+          "default": "'2024-07-01 18:58:35.690'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -961,7 +961,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.888'"
+          "default": "'2024-07-01 18:58:35.773'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -986,14 +986,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "company_disponibilities_companyId_pk": {
-          "name": "company_disponibilities_companyId_pk",
-          "columns": [
-            "companyId"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.deseases": {
@@ -1128,7 +1121,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 15:20:04.892'"
+          "default": "'2024-07-01 18:58:35.714'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1319,7 +1312,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.935'"
+          "default": "'2024-07-01 18:58:35.770'"
         },
         "updateAt": {
           "name": "updateAt",
@@ -1504,7 +1497,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 15:20:04.900'"
+          "default": "'2024-07-01 18:58:35.763'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1559,7 +1552,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 15:20:04.902'"
+          "default": "'2024-07-01 18:58:35.710'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1626,7 +1619,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.905'"
+          "default": "'2024-07-01 18:58:35.697'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1820,7 +1813,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.914'"
+          "default": "'2024-07-01 18:58:35.751'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1957,7 +1950,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.917'"
+          "default": "'2024-07-01 18:58:35.730'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2031,7 +2024,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.920'"
+          "default": "'2024-07-01 18:58:35.732'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2117,7 +2110,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.928'"
+          "default": "'2024-07-01 18:58:35.735'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2202,7 +2195,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.931'"
+          "default": "'2024-07-01 18:58:35.736'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2367,7 +2360,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 15:20:04.907'"
+          "default": "'2024-07-01 18:58:35.716'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2564,7 +2557,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.925'"
+          "default": "'2024-07-01 18:58:35.743'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2605,7 +2598,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.906'"
+          "default": "'2024-07-01 18:58:35.751'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2651,15 +2644,15 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "report_topic_topicId_topic__fk": {
-          "name": "report_topic_topicId_topic__fk",
+        "report_topic_topicId_topic_id_fk": {
+          "name": "report_topic_topicId_topic_id_fk",
           "tableFrom": "report_topic",
           "tableTo": "topic",
           "columnsFrom": [
             "topicId"
           ],
           "columnsTo": [
-            ""
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -2701,7 +2694,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.924'"
+          "default": "'2024-07-01 18:58:35.725'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2782,8 +2775,8 @@
       "name": "topic",
       "schema": "",
       "columns": {
-        "": {
-          "name": "",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -2811,7 +2804,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.932'"
+          "default": "'2024-07-01 18:58:35.744'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3145,7 +3138,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.933'"
+          "default": "'2024-07-01 18:58:35.782'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3204,7 +3197,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 15:20:04.915'"
+          "default": "'2024-07-01 18:58:35.725'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3265,14 +3258,6 @@
         "NAC"
       ]
     },
-    "public.session_type": {
-      "name": "session_type",
-      "schema": "public",
-      "values": [
-        "oneToOne",
-        "multiple"
-      ]
-    },
     "public.session_status_type": {
       "name": "session_status_type",
       "schema": "public",
@@ -3284,6 +3269,14 @@
         "REFUNDED",
         "CANCELED",
         "POSTPAWNED"
+      ]
+    },
+    "public.session_type": {
+      "name": "session_type",
+      "schema": "public",
+      "values": [
+        "oneToOne",
+        "multiple"
       ]
     }
   },
