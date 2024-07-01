@@ -45,8 +45,8 @@ export default function AutoFormArray({
     const itemDefType = isZodArray(item)
         ? item._def.type
         : isZodDefault(item)
-          ? item._def.innerType._def.type
-          : null;
+            ? item._def.innerType._def.type
+            : null;
 
     return (
         <AccordionItem value={name} className="border-none">

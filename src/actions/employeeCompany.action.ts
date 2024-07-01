@@ -6,17 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getEmployeesCompany() {}
 
-export const createEmployeeCompany = proAction(
-  CreateEmployeeCompanySchema,
-  async (params, _) => {},
-);
+export const createEmployeeCompany = proAction
+  .schema(CreateEmployeeCompanySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateEmployeeCompany = proAction(
-  CreateEmployeeCompanySchema,
-  async (params, _) => {},
-);
+export const updateEmployeeCompany = proAction
+  .schema(CreateEmployeeCompanySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteEmployeeCompany = proAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteEmployeeCompany = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

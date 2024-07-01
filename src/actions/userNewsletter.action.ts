@@ -6,17 +6,14 @@ import { CreateUserNewsletterSchema } from "../db";
 
 export async function getUserNewsletters() {}
 
-export const createUserNewsletter = proAction(
-    CreateUserNewsletterSchema,
-    async (params, _) => {},
-);
+export const createUserNewsletter = proAction
+  .schema(CreateUserNewsletterSchema)
+  .action(async () => {});
 
-export const updateUserNewsletter = proAction(
-    CreateUserNewsletterSchema,
-    async (params, _) => {},
-);
+export const updateUserNewsletter = proAction
+  .schema(CreateUserNewsletterSchema)
+  .action(async () => {});
 
-export const deleteUserNewsletter = proAction(
-    z.string(),
-    async (params, _) => {},
-);
+export const deleteUserNewsletter = proAction
+  .schema(z.string())
+  .action(async () => {});

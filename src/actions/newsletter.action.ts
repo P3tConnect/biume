@@ -6,14 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getNewsletters() {}
 
-export const createNewsletter = proAction(
-    CreateNewsletterSchema,
-    async (params, _) => {},
-);
+export const createNewsletter = proAction
+  .schema(CreateNewsletterSchema)
+  .action(async () => {});
 
-export const updateNewsletter = proAction(
-    CreateNewsletterSchema,
-    async (params, _) => {},
-);
+export const updateNewsletter = proAction
+  .schema(CreateNewsletterSchema)
+  .action(async () => {});
 
-export const deleteNewsletter = proAction(z.string(), async (params, _) => {});
+export const deleteNewsletter = proAction
+  .schema(z.string())
+  .action(async () => {});

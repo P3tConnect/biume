@@ -6,14 +6,12 @@ import { CreateRatingSchema } from "../db";
 
 export async function getRatings() {}
 
-export const createRating = userAction(
-  CreateRatingSchema,
-  async (params, _) => {},
-);
+export const createRating = userAction
+  .schema(CreateRatingSchema)
+  .action(async () => {});
 
-export const updateRating = userAction(
-  CreateRatingSchema,
-  async (params, _) => {},
-);
+export const updateRating = userAction
+  .schema(CreateRatingSchema)
+  .action(async () => {});
 
-export const deleteRating = proAction(z.string(), async (params, _) => {});
+export const deleteRating = proAction.schema(z.string()).action(async () => {});

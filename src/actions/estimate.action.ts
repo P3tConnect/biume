@@ -10,14 +10,14 @@ export async function getEstimatesByCustomer() {}
 
 export async function getEstimatesByCompany() {}
 
-export const createEstimate = proAction(
-    CreateEstimateSchema,
-    async (params, _) => {},
-);
+export const createEstimate = proAction
+  .schema(CreateEstimateSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateEstimate = proAction(
-    CreateEstimateSchema,
-    async (params, _) => {},
-);
+export const updateEstimate = proAction
+  .schema(CreateEstimateSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteEstimate = proAction(z.string(), async (params, _) => {});
+export const deleteEstimate = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

@@ -6,8 +6,12 @@ import { CreatePetSchema } from "../db";
 
 export async function getPets() {}
 
-export const createPet = userAction(CreatePetSchema, async (params, _) => {});
+export const createPet = userAction
+  .schema(CreatePetSchema)
+  .action(async () => {});
 
-export const updatePet = userAction(CreatePetSchema, async (params, _) => {});
+export const updatePet = userAction
+  .schema(CreatePetSchema)
+  .action(async () => {});
 
-export const deletePet = userAction(z.string(), async (params, _) => {});
+export const deletePet = userAction.schema(z.string()).action(async () => {});

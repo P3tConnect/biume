@@ -11,24 +11,14 @@ export async function getAllergies() {
   // return res;
 }
 
-export const createAllergy = userAction(
-  CreateAllergySchema,
-  async (params, _) => {
-    // const res = await db.insert(allergies).values(params);
-    // if (!res) {
-    //   throw new ActionError("Failed to create allergy");
-    // }
-  },
-);
+export const createAllergy = userAction
+  .schema(CreateAllergySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateAllergy = userAction(
-  CreateAllergySchema,
-  async (params, _) => {
-    // const res = await db
-    //   .update(allergies)
-    //   .set(params)
-    //   .where(eq(allergies, params.id));
-  },
-);
+export const updateAllergy = userAction
+  .schema(CreateAllergySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteAllergy = userAction(z.string(), async (params, _) => {});
+export const deleteAllergy = userAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

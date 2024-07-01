@@ -6,17 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getEstimateOptions() {}
 
-export const createEstimateOptions = proAction(
-    CreateEstimateOptionSchema,
-    async (params, _) => {},
-);
+export const createEstimateOptions = proAction
+  .schema(CreateEstimateOptionSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateEstimateOptions = proAction(
-    CreateEstimateOptionSchema,
-    async (params, _) => {},
-);
+export const updateEstimateOptions = proAction
+  .schema(CreateEstimateOptionSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteEstimateOptions = proAction(
-    z.string(),
-    async (params, _) => {},
-);
+export const deleteEstimateOptions = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

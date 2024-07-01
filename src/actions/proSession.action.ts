@@ -6,14 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getProSessions() {}
 
-export const createProSession = proAction(
-  CreateProSessionSchema,
-  async (params, _) => {},
-);
+export const createProSession = proAction
+  .schema(CreateProSessionSchema)
+  .action(async () => {});
 
-export const updateProSession = proAction(
-  CreateProSessionSchema,
-  async (params, _) => {},
-);
+export const updateProSession = proAction
+  .schema(CreateProSessionSchema)
+  .action(async () => {});
 
-export const deleteProSession = proAction(z.string(), async (params, _) => {});
+export const deleteProSession = proAction
+  .schema(z.string())
+  .action(async () => {});

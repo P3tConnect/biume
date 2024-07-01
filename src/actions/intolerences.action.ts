@@ -6,17 +6,14 @@ import { userAction } from "../utils/action";
 
 export async function getIntolerences() {}
 
-export const createIntolerence = userAction(
-  CreateIntolerenceSchema,
-  async (params, _) => {},
-);
+export const createIntolerence = userAction
+  .schema(CreateIntolerenceSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateIntolerence = userAction(
-  CreateIntolerenceSchema,
-  async (params, _) => {},
-);
+export const updateIntolerence = userAction
+  .schema(CreateIntolerenceSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteIntolerence = userAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteIntolerence = userAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

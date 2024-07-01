@@ -20,31 +20,28 @@ export const action = createSafeActionClient({
   handleReturnedServerError: handleReturnedServerError,
 });
 
-export const userAction = createSafeActionClient({
-  handleReturnedServerError: handleReturnedServerError,
-  middleware: async () => {
-    // const user = await currentUser();
-    // if (!user) {
-    //   throw new ActionError("You must be logged in");
-    // }
-    // return { user };
-  },
+export const userAction = action.use(async ({ next }) => {
+  const user = await currentUser();
+
+  if (!user) {
+    throw new ActionError("You must be logged in !");
+  }
+
+  return next({ ctx: user });
 });
 
-export const proAction = createSafeActionClient({
-  handleReturnedServerError: handleReturnedServerError,
-  middleware: async () => {
-    // const user = await currentUser();
-    // if (!user) {
-    //   throw new ActionError("You must be logged in");
-    // }
-    // if (user.role != "CLIENT" && user.plan != "NONE") {
-    //   return {
-    //     user,
-    //   };
-    // }
-    // throw new ActionError(
-    //   "You must upgrade your plan or register you as profesionnal",
-    // );
-  },
+export const proAction = action.use(async ({ next }) => {
+  const user = await currentUser();
+
+  if (!user) {
+    throw new ActionError("You must be logged in !");
+  }
+
+  if (user.plan != "NONE") {
+    return next({ ctx: user });
+  }
+
+  throw new ActionError(
+    "You need to subscribe to a plan to perform this action",
+  );
 });

@@ -6,17 +6,14 @@ import { CreateCompanyDocumentsSchema } from "../db";
 
 export async function getCompanyDocuments(companyId: string) {}
 
-export const createCompanyDocuments = proAction(
-    CreateCompanyDocumentsSchema,
-    async (params, _) => {},
-);
+export const createCompanyDocuments = proAction
+  .schema(CreateCompanyDocumentsSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateCompanyDocuments = proAction(
-    CreateCompanyDocumentsSchema,
-    async (params, _) => {},
-);
+export const updateCompanyDocuments = proAction
+  .schema(CreateCompanyDocumentsSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteCompanyDocuments = proAction(
-    z.string(),
-    async (params, _) => {},
-);
+export const deleteCompanyDocuments = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

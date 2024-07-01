@@ -6,14 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getProduct() {}
 
-export const createProduct = proAction(
-  CreateProductSchema,
-  async (params, _) => {},
-);
+export const createProduct = proAction
+  .schema(CreateProductSchema)
+  .action(async () => {});
 
-export const updateProduct = proAction(
-  CreateProductSchema,
-  async (params, _) => {},
-);
+export const updateProduct = proAction
+  .schema(CreateProductSchema)
+  .action(async () => {});
 
-export const deleteProduct = proAction(z.string(), async (params, _) => {});
+export const deleteProduct = proAction
+  .schema(z.string())
+  .action(async () => {});

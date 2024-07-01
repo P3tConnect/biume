@@ -36,6 +36,13 @@
       "when": 1719775680797,
       "tag": "0004_hard_eddie_brock",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1719821743548,
+      "tag": "0005_silent_scorpion",
+      "breakpoints": true
     }
   ]
 }

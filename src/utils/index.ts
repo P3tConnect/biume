@@ -1,5 +1,5 @@
 export * from "./resend";
-export * from "./schema";
+export * from "./schemas";
 export * from "./stripe";
 export * from "./auth";
 export * from "./current-user";

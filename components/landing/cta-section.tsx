@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { redirect } from "next/navigation";
-import { emailSchema } from "@/src/utils/schema";
+import { emailSchema } from "@/src/utils/schemas";
 
 const tiles = [
   {

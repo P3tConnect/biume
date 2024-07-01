@@ -7,27 +7,14 @@ import { CreateAskEstimateOptionSchema, askEstimateOptions } from "../db";
 
 export async function getAskEstimateOptions() {}
 
-export const createAskEstimateOptions = proAction(
-  CreateAskEstimateOptionSchema,
-  async (params, _) => {
-    // const res = await db.insert(askEstimateOptions).values(params);
-    // if (!res) {
-    //     throw new ActionError("Failed to create ask estimate options");
-    // }
-  },
-);
+export const createAskEstimateOptions = proAction
+  .schema(CreateAskEstimateOptionSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateAskEstimateOptions = proAction(
-  CreateAskEstimateOptionSchema,
-  async (params, _) => {
-    // const res = await db.update(askEstimateOptions).set(params);
-    // if (!res) {
-    //     throw new ActionError("Failed to update ask estimate options");
-    // }
-  },
-);
+export const updateAskEstimateOptions = proAction
+  .schema(CreateAskEstimateOptionSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteAskEstimateOptions = proAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteAskEstimateOptions = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

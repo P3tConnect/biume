@@ -8,14 +8,14 @@ export async function getCompanies() {}
 
 export async function getCompanyById() {}
 
-export const createCompany = proAction(
-    CreateCompanySchema,
-    async (params, _) => {},
-);
+export const createCompany = proAction
+  .schema(CreateCompanySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateCompany = proAction(
-    CreateCompanySchema,
-    async (params, _) => {},
-);
+export const updateCompany = proAction
+  .schema(CreateCompanySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteCompany = proAction(z.string(), async (params, _) => {});
+export const deleteCompany = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

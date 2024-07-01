@@ -6,14 +6,14 @@ import { CreateServiceSchema } from "../db";
 
 export async function getServices() {}
 
-export const createService = proAction(
-  CreateServiceSchema,
-  async (params, _) => {},
-);
+export const createService = proAction
+  .schema(CreateServiceSchema)
+  .action(async () => {});
 
-export const updateService = proAction(
-  CreateServiceSchema,
-  async (params, _) => {},
-);
+export const updateService = proAction
+  .schema(CreateServiceSchema)
+  .action(async () => {});
 
-export const deleteService = proAction(z.string(), async (params, _) => {});
+export const deleteService = proAction
+  .schema(z.string())
+  .action(async () => {});

@@ -6,17 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getProjectInvitees() {}
 
-export const createProjectInvitee = proAction(
-  CreateProjectInviteeSchema,
-  async (params, _) => {},
-);
+export const createProjectInvitee = proAction
+  .schema(CreateProjectInviteeSchema)
+  .action(async () => {});
 
-export const updateProjectInvitee = proAction(
-  CreateProjectInviteeSchema,
-  async (params, _) => {},
-);
+export const updateProjectInvitee = proAction
+  .schema(CreateProjectInviteeSchema)
+  .action(async () => {});
 
-export const deleteProjectInvitee = proAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteProjectInvitee = proAction
+  .schema(z.string())
+  .action(async () => {});

@@ -8,17 +8,14 @@ export async function getCancelPolicies() {}
 
 export async function getCancelPoliciesByCompany() {}
 
-export const createCancelPolicies = proAction(
-    CreateCancelPolicySchema,
-    async (params, _) => {},
-);
+export const createCancelPolicies = proAction
+  .schema(CreateCancelPolicySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateCancelPolicies = proAction(
-    CreateCancelPolicySchema,
-    async (params, _) => {},
-);
+export const updateCancelPolicies = proAction
+  .schema(CreateCancelPolicySchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteCancelPolicies = proAction(
-    z.string(),
-    async (params, _) => {},
-);
+export const deleteCancelPolicies = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

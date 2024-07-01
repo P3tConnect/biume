@@ -6,14 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getObservations() {}
 
-export const createObservation = proAction(
-  CreateObservationSchema,
-  async (params, _) => {},
-);
+export const createObservation = proAction
+  .schema(CreateObservationSchema)
+  .action(async () => {});
 
-export const updateObservation = proAction(
-  CreateObservationSchema,
-  async (params, _) => {},
-);
+export const updateObservation = proAction
+  .schema(CreateObservationSchema)
+  .action(async () => {});
 
-export const deleteObservation = proAction(z.string(), async (params, _) => {});
+export const deleteObservation = proAction
+  .schema(z.string())
+  .action(async () => {});

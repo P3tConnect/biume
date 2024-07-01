@@ -6,14 +6,12 @@ import { CreateOptionSchema } from "../db";
 
 export async function getOptions() {}
 
-export const createOption = proAction(
-    CreateOptionSchema,
-    async (params, _) => {},
-);
+export const createOption = proAction
+  .schema(CreateOptionSchema)
+  .action(async () => {});
 
-export const updateOption = proAction(
-    CreateOptionSchema,
-    async (params, _) => {},
-);
+export const updateOption = proAction
+  .schema(CreateOptionSchema)
+  .action(async () => {});
 
-export const deleteOption = proAction(z.string(), async (params, _) => {});
+export const deleteOption = proAction.schema(z.string()).action(async () => {});

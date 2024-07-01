@@ -10,24 +10,14 @@ export async function getAskEstimates() {
   // return res;
 }
 
-export const createAskEstimate = userAction(
-  CreateAskEstimateSchema,
-  async (params, _) => {
-    // const res = await db.insert(askEstimate).values(params);
-    // if (!res) {
-    //     throw new ActionError("Can't create Ask Estimate");
-    // }
-  },
-);
+export const createAskEstimate = userAction
+  .schema(CreateAskEstimateSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateAskEstimate = userAction(
-  CreateAskEstimateSchema,
-  async (params, _) => {
-    // const res = await db;
-  },
-);
+export const updateAskEstimate = userAction
+  .schema(CreateAskEstimateSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteAskEstimate = userAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteAskEstimate = userAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

@@ -6,14 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getProgression() {}
 
-export const createProgression = proAction(
-  CreateProgressionSchema,
-  async (params, _) => {},
-);
+export const createProgression = proAction
+  .schema(CreateProgressionSchema)
+  .action(async () => {});
 
-export const updateProgression = proAction(
-  CreateProgressionSchema,
-  async (params, _) => {},
-);
+export const updateProgression = proAction
+  .schema(CreateProgressionSchema)
+  .action(async () => {});
 
-export const deleteProgression = proAction(z.string(), async (params, _) => {});
+export const deleteProgression = proAction
+  .schema(z.string())
+  .action(async () => {});

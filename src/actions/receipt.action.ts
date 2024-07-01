@@ -6,14 +6,14 @@ import { CreateReceiptSchema } from "../db";
 
 export async function getReceipts() {}
 
-export const createReceipt = proAction(
-  CreateReceiptSchema,
-  async (params, _) => {},
-);
+export const createReceipt = proAction
+  .schema(CreateReceiptSchema)
+  .action(async () => {});
 
-export const updateReceipt = proAction(
-  CreateReceiptSchema,
-  async (params, _) => {},
-);
+export const updateReceipt = proAction
+  .schema(CreateReceiptSchema)
+  .action(async () => {});
 
-export const deleteReceipt = proAction(z.string(), async (params, _) => {});
+export const deleteReceipt = proAction
+  .schema(z.string())
+  .action(async () => {});

@@ -6,14 +6,14 @@ import { CreateInvoiceSchema } from "../db";
 
 export async function getInvoices() {}
 
-export const createInvoice = proAction(
-    CreateInvoiceSchema,
-    async (params, _) => {},
-);
+export const createInvoice = proAction
+  .schema(CreateInvoiceSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateInvoice = proAction(
-    CreateInvoiceSchema,
-    async (params, _) => {},
-);
+export const updateInvoice = proAction
+  .schema(CreateInvoiceSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteInvoice = proAction(z.string(), async (params, _) => {});
+export const deleteInvoice = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

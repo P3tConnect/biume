@@ -6,17 +6,14 @@ import { proAction } from "../utils/action";
 
 export async function getCompanyDisponibilities() {}
 
-export const createCompanyDisponibilities = proAction(
-  CreateCompanyDisponibilitiesSchema,
-  async (params, _) => {},
-);
+export const createCompanyDisponibilities = proAction
+  .schema(CreateCompanyDisponibilitiesSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateCompanyDisponibilities = proAction(
-  CreateCompanyDisponibilitiesSchema,
-  async (params, _) => {},
-);
+export const updateCompanyDisponibilities = proAction
+  .schema(CreateCompanyDisponibilitiesSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteCompanyDisponibilities = proAction(
-  z.string(),
-  async (params, _) => {},
-);
+export const deleteCompanyDisponibilities = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

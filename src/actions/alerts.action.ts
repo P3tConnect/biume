@@ -6,14 +6,14 @@ import { z } from "zod";
 
 export async function getAlerts() {}
 
-export const createAlert = proAction(
-    CreateAlertsSchema,
-    async (params, _) => {},
-);
+export const createAlert = proAction
+  .schema(CreateAlertsSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateAlert = proAction(
-    CreateAlertsSchema,
-    async (params, _) => {},
-);
+export const updateAlert = proAction
+  .schema(CreateAlertsSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteAlert = proAction(z.string(), async (params, _) => {});
+export const deleteAlert = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

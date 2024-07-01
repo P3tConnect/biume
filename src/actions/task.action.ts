@@ -6,8 +6,12 @@ import { CreateTaskSchema } from "../db";
 
 export async function getTasks() {}
 
-export const createTask = proAction(CreateTaskSchema, async (params, _) => {});
+export const createTask = proAction
+  .schema(CreateTaskSchema)
+  .action(async () => {});
 
-export const updateTask = proAction(CreateTaskSchema, async (params, _) => {});
+export const updateTask = proAction
+  .schema(CreateTaskSchema)
+  .action(async () => {});
 
-export const deleteTask = proAction(z.string(), async (params, _) => {});
+export const deleteTask = proAction.schema(z.string()).action(async () => {});

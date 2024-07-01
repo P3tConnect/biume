@@ -6,14 +6,14 @@ import { CreateAlertsTypeSchema } from "../db/alertTypes";
 
 export async function getAlertsTypes() {}
 
-export const createAlertsTypes = proAction(
-    CreateAlertsTypeSchema,
-    async (params, _) => {},
-);
+export const createAlertsTypes = proAction
+  .schema(CreateAlertsTypeSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const updateAlertsTypes = proAction(
-    CreateAlertsTypeSchema,
-    async (params, _) => {},
-);
+export const updateAlertsTypes = proAction
+  .schema(CreateAlertsTypeSchema)
+  .action(async ({ parsedInput }) => {});
 
-export const deleteAlertsTypes = proAction(z.string(), async (params, _) => {});
+export const deleteAlertsTypes = proAction
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});
