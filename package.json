@@ -14,7 +14,7 @@
     "email-build": "email build --packageManager=pnpm",
     "email-start": "email start",
     "trigger-dev": "pnpm dlx trigger.dev@beta dev",
-    "postinstall": "pnpm dlx trigger.dev@beta deploy"
+    "postinstall": "dlx trigger.dev@beta deploy"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.1",

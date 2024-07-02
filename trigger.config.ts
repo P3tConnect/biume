@@ -3,6 +3,7 @@ import type { TriggerConfig } from "@trigger.dev/sdk/v3";
 export const config: TriggerConfig = {
   project: "proj_lduckgshsvswaztqyhqy",
   logLevel: "log",
+  additionalPackages: ["pnpm"],
   retries: {
     enabledInDev: true,
     default: {
