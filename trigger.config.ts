@@ -13,4 +13,10 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
+  onFailure: async (payload, error, { ctx }) => {
+    console.log("Task failed !", ctx.task.id, "Error :", error);
+  },
+  onSuccess: async (payload, output, { ctx }) => {
+    console.log("Task Success !", ctx.task.id, "Output :", output);
+  },
 };

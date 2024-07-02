@@ -12,3 +12,24 @@ export const helloWorldTask = task({
     };
   },
 });
+
+export const loggerTestTask = task({
+  id: "test-logger",
+  run: async (payload: any, { ctx }) => {
+    logger.debug("Ceci est un test du logger en debug");
+
+    wait.for({ seconds: 30 });
+
+    logger.info("Ceci est un test du logger en info");
+
+    wait.for({ seconds: 30 });
+
+    logger.warn("Ceci est un test du logger en warn");
+
+    wait.for({ seconds: 30 });
+
+    logger.error("Ceci est un test du logger en error");
+
+    wait.for({ seconds: 45 });
+  },
+});

@@ -13,7 +13,7 @@ import {
   Rss,
   Shield,
 } from "lucide-react";
-import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { newSubWaitList } from "@/src/actions";
 import Loader from "../loader";
@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { redirect } from "next/navigation";
 import { emailSchema } from "@/src/utils/schemas";
 
 const tiles = [

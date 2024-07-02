@@ -7,6 +7,8 @@ export const env = createEnv({
     DATABASE_URL: z.string(),
     UPLOADTHING_SECRET: z.string(),
     UPLOADTHING_APP_ID: z.string(),
+    TRIGGER_SECRET_KEY: z.string(),
+    TRIGGER_PUBLIC_API_KEY: z.string(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string(),
