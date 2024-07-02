@@ -1,8 +1,9 @@
+import { env } from "@/src/utils";
 import { Body, Container, Head, Html, Tailwind, Img, Preview, Section } from "@react-email/components";
 import * as React from 'react';
 
-const baseUrl = process.env.APP_URL
-  ? `https://${process.env.APP_URL}`
+const baseUrl = env.NEXT_PUBLIC_APP_URL
+  ? `https://${env.NEXT_PUBLIC_APP_URL}`
   : `http://localhost:3000`;
 
 export const EmailLayout = ({ preview, children }: React.PropsWithChildren<{ preview?: string }>) => {

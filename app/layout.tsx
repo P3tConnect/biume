@@ -6,12 +6,16 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/src/context/theme-provider";
 import { Toaster } from "sonner";
+import { env } from "@/src/utils";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "PawThera",
-    metadataBase: new URL(`${process.env.NEXT_PUBLIC_APP_URL}`),
+    metadataBase: new URL(`${env.NEXT_PUBLIC_APP_URL}`),
     description:
         "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
     icons: {
@@ -29,7 +33,7 @@ export const metadata: Metadata = {
         siteName: "PawThera",
         images: [
             {
-                url: `${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
+                url: `${env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
                 width: 1200,
                 height: 630,
                 alt: "PawThera",
@@ -41,7 +45,7 @@ export const metadata: Metadata = {
         title: "PawThera",
         description:
             "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
-        images: [`${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
+        images: [`${env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
     },
     applicationName: "PawThera",
     authors: [
@@ -104,6 +108,9 @@ export default function RootLayout({
                     defaultTheme="dark"
                     enableSystem={false}
                 >
+                    <NextSSRPlugin
+                        routerConfig={extractRouterConfig(ourFileRouter)}
+                    />
                     <div vaul-drawer-wrapper="" className="bg-background">
                         {children}
                     </div>
