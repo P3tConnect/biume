@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { emailSchema } from "@/src/utils/schemas";
+import { triggerAction } from "@/src/actions/trigger.action";
 
 const tiles = [
   {
@@ -212,7 +213,7 @@ export default function CallToActionSection() {
                     <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
                   </div>
                   : */}
-                <form className="w-full gap-3 flex flex-col items-center justify-center" onSubmit={onSubmit}>
+                <form className="w-full gap-3 flex flex-col items-center justify-center" onSubmit={async () => await triggerAction()}>
                   <Input
                     placeholder="Email"
                     className="mt-10 border border-gray-400/70 rounded-lg"
