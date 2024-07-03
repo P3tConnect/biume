@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { userAction } from "../utils/action";
+import { userAction } from "../lib/action";
 import { CreatePetSchema } from "../db";
 
 export async function getPets() {}

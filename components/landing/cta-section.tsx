@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { emailSchema } from "@/src/utils/schemas";
+import { emailSchema } from "@/src/lib/schemas";
 import { triggerAction } from "@/src/actions/trigger.action";
 
 const tiles = [

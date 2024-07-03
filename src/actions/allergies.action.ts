@@ -1,15 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../utils/action";
-import { CreateAllergySchema, allergies } from "../db";
-// import { db } from "../utils/db";
-import { eq } from "drizzle-orm";
+import { userAction } from "../lib/action";
+import { CreateAllergySchema } from "../db";
 
-export async function getAllergies() {
-  // const res = await db.query.allergies.findMany();
-  // return res;
-}
+export async function getAllergies() {}
 
 export const createAllergy = userAction
   .schema(CreateAllergySchema)
