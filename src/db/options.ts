@@ -1,8 +1,16 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
+import { relations } from "drizzle-orm";
+import { askEstimateOptions } from "./askEstimateOptions";
+import { invoiceOptions } from "./invoiceOptions";
+import { estimateOptions } from "./estimateOptions";
+import { sessionOptions } from "./sessionOptions";
+import { createInsertSchema } from "drizzle-zod";
 
 export const options = pgTable("options", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description"),
   price: integer("price").notNull(),
@@ -14,3 +22,19 @@ export const options = pgTable("options", {
     .notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const optionsRelations = relations(options, ({ one, many }) => ({
+  askEstimates: many(askEstimateOptions),
+  invoices: many(invoiceOptions),
+  estimates: many(estimateOptions),
+  sessions: many(sessionOptions),
+  company: one(company, {
+    fields: [options.companyId],
+    references: [company.id],
+  }),
+}));
+
+export type Option = typeof options.$inferSelect;
+export type CreateOption = typeof options.$inferInsert;
+
+export const CreateOptionSchema = createInsertSchema(options);

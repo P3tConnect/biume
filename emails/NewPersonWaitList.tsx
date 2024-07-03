@@ -1,13 +1,14 @@
 import React from 'react'
 import { EmailLayout } from './EmailLayout'
+import { Container, Text } from '@react-email/components'
 
 const NewPersonWaitList = ({ subEmail }: { subEmail: string }) => {
   return (
     <EmailLayout>
-      <div className='h-screen w-screen justify-center items-center'>
-        <h1>Hi, you have a new subscriber</h1>
+      <Container>
+        <Text className=''>Hi, you have a new subscriber</Text>
         Email : <p>{subEmail}</p>
-      </div>
+      </Container>
     </EmailLayout>
   )
 }

@@ -1,12 +1,18 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { user } from "./user";
+import { createInsertSchema } from "drizzle-zod";
+import { petsIntolerences } from "./petsIntolerences";
 
 export const intolerences = pgTable("intolerences", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
@@ -15,5 +21,16 @@ export const intolerences = pgTable("intolerences", {
 
 export const intolerencesRelations = relations(
   intolerences,
-  ({ one, many }) => ({}),
+  ({ one, many }) => ({
+    owner: one(user, {
+      fields: [intolerences.ownerId],
+      references: [user.id],
+    }),
+    pets: many(petsIntolerences),
+  }),
 );
+
+export type Intolerence = typeof intolerences.$inferSelect;
+export type CreateIntolerence = typeof intolerences.$inferInsert;
+
+export const CreateIntolerenceSchema = createInsertSchema(intolerences);

@@ -2,6 +2,7 @@ import { pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { company } from "./company";
 import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
 
 export const employeeCompany = pgTable(
   "employee_company",
@@ -20,5 +21,19 @@ export const employeeCompany = pgTable(
 
 export const employeeCompanyRelations = relations(
   employeeCompany,
-  ({ many, one }) => ({}),
+  ({ one }) => ({
+    company: one(company, {
+      fields: [employeeCompany.companyId],
+      references: [company.id],
+    }),
+    employees: one(user, {
+      fields: [employeeCompany.employeeId],
+      references: [user.id],
+    }),
+  }),
 );
+
+export type EmployeeCompany = typeof employeeCompany.$inferSelect;
+export type CreateEmployeeCompany = typeof employeeCompany.$inferInsert;
+
+export const CreateEmployeeCompanySchema = createInsertSchema(employeeCompany);

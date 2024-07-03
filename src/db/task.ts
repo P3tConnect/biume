@@ -1,8 +1,12 @@
-import { date, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
+import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
 
 export const task = pgTable("task", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   ownerId: text("ownerId").references(() => company.id, {
     onDelete: "cascade",
@@ -15,3 +19,15 @@ export const task = pgTable("task", {
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
+
+export const taskRelations = relations(task, ({ one }) => ({
+  owner: one(company, {
+    fields: [task.ownerId],
+    references: [company.id],
+  }),
+}));
+
+export type Task = typeof task.$inferSelect;
+export type CreateTask = typeof task.$inferInsert;
+
+export const CreateTaskSchema = createInsertSchema(task);

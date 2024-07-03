@@ -6,14 +6,20 @@ import { sessions } from "../db/session";
 import { accounts } from "../db/accounts";
 import { verificationTokens } from "../db/verificationToken";
 import { authenticators } from "../db/verificators";
+import { Adapter } from "next-auth/adapters";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: user,
     accountsTable: accounts,
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
     authenticatorsTable: authenticators,
-  }),
+  }) as Adapter,
   providers: [],
 });
