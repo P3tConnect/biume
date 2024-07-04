@@ -1,25 +1,38 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import dotenv from "dotenv";
 
-export const env = createEnv({
-  server: {
-    RESEND_API_KEY: z.string(),
-    DATABASE_URL: z.string(),
-    UPLOADTHING_SECRET: z.string(),
-    UPLOADTHING_APP_ID: z.string(),
-    TRIGGER_SECRET_KEY: z.string(),
-    TRIGGER_PUBLIC_API_KEY: z.string(),
-  },
-  client: {
-    NEXT_PUBLIC_APP_URL: z.string(),
-  },
-  runtimeEnv: {
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    DATABASE_URL: process.env.DATABASE_URL,
-    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
-    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
-    TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
-    TRIGGER_PUBLIC_API_KEY: process.env.TRIGGER_PUBLIC_API_KEY,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  },
-});
+dotenv.config();
+
+interface ENV {
+  NODE_ENV: string | undefined;
+  PORT: number | undefined;
+  MONGO_URI: string | undefined;
+}
+
+interface Config {
+  NODE_ENV: string;
+  PORT: number;
+  MONGO_URI: string;
+}
+
+const getConfig = (): ENV => {
+  return {
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: process.env.PORT ? Number(process.env.PORT) : undefined,
+    MONGO_URI: process.env.MONGO_URI,
+  };
+};
+
+const getSafeConfig = (config: ENV): Config => {
+  for (const [key, value] of Object.entries(config)) {
+    if (value === undefined) {
+      throw new Error(`Missing key ${key} in config.env`);
+    }
+  }
+  return config as Config;
+};
+
+const config = getConfig();
+
+const safeConfig = getSafeConfig(config);
+
+export default safeConfig;
