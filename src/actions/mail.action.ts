@@ -1,6 +1,6 @@
 "use server";
 
-import NewPersonWaitList from "@/emails/NewPersonWaitList";
+import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
 import { resend } from "../lib/resend";
 import { redirect } from "next/navigation";
 import { ActionError, action } from "../lib/action";

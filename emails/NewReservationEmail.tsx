@@ -3,7 +3,9 @@ import { EmailLayout } from './EmailLayout'
 
 const NewReservation = () => {
   return (
-    <EmailLayout>NewReservation</EmailLayout>
+    <EmailLayout>
+
+    </EmailLayout>
   )
 }
 

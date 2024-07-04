@@ -45,6 +45,4 @@ const getSafeConfig = (config: ENV): Config => {
 
 const config = getConfig();
 
-const safeConfig = getSafeConfig(config);
-
-export default safeConfig;
+export const safeConfig = getSafeConfig(config);

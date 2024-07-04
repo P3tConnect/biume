@@ -1,5 +1,5 @@
-import safeConfig from "@/src/lib/env";
-import { Body, Container, Head, Html, Tailwind, Img, Preview, Section } from "@react-email/components";
+import { safeConfig } from "@/src/lib";
+import { Body, Container, Head, Html, Tailwind, Img, Preview, Section, Link } from "@react-email/components";
 import * as React from 'react';
 
 const baseUrl = safeConfig.NEXT_PUBLIC_APP_URL
@@ -26,8 +26,9 @@ export const EmailLayout = ({ preview, children }: React.PropsWithChildren<{ pre
                 height="auto"
                 alt="Logo PawThera"
               />
-              <h2>PawThera</h2>
-              <p>{baseUrl}</p>
+              <Link href={baseUrl} className="text-black">
+                <h2>PawThera</h2>
+              </Link>
             </div>
             <Section>
               {children}
