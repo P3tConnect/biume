@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/src/lib/utils";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/src/context/theme-provider";
-import { Toaster } from "sonner";
 import { safeConfig } from "@/src/lib";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import Providers from "@/src/context/providers";
+import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,11 +83,14 @@ export const metadata: Metadata = {
     ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    // const reqHeaders = headers();
+    // const messages = await getMessages({ locale: reqHeaders.get("accept-language") as string });
+
     return (
         <html lang="fr">
             <head>
@@ -103,21 +106,16 @@ export default function RootLayout({
                     inter.className,
                 )}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem={false}
-                >
+                {/* <NextIntlClientProvider messages={messages}> */}
+                <Providers>
                     <NextSSRPlugin
                         routerConfig={extractRouterConfig(ourFileRouter)}
                     />
                     <div vaul-drawer-wrapper="" className="bg-background">
                         {children}
                     </div>
-                </ThemeProvider>
-                <SpeedInsights />
-                <Analytics />
-                <Toaster />
+                </Providers>
+                {/* </NextIntlClientProvider> */}
             </body>
         </html>
     );
