@@ -13,7 +13,7 @@ const Providers = async ({ children }: PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider navigate={router.push}>
-        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem={true}>
           {children}
           <Toaster />
         </ThemeProvider>
