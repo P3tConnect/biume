@@ -45,3 +45,12 @@ export const proAction = action.use(async ({ next }) => {
     "You need to subscribe to a plan to perform this action",
   );
 });
+
+// export const adminAction = action.use(async ({ next }) => {
+//   const user = await currentUser();
+
+//   if (!user) {
+//     throw new ActionError("You must be logged in !")
+//   }
+
+// });

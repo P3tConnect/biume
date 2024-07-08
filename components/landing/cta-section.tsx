@@ -23,6 +23,7 @@ import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { emailSchema } from "@/src/lib/schemas";
 import { triggerAction } from "@/src/actions/trigger.action";
+import { getCompanyAddress } from "@/src/actions/companyAddress.action";
 
 const tiles = [
   {
