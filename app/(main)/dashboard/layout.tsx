@@ -1,8 +1,8 @@
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactNode } from 'react'
 
-const DashboardLayout = ({ children }: PropsWithChildren) => {
+const DashboardLayout = ({ children, admin, pro, client }: PropsWithChildren<{ admin: ReactNode, pro: ReactNode, client: ReactNode }>) => {
   return (
-    <>{children}</>
+    <>{children}{admin}{pro}{client}</>
   )
 }
 

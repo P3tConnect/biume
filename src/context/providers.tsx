@@ -1,4 +1,5 @@
 "use client"
+
 import { NextUIProvider } from '@nextui-org/react'
 import React, { PropsWithChildren } from 'react'
 import { ThemeProvider } from './theme-provider'
@@ -12,12 +13,12 @@ const Providers = async ({ children }: PropsWithChildren) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextUIProvider navigate={router.push}>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem={true}>
+      <ThemeProvider attribute='class' forcedTheme='dark' enableSystem={false}>
+        <NextUIProvider navigate={router.push}>
           {children}
           <Toaster />
-        </ThemeProvider>
-      </NextUIProvider>
+        </NextUIProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }

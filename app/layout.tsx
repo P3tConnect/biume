@@ -7,9 +7,8 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import Providers from "@/src/context/providers";
-import { getMessages } from "next-intl/server";
+import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -88,11 +87,11 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    // const reqHeaders = headers();
-    // const messages = await getMessages({ locale: reqHeaders.get("accept-language") as string });
+    const locale = await getLocale();
+    const messages = await getMessages();
 
     return (
-        <html lang="fr">
+        <html lang={locale}>
             <head>
                 <script
                     defer
@@ -106,16 +105,16 @@ export default async function RootLayout({
                     inter.className,
                 )}
             >
-                {/* <NextIntlClientProvider messages={messages}> */}
-                <Providers>
-                    <NextSSRPlugin
-                        routerConfig={extractRouterConfig(ourFileRouter)}
-                    />
-                    <div vaul-drawer-wrapper="" className="bg-background">
+                <NextIntlClientProvider messages={messages}>
+                    <Providers>
+                        <NextSSRPlugin
+                            routerConfig={extractRouterConfig(ourFileRouter)}
+                        />
+                        {/* <div vaul-drawer-wrapper="" className="bg-background"> */}
                         {children}
-                    </div>
-                </Providers>
-                {/* </NextIntlClientProvider> */}
+                        {/* </div> */}
+                    </Providers>
+                </NextIntlClientProvider>
             </body>
         </html>
     );

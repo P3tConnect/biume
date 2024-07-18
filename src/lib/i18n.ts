@@ -1,9 +1,10 @@
 import { getRequestConfig } from "next-intl/server";
+import { getUserLocale } from "../config/locale";
 
-export default getRequestConfig(async (params) => {
-  const locale = params.locale;
-
+export default getRequestConfig(async () => {
+  const locale = await getUserLocale();
   return {
-    messages: await import(`../../public/messages/${locale}.json`),
+    locale,
+    messages: (await import(`../../public/messages/${locale}.json`)).default,
   };
 });
