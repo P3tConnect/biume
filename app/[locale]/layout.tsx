@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { cn } from "@/src/lib/utils";
-import { safeConfig } from "@/src/lib";
+import { logger, safeConfig } from "@/src/lib";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "./api/uploadthing/core";
+import { ourFileRouter } from "../api/uploadthing/core";
 import Providers from "@/src/context/providers";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import { setUserLocale } from "@/src/config/locale";
+import { Locale } from "@/src/lib/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -84,14 +86,16 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
     children,
+    params,
 }: Readonly<{
     children: React.ReactNode;
+    params: { locale: string }
 }>) {
-    const locale = await getLocale();
     const messages = await getMessages();
+    logger.info("RootLayout", { messages, params });
 
     return (
-        <html lang={locale}>
+        <html lang={params.locale}>
             <head>
                 <script
                     defer
