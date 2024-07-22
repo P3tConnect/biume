@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../utils/action";
+import { proAction } from "../lib/action";
 import { CreateReceiptProductSchema } from "../db";
 
 export async function getReceiptProduct() {}

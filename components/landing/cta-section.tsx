@@ -21,8 +21,10 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { emailSchema } from "@/src/utils/schemas";
+import { emailSchema } from "@/src/lib/schemas";
 import { triggerAction } from "@/src/actions/trigger.action";
+import { getCompanyAddress } from "@/src/actions/companyAddress.action";
+import { useTranslations } from "next-intl";
 
 const tiles = [
   {
@@ -121,6 +123,7 @@ export default function CallToActionSection() {
   const [randomTiles3, setRandomTiles3] = useState<typeof tiles>([]);
   const [randomTiles4, setRandomTiles4] = useState<typeof tiles>([]);
   // const [isLoading, startTransition] = useTransition();
+  const t = useTranslations("LandingPage");
 
 
   useEffect(() => {
@@ -203,10 +206,10 @@ export default function CallToActionSection() {
               </div>
               <div className="z-10 mt-4 flex flex-col items-center text-center text-primary">
                 <h1 className="text-3xl font-bold lg:text-4xl">
-                  Notre application vous plait ?
+                  {t('ctaSection.title')}
                 </h1>
                 <p className="mt-2">
-                  Rejoignez-nous et inscrivez-vous sur la liste d&apos;attente
+                  {t('ctaSection.description')}
                 </p>
                 {/* {localStorage.getItem("alreadySub") ?
                   <div className="mt-5">
@@ -222,9 +225,8 @@ export default function CallToActionSection() {
                   />
                   {errors.email ? <p className="font-medium text-red-400">{errors.email.message}</p> : null}
                   {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
-                    Je m&apos;inscris
+                    {t('ctaSection.cta')}
                   </Button>}
-
                 </form>
               </div>
               <div className="absolute inset-0 -z-10 rounded-full  bg-backtround opacity-40 blur-xl dark:bg-background" />

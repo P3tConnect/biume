@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { proAction, userAction } from "../utils/action";
+import { proAction, userAction } from "../lib/action";
 import { CreateRatingSchema } from "../db";
 
 export async function getRatings() {}

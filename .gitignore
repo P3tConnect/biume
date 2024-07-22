@@ -37,3 +37,5 @@ yarn-error.log*
 next-env.d.ts
 
 .trigger
+.react-email
+bun.lockb

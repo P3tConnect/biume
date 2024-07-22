@@ -1,10 +1,10 @@
 "use server";
 
-import NewPersonWaitList from "@/emails/NewPersonWaitList";
-import { resend } from "../utils/resend";
+import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
+import { resend } from "../lib/resend";
 import { redirect } from "next/navigation";
-import { ActionError, action } from "../utils/action";
-import { emailSchema } from "../utils/schemas";
+import { ActionError, action } from "../lib/action";
+import { emailSchema } from "../lib/schemas";
 
 export const newSubWaitList = action
   .schema(emailSchema)

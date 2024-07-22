@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
-import { proAction } from "../utils/action";
+import { proAction } from "../lib/action";
 
 export async function getInvoiceOptions() {}
 

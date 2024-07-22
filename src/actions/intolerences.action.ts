@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { CreateIntolerenceSchema } from "../db";
-import { userAction } from "../utils/action";
+import { userAction } from "../lib/action";
 
 export async function getIntolerences() {}
 
