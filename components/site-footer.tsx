@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const footerSocials = [
   {
-    href: "",
+    href: "https://www.linkedin.com/company/pawthera/",
     name: "LinkedIn",
     icon: <LinkedInLogoIcon className="h-4 w-4" />,
   },
