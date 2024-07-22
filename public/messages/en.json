@@ -73,5 +73,27 @@
   "Footer": {
     "rights": "All rights reserved.",
     "slogan": "The application that saves time for independent professionals in the animal sector"
+  },
+  "Metadata": {
+    "description": "PawThera, the application that saves time for self-employed professionals in the animal sector",
+    "keywords": {
+      "keyword1": "animal osteopath",
+      "keyword2": "animals",
+      "keyword3": "pet",
+      "keyword4": "companion animals",
+      "keyword5": "animal naturopath",
+      "keyword6": "nca",
+      "keyword7": "animal behaviorist",
+      "keyword8": "dog",
+      "keyword9": "cat",
+      "keyword10": "horse",
+      "keyword11": "pawthera",
+      "keyword12": "pawtera",
+      "keyword13": "pawthera",
+      "keyword14": "independent",
+      "keyword15": "animal independent",
+      "keyword16": "animal self-employment",
+      "keyword17": "management"
+    }
   }
 }
