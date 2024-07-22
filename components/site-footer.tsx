@@ -1,4 +1,5 @@
 import { DiscordLogoIcon, TwitterLogoIcon, LinkedInLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +16,9 @@ const footerSocials = [
   },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const t = await getTranslations("Footer");
+
   return (
     <footer>
       <div className="mx-auto w-full max-w-screen-xl xl:pb-2">
@@ -33,7 +36,7 @@ export function SiteFooter() {
                 PawThera
               </span>
             </Link>
-            <p className="max-w-xs">L&apos;application qui fait gagner du temps aux indépendants du secteur animalier</p>
+            <p className="max-w-xs">{t('slogan')}</p>
           </div>
         </div>
 
@@ -55,7 +58,7 @@ export function SiteFooter() {
             <Link href="/" className="cursor-pointer">
               PawThera
             </Link>
-            . Tout droits réservés.
+            . {t('rights')}
           </span>
         </div>
       </div>

@@ -69,5 +69,9 @@
     "title": "Thank you for joining our waiting list !",
     "description": "We will keep you informed of the progress of our application 😉",
     "button": "Back to the home page"
+  },
+  "Footer": {
+    "rights": "All rights reserved.",
+    "slogan": "The application that saves time for independent professionals in the animal sector"
   }
 }
