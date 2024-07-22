@@ -2,6 +2,7 @@
 
 import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { redirect } from 'next/navigation';
 import React from 'react'
 import { z } from 'zod'
 
@@ -11,6 +12,7 @@ const schema = z.object({
 });
 
 const LoginPage = () => {
+  redirect('/')
   return (
     <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-secondary-300 to-card-300'>
       <Card className='w-full max-w-md p-6 space-y-4 rounded-xl bg-card/40'>

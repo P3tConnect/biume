@@ -92,7 +92,6 @@ export default async function RootLayout({
     params: { locale: string }
 }>) {
     const messages = await getMessages();
-    logger.info("RootLayout", { messages, params });
 
     return (
         <html lang={params.locale}>
@@ -114,9 +113,9 @@ export default async function RootLayout({
                         <NextSSRPlugin
                             routerConfig={extractRouterConfig(ourFileRouter)}
                         />
-                        {/* <div vaul-drawer-wrapper="" className="bg-background"> */}
-                        {children}
-                        {/* </div> */}
+                        <div vaul-drawer-wrapper="" className="bg-background">
+                            {children}
+                        </div>
                     </Providers>
                 </NextIntlClientProvider>
             </body>

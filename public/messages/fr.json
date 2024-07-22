@@ -65,5 +65,9 @@
       "cta": "Je m'inscris"
     }
   },
-  "AboutPage": {}
+  "Waitlist": {
+    "title": "Nous vous remercions de vous être inscrit sur notre liste d'attente !",
+    "description": "Restez connectés avec nous pour en savoir plus sur l'avancement de la plateforme 😉",
+    "button": "Retour a l'accueil"
+  }
 }

@@ -65,5 +65,9 @@
       "cta": "Register"
     }
   },
-  "AboutPage": {}
+  "Waitlist": {
+    "title": "Thank you for joining our waiting list !",
+    "description": "We will keep you informed of the progress of our application 😉",
+    "button": "Back to the home page"
+  }
 }
