@@ -7,82 +7,82 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../api/uploadthing/core";
 import Providers from "@/src/context/providers";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { setUserLocale } from "@/src/config/locale";
 import { Locale } from "@/src/lib/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "PawThera",
-    metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
-    description:
-        "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
-    icons: {
-        icon: "/app/favicon.ico",
-    },
-    appleWebApp: {
+export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
+    const t = await getTranslations("Metadata");
+    return {
         title: "PawThera",
-    },
-    openGraph: {
-        type: "website",
-        locale: "fr_FR",
-        url: "https://pawthera.com",
-        description:
-            "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
-        siteName: "PawThera",
-        images: [
+        metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
+        description: t("description"),
+        icons: {
+            icon: "/app/favicon.ico",
+        },
+        appleWebApp: {
+            title: "PawThera",
+        },
+        openGraph: {
+            type: "website",
+            locale: params.locale,
+            url: "https://pawthera.com",
+            description: t("description"),
+            siteName: "PawThera",
+            images: [
+                {
+                    url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
+                    width: 1200,
+                    height: 630,
+                    alt: "PawThera",
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: "PawThera",
+            description: t("description"),
+            images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
+        },
+        applicationName: "PawThera",
+        authors: [
             {
-                url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
-                width: 1200,
-                height: 630,
-                alt: "PawThera",
+                name: "Mathieu Chambaud",
+                url: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/",
+            },
+            {
+                name: "Graig Kolodziejczyk",
+                url: "https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/",
             },
         ],
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "PawThera",
-        description:
-            "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
-        images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
-    },
-    applicationName: "PawThera",
-    authors: [
-        {
-            name: "Mathieu Chambaud",
-            url: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/",
+        robots: {
+            follow: true,
+            index: true,
         },
-        {
-            name: "Graig Kolodziejczyk",
-            url: "https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/",
-        },
-    ],
-    robots: {
-        follow: true,
-        index: true,
-    },
-    keywords: [
-        "osteopathe animalier",
-        "animaux",
-        "animal",
-        "animaux de companie",
-        "naturopathe animalier",
-        "nac",
-        "comportementaliste animalier",
-        "chien",
-        "chat",
-        "cheval",
-        "pawthera",
-        "pawtera",
-        "pwthera",
-        "indépendant",
-        "indépendant animalier",
-        "auto-entreprise animale",
-        "gestion",
-    ],
-};
+        keywords: [
+            t('keywords.keyword1'),
+            t('keywords.keyword2'),
+            t('keywords.keyword3'),
+            t('keywords.keyword4'),
+            t('keywords.keyword5'),
+            t('keywords.keyword6'),
+            t('keywords.keyword7'),
+            t('keywords.keyword8'),
+            t('keywords.keyword9'),
+            t('keywords.keyword10'),
+            t('keywords.keyword11'),
+            t('keywords.keyword12'),
+            t('keywords.keyword13'),
+            t('keywords.keyword14'),
+            t('keywords.keyword15'),
+            t('keywords.keyword16'),
+            t('keywords.keyword17'),
+        ],
+    }
+}
 
 export default async function RootLayout({
     children,
@@ -92,7 +92,6 @@ export default async function RootLayout({
     params: { locale: string }
 }>) {
     const messages = await getMessages();
-    logger.info("RootLayout", { messages, params });
 
     return (
         <html lang={params.locale}>
@@ -114,9 +113,9 @@ export default async function RootLayout({
                         <NextSSRPlugin
                             routerConfig={extractRouterConfig(ourFileRouter)}
                         />
-                        {/* <div vaul-drawer-wrapper="" className="bg-background"> */}
-                        {children}
-                        {/* </div> */}
+                        <div vaul-drawer-wrapper="" className="bg-background">
+                            {children}
+                        </div>
                     </Providers>
                 </NextIntlClientProvider>
             </body>

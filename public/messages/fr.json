@@ -65,5 +65,35 @@
       "cta": "Je m'inscris"
     }
   },
-  "AboutPage": {}
+  "Waitlist": {
+    "title": "Nous vous remercions de vous être inscrit sur notre liste d'attente !",
+    "description": "Restez connectés avec nous pour en savoir plus sur l'avancement de la plateforme 😉",
+    "button": "Retour a l'accueil"
+  },
+  "Footer": {
+    "rights": "Tous droits réservés.",
+    "slogan": "L'application qui fait gagner du temps aux indépendants du secteur animalier"
+  },
+  "Metadata": {
+    "description": "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
+    "keywords": {
+      "keyword1": "osteopathe animalier",
+      "keyword2": "animaux",
+      "keyword3": "animal",
+      "keyword4": "animaux de companie",
+      "keyword5": "naturopathe animalier",
+      "keyword6": "nac",
+      "keyword7": "comportementaliste animalier",
+      "keyword8": "chien",
+      "keyword9": "chat",
+      "keyword10": "cheval",
+      "keyword11": "pawthera",
+      "keyword12": "pawtera",
+      "keyword13": "pawthera",
+      "keyword14": "indépendant",
+      "keyword15": "indépendant animalier",
+      "keyword16": "auto-entreprise animale",
+      "keyword17": "gestion"
+    }
+  }
 }
