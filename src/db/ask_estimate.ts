@@ -15,17 +15,23 @@ import { company } from "./company";
 import { z } from "zod";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
-  "PENDING",
-  "PAYED",
-  "CANCELLED",
-  "REVOKED",
+  "USER PENDING",
+  "USER ACCEPTED",
+  "REJECTED BY USER",
+  "CANCELED BY USER",
+  "USER PAYED",
+  "COMPANY PENDING",
+  "COMPANY ACCEPTED",
+  "REJECTED BY COMPANY",
+  "POSTPONED BY COMPANY",
+  "CANCELED BY COMPANY",
 ]);
 
 export const askEstimate = pgTable("ask_estimate", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  status: askEstimateStatus("status").default("PENDING"),
+  status: askEstimateStatus("status").default("USER PENDING"),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
   creator: text("creator").references(() => user.id, {
@@ -38,7 +44,7 @@ export const askEstimate = pgTable("ask_estimate", {
   updateAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
+export const askEstimateRelations = relations(askEstimate, ({ many }) => ({
   askEstimateOptions: many(askEstimateOptions),
 }));
 
