@@ -43,6 +43,7 @@ export const company = pgTable("company", {
     onDelete: "cascade",
   }),
   nac: text("nac"),
+  locked: boolean("locked").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
 });
