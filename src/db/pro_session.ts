@@ -19,13 +19,14 @@ import { z } from "zod";
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
 export const sessionStatusType = pgEnum("session_status_type", [
-  "PAYED",
-  "IN PROGRESS",
-  "WAITING FROM CLIENT",
-  "WAITING FOR REFUND",
-  "REFUNDED",
-  "CANCELED",
-  "POSTPAWNED",
+  "CLIENT PAYED",
+  "CLIENT PENDING",
+  "CLIENT CANCELED",
+  "CLIENT ACCEPTED",
+  "COMPANY PENDING",
+  "COMPANY ACCEPTED",
+  "COMPANY CANCELED",
+  "COMPANY POSTPONED",
 ]);
 
 export const proSession = pgTable("pro_session", {
@@ -44,7 +45,7 @@ export const proSession = pgTable("pro_session", {
   }),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
-  status: sessionStatusType("status").default("IN PROGRESS").notNull(),
+  status: sessionStatusType("status").default("COMPANY PENDING").notNull(),
   atHome: boolean("atHome").default(false).notNull(),
   type: sessionType("type").default("oneToOne").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
