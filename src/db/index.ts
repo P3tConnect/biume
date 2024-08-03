@@ -21,8 +21,6 @@ export * from "./usersNewsletter";
 export * from "./askEstimateOptions";
 export * from "./cancelPolicies";
 export * from "./companySlots";
-export * from "./estimate";
-export * from "./estimateOptions";
 export * from "./invoiceOptions";
 export * from "./options";
 export * from "./ask_estimate";

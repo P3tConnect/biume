@@ -3,7 +3,6 @@ import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { askEstimateOptions } from "./askEstimateOptions";
 import { invoiceOptions } from "./invoiceOptions";
-import { estimateOptions } from "./estimateOptions";
 import { sessionOptions } from "./sessionOptions";
 import { createInsertSchema } from "drizzle-zod";
 
@@ -26,7 +25,6 @@ export const options = pgTable("options", {
 export const optionsRelations = relations(options, ({ one, many }) => ({
   askEstimates: many(askEstimateOptions),
   invoices: many(invoiceOptions),
-  estimates: many(estimateOptions),
   sessions: many(sessionOptions),
   company: one(company, {
     fields: [options.companyId],

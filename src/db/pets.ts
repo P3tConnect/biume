@@ -37,6 +37,8 @@ export const pets = pgTable("pets", {
   ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
+  furColor: text("furColor"),
+  eyeColor: text("eyeColor"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt"),
 });

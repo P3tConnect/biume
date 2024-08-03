@@ -8,7 +8,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { company } from "./company";
 import { relations } from "drizzle-orm";
-import { estimate } from "./estimate";
 import { invoice } from "./invoice";
 import { sessionOptions } from "./sessionOptions";
 import { pets } from "./pets";
@@ -53,7 +52,6 @@ export const proSession = pgTable("pro_session", {
 });
 
 export const proSessionRelations = relations(proSession, ({ one, many }) => ({
-  estimate: one(estimate),
   invoice: one(invoice),
   options: many(sessionOptions),
   pet: one(pets, {

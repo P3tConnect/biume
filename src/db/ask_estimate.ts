@@ -39,6 +39,7 @@ export const askEstimate = pgTable("ask_estimate", {
   }),
   for: text("for").references(() => company.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").default(false),
+  message: text("message"),
   //sessionType: sessionType("sessionType").default("oneToOne"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updateAt: timestamp("updatedAt", { mode: "date" }),
