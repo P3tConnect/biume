@@ -4,7 +4,7 @@ import { z } from "zod";
 import { proAction, userAction } from "../lib/action";
 import { CreateRatingSchema } from "../db";
 
-export async function getRatings() {}
+export const getRatings = userAction.action(async () => {});
 
 export const createRating = userAction
   .schema(CreateRatingSchema)

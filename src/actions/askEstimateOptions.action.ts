@@ -9,12 +9,12 @@ export async function getAskEstimateOptions() {}
 
 export const createAskEstimateOptions = proAction
   .schema(CreateAskEstimateOptionSchema)
-  .action(async ({ parsedInput }) => {});
+  .action(async ({}) => {});
 
 export const updateAskEstimateOptions = proAction
   .schema(CreateAskEstimateOptionSchema)
-  .action(async ({ parsedInput }) => {});
+  .action(async ({}) => {});
 
 export const deleteAskEstimateOptions = proAction
   .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+  .action(async ({}) => {});

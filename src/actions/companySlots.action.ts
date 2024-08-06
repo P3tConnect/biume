@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { CreateCompanyDisponibilitiesSchema } from "../db";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 
-export async function getCompanyDisponibilities() {}
+export const getCompanyDisponibilities = userAction.action(async () => {});
 
 export const createCompanyDisponibilities = proAction
   .schema(CreateCompanyDisponibilitiesSchema)

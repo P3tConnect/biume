@@ -4,7 +4,7 @@ import { z } from "zod";
 import { userAction } from "../lib/action";
 import { CreateUserSchema } from "../db";
 
-export async function getUsers() {}
+export const getUsers = userAction.action(async () => {});
 
 export const createUser = userAction
   .schema(CreateUserSchema)

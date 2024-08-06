@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateProgressionSchema } from "../db";
 import { proAction } from "../lib/action";
 
-export async function getProgression() {}
+export const getProgression = proAction.action(async () => {});
 
 export const createProgression = proAction
   .schema(CreateProgressionSchema)

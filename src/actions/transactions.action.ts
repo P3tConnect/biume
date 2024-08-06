@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateTransactionSchema } from "../db";
 import { userAction } from "../lib";
 
-export const getTransactions = () => {};
+export const getTransactions = userAction.action(async () => {});
 
 export const createTransactions = userAction
   .schema(CreateTransactionSchema)

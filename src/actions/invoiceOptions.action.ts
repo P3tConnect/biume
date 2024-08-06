@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 
-export async function getInvoiceOptions() {}
+export const getInvoiceOptions = userAction.action(async () => {});
 
 export const createInvoiceOptions = proAction
   .schema(CreateInvoiceOptionsSchema)

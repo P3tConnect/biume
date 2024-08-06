@@ -4,7 +4,7 @@ import { CreateAlertsSchema } from "../db";
 import { proAction } from "../lib/action";
 import { z } from "zod";
 
-export async function getAlerts() {}
+export const getAlerts = proAction.action(async () => {});
 
 export const createAlert = proAction
   .schema(CreateAlertsSchema)

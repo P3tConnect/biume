@@ -3,7 +3,7 @@ import { z } from "zod";
 import { CreateDeseaseSchema } from "../db";
 import { userAction } from "../lib";
 
-export const getDeseases = async () => {};
+export const getDeseases = userAction.action(async () => {});
 
 export const creteDesease = userAction
   .schema(CreateDeseaseSchema)

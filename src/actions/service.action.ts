@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 import { CreateServiceSchema } from "../db";
 
-export async function getServices() {}
+export const getServices = userAction.action(async () => {});
 
 export const createService = proAction
   .schema(CreateServiceSchema)

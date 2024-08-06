@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateProductSchema } from "../db/products";
 import { proAction } from "../lib/action";
 
-export async function getProduct() {}
+export const getProduct = proAction.action(async () => {});
 
 export const createProduct = proAction
   .schema(CreateProductSchema)

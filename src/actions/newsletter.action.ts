@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { CreateNewsletterSchema } from "../db";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 
-export async function getNewsletters() {}
+export const getNewsletters = userAction.action(async () => {});
 
 export const createNewsletter = proAction
   .schema(CreateNewsletterSchema)

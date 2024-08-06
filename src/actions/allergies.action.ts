@@ -4,7 +4,7 @@ import { z } from "zod";
 import { userAction } from "../lib/action";
 import { CreateAllergySchema } from "../db";
 
-export async function getAllergies() {}
+export const getAllergies = userAction.action(async () => {});
 
 export const createAllergy = userAction
   .schema(CreateAllergySchema)

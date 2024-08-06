@@ -3,7 +3,7 @@ import { z } from "zod";
 import { CreateAddressSchema } from "../db/addresses";
 import { userAction } from "../lib";
 
-export const getAddresses = () => {};
+export const getAddresses = userAction.action(async () => {});
 
 export const createAddresses = userAction
   .schema(CreateAddressSchema)

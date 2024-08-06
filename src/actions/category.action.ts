@@ -1,9 +1,13 @@
 "use server";
 import { z } from "zod";
 import { CreateCategorySchema } from "../db";
-import { proAction } from "../lib";
+import { proAction, userAction } from "../lib/action";
 
-export const getCategories = () => {};
+export const getCategories = userAction.action(async () => {});
+
+export const getCategoryById = userAction
+  .schema(z.string())
+  .action(async () => {});
 
 export const createCategory = proAction
   .schema(CreateCategorySchema)

@@ -2,11 +2,13 @@
 
 import { z } from "zod";
 import { CreateCompanySchema } from "../db";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 
-export async function getCompanies() {}
+export const getCompanies = userAction.action(async () => {});
 
-export async function getCompanyById() {}
+export const getCompanyById = userAction
+  .schema(z.string())
+  .action(async () => {});
 
 export const createCompany = proAction
   .schema(CreateCompanySchema)

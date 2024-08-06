@@ -4,7 +4,7 @@ import { z } from "zod";
 import { proAction } from "../lib/action";
 import { CreateTaskSchema } from "../db";
 
-export async function getTasks() {}
+export const getTasks = proAction.action(async () => {});
 
 export const createTask = proAction
   .schema(CreateTaskSchema)
