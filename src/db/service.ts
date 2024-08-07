@@ -14,6 +14,7 @@ export const service = pgTable("service", {
   companyId: text("proId").references(() => company.id, {
     onDelete: "cascade",
   }),
+  duration: integer("duration"), // in minutes
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });

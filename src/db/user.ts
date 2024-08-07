@@ -19,6 +19,7 @@ import { deseases } from "./deseases";
 import { company } from "./company";
 import { address } from "./addresses";
 import { z } from "zod";
+import { transaction } from "./transactions";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -57,6 +58,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
     fields: [user.addressId],
     references: [address.id],
   }),
+  transactions: many(transaction),
 }));
 
 export type User = typeof user.$inferSelect;

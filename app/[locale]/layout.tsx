@@ -2,15 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/src/lib/utils";
-import { logger, safeConfig } from "@/src/lib";
+import { safeConfig } from "@/src/lib";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../api/uploadthing/core";
 import Providers from "@/src/context/providers";
-import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { setUserLocale } from "@/src/config/locale";
-import { Locale } from "@/src/lib/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -91,7 +89,7 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: { locale: string }
 }>) {
-    const messages = await getMessages();
+    const messages = await getMessages({ locale: params.locale });
 
     return (
         <html lang={params.locale}>
