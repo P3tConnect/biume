@@ -1,9 +1,9 @@
 "use server";
 import { z } from "zod";
 import { CreateJobSchema } from "../db";
-import { proAction } from "../lib";
+import { proAction, userAction } from "../lib/action";
 
-export const getJobs = () => {};
+export const getJobs = userAction.action(async () => {});
 
 export const createJob = proAction
   .schema(CreateJobSchema)

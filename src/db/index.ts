@@ -43,3 +43,4 @@ export * from "./petsDeseases";
 export * from "./petsIntolerences";
 export * from "./deseases";
 export * from "./transactions";
+export * from "./widgets";

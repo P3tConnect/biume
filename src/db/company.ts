@@ -19,6 +19,7 @@ import { user } from "./user";
 import { category } from "./category";
 import { companyAddress } from "./companyAddress";
 import { transaction } from "./transactions";
+import { widgets } from "./widgets";
 
 export const company = pgTable("company", {
   id: text("id")
@@ -79,6 +80,7 @@ export const companyRelations = relations(company, ({ one, many }) => ({
     references: [companyAddress.id],
   }),
   transactions: many(transaction),
+  widgets: many(widgets),
 }));
 
 export type Company = typeof company.$inferSelect;

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { CreateCompanyAddressSchema } from "../db/companyAddress";
 import { proAction, userAction } from "../lib";
 
-export const getCompanyAddress = () => {};
+export const getCompanyAddress = proAction.action(async () => {});
 
 export const createCompanyAddress = proAction
   .schema(CreateCompanyAddressSchema)

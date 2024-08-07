@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateEmployeeCompanySchema } from "../db";
 import { proAction } from "../lib/action";
 
-export async function getEmployeesCompany() {}
+export const getEmployeesCompany = proAction.action(async () => {});
 
 export const createEmployeeCompany = proAction
   .schema(CreateEmployeeCompanySchema)

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { CreateReceiptCategorySchema } from "../db";
 import { proAction } from "../lib";
 
-export const getReceiptCategories = () => {};
+export const getReceiptCategories = proAction.action(async () => {});
 
 export const createReceiptCategories = proAction
   .schema(CreateReceiptCategorySchema)

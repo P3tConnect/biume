@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { CreateObservationSchema } from "../db";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 
-export async function getObservations() {}
+export const getObservations = userAction.action(async () => {});
 
 export const createObservation = proAction
   .schema(CreateObservationSchema)

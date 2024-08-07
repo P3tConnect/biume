@@ -4,7 +4,7 @@ import { z } from "zod";
 import { userAction } from "../lib/action";
 import { CreateTopicSchema } from "../db";
 
-export async function getTopics() {}
+export const getTopics = userAction.action(async () => {});
 
 export const createTopic = userAction
   .schema(CreateTopicSchema)

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { userAction } from "../lib/action";
 import { CreatePetSchema } from "../db";
 
-export async function getPets() {}
+export const getPets = userAction.action(async () => {});
 
 export const createPet = userAction
   .schema(CreatePetSchema)

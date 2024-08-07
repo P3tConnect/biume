@@ -1,12 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../lib/action";
+import { proAction, userAction } from "../lib/action";
 import { CreateCancelPolicySchema } from "../db";
 
-export async function getCancelPolicies() {}
+export const getCancelPolicies = userAction.action(async () => {});
 
-export async function getCancelPoliciesByCompany() {}
+export const getCancelPoliciesByCompany = userAction.action(async () => {});
 
 export const createCancelPolicies = proAction
   .schema(CreateCancelPolicySchema)

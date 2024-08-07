@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateProjectInviteeSchema } from "../db";
 import { proAction } from "../lib/action";
 
-export async function getProjectInvitees() {}
+export const getProjectInvitees = proAction.action(async () => {});
 
 export const createProjectInvitee = proAction
   .schema(CreateProjectInviteeSchema)

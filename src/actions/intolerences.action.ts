@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CreateIntolerenceSchema } from "../db";
 import { userAction } from "../lib/action";
 
-export async function getIntolerences() {}
+export const getIntolerences = userAction.action(async () => {});
 
 export const createIntolerence = userAction
   .schema(CreateIntolerenceSchema)

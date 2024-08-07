@@ -4,7 +4,7 @@ import { z } from "zod";
 import { proAction } from "../lib/action";
 import { CreateReceiptSchema } from "../db";
 
-export async function getReceipts() {}
+export const getReceipts = proAction.action(async () => {});
 
 export const createReceipt = proAction
   .schema(CreateReceiptSchema)
