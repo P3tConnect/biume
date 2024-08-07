@@ -39,6 +39,7 @@ export const user = pgTable("user", {
   }),
   plan: plan("plan").default("NONE"),
   isPro: boolean("isPro").default(false),
+  isAdmin: boolean("isAdmin").default(false),
   createdAt: timestamp("createdAt").default(new Date()),
   updatedAt: timestamp("updateAt"),
 });
