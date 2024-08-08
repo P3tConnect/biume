@@ -19,7 +19,11 @@ import { deseases } from "./deseases";
 import { company } from "./company";
 import { address } from "./addresses";
 import { z } from "zod";
+<<<<<<< HEAD
 import { jobs } from "./jobs";
+=======
+import { transaction } from "./transactions";
+>>>>>>> 3edf5f6b8a575016c5143e0bb98eb3a574c93d2f
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -59,7 +63,11 @@ export const userRelations = relations(user, ({ one, many }) => ({
     fields: [user.addressId],
     references: [address.id],
   }),
+<<<<<<< HEAD
   jobs: many(jobs),
+=======
+  transactions: many(transaction),
+>>>>>>> 3edf5f6b8a575016c5143e0bb98eb3a574c93d2f
 }));
 
 export type User = typeof user.$inferSelect;
