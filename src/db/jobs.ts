@@ -16,6 +16,7 @@ export const JobType = pgEnum("jobType", [
   "reminder",
   "newsletter",
   "payout",
+  "refund",
   "none",
 ]);
 
