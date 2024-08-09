@@ -17,7 +17,6 @@ export const companyDisponibilities = pgTable("company_disponibilities", {
     .$defaultFn(() => crypto.randomUUID()),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
-  sessionType: sessionType("sessionType").default("oneToOne"),
   companyId: text("companyId").references(() => company.id, {
     onDelete: "cascade",
   }),

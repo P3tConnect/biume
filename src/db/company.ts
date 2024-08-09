@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { alertsTypes } from "./alertTypes";
 import { cancelPolicies } from "./cancelPolicies";
 import { companyDocuments } from "./companyDocuments";
 import { employeeCompany } from "./employeeCompany";
@@ -20,7 +19,7 @@ import { category } from "./category";
 import { companyAddress } from "./companyAddress";
 import { transaction } from "./transactions";
 import { widgets } from "./widgets";
-import { jobs } from "./jobs";
+import { bgJobs } from "./bgJobs";
 
 export const company = pgTable("company", {
   id: text("id")
@@ -46,6 +45,7 @@ export const company = pgTable("company", {
   }),
   nac: text("nac"),
   locked: boolean("locked").notNull().default(false),
+  lang: text("lang").default("fr"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
 });
@@ -67,7 +67,6 @@ export const companyRelations = relations(company, ({ one, many }) => ({
   cancelPolicies: many(cancelPolicies),
   projects: many(project),
   tasks: many(task),
-  alertTypes: many(alertsTypes),
   ratings: many(ratings),
   services: many(service),
   options: many(options),
@@ -82,7 +81,7 @@ export const companyRelations = relations(company, ({ one, many }) => ({
   }),
   transactions: many(transaction),
   widgets: many(widgets),
-  jobs: many(jobs),
+  bgJobs: many(bgJobs),
 }));
 
 export type Company = typeof company.$inferSelect;

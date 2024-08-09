@@ -1,5 +1,5 @@
 {
-  "id": "6ef5f689-51e3-46ab-ab99-dc08800db137",
+  "id": "65a9f8eb-cd4e-4a48-afc9-90bd2b2bc5d4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -147,7 +147,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.769'"
+          "default": "'2024-08-09 10:42:42.024'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -158,171 +158,6 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.alerts": {
-      "name": "alerts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "alertType": {
-          "name": "alertType",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "daysBefore": {
-          "name": "daysBefore",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "form": {
-          "name": "form",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "to": {
-          "name": "to",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "alerts_alertType_alerts_types_id_fk": {
-          "name": "alerts_alertType_alerts_types_id_fk",
-          "tableFrom": "alerts",
-          "tableTo": "alerts_types",
-          "columnsFrom": [
-            "alertType"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "alerts_form_company_id_fk": {
-          "name": "alerts_form_company_id_fk",
-          "tableFrom": "alerts",
-          "tableTo": "company",
-          "columnsFrom": [
-            "form"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "alerts_to_user_id_fk": {
-          "name": "alerts_to_user_id_fk",
-          "tableFrom": "alerts",
-          "tableTo": "user",
-          "columnsFrom": [
-            "to"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.alerts_types": {
-      "name": "alerts_types",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-07-01 18:58:35.679'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "alerts_types_ownerId_company_id_fk": {
-          "name": "alerts_types_ownerId_company_id_fk",
-          "tableFrom": "alerts_types",
-          "tableTo": "company",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -359,7 +194,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.759'"
+          "default": "'2024-08-09 10:42:42.018'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -403,7 +238,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
-          "default": "'PENDING'"
+          "default": "'USER PENDING'"
         },
         "beginAt": {
           "name": "beginAt",
@@ -436,12 +271,18 @@
           "notNull": false,
           "default": false
         },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.705'"
+          "default": "'2024-08-09 10:42:41.981'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -531,6 +372,96 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.bg_jobs": {
+      "name": "bg_jobs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "jobType": {
+          "name": "jobType",
+          "type": "jobType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'none'"
+        },
+        "from": {
+          "name": "from",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to": {
+          "name": "to",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateToExecute": {
+          "name": "dateToExecute",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "jobStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-08-09 10:42:42.011'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bg_jobs_from_company_id_fk": {
+          "name": "bg_jobs_from_company_id_fk",
+          "tableFrom": "bg_jobs",
+          "tableTo": "company",
+          "columnsFrom": [
+            "from"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "bg_jobs_to_user_id_fk": {
+          "name": "bg_jobs_to_user_id_fk",
+          "tableFrom": "bg_jobs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "to"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.cancel_policies": {
       "name": "cancel_policies",
       "schema": "",
@@ -564,7 +495,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.685'"
+          "default": "'2024-08-09 10:42:41.970'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -625,7 +556,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.724'"
+          "default": "'2024-08-09 10:42:41.992'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -740,6 +671,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "locked": {
+          "name": "locked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -859,7 +797,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.747'"
+          "default": "'2024-08-09 10:42:42.006'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -906,7 +844,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.690'"
+          "default": "'2024-08-09 10:42:41.973'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -961,7 +899,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.773'"
+          "default": "'2024-08-09 10:42:42.026'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1094,110 +1032,6 @@
       },
       "uniqueConstraints": {}
     },
-    "public.estimate": {
-      "name": "estimate",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "sessionId": {
-          "name": "sessionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "total": {
-          "name": "total",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'2024-07-01 18:58:35.714'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "estimate_sessionId_pro_session_id_fk": {
-          "name": "estimate_sessionId_pro_session_id_fk",
-          "tableFrom": "estimate",
-          "tableTo": "pro_session",
-          "columnsFrom": [
-            "sessionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.estimate_options": {
-      "name": "estimate_options",
-      "schema": "",
-      "columns": {
-        "estimateId": {
-          "name": "estimateId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "optionId": {
-          "name": "optionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "estimate_options_estimateId_estimate_id_fk": {
-          "name": "estimate_options_estimateId_estimate_id_fk",
-          "tableFrom": "estimate_options",
-          "tableTo": "estimate",
-          "columnsFrom": [
-            "estimateId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "estimate_options_optionId_options_id_fk": {
-          "name": "estimate_options_optionId_options_id_fk",
-          "tableFrom": "estimate_options",
-          "tableTo": "options",
-          "columnsFrom": [
-            "optionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.session": {
       "name": "session",
       "schema": "",
@@ -1307,12 +1141,19 @@
           "notNull": false,
           "default": false
         },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.770'"
+          "default": "'2024-08-09 10:42:42.024'"
         },
         "updateAt": {
           "name": "updateAt",
@@ -1497,7 +1338,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 18:58:35.763'"
+          "default": "'2024-08-09 10:42:42.020'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1535,8 +1376,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "sessionId": {
-          "name": "sessionId",
+        "askEstimateId": {
+          "name": "askEstimateId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1552,7 +1393,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 18:58:35.710'"
+          "default": "'2024-08-09 10:42:41.984'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1563,12 +1404,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "invoice_sessionId_pro_session_id_fk": {
-          "name": "invoice_sessionId_pro_session_id_fk",
+        "invoice_askEstimateId_ask_estimate_id_fk": {
+          "name": "invoice_askEstimateId_ask_estimate_id_fk",
           "tableFrom": "invoice",
-          "tableTo": "pro_session",
+          "tableTo": "ask_estimate",
           "columnsFrom": [
-            "sessionId"
+            "askEstimateId"
           ],
           "columnsTo": [
             "id"
@@ -1619,7 +1460,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.697'"
+          "default": "'2024-08-09 10:42:41.977'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1707,6 +1548,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "furColor": {
+          "name": "furColor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eyeColor": {
+          "name": "eyeColor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -1791,7 +1644,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'IN PROGRESS'"
+          "default": "'COMPANY PENDING'"
         },
         "atHome": {
           "name": "atHome",
@@ -1813,7 +1666,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.751'"
+          "default": "'2024-08-09 10:42:42.013'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1950,7 +1803,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.730'"
+          "default": "'2024-08-09 10:42:41.996'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2024,7 +1877,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.732'"
+          "default": "'2024-08-09 10:42:41.997'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2105,12 +1958,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.735'"
+          "default": "'2024-08-09 10:42:41.999'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2195,7 +2054,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.736'"
+          "default": "'2024-08-09 10:42:42.000'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2360,7 +2219,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-07-01 18:58:35.716'"
+          "default": "'2024-08-09 10:42:41.985'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2552,12 +2411,24 @@
           "primaryKey": false,
           "notNull": true
         },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reportTemplateId": {
+          "name": "reportTemplateId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.743'"
+          "default": "'2024-08-09 10:42:42.005'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2567,7 +2438,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "report_reportTemplateId_report_template_id_fk": {
+          "name": "report_reportTemplateId_report_template_id_fk",
+          "tableFrom": "report",
+          "tableTo": "report_template",
+          "columnsFrom": [
+            "reportTemplateId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -2598,7 +2483,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.751'"
+          "default": "'2024-08-09 10:42:42.013'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2694,7 +2579,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.725'"
+          "default": "'2024-08-09 10:42:41.992'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2804,7 +2689,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.744'"
+          "default": "'2024-08-09 10:42:42.005'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3125,10 +3010,16 @@
           "name": "from",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "to": {
           "name": "to",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -3138,7 +3029,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.782'"
+          "default": "'2024-08-09 10:42:42.033'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3148,7 +3039,84 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "transaction_from_user_id_fk": {
+          "name": "transaction_from_user_id_fk",
+          "tableFrom": "transaction",
+          "tableTo": "user",
+          "columnsFrom": [
+            "from"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transaction_to_company_id_fk": {
+          "name": "transaction_to_company_id_fk",
+          "tableFrom": "transaction",
+          "tableTo": "company",
+          "columnsFrom": [
+            "to"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.widgets": {
+      "name": "widgets",
+      "schema": "",
+      "columns": {
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "widgetsOrientation",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Horizontal'"
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "widgets_companyId_company_id_fk": {
+          "name": "widgets_companyId_company_id_fk",
+          "tableFrom": "widgets",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -3197,7 +3165,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-07-01 18:58:35.725'"
+          "default": "'2024-08-09 10:42:41.992'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3224,6 +3192,74 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.report_template": {
+      "name": "report_template",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "report_template_owner_id_user_id_fk": {
+          "name": "report_template_owner_id_user_id_fk",
+          "tableFrom": "report_template",
+          "tableTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     }
   },
   "enums": {
@@ -3231,10 +3267,37 @@
       "name": "askEstimateStatus",
       "schema": "public",
       "values": [
-        "PENDING",
-        "PAYED",
-        "CANCELLED",
-        "REVOKED"
+        "USER PENDING",
+        "USER ACCEPTED",
+        "REJECTED BY USER",
+        "CANCELED BY USER",
+        "USER PAYED",
+        "COMPANY PENDING",
+        "COMPANY ACCEPTED",
+        "REJECTED BY COMPANY",
+        "POSTPONED BY COMPANY",
+        "CANCELED BY COMPANY"
+      ]
+    },
+    "public.jobStatus": {
+      "name": "jobStatus",
+      "schema": "public",
+      "values": [
+        "pending",
+        "in_progress",
+        "completed",
+        "failed"
+      ]
+    },
+    "public.jobType": {
+      "name": "jobType",
+      "schema": "public",
+      "values": [
+        "reminder",
+        "newsletter",
+        "payout",
+        "refund",
+        "none"
       ]
     },
     "public.plan": {
@@ -3262,13 +3325,14 @@
       "name": "session_status_type",
       "schema": "public",
       "values": [
-        "PAYED",
-        "IN PROGRESS",
-        "WAITING FROM CLIENT",
-        "WAITING FOR REFUND",
-        "REFUNDED",
-        "CANCELED",
-        "POSTPAWNED"
+        "CLIENT PAYED",
+        "CLIENT PENDING",
+        "CLIENT CANCELED",
+        "CLIENT ACCEPTED",
+        "COMPANY PENDING",
+        "COMPANY ACCEPTED",
+        "COMPANY CANCELED",
+        "COMPANY POSTPONED"
       ]
     },
     "public.session_type": {
@@ -3278,9 +3342,26 @@
         "oneToOne",
         "multiple"
       ]
+    },
+    "public.widgetsOrientation": {
+      "name": "widgetsOrientation",
+      "schema": "public",
+      "values": [
+        "Horizontal",
+        "Vertical"
+      ]
+    },
+    "public.widgetsType": {
+      "name": "widgetsType",
+      "schema": "public",
+      "values": [
+        "Square",
+        "Rectangle"
+      ]
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
     "columns": {},
     "schemas": {},

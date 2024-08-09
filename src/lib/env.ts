@@ -24,7 +24,7 @@ interface Config {
 
 const getConfig = (): ENV => {
   return {
-    RESEND_API_KEY: process.env.NODE_ENV,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,

@@ -11,6 +11,7 @@ export const companyAddress = pgTable("company_address", {
   lng: integer("lng"),
   zip: integer("zip"),
   postalAddress: text("postalAddress").notNull(),
+  cntryCode: text("cntryCode"),
   createdAt: timestamp("createdAt").default(new Date()),
   updatedAt: timestamp("updatedAt"),
 });

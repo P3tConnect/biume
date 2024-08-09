@@ -19,11 +19,8 @@ import { deseases } from "./deseases";
 import { company } from "./company";
 import { address } from "./addresses";
 import { z } from "zod";
-<<<<<<< HEAD
-import { jobs } from "./jobs";
-=======
+import { bgJobs } from "./bgJobs";
 import { transaction } from "./transactions";
->>>>>>> 3edf5f6b8a575016c5143e0bb98eb3a574c93d2f
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -45,6 +42,8 @@ export const user = pgTable("user", {
   plan: plan("plan").default("NONE"),
   isPro: boolean("isPro").default(false),
   isAdmin: boolean("isAdmin").default(false),
+  locked: boolean("locked").default(false),
+  lang: text("lang").default("fr"),
   createdAt: timestamp("createdAt").default(new Date()),
   updatedAt: timestamp("updateAt"),
 });
@@ -57,17 +56,14 @@ export const userRelations = relations(user, ({ one, many }) => ({
   projectInvitees: many(projectsInvitees),
   allergies: many(allergies),
   intolerences: many(intolerences),
-  usersJobs: many(usersJobs),
+  jobs: many(usersJobs),
   deseases: many(deseases),
   address: one(address, {
     fields: [user.addressId],
     references: [address.id],
   }),
-<<<<<<< HEAD
-  jobs: many(jobs),
-=======
+  bgJobs: many(bgJobs),
   transactions: many(transaction),
->>>>>>> 3edf5f6b8a575016c5143e0bb98eb3a574c93d2f
 }));
 
 export type User = typeof user.$inferSelect;
