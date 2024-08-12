@@ -13,6 +13,9 @@ export const widgetsOrientation = pgEnum("widgetsOrientation", [
 ]);
 
 export const widgets = pgTable("widgets", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   width: integer("width").notNull(),
   height: integer("height").notNull(),
   type: widgetsType("type").default("Square").notNull(),

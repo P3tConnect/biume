@@ -43,3 +43,6 @@ export * from "./petsIntolerences";
 export * from "./deseases";
 export * from "./transactions";
 export * from "./widgets";
+export * from "./bgJobs";
+export * from "./companyAddress";
+export * from "./companyDocuments";
