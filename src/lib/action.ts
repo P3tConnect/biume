@@ -1,56 +1,41 @@
-import { createSafeActionClient } from "next-safe-action";
 import { currentUser } from "./current-user";
+import { createServerActionProcedure, ZSAError } from "zsa";
 
-export class ActionError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "Action Error";
+const authedProcedure = createServerActionProcedure().handler(async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
+    }
+
+    return {
+      user,
+    };
+  } catch (err) {
+    throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
   }
-}
-
-const handleReturnedServerError = (error: Error) => {
-  if (error instanceof ActionError) {
-    return error.message;
-  }
-
-  return "An unexpected error occured";
-};
-
-export const action = createSafeActionClient({
-  handleReturnedServerError: handleReturnedServerError,
 });
 
-export const userAction = action.use(async ({ next }) => {
-  const user = await currentUser();
+export const authedAction = authedProcedure.createServerAction();
 
-  if (!user) {
-    throw new ActionError("You must be logged in !");
-  }
+const companyProcedure = createServerActionProcedure(authedProcedure).handler(
+  async ({ ctx }) => {
+    if (ctx.user.plan != "NONE") {
+      return ctx;
+    }
+    throw new ZSAError("NOT_AUTHORIZED", "You need to subscribe to a plan");
+  },
+);
 
-  return next({ ctx: user });
-});
+export const companyAction = companyProcedure.createServerAction();
 
-export const proAction = action.use(async ({ next }) => {
-  const user = await currentUser();
+export const adminAction = createServerActionProcedure(authedProcedure).handler(
+  async ({ ctx }) => {
+    if (ctx.user.isAdmin) {
+      return ctx;
+    }
 
-  if (!user) {
-    throw new ActionError("You must be logged in !");
-  }
-
-  if (user.plan != "NONE") {
-    return next({ ctx: user });
-  }
-
-  throw new ActionError(
-    "You need to subscribe to a plan to perform this action",
-  );
-});
-
-// export const adminAction = action.use(async ({ next }) => {
-//   const user = await currentUser();
-
-//   if (!user) {
-//     throw new ActionError("You must be logged in !")
-//   }
-
-// });
+    throw new ZSAError("NOT_AUTHORIZED", "You need to be an admin");
+  },
+);

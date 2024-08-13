@@ -1,12 +1,11 @@
 'use client';
 
 import Marquee from "@/components/magicui/marquee";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
   BarChart,
-  ChevronRight,
   File,
   Globe,
   HeartHandshake,
@@ -22,8 +21,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { emailSchema } from "@/src/lib/schemas";
-import { triggerAction } from "@/src/actions/trigger.action";
-import { getCompanyAddress } from "@/src/actions/companyAddress.action";
 import { useTranslations } from "next-intl";
 
 const tiles = [

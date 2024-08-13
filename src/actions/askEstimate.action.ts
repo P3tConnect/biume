@@ -1,63 +1,64 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../lib/action";
+import { authedAction } from "../lib/action";
 import { askEstimate, CreateAskEstimateSchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getAskEstimates = userAction.action(async () => {
+export const getAskEstimates = authedAction.handler(async () => {
   const data = await db.query.askEstimate.findMany().execute();
 
   if (!data) {
-    throw new ActionError("AskEstimates not found");
+    throw new ZSAError("NOT_FOUND", "AskEstimates not found");
   }
 
   return data;
 });
 
-export const createAskEstimate = userAction
-  .schema(CreateAskEstimateSchema)
-  .action(async ({ parsedInput }) => {
+export const createAskEstimate = authedAction
+  .input(CreateAskEstimateSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(askEstimate)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("AskEstimate not created");
+      throw new ZSAError("ERROR", "AskEstimate not created");
     }
 
     return data;
   });
 
-export const updateAskEstimate = userAction
-  .schema(CreateAskEstimateSchema)
-  .action(async ({ parsedInput }) => {
+export const updateAskEstimate = authedAction
+  .input(CreateAskEstimateSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(askEstimate)
-      .set(parsedInput)
-      .where(eq(askEstimate.id, parsedInput.id))
+      .set(input)
+      .where(eq(askEstimate.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("AskEstimate not updated");
+      throw new ZSAError("ERROR", "AskEstimate not updated");
     }
 
     return data;
   });
 
-export const deleteAskEstimate = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteAskEstimate = authedAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(askEstimate)
-      .where(eq(askEstimate.id, parsedInput))
+      .where(eq(askEstimate.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("AskEstimate not deleted");
+      throw new ZSAError("ERROR", "AskEstimate not deleted");
     }
   });

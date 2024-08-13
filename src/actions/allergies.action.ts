@@ -1,63 +1,60 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../lib/action";
+import { authedAction } from "../lib/action";
 import { allergies, CreateAllergySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getAllergies = userAction.action(async () => {
+export const getAllergies = authedAction.handler(async () => {
   const data = await db.query.allergies.findMany();
 
   if (!data) {
-    throw new ActionError("Allergies not found");
+    throw new ZSAError("NOT_FOUND", "Allergies not found");
   }
 
   return data;
 });
 
-export const createAllergy = userAction
-  .schema(CreateAllergySchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(allergies)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createAllergy = authedAction
+  .input(CreateAllergySchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(allergies).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Allergy not created");
+      throw new ZSAError("ERROR", "Allergy not created");
     }
 
     return data;
   });
 
-export const updateAllergy = userAction
-  .schema(CreateAllergySchema)
-  .action(async ({ parsedInput }) => {
+export const updateAllergy = authedAction
+  .input(CreateAllergySchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(allergies)
-      .set(parsedInput)
-      .where(eq(allergies.id, parsedInput.id))
+      .set(input)
+      .where(eq(allergies.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Allergy not updated");
+      throw new ZSAError("ERROR", "Allergy not updated");
     }
 
     return data;
   });
 
-export const deleteAllergy = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteAllergy = authedAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(allergies)
-      .where(eq(allergies.id, parsedInput))
+      .where(eq(allergies.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("Allergy not deleted");
+      throw new ZSAError("ERROR", "Allergy not deleted");
     }
   });
