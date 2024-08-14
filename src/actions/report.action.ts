@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction, db } from "../lib";
 import { CreateReportSchema, report } from "../db";
 import { eq } from "drizzle-orm";
-import { db } from "../lib";
+import { ZSAError } from "zsa";
 
-export const getReports = userAction.action(async () => {});
+export const getReports = clientAction.handler(async () => {});
 
-export const createReport = proAction
-  .schema(CreateReportSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(report)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createReport = companyAction
+  .input(CreateReportSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(report).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Report not created");
+      throw new ZSAError("ERROR", "Report not created");
     }
 
     return data;
   });
 
-export const updateReport = proAction
-  .schema(CreateReportSchema)
-  .action(async ({ parsedInput }) => {
+export const updateReport = companyAction
+  .input(CreateReportSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(report)
-      .set(parsedInput)
-      .where(eq(report.id, parsedInput.id))
+      .set(input)
+      .where(eq(report.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Report not updated");
+      throw new ZSAError("ERROR", "Report not updated");
     }
 
     return data;
   });
 
-export const deleteReport = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteReport = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(report)
-      .where(eq(report.id, parsedInput))
+      .where(eq(report.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Report not deleted");
+      throw new ZSAError("ERROR", "Report not deleted");
     }
   });

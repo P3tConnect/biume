@@ -2,63 +2,63 @@
 
 import { z } from "zod";
 import { CreateProSessionSchema, proSession } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
-import { db } from "../lib";
+import { clientAction, companyAction, db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getProSessions = userAction.action(async () => {});
+export const getProSessions = clientAction.handler(async () => {});
 
-export const getProSessionById = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+export const getProSessionById = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const getProSessionByCompany = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+export const getProSessionByCompany = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const createProSession = proAction
-  .schema(CreateProSessionSchema)
-  .action(async ({ parsedInput }) => {
+export const createProSession = companyAction
+  .input(CreateProSessionSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(proSession)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("ProSession not created");
+      throw new ZSAError("ERROR", "ProSession not created");
     }
 
     return data;
   });
 
-export const updateProSession = proAction
-  .schema(CreateProSessionSchema)
-  .action(async ({ parsedInput }) => {
+export const updateProSession = companyAction
+  .input(CreateProSessionSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(proSession)
-      .set(parsedInput)
-      .where(eq(proSession.id, parsedInput.id))
+      .set(input)
+      .where(eq(proSession.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("ProSession not updated");
+      throw new ZSAError("ERROR", "ProSession not updated");
     }
 
     return data;
   });
 
-export const deleteProSession = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteProSession = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(proSession)
-      .where(eq(proSession.id, parsedInput))
+      .where(eq(proSession.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("ProSession not deleted");
+      throw new ZSAError("ERROR", "ProSession not deleted");
     }
   });

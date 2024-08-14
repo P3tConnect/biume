@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../lib/action";
+import { clientAction, db } from "../lib";
 import { CreateTopicSchema, topic } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getTopics = userAction.action(async () => {});
+export const getTopics = clientAction.handler(async () => {});
 
-export const createTopic = userAction
-  .schema(CreateTopicSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(topic)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createTopic = clientAction
+  .input(CreateTopicSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(topic).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Topic not created");
+      throw new ZSAError("ERROR", "Topic not created");
     }
 
     return data;
   });
 
-export const updateTopic = userAction
-  .schema(CreateTopicSchema)
-  .action(async ({ parsedInput }) => {
+export const updateTopic = clientAction
+  .input(CreateTopicSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(topic)
-      .set(parsedInput)
-      .where(eq(topic.id, parsedInput.id))
+      .set(input)
+      .where(eq(topic.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Topic not updated");
+      throw new ZSAError("ERROR", "Topic not updated");
     }
 
     return data;
   });
 
-export const deleteTopic = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteTopic = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(topic)
-      .where(eq(topic.id, parsedInput))
+      .where(eq(topic.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Topic not deleted");
+      throw new ZSAError("ERROR", "Topic not deleted");
     }
   });

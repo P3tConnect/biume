@@ -2,55 +2,56 @@
 
 import { z } from "zod";
 import { CreateObservationSchema, observation } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { companyAction, clientAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getObservations = userAction.action(async () => {});
+export const getObservations = clientAction.handler(async () => {});
 
-export const createObservation = proAction
-  .schema(CreateObservationSchema)
-  .action(async ({ parsedInput }) => {
+export const createObservation = companyAction
+  .input(CreateObservationSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(observation)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Observation not created");
+      throw new ZSAError("ERROR", "Observation not created");
     }
 
     return data;
   });
 
-export const updateObservation = proAction
-  .schema(CreateObservationSchema)
-  .action(async ({ parsedInput }) => {
+export const updateObservation = companyAction
+  .input(CreateObservationSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(observation)
-      .set(parsedInput)
-      .where(eq(observation.id, parsedInput.id))
+      .set(input)
+      .where(eq(observation.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Observation not updated");
+      throw new ZSAError("ERROR", "Observation not updated");
     }
 
     return data;
   });
 
-export const deleteObservation = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteObservation = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(observation)
-      .where(eq(observation.id, parsedInput))
+      .where(eq(observation.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Observation not deleted");
+      throw new ZSAError("ERROR", "Observation not deleted");
     }
   });

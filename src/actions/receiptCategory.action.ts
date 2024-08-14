@@ -1,18 +1,18 @@
 "use server";
 import { z } from "zod";
 import { CreateReceiptCategorySchema } from "../db";
-import { proAction } from "../lib";
+import { companyAction } from "../lib";
 
-export const getReceiptCategories = proAction.action(async () => {});
+export const getReceiptCategories = companyAction.handler(async () => {});
 
-export const createReceiptCategories = proAction
-  .schema(CreateReceiptCategorySchema)
-  .action(async () => {});
+export const createReceiptCategories = companyAction
+  .input(CreateReceiptCategorySchema)
+  .handler(async () => {});
 
-export const updateReceiptCategory = proAction
-  .schema(CreateReceiptCategorySchema)
-  .action(async () => {});
+export const updateReceiptCategory = companyAction
+  .input(CreateReceiptCategorySchema)
+  .handler(async () => {});
 
-export const deleteReceiptCategory = proAction
-  .schema(z.string())
-  .action(async () => {});
+export const deleteReceiptCategory = companyAction
+  .input(z.string())
+  .handler(async () => {});

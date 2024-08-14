@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction, db } from "../lib";
 import { CreateServiceSchema, service } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getServices = userAction.action(async () => {});
+export const getServices = clientAction.handler(async () => {});
 
-export const createService = proAction
-  .schema(CreateServiceSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(service)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createService = companyAction
+  .input(CreateServiceSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(service).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Service not created");
+      throw new ZSAError("ERROR", "Service not created");
     }
 
     return data;
   });
 
-export const updateService = proAction
-  .schema(CreateServiceSchema)
-  .action(async ({ parsedInput }) => {
+export const updateService = companyAction
+  .input(CreateServiceSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(service)
-      .set(parsedInput)
-      .where(eq(service.id, parsedInput.id))
+      .set(input)
+      .where(eq(service.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Service not updated");
+      throw new ZSAError("ERROR", "Service not updated");
     }
 
     return data;
   });
 
-export const deleteService = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteService = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(service)
-      .where(eq(service.id, parsedInput))
+      .where(eq(service.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Service not deleted");
+      throw new ZSAError("ERROR", "Service not deleted");
     }
   });

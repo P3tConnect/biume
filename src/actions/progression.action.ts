@@ -2,55 +2,55 @@
 
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
-import { ActionError, proAction } from "../lib/action";
-import { db } from "../lib";
+import { companyAction, db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getProgression = proAction.action(async () => {});
+export const getProgression = companyAction.handler(async () => {});
 
-export const createProgression = proAction
-  .schema(CreateProgressionSchema)
-  .action(async ({ parsedInput }) => {
+export const createProgression = companyAction
+  .input(CreateProgressionSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(progression)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Progression not created");
+      throw new ZSAError("ERROR", "Progression not created");
     }
 
     return data;
   });
 
-export const updateProgression = proAction
-  .schema(CreateProgressionSchema)
-  .action(async ({ parsedInput }) => {
+export const updateProgression = companyAction
+  .input(CreateProgressionSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(progression)
-      .set(parsedInput)
-      .where(eq(progression.id, parsedInput.id))
+      .set(input)
+      .where(eq(progression.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Progression not updated");
+      throw new ZSAError("ERROR", "Progression not updated");
     }
 
     return data;
   });
 
-export const deleteProgression = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteProgression = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(progression)
-      .where(eq(progression.id, parsedInput))
+      .where(eq(progression.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Progression not deleted");
+      throw new ZSAError("ERROR", "Progression not deleted");
     }
   });

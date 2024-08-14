@@ -1,51 +1,50 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction } from "../lib/action";
+import { companyAction, db } from "../lib";
 import { CreateReceiptSchema, receipt } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getReceipts = proAction.action(async () => {});
+export const getReceipts = companyAction.handler(async () => {});
 
-export const createReceipt = proAction
-  .schema(CreateReceiptSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(receipt)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createReceipt = companyAction
+  .input(CreateReceiptSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(receipt).values(input).returning().execute();
+
     if (!data) {
-      throw new ActionError("Receipt not created");
+      throw new ZSAError("ERROR", "Receipt not created");
     }
+
     return data;
   });
 
-export const updateReceipt = proAction
-  .schema(CreateReceiptSchema)
-  .action(async ({ parsedInput }) => {
+export const updateReceipt = companyAction
+  .input(CreateReceiptSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(receipt)
-      .set(parsedInput)
-      .where(eq(receipt.id, parsedInput.id))
+      .set(input)
+      .where(eq(receipt.id, input.id as string))
       .returning()
       .execute();
     if (!data) {
-      throw new ActionError("Receipt not updated");
+      throw new ZSAError("ERROR", "Receipt not updated");
     }
     return data;
   });
 
-export const deleteReceipt = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteReceipt = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(receipt)
-      .where(eq(receipt.id, parsedInput))
+      .where(eq(receipt.id, input))
       .returning()
       .execute();
+
     if (!data) {
-      throw new ActionError("Receipt not deleted");
+      throw new ZSAError("ERROR", "Receipt not deleted");
     }
   });

@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction, db } from "../lib";
 import { CreateInvoiceSchema, invoice } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getInvoices = userAction.action(async () => {});
+export const getInvoices = clientAction.handler(async () => {});
 
-export const createInvoice = proAction
-  .schema(CreateInvoiceSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(invoice)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createInvoice = companyAction
+  .input(CreateInvoiceSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(invoice).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Invoice not created");
+      throw new ZSAError("ERROR", "Invoice not created");
     }
 
     return data;
   });
 
-export const updateInvoice = proAction
-  .schema(CreateInvoiceSchema)
-  .action(async ({ parsedInput }) => {
+export const updateInvoice = companyAction
+  .input(CreateInvoiceSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(invoice)
-      .set(parsedInput)
-      .where(eq(invoice.id, parsedInput.id))
+      .set(input)
+      .where(eq(invoice.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Invoice not updated");
+      throw new ZSAError("ERROR", "Invoice not updated");
     }
 
     return data;
   });
 
-export const deleteInvoice = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteInvoice = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(invoice)
-      .where(eq(invoice.id, parsedInput))
+      .where(eq(invoice.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Invoice not deleted");
+      throw new ZSAError("ERROR", "Invoice not deleted");
     }
   });

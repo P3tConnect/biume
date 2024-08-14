@@ -4,53 +4,54 @@ import {
   companyAddress,
   CreateCompanyAddressSchema,
 } from "../db/companyAddress";
-import { ActionError, db, proAction } from "../lib";
+import { db, companyAction } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getCompanyAddress = proAction.action(async () => {});
+export const getCompanyAddress = companyAction.handler(async () => {});
 
-export const createCompanyAddress = proAction
-  .schema(CreateCompanyAddressSchema)
-  .action(async ({ parsedInput }) => {
+export const createCompanyAddress = companyAction
+  .input(CreateCompanyAddressSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(companyAddress)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyAddress not created");
+      throw new ZSAError("ERROR", "CompanyAddress not created");
     }
 
     return data;
   });
 
-export const updateCompanyAddress = proAction
-  .schema(CreateCompanyAddressSchema)
-  .action(async ({ parsedInput }) => {
+export const updateCompanyAddress = companyAction
+  .input(CreateCompanyAddressSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(companyAddress)
-      .set(parsedInput)
-      .where(eq(companyAddress.id, parsedInput.id))
+      .set(input)
+      .where(eq(companyAddress.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyAddress not updated");
+      throw new ZSAError("ERROR", "CompanyAddress not updated");
     }
 
     return data;
   });
 
-export const deleteCompanyAddress = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteCompanyAddress = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(companyAddress)
-      .where(eq(companyAddress.id, parsedInput))
+      .where(eq(companyAddress.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyAddress not deleted");
+      throw new ZSAError("ERROR", "CompanyAddress not deleted");
     }
   });

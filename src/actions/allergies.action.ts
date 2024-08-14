@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { authedAction } from "../lib/action";
+import { clientAction } from "../lib/action";
 import { allergies, CreateAllergySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getAllergies = authedAction.handler(async () => {
+export const getAllergies = clientAction.handler(async () => {
   const data = await db.query.allergies.findMany();
 
   if (!data) {
@@ -17,7 +17,7 @@ export const getAllergies = authedAction.handler(async () => {
   return data;
 });
 
-export const createAllergy = authedAction
+export const createAllergy = clientAction
   .input(CreateAllergySchema)
   .handler(async ({ input }) => {
     const data = await db.insert(allergies).values(input).returning().execute();
@@ -29,7 +29,7 @@ export const createAllergy = authedAction
     return data;
   });
 
-export const updateAllergy = authedAction
+export const updateAllergy = clientAction
   .input(CreateAllergySchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -46,7 +46,7 @@ export const updateAllergy = authedAction
     return data;
   });
 
-export const deleteAllergy = authedAction
+export const deleteAllergy = clientAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

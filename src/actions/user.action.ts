@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../lib/action";
+import { clientAction, db } from "../lib";
 import { CreateUserSchema, user } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getUsers = userAction.action(async () => {});
+export const getUsers = clientAction.handler(async () => {});
 
-export const createUser = userAction
-  .schema(CreateUserSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(user)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createUser = clientAction
+  .input(CreateUserSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(user).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("User not created");
+      throw new ZSAError("ERROR", "User not created");
     }
 
     return data;
   });
 
-export const updateUser = userAction
-  .schema(CreateUserSchema)
-  .action(async ({ parsedInput }) => {
+export const updateUser = clientAction
+  .input(CreateUserSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(user)
-      .set(parsedInput)
-      .where(eq(user.id, parsedInput.id))
+      .set(input)
+      .where(eq(user.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("User not updated");
+      throw new ZSAError("ERROR", "User not updated");
     }
 
     return data;
   });
 
-export const deleteUser = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteUser = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(user)
-      .where(eq(user.id, parsedInput))
+      .where(eq(user.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("User not deleted");
+      throw new ZSAError("ERROR", "User not deleted");
     }
   });

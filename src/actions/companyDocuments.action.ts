@@ -1,55 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction } from "../lib/action";
+import { companyAction, db } from "../lib";
 import { companyDocuments, CreateCompanyDocumentsSchema } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getCompanyDocuments = proAction.action(async () => {});
+export const getCompanyDocuments = companyAction.handler(async () => {});
 
-export const createCompanyDocuments = proAction
-  .schema(CreateCompanyDocumentsSchema)
-  .action(async ({ parsedInput }) => {
+export const createCompanyDocuments = companyAction
+  .input(CreateCompanyDocumentsSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(companyDocuments)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDocuments not created");
+      throw new ZSAError("ERROR", "CompanyDocuments not created");
     }
 
     return data;
   });
 
-export const updateCompanyDocuments = proAction
-  .schema(CreateCompanyDocumentsSchema)
-  .action(async ({ parsedInput }) => {
+export const updateCompanyDocuments = companyAction
+  .input(CreateCompanyDocumentsSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(companyDocuments)
-      .set(parsedInput)
-      .where(eq(companyDocuments.id, parsedInput.id))
+      .set(input)
+      .where(eq(companyDocuments.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDocuments not updated");
+      throw new ZSAError("ERROR", "CompanyDocuments not updated");
     }
 
     return data;
   });
 
-export const deleteCompanyDocuments = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteCompanyDocuments = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(companyDocuments)
-      .where(eq(companyDocuments.id, parsedInput))
+      .where(eq(companyDocuments.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDocuments not deleted");
+      throw new ZSAError("ERROR", "CompanyDocuments not deleted");
     }
   });

@@ -2,55 +2,51 @@
 
 import { z } from "zod";
 import { CreateProductSchema, product } from "../db/products";
-import { ActionError, proAction } from "../lib/action";
-import { db } from "../lib";
+import { companyAction, db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getProduct = proAction.action(async () => {});
+export const getProduct = companyAction.handler(async () => {});
 
-export const createProduct = proAction
-  .schema(CreateProductSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(product)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createProduct = companyAction
+  .input(CreateProductSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(product).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Product not created");
+      throw new ZSAError("ERROR", "Product not created");
     }
 
     return data;
   });
 
-export const updateProduct = proAction
-  .schema(CreateProductSchema)
-  .action(async ({ parsedInput }) => {
+export const updateProduct = companyAction
+  .input(CreateProductSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(product)
-      .set(parsedInput)
-      .where(eq(product.id, parsedInput.id))
+      .set(input)
+      .where(eq(product.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Product not updated");
+      throw new ZSAError("ERROR", "Product not updated");
     }
 
     return data;
   });
 
-export const deleteProduct = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteProduct = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(product)
-      .where(eq(product.id, parsedInput))
+      .where(eq(product.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Product not deleted");
+      throw new ZSAError("ERROR", "Product not deleted");
     }
   });

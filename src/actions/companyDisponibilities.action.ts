@@ -5,54 +5,54 @@ import {
   companyDisponibilities,
   CreateCompanyDisponibilitiesSchema,
 } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
-import { db } from "../lib";
+import { clientAction, companyAction, db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getCompanyDisponibilities = userAction.action(async () => {});
+export const getCompanyDisponibilities = clientAction.handler(async () => {});
 
-export const createCompanyDisponibilities = proAction
-  .schema(CreateCompanyDisponibilitiesSchema)
-  .action(async ({ parsedInput }) => {
+export const createCompanyDisponibilities = companyAction
+  .input(CreateCompanyDisponibilitiesSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(companyDisponibilities)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDisponibilities not created");
+      throw new ZSAError("ERROR", "CompanyDisponibilities not created");
     }
 
     return data;
   });
 
-export const updateCompanyDisponibilities = proAction
-  .schema(CreateCompanyDisponibilitiesSchema)
-  .action(async ({ parsedInput }) => {
+export const updateCompanyDisponibilities = companyAction
+  .input(CreateCompanyDisponibilitiesSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(companyDisponibilities)
-      .set(parsedInput)
-      .where(eq(companyDisponibilities.id, parsedInput.id))
+      .set(input)
+      .where(eq(companyDisponibilities.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDisponibilities not updated");
+      throw new ZSAError("ERROR", "CompanyDisponibilities not updated");
     }
 
     return data;
   });
 
-export const deleteCompanyDisponibilities = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteCompanyDisponibilities = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(companyDisponibilities)
-      .where(eq(companyDisponibilities.id, parsedInput))
+      .where(eq(companyDisponibilities.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("CompanyDisponibilities not deleted");
+      throw new ZSAError("ERROR", "CompanyDisponibilities not deleted");
     }
   });

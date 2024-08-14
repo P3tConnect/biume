@@ -2,55 +2,52 @@
 
 import { z } from "zod";
 import { CreateProjectSchema, project } from "../db";
-import { ActionError, proAction } from "../lib/action";
+import { companyAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getProjects = proAction.action(async () => {});
+export const getProjects = companyAction.handler(async () => {});
 
-export const createProject = proAction
-  .schema(CreateProjectSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(project)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createProject = companyAction
+  .input(CreateProjectSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(project).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Project not created");
+      throw new ZSAError("ERROR", "Project not created");
     }
 
     return data;
   });
 
-export const updateProject = proAction
-  .schema(CreateProjectSchema)
-  .action(async ({ parsedInput }) => {
+export const updateProject = companyAction
+  .input(CreateProjectSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(project)
-      .set(parsedInput)
-      .where(eq(project.id, parsedInput.id))
+      .set(input)
+      .where(eq(project.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Project not updated");
+      throw new ZSAError("ERROR", "Project not updated");
     }
 
     return data;
   });
 
-export const deleteProject = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteProject = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(project)
-      .where(eq(project.id, parsedInput))
+      .where(eq(project.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Project not deleted");
+      throw new ZSAError("ERROR", "Project not deleted");
     }
   });

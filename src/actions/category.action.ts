@@ -1,58 +1,55 @@
 "use server";
 import { z } from "zod";
 import { category, CreateCategorySchema } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getCategories = userAction.action(async () => {});
+export const getCategories = clientAction.handler(async () => {});
 
-export const getCategoryById = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+export const getCategoryById = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const createCategory = proAction
-  .schema(CreateCategorySchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(category)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createCategory = companyAction
+  .input(CreateCategorySchema)
+  .handler(async ({ input, ctx }) => {
+    const data = await db.insert(category).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Category not created");
+      throw new ZSAError("ERROR", "Category not created");
     }
 
     return data;
   });
 
-export const updateCategory = proAction
-  .schema(CreateCategorySchema)
-  .action(async ({ parsedInput }) => {
+export const updateCategory = companyAction
+  .input(CreateCategorySchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(category)
-      .set(parsedInput)
-      .where(eq(category.id, parsedInput.id))
+      .set(input)
+      .where(eq(category.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Category not updated");
+      throw new ZSAError("ERROR", "Category not updated");
     }
 
     return data;
   });
 
-export const deleteCategory = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteCategory = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(category)
-      .where(eq(category.id, parsedInput))
+      .where(eq(category.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("Category not deleted");
+      throw new ZSAError("ERROR", "Category not deleted");
     }
   });

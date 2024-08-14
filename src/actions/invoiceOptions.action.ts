@@ -2,18 +2,18 @@
 
 import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
-import { proAction, userAction } from "../lib/action";
+import { companyAction, clientAction } from "../lib";
 
-export const getInvoiceOptions = userAction.action(async () => {});
+export const getInvoiceOptions = clientAction.handler(async () => {});
 
-export const createInvoiceOptions = proAction
-  .schema(CreateInvoiceOptionsSchema)
-  .action(async ({}) => {});
+export const createInvoiceOptions = companyAction
+  .input(CreateInvoiceOptionsSchema)
+  .handler(async ({}) => {});
 
-export const updateInvoiceOptions = proAction
-  .schema(CreateInvoiceOptionsSchema)
-  .action(async ({}) => {});
+export const updateInvoiceOptions = companyAction
+  .input(CreateInvoiceOptionsSchema)
+  .handler(async ({}) => {});
 
-export const deleteInvoiceOptions = proAction
-  .schema(z.string())
-  .action(async ({}) => {});
+export const deleteInvoiceOptions = companyAction
+  .input(z.string())
+  .handler(async ({}) => {});

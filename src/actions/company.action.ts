@@ -2,58 +2,55 @@
 
 import { z } from "zod";
 import { company, CreateCompanySchema } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { companyAction, clientAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getCompanies = userAction.action(async () => {});
+export const getCompanies = clientAction.handler(async () => {});
 
-export const getCompanyById = userAction
-  .schema(z.string())
-  .action(async () => {});
+export const getCompanyById = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const createCompany = proAction
-  .schema(CreateCompanySchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(company)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createCompany = companyAction
+  .input(CreateCompanySchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(company).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Company not created");
+      throw new ZSAError("ERROR", "Company not created");
     }
 
     return data;
   });
 
-export const updateCompany = proAction
-  .schema(CreateCompanySchema)
-  .action(async ({ parsedInput }) => {
+export const updateCompany = companyAction
+  .input(CreateCompanySchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(company)
-      .set(parsedInput)
-      .where(eq(company.id, parsedInput.id))
+      .set(input)
+      .where(eq(company.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Company not updated");
+      throw new ZSAError("ERROR", "Company not updated");
     }
 
     return data;
   });
 
-export const deleteCompany = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteCompany = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(company)
-      .where(eq(company.id, parsedInput))
+      .where(eq(company.id, input))
       .execute();
 
     if (!data) {
-      throw new ActionError("Company not deleted");
+      throw new ZSAError("ERROR", "Company not deleted");
     }
   });

@@ -1,55 +1,52 @@
 "use server";
 import { z } from "zod";
 import { CreateDeseaseSchema, deseases } from "../db";
-import { ActionError, db, userAction } from "../lib";
+import { db, clientAction } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getDeseases = userAction.action(async () => {});
+export const getDeseases = clientAction.handler(async () => {});
 
-export const creteDesease = userAction
-  .schema(CreateDeseaseSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(deseases)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const creteDesease = clientAction
+  .input(CreateDeseaseSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(deseases).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Desease not created");
+      throw new ZSAError("ERROR", "Desease not created");
     }
 
     return data;
   });
 
-export const updateDesease = userAction
-  .schema(CreateDeseaseSchema)
-  .action(async ({ parsedInput }) => {
+export const updateDesease = clientAction
+  .input(CreateDeseaseSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(deseases)
-      .set(parsedInput)
-      .where(eq(deseases.id, parsedInput.id))
+      .set(input)
+      .where(eq(deseases.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Desease not updated");
+      throw new ZSAError("ERROR", "Desease not updated");
     }
 
     return data;
   });
 
-export const deleteDesease = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteDesease = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(deseases)
-      .where(eq(deseases.id, parsedInput))
+      .where(eq(deseases.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Desease not deleted");
+      throw new ZSAError("ERROR", "Desease not deleted");
     }
 
     return data;

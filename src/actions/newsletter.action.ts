@@ -1,56 +1,58 @@
-"use server";
+import { input } from "./../config/primitives";
+("use server");
 
 import { z } from "zod";
 import { CreateNewsletterSchema, newsletter } from "../db";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getNewsletters = userAction.action(async () => {});
+export const getNewsletters = clientAction.handler(async () => {});
 
-export const createNewsletter = proAction
-  .schema(CreateNewsletterSchema)
-  .action(async ({ parsedInput }) => {
+export const createNewsletter = companyAction
+  .input(CreateNewsletterSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(newsletter)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Newsletter not created");
+      throw new ZSAError("ERROR", "Newsletter not created");
     }
 
     return data;
   });
 
-export const updateNewsletter = proAction
-  .schema(CreateNewsletterSchema)
-  .action(async ({ parsedInput }) => {
+export const updateNewsletter = companyAction
+  .input(CreateNewsletterSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(newsletter)
-      .set(parsedInput)
-      .where(eq(newsletter.id, parsedInput.id))
+      .set(input)
+      .where(eq(newsletter.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Newsletter not updated");
+      throw new ZSAError("ERROR", "Newsletter not updated");
     }
 
     return data;
   });
 
-export const deleteNewsletter = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteNewsletter = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(newsletter)
-      .where(eq(newsletter.id, parsedInput))
+      .where(eq(newsletter.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Newsletter not deleted");
+      throw new ZSAError("ERROR", "Newsletter not deleted");
     }
   });

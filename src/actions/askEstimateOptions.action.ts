@@ -1,33 +1,32 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction } from "../lib/action";
+import { companyAction, db } from "../lib";
 import { CreateAskEstimateOptionSchema, askEstimateOptions } from "../db";
-import { db } from "../lib";
-// import { db } from "..//db";
+import { ZSAError } from "zsa";
 
 export async function getAskEstimateOptions() {}
 
-export const createAskEstimateOptions = proAction
-  .schema(CreateAskEstimateOptionSchema)
-  .action(async ({ parsedInput }) => {
+export const createAskEstimateOptions = companyAction
+  .input(CreateAskEstimateOptionSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(askEstimateOptions)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("AskEstimateOptions not created");
+      throw new ZSAError("ERROR", "AskEstimateOptions not created");
     }
 
     return data;
   });
 
-export const updateAskEstimateOptions = proAction
-  .schema(CreateAskEstimateOptionSchema)
-  .action(async ({ parsedInput }) => {});
+export const updateAskEstimateOptions = companyAction
+  .input(CreateAskEstimateOptionSchema)
+  .handler(async ({ input }) => {});
 
-export const deleteAskEstimateOptions = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+export const deleteAskEstimateOptions = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {});

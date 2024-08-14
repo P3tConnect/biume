@@ -1,52 +1,46 @@
 import { z } from "zod";
 import { bgJobs, CreateBgJobsSchema } from "../db/bgJobs";
-import { ActionError, db, proAction } from "../lib";
+import { db, companyAction } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getBgJobs = proAction.action(async () => {});
+export const getBgJobs = companyAction.handler(async () => {});
 
-export const createBgJob = proAction
-  .schema(CreateBgJobsSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(bgJobs)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createBgJob = companyAction
+  .input(CreateBgJobsSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(bgJobs).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("BgJob not created");
+      throw new ZSAError("ERROR", "BgJob not created");
     }
 
     return data;
   });
 
-export const updateBgJob = proAction
-  .schema(CreateBgJobsSchema)
-  .action(async ({ parsedInput }) => {
+export const updateBgJob = companyAction
+  .input(CreateBgJobsSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(bgJobs)
-      .set(parsedInput)
-      .where(eq(bgJobs.id, parsedInput.id))
+      .set(input)
+      .where(eq(bgJobs.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("BgJob not updated");
+      throw new ZSAError("ERROR", "BgJob not updated");
     }
 
     return data;
   });
 
-export const deleteBgJob = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .delete(bgJobs)
-      .where(eq(bgJobs.id, parsedInput))
-      .execute();
+export const deleteBgJob = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db.delete(bgJobs).where(eq(bgJobs.id, input)).execute();
 
     if (!data) {
-      throw new ActionError("BgJob not deleted");
+      throw new ZSAError("ERROR", "BgJob not deleted");
     }
   });

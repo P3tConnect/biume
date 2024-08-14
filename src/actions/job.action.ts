@@ -1,49 +1,50 @@
 import { eq } from "drizzle-orm";
 import { CreateJobSchema, job } from "../db";
-import { ActionError, db, proAction } from "../lib";
+import { db, companyAction } from "../lib";
 import { z } from "zod";
+import { ZSAError } from "zsa";
 
-export const getJobs = proAction.action(async () => {});
+export const getJobs = companyAction.handler(async () => {});
 
-export const createJob = proAction
-  .schema(CreateJobSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db.insert(job).values(parsedInput).returning().execute();
+export const createJob = companyAction
+  .input(CreateJobSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(job).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Job not created");
+      throw new ZSAError("ERROR", "Job not created");
     }
 
     return data;
   });
 
-export const updateJob = proAction
-  .schema(CreateJobSchema)
-  .action(async ({ parsedInput }) => {
+export const updateJob = companyAction
+  .input(CreateJobSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(job)
-      .set(parsedInput)
-      .where(eq(job.id, parsedInput.id))
+      .set(input)
+      .where(eq(job.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Job not updated");
+      throw new ZSAError("ERROR", "Job not updated");
     }
 
     return data;
   });
 
-export const deleteJob = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteJob = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(job)
-      .where(eq(job.id, parsedInput))
+      .where(eq(job.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Job not deleted");
+      throw new ZSAError("ERROR", "Job not deleted");
     }
   });

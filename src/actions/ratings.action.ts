@@ -1,56 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, proAction, userAction } from "../lib/action";
+import { clientAction, companyAction, db } from "../lib";
 import { CreateRatingSchema, ratings } from "../db";
-import { db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getRatings = userAction.action(async () => {});
+export const getRatings = clientAction.handler(async () => {});
 
-export const createRating = userAction
-  .schema(CreateRatingSchema)
-  .action(async ({ parsedInput }) => {
-    const data = await db
-      .insert(ratings)
-      .values(parsedInput)
-      .returning()
-      .execute();
+export const createRating = clientAction
+  .input(CreateRatingSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(ratings).values(input).returning().execute();
 
     if (!data) {
-      throw new ActionError("Rating not created");
+      throw new ZSAError("ERROR", "Rating not created");
     }
 
     return data;
   });
 
-export const updateRating = userAction
-  .schema(CreateRatingSchema)
-  .action(async ({ parsedInput }) => {
+export const updateRating = clientAction
+  .input(CreateRatingSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(ratings)
-      .set(parsedInput)
-      .where(eq(ratings.id, parsedInput.id))
+      .set(input)
+      .where(eq(ratings.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Rating not updated");
+      throw new ZSAError("ERROR", "Rating not updated");
     }
 
     return data;
   });
 
-export const deleteRating = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteRating = companyAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(ratings)
-      .where(eq(ratings.id, parsedInput))
+      .where(eq(ratings.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Rating not deleted");
+      throw new ZSAError("ERROR", "Rating not deleted");
     }
   });

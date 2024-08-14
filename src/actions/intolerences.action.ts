@@ -2,55 +2,55 @@
 
 import { z } from "zod";
 import { CreateIntolerenceSchema, intolerences } from "../db";
-import { ActionError, userAction } from "../lib/action";
-import { db } from "../lib";
+import { clientAction, db } from "../lib";
 import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export const getIntolerences = userAction.action(async () => {});
+export const getIntolerences = clientAction.handler(async () => {});
 
-export const createIntolerence = userAction
-  .schema(CreateIntolerenceSchema)
-  .action(async ({ parsedInput }) => {
+export const createIntolerence = clientAction
+  .input(CreateIntolerenceSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .insert(intolerences)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Intolerence not created");
+      throw new ZSAError("ERROR", "Intolerence not created");
     }
 
     return data;
   });
 
-export const updateIntolerence = userAction
-  .schema(CreateIntolerenceSchema)
-  .action(async ({ parsedInput }) => {
+export const updateIntolerence = clientAction
+  .input(CreateIntolerenceSchema)
+  .handler(async ({ input }) => {
     const data = await db
       .update(intolerences)
-      .set(parsedInput)
-      .where(eq(intolerences.id, parsedInput.id))
+      .set(input)
+      .where(eq(intolerences.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Intolerence not updated");
+      throw new ZSAError("ERROR", "Intolerence not updated");
     }
 
     return data;
   });
 
-export const deleteIntolerence = userAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteIntolerence = clientAction
+  .input(z.string())
+  .handler(async ({ input }) => {
     const data = await db
       .delete(intolerences)
-      .where(eq(intolerences.id, parsedInput))
+      .where(eq(intolerences.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ActionError("Intolerence not deleted");
+      throw new ZSAError("ERROR", "Intolerence not deleted");
     }
   });
