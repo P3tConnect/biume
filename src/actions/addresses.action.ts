@@ -10,30 +10,38 @@ export const getAddresses = clientAction.handler(async () => {});
 export const createAddresses = clientAction
   .input(CreateAddressSchema)
   .handler(async ({ input }) => {
-    const data = await db.insert(address).values(input).returning().execute();
+    try {
+      const data = await db.insert(address).values(input).returning().execute();
 
-    if (!data) {
-      throw new ZSAError("ERROR", "Address not created");
+      if (!data) {
+        throw new ZSAError("ERROR", "Address not created");
+      }
+
+      return data;
+    } catch (err) {
+      throw new ZSAError("ERROR", err);
     }
-
-    return data;
   });
 
 export const updateAddress = clientAction
   .input(CreateAddressSchema)
   .handler(async ({ input }) => {
-    const data = await db
-      .update(address)
-      .set(input)
-      .where(eq(address.id, input.id as string))
-      .returning()
-      .execute();
+    try {
+      const data = await db
+        .update(address)
+        .set(input)
+        .where(eq(address.id, input.id as string))
+        .returning()
+        .execute();
 
-    if (!data) {
-      throw new ZSAError("ERROR", "Address not updated");
+      if (!data) {
+        throw new ZSAError("ERROR", "Address not updated");
+      }
+
+      return data;
+    } catch (err) {
+      throw new ZSAError("ERROR", err);
     }
-
-    return data;
   });
 
 export const deleteAddress = clientAction
