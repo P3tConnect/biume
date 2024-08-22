@@ -26,6 +26,7 @@
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.0",
+    "@infisical/sdk": "^2.3.5",
     "@neondatabase/serverless": "^0.9.4",
     "@nextui-org/react": "^2.4.2",
     "@radix-ui/react-accordion": "^1.2.0",
