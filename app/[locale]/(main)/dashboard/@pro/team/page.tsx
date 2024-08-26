@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ProDashboardManagementPage = () => {
+const ProDashboardTeamPage = () => {
   return (
-    <div>ProDashboardManagementPage</div>
+    <div>ProDashboardTeamPage</div>
   )
 }
 
-export default ProDashboardManagementPage
+export default ProDashboardTeamPage;
