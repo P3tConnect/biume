@@ -28,7 +28,7 @@ export const getTriggerPublicApiKey = async () => {
     secretName: infisicalClientVariables.TRIGGER_PUBLIC_API_KEY,
   });
 
-  return secret;
+  return secret.secretValue;
 };
 
 export const getTriggerSecret = async () => {
@@ -38,7 +38,7 @@ export const getTriggerSecret = async () => {
     secretName: infisicalClientVariables.TRIGGER_SECRET_KEY,
   });
 
-  return secret;
+  return secret.secretValue;
 };
 
 export const getResendApiKey = async () => {
@@ -48,7 +48,7 @@ export const getResendApiKey = async () => {
     secretName: infisicalClientVariables.RESEND_API_KEY,
   });
 
-  return secret;
+  return secret.secretValue;
 };
 
 export const getUploadthingAppId = async () => {
@@ -58,7 +58,7 @@ export const getUploadthingAppId = async () => {
     secretName: infisicalClientVariables.UPLOADTHING_APP_ID,
   });
 
-  return secret;
+  return secret.secretValue;
 };
 
 export const getUploadthingSecret = async () => {
@@ -68,7 +68,7 @@ export const getUploadthingSecret = async () => {
     secretName: infisicalClientVariables.UPLOADTHING_SECRET,
   });
 
-  return secret;
+  return secret.secretValue;
 };
 
 export const getDatabaseUrl = async () => {
@@ -78,5 +78,5 @@ export const getDatabaseUrl = async () => {
     secretName: infisicalClientVariables.DATABASE_URL,
   });
 
-  return secret;
+  return secret.secretValue;
 };

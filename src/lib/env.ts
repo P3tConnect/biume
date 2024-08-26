@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface ENV {
+  DATABASE_URL: string | undefined;
   NEXT_PUBLIC_APP_URL: string | undefined;
   INFISICAL_CLIENT_ID: string | undefined;
   INFISICAL_CLIENT_SECRET: string | undefined;
@@ -12,6 +13,7 @@ interface ENV {
 }
 
 interface Config {
+  DATABASE_URL: string;
   NEXT_PUBLIC_APP_URL: string;
   INFISICAL_CLIENT_ID: string;
   INFISICAL_CLIENT_SECRET: string;
@@ -22,6 +24,7 @@ interface Config {
 
 const getConfig = (): ENV => {
   return {
+    DATABASE_URL: process.env.DATABASE_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     INFISICAL_CLIENT_ID: process.env.INFISICAL_CLIENT_ID,
     INFISICAL_CLIENT_SECRET: process.env.INFISICAL_CLIENT_SECRET,

@@ -11,7 +11,7 @@
     "db-migrate": "drizzle-kit migrate",
     "db-preview": "drizzle-kit studio",
     "email-dev": "email dev --port=3001",
-    "email-build": "email build --packageManager=pnpm",
+    "email-build": "email build --packageManager=bun",
     "email-start": "email start",
     "trigger-dev": "pnpm dlx trigger.dev@beta dev",
     "trigger-deploy": "pnpm dlx trigger.dev@beta deploy"
@@ -59,7 +59,7 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.51.1",
     "@tanstack/react-table": "^8.19.2",
-    "@trigger.dev/sdk": "3.0.0-beta.50",
+    "@trigger.dev/sdk": "3.0.0-beta.55",
     "@uploadthing/react": "^6.7.2",
     "ai": "^3.2.20",
     "class-variance-authority": "^0.7.0",
