@@ -1,12 +1,11 @@
 import { redirect } from 'next/navigation'
-import React, { PropsWithChildren, ReactNode } from 'react'
-import DashboardLayoutComponents from '@/components/dashboard/layout/dashboard-layout'
+import { PropsWithChildren, ReactNode } from 'react'
+import DashboardLayoutComponents from '@/components/dashboard/layout/dashboard-layout';
 
-const DashboardLayout = ({ children, admin, pro, client }: PropsWithChildren<{ admin: ReactNode, pro: ReactNode, client: ReactNode }>) => {
-  redirect('/')
+export default function DashboardLayout({ pro, client, admin }: { pro: ReactNode, client: ReactNode, admin: ReactNode })  {
+  // redirect('/')
+  console.log("bonjour")
   return (
-    <DashboardLayoutComponents>{children}{admin}{pro}{client}</DashboardLayoutComponents>
+    <DashboardLayoutComponents>{pro}</DashboardLayoutComponents>
   )
 }
-
-export default DashboardLayout

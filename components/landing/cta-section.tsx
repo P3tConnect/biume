@@ -140,15 +140,15 @@ export default function CallToActionSection() {
     }
   });
 
-  const onSubmit = handleSubmit(async (data) => {
-    const response = await newSubWaitList({ email: data.email });
+  // const onSubmit = handleSubmit(async (data) => {
+  //   const response = await newSubWaitList({ email: data.email });
 
-    if (response?.serverError) {
-      toast.error(response.serverError)
-    } else {
-      reset()
-    }
-  })
+  //   if (response?.serverError) {
+  //     toast.error(response.serverError)
+  //   } else {
+  //     reset()
+  //   }
+  // })
 
   return (
     <section id="cta">
@@ -213,7 +213,7 @@ export default function CallToActionSection() {
                     <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
                   </div>
                   : */}
-                <form className="w-full gap-3 flex flex-col items-center justify-center" onSubmit={onSubmit}>
+                <form className="w-full gap-3 flex flex-col items-center justify-center">
                   <Input
                     placeholder="Email"
                     className="mt-10 border border-gray-400/70 rounded-lg"
