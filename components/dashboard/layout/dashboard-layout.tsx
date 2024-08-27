@@ -24,9 +24,9 @@ export default function DashboardLayout({
           sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72"
         )}
       >
-        <ContentLayout title="Dashboard">
+        {/* <ContentLayout title="Dashboard"> */}
           {children}
-        </ContentLayout>
+        {/* </ContentLayout> */}
       </main>
     </>
   );
