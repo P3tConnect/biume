@@ -1,8 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
 import { ArrowRightIcon, CheckIcon } from "@radix-ui/react-icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+
+import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import { cn } from "@/src/lib/utils";
 
 const BentoGrid = ({
   children,
@@ -15,7 +23,7 @@ const BentoGrid = ({
     <div
       className={cn(
         "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
-        className,
+        className
       )}
     >
       {children}
@@ -50,7 +58,7 @@ const BentoCard = ({
       "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
       // dark styles
       "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
-      className,
+      className
     )}
   >
     <div>{background}</div>
@@ -64,19 +72,24 @@ const BentoCard = ({
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
       )}
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="ghost" asChild size="sm" className="pointer-events-auto">
+          <Button
+            variant="ghost"
+            asChild
+            size="sm"
+            className="pointer-events-auto"
+          >
             <div className="cursor-pointer">
               {cta}
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </div>
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="bg-white dark:bg-black">
           <DialogHeader>
             <DialogTitle>
               <div className="flex gap-3 items-center">
@@ -85,12 +98,10 @@ const BentoCard = ({
               </div>
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription>
-            {description}
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
           {points.map((point, index) => (
             <div key={index} className="flex gap-2">
-              <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />
+              <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-primary p-[2px] text-white" />
               <p>{point}</p>
             </div>
           ))}

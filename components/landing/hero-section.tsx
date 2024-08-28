@@ -1,41 +1,52 @@
 "use client";
 
-import TextShimmer from "@/components/magicui/text-shimmer";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
+import MockUpMac from "@/public/assets/images/Mock-up-mac.png";
+import { useTranslations } from "next-intl";
 
 export default function HeroSection() {
   const t = useTranslations("LandingPage");
 
   return (
-    <section
-      id="hero"
-      className="relative mx-auto flex flex-col justify-center items-center h-screen w-screen max-w-[80rem] px-6 text-center md:px-8"
-    >
-      <div className="backdrop-filter-[12px] inline-flex h-7 items-center justify-between rounded-full border border-white/5 bg-white/10 px-3 text-xs text-white transition-all ease-in hover:cursor-pointer hover:bg-white/20 group gap-1 translate-y-[-1rem] animate-fade-in opacity-0">
-        <TextShimmer className="inline-flex items-center justify-center">
-          <a href="#cta" className="inline-flex items-center justify-center">
-            <span>✨{t("waitlistShortcut")}</span>{" "}
-            <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-          </a>
-        </TextShimmer>
-      </div>
-      <h1 className="bg-gradient-to-br from-white from-30% to-white/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent text-balance sm:text-6xl md:text-7xl lg:text-8xl translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]">
-        {t('title1')}
-        <br className="hidden md:block" /> {t('title2')}
-      </h1>
-      <p className="mb-12 text-lg tracking-tight text-gray-400 md:text-xl text-balance translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:400ms]">
-        {t('presentation1')}
-        <br className="hidden md:block" /> {t('presentation2')}
-      </p>
-      <Button className="translate-y-[-1rem] animate-fade-in gap-1 rounded-lg text-black opacity-0 ease-in-out [--animation-delay:600ms]" asChild>
-        <Link href="https://forms.gle/k1wZwzPw77zE5Pj19" target="_blank">
-          <span>{t('survey')}</span>
-          <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
-        </Link>
-      </Button>
-    </section>
+    <>
+      <section id="hero" className="h-screen w-full overflow-hidden relative">
+        <div className="flex flex-col lg:flex-row justify-between items-center content-center h-full w-full">
+          <div className="flex flex-col justify-center content-center items-center lg:items-start w-full mt-10 lg:mt-40 p-4 lg:pl-20">
+            <div className=" mb-5 text-center lg:text-left">
+              <h1 className="text-[48px] md:text-[72px] lg:text-[96px] font-extrabold leading-tight lg:leading-[5.5rem]">
+                Bienvenue
+              </h1>
+              <h1 className="text-[48px] md:text-[72px] lg:text-[96px] font-extrabold leading-tight lg:leading-[5.5rem]">
+                sur <span className="text-secondary-foreground">Pawthera</span>
+              </h1>
+            </div>
+            <p className="text-[16px] md:text-[18px] lg:text-[20px] text-center lg:text-left">
+              Simplifiez la gestion
+              <span className="font-extrabold">
+                {" "}
+                de votre entreprise animalière{" "}
+              </span>
+              avec PawThera. <br /> Et consacrez votre énergie sur
+              <span className="font-extrabold"> nos amis à quatre pattes.</span>
+            </p>
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeUejqORcN5BQoxeWGsQbgjHiGCQrHK1NjlXQ4LziLitZV1UA/viewform?usp=send_form">
+              <Button className="rounded-full h-12 md:h-14 mt-6 md:mt-10 bg-black text-white hover:bg-black hover:text-white dark:bg-white dark:text-black darl:hover:bg-white dark:hover:text-black">
+                Répondez à notre enquête
+              </Button>
+            </Link>
+          </div>
+          <div className="block lg:hidden w-full">
+            <Image
+              src={MockUpMac}
+              alt="hero image tablet"
+              width={1404}
+              height={938}
+            />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

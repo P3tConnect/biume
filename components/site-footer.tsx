@@ -2,6 +2,7 @@ import { LinkedInLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 const footerSocials = [
   {
@@ -36,7 +37,7 @@ export async function SiteFooter() {
                 PawThera
               </span>
             </Link>
-            <p className="max-w-xs">{t('slogan')}</p>
+            <p className="max-w-xs">{t("slogan")}</p>
           </div>
         </div>
 
@@ -58,7 +59,7 @@ export async function SiteFooter() {
             <Link href="/" className="cursor-pointer">
               PawThera
             </Link>
-            . {t('rights')}
+            . {t("rights")}
           </span>
         </div>
       </div>

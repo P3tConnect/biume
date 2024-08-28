@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { NextUIProvider } from '@nextui-org/react'
-import React, { PropsWithChildren } from 'react'
-import { ThemeProvider } from './theme-provider'
-import { useRouter } from 'next/navigation'
-import { Toaster } from 'sonner'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { PropsWithChildren } from "react";
+
+import { NextUIProvider } from "@nextui-org/react";
+import { ThemeProvider } from "./theme-provider";
+import { Toaster } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Providers = async ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -13,14 +14,19 @@ const Providers = async ({ children }: PropsWithChildren) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute='class' forcedTheme='light' enableSystem={false}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem={false}
+        disableTransitionOnChange={true}
+      >
         <NextUIProvider navigate={router.push}>
           {children}
           <Toaster />
         </NextUIProvider>
       </ThemeProvider>
     </QueryClientProvider>
-  )
-}
+  );
+};
 
-export default Providers
+export default Providers;

@@ -1,8 +1,15 @@
-"use client"
+"use client";
+
+import {
+  BellIcon,
+  BrainCircuit,
+  CalendarIcon,
+  ReceiptEuro,
+  ScrollText,
+} from "lucide-react";
+import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 
 import React from "react";
-import { BellIcon, BrainCircuit, CalendarIcon, ReceiptEuro, ScrollText } from 'lucide-react'
-import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 import { useTranslations } from "next-intl";
 
 export default function FeaturesSection() {
@@ -71,8 +78,7 @@ export default function FeaturesSection() {
     {
       Icon: BellIcon,
       name: t("features.notifications.title"),
-      description:
-        t("features.notifications.description"),
+      description: t("features.notifications.description"),
       href: "/",
       cta: t("features.more"),
       points: [
@@ -85,28 +91,29 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section id="features">
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-32 md:px-8">
-        <div className="mx-auto max-w-5xl text-center">
-          <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
-            {t("features.parentTitle")}
-          </h4>
+    <section id="features" className="h-full w-full overflow-hidden relative">
+      <div className="flex flex-col justify-center h-full w-full items-center content-center py-10 px-10">
+        <div className="bg-gray/75 rounded-[32px] border-1 p-10 border-[#D8D8D8] w-full dark:border-gray-300/50 dark:bg-black dark:bg-opacity-50 dark:backdrop-blur-lg">
+          <div className="flex flex-col text-center justify-center items-center content-center mt-10 px-4">
+            <h1 className="text-[20px] md:text-[24px] font-bold">
+              Notre application
+            </h1>
+            <h1 className="text-[40px] md:text-[75px] font-extrabold leading-[2.5rem] md:leading-[3.5rem]">
+              Les fonctionnalités
+            </h1>
+            <p className="text-[14px] md:text-[16px] font-semibold leading-[1.5rem] md:leading-[3rem] px-2">
+              Ce sont les fonctionnalités que nous avons prévues, aidez-nous à
+              l&apos;améliorer pour en faire votre outil.
+            </p>
+          </div>
 
-          <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
-            {t("features.title")}
-          </h2>
-
-          <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white">
-            {t("features.description")}
-          </p>
+          <BentoGrid className="lg:grid-rows-3">
+            {features.map((feature, index) => (
+              <BentoCard key={index} {...feature} />
+            ))}
+          </BentoGrid>
         </div>
-
-        <BentoGrid className="lg:grid-rows-3">
-          {features.map((feature) => (
-            <BentoCard key={feature.name} {...feature} />
-          ))}
-        </BentoGrid>
       </div>
     </section>
-  )
+  );
 }
