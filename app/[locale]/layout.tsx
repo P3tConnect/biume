@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/src/lib/utils";
 import { safeConfig } from "@/src/lib";
@@ -10,7 +10,7 @@ import Providers from "@/src/context/providers";
 import { getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
-const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"] });
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
     const t = await getTranslations("Metadata");
@@ -103,7 +103,7 @@ export default async function RootLayout({
             <body
                 className={cn(
                     "min-h-screen bg-background font-sans antialiased",
-                    inter.className,
+                    nunito.className,
                 )}
             >
                 <NextIntlClientProvider messages={messages}>

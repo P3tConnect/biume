@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: var(--color-white);
     --foreground: 0 0% 3.9%;
 
     --card: 0 0% 100%;
@@ -13,10 +13,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
 
-    --primary: 0 0% 9%;
+    --primary: var(--color-green);
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 0 0% 96.1%;
+    --secondary: var(--color-purple);
     --secondary-foreground: 0 0% 9%;
 
     --muted: 0 0% 96.1%;
@@ -36,11 +36,16 @@
 
     /* Custom properties */
     --navigation-height: 3.5rem;
-    --color-one: #ffbd7a;
-    --color-two: #fe8bbb;
-    --color-three: #9e7aff;
+    --color-green: #6BDA97;
+    --color-purple: #4804CB;
+    --color-king-blue: #08297B;
+    --color-orange: #FF9500;
+    --color-pink: #B2387E;
+    --color-black: #202020;
+    --color-white: #FFFFFF;
+    --color-gray: #EAEAEA;
 
-    /* 
+    /*
     --color-one: #37ecba;
     --color-two: #72afd3;
     --color-three: #ff2e63;
@@ -48,7 +53,7 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
+    --background: var(--color-black);
     --foreground: 0 0% 98%;
 
     --card: 0 0% 3.9%;
@@ -57,10 +62,10 @@
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
+    --primary: var(--color-green);
     --primary-foreground: 0 0% 9%;
 
-    --secondary: 0 0% 14.9%;
+    --secondary: var(--color-purple);
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 14.9%;
@@ -84,5 +89,39 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-primary {
+    background-color: var(--primary);
+  }
+
+  .bg-light {
+    background-color: var(--color-white);
+  }
+
+  .bg-dark {
+    background-color: var(--color-black);
+  }
+
+  .bg-gray{
+    background-color: var(--color-gray);
+  }
+
+  /*.border-gray{*/
+  /*  border-color: var(--color-gray);*/
+  /*}*/
+
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+
+  .text-primary {
+    color: var(--primary);
+  }
+
+  .text-secondary {
+    color: var(--secondary);
   }
 }

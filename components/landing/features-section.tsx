@@ -1,8 +1,13 @@
-"use client"
+"use client";
 
-import React from "react";
-import { BellIcon, BrainCircuit, CalendarIcon, ReceiptEuro, ScrollText } from 'lucide-react'
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
+
+import Bell from "@/public/assets/svg/notification.svg";
+import Calendar from "@/public/assets/svg/Calendrier.svg";
+import Comptabilite from "@/public/assets/svg/Administration_et_comptabilite.svg";
+import IA from "@/public/assets/svg/IA.svg";
+import React from "react";
+import ReceiptEuro from "@/public/assets/svg/Réservation_en_ligne.svg";
 import { useTranslations } from "next-intl";
 
 export default function FeaturesSection() {
@@ -10,23 +15,7 @@ export default function FeaturesSection() {
 
   const features = [
     {
-      Icon: BrainCircuit,
-      name: t("features.ia.title"),
-      description: t("features.ia.description"),
-      href: "/",
-      cta: t("features.more"),
-      points: [
-        t("features.ia.points.point1"),
-        t("features.ia.points.point2"),
-        t("features.ia.points.point3"),
-        t("features.ia.points.point4"),
-        t("features.ia.points.point5"),
-      ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3",
-    },
-    {
-      Icon: ScrollText,
+      Icon: Comptabilite,
       name: t("features.accounting.title"),
       description: t("features.accounting.description"),
       href: "/",
@@ -38,8 +27,19 @@ export default function FeaturesSection() {
         t("features.accounting.points.point4"),
         t("features.accounting.points.point5"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
+      className: "w-full md:w-[calc(33.333%-16px)]",
+    },
+    {
+      Icon: Calendar,
+      name: t("features.calendar.title"),
+      description: t("features.calendar.description"),
+      href: "/",
+      cta: t("features.more"),
+      points: [
+        t("features.calendar.points.point1"),
+        t("features.calendar.points.point2"),
+      ],
+      className: "w-full md:w-[calc(33.333%-16px)]",
     },
     {
       Icon: ReceiptEuro,
@@ -52,61 +52,62 @@ export default function FeaturesSection() {
         t("features.reservations.points.point2"),
         t("features.reservations.points.point3"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
+      className: "w-full md:w-[calc(33.333%-16px)]",
     },
     {
-      Icon: CalendarIcon,
-      name: t("features.calendar.title"),
-      description: t("features.calendar.description"),
+      Icon: IA,
+      name: t("features.ia.title"),
+      description: t("features.ia.description"),
       href: "/",
       cta: t("features.more"),
       points: [
-        t("features.calendar.points.point1"),
-        t("features.calendar.points.point2"),
+        t("features.ia.points.point1"),
+        t("features.ia.points.point2"),
+        t("features.ia.points.point3"),
+        t("features.ia.points.point4"),
+        t("features.ia.points.point5"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
+      className: "w-full md:w-[calc(50%-16px)]",
     },
     {
-      Icon: BellIcon,
+      Icon: Bell,
       name: t("features.notifications.title"),
-      description:
-        t("features.notifications.description"),
+      description: t("features.notifications.description"),
       href: "/",
       cta: t("features.more"),
       points: [
         t("features.notifications.points.point1"),
         t("features.notifications.points.point2"),
+        t("features.notifications.points.point3"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
+      className: "w-full md:w-[calc(50%-16px)]",
     },
   ];
 
   return (
-    <section id="features">
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-8 px-4 py-32 md:px-8">
-        <div className="mx-auto max-w-5xl text-center">
-          <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
-            {t("features.parentTitle")}
-          </h4>
+    <section id="features" className="h-full w-full overflow-hidden relative">
+      <div className="flex flex-col justify-center h-full w-full items-center content-center py-10 px-10">
+        <div className="bg-gray/75 bg-transparent/10 rounded-[32px] border-1 border-[#D8D8D8] w-full dark:border-gray-300/50">
+          <div className="flex flex-col text-center justify-center items-center content-center mt-10 px-4">
+            <h1 className="text-[20px] md:text-[24px] font-bold">
+              Notre application
+            </h1>
+            <h1 className="text-[40px] md:text-[75px] font-extrabold leading-[2.5rem] md:leading-[3.5rem]">
+              Les fonctionnalités
+            </h1>
+            <p className="text-[14px] md:text-[16px] font-semibold leading-[1.5rem] md:leading-[3rem] px-2">
+              Ce sont les fonctionnalités que nous avons prévues, aidez-nous à
+              l&apos;améliorer pour en faire votre outil.
+            </p>
+          </div>
 
-          <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
-            {t("features.title")}
-          </h2>
-
-          <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white">
-            {t("features.description")}
-          </p>
+          <BentoGrid className="px-10 py-10">
+            {features.map((feature, index) => (
+              <BentoCard background={undefined} key={index} {...feature} />
+            ))}
+          </BentoGrid>
         </div>
-
-        <BentoGrid className="lg:grid-rows-3">
-          {features.map((feature) => (
-            <BentoCard key={feature.name} {...feature} />
-          ))}
-        </BentoGrid>
       </div>
     </section>
-  )
+  );
 }
