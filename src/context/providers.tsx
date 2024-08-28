@@ -17,7 +17,8 @@ const Providers = async ({ children }: PropsWithChildren) => {
       <ThemeProvider
         attribute="class"
         defaultTheme="light"
-        disableTransitionOnChange
+        enableSystem={false}
+        disableTransitionOnChange={true}
       >
         <NextUIProvider navigate={router.push}>
           {children}

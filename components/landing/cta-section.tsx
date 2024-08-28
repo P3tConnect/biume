@@ -14,27 +14,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 export default function CallToActionSection() {
   const t = useTranslations("LandingPage");
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors, isLoading },
-  //   reset,
-  // } = useForm<z.infer<typeof emailSchema>>({
-  //   resolver: zodResolver(emailSchema),
-  //   defaultValues: {
-  //     email: "",
-  //   },
-  // });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isLoading },
+    reset,
+  } = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
-  // const onSubmit = handleSubmit(async (data) => {
-  //   const response = await newSubWaitList({ email: data.email });
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await newSubWaitList({ email: data.email });
 
-  //   if (response?.serverError) {
-  //     toast.error(response.serverError);
-  //   } else {
-  //     reset();
-  //   }
-  // });
+    if (response?.serverError) {
+      toast.error(response.serverError);
+    } else {
+      reset();
+    }
+  });
 
   return (
     <section
@@ -66,21 +66,21 @@ export default function CallToActionSection() {
                   type="email"
                   // {...register("email")}
                 />
-                {/* {errors.email && (
+                {errors.email && (
                   <p className="font-medium text-red-400">
                     {errors.email.message}
                   </p>
-                )} */}
-                {/* {isLoading ? (
+                )}
+                {isLoading ? (
                   <Loader />
-                ) : (*/}
-                <Button
-                  type="submit"
-                  className="bg-black text-white w-full md:w-[276px] h-[48px] md:h-[56px] rounded-full hover:bg-black hover:text-white mt-6 md:mt-10"
-                >
-                  {t("ctaSection.cta")}
-                </Button>
-                {/* )} */}
+                ) : (
+                  <Button
+                    type="submit"
+                    className="bg-black text-white w-full md:w-[276px] h-[48px] md:h-[56px] rounded-full hover:bg-black hover:text-white mt-6 md:mt-10"
+                  >
+                    {t("ctaSection.cta")}
+                  </Button>
+                )}
               </form>
             </div>
           </div>
