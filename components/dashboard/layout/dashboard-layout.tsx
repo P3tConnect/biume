@@ -4,7 +4,7 @@ import { cn } from "@/src/lib/utils";
 import { useStore } from "@/src/hooks/useStore";
 import { Sidebar } from "@/components/dashboard/layout/sidebar";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
-import { ContentLayout } from "./content-layout";
+import { Navbar } from "./navbar";
 
 export default function DashboardLayout({
   children
@@ -20,12 +20,10 @@ export default function DashboardLayout({
       <div className="flex flex-row h-full w-full justify-start items-center pt-5 pb-5 bg-background/90 backdrop-blur-xl backdrop-opacity-10 rounded-2xl border border-border">
           <Sidebar />
           <main
-            className=
-              "min-h-[calc(100vh_-_56px)] transition-[margin-left] ease-in-out duration-300"
+            className="min-h-[calc(100vh_-_56px)] w-full pr-5 transition-[margin-left] ease-in-out duration-300 flex flex-col"
           >
-            {/* <ContentLayout title="Dashboard"> */}
+            <Navbar title="Dashboard" isOpen={sidebar.isOpen} />
               {children}
-            {/* </ContentLayout> */}
           </main>
       </div>
     </div>

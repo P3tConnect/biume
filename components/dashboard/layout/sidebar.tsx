@@ -16,7 +16,7 @@ export function Sidebar() {
   if(!sidebar) return null;
 
   return (
-    <div className={cn("w-72 h-full bg-background m-5 rounded-xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border border-border",
+    <div className={cn("w-72 h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border border-border",
       sidebar?.isOpen === false ? "w-[90px]" : "w-72"
     )}>
       <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
