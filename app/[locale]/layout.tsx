@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
+import { Nunito } from "next/font/google";
 import "../globals.css";
 
 import { getMessages, getTranslations } from "next-intl/server";
 
-import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
@@ -12,7 +13,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
 
-const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
 
 export async function generateMetadata({
   params,
@@ -96,31 +97,32 @@ export default async function RootLayout({
   params: { locale: string };
 }>) {
   const messages = await getMessages({ locale: params.locale });
-
-  return (
-    <html lang={params.locale}>
-      <head>
-        <script
-          defer
-          src="https://woyage.app/track.js"
-          data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
-        ></script>
-      </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.className
-        )}
-      >
-        <NextIntlClientProvider messages={messages}>
-          <Providers>
-            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <div vaul-drawer-wrapper="" className="bg-background">
-              {children}
-            </div>
-          </Providers>
-        </NextIntlClientProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang={params.locale}>
+            <head>
+                <script
+                    defer
+                    src="https://woyage.app/track.js"
+                    data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
+                ></script>
+            </head>
+            <body
+                className={cn(
+                    "min-h-screen bg-background font-sans antialiased",
+                    nunito.className,
+                )}
+            >
+                <NextIntlClientProvider messages={messages}>
+                    <Providers>
+                        <NextSSRPlugin
+                            routerConfig={extractRouterConfig(ourFileRouter)}
+                        />
+                        <div vaul-drawer-wrapper="" className="bg-background">
+                            {children}
+                        </div>
+                    </Providers>
+                </NextIntlClientProvider>
+            </body>
+        </html>
+    );
 }

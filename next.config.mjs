@@ -20,6 +20,7 @@ const nextConfig = {
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
     TRIGGER_PUBLIC_API_KEY: process.env.TRIGGER_PUBLIC_API_KEY,
+    AUTH_SECRET: process.env.AUTH_SECRET,
   },
 };
 

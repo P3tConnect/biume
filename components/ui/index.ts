@@ -42,3 +42,4 @@ export * from "./sheet";
 export * from "./separator";
 export * from "./radio-group";
 export * from "./alert";
+export * from "./tooltip";

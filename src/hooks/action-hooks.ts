@@ -3,9 +3,10 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { setupServerActionHooks } from "zsa-react-query";
 
 const {
-   useServerActionQuery,
-   useServerActionMutation,
-   useServerActionInfiniteQuery,
+  useServerActionQuery,
+  useServerActionMutation,
+  useServerActionInfiniteQuery,
+
 } = setupServerActionHooks({
   hooks: {
     useQuery: useQuery,
@@ -14,7 +15,7 @@ const {
   },
 });
 export {
-   useServerActionInfiniteQuery,
-   useServerActionMutation,
-   useServerActionQuery,
+  useServerActionInfiniteQuery,
+  useServerActionMutation,
+  useServerActionQuery,
 };
