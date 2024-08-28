@@ -1,6 +1,6 @@
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
-import { withUt } from 'uploadthing/tw'
 import { nextui } from '@nextui-org/react'
+import { withUt } from 'uploadthing/tw'
 
 const darkMode = ["class"]
 const content = [
@@ -25,7 +25,7 @@ const theme = {
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
-            background: "hsl(var(--background))",
+            background: "hex(var(--background))",
             foreground: "hsl(var(--foreground))",
             primary: {
                 DEFAULT: "hsl(var(--primary))",
@@ -34,6 +34,10 @@ const theme = {
             secondary: {
                 DEFAULT: "hsl(var(--secondary))",
                 foreground: "hsl(var(--secondary-foreground))",
+            },
+            gray: {
+                DEFAULT: "hsl(var(--gray))",
+                foreground: "hsl(var(--gray-foreground))",
             },
             destructive: {
                 DEFAULT: "hsl(var(--destructive))",

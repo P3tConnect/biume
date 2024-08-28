@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: var(--color-white);
+    --background: 0, 0%, 100%;
     --foreground: 0 0% 3.9%;
 
     --card: 0 0% 100%;
@@ -13,11 +13,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
 
-    --primary: var(--color-green);
-    --primary-foreground: 0 0% 98%;
+    --primary: 146, 61%, 66%;
+    --primary-foreground: 146, 61%, 66%;
 
-    --secondary: var(--color-purple);
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 258, 96%, 39%;
+    --secondary-foreground: 258, 96%, 39%;
+    
+    --gray: 0, 0%, 13%;
+    --gray-foreground: 0, 0%, 13%;
 
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
@@ -36,8 +39,6 @@
 
     /* Custom properties */
     --navigation-height: 3.5rem;
-    --color-green: #6BDA97;
-    --color-purple: #4804CB;
     --color-king-blue: #08297B;
     --color-orange: #FF9500;
     --color-pink: #B2387E;
@@ -53,7 +54,7 @@
   }
 
   .dark {
-    --background: var(--color-black);
+    --background: 0, 0%, 0%;
     --foreground: 0 0% 98%;
 
     --card: 0 0% 3.9%;
@@ -62,11 +63,14 @@
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: var(--color-green);
-    --primary-foreground: 0 0% 9%;
+    --primary: 146, 61%, 66%;
+    --primary-foreground: 146, 61%, 66%;
 
-    --secondary: var(--color-purple);
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 258, 96%, 39%;
+    --secondary-foreground: 258, 96%, 39%;
+
+    --gray: 0, 0%, 13%;
+    --gray-foreground: 0, 0%, 13%;
 
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
@@ -89,39 +93,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-@layer utilities {
-  .bg-primary {
-    background-color: var(--primary);
-  }
-
-  .bg-light {
-    background-color: var(--color-white);
-  }
-
-  .bg-dark {
-    background-color: var(--color-black);
-  }
-
-  .bg-gray{
-    background-color: var(--color-gray);
-  }
-
-  /*.border-gray{*/
-  /*  border-color: var(--color-gray);*/
-  /*}*/
-
-  .bg-secondary {
-    background-color: var(--secondary);
-  }
-
-  .text-primary {
-    color: var(--primary);
-  }
-
-  .text-secondary {
-    color: var(--secondary);
   }
 }

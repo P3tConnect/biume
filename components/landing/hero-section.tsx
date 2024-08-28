@@ -19,7 +19,7 @@ export default function HeroSection() {
                 Bienvenue
               </h1>
               <h1 className="text-[48px] md:text-[72px] lg:text-[96px] font-extrabold leading-tight lg:leading-[5.5rem]">
-                sur <span className="text-secondary">Pawthera</span>
+                sur <span className="text-secondary-foreground">Pawthera</span>
               </h1>
             </div>
             <p className="text-[16px] md:text-[18px] lg:text-[20px] text-center lg:text-left">

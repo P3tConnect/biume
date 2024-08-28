@@ -40,3 +40,7 @@ next-env.d.ts
 .react-email
 bun.lockb
 .cursorrules
+
+/.idea
+.idea 
+/idea

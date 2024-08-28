@@ -16,8 +16,7 @@ const Providers = async ({ children }: PropsWithChildren) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem={true}
+        defaultTheme="light"
         disableTransitionOnChange
       >
         <NextUIProvider navigate={router.push}>

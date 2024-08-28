@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 import { cn } from "@/src/lib/utils";
 
@@ -20,7 +20,12 @@ const BentoGrid = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-wrap gap-6 w-full", className)}>
+    <div
+      className={cn(
+        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        className
+      )}
+    >
       {children}
     </div>
   );
@@ -37,7 +42,7 @@ const BentoCard = ({
   cta,
 }: {
   name: string;
-  className?: string;
+  className: string;
   background: ReactNode;
   Icon: any;
   description: string;
@@ -48,57 +53,62 @@ const BentoCard = ({
   <div
     key={name}
     className={cn(
-      "bg-white dark:bg-black rounded-3xl p-8 flex flex-col min-h-[299px]",
+      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
+      // light styles
+      "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+      // dark styles
+      "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       className
     )}
   >
-    <div className="flex flex-col items-start mb-4">
-      <Image
-        src={Icon}
-        className="text-seconday"
-        width={90}
-        height={90}
-        alt={"Pawthera" + Icon}
-      />
-    </div>
-    <div className="flex-grow">
-      <h1 className="text-black dark:text-white text-[24px] font-bold mb-2">
+    <div>{background}</div>
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
+      <Icon className="h-12 w-12 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
+      <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
         {name}
-      </h1>
-      <p className="text-black font-semibold text-[16px] leading-[1.5rem] mb-4">
-        {description}
-      </p>
+      </h3>
+      <p className="max-w-lg text-neutral-400">{description}</p>
     </div>
-    <Dialog>
-      <DialogTrigger asChild className="flex items-center justify-start">
-        <p className="cursor-pointer text-secondary font-semibold text-[16px]">
-          {cta} <ArrowRightIcon className="ml-2 h-4 w-4" />
-        </p>
-      </DialogTrigger>
-      <DialogContent className="bg-white dark:bg-black text-black dark:text-white p-6 rounded-lg shadow-lg max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="flex gap-3 items-center">
-            <Image
-              src={Icon}
-              className="text-secondary"
-              width={90}
-              height={90}
-              alt={"Pawthera" + Icon}
-            />
-            <h2 className="text-2xl font-bold">{name}</h2>
-          </DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
-          <p className="mb-4">{description}</p>
+
+    <div
+      className={cn(
+        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+      )}
+    >
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            asChild
+            size="sm"
+            className="pointer-events-auto"
+          >
+            <div className="cursor-pointer">
+              {cta}
+              <ArrowRightIcon className="ml-2 h-4 w-4" />
+            </div>
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="bg-white dark:bg-black">
+          <DialogHeader>
+            <DialogTitle>
+              <div className="flex gap-3 items-center">
+                <Icon className="h-7 w-7 origin-left flex transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
+                <h2 className="text-2xl font-bold">{name}</h2>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription>{description}</DialogDescription>
           {points.map((point, index) => (
-            <div key={index} className="flex gap-2 mb-3">
-              <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-green-400 p-[2px] text-black dark:text-white" />
+            <div key={index} className="flex gap-2">
+              <CheckIcon className="h-5 w-5 shrink-0 rounded-full bg-primary p-[2px] text-white" />
               <p>{point}</p>
             </div>
           ))}
-        </DialogDescription>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </div>
+    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
   </div>
 );
 
