@@ -3,8 +3,6 @@ import { Nunito } from "next/font/google";
 import "../globals.css";
 
 import { getMessages, getTranslations } from "next-intl/server";
-
-import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import Providers from "@/src/context/providers";

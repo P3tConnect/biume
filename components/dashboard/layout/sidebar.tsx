@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "./menu";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { SidebarToggle } from "./sidebar-toggle";
+import { useLocale } from "next-intl";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
+  const locale = useLocale();
   
   if(!sidebar) return null;
 
@@ -29,7 +31,7 @@ export function Sidebar() {
           variant="link"
           asChild
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href={`/${locale}/dashboard`} className="flex items-center gap-2">
             <PanelsTopLeft className="w-6 h-6 mr-1" />
             <h1
               className={cn(
@@ -47,16 +49,4 @@ export function Sidebar() {
       </div>
     </div>
   );
-
-  // return (
-  //   <div
-  //     className={cn(
-  //       "fixed top-0 left-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300",
-  //       sidebar?.isOpen === false ? "w-[90px]" : "w-72"
-  //     )}
-  //   >
-  //     <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-  //     
-  //   </div>
-  // );
 }

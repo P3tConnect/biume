@@ -19,22 +19,22 @@ type Group = {
   menus: Menu[];
 }
 
-export function proMenuList(pathname: string): Group[] {
+export function proMenuList(pathname: string, locale: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: "/dashboard",
+          href: `/${locale}/dashboard`,
           label: "Dashboard",
-          active: pathname.startsWith("/dashboard"),
+          active: pathname == `/${locale}/dashboard`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: "/dashboard/agenda",
+          href: `/${locale}/dashboard/timetable`,
           label: "Agenda",
-          active: pathname.startsWith("/dashboard/agenda"),
+          active: pathname == `/${locale}/dashboard/timetable`,
           icon: Calendar,
           submenus: [],
         }
@@ -44,23 +44,23 @@ export function proMenuList(pathname: string): Group[] {
       groupLabel: "Management",
       menus: [
         {
-          href: "/dashboard/accounting",
+          href: `/${locale}/dashboard/accounting`,
           label: "Administratif",
-          active: pathname.startsWith("/dashboard/accounting"),
+          active: pathname == `/${locale}/dashboard/accounting`,
           icon: FolderOpen,
           submenus: [],
         },
         {
-          href: "/dashboard/team",
+          href: `/${locale}/dashboard/team`,
           label: "Equipe",
-          active: pathname.startsWith("/dashboard/team"),
+          active: pathname == `/${locale}/dashboard/team`,
           icon: UsersRound,
           submenus: [],
         },
         {
-          href: "/dashboard/reminders",
+          href: `/${locale}/dashboard/reminders`,
           label: "Rappels",
-          active: pathname.startsWith("/dashboard/reminders"),
+          active: pathname == `/${locale}/dashboard/reminders`,
           icon: Timer,
           submenus: [],
         }
@@ -70,30 +70,30 @@ export function proMenuList(pathname: string): Group[] {
       groupLabel: "Gestion",
       menus: [
         {
-          href: "/dashboard/clients",
+          href: `/${locale}/dashboard/clients`,
           label: "Clients",
-          active: pathname.startsWith("/dashboard/clients"),
+          active: pathname == `/${locale}/dashboard/clients`,
           icon: Contact2,
           submenus: [],
         },
         {
-          href: "/dashboard/patients",
+          href: `/${locale}/dashboard/patients`,
           label: "Patients",
-          active: pathname.startsWith("/dashboard/patients"),
+          active: pathname == `/${locale}/dashboard/patients`,
           icon: PawPrint,
           submenus: [],
         },
         {
-          href: "/dashboard/reports",
+          href: `/${locale}/dashboard/reports`,
           label: "Rapports",
-          active: pathname.startsWith("/dashboard/reports"),
+          active: pathname == `/${locale}/dashboard/reports`,
           icon: LineChart,
           submenus: [],
         },
         {
-          href: "/dashboard/observations",
+          href: `/${locale}/dashboard/observations`,
           label: "Observations",
-          active: pathname.startsWith("/dashboard/observations"),
+          active: pathname == `/${locale}/dashboard/observations`,
           icon: Eye,
           submenus: [],
         }

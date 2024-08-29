@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipProvider
 } from "@/components/ui";
+import { useLocale } from "next-intl";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -22,12 +23,13 @@ interface MenuProps {
 
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
-  const menuList = proMenuList(pathname);
+  const locale = useLocale();
+  const menuList = proMenuList(pathname, locale);
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
       <nav className="mt-8 h-full w-full">
-        <ul className="flex flex-col min-h-[calc(92vh-48px-36px-16px-32px)] lg:min-h-[calc(92vh-32px-40px-32px)] items-start space-y-1 px-2">
+        <ul className="flex flex-col min-h-[calc(90vh-48px-36px-16px-32px)] lg:min-h-[calc(92vh-32px-40px-32px)] items-start space-y-1 px-2">
           {menuList.map(({ groupLabel, menus }, index) => (
             <li className={cn("w-full", groupLabel ? "pt-5" : "")} key={index}>
               {(isOpen && groupLabel) || isOpen === undefined ? (
@@ -58,22 +60,23 @@ export function Menu({ isOpen }: MenuProps) {
                         <Tooltip delayDuration={100}>
                           <TooltipTrigger asChild>
                             <Button
-                              variant={active ? "secondary" : "ghost"}
-                              className="w-full justify-start h-10 mb-1"
+                              variant={"ghost"}
+                              className={cn("w-full justify-start h-10 mb-1", active ? "bg-gray-100 dark:bg-gray-800" : "")}
                               asChild
                             >
                               <Link href={href}>
                                 <span
                                   className={cn(isOpen === false ? "" : "mr-4")}
                                 >
-                                  <Icon size={18} />
+                                  <Icon size={18} className={cn(active ? "fill-secondary" : "")} />
                                 </span>
                                 <p
                                   className={cn(
                                     "max-w-[200px] truncate",
                                     isOpen === false
                                       ? "-translate-x-96 opacity-0"
-                                      : "translate-x-0 opacity-100"
+                                      : "translate-x-0 opacity-100",
+                                    active ? "text-secondary" : ""
                                   )}
                                 >
                                   {label}
