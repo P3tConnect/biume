@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
+import { getScopedI18n } from '@/src/locales'
 import { ArrowLeft } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import React from 'react'
 
 const WaitListPage = async () => {
-  const t = await getTranslations('Waitlist')
+  const t = await getScopedI18n('waitlist')
   return (
     <div className='flex flex-col gap-2 h-screen w-screen items-center justify-center'>
       <div className=' text-[7rem]'>🥳</div>

@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import MockUpMac from "@/public/assets/images/Mock-up-mac.png";
-import { useTranslations } from "next-intl";
+import { useScopedI18n } from "@/src/locales";
 
 export default function HeroSection() {
-  const t = useTranslations("LandingPage");
+  const t = useScopedI18n("landingPage");
 
   return (
     <>

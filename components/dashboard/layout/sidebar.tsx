@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "./menu";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { SidebarToggle } from "./sidebar-toggle";
-import { useLocale } from "next-intl";
+import { useCurrentLocale } from "@/src/locales";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
-  const locale = useLocale();
+  const locale = useCurrentLocale();
   
   if(!sidebar) return null;
 

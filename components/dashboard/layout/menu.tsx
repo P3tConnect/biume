@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipProvider
 } from "@/components/ui";
-import { useLocale } from "next-intl";
+import { useCurrentLocale } from "@/src/locales";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -23,7 +23,7 @@ interface MenuProps {
 
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
-  const locale = useLocale();
+  const locale = useCurrentLocale();
   const menuList = proMenuList(pathname, locale);
 
   return (

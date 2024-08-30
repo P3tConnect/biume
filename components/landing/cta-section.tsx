@@ -7,12 +7,13 @@ import { emailSchema } from "@/src/lib/schemas";
 import { newSubWaitList } from "@/src/actions";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useScopedI18n } from "@/src/locales/client";
+import { useServerActionMutation } from "@/src/hooks";
 
 export default function CallToActionSection() {
-  const t = useTranslations("LandingPage");
+  const t = useScopedI18n("landingPage");
 
   const {
     register,
@@ -26,10 +27,21 @@ export default function CallToActionSection() {
     },
   });
 
+  const { mutateAsync } = useServerActionMutation(newSubWaitList, {
+    onError: (err) => {
+      toast.error(err.message);
+      reset();
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
+  });
+
   return (
     <section
       id="cta"
-      className="h-full w-full bg-transparent -z-40 flex justify-center items-center pt-10 pb-20 overflow-hidden relative px-4 md:px-10"
+      className="h-full w-full bg-transparent flex justify-center items-center pt-10 pb-20 overflow-hidden relative px-4 md:px-10"
     >
       <div className="rounded-[32px] w-full bg-transparent/10 border-1 border-[#D8D8D8] px-6 md:px-20 py-6 md:py-10 mx-auto dark:bg-black/30 dark:border-gray-300/50">
         <div className="flex flex-col xl:flex-row justify-between items-center md:items-center content-center text-start gap-8 md:gap-16">
@@ -48,13 +60,13 @@ export default function CallToActionSection() {
               </p>
               <form
                 className="w-full gap-3 flex flex-col items-center justify-center mt-6 md:mt-10"
-                // onSubmit={onSubmit}
+                onSubmit={onSubmit}
               >
                 <Input
                   placeholder="Email"
                   className="border border-gray-400/70 w-full md:w-[400px] rounded-full"
                   type="email"
-                  // {...register("email")}
+                  {...register("email")}
                 />
                 {errors.email && (
                   <p className="font-medium text-red-400">

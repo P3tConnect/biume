@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "../globals.css";
 
-import { getMessages, getTranslations } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
+import { I18nProviderClient } from "@/src/locales/client";
+import { getI18n, getScopedI18n } from "@/src/locales/server";
 
 const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const t = await getTranslations("Metadata");
+  const t = await getScopedI18n('metadata');
   return {
     title: "PawThera",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -94,7 +94,6 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  const messages = await getMessages({ locale: params.locale });
     return (
         <html lang={params.locale}>
             <head>
@@ -110,7 +109,7 @@ export default async function RootLayout({
                     nunito.className,
                 )}
             >
-                <NextIntlClientProvider messages={messages}>
+                <I18nProviderClient locale={params.locale}>
                     <Providers>
                         <NextSSRPlugin
                             routerConfig={extractRouterConfig(ourFileRouter)}
@@ -119,7 +118,7 @@ export default async function RootLayout({
                             {children}
                         </div>
                     </Providers>
-                </NextIntlClientProvider>
+                </I18nProviderClient>
             </body>
         </html>
     );
