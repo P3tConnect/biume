@@ -18,7 +18,7 @@ export default function CallToActionSection() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
     reset,
   } = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
@@ -27,7 +27,7 @@ export default function CallToActionSection() {
     },
   });
 
-  const { mutateAsync } = useServerActionMutation(newSubWaitList, {
+  const { mutateAsync, isPending } = useServerActionMutation(newSubWaitList, {
     onError: (err) => {
       toast.error(err.message);
       reset();
@@ -73,7 +73,7 @@ export default function CallToActionSection() {
                     {errors.email.message}
                   </p>
                 )}
-                {isLoading ? (
+                {isPending ? (
                   <Loader />
                 ) : (
                   <Button
