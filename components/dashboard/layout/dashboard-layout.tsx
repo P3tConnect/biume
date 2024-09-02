@@ -21,7 +21,7 @@ export default function DashboardLayout({
           <main
             className="min-h-[calc(100vh_-_56px)] w-full pr-5 transition-[margin-left] ease-in-out duration-300 flex flex-col"
           >
-            <Navbar title="Dashboard" isOpen={sidebar.isOpen} />
+            <Navbar title="Dashboard" isOpen={sidebar.isOpen} sidebar={sidebar} />
               {children}
           </main>
       </div>

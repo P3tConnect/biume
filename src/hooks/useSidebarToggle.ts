@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface useSidebarToggleStore {
+export interface useSidebarToggleStore {
   isOpen: boolean;
   setIsOpen: () => void;
 }

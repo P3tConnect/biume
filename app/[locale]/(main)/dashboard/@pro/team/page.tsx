@@ -2,7 +2,7 @@ import React from 'react'
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "PawThera - Équipe",
+  title: "Equipe - Dashboard",
   description: "Gestion de l'équipe",
 };
 
