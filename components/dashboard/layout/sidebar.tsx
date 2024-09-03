@@ -21,7 +21,7 @@ export function Sidebar() {
     <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border border-border",
       sidebar?.isOpen === false ? "w-[68px]" : "w-72"
     )}>
-      <div className="relative h-full flex flex-col justify-center py-4">
+      <div className="relative h-full flex flex-col justify-start py-4">
         <div className={"flex justify-start items-center mx-5 gap-5"}>
           <MoveLeft className={cn("h-5 w-5 text-gray-600 hover:text-gray-400", sidebar.isOpen == true ? "visible" : "hidden")} onClick={() => router.push("/")} />
           <DropdownMenu onOpenChange={setIsOpen}>
