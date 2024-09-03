@@ -1,24 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import { MoveLeft, PanelsTopLeft } from "lucide-react";
+import { MoveLeft } from "lucide-react";
 
 import { cn } from "@/src/lib";
 import { useStore } from "@/src/hooks/useStore";
-import { Button } from "@/components/ui/button";
 import { Menu } from "./menu";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
-import { SidebarToggle } from "./sidebar-toggle";
-import { useCurrentLocale } from "@/src/locales";
 import { Avatar, DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui";
 import { useRouter } from "next/navigation";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
   const router = useRouter();
-  const locale = useCurrentLocale();
-  
-  if(!sidebar) return null;
+
+  if (!sidebar) return null;
 
   return (
     <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border border-border",
@@ -29,9 +24,9 @@ export function Sidebar() {
           <MoveLeft className={cn("h-5 w-5 text-gray-600 hover:text-gray-400 transition-[colors,opacity] duration-300", sidebar.isOpen == true ? "visible" : "hidden")} onClick={() => router.push("/")} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar className="h-8 w-8 bg-gray-400" />
+              <Avatar className={cn("h-8 w-8 bg-gray-400", sidebar.isOpen == true ? "h-8 w-8" : "h-4 w-4")} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent side={sidebar.isOpen ? "left" : "right"}>
               <DropdownMenuLabel>Mes établissements</DropdownMenuLabel>
             </DropdownMenuContent>
           </DropdownMenu>

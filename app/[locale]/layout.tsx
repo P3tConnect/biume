@@ -9,7 +9,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
 import { I18nProviderClient } from "@/src/locales/client";
-import { getI18n, getScopedI18n } from "@/src/locales/server";
+import { getScopedI18n } from "@/src/locales/server";
 
 const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
 
@@ -94,32 +94,32 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-    return (
-        <html lang={params.locale}>
-            <head>
-                <script
-                    defer
-                    src="https://woyage.app/track.js"
-                    data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
-                ></script>
-            </head>
-            <body
-                className={cn(
-                    "min-h-screen bg-background font-sans antialiased",
-                    nunito.className,
-                )}
-            >
-                <I18nProviderClient locale={params.locale}>
-                    <Providers>
-                        <NextSSRPlugin
-                            routerConfig={extractRouterConfig(ourFileRouter)}
-                        />
-                        <div vaul-drawer-wrapper="" className="bg-background">
-                            {children}
-                        </div>
-                    </Providers>
-                </I18nProviderClient>
-            </body>
-        </html>
-    );
+  return (
+    <html lang={params.locale}>
+      <head>
+        <script
+          defer
+          src="https://woyage.app/track.js"
+          data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
+        ></script>
+      </head>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          nunito.className,
+        )}
+      >
+        <I18nProviderClient locale={params.locale}>
+          <Providers>
+            <NextSSRPlugin
+              routerConfig={extractRouterConfig(ourFileRouter)}
+            />
+            <div vaul-drawer-wrapper="" className="bg-background">
+              {children}
+            </div>
+          </Providers>
+        </I18nProviderClient>
+      </body>
+    </html>
+  );
 }

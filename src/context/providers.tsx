@@ -2,14 +2,11 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { PropsWithChildren } from "react";
-
-import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "sonner";
-import { useRouter } from "next/navigation";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Providers = async ({ children }: PropsWithChildren) => {
-  const router = useRouter();
   const queryClient = new QueryClient();
 
   return (
@@ -20,10 +17,10 @@ const Providers = async ({ children }: PropsWithChildren) => {
         enableSystem={false}
         disableTransitionOnChange={true}
       >
-        <NextUIProvider navigate={router.push}>
+        <TooltipProvider disableHoverableContent>
           {children}
           <Toaster />
-        </NextUIProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

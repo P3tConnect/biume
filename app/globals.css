@@ -16,9 +16,9 @@
     --primary: 146, 61%, 66%;
     --primary-foreground: 146, 61%, 66%;
 
-    --secondary: 258, 96%, 39%;
+    --secondary: 274, 100%, 50%;
     --secondary-foreground: 258, 96%, 39%;
-    
+
     --gray: 0, 0%, 13%;
     --gray-foreground: 0, 0%, 13%;
 
@@ -39,12 +39,12 @@
 
     /* Custom properties */
     --navigation-height: 3.5rem;
-    --color-king-blue: #08297B;
-    --color-orange: #FF9500;
-    --color-pink: #B2387E;
+    --color-king-blue: #08297b;
+    --color-orange: #ff9500;
+    --color-pink: #b2387e;
     --color-black: #202020;
-    --color-white: #FFFFFF;
-    --color-gray: #EAEAEA;
+    --color-white: #ffffff;
+    --color-gray: #eaeaea;
 
     /*
     --color-one: #37ecba;
@@ -66,7 +66,7 @@
     --primary: 146, 61%, 66%;
     --primary-foreground: 146, 61%, 66%;
 
-    --secondary: 258, 96%, 39%;
+    --secondary: 274, 100%, 50%;
     --secondary-foreground: 258, 96%, 39%;
 
     --gray: 0, 0%, 13%;

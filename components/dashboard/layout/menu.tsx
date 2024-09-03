@@ -56,41 +56,39 @@ export function Menu({ isOpen }: MenuProps) {
                 ({ href, label, icon: Icon, active, submenus }, index) =>
                   submenus.length === 0 ? (
                     <div className="w-full" key={index}>
-                      <TooltipProvider disableHoverableContent>
-                        <Tooltip delayDuration={100}>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant={"ghost"}
-                              className={cn("w-full justify-start h-10 mb-1", active ? "bg-gray-100 dark:bg-gray-800" : "")}
-                              asChild
-                            >
-                              <Link href={href}>
-                                <span
-                                  className={cn(isOpen === false ? "" : "mr-4")}
-                                >
-                                  <Icon size={18} className={cn(active ? "fill-secondary" : "")} />
-                                </span>
-                                <p
-                                  className={cn(
-                                    "max-w-[200px] truncate",
-                                    isOpen === false
-                                      ? "-translate-x-96 opacity-0"
-                                      : "translate-x-0 opacity-100",
-                                    active ? "text-secondary" : ""
-                                  )}
-                                >
-                                  {label}
-                                </p>
-                              </Link>
-                            </Button>
-                          </TooltipTrigger>
-                          {isOpen === false && (
-                            <TooltipContent side="right">
-                              {label}
-                            </TooltipContent>
-                          )}
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Tooltip delayDuration={100}>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant={"ghost"}
+                            className={cn("w-full justify-start h-10 mb-1", active ? "bg-gray-100 dark:bg-gray-800" : "")}
+                            asChild
+                          >
+                            <Link href={href}>
+                              <span
+                                className={cn(isOpen === false ? "" : "mr-4")}
+                              >
+                                <Icon size={18} className={cn(active ? "text-secondary" : "")} />
+                              </span>
+                              <p
+                                className={cn(
+                                  "max-w-[200px] truncate",
+                                  isOpen === false
+                                    ? "-translate-x-96 opacity-0"
+                                    : "translate-x-0 opacity-100",
+                                  active ? "text-secondary" : ""
+                                )}
+                              >
+                                {label}
+                              </p>
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        {isOpen === false && (
+                          <TooltipContent side="right">
+                            {label}
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
                     </div>
                   ) : (
                     <div className="w-full" key={index}>
@@ -107,32 +105,30 @@ export function Menu({ isOpen }: MenuProps) {
             </li>
           ))}
           <li className="w-full grow flex items-end">
-            <TooltipProvider disableHoverableContent>
-              <Tooltip delayDuration={100}>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {}}
-                    variant="outline"
-                    className="w-full justify-center h-10 mt-5"
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => { }}
+                  variant="outline"
+                  className="w-full justify-center h-10 mt-5"
+                >
+                  <span className={cn(isOpen === false ? "" : "mr-4")}>
+                    <LogOut size={18} />
+                  </span>
+                  <p
+                    className={cn(
+                      "whitespace-nowrap",
+                      isOpen === false ? "opacity-0 hidden" : "opacity-100"
+                    )}
                   >
-                    <span className={cn(isOpen === false ? "" : "mr-4")}>
-                      <LogOut size={18} />
-                    </span>
-                    <p
-                      className={cn(
-                        "whitespace-nowrap",
-                        isOpen === false ? "opacity-0 hidden" : "opacity-100"
-                      )}
-                    >
-                      Déconnexion
-                    </p>
-                  </Button>
-                </TooltipTrigger>
-                {isOpen === false && (
-                  <TooltipContent side="right">Déconnexion</TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
+                    Déconnexion
+                  </p>
+                </Button>
+              </TooltipTrigger>
+              {isOpen === false && (
+                <TooltipContent side="right">Déconnexion</TooltipContent>
+              )}
+            </Tooltip>
           </li>
         </ul>
       </nav>
