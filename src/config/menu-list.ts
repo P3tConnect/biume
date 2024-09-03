@@ -6,7 +6,7 @@ type Submenu = {
   active: boolean;
 }
 
-type Menu = {
+export type Menu = {
   href: string;
   label: string;
   active: boolean;
@@ -17,6 +17,56 @@ type Menu = {
 type Group = {
   groupLabel: string;
   menus: Menu[];
+}
+
+export function proSimpleMenuList(pathname: string, locale: string) {
+  return [
+    {
+      href: `/${locale}/dashboard`,
+      label: "Dashboard",
+      active: pathname == `/${locale}/dashboard`,
+    },
+    {
+      href: `/${locale}/dashboard/timetable`,
+      label: "Agenda",
+      active: pathname == `/${locale}/dashboard/timetable`,
+    },
+    {
+      href: `/${locale}/dashboard/accounting`,
+      label: "Administratif",
+      active: pathname == `/${locale}/dashboard/accounting`,
+    },
+    {
+      href: `/${locale}/dashboard/team`,
+      label: "Equipe",
+      active: pathname == `/${locale}/dashboard/team`,
+    },
+    {
+      href: `/${locale}/dashboard/reminders`,
+      label: "Rappels",
+      active: pathname == `/${locale}/dashboard/reminders`,
+    },
+    {
+      href: `/${locale}/dashboard/clients`,
+      label: "Clients",
+      active: pathname == `/${locale}/dashboard/clients`,
+    },
+    {
+      href: `/${locale}/dashboard/patients`,
+      label: "Patients",
+      active: pathname == `/${locale}/dashboard/patients`,
+    },
+    {
+      href: `/${locale}/dashboard/reports`,
+      label: "Rapports",
+      active: pathname == `/${locale}/dashboard/reports`,
+    },
+    {
+      href: `/${locale}/dashboard/observations`,
+      label: "Observations",
+      active: pathname == `/${locale}/dashboard/observations`,
+    }
+  ];
 }
 
 export function proMenuList(pathname: string, locale: string): Group[] {

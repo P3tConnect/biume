@@ -16,7 +16,6 @@ export function ModeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <TooltipProvider disableHoverableContent>
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
           <Button
@@ -32,6 +31,5 @@ export function ModeToggle() {
         </TooltipTrigger>
         <TooltipContent side="bottom">Switch Theme</TooltipContent>
       </Tooltip>
-    </TooltipProvider>
   );
 }

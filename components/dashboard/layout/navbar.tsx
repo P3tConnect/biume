@@ -4,23 +4,25 @@ import { SheetMenu } from "./sheet-menu";
 import { cn } from "@/src/lib";
 import { SidebarToggle } from "./sidebar-toggle";
 import { useSidebarToggleStore } from "@/src/hooks/useSidebarToggle";
+import SearchButton from "./search-button";
+import { Menu } from "@/src/config/menu-list";
 
 interface NavbarProps {
-  title: string;
-  isOpen: boolean | undefined;
   sidebar: useSidebarToggleStore;
+  menu: Menu;
 }
 
-export function Navbar({ title, isOpen, sidebar }: NavbarProps) {
+export function Navbar({ menu, sidebar }: NavbarProps) {
   return (
     <header className="sticky top-0 flex w-full mt-4 bg-background/95 border border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:shadow-secondary rounded-2xl">
       <div className="mx-4 sm:mx-4 flex w-full h-14 items-center justify-around">
-        <div className="flex items-center space-x-2 lg:space-x-0">
+        <div className="flex items-center justify-center space-x-2 gap-3 lg:space-x-0">
           <SheetMenu />
           <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-          <h1 className="font-bold pl-5">{title}</h1>
+          <h1 className="font-bold">{menu.label}</h1>
         </div>
         <div className="flex flex-1 items-center space-x-2 justify-end">
+          <SearchButton />
           <ModeToggle />
           <UserNav />
         </div>
