@@ -18,16 +18,16 @@ export function Sidebar() {
   if (!sidebar) return null;
 
   return (
-    <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border border-border",
+    <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
       sidebar?.isOpen === false ? "w-[68px]" : "w-72"
     )}>
       <div className="relative h-full flex flex-col justify-start py-4">
-        <div className={"flex justify-start items-center mx-5 gap-5"}>
+        <div className={"flex justify-start items-center mx-4 gap-4"}>
           <MoveLeft className={cn("h-5 w-5 text-gray-600 hover:text-gray-400", sidebar.isOpen == true ? "visible" : "hidden")} onClick={() => router.push("/")} />
           <DropdownMenu onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
               <div className={cn("flex items-center justify-center gap-2", sidebar.isOpen == true ? "" : "flex-col")}>
-                <Avatar className={cn("bg-gray-400", sidebar.isOpen == true ? "h-8 w-8" : "h-7 w-7")} />
+                <Avatar className={cn("bg-gray-400", sidebar.isOpen == true ? "h-8 w-8" : "h-8 w-8")} />
                 <p className={cn("text-sm font-medium", sidebar.isOpen == true ? "visible" : "hidden")}>Patenron</p>
                 <ChevronDown className={cn("h-4 w-4 transition-transform ease-in-out duration-200", isOpen == true ? "rotate-180" : "rotate-0")} />
               </div>

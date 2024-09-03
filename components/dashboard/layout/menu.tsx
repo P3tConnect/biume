@@ -6,14 +6,13 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/src/lib";
 import { proMenuList } from "@/src/config/menu-list";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapseMenuButton } from "./collapse-menu-button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-  TooltipProvider
+  TooltipProvider,
+  Button
 } from "@/components/ui";
 import { useCurrentLocale } from "@/src/locales";
 
@@ -27,8 +26,7 @@ export function Menu({ isOpen }: MenuProps) {
   const menuList = proMenuList(pathname, locale);
 
   return (
-    // <ScrollArea className="[&>div>div[style]]:!block h-full">
-    <nav className="mt-6 h-full w-full flex flex-col justify-around">
+    <nav className="mt-4 h-full w-full flex flex-col justify-around">
       <ul className="flex flex-col items-start space-y-1 px-2">
         {menuList.map(({ groupLabel, menus }, index) => (
           <li className={cn("w-full", groupLabel ? "pt-5" : "")} key={index}>
@@ -132,6 +130,5 @@ export function Menu({ isOpen }: MenuProps) {
         </Tooltip>
       </div>
     </nav>
-    // </ScrollArea>
   );
 }

@@ -14,10 +14,10 @@
     --popover-foreground: 0 0% 3.9%;
 
     --primary: 146, 61%, 66%;
-    --primary-foreground: 146, 61%, 66%;
+    --primary-foreground: 0, 0%, 100%;
 
     --secondary: 274, 100%, 50%;
-    --secondary-foreground: 258, 96%, 39%;
+    --secondary-foreground: 0, 0%, 100%;
 
     --gray: 0, 0%, 13%;
     --gray-foreground: 0, 0%, 13%;
@@ -64,10 +64,10 @@
     --popover-foreground: 0 0% 98%;
 
     --primary: 146, 61%, 66%;
-    --primary-foreground: 146, 61%, 66%;
+    --primary-foreground: 0, 0%, 100%;
 
     --secondary: 274, 100%, 50%;
-    --secondary-foreground: 258, 96%, 39%;
+    --secondary-foreground: 0, 0%, 100%;
 
     --gray: 0, 0%, 13%;
     --gray-foreground: 0, 0%, 13%;
