@@ -1,10 +1,37 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, db } from "../lib";
+import { clientAction, db, signIn, signOut } from "../lib";
 import { CreateUserSchema, user } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
+
+export const loginWithCredentials = async ({ email, password }: { email: string, password: string }) => {
+  await signIn("credentials", {
+    email,
+    password,
+    redirect: true,
+    redirectTo: "/dashboard",
+  });
+};
+
+export const logout = async () => {
+  await signOut();
+};
+
+export const loginWithGoogle = async () => {
+  await signIn("google", {
+    redirect: true,
+    redirectTo: "/dashboard",
+  });
+};
+
+export const loginWithFacebook = async () => {
+  await signIn("facebook", {
+    redirect: true,
+    redirectTo: "/dashboard"
+  });
+};
 
 export const getUsers = clientAction.handler(async () => {});
 

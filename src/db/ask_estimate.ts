@@ -8,7 +8,6 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { askEstimateOptions } from "./askEstimateOptions";
-import { sessionType } from "./pro_session";
 import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { company } from "./company";
@@ -40,6 +39,7 @@ export const askEstimate = pgTable("ask_estimate", {
   for: text("for").references(() => company.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").default(false),
   message: text("message"),
+  new: boolean("new").default(false),
   //sessionType: sessionType("sessionType").default("oneToOne"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updateAt: timestamp("updatedAt", { mode: "date" }),

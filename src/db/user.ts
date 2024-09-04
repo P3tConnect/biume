@@ -21,6 +21,7 @@ import { address } from "./addresses";
 import { z } from "zod";
 import { bgJobs } from "./bgJobs";
 import { transaction } from "./transactions";
+import { authenticator } from "./authenticator";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -64,6 +65,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
   }),
   bgJobs: many(bgJobs),
   transactions: many(transaction),
+  authenticators: many(authenticator),
 }));
 
 export type User = typeof user.$inferSelect;

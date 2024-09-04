@@ -2,7 +2,6 @@ import {
   integer,
   pgEnum,
   pgTable,
-  serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -11,8 +10,6 @@ import { relations } from "drizzle-orm";
 import { proSession } from "./pro_session";
 import { createInsertSchema } from "drizzle-zod";
 import { petsDeseases } from "./petsDeseases";
-import { allergies } from "./allergies";
-import { intolerences } from "./intolerences";
 import { z } from "zod";
 import { petsAllergies } from "./petsAllergies";
 import { petsIntolerences } from "./petsIntolerences";

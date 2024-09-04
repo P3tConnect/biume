@@ -24,7 +24,7 @@ export async function generateMetadata({
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: "/app/favicon.ico",
+      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
       title: "PawThera",
