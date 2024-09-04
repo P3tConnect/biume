@@ -1,3 +1,3 @@
-export * from "./balancePayouts";
-export * from "./reminders";
-export * from "./example";
+export * from "./balancePayouts.trigger";
+export * from "./reminders.trigger";
+export * from "./example.trigger";

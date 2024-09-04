@@ -2,7 +2,7 @@ export * from "./accounts";
 export * from "./session";
 export * from "./user";
 export * from "./verificationToken";
-export * from "./verificators";
+export * from "./authenticator";
 export * from "./allergies";
 export * from "./company";
 export * from "./employeeCompany";

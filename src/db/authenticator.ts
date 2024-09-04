@@ -1,7 +1,7 @@
 import { boolean, integer, pgTable, text } from "drizzle-orm/pg-core";
 import { user } from "./user";
 
-export const authenticators = pgTable("authenticator", {
+export const authenticator = pgTable("authenticator", {
   credentialID: text("credentialID").notNull().unique(),
   userId: text("userId")
     .notNull()

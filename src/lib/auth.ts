@@ -5,7 +5,7 @@ import { user } from "../db/user";
 import { sessions } from "../db/session";
 import { accounts } from "../db/accounts";
 import { verificationTokens } from "../db/verificationToken";
-import { authenticators } from "../db/verificators";
+import { authenticators } from "../db/authenticator";
 import { Adapter } from "next-auth/adapters";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
