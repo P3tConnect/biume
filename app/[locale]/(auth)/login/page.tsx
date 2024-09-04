@@ -1,44 +1,26 @@
 "use client"
 
-import AutoForm, { AutoFormSubmit } from '@/components/ui/auto-form'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { redirect } from 'next/navigation';
+import { Button, Input } from '@/components/ui';
+import Image from 'next/image';
 import React from 'react'
-import { z } from 'zod'
-
-const schema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
 
 const LoginPage = () => {
-  redirect('/')
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-secondary-300 to-card-300'>
-      <Card className='w-full max-w-md p-6 space-y-4 rounded-xl bg-card/40'>
-        <CardHeader className='text-center'>
-          <CardTitle className='text-2xl font-bold'>Connexion</CardTitle>
-          <CardDescription>Enter your email and password to access your account.</CardDescription>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          <AutoForm formSchema={schema} fieldConfig={{
-            password: {
-              inputProps: {
-                className: "rounded-xl",
-                type: "password"
-              }
-            },
-            email: {
-              inputProps: {
-                className: "rounded-xl",
-                type: "email"
-              }
-            },
-          }}>
-            <AutoFormSubmit className='w-full'>Me Connecter</AutoFormSubmit>
-          </AutoForm>
-        </CardContent>
-      </Card>
+    <div className='flex items-center justify-between min-h-screen px-5'>
+      <form className='flex flex-col items-center justify-center w-1/2 space-y-4'>
+        <h1 className="text-3xl font-bold text-secondary">Connexion</h1>
+        <p className='text-gray-400 max-w-96 text-center'>Ceci est du texte de description pour justifier de l'utilité de s'inscrire sur notre plateforme PawThera</p>
+        <Input className='w-96 rounded-3xl' type='email' placeholder='Email' />
+        <Input className='w-96 rounded-3xl' type='password' placeholder='Mot de passe' />
+        <Button
+          className='w-96 rounded-3xl'
+          variant={'secondary'}
+          type="submit"
+        >
+          Se connecter
+        </Button>
+      </form>
+      <Image src={'/assets/svg/login.svg'} alt='login image with a dog an its owner' width={500} objectFit='cover' height={500} className='rounded-2xl' />
     </div>
   )
 }
