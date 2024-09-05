@@ -6,7 +6,7 @@ import { cn } from "@/src/lib";
 import { useStore } from "@/src/hooks/useStore";
 import { Menu } from "./menu";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
-import { Avatar, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui";
+import { Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -27,7 +27,10 @@ export function Sidebar() {
           <DropdownMenu onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
               <div className={cn("flex items-center justify-center gap-2", sidebar.isOpen == true ? "" : "flex-col")}>
-                <Avatar className={cn("bg-gray-400", sidebar.isOpen == true ? "h-8 w-8" : "h-8 w-8")} />
+                <Avatar className="h-8 w-8 rounded-full border border-border">
+                  <AvatarImage src="#" alt="avatar" />
+                  <AvatarFallback className="bg-transparent">P</AvatarFallback>
+                </Avatar>
                 <p className={cn("text-sm font-medium", sidebar.isOpen == true ? "visible" : "hidden")}>Patenron</p>
                 <ChevronDown className={cn("h-4 w-4 transition-transform ease-in-out duration-200", isOpen == true ? "rotate-180" : "rotate-0")} />
               </div>

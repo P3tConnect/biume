@@ -18,10 +18,17 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { useCurrentLocale } from "@/src/locales";
+import { logout } from "@/src/actions";
 
 export function UserNav() {
+  const locale = useCurrentLocale();
+
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -55,20 +62,40 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link href="/dashboard" className="flex items-center">
+            <Link href={`/${locale}/dashboard`} className="flex items-center">
               <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
-              Dashboard
+              Tableau de bord
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 rounded-full flex items-center justify-center text-sm text-white bg-red-600">
+                  3
+                </div>
+                Notifications
+              </div>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>
+                Notification 1
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Notification 2
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
-            <Link href="/account" className="flex items-center">
+            <Link href={`/${locale}/dashboard/account`} className="flex items-center">
               <User className="w-4 h-4 mr-3 text-muted-foreground" />
-              Account
+              Profil
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="hover:cursor-pointer" onClick={() => {}}>
+        <DropdownMenuItem className="hover:cursor-pointer" onClick={async () => {
+          await logout();
+        }}>
           <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
           Sign out
         </DropdownMenuItem>

@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const userEmail = credentials.email as string;
         const userPassword = credentials.password as string;
 
-        /// TODO: Implement the hash password function
+        // TODO: Implement a hash password function
 
         const user = await db.query.user.findFirst({
           where: eq(dbUser.email, userEmail),
