@@ -8,6 +8,7 @@ declare module "next-auth" {
             emailVerified: Date | null;
             stripeId: string | null;
             isPro: boolean | null;
+            isAdmin: boolean | null;
             plan: Plan;
             role: Job[];
         };
@@ -17,6 +18,7 @@ declare module "next-auth" {
         emailVerified: Date | null;
         stripeId: string | null;
         isPro: boolean | null;
+        isAdmin: boolean | null;
         plan: Plan;
         role: Job[];
     }

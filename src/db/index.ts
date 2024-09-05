@@ -46,3 +46,5 @@ export * from "./widgets";
 export * from "./bgJobs";
 export * from "./companyAddress";
 export * from "./companyDocuments";
+export * from "./notifications";
+export * from "./newsletter";

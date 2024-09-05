@@ -37,6 +37,7 @@ export const user = pgTable("user", {
   emailVerified: timestamp("emailVerified"),
   image: text("image"),
   phone: text("phone"),
+  password: text("password"),
   stripeId: text("stripeId"),
   addressId: text("address").references(() => address.id, {
     onDelete: "cascade",

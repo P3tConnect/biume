@@ -12,6 +12,10 @@ interface ENV {
   NEXT_PUBLIC_APP_URL: string | undefined;
   AUTH_SECRET: string | undefined;
   NODE_ENV: string | undefined;
+  GOOGLE_CLIENT_ID: string | undefined;
+  GOOGLE_CLIENT_SECRET: string | undefined;
+  FACEBOOK_CLIENT_ID: string | undefined;
+  FACEBOOK_CLIENT_SECRET: string | undefined;
 }
 
 interface Config {
@@ -24,6 +28,10 @@ interface Config {
   NEXT_PUBLIC_APP_URL: string;
   AUTH_SECRET: string;
   NODE_ENV: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  FACEBOOK_CLIENT_ID: string;
+  FACEBOOK_CLIENT_SECRET: string;
 }
 
 const getConfig = (): ENV => {
@@ -37,6 +45,10 @@ const getConfig = (): ENV => {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     NODE_ENV: process.env.NODE_ENV,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+    FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
   };
 };
 
