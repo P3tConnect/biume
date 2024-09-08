@@ -1,5 +1,4 @@
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
-import { nextui } from '@nextui-org/react'
 import { withUt } from 'uploadthing/tw'
 
 const darkMode = ["class"]
@@ -9,7 +8,6 @@ const content = [
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./emails/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
 ];
 const prefix = "";
 const theme = {
@@ -154,7 +152,7 @@ const theme = {
         },
     },
 };
-const plugins = [require("tailwindcss-animate"), addVariablesForColors, nextui()];
+const plugins = [require("tailwindcss-animate"), addVariablesForColors];
 
 function addVariablesForColors({ addBase, theme }) {
     let allColors = flattenColorPalette(theme("colors"));

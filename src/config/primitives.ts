@@ -360,7 +360,8 @@ export const input = tv({
       md: "rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
       lg: "rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
       xl: "rounded-lg border border-input bg-background px-5 py-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-      "2xl": "rounded-lg border border-input bg-background px-6 py-5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "2xl":
+        "rounded-lg border border-input bg-background px-6 py-5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
     },
     padding: {
       none: "p-0",
@@ -752,6 +753,92 @@ export const avatar = tv({
       30: "z-30",
       40: "z-40",
       50: "z-50",
+    },
+  },
+});
+
+export const cardVariants = tv({
+  base: "rounded-lg border bg-card text-card-foreground shadow-sm",
+  variants: {
+    padding: {
+      none: "p-0",
+      sm: "p-4",
+      md: "p-6",
+      lg: "p-8",
+      xl: "p-10",
+    },
+    margin: {
+      none: "m-0",
+      sm: "m-4",
+      md: "m-6",
+      lg: "m-8",
+      xl: "m-10",
+    },
+    gap: {
+      none: "gap-0",
+      sm: "gap-4",
+      md: "gap-6",
+      lg: "gap-8",
+      xl: "gap-10",
+    },
+    border: {
+      none: "border-none",
+      solid: "border",
+      dashed: "border-dashed",
+      dotted: "border-dotted",
+      double: "border-double",
+    },
+    borderColor: {
+      primary: "border-primary",
+      secondary: "border-secondary",
+      gray: "border-gray",
+      destructive: "border-destructive",
+      muted: "border-muted-foreground",
+      accent: "border-accent",
+    },
+    borderWidth: {
+      none: "border-0",
+      default: "border",
+      0: "border-0",
+      2: "border-2",
+      4: "border-4",
+      8: "border-8",
+    },
+    borderRadius: {
+      none: "rounded-none",
+      sm: "rounded-sm",
+      md: "rounded",
+      lg: "rounded-lg",
+      xl: "rounded-xl",
+      full: "rounded-full",
+      t: "rounded-t",
+      r: "rounded-r",
+      b: "rounded-b",
+      l: "rounded-l",
+      tl: "rounded-tl",
+      tr: "rounded-tr",
+      br: "rounded-br",
+      bl: "rounded-bl",
+    },
+  },
+});
+
+export const cardHeaderVariants = tv({
+  base: "flex flex-col space-y-1.5 p-6",
+  variants: {
+    padding: {
+      none: "p-0",
+      sm: "p-4",
+      md: "p-6",
+      lg: "p-8",
+      xl: "p-10",
+    },
+    margin: {
+      none: "m-0",
+      sm: "m-4",
+      md: "m-6",
+      lg: "m-8",
+      xl: "m-10",
     },
   },
 });

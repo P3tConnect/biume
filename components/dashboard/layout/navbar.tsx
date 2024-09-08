@@ -14,7 +14,7 @@ interface NavbarProps {
 
 export function Navbar({ menu, sidebar }: NavbarProps) {
   return (
-    <header className="sticky top-0 flex w-full mt-3 bg-white dark:bg-black border border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:shadow-secondary rounded-2xl">
+    <header className="sticky top-0 flex w-full mt-3 mb-3 bg-white dark:bg-black border border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:shadow-secondary rounded-2xl">
       <div className="mx-4 sm:mx-4 flex w-full h-14 items-center justify-around">
         <div className="flex items-center justify-center space-x-2 gap-3 lg:space-x-0">
           <SheetMenu />
