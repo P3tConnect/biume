@@ -5,7 +5,7 @@ import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
 import HeroSection from "@/components/landing/hero-section";
 import Image from "next/image";
-import ImagePawthera from "@/public/assets/images/window-pawthera-hero-section.png";
+import ImagePawthera from "@/public/assets/svg/hero-section.svg";
 
 export default function Home() {
   return (
