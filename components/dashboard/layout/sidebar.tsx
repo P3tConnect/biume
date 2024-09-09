@@ -26,7 +26,7 @@ export function Sidebar() {
           <MoveLeft className={cn("h-5 w-5 text-gray-600 hover:text-gray-400", sidebar.isOpen == true ? "visible" : "hidden")} onClick={() => router.push("/")} />
           <DropdownMenu onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-              <div className={cn("flex items-center justify-center gap-2", sidebar.isOpen == true ? "" : "flex-col")}>
+              <div className={cn("flex items-center justify-center gap-2 cursor-pointer", sidebar.isOpen == true ? "" : "flex-col")}>
                 <Avatar className="h-8 w-8 rounded-full border border-border">
                   <AvatarImage src="#" alt="avatar" />
                   <AvatarFallback className="bg-transparent">P</AvatarFallback>

@@ -1,4 +1,4 @@
-import { Calendar, Contact2, Eye, FolderOpen, LayoutGrid, LineChart, LucideIcon, PawPrint, Tag, Timer, UsersRound } from "lucide-react";
+import { Calendar, Contact2, Eye, FolderOpen, LayoutGrid, LineChart, LucideIcon, LucideMessageCircleQuestion, PawPrint, Tag, Timer, UsersRound } from "lucide-react";
 
 type Submenu = {
   href: string;
@@ -147,6 +147,18 @@ export function proMenuList(pathname: string, locale: string): Group[] {
           icon: Eye,
           submenus: [],
         }
+      ],
+    },
+    {
+      groupLabel: "Informations",
+      menus: [
+        {
+          href: `/${locale}/help`,
+          label: "Aide et Assistance",
+          active: pathname == `/${locale}/help`,
+          icon: LucideMessageCircleQuestion,
+          submenus: [],
+        },
       ],
     }
   ]

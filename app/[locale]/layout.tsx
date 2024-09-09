@@ -96,13 +96,6 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang={params.locale}>
-      <head>
-        <script
-          defer
-          src="https://woyage.app/track.js"
-          data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
-        ></script>
-      </head>
       <body
         className={cn(
           "min-h-screen font-sans antialiased",
