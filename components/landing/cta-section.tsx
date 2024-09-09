@@ -26,16 +26,6 @@ export default function CallToActionSection() {
     },
   });
 
-  const onSubmit = handleSubmit(async (data) => {
-    const response = await newSubWaitList({ email: data.email });
-
-    if (response?.serverError) {
-      toast.error(response.serverError);
-    } else {
-      reset();
-    }
-  });
-
   return (
     <section
       id="cta"
