@@ -18,7 +18,7 @@ export function Sidebar() {
   if (!sidebar) return null;
 
   return (
-    <div className={cn("h-full bg-white dark:bg-black m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
+    <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
       sidebar?.isOpen === false ? "w-[68px]" : "w-72"
     )}>
       <div className="relative h-full flex flex-col justify-start py-4">

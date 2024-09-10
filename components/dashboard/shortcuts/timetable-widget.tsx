@@ -6,29 +6,16 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
 } from "@/components/ui";
 import {
   ArrowLeft,
   ArrowRight,
-  MoreHorizontal,
-  MoreVertical,
 } from "lucide-react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import interactionPlugin from "@fullcalendar/interaction";
-import Link from "next/link";
 import { useSidebarToggle, useStore } from "@/src/hooks";
 import { useEffect, useRef, useState } from "react";
 import { CalendarApi } from "@fullcalendar/core/index.js";
@@ -104,28 +91,28 @@ const TimetableWidget = () => {
   return (
     <Card
       ref={containerRef}
-      className="w-full bg-white h-1/2 dark:bg-black rounded-2xl"
+      className="w-full bg-secondary h-1/2 rounded-2xl border border-border dark:border-white"
     >
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl">
+        <CardTitle className="text-xl text-white">
           Calendrier et prochains rendez-vous
         </CardTitle>
         <div className="flex justify-center items-center gap-2">
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={handlePrev}
             className="rounded-full h-7 w-7 p-0"
           >
             <ArrowLeft size={18} />
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={handleNext}
             className="rounded-full h-7 w-7 p-0"
           >
             <ArrowRight size={18} />
           </Button>
-          <p>
+          <p className="text-white">
             {calendarApi && currentMonth != ""
               ? `${currentMonth.toUpperCase()}`
               : ""}
@@ -133,7 +120,7 @@ const TimetableWidget = () => {
           <CalendarDropdown viewMode={viewMode} setViewMode={setViewMode} />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="text-white">
         <FullCalendar
           ref={calendarRef}
           locale={locale}
@@ -144,10 +131,11 @@ const TimetableWidget = () => {
             interactionPlugin,
           ]}
           editable={true}
+          firstDay={1}
           selectable={true}
           selectMirror={true}
-          height={400}
-          contentHeight={400}
+          height={375}
+          contentHeight={375}
           dayMaxEvents={3}
           dateClick={(date) => {
             console.log(date.date, "date click");
