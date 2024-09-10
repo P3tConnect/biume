@@ -2,7 +2,6 @@
 
 import {
   Badge,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -13,23 +12,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui";
 import { ArrowUpRight } from "lucide-react";
-import React, { useState } from "react";
 
 const ClientsProWidget = () => {
-  const [viewMode, setViewMode] = useState("week");
 
   return (
     <Dialog>
-      <DialogTrigger asChild className="group">
+      <DialogTrigger asChild className="group hover:cursor-pointer">
         <Card className="w-full bg-background rounded-2xl hover:bg-[#EEEFF6] hover:dark:bg-[#313131] transition-all duration-400">
           <CardHeader className="flex flex-row justify-between items-center">
             <CardTitle className="text-2xl font-bold">

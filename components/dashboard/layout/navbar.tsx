@@ -6,6 +6,7 @@ import { useSidebarToggleStore } from "@/src/hooks/useSidebarToggle";
 import SearchButton from "./search-button";
 import { Menu } from "@/src/config/menu-list";
 import NewShortcut from "./new-shortcut";
+import Notifications from "./notifications";
 
 interface NavbarProps {
   sidebar: useSidebarToggleStore;
@@ -14,7 +15,7 @@ interface NavbarProps {
 
 export function Navbar({ menu, sidebar }: NavbarProps) {
   return (
-    <header className="sticky top-0 flex w-full mt-3 mb-3 bg-background border border-border dark:shadow-secondary rounded-2xl">
+    <header className="sticky top-0 flex w-full mt-1 mb-3 bg-background border border-border dark:shadow-secondary rounded-2xl">
       <div className="mx-4 sm:mx-4 flex w-full h-14 items-center justify-around">
         <div className="flex items-center justify-center space-x-2 gap-3 lg:space-x-0">
           <SheetMenu />
@@ -25,6 +26,7 @@ export function Navbar({ menu, sidebar }: NavbarProps) {
         <div className="flex flex-1 items-center space-x-2 justify-end">
           <SearchButton />
           <ModeToggle />
+          <Notifications />
           <UserNav />
         </div>
       </div>
