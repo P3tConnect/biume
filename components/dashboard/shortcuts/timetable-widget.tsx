@@ -28,22 +28,30 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { logger } from "@/src/lib";
-import { CalendarApi } from "@fullcalendar/core/index.js";
-import { useCurrentLocale } from "@/src/locales";
 import Link from "next/link";
 import { useSidebarToggle, useStore } from "@/src/hooks";
+import { useEffect, useRef, useState } from "react";
+import { CalendarApi } from "@fullcalendar/core/index.js";
+import { useCurrentLocale } from "@/src/locales";
+import { logger } from "@/src/lib";
+import { toast } from "sonner";
+import CalendarDropdown from "./components/calendar-dropdown";
 
 const TimetableWidget = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
-  const currentLocale = useCurrentLocale();
   const calendarRef = useRef<FullCalendar>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
+  const locale = useCurrentLocale();
+
+  useEffect(() => {
+    const calendar = calendarRef.current;
+    if (calendar) {
+      setCalendarApi(calendar.getApi());
+    }
+  }, []);
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -67,13 +75,7 @@ const TimetableWidget = () => {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [containerRef]);
-
-  const handleChangeView = (view: string) => {
-    if (calendarApi) {
-      calendarApi.changeView(view);
-    }
-  };
+  }, []);
 
   const handleNext = () => {
     if (calendarApi) {
@@ -93,18 +95,22 @@ const TimetableWidget = () => {
     }
   };
 
+  const handleChangeView = (view: string) => {
+    if (calendarApi) {
+      calendarApi.changeView(view);
+    }
+  };
+
   return (
-    <Card ref={containerRef} className="w-full bg-white h-1/2 dark:bg-black rounded-2xl">
+    <Card
+      ref={containerRef}
+      className="w-full bg-white h-1/2 dark:bg-black rounded-2xl"
+    >
       <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle className="text-xl">
           Calendrier et prochains rendez-vous
         </CardTitle>
         <div className="flex justify-center items-center gap-2">
-          <p>
-            {calendarApi && currentMonth != ""
-              ? `${currentMonth.toUpperCase()}`
-              : ""}
-          </p>
           <Button
             variant="outline"
             onClick={handlePrev}
@@ -119,66 +125,18 @@ const TimetableWidget = () => {
           >
             <ArrowRight size={18} />
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="rounded-full h-7 w-7 p-0">
-                <MoreVertical size={18} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel className="font-bold">
-                Options
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  {viewMode == "week" ? (
-                    <p>Semaine</p>
-                  ) : viewMode == "month" ? (
-                    <p>Mois</p>
-                  ) : viewMode == "year" ? (
-                    <p>Année</p>
-                  ) : null}
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  <DropdownMenuCheckboxItem
-                    checked={viewMode === "week"}
-                    onCheckedChange={() => setViewMode("week")}
-                  >
-                    <p>Semaine</p>
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={viewMode === "month"}
-                    onCheckedChange={() => setViewMode("month")}
-                  >
-                    <p>Mois</p>
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={viewMode === "year"}
-                    onCheckedChange={() => setViewMode("year")}
-                  >
-                    <p>Année</p>
-                  </DropdownMenuCheckboxItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="flex justify-between items-center"
-                asChild
-              >
-                <Link href={`/dashboard/timetable`}>
-                  <p className="font-semibold">Voir plus</p>
-                  <MoreHorizontal size={14} />
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <p>
+            {calendarApi && currentMonth != ""
+              ? `${currentMonth.toUpperCase()}`
+              : ""}
+          </p>
+          <CalendarDropdown viewMode={viewMode} setViewMode={setViewMode} />
         </div>
       </CardHeader>
       <CardContent>
         <FullCalendar
           ref={calendarRef}
-          locale={currentLocale}
+          locale={locale}
           plugins={[
             dayGridPlugin,
             timeGridDayPlugin,
@@ -186,14 +144,10 @@ const TimetableWidget = () => {
             interactionPlugin,
           ]}
           editable={true}
-          windowResize={(arg) => {
-            arg.view.calendar.updateSize();
-          }}
           selectable={true}
           selectMirror={true}
           height={400}
           contentHeight={400}
-          weekends={false}
           dayMaxEvents={3}
           dateClick={(date) => {
             console.log(date.date, "date click");

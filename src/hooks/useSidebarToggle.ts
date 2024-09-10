@@ -1,6 +1,3 @@
-import { CalendarApi } from "@fullcalendar/core/index.js";
-import FullCalendar from "@fullcalendar/react";
-import { RefObject } from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
