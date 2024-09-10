@@ -96,16 +96,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang={params.locale}>
-      <head>
-        <script
-          defer
-          src="https://woyage.app/track.js"
-          data-website-id="b1932f9a-8d7c-4ebc-8c7b-fec2877848bc"
-        ></script>
-      </head>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen font-sans antialiased",
           nunito.className,
         )}
       >
@@ -114,7 +107,7 @@ export default async function RootLayout({
             <NextSSRPlugin
               routerConfig={extractRouterConfig(ourFileRouter)}
             />
-            <div vaul-drawer-wrapper="" className="bg-background">
+            <div vaul-drawer-wrapper="">
               {children}
             </div>
           </Providers>

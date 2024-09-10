@@ -1,5 +1,9 @@
 import React from 'react'
 import { Metadata } from 'next';
+import ClientsProWidget from '@/components/dashboard/shortcuts/clients-widget';
+import ExpensesProWidget from '@/components/dashboard/shortcuts/expenses-widget';
+import SalesProWidget from '@/components/dashboard/shortcuts/sales-widget';
+import TimetableWidget from '@/components/dashboard/shortcuts/timetable-widget';
 
 export const metadata: Metadata = {
   title: 'Home - Dashboard',
@@ -8,7 +12,16 @@ export const metadata: Metadata = {
 
 const DashboardHomeProPage = () => {
   return (
-    <div>DashboardHomeProPage</div>
+    <div className='w-full flex items-start justify-start h-full gap-3'>
+      <div className='flex flex-col w-1/4 h-full gap-3'>
+        <ClientsProWidget />
+        <ExpensesProWidget />
+        <SalesProWidget />
+      </div>
+      <div className='flex flex-col w-3/4 h-full gap-3'>
+        <TimetableWidget />
+      </div>
+    </div>
   )
 }
 
