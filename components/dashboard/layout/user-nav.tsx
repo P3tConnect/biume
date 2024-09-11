@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { BellIcon, LayoutGrid, LogOut, Settings, User } from "lucide-react";
+import { LayoutGrid, LogOut, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -17,10 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCurrentLocale } from "@/src/locales";
 import { logout } from "@/src/actions";
@@ -66,22 +63,31 @@ export function UserNav() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link href={`/${locale}/dashboard/account`} className="flex items-center">
+              <Link
+                href={`/${locale}/dashboard/account`}
+                className="flex items-center"
+              >
                 <User className="w-4 h-4 mr-3 text-muted-foreground" />
                 Profil
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link href={`/${locale}/dashboard/settings`} className="flex items-center">
+              <Link
+                href={`/${locale}/dashboard/profile/settings`}
+                className="flex items-center"
+              >
                 <Settings className="w-4 h-4 mr-3 text-muted-foreground" />
                 Paramètres
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="hover:cursor-pointer" onClick={async () => {
-            await logout();
-          }}>
+          <DropdownMenuItem
+            className="hover:cursor-pointer"
+            onClick={async () => {
+              await logout();
+            }}
+          >
             <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
             Sign out
           </DropdownMenuItem>
