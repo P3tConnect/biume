@@ -2,7 +2,6 @@
 
 import {
   Badge,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -13,68 +12,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui";
-import { ArrowRight, MoreVertical } from "lucide-react";
-import React, { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 
 const ClientsProWidget = () => {
-  const [viewMode, setViewMode] = useState("week");
 
   return (
     <Dialog>
-      <Card className="w-full bg-white dark:bg-black rounded-2xl">
-        <CardHeader className="flex flex-row justify-between items-center">
-          <CardTitle className="text-xl">Total des clients ce mois</CardTitle>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="rounded-full h-7 w-7 p-0">
-                <MoreVertical size={18} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel className="font-bold">
-                Options
-              </DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                checked={viewMode == "week"}
-                onCheckedChange={() => setViewMode("week")}
-              >
-                Par semaine
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={viewMode == "month"}
-                onCheckedChange={() => setViewMode("month")}
-              >
-                Par mois
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={viewMode == "year"}
-                onCheckedChange={() => setViewMode("year")}
-              >
-                Par année
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuSeparator />
-              <DialogTrigger asChild>
-                <DropdownMenuItem className="flex justify-between items-center">
-                  <p className="font-semibold">Voir plus</p>
-                  <ArrowRight size={14} />
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardHeader>
-        <CardContent className="flex justify-start items-center gap-5">
-          <h3 className="font-bold text-4xl text-secondary">450</h3>
-          <Badge>+ 130%</Badge>
-        </CardContent>
-      </Card>
+      <DialogTrigger asChild className="group hover:cursor-pointer">
+        <Card className="w-full bg-background rounded-2xl hover:bg-[#EEEFF6] hover:dark:bg-[#313131] transition-all duration-400">
+          <CardHeader className="flex flex-row justify-between items-center">
+            <CardTitle className="text-2xl font-bold">
+              Total des clients ce mois
+            </CardTitle>
+            <ArrowUpRight className="h-4 w-4 group-hover:h-6 group-hover:w-6 transition-all duration-600" />
+          </CardHeader>
+          <CardContent className="flex justify-start items-center gap-5">
+            <h3 className="font-bold text-4xl text-secondary">450</h3>
+            <Badge>+ 130%</Badge>
+          </CardContent>
+        </Card>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Total des clients ce mois</DialogTitle>

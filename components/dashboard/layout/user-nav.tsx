@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BellIcon, LayoutGrid, LogOut, User } from "lucide-react";
+import { LayoutGrid, LogOut, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,7 +9,6 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  TooltipProvider
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -18,10 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCurrentLocale } from "@/src/locales";
 import { logout } from "@/src/actions";
@@ -46,7 +42,7 @@ export function UserNav() {
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Profile</TooltipContent>
+          <TooltipContent side="bottom">Profil</TooltipContent>
         </Tooltip>
 
         <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -66,36 +62,32 @@ export function UserNav() {
                 Tableau de bord
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <div className="flex items-center gap-2">
-                  <BellIcon className="h-4 w-4 text-muted-foreground" />
-                  Notifications
-                  <div className="h-4 w-4 rounded-full flex items-center justify-center bg-red-600">
-                    <p className="text-xs text-white">3</p>
-                  </div>
-                </div>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  Notification 1
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Notification 2
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link href={`/${locale}/dashboard/account`} className="flex items-center">
+              <Link
+                href={`/${locale}/dashboard/account`}
+                className="flex items-center"
+              >
                 <User className="w-4 h-4 mr-3 text-muted-foreground" />
                 Profil
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem className="hover:cursor-pointer" asChild>
+              <Link
+                href={`/${locale}/dashboard/profile/settings`}
+                className="flex items-center"
+              >
+                <Settings className="w-4 h-4 mr-3 text-muted-foreground" />
+                Paramètres
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="hover:cursor-pointer" onClick={async () => {
-            await logout();
-          }}>
+          <DropdownMenuItem
+            className="hover:cursor-pointer"
+            onClick={async () => {
+              await logout();
+            }}
+          >
             <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
             Sign out
           </DropdownMenuItem>

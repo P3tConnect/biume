@@ -23,7 +23,7 @@ export default function DashboardLayout({
   const menu = proSimpleMenuList(pathname, locale).find((item) => item.active);
 
   return (
-    <div className="p-5 h-[100vh] w-[100vw] relative overflow-hidden flex justify-center items-center">
+    <div className="p-3 h-[100vh] w-[100vw] relative overflow-hidden flex justify-center items-center">
       <div className="flex flex-row h-full w-full justify-start items-center pt-4 pb-4 bg-gray-100/40 dark:bg-gray-800/50 backdrop-blur-3xl backdrop-opacity-80 shadow-2xl rounded-2xl border border-border">
         <Sidebar />
         <main

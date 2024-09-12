@@ -7,7 +7,7 @@ const CalendarDropdown = ({ viewMode, setViewMode }: { viewMode: string, setView
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="rounded-full h-7 w-7 p-0">
+        <Button variant="secondary" className="rounded-full h-7 w-7 p-0">
           <MoreVertical size={18} />
         </Button>
       </DropdownMenuTrigger>
