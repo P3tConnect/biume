@@ -46,9 +46,8 @@ const TimetableWidget = () => {
       setCalendarApi(calendar.getApi());
     }
   }, []);
-
+  
   // !!! That useEffect is here to update the calendar size when the container changes
-
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
       if (calendarRef.current) {
@@ -67,7 +66,7 @@ const TimetableWidget = () => {
   }, []);
 
   // !!! 
-
+        
   const handleNext = () => {
     if (calendarApi) {
       calendarApi.next();
