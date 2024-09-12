@@ -72,7 +72,7 @@ const LoginPage = () => {
           height={1149}
           quality={30}
           objectFit="cover"
-          src={"/assets/images/login-image.png"}
+          src={"/assets/images/login-image.jpg"}
           alt="login image with a dog an its owner"
           className="rounded-[45px] w-full h-full object-cover"
         />
