@@ -10,6 +10,7 @@ import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
 import { I18nProviderClient } from "@/src/locales/client";
 import { getScopedI18n } from "@/src/locales/server";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 
 const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
 
@@ -110,6 +111,7 @@ export default async function RootLayout({
             <div vaul-drawer-wrapper="">
               {children}
             </div>
+            <TailwindIndicator />
           </Providers>
         </I18nProviderClient>
       </body>
