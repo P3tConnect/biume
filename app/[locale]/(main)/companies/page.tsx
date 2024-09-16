@@ -6,7 +6,6 @@ import RelevantCompanySection from '@/components/company/relevant-company-sectio
 import TabsSection from '@/components/company/tabs-section'
 import ZoneSection from '@/components/company/zone-section'
 import Footer from '@/components/landing/footer'
-import { redirect } from 'next/navigation'
 import React from 'react'
 
 const CompanyListPage = () => {
@@ -14,7 +13,7 @@ const CompanyListPage = () => {
     <>
       <CompanyDetailsHero />
       <CompanyDetailsHeader />
-      <div className='flex items-center justify-center gap-5 p-5'>
+      <div className='flex items-start justify-center h-full gap-5 p-5'>
         <TabsSection />
         <div className='flex flex-col items-center justify-center h-full w-1/4 gap-5'>
           <RatesSection />

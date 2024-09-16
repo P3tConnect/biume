@@ -4,7 +4,7 @@ import { Button } from '../ui'
 
 const CompanyDetailsHeader = () => {
   return (
-    <div className='absolute top-5 bg-background h-16 w-screen rounded-full flex justify-between items-center px-5'>
+    <div className='absolute top-2 bg-background h-16 w-screen rounded-full flex justify-between items-center px-5'>
       <Image 
         src={"/assets/images/Logo couleur et noir.png"}
         alt="logo pawthera"

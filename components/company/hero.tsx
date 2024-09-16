@@ -5,7 +5,7 @@ import { User } from "lucide-react";
 
 const CompanyDetailsHero = () => {
   return (
-    <section className="relative w-full h-[500px] overflow-hidden">
+    <section className="relative w-full h-[400px] overflow-hidden">
       {/* <Image
         src="/api/placeholder/800/400"
         alt="Placeholder image"
