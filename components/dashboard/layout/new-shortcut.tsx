@@ -5,7 +5,7 @@ import React from 'react'
 const NewShortcut = () => {
   return (
     <Button
-      className='rounded-xl flex items-center justify-center gap-2 ml-10'
+      className='rounded-xl flex items-center justify-center gap-2'
       size="sm"
       variant="secondary"
     >
