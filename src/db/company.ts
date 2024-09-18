@@ -1,9 +1,8 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { cancelPolicies } from "./cancelPolicies";
 import { companyDocuments } from "./companyDocuments";
-import { employeeCompany } from "./employeeCompany";
 import { newsletter } from "./newsletter";
 import { options } from "./options";
 import { product } from "./products";
@@ -20,6 +19,12 @@ import { companyAddress } from "./companyAddress";
 import { transaction } from "./transactions";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
+import { z } from "zod";
+import { companyMembership } from "./company_membership";
+
+export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
+
+export const PlanEnum = z.enum(plan.enumValues);
 
 export const company = pgTable("company", {
   id: text("id")
@@ -34,6 +39,7 @@ export const company = pgTable("company", {
   }),
   openAt: date("openAt"),
   closeAt: date("closeAt"),
+  stripeId: text("stripeId"),
   email: text("email").notNull().unique(),
   ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").notNull(),
@@ -55,7 +61,7 @@ export const companyRelations = relations(company, ({ one, many }) => ({
     fields: [company.ownerId],
     references: [user.id],
   }),
-  employees: many(employeeCompany),
+  memberships: many(companyMembership),
   progression: one(progression, {
     fields: [company.progressionId],
     references: [progression.id],
