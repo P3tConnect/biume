@@ -140,15 +140,15 @@ const TimetableWidget = () => {
           height={375}
           contentHeight={375}
           dayMaxEvents={3}
-          dateClick={(date) => {
-            console.log(date.date, "date click");
-          }}
-          select={(date) => {
-            console.log(date.start, "date select");
-          }}
-          eventClick={(event) => {
-            console.log(event.view.title, "event click");
-          }}
+          // dateClick={(date) => {
+          //   console.log(date.date, "date click");
+          // }}
+          // select={(date) => {
+          //   console.log(date.start, "date select");
+          // }}
+          // eventClick={(event) => {
+          //   console.log(event.view.title, "event click");
+          // }}
           datesSet={(dates) => {
             setCurrentMonth(dates.view.title);
           }}

@@ -1,14 +1,11 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  date,
-  pgEnum,
   pgTable,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { pets } from "./pets";
-import { employeeCompany } from "./employeeCompany";
 import { ratings } from "./ratings";
 import { projectsInvitees } from "./projectsInvitees";
 import { allergies } from "./allergies";
@@ -16,17 +13,12 @@ import { intolerences } from "./intolerences";
 import { createInsertSchema } from "drizzle-zod";
 import { usersJobs } from "./usersJobs";
 import { deseases } from "./deseases";
-import { company } from "./company";
 import { address } from "./addresses";
-import { z } from "zod";
 import { bgJobs } from "./bgJobs";
 import { transaction } from "./transactions";
 import { authenticator } from "./authenticator";
 import { notification } from "./notifications";
-
-export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
-
-export const PlanEnum = z.enum(plan.enumValues);
+import { companyMembership } from "./company_membership";
 
 export const user = pgTable("user", {
   id: text("id")
@@ -42,7 +34,6 @@ export const user = pgTable("user", {
   addressId: text("address").references(() => address.id, {
     onDelete: "cascade",
   }),
-  plan: plan("plan").default("NONE"),
   isPro: boolean("isPro").default(false),
   isAdmin: boolean("isAdmin").default(false),
   locked: boolean("locked").default(false),
@@ -52,9 +43,8 @@ export const user = pgTable("user", {
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({
-  companiesOwner: many(company),
   pets: many(pets),
-  employeeOf: many(employeeCompany),
+  memberships: many(companyMembership),
   ratingsAuthor: many(ratings),
   projectInvitees: many(projectsInvitees),
   allergies: many(allergies),

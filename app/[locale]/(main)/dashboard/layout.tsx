@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
 
@@ -11,6 +10,5 @@ export default function DashboardLayout({
   client: ReactNode;
   admin: ReactNode;
 }) {
-  // redirect('/')
   return <DashboardLayoutComponents>{pro}</DashboardLayoutComponents>;
 }
