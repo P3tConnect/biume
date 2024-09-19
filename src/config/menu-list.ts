@@ -19,72 +19,72 @@ type Group = {
   menus: Menu[];
 }
 
-export function proSimpleMenuList(pathname: string, locale: string) {
+export function proSimpleMenuList(pathname: string, locale: string, companyId: string) {
   return [
     {
-      href: `/${locale}/dashboard`,
+      href: `/${locale}/dashboard/${companyId}`,
       label: "Dashboard",
-      active: pathname == `/${locale}/dashboard`,
+      active: pathname == `/${locale}/dashboard/${companyId}`,
     },
     {
-      href: `/${locale}/dashboard/timetable`,
+      href: `/${locale}/dashboard/${companyId}/timetable`,
       label: "Agenda",
-      active: pathname == `/${locale}/dashboard/timetable`,
+      active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
     },
     {
-      href: `/${locale}/dashboard/accounting`,
+      href: `/${locale}/dashboard/${companyId}/accounting`,
       label: "Administratif",
-      active: pathname == `/${locale}/dashboard/accounting`,
+      active: pathname == `/${locale}/dashboard/${companyId}/accounting`,
     },
     {
-      href: `/${locale}/dashboard/team`,
+      href: `/${locale}/dashboard/${companyId}/team`,
       label: "Equipe",
-      active: pathname == `/${locale}/dashboard/team`,
+      active: pathname == `/${locale}/dashboard/${companyId}/team`,
     },
     {
-      href: `/${locale}/dashboard/reminders`,
+      href: `/${locale}/dashboard/${companyId}/reminders`,
       label: "Rappels",
-      active: pathname == `/${locale}/dashboard/reminders`,
+      active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
     },
     {
-      href: `/${locale}/dashboard/clients`,
+      href: `/${locale}/dashboard/${companyId}/clients`,
       label: "Clients",
-      active: pathname == `/${locale}/dashboard/clients`,
+      active: pathname == `/${locale}/dashboard/${companyId}/clients`,
     },
     {
-      href: `/${locale}/dashboard/patients`,
+      href: `/${locale}/dashboard/${companyId}/patients`,
       label: "Patients",
-      active: pathname == `/${locale}/dashboard/patients`,
+      active: pathname == `/${locale}/dashboard/${companyId}/patients`,
     },
     {
-      href: `/${locale}/dashboard/reports`,
+      href: `/${locale}/dashboard/${companyId}/reports`,
       label: "Rapports",
-      active: pathname == `/${locale}/dashboard/reports`,
+      active: pathname == `/${locale}/dashboard/${companyId}/reports`,
     },
     {
-      href: `/${locale}/dashboard/observations`,
+      href: `/${locale}/dashboard/${companyId}/observations`,
       label: "Observations",
-      active: pathname == `/${locale}/dashboard/observations`,
+      active: pathname == `/${locale}/dashboard/${companyId}/observations`,
     }
   ];
 }
 
-export function proMenuList(pathname: string, locale: string): Group[] {
+export function proMenuList(pathname: string, locale: string, companyId: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/${locale}/dashboard`,
+          href: `/${locale}/dashboard/${companyId}`,
           label: "Dashboard",
-          active: pathname == `/${locale}/dashboard`,
+          active: pathname == `/${locale}/dashboard/${companyId}`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/timetable`,
+          href: `/${locale}/dashboard/${companyId}/timetable`,
           label: "Agenda",
-          active: pathname == `/${locale}/dashboard/timetable`,
+          active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
           icon: Calendar,
           submenus: [],
         }
@@ -94,23 +94,23 @@ export function proMenuList(pathname: string, locale: string): Group[] {
       groupLabel: "Management",
       menus: [
         {
-          href: `/${locale}/dashboard/accounting`,
+          href: `/${locale}/dashboard/${companyId}/accounting`,
           label: "Administratif",
-          active: pathname == `/${locale}/dashboard/accounting`,
+          active: pathname == `/${locale}/dashboard/${companyId}/accounting`,
           icon: FolderOpen,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/team`,
+          href: `/${locale}/dashboard/${companyId}/team`,
           label: "Equipe",
-          active: pathname == `/${locale}/dashboard/team`,
+          active: pathname == `/${locale}/dashboard/${companyId}/team`,
           icon: UsersRound,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/reminders`,
+          href: `/${locale}/dashboard/${companyId}/reminders`,
           label: "Rappels",
-          active: pathname == `/${locale}/dashboard/reminders`,
+          active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
           icon: Timer,
           submenus: [],
         }
@@ -120,30 +120,30 @@ export function proMenuList(pathname: string, locale: string): Group[] {
       groupLabel: "Gestion",
       menus: [
         {
-          href: `/${locale}/dashboard/clients`,
+          href: `/${locale}/dashboard/${companyId}/clients`,
           label: "Clients",
-          active: pathname == `/${locale}/dashboard/clients`,
+          active: pathname == `/${locale}/dashboard/${companyId}/clients`,
           icon: Contact2,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/patients`,
+          href: `/${locale}/dashboard/${companyId}/patients`,
           label: "Patients",
-          active: pathname == `/${locale}/dashboard/patients`,
+          active: pathname == `/${locale}/dashboard/${companyId}/patients`,
           icon: PawPrint,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/reports`,
+          href: `/${locale}/dashboard/${companyId}/reports`,
           label: "Rapports",
-          active: pathname == `/${locale}/dashboard/reports`,
+          active: pathname == `/${locale}/dashboard/${companyId}/reports`,
           icon: LineChart,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/observations`,
+          href: `/${locale}/dashboard/${companyId}/observations`,
           label: "Observations",
-          active: pathname == `/${locale}/dashboard/observations`,
+          active: pathname == `/${locale}/dashboard/${companyId}/observations`,
           icon: Eye,
           submenus: [],
         }

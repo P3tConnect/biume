@@ -1,9 +1,13 @@
 import { ReactNode } from "react"
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
+import { logger } from "@/src/lib";
 
-const DashboardCompanyLayout = ({ member, owner } : { member: ReactNode, owner: ReactNode }) => {
+const DashboardCompanyLayout = ({ member, owner, params } : { member: ReactNode, owner: ReactNode, params: { companyId: string } }) => {
+
+  logger.info("params", params);
+
   return (
-    <DashboardLayoutComponents>{owner}</DashboardLayoutComponents>
+    <DashboardLayoutComponents companyId={params.companyId}>{owner}</DashboardLayoutComponents>
   )
 }
 

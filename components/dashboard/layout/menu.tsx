@@ -18,12 +18,13 @@ import { useCurrentLocale } from "@/src/locales";
 
 interface MenuProps {
   isOpen: boolean | undefined;
+  companyId: string;
 }
 
-export function Menu({ isOpen }: MenuProps) {
+export function Menu({ isOpen, companyId }: MenuProps) {
   const pathname = usePathname();
   const locale = useCurrentLocale();
-  const menuList = proMenuList(pathname, locale);
+  const menuList = proMenuList(pathname, locale, companyId);
 
   return (
     <nav className="mt-4 h-full w-full flex flex-col justify-around">

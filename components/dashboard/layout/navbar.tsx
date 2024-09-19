@@ -15,14 +15,14 @@ interface NavbarProps {
   menu: Menu;
 }
 
-export function Navbar({ menu, sidebar }: NavbarProps) {
+export function Navbar({ menu, sidebar }: NavbarProps, { companyId } : { companyId: string }) {
   return (
     <header className="sticky top-0 flex w-full mt-1 mb-3 bg-background border border-border dark:shadow-secondary rounded-2xl">
       <div className="mx-2 flex items-center justify-between gap-2 w-full h-14 lg:mx-2 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-5 lg:flex lg:items-center lg:justify-between">
-          <SheetMenu />
+          <SheetMenu companyId={companyId} />
           <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-          <h1 className="font-bold">{menu.label}</h1>
+          {/* <h1 className="font-bold">{menu.label}</h1> */}
           <NewShortcut />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-2">
