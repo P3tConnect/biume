@@ -53,4 +53,4 @@ ENV PORT 3000
 # Set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["bun", "server.js"]
+CMD bun run start
