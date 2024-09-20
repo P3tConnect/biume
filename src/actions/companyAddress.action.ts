@@ -4,13 +4,13 @@ import {
   companyAddress,
   CreateCompanyAddressSchema,
 } from "../db/companyAddress";
-import { db, companyAction } from "../lib";
+import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getCompanyAddress = companyAction.handler(async () => {});
+export const getCompanyAddress = ownerAction.handler(async () => {});
 
-export const createCompanyAddress = companyAction
+export const createCompanyAddress = ownerAction
   .input(CreateCompanyAddressSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -26,7 +26,7 @@ export const createCompanyAddress = companyAction
     return data;
   });
 
-export const updateCompanyAddress = companyAction
+export const updateCompanyAddress = ownerAction
   .input(CreateCompanyAddressSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -43,7 +43,7 @@ export const updateCompanyAddress = companyAction
     return data;
   });
 
-export const deleteCompanyAddress = companyAction
+export const deleteCompanyAddress = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

@@ -2,21 +2,21 @@
 
 import { z } from "zod";
 import { CreateProSessionSchema, proSession } from "../db";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getProSessions = clientAction.handler(async () => {});
 
-export const getProSessionById = companyAction
+export const getProSessionById = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {});
 
-export const getProSessionByCompany = companyAction
+export const getProSessionByCompany = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {});
 
-export const createProSession = companyAction
+export const createProSession = ownerAction
   .input(CreateProSessionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -32,7 +32,7 @@ export const createProSession = companyAction
     return data;
   });
 
-export const updateProSession = companyAction
+export const updateProSession = ownerAction
   .input(CreateProSessionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -49,7 +49,7 @@ export const updateProSession = companyAction
     return data;
   });
 
-export const deleteProSession = companyAction
+export const deleteProSession = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { CreateReportSchema, report } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getReports = clientAction.handler(async () => {});
 
-export const createReport = companyAction
+export const createReport = ownerAction
   .input(CreateReportSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(report).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createReport = companyAction
     return data;
   });
 
-export const updateReport = companyAction
+export const updateReport = ownerAction
   .input(CreateReportSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updateReport = companyAction
     return data;
   });
 
-export const deleteReport = companyAction
+export const deleteReport = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

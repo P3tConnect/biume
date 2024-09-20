@@ -76,7 +76,7 @@ const memberProcedure = createServerActionProcedure(authedProcedure).handler(
 
 export const memberAction = memberProcedure.createServerAction();
 
-export const ownerAction = createServerActionProcedure(authedProcedure).handler(
+export const ownerProcedure = createServerActionProcedure(authedProcedure).handler(
   async ({ ctx }) => {
     if (ctx.user) {
       const data = await db.query.companyMembership.findFirst({
@@ -107,3 +107,5 @@ export const ownerAction = createServerActionProcedure(authedProcedure).handler(
     );
   },
 );
+
+export const ownerAction = ownerProcedure.createServerAction();

@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { CreateProductSchema, product } from "../db/products";
-import { companyAction, db } from "../lib";
+import { ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getProduct = companyAction.handler(async () => {});
+export const getProduct = ownerAction.handler(async () => {});
 
-export const createProduct = companyAction
+export const createProduct = ownerAction
   .input(CreateProductSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(product).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createProduct = companyAction
     return data;
   });
 
-export const updateProduct = companyAction
+export const updateProduct = ownerAction
   .input(CreateProductSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updateProduct = companyAction
     return data;
   });
 
-export const deleteProduct = companyAction
+export const deleteProduct = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
-import { companyAction, db } from "../lib";
+import { ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getProgression = companyAction.handler(async () => {});
+export const getProgression = ownerAction.handler(async () => {});
 
-export const createProgression = companyAction
+export const createProgression = ownerAction
   .input(CreateProgressionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -24,7 +24,7 @@ export const createProgression = companyAction
     return data;
   });
 
-export const updateProgression = companyAction
+export const updateProgression = ownerAction
   .input(CreateProgressionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -41,7 +41,7 @@ export const updateProgression = companyAction
     return data;
   });
 
-export const deleteProgression = companyAction
+export const deleteProgression = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

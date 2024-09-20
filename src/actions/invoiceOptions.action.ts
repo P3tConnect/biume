@@ -2,18 +2,18 @@
 
 import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
-import { companyAction, clientAction } from "../lib";
+import { ownerAction, clientAction } from "../lib";
 
 export const getInvoiceOptions = clientAction.handler(async () => {});
 
-export const createInvoiceOptions = companyAction
+export const createInvoiceOptions = ownerAction
   .input(CreateInvoiceOptionsSchema)
   .handler(async ({}) => {});
 
-export const updateInvoiceOptions = companyAction
+export const updateInvoiceOptions = ownerAction
   .input(CreateInvoiceOptionsSchema)
   .handler(async ({}) => {});
 
-export const deleteInvoiceOptions = companyAction
+export const deleteInvoiceOptions = ownerAction
   .input(z.string())
   .handler(async ({}) => {});
