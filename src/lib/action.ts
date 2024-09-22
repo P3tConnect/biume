@@ -1,7 +1,7 @@
 import { currentUser } from "./current-user";
 import { createServerAction, createServerActionProcedure, ZSAError } from "zsa";
 import { db } from "./db";
-import { company } from "../db";
+import { company, companyMembership } from "../db";
 import { eq } from "drizzle-orm";
 
 export const action = createServerAction();
@@ -26,49 +26,86 @@ export const authedAction = authedProcedure.createServerAction();
 
 const clientProcedure = createServerActionProcedure(authedProcedure).handler(
   async ({ ctx }) => {
-    if (ctx.user.plan == "NONE") {
-      return {
-        user: ctx.user,
-      };
-    }
+    if (ctx.user) {
+      const data = await db.query.companyMembership.findFirst({
+        where: eq(companyMembership.userId, ctx.user.id),
+      });
 
-    throw new ZSAError(
-      "NOT_AUTHORIZED",
-      "You need to be registered as a client",
-    );
+      if (!data) {
+        return {
+          user: ctx.user,
+        }
+      }
+
+      throw new ZSAError(
+        "NOT_AUTHORIZED",
+        "You need to be registered to perform this action",
+      );
+    }
   },
 );
 
 export const clientAction = clientProcedure.createServerAction();
 
-const companyProcedure = createServerActionProcedure(authedProcedure).handler(
+const memberProcedure = createServerActionProcedure(authedProcedure).handler(
   async ({ ctx }) => {
-    if (ctx.user.plan != "NONE") {
-      const companyData = await db.query.company.findFirst({
-        where: eq(company.ownerId, ctx.user.id),
+    if (ctx.user) {
+      const data = await db.query.companyMembership.findFirst({
+        where: eq(companyMembership.userId, ctx.user.id),
+        with: {
+          company: true,
+        },
       });
 
-      if (!companyData) {
-        throw new ZSAError("NOT_AUTHORIZED", "You must create a company");
+      if (!data) {
+        throw new ZSAError(
+          "NOT_AUTHORIZED",
+          "You need to be in a company to perform this action",
+        );
       }
-
-      return {
-        user: ctx.user,
-        company: companyData,
-      };
-    }
-    throw new ZSAError("NOT_AUTHORIZED", "You need to subscribe to a plan");
+  
+      if (data.role == "MEMBER") {
+        return {
+          user: ctx.user,
+          company: data.company,
+        }
+      }
+    }   
   },
 );
 
-export const companyAction = companyProcedure.createServerAction();
+export const memberAction = memberProcedure.createServerAction();
 
-export const adminAction = createServerActionProcedure(authedProcedure).handler(
+export const ownerProcedure = createServerActionProcedure(authedProcedure).handler(
   async ({ ctx }) => {
-    if (ctx.user.isAdmin) {
-      return ctx;
+    if (ctx.user) {
+      const data = await db.query.companyMembership.findFirst({
+        where: eq(companyMembership.userId, ctx.user.id),
+        with: {
+          company: true,
+        },
+      });
+
+      if (!data) {
+        throw new ZSAError(
+          "NOT_AUTHORIZED",
+          "You need to be in a company to perform this action",
+        );
+      }
+  
+      if (data.role == "OWNER") {
+        return {
+          user: ctx.user,
+          company: data.company,
+        }
+      }
     }
 
-    throw new ZSAError("NOT_AUTHORIZED", "You need to be an admin");
+    throw new ZSAError(
+      "NOT_AUTHORIZED",
+      "You need to be registered to perform this action",
+    );
   },
 );
+
+export const ownerAction = ownerProcedure.createServerAction();

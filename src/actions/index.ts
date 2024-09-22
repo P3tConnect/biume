@@ -1,5 +1,4 @@
 export * from "./mail.action";
-export * from "./employeeCompany.action";
 export * from "./pets.action";
 export * from "./cancelPolicies.action";
 export * from "./service.action";

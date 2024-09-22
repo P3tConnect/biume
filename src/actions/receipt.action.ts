@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { companyAction, db } from "../lib";
+import { ownerAction, db } from "../lib";
 import { CreateReceiptSchema, receipt } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getReceipts = companyAction.handler(async () => {});
+export const getReceipts = ownerAction.handler(async () => {});
 
-export const createReceipt = companyAction
+export const createReceipt = ownerAction
   .input(CreateReceiptSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(receipt).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createReceipt = companyAction
     return data;
   });
 
-export const updateReceipt = companyAction
+export const updateReceipt = ownerAction
   .input(CreateReceiptSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -35,7 +35,7 @@ export const updateReceipt = companyAction
     return data;
   });
 
-export const deleteReceipt = companyAction
+export const deleteReceipt = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

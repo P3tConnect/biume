@@ -46,9 +46,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             emailVerified: true,
             image: true,
             stripeId: true,
-            plan: true,
+            lang: true,
             isPro: true,
             isAdmin: true,
+            locked: true,
+            phone: true,
           }
         }) as AdapterUser;
 

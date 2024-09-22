@@ -2,14 +2,14 @@
 
 import { z } from "zod";
 import { CreateNewsletterSchema, newsletter } from "../db";
-import { clientAction, companyAction } from "../lib/action";
+import { clientAction, ownerAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getNewsletters = clientAction.handler(async () => {});
 
-// export const createNewsletter = companyAction
+// export const createNewsletter = ownerAction
 //   .input(CreateNewsletterSchema)
 //   .handler(async ({ input }) => {
 //     const data = await db
@@ -25,7 +25,7 @@ export const getNewsletters = clientAction.handler(async () => {});
 //     return data;
 //   });
 
-// export const updateNewsletter = companyAction
+// export const updateNewsletter = ownerAction
 //   .input(CreateNewsletterSchema)
 //   .handler(async ({ input }) => {
 //     const data = await db
@@ -42,7 +42,7 @@ export const getNewsletters = clientAction.handler(async () => {});
 //     return data;
 //   });
 
-// export const deleteNewsletter = companyAction
+// export const deleteNewsletter = ownerAction
 //   .input(z.string())
 //   .handler(async ({ input }) => {
 //     const data = await db

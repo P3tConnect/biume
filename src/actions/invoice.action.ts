@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { CreateInvoiceSchema, invoice } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getInvoices = clientAction.handler(async () => {});
 
-export const createInvoice = companyAction
+export const createInvoice = ownerAction
   .input(CreateInvoiceSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(invoice).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createInvoice = companyAction
     return data;
   });
 
-export const updateInvoice = companyAction
+export const updateInvoice = ownerAction
   .input(CreateInvoiceSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updateInvoice = companyAction
     return data;
   });
 
-export const deleteInvoice = companyAction
+export const deleteInvoice = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

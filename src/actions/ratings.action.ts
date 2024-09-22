@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { CreateRatingSchema, ratings } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
@@ -37,7 +37,7 @@ export const updateRating = clientAction
     return data;
   });
 
-export const deleteRating = companyAction
+export const deleteRating = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

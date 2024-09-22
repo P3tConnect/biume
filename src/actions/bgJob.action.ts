@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { bgJobs, CreateBgJobsSchema } from "../db/bgJobs";
-import { db, companyAction } from "../lib";
+import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getBgJobs = companyAction.handler(async () => {});
+export const getBgJobs = ownerAction.handler(async () => {});
 
-export const createBgJob = companyAction
+export const createBgJob = ownerAction
   .input(CreateBgJobsSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(bgJobs).values(input).returning().execute();
@@ -18,7 +18,7 @@ export const createBgJob = companyAction
     return data;
   });
 
-export const updateBgJob = companyAction
+export const updateBgJob = ownerAction
   .input(CreateBgJobsSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -35,7 +35,7 @@ export const updateBgJob = companyAction
     return data;
   });
 
-export const deleteBgJob = companyAction
+export const deleteBgJob = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db.delete(bgJobs).where(eq(bgJobs.id, input)).execute();

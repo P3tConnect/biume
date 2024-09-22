@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { companyAction, clientAction } from "../lib/action";
+import { ownerAction, clientAction } from "../lib/action";
 import { cancelPolicies, CreateCancelPolicySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
@@ -21,7 +21,7 @@ export const getCancelPoliciesByCompany = clientAction.handler(
   async ({ input }) => {},
 );
 
-export const createCancelPolicies = companyAction
+export const createCancelPolicies = ownerAction
   .input(CreateCancelPolicySchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const createCancelPolicies = companyAction
     return data;
   });
 
-export const updateCancelPolicies = companyAction
+export const updateCancelPolicies = ownerAction
   .input(CreateCancelPolicySchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -54,7 +54,7 @@ export const updateCancelPolicies = companyAction
     return data;
   });
 
-export const deleteCancelPolicies = companyAction
+export const deleteCancelPolicies = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db
