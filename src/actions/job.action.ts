@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 import { CreateJobSchema, job } from "../db";
-import { db, companyAction } from "../lib";
+import { db, ownerAction } from "../lib";
 import { z } from "zod";
 import { ZSAError } from "zsa";
 
-export const getJobs = companyAction.handler(async () => {});
+export const getJobs = ownerAction.handler(async () => {});
 
-export const createJob = companyAction
+export const createJob = ownerAction
   .input(CreateJobSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(job).values(input).returning().execute();
@@ -18,7 +18,7 @@ export const createJob = companyAction
     return data;
   });
 
-export const updateJob = companyAction
+export const updateJob = ownerAction
   .input(CreateJobSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -35,7 +35,7 @@ export const updateJob = companyAction
     return data;
   });
 
-export const deleteJob = companyAction
+export const deleteJob = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

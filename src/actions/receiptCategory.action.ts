@@ -1,18 +1,18 @@
 "use server";
 import { z } from "zod";
 import { CreateReceiptCategorySchema } from "../db";
-import { companyAction } from "../lib";
+import { ownerAction } from "../lib";
 
-export const getReceiptCategories = companyAction.handler(async () => {});
+export const getReceiptCategories = ownerAction.handler(async () => {});
 
-export const createReceiptCategories = companyAction
+export const createReceiptCategories = ownerAction
   .input(CreateReceiptCategorySchema)
   .handler(async () => {});
 
-export const updateReceiptCategory = companyAction
+export const updateReceiptCategory = ownerAction
   .input(CreateReceiptCategorySchema)
   .handler(async () => {});
 
-export const deleteReceiptCategory = companyAction
+export const deleteReceiptCategory = ownerAction
   .input(z.string())
   .handler(async () => {});

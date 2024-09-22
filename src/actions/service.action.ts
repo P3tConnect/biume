@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { CreateServiceSchema, service } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getServices = clientAction.handler(async () => {});
 
-export const createService = companyAction
+export const createService = ownerAction
   .input(CreateServiceSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(service).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createService = companyAction
     return data;
   });
 
-export const updateService = companyAction
+export const updateService = ownerAction
   .input(CreateServiceSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updateService = companyAction
     return data;
   });
 
-export const deleteService = companyAction
+export const deleteService = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

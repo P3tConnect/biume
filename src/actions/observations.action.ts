@@ -2,14 +2,14 @@
 
 import { z } from "zod";
 import { CreateObservationSchema, observation } from "../db";
-import { companyAction, clientAction } from "../lib/action";
+import { ownerAction, clientAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getObservations = clientAction.handler(async () => {});
 
-export const createObservation = companyAction
+export const createObservation = ownerAction
   .input(CreateObservationSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -25,7 +25,7 @@ export const createObservation = companyAction
     return data;
   });
 
-export const updateObservation = companyAction
+export const updateObservation = ownerAction
   .input(CreateObservationSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -42,7 +42,7 @@ export const updateObservation = companyAction
     return data;
   });
 
-export const deleteObservation = companyAction
+export const deleteObservation = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

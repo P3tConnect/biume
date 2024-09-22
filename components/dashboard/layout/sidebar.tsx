@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage, DropdownMenu, DropdownMenuCheckbox
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function Sidebar() {
+export function Sidebar({ companyId} : { companyId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const sidebar = useStore(useSidebarToggle, (state) => state);
   const router = useRouter();
@@ -54,7 +54,7 @@ export function Sidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <Menu isOpen={sidebar?.isOpen} />
+        <Menu isOpen={sidebar?.isOpen} companyId={companyId} />
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { CreateWidgetsSchema, widgets } from "../db";
-import { db, companyAction } from "../lib";
+import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getWidgets = companyAction.handler(async () => {});
+export const getWidgets = ownerAction.handler(async () => {});
 
-export const createWidget = companyAction
+export const createWidget = ownerAction
   .input(CreateWidgetsSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(widgets).values(input).returning().execute();
@@ -18,7 +18,7 @@ export const createWidget = companyAction
     return data;
   });
 
-export const updateWidget = companyAction
+export const updateWidget = ownerAction
   .input(CreateWidgetsSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -35,7 +35,7 @@ export const updateWidget = companyAction
     return data;
   });
 
-export const deleteWidget = companyAction
+export const deleteWidget = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

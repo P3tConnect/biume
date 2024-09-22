@@ -10,8 +10,9 @@ import {
   SheetTrigger,
   SheetTitle
 } from "@/components/ui/sheet";
+import { company } from "@/src/db";
 
-export function SheetMenu() {
+export function SheetMenu({ companyId } : { companyId: string }) {
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
@@ -32,7 +33,7 @@ export function SheetMenu() {
             </Link>
           </Button>
         </SheetHeader>
-        <Menu isOpen />
+        <Menu isOpen companyId={companyId} />
       </SheetContent>
     </Sheet>
   );

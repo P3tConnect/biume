@@ -1,17 +1,15 @@
 import { z } from "zod";
 import { CreateJobSchema } from "../db";
-import { companyAction, clientAction } from "../lib/action";
+import { ownerAction, clientAction } from "../lib/action";
 
 export const getJobs = clientAction.handler(async () => {});
 
-export const createJob = companyAction
+export const createJob = ownerAction
   .input(CreateJobSchema)
   .handler(async () => {});
 
-export const updateJob = companyAction
+export const updateJob = ownerAction
   .input(CreateJobSchema)
   .handler(async () => {});
 
-export const deleteJob = companyAction
-  .input(z.string())
-  .handler(async () => {});
+export const deleteJob = ownerAction.input(z.string()).handler(async () => {});

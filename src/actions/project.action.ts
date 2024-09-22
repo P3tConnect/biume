@@ -2,14 +2,14 @@
 
 import { z } from "zod";
 import { CreateProjectSchema, project } from "../db";
-import { companyAction } from "../lib/action";
+import { ownerAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getProjects = companyAction.handler(async () => {});
+export const getProjects = ownerAction.handler(async () => {});
 
-export const createProject = companyAction
+export const createProject = ownerAction
   .input(CreateProjectSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(project).values(input).returning().execute();
@@ -21,7 +21,7 @@ export const createProject = companyAction
     return data;
   });
 
-export const updateProject = companyAction
+export const updateProject = ownerAction
   .input(CreateProjectSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -38,7 +38,7 @@ export const updateProject = companyAction
     return data;
   });
 
-export const deleteProject = companyAction
+export const deleteProject = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

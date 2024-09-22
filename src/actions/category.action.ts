@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 import { category, CreateCategorySchema } from "../db";
-import { clientAction, companyAction } from "../lib/action";
+import { clientAction, ownerAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
@@ -12,7 +12,7 @@ export const getCategoryById = clientAction
   .input(z.string())
   .handler(async ({ input }) => {});
 
-export const createCategory = companyAction
+export const createCategory = ownerAction
   .input(CreateCategorySchema)
   .handler(async ({ input, ctx }) => {
     const data = await db.insert(category).values(input).returning().execute();
@@ -24,7 +24,7 @@ export const createCategory = companyAction
     return data;
   });
 
-export const updateCategory = companyAction
+export const updateCategory = ownerAction
   .input(CreateCategorySchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -41,7 +41,7 @@ export const updateCategory = companyAction
     return data;
   });
 
-export const deleteCategory = companyAction
+export const deleteCategory = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

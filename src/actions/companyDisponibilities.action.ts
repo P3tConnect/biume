@@ -5,13 +5,13 @@ import {
   companyDisponibilities,
   CreateCompanyDisponibilitiesSchema,
 } from "../db";
-import { clientAction, companyAction, db } from "../lib";
+import { clientAction, ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getCompanyDisponibilities = clientAction.handler(async () => {});
 
-export const createCompanyDisponibilities = companyAction
+export const createCompanyDisponibilities = ownerAction
   .input(CreateCompanyDisponibilitiesSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -27,7 +27,7 @@ export const createCompanyDisponibilities = companyAction
     return data;
   });
 
-export const updateCompanyDisponibilities = companyAction
+export const updateCompanyDisponibilities = ownerAction
   .input(CreateCompanyDisponibilitiesSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -44,7 +44,7 @@ export const updateCompanyDisponibilities = companyAction
     return data;
   });
 
-export const deleteCompanyDisponibilities = companyAction
+export const deleteCompanyDisponibilities = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { companyAction, db } from "../lib";
+import { ownerAction, db } from "../lib";
 import { CreateAskEstimateOptionSchema, askEstimateOptions } from "../db";
 import { ZSAError } from "zsa";
 
 export async function getAskEstimateOptions() {}
 
-export const createAskEstimateOptions = companyAction
+export const createAskEstimateOptions = ownerAction
   .input(CreateAskEstimateOptionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -23,10 +23,10 @@ export const createAskEstimateOptions = companyAction
     return data;
   });
 
-export const updateAskEstimateOptions = companyAction
+export const updateAskEstimateOptions = ownerAction
   .input(CreateAskEstimateOptionSchema)
   .handler(async ({ input }) => {});
 
-export const deleteAskEstimateOptions = companyAction
+export const deleteAskEstimateOptions = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {});

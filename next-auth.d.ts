@@ -9,7 +9,9 @@ declare module "next-auth" {
             stripeId: string | null;
             isPro: boolean | null;
             isAdmin: boolean | null;
-            plan: Plan;
+            lang: string;
+            locked: boolean;
+            phone: string;
             role: Job[];
         };
     }
@@ -19,7 +21,9 @@ declare module "next-auth" {
         stripeId: string | null;
         isPro: boolean | null;
         isAdmin: boolean | null;
-        plan: Plan;
+        lang: string;
+        locked: boolean;
+        phone: string;
         role: Job[];
     }
 }
