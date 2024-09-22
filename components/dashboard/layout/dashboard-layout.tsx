@@ -4,7 +4,7 @@ import { useStore } from "@/src/hooks/useStore";
 import { Sidebar } from "@/components/dashboard/layout/sidebar";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { Navbar } from "./navbar";
-import { Menu, proSimpleMenuList } from "@/src/config/menu-list";
+import { Menu, proMenuList, proSimpleMenuList } from "@/src/config/menu-list";
 import { usePathname } from "next/navigation";
 import { useCurrentLocale } from "@/src/locales";
 import DashboardBubbles from "./dashboard-bubbles";
@@ -23,10 +23,9 @@ export default function DashboardLayout({
 
   if (!sidebar) return null;
 
-  const menu = proSimpleMenuList(pathname, locale, companyId).find((item) => item.active);
+  const menu = proMenuList(pathname, locale, companyId).find((item) => item)?.menus.find((item) => item.active);
 
-  logger.info("companyId", companyId);
-  logger.info("pathname", pathname);
+  console.log(menu, "menu");
 
   return (
     <div className="p-3 h-[100vh] w-[100vw] relative overflow-hidden flex justify-center items-center">
@@ -36,7 +35,7 @@ export default function DashboardLayout({
           className="min-h-[calc(100vh_-_56px)] w-full px-5 transition-[margin-left] ease-in-out duration-300 flex flex-col lg:pl-0"
         >
           <Navbar menu={menu as Menu} sidebar={sidebar} />
-            {children}
+          {children}
         </main>
       </div>
       <DashboardBubbles />
