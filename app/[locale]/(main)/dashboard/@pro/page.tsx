@@ -14,14 +14,14 @@ export const metadata: Metadata = {
 
 const DashboardHomeProPage = () => {
   return (
-    <div className='w-full flex items-start justify-start h-full gap-3'>
-      <div className='flex flex-col w-1/4 h-full gap-3'>
+    <div className='w-full flex flex-col-reverse mt-52 md:flex-row items-start justify-start h-full gap-3 md:mt-0 sm:mt-44 lg:mt-0'>
+      <div className='flex flex-col w-full md:w-1/4 h-full gap-3'>
         <ClientsProWidget />
         <ExpensesProWidget />
         <SalesProWidget />
         <IncomingReservationsWidget />
       </div>
-      <div className='flex flex-col w-3/4 h-full gap-3'>
+      <div className='flex flex-col w-full md:w-3/4 h-full gap-3'>
         <TimetableWidget />
         <ReservationsStatusesWidget />
       </div>

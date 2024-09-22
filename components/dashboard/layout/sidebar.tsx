@@ -18,8 +18,10 @@ export function Sidebar() {
   if (!sidebar) return null;
 
   return (
-    <div className={cn("h-full bg-background m-5 rounded-2xl -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
-      sidebar?.isOpen === false ? "w-[68px]" : "w-72"
+    <div className={cn(
+      "h-full bg-background m-5 rounded-2xl translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
+      sidebar?.isOpen === false ? "w-[68px]" : "w-72",
+      "hidden lg:block"
     )}>
       <div className="relative h-full flex flex-col justify-start py-4">
         <div className={"flex justify-start items-center mx-4 gap-4"}>
