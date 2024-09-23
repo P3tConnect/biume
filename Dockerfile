@@ -20,28 +20,30 @@ RUN \
 COPY app ./app
 COPY public ./public
 COPY components ./components
-COPY lib ./lib
+COPY emails ./emails
+COPY src ./src
 COPY next.config.mjs .
-COPY prisma ./prisma
+COPY middleware.ts .
+COPY next-auth.d.ts .
 COPY components.json .
-COPY tailwind.config.ts .
+COPY tailwind.config.js .
 COPY tsconfig.json .
 COPY postcss.config.mjs .
+COPY package.json .
+COPY bun.lockb .
+COPY trigger.config.ts .
+COPY drizzle.config.ts .
 
 # Environment variables must be present at build time
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
-ARG BASIC_AUTH_USER
-ENV BASIC_AUTH_USER=${BASIC_AUTH_USER}
-ARG BASIC_AUTH_PASSWORD
-ENV BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
 
 # Build Next.js based on the preferred package manager
 RUN \
     if [ -f yarn.lock ]; then yarn build; \
     elif [ -f package-lock.json ]; then npm run build; \
     elif [ -f pnpm-lock.yaml ]; then pnpm build; \
-    elif [ -f bun.lockb ]; then bun build; \
+    elif [ -f bun.lockb ]; then bun run build; \
     else npm run build; \
     fi
 
