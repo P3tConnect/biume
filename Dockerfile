@@ -39,13 +39,7 @@ ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 # Build Next.js based on the preferred package manager
-RUN \
-    if [ -f yarn.lock ]; then yarn build; \
-    elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then pnpm build; \
-    elif [ -f bun.lockb ]; then bun run build; \
-    else npm run build; \
-    fi
+RUN bun install
 
 # Step 2. Production image, copy all the files and run next
 FROM base AS runner
