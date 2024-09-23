@@ -13,8 +13,8 @@
     "email-dev": "email dev --port=3001",
     "email-build": "email build --packageManager=bun",
     "email-start": "email start",
-    "trigger-dev": "pnpm dlx trigger.dev@beta dev",
-    "trigger-deploy": "pnpm dlx trigger.dev@beta deploy"
+    "trigger-dev": "bunx --bun trigger.dev@beta dev",
+    "trigger-deploy": "bunx --bun trigger.dev@beta deploy"
   },
   "packageManager": "bun@1.1.26",
   "dependencies": {
