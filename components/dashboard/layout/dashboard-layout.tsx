@@ -4,7 +4,7 @@ import { useStore } from "@/src/hooks/useStore";
 import { Sidebar } from "@/components/dashboard/layout/sidebar";
 import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { Navbar } from "./navbar";
-import { Menu, proMenuList, proSimpleMenuList } from "@/src/config/menu-list";
+import { Menu, proMenuList } from "@/src/config/menu-list";
 import { usePathname } from "next/navigation";
 import { useCurrentLocale } from "@/src/locales";
 import DashboardBubbles from "./dashboard-bubbles";
