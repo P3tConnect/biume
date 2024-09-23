@@ -3,15 +3,16 @@ import { relations } from "drizzle-orm";
 import { invoiceOptions } from "./invoiceOptions";
 import { createInsertSchema } from "drizzle-zod";
 import { askEstimate } from "./ask_estimate";
+import { proSession } from "./pro_session";
 
 export const invoice = pgTable("invoice", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  askEstimateId: text("askEstimateId").references(() => askEstimate.id, {
+  total: integer("total"),
+  sessionId: text("sessionId").references(() => proSession.id, {
     onDelete: "cascade",
   }),
-  total: integer("total"),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
@@ -20,9 +21,9 @@ export const invoice = pgTable("invoice", {
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
   options: many(invoiceOptions),
-  askEstimate: one(askEstimate, {
-    fields: [invoice.askEstimateId],
-    references: [askEstimate.id],
+  session: one(proSession, {
+    fields: [invoice.sessionId],
+    references: [proSession.id],
   }),
 }));
 

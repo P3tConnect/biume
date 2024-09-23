@@ -20,7 +20,10 @@ export const companyCertifications = pgTable("company_certifications", {
 export const companyCertificationsRelations = relations(
   companyCertifications,
   ({ one }) => ({
-    companyDocuments: one(companyDocuments),
+    companyDocuments: one(companyDocuments, {
+      fields: [companyCertifications.companyDocumentsId],
+      references: [companyDocuments.id],
+    }),
   }),
 );
 

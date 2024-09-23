@@ -15,8 +15,7 @@ import { usersJobs } from "./usersJobs";
 import { deseases } from "./deseases";
 import { address } from "./addresses";
 import { bgJobs } from "./bgJobs";
-import { transaction } from "./transactions";
-import { authenticator } from "./authenticator";
+import { transaction } from "./transaction";
 import { notification } from "./notifications";
 import { companyMembership } from "./company_membership";
 
@@ -57,7 +56,6 @@ export const userRelations = relations(user, ({ one, many }) => ({
   }),
   bgJobs: many(bgJobs),
   transactions: many(transaction),
-  authenticators: many(authenticator),
   notifications: many(notification),
 }));
 

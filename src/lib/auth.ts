@@ -9,7 +9,7 @@ import { user } from "../db/user";
 import { sessions } from "../db/session";
 import { accounts } from "../db/accounts";
 import { verificationTokens } from "../db/verificationToken";
-import { authenticator } from "../db";
+import { authenticators } from "../db";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 import { logger } from "./logger";
 import { stripe } from "./stripe";
@@ -22,7 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     accountsTable: accounts,
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
-    authenticatorsTable: authenticator,
+    authenticatorsTable: authenticators,
   }) as Adapter,
   providers: [
     Credentials({
