@@ -8,13 +8,7 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* bun.lockb* ./
 # Omit --production flag for TypeScript devDependencies
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i; \
-    elif [ -f bun.lockb ]; then corepack enable bun && bun install; \
-    else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
-    fi
+RUN bun install --frozen-lockfile
 
 # Adjust the files and folders that should be copied to the build container
 COPY app ./app
@@ -39,7 +33,7 @@ ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 # Build Next.js based on the preferred package manager
-RUN bun install
+RUN bun run build
 
 # Step 2. Production image, copy all the files and run next
 FROM base AS runner
