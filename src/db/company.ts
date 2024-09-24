@@ -43,6 +43,7 @@ export const company = pgTable("company", {
   email: text("email").notNull().unique(),
   ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").notNull(),
+  plan: plan("plan").default("NONE"),
   documentsId: text("documentsId").references(() => companyDocuments.id, {
     onDelete: "cascade",
   }),

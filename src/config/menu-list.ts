@@ -8,6 +8,7 @@ import {
   LucideIcon,
   LucideMessageCircleQuestion,
   PawPrint,
+  Ticket,
   Timer,
   UsersRound,
 } from "lucide-react";
@@ -130,6 +131,45 @@ export function proMenuList(
   ];
 }
 
-export function clientMenuList(pathname: string): Group[] {
-  return [];
+export function clientMenuList(pathname: string, locale: string): Group[] {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: `/${locale}/dashboard`,
+          label: "Dashboard",
+          active: pathname == `/${locale}/dashboard`,
+          icon: LayoutGrid,
+          submenus: [],
+        },
+        {
+          href: `/${locale}/dashboard/timetable`,
+          label: "Agenda",
+          active: pathname == `/${locale}/dashboard/timetable`,
+          icon: Calendar,
+          submenus: [],
+        },
+      ],
+    },
+    {
+      groupLabel: "Mon compte",
+      menus: [
+        {
+          href: `/${locale}/dashboard/reservations`,
+          label: "Mes réservations",
+          active: pathname == `/${locale}/dashboard/reservations`,
+          icon: Ticket,
+          submenus: [],
+        },
+        {
+          href: `/${locale}/dashboard/pets`,
+          label: "Mes animaux",
+          active: pathname == `/${locale}/dashboard/pets`,
+          icon: PawPrint,
+          submenus: [],
+        }
+      ],
+    },
+  ];
 }

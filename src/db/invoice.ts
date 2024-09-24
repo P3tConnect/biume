@@ -10,9 +10,7 @@ export const invoice = pgTable("invoice", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   total: integer("total"),
-  sessionId: text("sessionId").references(() => proSession.id, {
-    onDelete: "cascade",
-  }),
+  sessionId: text("sessionId").references(() => proSession.id, { onDelete: "cascade" }),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
@@ -23,7 +21,7 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
   options: many(invoiceOptions),
   session: one(proSession, {
     fields: [invoice.sessionId],
-    references: [proSession.id],
+    references: [proSession.id]
   }),
 }));
 

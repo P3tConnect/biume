@@ -1,51 +1,99 @@
-export * from "./accounts";
-export * from "./session";
-export * from "./user";
-export * from "./verificationToken";
-export * from "./authenticator";
-export * from "./allergies";
-export * from "./company";
-export * from "./intolerences";
-export * from "./invoice";
-export * from "./newsletter";
-export * from "./pets";
-export * from "./pro_session";
-export * from "./project";
-export * from "./ratings";
-export * from "./service";
-export * from "./session";
-export * from "./task";
-export * from "./usersNewsletter";
-export * from "./askEstimateOptions";
-export * from "./cancelPolicies";
-export * from "./companyDisponibilities";
-export * from "./invoiceOptions";
-export * from "./options";
-export * from "./ask_estimate";
-export * from "./progression";
-export * from "./companyDocuments";
-export * from "./projectsInvitees";
-export * from "./sessionOptions";
-export * from "./report";
-export * from "./observation";
-export * from "./reportTopics";
-export * from "./receipts";
-export * from "./receiptProducts";
-export * from "./topic";
-export * from "./job";
-export * from "./usersJobs";
-export * from "./receiptCategory";
-export * from "./category";
-export * from "./petsAllergies";
-export * from "./petsDeseases";
-export * from "./petsIntolerences";
-export * from "./deseases";
-export * from "./widgets";
-export * from "./bgJobs";
-export * from "./companyAddress";
-export * from "./companyDocuments";
-export * from "./notifications";
-export * from "./newsletter";
-export * from "./company_membership";
-export * from "./report_template";
-export * from "./transaction";
+import { accounts } from "./accounts";
+import { proSession } from "./pro_session";
+import { user } from "./user";
+import { sessions } from "./session"
+import { verificationTokens } from "./verificationToken"
+import { authenticators } from "./authenticator";
+import { allergies } from "./allergies";
+import { company } from "./company";
+import { service } from "./service";
+import { intolerences } from "./intolerences";
+import { invoice } from "./invoice";
+import { newsletter } from "./newsletter";
+import { pets } from "./pets";
+import { project } from "./project";
+import { ratings } from "./ratings";
+import { task } from "./task";
+import { usersNewsletters } from "./usersNewsletter";
+import { askEstimateOptions } from "./askEstimateOptions";
+import { cancelPolicies } from "./cancelPolicies";
+import { companyDisponibilities } from "./companyDisponibilities";
+import { invoiceOptions } from "./invoiceOptions";
+import { options } from "./options";
+import { askEstimate } from "./ask_estimate";
+import { progression } from "./progression";
+import { companyDocuments } from "./companyDocuments";
+import { projectsInvitees } from "./projectsInvitees";
+import { sessionOptions } from "./sessionOptions";
+import { report } from "./report";
+import { observation } from "./observation";
+import { reportTopic } from "./reportTopics";
+import { receipt } from "./receipts";
+import { receiptProduct } from "./receiptProducts";
+import { topic } from "./topic";
+import { job } from "./job";
+import { usersJobs } from "./usersJobs";
+import { receiptCategory } from "./receiptCategory";
+import { category } from "./category";
+import { petsAllergies } from "./petsAllergies";
+import { petsDeseases } from "./petsDeseases";
+import { petsIntolerences } from "./petsIntolerences";
+import { deseases } from "./deseases";
+import { widgets } from "./widgets";
+import { bgJobs } from "./bgJobs";
+import { companyAddress } from "./companyAddress";
+import { notification } from "./notifications";
+import { companyMembership } from "./company_membership";
+import { reportTemplate } from "./report_template";
+import { transaction } from "./transaction";
+
+export const schema = {
+  accounts,
+  proSession,
+  user,
+  sessions,
+  verificationTokens,
+  authenticators,
+  allergies,
+  company,
+  service,
+  intolerences,
+  invoice,
+  newsletter,
+  pets,
+  project,
+  ratings,
+  task,
+  usersNewsletters,
+  askEstimateOptions,
+  cancelPolicies,
+  companyDisponibilities,
+  invoiceOptions,
+  options,
+  askEstimate,
+  progression,
+  companyDocuments,
+  projectsInvitees,
+  sessionOptions,
+  report,
+  observation,
+  reportTopic,
+  receipt,
+  receiptProduct,
+  topic,
+  job,
+  usersJobs,
+  receiptCategory,
+  category,
+  petsAllergies,
+  petsDeseases,
+  petsIntolerences,
+  deseases,
+  widgets,
+  bgJobs,
+  companyAddress,
+  notification,
+  companyMembership,
+  reportTemplate,
+  transaction,
+};
