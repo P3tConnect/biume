@@ -1,6 +1,6 @@
 {
-  "id": "77c9e83a-a749-4b46-af1b-a53ceeb502a6",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "45b565f0-0bfa-4821-bce3-5d6faa46a3d5",
+  "prevId": "77c9e83a-a749-4b46-af1b-a53ceeb502a6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -147,7 +147,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.255'"
+          "default": "'2024-09-25 11:07:58.975'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -194,7 +194,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.247'"
+          "default": "'2024-09-25 11:07:58.969'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -289,7 +289,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.209'"
+          "default": "'2024-09-25 11:07:58.930'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -516,7 +516,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.239'"
+          "default": "'2024-09-25 11:07:58.960'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -590,7 +590,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.198'"
+          "default": "'2024-09-25 11:07:58.918'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -651,7 +651,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.220'"
+          "default": "'2024-09-25 11:07:58.941'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -706,7 +706,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.241'"
+          "default": "'2024-09-25 11:07:58.962'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -987,7 +987,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.235'"
+          "default": "'2024-09-25 11:07:58.956'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1040,7 +1040,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.202'"
+          "default": "'2024-09-25 11:07:58.923'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1101,7 +1101,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.259'"
+          "default": "'2024-09-25 11:07:58.979'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1156,7 +1156,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.202'"
+          "default": "'2024-09-25 11:07:58.923'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1309,7 +1309,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.256'"
+          "default": "'2024-09-25 11:07:58.977'"
         },
         "updateAt": {
           "name": "updateAt",
@@ -1378,7 +1378,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-25 11:07:27.250'"
+          "default": "'2024-09-25 11:07:58.971'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1433,7 +1433,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-25 11:07:27.212'"
+          "default": "'2024-09-25 11:07:58.933'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1577,7 +1577,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.205'"
+          "default": "'2024-09-25 11:07:58.926'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1705,7 +1705,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.242'"
+          "default": "'2024-09-25 11:07:58.964'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1758,7 +1758,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-25 11:07:27.214'"
+          "default": "'2024-09-25 11:07:58.934'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2071,6 +2071,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "serviceId": {
+          "name": "serviceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "beginAt": {
           "name": "beginAt",
           "type": "date",
@@ -2111,7 +2117,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.243'"
+          "default": "'2024-09-25 11:07:58.964'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2173,6 +2179,19 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "pro_session_serviceId_service_id_fk": {
+          "name": "pro_session_serviceId_service_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "service",
+          "columnsFrom": [
+            "serviceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2223,7 +2242,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.220'"
+          "default": "'2024-09-25 11:07:58.942'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2365,7 +2384,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.224'"
+          "default": "'2024-09-25 11:07:58.946'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2488,7 +2507,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.225'"
+          "default": "'2024-09-25 11:07:58.947'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2660,7 +2679,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.220'"
+          "default": "'2024-09-25 11:07:58.942'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3098,7 +3117,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.228'"
+          "default": "'2024-09-25 11:07:58.950'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3159,7 +3178,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.234'"
+          "default": "'2024-09-25 11:07:58.955'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3226,7 +3245,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-25 11:07:27.236'"
+          "default": "'2024-09-25 11:07:58.957'"
         },
         "updatedAt": {
           "name": "updatedAt",

@@ -1,11 +1,12 @@
 "use server";
 
-import { z } from "zod";
+import { CreateAllergySchema, allergies } from "../db";
+
+import { ZSAError } from "zsa";
 import { clientAction } from "../lib/action";
-import { allergies, CreateAllergySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
+import { z } from "zod";
 
 export const getAllergies = clientAction.handler(async () => {
   const data = await db.query.allergies.findMany();

@@ -1,4 +1,4 @@
-import { User } from "../db";
+import { User } from "../db/user";
 import { auth } from "./auth";
 
 export const currentUser = async () => {
