@@ -15,6 +15,13 @@
       "when": 1727262478999,
       "tag": "0001_friendly_moonstone",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1727198503831,
+      "tag": "0001_broken_greymalkin",
+      "breakpoints": true
     }
   ]
 }
