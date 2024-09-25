@@ -12,6 +12,7 @@ import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { company } from "./company";
 import { z } from "zod";
+import { invoice } from "./invoice";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
   "USER PENDING",
@@ -45,7 +46,7 @@ export const askEstimate = pgTable("ask_estimate", {
   updateAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const askEstimateRelations = relations(askEstimate, ({ many }) => ({
+export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
   askEstimateOptions: many(askEstimateOptions),
 }));
 

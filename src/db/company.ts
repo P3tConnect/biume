@@ -16,7 +16,7 @@ import { topic } from "./topic";
 import { user } from "./user";
 import { category } from "./category";
 import { companyAddress } from "./companyAddress";
-import { transaction } from "./transactions";
+import { transaction } from "./transaction";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { z } from "zod";
@@ -43,6 +43,7 @@ export const company = pgTable("company", {
   email: text("email").notNull().unique(),
   ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").notNull(),
+  plan: plan("plan").default("NONE"),
   documentsId: text("documentsId").references(() => companyDocuments.id, {
     onDelete: "cascade",
   }),

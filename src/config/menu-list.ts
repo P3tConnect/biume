@@ -1,10 +1,23 @@
-import { Calendar, Contact2, Eye, FolderOpen, LayoutGrid, LineChart, LucideIcon, LucideMessageCircleQuestion, PawPrint, Tag, Timer, UsersRound } from "lucide-react";
+import {
+  Calendar,
+  Contact2,
+  Eye,
+  FolderOpen,
+  LayoutGrid,
+  LineChart,
+  LucideIcon,
+  LucideMessageCircleQuestion,
+  PawPrint,
+  Ticket,
+  Timer,
+  UsersRound,
+} from "lucide-react";
 
 type Submenu = {
   href: string;
   label: string;
   active: boolean;
-}
+};
 
 export type Menu = {
   href: string;
@@ -12,64 +25,18 @@ export type Menu = {
   active: boolean;
   icon: LucideIcon;
   submenus: Submenu[];
-}
+};
 
 type Group = {
   groupLabel: string;
   menus: Menu[];
-}
+};
 
-export function proSimpleMenuList(pathname: string, locale: string, companyId: string) {
-  return [
-    {
-      href: `/${locale}/dashboard/${companyId}`,
-      label: "Dashboard",
-      active: pathname == `/${locale}/dashboard/${companyId}`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/timetable`,
-      label: "Agenda",
-      active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/accounting`,
-      label: "Administratif",
-      active: pathname == `/${locale}/dashboard/${companyId}/accounting`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/team`,
-      label: "Equipe",
-      active: pathname == `/${locale}/dashboard/${companyId}/team`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/reminders`,
-      label: "Rappels",
-      active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/clients`,
-      label: "Clients",
-      active: pathname == `/${locale}/dashboard/${companyId}/clients`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/patients`,
-      label: "Patients",
-      active: pathname == `/${locale}/dashboard/${companyId}/patients`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/reports`,
-      label: "Rapports",
-      active: pathname == `/${locale}/dashboard/${companyId}/reports`,
-    },
-    {
-      href: `/${locale}/dashboard/${companyId}/observations`,
-      label: "Observations",
-      active: pathname == `/${locale}/dashboard/${companyId}/observations`,
-    }
-  ];
-}
-
-export function proMenuList(pathname: string, locale: string, companyId: string): Group[] {
+export function proMenuList(
+  pathname: string,
+  locale: string,
+  companyId: string,
+): Group[] {
   return [
     {
       groupLabel: "",
@@ -87,7 +54,7 @@ export function proMenuList(pathname: string, locale: string, companyId: string)
           active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
           icon: Calendar,
           submenus: [],
-        }
+        },
       ],
     },
     {
@@ -113,7 +80,7 @@ export function proMenuList(pathname: string, locale: string, companyId: string)
           active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
           icon: Timer,
           submenus: [],
-        }
+        },
       ],
     },
     {
@@ -146,7 +113,7 @@ export function proMenuList(pathname: string, locale: string, companyId: string)
           active: pathname == `/${locale}/dashboard/${companyId}/observations`,
           icon: Eye,
           submenus: [],
-        }
+        },
       ],
     },
     {
@@ -160,10 +127,49 @@ export function proMenuList(pathname: string, locale: string, companyId: string)
           submenus: [],
         },
       ],
-    }
-  ]
-};
+    },
+  ];
+}
 
-export function clientMenuList(pathname: string): Group[] {
-  return [];
-};
+export function clientMenuList(pathname: string, locale: string): Group[] {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: `/${locale}/dashboard`,
+          label: "Dashboard",
+          active: pathname == `/${locale}/dashboard`,
+          icon: LayoutGrid,
+          submenus: [],
+        },
+        {
+          href: `/${locale}/dashboard/timetable`,
+          label: "Agenda",
+          active: pathname == `/${locale}/dashboard/timetable`,
+          icon: Calendar,
+          submenus: [],
+        },
+      ],
+    },
+    {
+      groupLabel: "Mon compte",
+      menus: [
+        {
+          href: `/${locale}/dashboard/reservations`,
+          label: "Mes réservations",
+          active: pathname == `/${locale}/dashboard/reservations`,
+          icon: Ticket,
+          submenus: [],
+        },
+        {
+          href: `/${locale}/dashboard/pets`,
+          label: "Mes animaux",
+          active: pathname == `/${locale}/dashboard/pets`,
+          icon: PawPrint,
+          submenus: [],
+        }
+      ],
+    },
+  ];
+}

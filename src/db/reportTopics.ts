@@ -13,7 +13,7 @@ export const reportTopic = pgTable("report_topic", {
   }),
 });
 
-export const reportTopicRelations = relations(reportTopic, ({ one, many }) => ({
+export const reportTopicRelations = relations(reportTopic, ({ one }) => ({
   report: one(report, {
     fields: [reportTopic.reportId],
     references: [report.id],

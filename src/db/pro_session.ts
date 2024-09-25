@@ -15,6 +15,7 @@ import { report } from "./report";
 import { observation } from "./observation";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { service } from "./service";
 
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
@@ -43,6 +44,9 @@ export const proSession = pgTable("pro_session", {
   observationId: text("observationId").references(() => observation.id, {
     onDelete: "cascade",
   }),
+  serviceId: text("serviceId").notNull().references(() => service.id, {
+    onDelete: "cascade",
+  }),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
   status: sessionStatusType("status").default("COMPANY PENDING").notNull(),
@@ -54,6 +58,10 @@ export const proSession = pgTable("pro_session", {
 
 export const proSessionRelations = relations(proSession, ({ one, many }) => ({
   invoice: one(invoice),
+  service: one(service, {
+    fields: [proSession.serviceId],
+    references: [service.id],
+  }),
   options: many(sessionOptions),
   pet: one(pets, {
     fields: [proSession.clientId],

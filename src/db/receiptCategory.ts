@@ -4,7 +4,7 @@ import { category } from "./category";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
-export const receiptCategory = pgTable("receip_category", {
+export const receiptCategory = pgTable("receipt_category", {
   receiptId: text("receiptId").references(() => receipt.id, {
     onDelete: "cascade",
   }),
