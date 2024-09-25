@@ -1,36 +1,71 @@
-"use client";
-
-import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-
+import {
+  InstagramLogoIcon,
+  LinkedInLogoIcon,
+  TwitterLogoIcon,
+} from "@radix-ui/react-icons";
 import Image from "next/image";
+
+interface Icon {
+  icon: JSX.Element;
+  url: string;
+}
+
+const icons: Icon[] = [
+  { icon: <LinkedInLogoIcon />, url: "#" },
+  { icon: <InstagramLogoIcon />, url: "#" },
+  { icon: <TwitterLogoIcon />, url: "#" },
+];
+
+type Link = {
+  text: string;
+  url: string;
+};
+
+const links: Link[] = [
+  { text: "About", url: "#" },
+  { text: "Services", url: "#" },
+  { text: "Contact", url: "#" },
+];
 
 export default function Footer() {
   return (
-    <footer id="footer" className="h-[366px] w-full bg-gray">
-      <div className="flex flex-col h-full w-full">
-        <div className="flex flex-col justify-center content-center items-center py-10 px-10 text-center w-full h-full">
+    <footer className="flex flex-col gap-y-5 rounded-lg px-7 py-5 md:px-10">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-x-2">
           <Image
-            src="/assets/images/title.png"
-            alt="logo pawthera"
-            width={346}
-            height={55}
+            className="h-24 w-24"
+            src="/assets/svg/Logo couleur.svg"
+            width={120}
+            height={120}
+            alt="MagicUI Logo"
           />
-          <p className="text-white text-[20px] font-semibold mt-10">
-            L'application qui fait gagner du temps aux indépendants du secteur
-            animalier
-          </p>
         </div>
-        <div className="h-[1px] w-full bg-white my-5"></div>
-        <div className="flex flex-col md:flex-row justify-between mb-10 px-10">
-          <div className="flex flex-row justify-center items-center text-center content-center gap-4 mb-4 md:mb-0">
-            <InstagramLogoIcon className="text-white" width={24} height={25} />
-            <LinkedInLogoIcon className="text-white" width={24} height={25} />
-          </div>
-          <div className="text-center md:text-left">
-            <p className="text-white">
-              Copyright © 2024 PawThera. Tous droits réservés.
-            </p>
-          </div>
+
+        <div className="flex gap-x-2">
+          {icons.map((icon, index) => (
+            <a
+              key={index}
+              href={icon.url}
+              className="flex h-5 w-5 items-center justify-center text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-500 hover:dark:text-neutral-100"
+            >
+              {icon.icon}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col justify-between gap-y-5 md:flex-row md:items-center">
+        <ul className="flex flex-col gap-x-5 gap-y-2 text-neutral-500 md:flex-row md:items-center ">
+          {links.map((link, index) => (
+            <li
+              key={index}
+              className="text-[15px]/normal font-medium text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-400 hover:dark:text-neutral-100"
+            >
+              <a href={link.url}>{link.text}</a>
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center justify-between text-sm font-medium tracking-tight text-neutral-500 dark:text-neutral-400">
+          <p>All right reserverd.</p>
         </div>
       </div>
     </footer>

@@ -15,7 +15,7 @@ const CompanyListPage = () => {
       <CompanyDetailsHeader />
       <div className='flex items-start justify-center h-full gap-5 p-5'>
         <TabsSection />
-        <div className='flex flex-col items-center justify-center h-full w-1/4 gap-5'>
+        <div className='flex flex-col items-center justify-center h-full w-1/2 gap-5'>
           <RatesSection />
           <DisponibilitiesSection />
         </div>
