@@ -15,6 +15,7 @@ import { logger } from "./logger";
 import { stripe } from "./stripe";
 import { user as dbUser } from "@/src/db";
 import { eq } from "drizzle-orm";
+import * as bcrypt from "bcrypt";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -38,7 +39,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // TODO: Implement a hash password function
 
-        const user = await db.query.user.findFirst({
+        const hashedPassword = await handleCryptPassword(userPassword);
+
+        const user = (await db.query.user.findFirst({
           where: eq(dbUser.email, userEmail),
           columns: {
             id: true,
@@ -51,12 +54,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             isAdmin: true,
             locked: true,
             phone: true,
-          }
-        }) as AdapterUser;
+          },
+        })) as AdapterUser;
 
-        
         if (!user) {
           logger.debug("User not found");
+          const createUser = await db.insert(dbUser).values({
+            email: userEmail,
+            password: hashedPassword,
+          });
+
           return null;
         }
 
@@ -104,9 +111,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         name: user.name ?? "",
       });
 
-      await db.update(dbUser).set({
-        stripeId: stripeCustomer.id,
-      }).where(eq(dbUser.id, userId)).execute();
+      await db
+        .update(dbUser)
+        .set({
+          stripeId: stripeCustomer.id,
+        })
+        .where(eq(dbUser.id, userId))
+        .execute();
     },
-  }
+  },
 });
+
+const handleCryptPassword = async (password: string) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
+
+const handleComparePassword = async (password: string, hash: string) => {
+  return await bcrypt.compare(password, hash);
+};
