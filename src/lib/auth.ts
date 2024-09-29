@@ -37,9 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const userEmail = credentials.email as string;
         const userPassword = credentials.password as string;
 
-        // TODO: Implement a hash password function
-
-        const user = await db.query.user.findFirst({
+        const user = (await db.query.user.findFirst({
           where: eq(dbUser.email, userEmail),
           columns: {
             id: true,
@@ -52,19 +50,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             isAdmin: true,
             locked: true,
             phone: true,
-          }
-        }) as AdapterUser;
+            password: true,
+          },
+        })) as AdapterUser;
 
-        
         if (!user) {
           logger.debug("User not found");
-          return null;
+
+          // const hashedPassword = await handleCryptPassword(userPassword);
+
+          const createUser = await db
+            .insert(dbUser)
+            .values({
+              email: userEmail,
+              password: userPassword,
+            })
+            .returning()
+            .execute()
+            .then((res) => res[0]);
+
+          const user = {
+            id: createUser.id,
+            email: createUser.email,
+            emailVerified: createUser.emailVerified,
+            image: createUser.image,
+            stripeId: createUser.stripeId,
+            isPro: createUser.isPro,
+            lang: createUser.lang,
+            isAdmin: createUser.isAdmin,
+            locked: createUser.locked,
+            phone: createUser.phone,
+            password: createUser.password,
+          };
+
+          return user;
         }
 
-        if (user !== credentials.password) {
-          logger.debug("Password not correct");
-          return null;
-        }
+        // if (!(await handleComparePassword(userPassword, user.password!))) {
+        //   logger.debug("Password not correct");
+        //   return null;
+        // }
 
         return user;
       },
@@ -105,9 +130,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         name: user.name ?? "",
       });
 
-      await db.update(dbUser).set({
-        stripeId: stripeCustomer.id,
-      }).where(eq(dbUser.id, userId)).execute();
+      await db
+        .update(dbUser)
+        .set({
+          stripeId: stripeCustomer.id,
+        })
+        .where(eq(dbUser.id, userId))
+        .execute();
     },
-  }
+  },
 });
