@@ -46,7 +46,7 @@ const TimetableWidget = () => {
       setCalendarApi(calendar.getApi());
     }
   }, []);
-  
+
   // !!! That useEffect is here to update the calendar size when the container changes
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
@@ -64,9 +64,8 @@ const TimetableWidget = () => {
       resizeObserver.disconnect();
     };
   }, []);
-
   // !!! 
-        
+
   const handleNext = () => {
     if (calendarApi) {
       calendarApi.next();
@@ -94,7 +93,7 @@ const TimetableWidget = () => {
   return (
     <Card
       ref={containerRef}
-      className="w-full bg-secondary h-1/2 rounded-2xl border border-border -z-10 dark:border-white"
+      className="w-full bg-secondary h-1/2 rounded-2xl border border-border dark:border-white"
     >
       <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle className="text-xl text-white">

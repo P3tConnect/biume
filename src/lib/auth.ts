@@ -15,7 +15,6 @@ import { logger } from "./logger";
 import { stripe } from "./stripe";
 import { user as dbUser } from "@/src/db";
 import { eq } from "drizzle-orm";
-import * as bcrypt from "bcrypt";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -37,10 +36,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const userEmail = credentials.email as string;
         const userPassword = credentials.password as string;
 
-        // TODO: Implement a hash password function
-
-        const hashedPassword = await handleCryptPassword(userPassword);
-
         const user = (await db.query.user.findFirst({
           where: eq(dbUser.email, userEmail),
           columns: {
@@ -54,23 +49,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             isAdmin: true,
             locked: true,
             phone: true,
+            password: true,
           },
         })) as AdapterUser;
 
         if (!user) {
           logger.debug("User not found");
-          const createUser = await db.insert(dbUser).values({
-            email: userEmail,
-            password: hashedPassword,
-          });
 
-          return null;
+          // const hashedPassword = await handleCryptPassword(userPassword);
+
+          const createUser = await db
+            .insert(dbUser)
+            .values({
+              email: userEmail,
+              password: userPassword,
+            })
+            .returning()
+            .execute()
+            .then((res) => res[0]);
+
+          const user = {
+            id: createUser.id,
+            email: createUser.email,
+            emailVerified: createUser.emailVerified,
+            image: createUser.image,
+            stripeId: createUser.stripeId,
+            isPro: createUser.isPro,
+            lang: createUser.lang,
+            isAdmin: createUser.isAdmin,
+            locked: createUser.locked,
+            phone: createUser.phone,
+            password: createUser.password,
+          };
+
+          return user;
         }
 
-        if (user !== credentials.password) {
-          logger.debug("Password not correct");
-          return null;
-        }
+        // if (!(await handleComparePassword(userPassword, user.password!))) {
+        //   logger.debug("Password not correct");
+        //   return null;
+        // }
 
         return user;
       },
@@ -121,12 +139,3 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
-
-const handleCryptPassword = async (password: string) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
-};
-
-const handleComparePassword = async (password: string, hash: string) => {
-  return await bcrypt.compare(password, hash);
-};
