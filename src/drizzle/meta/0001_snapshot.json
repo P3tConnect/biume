@@ -1,6 +1,11 @@
 {
+<<<<<<< Updated upstream
   "id": "b29125c2-bfa9-4e27-a111-fad30531d7d6",
   "prevId": "65a9f8eb-cd4e-4a48-afc9-90bd2b2bc5d4",
+=======
+  "id": "89bf2ed3-915b-442d-8798-761c94ce0905",
+  "prevId": "9a210793-ae06-4875-9463-cfe8f1984f78",
+>>>>>>> Stashed changes
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -147,7 +152,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.500'"
+=======
+          "default": "'2024-09-24 17:21:43.766'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -194,7 +203,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.494'"
+=======
+          "default": "'2024-09-24 17:21:43.753'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -289,7 +302,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.467'"
+=======
+          "default": "'2024-09-24 17:21:43.674'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -448,7 +465,19 @@
           "onUpdate": "no action"
         }
       },
+<<<<<<< Updated upstream
       "compositePrimaryKeys": {},
+=======
+      "compositePrimaryKeys": {
+        "authenticator_userId_credentialID_pk": {
+          "name": "authenticator_userId_credentialID_pk",
+          "columns": [
+            "userId",
+            "credentialID"
+          ]
+        }
+      },
+>>>>>>> Stashed changes
       "uniqueConstraints": {
         "authenticator_credentialID_unique": {
           "name": "authenticator_credentialID_unique",
@@ -508,7 +537,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.490'"
+=======
+          "default": "'2024-09-24 17:21:43.736'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -582,7 +615,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.456'"
+=======
+          "default": "'2024-09-24 17:21:43.645'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -643,7 +680,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.475'"
+=======
+          "default": "'2024-09-24 17:21:43.696'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -671,6 +712,77 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
+=======
+    "public.company_membership": {
+      "name": "company_membership",
+      "schema": "",
+      "columns": {
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.738'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "company_membership_companyId_company_id_fk": {
+          "name": "company_membership_companyId_company_id_fk",
+          "tableFrom": "company_membership",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "company_membership_userId_user_id_fk": {
+          "name": "company_membership_userId_user_id_fk",
+          "tableFrom": "company_membership",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+>>>>>>> Stashed changes
     "public.company": {
       "name": "company",
       "schema": "",
@@ -723,6 +835,15 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< Updated upstream
+=======
+        "stripeId": {
+          "name": "stripeId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+>>>>>>> Stashed changes
         "email": {
           "name": "email",
           "type": "text",
@@ -741,6 +862,17 @@
           "primaryKey": false,
           "notNull": true
         },
+<<<<<<< Updated upstream
+=======
+        "plan": {
+          "name": "plan",
+          "type": "plan",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'NONE'"
+        },
+>>>>>>> Stashed changes
         "documentsId": {
           "name": "documentsId",
           "type": "text",
@@ -897,7 +1029,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.486'"
+=======
+          "default": "'2024-09-24 17:21:43.727'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -950,7 +1086,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.459'"
+=======
+          "default": "'2024-09-24 17:21:43.657'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1011,7 +1151,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.504'"
+=======
+          "default": "'2024-09-24 17:21:43.774'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1066,7 +1210,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.460'"
+=======
+          "default": "'2024-09-24 17:21:43.659'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1128,6 +1276,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.employee_company": {
       "name": "employee_company",
       "schema": "",
@@ -1143,22 +1292,74 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+=======
+    "public.intolerences": {
+      "name": "intolerences",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2024-09-24 17:21:43.758'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+>>>>>>> Stashed changes
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "employee_company_employeeId_user_id_fk": {
           "name": "employee_company_employeeId_user_id_fk",
           "tableFrom": "employee_company",
           "tableTo": "user",
           "columnsFrom": [
             "employeeId"
+=======
+        "intolerences_ownerId_user_id_fk": {
+          "name": "intolerences_ownerId_user_id_fk",
+          "tableFrom": "intolerences",
+          "tableTo": "user",
+          "columnsFrom": [
+            "ownerId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+<<<<<<< Updated upstream
         },
         "employee_company_companyId_company_id_fk": {
           "name": "employee_company_companyId_company_id_fk",
@@ -1166,6 +1367,57 @@
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
+=======
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.invoice": {
+      "name": "invoice",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "total": {
+          "name": "total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2024-09-24 17:21:43.681'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invoice_sessionId_pro_session_id_fk": {
+          "name": "invoice_sessionId_pro_session_id_fk",
+          "tableFrom": "invoice",
+          "tableTo": "pro_session",
+          "columnsFrom": [
+            "sessionId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -1174,6 +1426,7 @@
           "onUpdate": "no action"
         }
       },
+<<<<<<< Updated upstream
       "compositePrimaryKeys": {
         "employee_company_companyId_employeeId_pk": {
           "name": "employee_company_companyId_employeeId_pk",
@@ -1206,16 +1459,58 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+=======
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.invoice_options": {
+      "name": "invoice_options",
+      "schema": "",
+      "columns": {
+        "invoiceId": {
+          "name": "invoiceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+>>>>>>> Stashed changes
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
+=======
+        "invoice_options_invoiceId_invoice_id_fk": {
+          "name": "invoice_options_invoiceId_invoice_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "invoice",
+          "columnsFrom": [
+            "invoiceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invoice_options_optionId_options_id_fk": {
+          "name": "invoice_options_optionId_options_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -1227,8 +1522,13 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.user": {
       "name": "user",
+=======
+    "public.job": {
+      "name": "job",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
@@ -1237,6 +1537,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< Updated upstream
         "name": {
           "name": "name",
           "type": "text",
@@ -1275,16 +1576,66 @@
         },
         "stripeId": {
           "name": "stripeId",
+=======
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.newsletter": {
+      "name": "newsletter",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "redactor": {
+          "name": "redactor",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+        "images": {
+          "name": "images",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
         "address": {
           "name": "address",
+=======
+        "content": {
+          "name": "content",
+>>>>>>> Stashed changes
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< Updated upstream
         "plan": {
           "name": "plan",
           "type": "plan",
@@ -1321,15 +1672,24 @@
           "notNull": false,
           "default": "'fr'"
         },
+=======
+>>>>>>> Stashed changes
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.502'"
         },
         "updateAt": {
           "name": "updateAt",
+=======
+          "default": "'2024-09-24 17:21:43.666'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+>>>>>>> Stashed changes
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -1337,12 +1697,21 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "user_address_address_id_fk": {
           "name": "user_address_address_id_fk",
           "tableFrom": "user",
           "tableTo": "address",
           "columnsFrom": [
             "address"
+=======
+        "newsletter_redactor_company_id_fk": {
+          "name": "newsletter_redactor_company_id_fk",
+          "tableFrom": "newsletter",
+          "tableTo": "company",
+          "columnsFrom": [
+            "redactor"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -1352,6 +1721,7 @@
         }
       },
       "compositePrimaryKeys": {},
+<<<<<<< Updated upstream
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
@@ -1400,6 +1770,12 @@
     },
     "public.intolerences": {
       "name": "intolerences",
+=======
+      "uniqueConstraints": {}
+    },
+    "public.notification": {
+      "name": "notification",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
@@ -1412,6 +1788,7 @@
           "name": "title",
           "type": "text",
           "primaryKey": false,
+<<<<<<< Updated upstream
           "notNull": false
         },
         "description": {
@@ -1422,10 +1799,29 @@
         },
         "ownerId": {
           "name": "ownerId",
+=======
+          "notNull": true
+        },
+        "notificationType": {
+          "name": "notificationType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+>>>>>>> Stashed changes
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< Updated upstream
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -1438,16 +1834,45 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+=======
+        "new": {
+          "name": "new",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+>>>>>>> Stashed changes
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "intolerences_ownerId_user_id_fk": {
           "name": "intolerences_ownerId_user_id_fk",
           "tableFrom": "intolerences",
           "tableTo": "user",
           "columnsFrom": [
             "ownerId"
+=======
+        "notification_userId_user_id_fk": {
+          "name": "notification_userId_user_id_fk",
+          "tableFrom": "notification",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -1459,8 +1884,13 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.invoice": {
       "name": "invoice",
+=======
+    "public.observations": {
+      "name": "observations",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
@@ -1469,6 +1899,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< Updated upstream
         "askEstimateId": {
           "name": "askEstimateId",
           "type": "text",
@@ -1480,13 +1911,31 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+=======
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+>>>>>>> Stashed changes
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
+<<<<<<< Updated upstream
           "notNull": true,
           "default": "'2024-09-11 07:42:14.469'"
+=======
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.742'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1496,6 +1945,7 @@
         }
       },
       "indexes": {},
+<<<<<<< Updated upstream
       "foreignKeys": {
         "invoice_askEstimateId_ask_estimate_id_fk": {
           "name": "invoice_askEstimateId_ask_estimate_id_fk",
@@ -1516,6 +1966,14 @@
     },
     "public.newsletter": {
       "name": "newsletter",
+=======
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.options": {
+      "name": "options",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
@@ -1524,6 +1982,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< Updated upstream
         "redactor": {
           "name": "redactor",
           "type": "text",
@@ -1544,6 +2003,28 @@
         },
         "content": {
           "name": "content",
+=======
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+>>>>>>> Stashed changes
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1552,8 +2033,13 @@
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
+<<<<<<< Updated upstream
           "notNull": false,
           "default": "'2024-09-11 07:42:14.463'"
+=======
+          "notNull": true,
+          "default": "'2024-09-24 17:21:43.684'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1564,12 +2050,21 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "newsletter_redactor_company_id_fk": {
           "name": "newsletter_redactor_company_id_fk",
           "tableFrom": "newsletter",
           "tableTo": "company",
           "columnsFrom": [
             "redactor"
+=======
+        "options_companyId_company_id_fk": {
+          "name": "options_companyId_company_id_fk",
+          "tableFrom": "options",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -1685,6 +2180,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.pro_session": {
       "name": "pro_session",
       "schema": "",
@@ -1697,10 +2193,19 @@
         },
         "proId": {
           "name": "proId",
+=======
+    "public.pets_allergies": {
+      "name": "pets_allergies",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+>>>>>>> Stashed changes
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< Updated upstream
         "clientId": {
           "name": "clientId",
           "type": "text",
@@ -1710,1242 +2215,7 @@
         "reportId": {
           "name": "reportId",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "observationId": {
-          "name": "observationId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "beginAt": {
-          "name": "beginAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "endAt": {
-          "name": "endAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "session_status_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'COMPANY PENDING'"
-        },
-        "atHome": {
-          "name": "atHome",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "type": {
-          "name": "type",
-          "type": "session_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'oneToOne'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.491'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "pro_session_proId_company_id_fk": {
-          "name": "pro_session_proId_company_id_fk",
-          "tableFrom": "pro_session",
-          "tableTo": "company",
-          "columnsFrom": [
-            "proId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "pro_session_clientId_pets_id_fk": {
-          "name": "pro_session_clientId_pets_id_fk",
-          "tableFrom": "pro_session",
-          "tableTo": "pets",
-          "columnsFrom": [
-            "clientId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "pro_session_reportId_report_id_fk": {
-          "name": "pro_session_reportId_report_id_fk",
-          "tableFrom": "pro_session",
-          "tableTo": "report",
-          "columnsFrom": [
-            "reportId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "pro_session_observationId_observations_id_fk": {
-          "name": "pro_session_observationId_observations_id_fk",
-          "tableFrom": "pro_session",
-          "tableTo": "observations",
-          "columnsFrom": [
-            "observationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.project": {
-      "name": "project",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "beginAt": {
-          "name": "beginAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "endAt": {
-          "name": "endAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "isImportant": {
-          "name": "isImportant",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "note": {
-          "name": "note",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "link": {
-          "name": "link",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.478'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "project_ownerId_company_id_fk": {
-          "name": "project_ownerId_company_id_fk",
-          "tableFrom": "project",
-          "tableTo": "company",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.ratings": {
-      "name": "ratings",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "rate": {
-          "name": "rate",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "comment": {
-          "name": "comment",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "proId": {
-          "name": "proId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "writerId": {
-          "name": "writerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "isRecommanded": {
-          "name": "isRecommanded",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.479'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "ratings_proId_company_id_fk": {
-          "name": "ratings_proId_company_id_fk",
-          "tableFrom": "ratings",
-          "tableTo": "company",
-          "columnsFrom": [
-            "proId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "ratings_writerId_user_id_fk": {
-          "name": "ratings_writerId_user_id_fk",
-          "tableFrom": "ratings",
-          "tableTo": "user",
-          "columnsFrom": [
-            "writerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.service": {
-      "name": "service",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "proId": {
-          "name": "proId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "duration": {
-          "name": "duration",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.480'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "service_proId_company_id_fk": {
-          "name": "service_proId_company_id_fk",
-          "tableFrom": "service",
-          "tableTo": "company",
-          "columnsFrom": [
-            "proId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.task": {
-      "name": "task",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "beginAt": {
-          "name": "beginAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "endAt": {
-          "name": "endAt",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.481'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "task_ownerId_company_id_fk": {
-          "name": "task_ownerId_company_id_fk",
-          "tableFrom": "task",
-          "tableTo": "company",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.users_newsletters": {
-      "name": "users_newsletters",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "newsletterId": {
-          "name": "newsletterId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "users_newsletters_userId_user_id_fk": {
-          "name": "users_newsletters_userId_user_id_fk",
-          "tableFrom": "users_newsletters",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "users_newsletters_newsletterId_newsletter_id_fk": {
-          "name": "users_newsletters_newsletterId_newsletter_id_fk",
-          "tableFrom": "users_newsletters",
-          "tableTo": "newsletter",
-          "columnsFrom": [
-            "newsletterId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.invoice_options": {
-      "name": "invoice_options",
-      "schema": "",
-      "columns": {
-        "invoiceId": {
-          "name": "invoiceId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "optionId": {
-          "name": "optionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "invoice_options_invoiceId_invoice_id_fk": {
-          "name": "invoice_options_invoiceId_invoice_id_fk",
-          "tableFrom": "invoice_options",
-          "tableTo": "invoice",
-          "columnsFrom": [
-            "invoiceId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "invoice_options_optionId_options_id_fk": {
-          "name": "invoice_options_optionId_options_id_fk",
-          "tableFrom": "invoice_options",
-          "tableTo": "options",
-          "columnsFrom": [
-            "optionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.options": {
-      "name": "options",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "price": {
-          "name": "price",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "companyId": {
-          "name": "companyId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'2024-09-11 07:42:14.471'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "options_companyId_company_id_fk": {
-          "name": "options_companyId_company_id_fk",
-          "tableFrom": "options",
-          "tableTo": "company",
-          "columnsFrom": [
-            "companyId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.progression": {
-      "name": "progression",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "docs": {
-          "name": "docs",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "cancelPolicies": {
-          "name": "cancelPolicies",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "reminders": {
-          "name": "reminders",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "services": {
-          "name": "services",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.projects_invitees": {
-      "name": "projects_invitees",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "projectId": {
-          "name": "projectId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "projects_invitees_userId_user_id_fk": {
-          "name": "projects_invitees_userId_user_id_fk",
-          "tableFrom": "projects_invitees",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "projects_invitees_projectId_project_id_fk": {
-          "name": "projects_invitees_projectId_project_id_fk",
-          "tableFrom": "projects_invitees",
-          "tableTo": "project",
-          "columnsFrom": [
-            "projectId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.session_options": {
-      "name": "session_options",
-      "schema": "",
-      "columns": {
-        "sessionId": {
-          "name": "sessionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "optionId": {
-          "name": "optionId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "session_options_sessionId_pro_session_id_fk": {
-          "name": "session_options_sessionId_pro_session_id_fk",
-          "tableFrom": "session_options",
-          "tableTo": "pro_session",
-          "columnsFrom": [
-            "sessionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "session_options_optionId_options_id_fk": {
-          "name": "session_options_optionId_options_id_fk",
-          "tableFrom": "session_options",
-          "tableTo": "options",
-          "columnsFrom": [
-            "optionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.report": {
-      "name": "report",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reportTemplateId": {
-          "name": "reportTemplateId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.485'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "report_reportTemplateId_report_template_id_fk": {
-          "name": "report_reportTemplateId_report_template_id_fk",
-          "tableFrom": "report",
-          "tableTo": "report_template",
-          "columnsFrom": [
-            "reportTemplateId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.observations": {
-      "name": "observations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.491'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.report_topic": {
-      "name": "report_topic",
-      "schema": "",
-      "columns": {
-        "reportId": {
-          "name": "reportId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "topicId": {
-          "name": "topicId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "report_topic_reportId_report_id_fk": {
-          "name": "report_topic_reportId_report_id_fk",
-          "tableFrom": "report_topic",
-          "tableTo": "report",
-          "columnsFrom": [
-            "reportId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "report_topic_topicId_topic_id_fk": {
-          "name": "report_topic_topicId_topic_id_fk",
-          "tableFrom": "report_topic",
-          "tableTo": "topic",
-          "columnsFrom": [
-            "topicId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.receipt": {
-      "name": "receipt",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "companyId": {
-          "name": "companyId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "totalPrice": {
-          "name": "totalPrice",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.475'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "receipt_companyId_company_id_fk": {
-          "name": "receipt_companyId_company_id_fk",
-          "tableFrom": "receipt",
-          "tableTo": "company",
-          "columnsFrom": [
-            "companyId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.receipt_product": {
-      "name": "receipt_product",
-      "schema": "",
-      "columns": {
-        "receiptId": {
-          "name": "receiptId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "productId": {
-          "name": "productId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "receipt_product_receiptId_receipt_id_fk": {
-          "name": "receipt_product_receiptId_receipt_id_fk",
-          "tableFrom": "receipt_product",
-          "tableTo": "receipt",
-          "columnsFrom": [
-            "receiptId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "receipt_product_productId_product_id_fk": {
-          "name": "receipt_product_productId_product_id_fk",
-          "tableFrom": "receipt_product",
-          "tableTo": "product",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.topic": {
-      "name": "topic",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "companyId": {
-          "name": "companyId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-11 07:42:14.485'"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "topic_companyId_company_id_fk": {
-          "name": "topic_companyId_company_id_fk",
-          "tableFrom": "topic",
-          "tableTo": "company",
-          "columnsFrom": [
-            "companyId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.job": {
-      "name": "job",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.users_jobs": {
-      "name": "users_jobs",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "jobId": {
-          "name": "jobId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "users_jobs_userId_user_id_fk": {
-          "name": "users_jobs_userId_user_id_fk",
-          "tableFrom": "users_jobs",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "users_jobs_jobId_job_id_fk": {
-          "name": "users_jobs_jobId_job_id_fk",
-          "tableFrom": "users_jobs",
-          "tableTo": "job",
-          "columnsFrom": [
-            "jobId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.receip_category": {
-      "name": "receip_category",
-      "schema": "",
-      "columns": {
-        "receiptId": {
-          "name": "receiptId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "categoryId": {
-          "name": "categoryId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "receip_category_receiptId_receipt_id_fk": {
-          "name": "receip_category_receiptId_receipt_id_fk",
-          "tableFrom": "receip_category",
-          "tableTo": "receipt",
-          "columnsFrom": [
-            "receiptId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "receip_category_categoryId_category_id_fk": {
-          "name": "receip_category_categoryId_category_id_fk",
-          "tableFrom": "receip_category",
-          "tableTo": "category",
-          "columnsFrom": [
-            "categoryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.pets_allergies": {
-      "name": "pets_allergies",
-      "schema": "",
-      "columns": {
-        "petId": {
-          "name": "petId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
+=======
         "allergyId": {
           "name": "allergyId",
           "type": "text",
@@ -3083,6 +2353,2090 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.pro_session": {
+      "name": "pro_session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "proId": {
+          "name": "proId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reportId": {
+          "name": "reportId",
+          "type": "text",
+>>>>>>> Stashed changes
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observationId": {
+          "name": "observationId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+=======
+        "serviceId": {
+          "name": "serviceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+>>>>>>> Stashed changes
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "session_status_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'COMPANY PENDING'"
+        },
+        "atHome": {
+          "name": "atHome",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "type": {
+          "name": "type",
+          "type": "session_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'oneToOne'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.491'"
+=======
+          "default": "'2024-09-24 17:21:43.742'"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pro_session_proId_company_id_fk": {
+          "name": "pro_session_proId_company_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "company",
+          "columnsFrom": [
+            "proId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pro_session_clientId_pets_id_fk": {
+          "name": "pro_session_clientId_pets_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pro_session_reportId_report_id_fk": {
+          "name": "pro_session_reportId_report_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "report",
+          "columnsFrom": [
+            "reportId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pro_session_observationId_observations_id_fk": {
+          "name": "pro_session_observationId_observations_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "observations",
+          "columnsFrom": [
+            "observationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+<<<<<<< Updated upstream
+=======
+        },
+        "pro_session_serviceId_service_id_fk": {
+          "name": "pro_session_serviceId_service_id_fk",
+          "tableFrom": "pro_session",
+          "tableTo": "service",
+          "columnsFrom": [
+            "serviceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+>>>>>>> Stashed changes
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.project": {
+      "name": "project",
+=======
+    "public.product": {
+      "name": "product",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+=======
+        "description": {
+          "name": "description",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isImportant": {
+          "name": "isImportant",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "note": {
+          "name": "note",
+=======
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "link": {
+          "name": "link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+=======
+        "unitPrice": {
+          "name": "unitPrice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+>>>>>>> Stashed changes
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.478'"
+=======
+          "default": "'2024-09-24 17:21:43.696'"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "project_ownerId_company_id_fk": {
+          "name": "project_ownerId_company_id_fk",
+          "tableFrom": "project",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+=======
+        "product_companyId_company_id_fk": {
+          "name": "product_companyId_company_id_fk",
+          "tableFrom": "product",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.ratings": {
+      "name": "ratings",
+=======
+    "public.progression": {
+      "name": "progression",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "rate": {
+          "name": "rate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proId": {
+          "name": "proId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "writerId": {
+          "name": "writerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isRecommanded": {
+          "name": "isRecommanded",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-11 07:42:14.479'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ratings_proId_company_id_fk": {
+          "name": "ratings_proId_company_id_fk",
+          "tableFrom": "ratings",
+          "tableTo": "company",
+          "columnsFrom": [
+            "proId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ratings_writerId_user_id_fk": {
+          "name": "ratings_writerId_user_id_fk",
+          "tableFrom": "ratings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "writerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.service": {
+      "name": "service",
+=======
+        "docs": {
+          "name": "docs",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "cancelPolicies": {
+          "name": "cancelPolicies",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "reminders": {
+          "name": "reminders",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "services": {
+          "name": "services",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.project": {
+      "name": "project",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+=======
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ownerId": {
+          "name": "ownerId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "description": {
+          "name": "description",
+=======
+        "color": {
+          "name": "color",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proId": {
+          "name": "proId",
+=======
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isImportant": {
+          "name": "isImportant",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "note": {
+          "name": "note",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+=======
+        "link": {
+          "name": "link",
+          "type": "text",
+>>>>>>> Stashed changes
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.480'"
+=======
+          "default": "'2024-09-24 17:21:43.704'"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "service_proId_company_id_fk": {
+          "name": "service_proId_company_id_fk",
+          "tableFrom": "service",
+          "tableTo": "company",
+          "columnsFrom": [
+            "proId"
+=======
+        "project_ownerId_company_id_fk": {
+          "name": "project_ownerId_company_id_fk",
+          "tableFrom": "project",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.task": {
+      "name": "task",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+=======
+    "public.projects_invitees": {
+      "name": "projects_invitees",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectId": {
+          "name": "projectId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projects_invitees_userId_user_id_fk": {
+          "name": "projects_invitees_userId_user_id_fk",
+          "tableFrom": "projects_invitees",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "projects_invitees_projectId_project_id_fk": {
+          "name": "projects_invitees_projectId_project_id_fk",
+          "tableFrom": "projects_invitees",
+          "tableTo": "project",
+          "columnsFrom": [
+            "projectId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.ratings": {
+      "name": "ratings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rate": {
+          "name": "rate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "location": {
+          "name": "location",
+=======
+        "proId": {
+          "name": "proId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+=======
+        "writerId": {
+          "name": "writerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isRecommanded": {
+          "name": "isRecommanded",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+>>>>>>> Stashed changes
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.481'"
+=======
+          "default": "'2024-09-24 17:21:43.707'"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "task_ownerId_company_id_fk": {
+          "name": "task_ownerId_company_id_fk",
+          "tableFrom": "task",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+=======
+        "ratings_proId_company_id_fk": {
+          "name": "ratings_proId_company_id_fk",
+          "tableFrom": "ratings",
+          "tableTo": "company",
+          "columnsFrom": [
+            "proId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ratings_writerId_user_id_fk": {
+          "name": "ratings_writerId_user_id_fk",
+          "tableFrom": "ratings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "writerId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.users_newsletters": {
+      "name": "users_newsletters",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+=======
+    "public.receipt_category": {
+      "name": "receipt_category",
+      "schema": "",
+      "columns": {
+        "receiptId": {
+          "name": "receiptId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "newsletterId": {
+          "name": "newsletterId",
+=======
+        "categoryId": {
+          "name": "categoryId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "users_newsletters_userId_user_id_fk": {
+          "name": "users_newsletters_userId_user_id_fk",
+          "tableFrom": "users_newsletters",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+=======
+        "receipt_category_receiptId_receipt_id_fk": {
+          "name": "receipt_category_receiptId_receipt_id_fk",
+          "tableFrom": "receipt_category",
+          "tableTo": "receipt",
+          "columnsFrom": [
+            "receiptId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+<<<<<<< Updated upstream
+        "users_newsletters_newsletterId_newsletter_id_fk": {
+          "name": "users_newsletters_newsletterId_newsletter_id_fk",
+          "tableFrom": "users_newsletters",
+          "tableTo": "newsletter",
+          "columnsFrom": [
+            "newsletterId"
+=======
+        "receipt_category_categoryId_category_id_fk": {
+          "name": "receipt_category_categoryId_category_id_fk",
+          "tableFrom": "receipt_category",
+          "tableTo": "category",
+          "columnsFrom": [
+            "categoryId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.invoice_options": {
+      "name": "invoice_options",
+      "schema": "",
+      "columns": {
+        "invoiceId": {
+          "name": "invoiceId",
+=======
+    "public.receipt_product": {
+      "name": "receipt_product",
+      "schema": "",
+      "columns": {
+        "receiptId": {
+          "name": "receiptId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "optionId": {
+          "name": "optionId",
+=======
+        "productId": {
+          "name": "productId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "invoice_options_invoiceId_invoice_id_fk": {
+          "name": "invoice_options_invoiceId_invoice_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "invoice",
+          "columnsFrom": [
+            "invoiceId"
+=======
+        "receipt_product_receiptId_receipt_id_fk": {
+          "name": "receipt_product_receiptId_receipt_id_fk",
+          "tableFrom": "receipt_product",
+          "tableTo": "receipt",
+          "columnsFrom": [
+            "receiptId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+<<<<<<< Updated upstream
+        "invoice_options_optionId_options_id_fk": {
+          "name": "invoice_options_optionId_options_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
+=======
+        "receipt_product_productId_product_id_fk": {
+          "name": "receipt_product_productId_product_id_fk",
+          "tableFrom": "receipt_product",
+          "tableTo": "product",
+          "columnsFrom": [
+            "productId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.options": {
+      "name": "options",
+=======
+    "public.receipt": {
+      "name": "receipt",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+=======
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "companyId": {
+          "name": "companyId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+=======
+        "totalPrice": {
+          "name": "totalPrice",
+          "type": "integer",
+          "primaryKey": false,
+>>>>>>> Stashed changes
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+<<<<<<< Updated upstream
+          "notNull": true,
+          "default": "'2024-09-11 07:42:14.471'"
+=======
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.696'"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "options_companyId_company_id_fk": {
+          "name": "options_companyId_company_id_fk",
+          "tableFrom": "options",
+=======
+        "receipt_companyId_company_id_fk": {
+          "name": "receipt_companyId_company_id_fk",
+          "tableFrom": "receipt",
+>>>>>>> Stashed changes
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.progression": {
+      "name": "progression",
+=======
+    "public.report_template": {
+      "name": "report_template",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "docs": {
+          "name": "docs",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "cancelPolicies": {
+          "name": "cancelPolicies",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "reminders": {
+          "name": "reminders",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "services": {
+          "name": "services",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.projects_invitees": {
+      "name": "projects_invitees",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectId": {
+          "name": "projectId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projects_invitees_userId_user_id_fk": {
+          "name": "projects_invitees_userId_user_id_fk",
+          "tableFrom": "projects_invitees",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "projects_invitees_projectId_project_id_fk": {
+          "name": "projects_invitees_projectId_project_id_fk",
+          "tableFrom": "projects_invitees",
+          "tableTo": "project",
+          "columnsFrom": [
+            "projectId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.session_options": {
+      "name": "session_options",
+      "schema": "",
+      "columns": {
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "text",
+=======
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+>>>>>>> Stashed changes
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "session_options_sessionId_pro_session_id_fk": {
+          "name": "session_options_sessionId_pro_session_id_fk",
+          "tableFrom": "session_options",
+          "tableTo": "pro_session",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "session_options_optionId_options_id_fk": {
+          "name": "session_options_optionId_options_id_fk",
+          "tableFrom": "session_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
+=======
+        "report_template_owner_id_user_id_fk": {
+          "name": "report_template_owner_id_user_id_fk",
+          "tableFrom": "report_template",
+          "tableTo": "user",
+          "columnsFrom": [
+            "owner_id"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.report": {
+      "name": "report",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reportTemplateId": {
+          "name": "reportTemplateId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.485'"
+=======
+          "default": "now()"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "report_reportTemplateId_report_template_id_fk": {
+          "name": "report_reportTemplateId_report_template_id_fk",
+          "tableFrom": "report",
+          "tableTo": "report_template",
+          "columnsFrom": [
+            "reportTemplateId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.observations": {
+      "name": "observations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-11 07:42:14.491'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+=======
+>>>>>>> Stashed changes
+    "public.report_topic": {
+      "name": "report_topic",
+      "schema": "",
+      "columns": {
+        "reportId": {
+          "name": "reportId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topicId": {
+          "name": "topicId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "report_topic_reportId_report_id_fk": {
+          "name": "report_topic_reportId_report_id_fk",
+          "tableFrom": "report_topic",
+          "tableTo": "report",
+          "columnsFrom": [
+            "reportId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "report_topic_topicId_topic_id_fk": {
+          "name": "report_topic_topicId_topic_id_fk",
+          "tableFrom": "report_topic",
+          "tableTo": "topic",
+          "columnsFrom": [
+            "topicId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.receipt": {
+      "name": "receipt",
+=======
+    "public.service": {
+      "name": "service",
+>>>>>>> Stashed changes
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "companyId": {
+          "name": "companyId",
+=======
+        "name": {
+          "name": "name",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "totalPrice": {
+          "name": "totalPrice",
+=======
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+>>>>>>> Stashed changes
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-11 07:42:14.475'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "receipt_companyId_company_id_fk": {
+          "name": "receipt_companyId_company_id_fk",
+          "tableFrom": "receipt",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.receipt_product": {
+      "name": "receipt_product",
+      "schema": "",
+      "columns": {
+        "receiptId": {
+          "name": "receiptId",
+=======
+        "proId": {
+          "name": "proId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "productId": {
+          "name": "productId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "receipt_product_receiptId_receipt_id_fk": {
+          "name": "receipt_product_receiptId_receipt_id_fk",
+          "tableFrom": "receipt_product",
+          "tableTo": "receipt",
+          "columnsFrom": [
+            "receiptId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "receipt_product_productId_product_id_fk": {
+          "name": "receipt_product_productId_product_id_fk",
+          "tableFrom": "receipt_product",
+          "tableTo": "product",
+          "columnsFrom": [
+            "productId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.topic": {
+      "name": "topic",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+=======
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+>>>>>>> Stashed changes
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+<<<<<<< Updated upstream
+          "default": "'2024-09-11 07:42:14.485'"
+=======
+          "default": "now()"
+>>>>>>> Stashed changes
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "topic_companyId_company_id_fk": {
+          "name": "topic_companyId_company_id_fk",
+          "tableFrom": "topic",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+=======
+        "service_proId_company_id_fk": {
+          "name": "service_proId_company_id_fk",
+          "tableFrom": "service",
+          "tableTo": "company",
+          "columnsFrom": [
+            "proId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.job": {
+      "name": "job",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+=======
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "sessionToken": {
+          "name": "sessionToken",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+<<<<<<< Updated upstream
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users_jobs": {
+      "name": "users_jobs",
+      "schema": "",
+      "columns": {
+=======
+>>>>>>> Stashed changes
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+<<<<<<< Updated upstream
+          "notNull": false
+        },
+        "jobId": {
+          "name": "jobId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+=======
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+>>>>>>> Stashed changes
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "users_jobs_userId_user_id_fk": {
+          "name": "users_jobs_userId_user_id_fk",
+          "tableFrom": "users_jobs",
+=======
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
+          "tableFrom": "session",
+>>>>>>> Stashed changes
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+<<<<<<< Updated upstream
+        },
+        "users_jobs_jobId_job_id_fk": {
+          "name": "users_jobs_jobId_job_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "job",
+          "columnsFrom": [
+            "jobId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+=======
+>>>>>>> Stashed changes
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.receip_category": {
+      "name": "receip_category",
+      "schema": "",
+      "columns": {
+        "receiptId": {
+          "name": "receiptId",
+=======
+    "public.session_options": {
+      "name": "session_options",
+      "schema": "",
+      "columns": {
+        "sessionId": {
+          "name": "sessionId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "categoryId": {
+          "name": "categoryId",
+=======
+        "optionId": {
+          "name": "optionId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "receip_category_receiptId_receipt_id_fk": {
+          "name": "receip_category_receiptId_receipt_id_fk",
+          "tableFrom": "receip_category",
+          "tableTo": "receipt",
+          "columnsFrom": [
+            "receiptId"
+=======
+        "session_options_sessionId_pro_session_id_fk": {
+          "name": "session_options_sessionId_pro_session_id_fk",
+          "tableFrom": "session_options",
+          "tableTo": "pro_session",
+          "columnsFrom": [
+            "sessionId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+<<<<<<< Updated upstream
+        "receip_category_categoryId_category_id_fk": {
+          "name": "receip_category_categoryId_category_id_fk",
+          "tableFrom": "receip_category",
+          "tableTo": "category",
+          "columnsFrom": [
+            "categoryId"
+=======
+        "session_options_optionId_options_id_fk": {
+          "name": "session_options_optionId_options_id_fk",
+          "tableFrom": "session_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.pets_allergies": {
+      "name": "pets_allergies",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+=======
+    "public.task": {
+      "name": "task",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ownerId": {
+          "name": "ownerId",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "allergyId": {
+          "name": "allergyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pets_allergies_petId_pets_id_fk": {
+          "name": "pets_allergies_petId_pets_id_fk",
+          "tableFrom": "pets_allergies",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_allergies_allergyId_allergies_id_fk": {
+          "name": "pets_allergies_allergyId_allergies_id_fk",
+          "tableFrom": "pets_allergies",
+          "tableTo": "allergies",
+          "columnsFrom": [
+            "allergyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.pets_deseases": {
+      "name": "pets_deseases",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+=======
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+>>>>>>> Stashed changes
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+<<<<<<< Updated upstream
+        "deseaseId": {
+          "name": "deseaseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+=======
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beginAt": {
+          "name": "beginAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endAt": {
+          "name": "endAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.714'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+>>>>>>> Stashed changes
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "pets_deseases_petId_pets_id_fk": {
+          "name": "pets_deseases_petId_pets_id_fk",
+          "tableFrom": "pets_deseases",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_deseases_deseaseId_deseases_id_fk": {
+          "name": "pets_deseases_deseaseId_deseases_id_fk",
+          "tableFrom": "pets_deseases",
+          "tableTo": "deseases",
+          "columnsFrom": [
+            "deseaseId"
+=======
+        "task_ownerId_company_id_fk": {
+          "name": "task_ownerId_company_id_fk",
+          "tableFrom": "task",
+          "tableTo": "company",
+          "columnsFrom": [
+            "ownerId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+<<<<<<< Updated upstream
+    "public.pets_intolerences": {
+      "name": "pets_intolerences",
+      "schema": "",
+      "columns": {
+        "petId": {
+          "name": "petId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intolerenceId": {
+          "name": "intolerenceId",
+          "type": "text",
+          "primaryKey": false,
+=======
+    "public.topic": {
+      "name": "topic",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.725'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+>>>>>>> Stashed changes
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+<<<<<<< Updated upstream
+        "pets_intolerences_petId_pets_id_fk": {
+          "name": "pets_intolerences_petId_pets_id_fk",
+          "tableFrom": "pets_intolerences",
+          "tableTo": "pets",
+          "columnsFrom": [
+            "petId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "pets_intolerences_intolerenceId_intolerences_id_fk": {
+          "name": "pets_intolerences_intolerenceId_intolerences_id_fk",
+          "tableFrom": "pets_intolerences",
+          "tableTo": "intolerences",
+          "columnsFrom": [
+            "intolerenceId"
+=======
+        "topic_companyId_company_id_fk": {
+          "name": "topic_companyId_company_id_fk",
+          "tableFrom": "topic",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+>>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.transaction": {
       "name": "transaction",
       "schema": "",
@@ -3122,7 +4476,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.508'"
+=======
+          "default": "'2024-09-24 17:21:43.730'"
+>>>>>>> Stashed changes
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3163,8 +4521,13 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.widgets": {
       "name": "widgets",
+=======
+    "public.user": {
+      "name": "user",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
@@ -3173,6 +4536,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< Updated upstream
         "width": {
           "name": "width",
           "type": "integer",
@@ -3195,6 +4559,137 @@
         },
         "companyId": {
           "name": "companyId",
+=======
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripeId": {
+          "name": "stripeId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isPro": {
+          "name": "isPro",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "locked": {
+          "name": "locked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "lang": {
+          "name": "lang",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'fr'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-24 17:21:43.768'"
+        },
+        "updateAt": {
+          "name": "updateAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_address_address_id_fk": {
+          "name": "user_address_address_id_fk",
+          "tableFrom": "user",
+          "tableTo": "address",
+          "columnsFrom": [
+            "address"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
+    },
+    "public.users_jobs": {
+      "name": "users_jobs",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jobId": {
+          "name": "jobId",
+>>>>>>> Stashed changes
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -3202,12 +4697,34 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "widgets_companyId_company_id_fk": {
           "name": "widgets_companyId_company_id_fk",
           "tableFrom": "widgets",
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
+=======
+        "users_jobs_userId_user_id_fk": {
+          "name": "users_jobs_userId_user_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_jobs_jobId_job_id_fk": {
+          "name": "users_jobs_jobId_job_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "job",
+          "columnsFrom": [
+            "jobId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -3219,6 +4736,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.notification": {
       "name": "notification",
       "schema": "",
@@ -3247,12 +4765,19 @@
           "primaryKey": false,
           "notNull": true
         },
+=======
+    "public.users_newsletters": {
+      "name": "users_newsletters",
+      "schema": "",
+      "columns": {
+>>>>>>> Stashed changes
         "userId": {
           "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< Updated upstream
         "new": {
           "name": "new",
           "type": "boolean",
@@ -3271,13 +4796,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+=======
+        "newsletterId": {
+          "name": "newsletterId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+>>>>>>> Stashed changes
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "notification_userId_user_id_fk": {
           "name": "notification_userId_user_id_fk",
           "tableFrom": "notification",
+=======
+        "users_newsletters_userId_user_id_fk": {
+          "name": "users_newsletters_userId_user_id_fk",
+          "tableFrom": "users_newsletters",
+>>>>>>> Stashed changes
           "tableTo": "user",
           "columnsFrom": [
             "userId"
@@ -3287,11 +4825,28 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+<<<<<<< Updated upstream
+=======
+        },
+        "users_newsletters_newsletterId_newsletter_id_fk": {
+          "name": "users_newsletters_newsletterId_newsletter_id_fk",
+          "tableFrom": "users_newsletters",
+          "tableTo": "newsletter",
+          "columnsFrom": [
+            "newsletterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+>>>>>>> Stashed changes
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< Updated upstream
     "public.product": {
       "name": "product",
       "schema": "",
@@ -3367,10 +4922,51 @@
     },
     "public.report_template": {
       "name": "report_template",
+=======
+    "public.verificationToken": {
+      "name": "verificationToken",
+      "schema": "",
+      "columns": {
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "verificationToken_identifier_token_pk": {
+          "name": "verificationToken_identifier_token_pk",
+          "columns": [
+            "identifier",
+            "token"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.widgets": {
+      "name": "widgets",
+>>>>>>> Stashed changes
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
+<<<<<<< Updated upstream
           "type": "serial",
           "primaryKey": true,
           "notNull": true
@@ -3412,16 +5008,56 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+=======
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "widgetsOrientation",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Horizontal'"
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+>>>>>>> Stashed changes
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< Updated upstream
         "report_template_owner_id_user_id_fk": {
           "name": "report_template_owner_id_user_id_fk",
           "tableFrom": "report_template",
           "tableTo": "user",
           "columnsFrom": [
             "owner_id"
+=======
+        "widgets_companyId_company_id_fk": {
+          "name": "widgets_companyId_company_id_fk",
+          "tableFrom": "widgets",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+>>>>>>> Stashed changes
           ],
           "columnsTo": [
             "id"
@@ -3472,6 +5108,19 @@
         "none"
       ]
     },
+<<<<<<< Updated upstream
+=======
+    "public.company_membership_role": {
+      "name": "company_membership_role",
+      "schema": "public",
+      "values": [
+        "NONE",
+        "MEMBER",
+        "OWNER",
+        "ADMIN"
+      ]
+    },
+>>>>>>> Stashed changes
     "public.plan": {
       "name": "plan",
       "schema": "public",
@@ -3482,6 +5131,19 @@
         "NONE"
       ]
     },
+<<<<<<< Updated upstream
+=======
+    "public.notificationType": {
+      "name": "notificationType",
+      "schema": "public",
+      "values": [
+        "rate",
+        "newClient",
+        "newReport",
+        "newAskReservation"
+      ]
+    },
+>>>>>>> Stashed changes
     "public.petType": {
       "name": "petType",
       "schema": "public",
@@ -3530,6 +5192,7 @@
         "Square",
         "Rectangle"
       ]
+<<<<<<< Updated upstream
     },
     "public.notificationType": {
       "name": "notificationType",
@@ -3540,6 +5203,8 @@
         "newReport",
         "newAskReservation"
       ]
+=======
+>>>>>>> Stashed changes
     }
   },
   "schemas": {},
