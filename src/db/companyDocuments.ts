@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
 import { companyCertifications } from "./companyCertifications";

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   "id": "b29125c2-bfa9-4e27-a111-fad30531d7d6",
   "prevId": "65a9f8eb-cd4e-4a48-afc9-90bd2b2bc5d4",
@@ -6,6 +7,10 @@
   "id": "89bf2ed3-915b-442d-8798-761c94ce0905",
   "prevId": "9a210793-ae06-4875-9463-cfe8f1984f78",
 >>>>>>> Stashed changes
+=======
+  "id": "45b565f0-0bfa-4821-bce3-5d6faa46a3d5",
+  "prevId": "77c9e83a-a749-4b46-af1b-a53ceeb502a6",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -152,11 +157,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.500'"
 =======
           "default": "'2024-09-24 17:21:43.766'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.975'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -203,11 +212,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.494'"
 =======
           "default": "'2024-09-24 17:21:43.753'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.969'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -302,11 +315,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.467'"
 =======
           "default": "'2024-09-24 17:21:43.674'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.930'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -465,9 +482,12 @@
           "onUpdate": "no action"
         }
       },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       "compositePrimaryKeys": {},
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "compositePrimaryKeys": {
         "authenticator_userId_credentialID_pk": {
           "name": "authenticator_userId_credentialID_pk",
@@ -477,7 +497,10 @@
           ]
         }
       },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "uniqueConstraints": {
         "authenticator_credentialID_unique": {
           "name": "authenticator_credentialID_unique",
@@ -537,11 +560,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.490'"
 =======
           "default": "'2024-09-24 17:21:43.736'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.960'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -615,11 +642,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.456'"
 =======
           "default": "'2024-09-24 17:21:43.645'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.918'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -680,11 +711,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.475'"
 =======
           "default": "'2024-09-24 17:21:43.696'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.941'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -712,8 +747,11 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.company_membership": {
       "name": "company_membership",
       "schema": "",
@@ -741,7 +779,11 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
           "default": "'2024-09-24 17:21:43.738'"
+=======
+          "default": "'2024-09-25 11:07:58.962'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -782,7 +824,10 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.company": {
       "name": "company",
       "schema": "",
@@ -835,15 +880,21 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "stripeId": {
           "name": "stripeId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "email": {
           "name": "email",
           "type": "text",
@@ -862,8 +913,11 @@
           "primaryKey": false,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "plan": {
           "name": "plan",
           "type": "plan",
@@ -872,7 +926,10 @@
           "notNull": false,
           "default": "'NONE'"
         },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "documentsId": {
           "name": "documentsId",
           "type": "text",
@@ -1029,11 +1086,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.486'"
 =======
           "default": "'2024-09-24 17:21:43.727'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.956'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1086,11 +1147,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.459'"
 =======
           "default": "'2024-09-24 17:21:43.657'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.923'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1151,11 +1216,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.504'"
 =======
           "default": "'2024-09-24 17:21:43.774'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.979'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1210,11 +1279,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.460'"
 =======
           "default": "'2024-09-24 17:21:43.659'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.923'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1276,6 +1349,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.employee_company": {
       "name": "employee_company",
@@ -1523,6 +1597,8 @@
       "uniqueConstraints": {}
     },
 <<<<<<< Updated upstream
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.user": {
       "name": "user",
 =======
@@ -1635,6 +1711,7 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "plan": {
           "name": "plan",
@@ -1644,6 +1721,8 @@
           "notNull": false,
           "default": "'NONE'"
         },
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "isPro": {
           "name": "isPro",
           "type": "boolean",
@@ -1679,8 +1758,12 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.502'"
+=======
+          "default": "'2024-09-25 11:07:58.977'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updateAt": {
           "name": "updateAt",
@@ -1731,42 +1814,6 @@
           ]
         }
       }
-    },
-    "public.verificationToken": {
-      "name": "verificationToken",
-      "schema": "",
-      "columns": {
-        "identifier": {
-          "name": "identifier",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "token": {
-          "name": "token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "verificationToken_identifier_token_pk": {
-          "name": "verificationToken_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
     },
     "public.intolerences": {
       "name": "intolerences",
@@ -1827,7 +1874,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-11 07:42:14.497'"
+          "default": "'2024-09-25 11:07:58.971'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1899,6 +1946,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "askEstimateId": {
           "name": "askEstimateId",
@@ -1906,6 +1954,8 @@
           "primaryKey": false,
           "notNull": false
         },
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "total": {
           "name": "total",
           "type": "integer",
@@ -1925,17 +1975,27 @@
           "notNull": true
 >>>>>>> Stashed changes
         },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
 <<<<<<< Updated upstream
           "notNull": true,
+<<<<<<< HEAD
           "default": "'2024-09-11 07:42:14.469'"
 =======
           "notNull": false,
           "default": "'2024-09-24 17:21:43.742'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.933'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1947,12 +2007,12 @@
       "indexes": {},
 <<<<<<< Updated upstream
       "foreignKeys": {
-        "invoice_askEstimateId_ask_estimate_id_fk": {
-          "name": "invoice_askEstimateId_ask_estimate_id_fk",
+        "invoice_sessionId_pro_session_id_fk": {
+          "name": "invoice_sessionId_pro_session_id_fk",
           "tableFrom": "invoice",
-          "tableTo": "ask_estimate",
+          "tableTo": "pro_session",
           "columnsFrom": [
-            "askEstimateId"
+            "sessionId"
           ],
           "columnsTo": [
             "id"
@@ -1961,6 +2021,83 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.invoice_options": {
+      "name": "invoice_options",
+      "schema": "",
+      "columns": {
+        "invoiceId": {
+          "name": "invoiceId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "optionId": {
+          "name": "optionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invoice_options_invoiceId_invoice_id_fk": {
+          "name": "invoice_options_invoiceId_invoice_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "invoice",
+          "columnsFrom": [
+            "invoiceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invoice_options_optionId_options_id_fk": {
+          "name": "invoice_options_optionId_options_id_fk",
+          "tableFrom": "invoice_options",
+          "tableTo": "options",
+          "columnsFrom": [
+            "optionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.job": {
+      "name": "job",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -2035,11 +2172,15 @@
           "primaryKey": false,
 <<<<<<< Updated upstream
           "notNull": false,
+<<<<<<< HEAD
           "default": "'2024-09-11 07:42:14.463'"
 =======
           "notNull": true,
           "default": "'2024-09-24 17:21:43.684'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.926'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2065,6 +2206,187 @@
           "columnsFrom": [
             "companyId"
 >>>>>>> Stashed changes
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.notification": {
+      "name": "notification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notificationType": {
+          "name": "notificationType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "new": {
+          "name": "new",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notification_userId_user_id_fk": {
+          "name": "notification_userId_user_id_fk",
+          "tableFrom": "notification",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.observations": {
+      "name": "observations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-25 11:07:58.964'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.options": {
+      "name": "options",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'2024-09-25 11:07:58.934'"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "options_companyId_company_id_fk": {
+          "name": "options_companyId_company_id_fk",
+          "tableFrom": "options",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
           ],
           "columnsTo": [
             "id"
@@ -2180,6 +2502,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.pro_session": {
       "name": "pro_session",
@@ -2194,17 +2517,23 @@
         "proId": {
           "name": "proId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.pets_allergies": {
       "name": "pets_allergies",
       "schema": "",
       "columns": {
         "petId": {
           "name": "petId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "clientId": {
           "name": "clientId",
@@ -2216,6 +2545,8 @@
           "name": "reportId",
           "type": "text",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "allergyId": {
           "name": "allergyId",
           "type": "text",
@@ -2378,7 +2709,10 @@
         "reportId": {
           "name": "reportId",
           "type": "text",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "primaryKey": false,
           "notNull": false
         },
@@ -2388,15 +2722,21 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "serviceId": {
           "name": "serviceId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "beginAt": {
           "name": "beginAt",
           "type": "date",
@@ -2437,11 +2777,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.491'"
 =======
           "default": "'2024-09-24 17:21:43.742'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.964'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2503,8 +2847,11 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "pro_session_serviceId_service_id_fk": {
           "name": "pro_session_serviceId_service_id_fk",
@@ -2518,12 +2865,16 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.project": {
       "name": "project",
@@ -2531,6 +2882,10 @@
     "public.product": {
       "name": "product",
 >>>>>>> Stashed changes
+=======
+    "public.product": {
+      "name": "product",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -2545,6 +2900,7 @@
           "primaryKey": false,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "ownerId": {
           "name": "ownerId",
@@ -2564,10 +2920,15 @@
         "description": {
           "name": "description",
 >>>>>>> Stashed changes
+=======
+        "description": {
+          "name": "description",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "beginAt": {
           "name": "beginAt",
@@ -2591,6 +2952,8 @@
         "note": {
           "name": "note",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "quantity": {
           "name": "quantity",
           "type": "integer",
@@ -2599,11 +2962,15 @@
         },
         "companyId": {
           "name": "companyId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "link": {
           "name": "link",
@@ -2611,23 +2978,32 @@
           "primaryKey": false,
           "notNull": false
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "unitPrice": {
           "name": "unitPrice",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.478'"
 =======
           "default": "'2024-09-24 17:21:43.696'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.942'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2638,6 +3014,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "project_ownerId_company_id_fk": {
           "name": "project_ownerId_company_id_fk",
@@ -2646,13 +3023,18 @@
           "columnsFrom": [
             "ownerId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "product_companyId_company_id_fk": {
           "name": "product_companyId_company_id_fk",
           "tableFrom": "product",
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -2664,6 +3046,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.ratings": {
       "name": "ratings",
@@ -2671,6 +3054,10 @@
     "public.progression": {
       "name": "progression",
 >>>>>>> Stashed changes
+=======
+    "public.progression": {
+      "name": "progression",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -2679,6 +3066,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "rate": {
           "name": "rate",
@@ -2760,6 +3148,8 @@
     "public.service": {
       "name": "service",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "docs": {
           "name": "docs",
           "type": "boolean",
@@ -2796,7 +3186,10 @@
     },
     "public.project": {
       "name": "project",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -2805,6 +3198,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "image": {
           "name": "image",
@@ -2815,6 +3209,8 @@
         "name": {
           "name": "name",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "title": {
           "name": "title",
           "type": "text",
@@ -2823,11 +3219,15 @@
         },
         "ownerId": {
           "name": "ownerId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "description": {
           "name": "description",
@@ -2835,10 +3235,15 @@
         "color": {
           "name": "color",
 >>>>>>> Stashed changes
+=======
+        "color": {
+          "name": "color",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "price": {
           "name": "price",
@@ -2849,6 +3254,8 @@
         "proId": {
           "name": "proId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "location": {
           "name": "location",
           "type": "text",
@@ -2876,11 +3283,15 @@
         },
         "note": {
           "name": "note",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "duration": {
           "name": "duration",
@@ -2890,6 +3301,11 @@
           "name": "link",
           "type": "text",
 >>>>>>> Stashed changes
+=======
+        "link": {
+          "name": "link",
+          "type": "text",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "primaryKey": false,
           "notNull": false
         },
@@ -2898,11 +3314,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.480'"
 =======
           "default": "'2024-09-24 17:21:43.704'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.946'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2913,6 +3333,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "service_proId_company_id_fk": {
           "name": "service_proId_company_id_fk",
@@ -2921,13 +3342,18 @@
           "columnsFrom": [
             "proId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "project_ownerId_company_id_fk": {
           "name": "project_ownerId_company_id_fk",
           "tableFrom": "project",
           "tableTo": "company",
           "columnsFrom": [
             "ownerId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -2939,6 +3365,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.task": {
       "name": "task",
@@ -2971,6 +3398,8 @@
         "color": {
           "name": "color",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.projects_invitees": {
       "name": "projects_invitees",
       "schema": "",
@@ -3038,11 +3467,15 @@
         },
         "comment": {
           "name": "comment",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "location": {
           "name": "location",
@@ -3050,10 +3483,15 @@
         "proId": {
           "name": "proId",
 >>>>>>> Stashed changes
+=======
+        "proId": {
+          "name": "proId",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "beginAt": {
           "name": "beginAt",
@@ -3067,6 +3505,8 @@
           "primaryKey": false,
           "notNull": false
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "writerId": {
           "name": "writerId",
           "type": "text",
@@ -3079,18 +3519,25 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.481'"
 =======
           "default": "'2024-09-24 17:21:43.707'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.947'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3101,6 +3548,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "task_ownerId_company_id_fk": {
           "name": "task_ownerId_company_id_fk",
@@ -3109,6 +3557,8 @@
           "columnsFrom": [
             "ownerId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "ratings_proId_company_id_fk": {
           "name": "ratings_proId_company_id_fk",
           "tableFrom": "ratings",
@@ -3128,7 +3578,10 @@
           "tableTo": "user",
           "columnsFrom": [
             "writerId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3140,6 +3593,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.users_newsletters": {
       "name": "users_newsletters",
@@ -3148,17 +3602,23 @@
         "userId": {
           "name": "userId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.receipt_category": {
       "name": "receipt_category",
       "schema": "",
       "columns": {
         "receiptId": {
           "name": "receiptId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "newsletterId": {
           "name": "newsletterId",
@@ -3166,6 +3626,10 @@
         "categoryId": {
           "name": "categoryId",
 >>>>>>> Stashed changes
+=======
+        "categoryId": {
+          "name": "categoryId",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -3173,6 +3637,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "users_newsletters_userId_user_id_fk": {
           "name": "users_newsletters_userId_user_id_fk",
@@ -3181,13 +3646,18 @@
           "columnsFrom": [
             "userId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "receipt_category_receiptId_receipt_id_fk": {
           "name": "receipt_category_receiptId_receipt_id_fk",
           "tableFrom": "receipt_category",
           "tableTo": "receipt",
           "columnsFrom": [
             "receiptId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3195,6 +3665,7 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "users_newsletters_newsletterId_newsletter_id_fk": {
           "name": "users_newsletters_newsletterId_newsletter_id_fk",
@@ -3203,13 +3674,18 @@
           "columnsFrom": [
             "newsletterId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "receipt_category_categoryId_category_id_fk": {
           "name": "receipt_category_categoryId_category_id_fk",
           "tableFrom": "receipt_category",
           "tableTo": "category",
           "columnsFrom": [
             "categoryId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3221,6 +3697,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.invoice_options": {
       "name": "invoice_options",
@@ -3229,17 +3706,23 @@
         "invoiceId": {
           "name": "invoiceId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.receipt_product": {
       "name": "receipt_product",
       "schema": "",
       "columns": {
         "receiptId": {
           "name": "receiptId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "optionId": {
           "name": "optionId",
@@ -3247,6 +3730,10 @@
         "productId": {
           "name": "productId",
 >>>>>>> Stashed changes
+=======
+        "productId": {
+          "name": "productId",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -3254,6 +3741,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "invoice_options_invoiceId_invoice_id_fk": {
           "name": "invoice_options_invoiceId_invoice_id_fk",
@@ -3262,13 +3750,18 @@
           "columnsFrom": [
             "invoiceId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "receipt_product_receiptId_receipt_id_fk": {
           "name": "receipt_product_receiptId_receipt_id_fk",
           "tableFrom": "receipt_product",
           "tableTo": "receipt",
           "columnsFrom": [
             "receiptId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3276,6 +3769,7 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "invoice_options_optionId_options_id_fk": {
           "name": "invoice_options_optionId_options_id_fk",
@@ -3284,13 +3778,18 @@
           "columnsFrom": [
             "optionId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "receipt_product_productId_product_id_fk": {
           "name": "receipt_product_productId_product_id_fk",
           "tableFrom": "receipt_product",
           "tableTo": "product",
           "columnsFrom": [
             "productId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3302,6 +3801,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.options": {
       "name": "options",
@@ -3309,6 +3809,10 @@
     "public.receipt": {
       "name": "receipt",
 >>>>>>> Stashed changes
+=======
+    "public.receipt": {
+      "name": "receipt",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -3317,6 +3821,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "title": {
           "name": "title",
@@ -3327,6 +3832,8 @@
         "description": {
           "name": "description",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "image": {
           "name": "image",
           "type": "text",
@@ -3335,11 +3842,15 @@
         },
         "companyId": {
           "name": "companyId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "price": {
           "name": "price",
@@ -3352,17 +3863,23 @@
           "type": "text",
           "primaryKey": false,
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "totalPrice": {
           "name": "totalPrice",
           "type": "integer",
           "primaryKey": false,
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "notNull": true,
           "default": "'2024-09-11 07:42:14.471'"
@@ -3370,6 +3887,10 @@
           "notNull": false,
           "default": "'2024-09-24 17:21:43.696'"
 >>>>>>> Stashed changes
+=======
+          "notNull": false,
+          "default": "'2024-09-25 11:07:58.942'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3380,6 +3901,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "options_companyId_company_id_fk": {
           "name": "options_companyId_company_id_fk",
@@ -3389,6 +3911,11 @@
           "name": "receipt_companyId_company_id_fk",
           "tableFrom": "receipt",
 >>>>>>> Stashed changes
+=======
+        "receipt_companyId_company_id_fk": {
+          "name": "receipt_companyId_company_id_fk",
+          "tableFrom": "receipt",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
@@ -3403,6 +3930,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.progression": {
       "name": "progression",
@@ -3410,6 +3938,10 @@
     "public.report_template": {
       "name": "report_template",
 >>>>>>> Stashed changes
+=======
+    "public.report_template": {
+      "name": "report_template",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -3418,6 +3950,7 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "docs": {
           "name": "docs",
@@ -3516,6 +4049,8 @@
           "name": "optionId",
           "type": "text",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "image": {
           "name": "image",
           "type": "text",
@@ -3550,13 +4085,17 @@
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "session_options_sessionId_pro_session_id_fk": {
           "name": "session_options_sessionId_pro_session_id_fk",
@@ -3578,13 +4117,18 @@
           "columnsFrom": [
             "optionId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "report_template_owner_id_user_id_fk": {
           "name": "report_template_owner_id_user_id_fk",
           "tableFrom": "report_template",
           "tableTo": "user",
           "columnsFrom": [
             "owner_id"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3635,11 +4179,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.485'"
 =======
           "default": "now()"
 >>>>>>> Stashed changes
+=======
+          "default": "now()"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3667,6 +4215,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.observations": {
       "name": "observations",
@@ -3711,6 +4260,8 @@
     },
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.report_topic": {
       "name": "report_topic",
       "schema": "",
@@ -3760,6 +4311,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.receipt": {
       "name": "receipt",
@@ -3767,6 +4319,10 @@
     "public.service": {
       "name": "service",
 >>>>>>> Stashed changes
+=======
+    "public.service": {
+      "name": "service",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
       "schema": "",
       "columns": {
         "id": {
@@ -3781,6 +4337,7 @@
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "companyId": {
           "name": "companyId",
@@ -3788,14 +4345,21 @@
         "name": {
           "name": "name",
 >>>>>>> Stashed changes
+=======
+        "name": {
+          "name": "name",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "totalPrice": {
           "name": "totalPrice",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "description": {
           "name": "description",
           "type": "text",
@@ -3804,11 +4368,15 @@
         },
         "price": {
           "name": "price",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "createdAt": {
           "name": "createdAt",
@@ -3853,10 +4421,15 @@
         "proId": {
           "name": "proId",
 >>>>>>> Stashed changes
+=======
+        "proId": {
+          "name": "proId",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "productId": {
           "name": "productId",
@@ -3927,6 +4500,11 @@
           "name": "duration",
           "type": "integer",
 >>>>>>> Stashed changes
+=======
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "primaryKey": false,
           "notNull": false
         },
@@ -3935,11 +4513,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.485'"
 =======
           "default": "now()"
 >>>>>>> Stashed changes
+=======
+          "default": "now()"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3950,6 +4532,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "topic_companyId_company_id_fk": {
           "name": "topic_companyId_company_id_fk",
@@ -3958,13 +4541,18 @@
           "columnsFrom": [
             "companyId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "service_proId_company_id_fk": {
           "name": "service_proId_company_id_fk",
           "tableFrom": "service",
           "tableTo": "company",
           "columnsFrom": [
             "proId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -3976,6 +4564,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.job": {
       "name": "job",
@@ -3984,17 +4573,23 @@
         "id": {
           "name": "id",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.session": {
       "name": "session",
       "schema": "",
       "columns": {
         "sessionToken": {
           "name": "sessionToken",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "title": {
           "name": "title",
@@ -4020,10 +4615,13 @@
       "columns": {
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "userId": {
           "name": "userId",
           "type": "text",
           "primaryKey": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "notNull": false
         },
@@ -4033,6 +4631,8 @@
           "primaryKey": false,
           "notNull": false
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "notNull": true
         },
         "expires": {
@@ -4040,11 +4640,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "users_jobs_userId_user_id_fk": {
           "name": "users_jobs_userId_user_id_fk",
@@ -4054,6 +4658,11 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
 >>>>>>> Stashed changes
+=======
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
+          "tableFrom": "session",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "tableTo": "user",
           "columnsFrom": [
             "userId"
@@ -4063,6 +4672,7 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         },
         "users_jobs_jobId_job_id_fk": {
@@ -4079,11 +4689,14 @@
           "onUpdate": "no action"
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.receip_category": {
       "name": "receip_category",
@@ -4092,17 +4705,23 @@
         "receiptId": {
           "name": "receiptId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.session_options": {
       "name": "session_options",
       "schema": "",
       "columns": {
         "sessionId": {
           "name": "sessionId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "categoryId": {
           "name": "categoryId",
@@ -4110,6 +4729,10 @@
         "optionId": {
           "name": "optionId",
 >>>>>>> Stashed changes
+=======
+        "optionId": {
+          "name": "optionId",
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -4117,6 +4740,7 @@
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "receip_category_receiptId_receipt_id_fk": {
           "name": "receip_category_receiptId_receipt_id_fk",
@@ -4125,13 +4749,18 @@
           "columnsFrom": [
             "receiptId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "session_options_sessionId_pro_session_id_fk": {
           "name": "session_options_sessionId_pro_session_id_fk",
           "tableFrom": "session_options",
           "tableTo": "pro_session",
           "columnsFrom": [
             "sessionId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -4139,6 +4768,7 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "receip_category_categoryId_category_id_fk": {
           "name": "receip_category_categoryId_category_id_fk",
@@ -4147,13 +4777,18 @@
           "columnsFrom": [
             "categoryId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "session_options_optionId_options_id_fk": {
           "name": "session_options_optionId_options_id_fk",
           "tableFrom": "session_options",
           "tableTo": "options",
           "columnsFrom": [
             "optionId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -4165,6 +4800,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.pets_allergies": {
       "name": "pets_allergies",
@@ -4173,6 +4809,8 @@
         "petId": {
           "name": "petId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.task": {
       "name": "task",
       "schema": "",
@@ -4191,11 +4829,15 @@
         },
         "ownerId": {
           "name": "ownerId",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "allergyId": {
           "name": "allergyId",
@@ -4243,6 +4885,8 @@
         "petId": {
           "name": "petId",
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "description": {
           "name": "description",
           "type": "text",
@@ -4251,11 +4895,15 @@
         },
         "color": {
           "name": "color",
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "deseaseId": {
           "name": "deseaseId",
@@ -4263,6 +4911,8 @@
           "primaryKey": false,
           "notNull": false
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "location": {
           "name": "location",
           "type": "text",
@@ -4286,18 +4936,26 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
           "default": "'2024-09-24 17:21:43.714'"
+=======
+          "default": "'2024-09-25 11:07:58.950'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "pets_deseases_petId_pets_id_fk": {
           "name": "pets_deseases_petId_pets_id_fk",
@@ -4319,13 +4977,18 @@
           "columnsFrom": [
             "deseaseId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "task_ownerId_company_id_fk": {
           "name": "task_ownerId_company_id_fk",
           "tableFrom": "task",
           "tableTo": "company",
           "columnsFrom": [
             "ownerId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -4337,6 +5000,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "public.pets_intolerences": {
       "name": "pets_intolerences",
@@ -4353,6 +5017,8 @@
           "type": "text",
           "primaryKey": false,
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.topic": {
       "name": "topic",
       "schema": "",
@@ -4386,18 +5052,26 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
           "default": "'2024-09-24 17:21:43.725'"
+=======
+          "default": "'2024-09-25 11:07:58.955'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "pets_intolerences_petId_pets_id_fk": {
           "name": "pets_intolerences_petId_pets_id_fk",
@@ -4419,13 +5093,18 @@
           "columnsFrom": [
             "intolerenceId"
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         "topic_companyId_company_id_fk": {
           "name": "topic_companyId_company_id_fk",
           "tableFrom": "topic",
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
           ],
           "columnsTo": [
             "id"
@@ -4476,11 +5155,15 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
           "default": "'2024-09-11 07:42:14.508'"
 =======
           "default": "'2024-09-24 17:21:43.730'"
 >>>>>>> Stashed changes
+=======
+          "default": "'2024-09-25 11:07:58.957'"
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -4521,7 +5204,144 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+    "public.users_jobs": {
+      "name": "users_jobs",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jobId": {
+          "name": "jobId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_jobs_userId_user_id_fk": {
+          "name": "users_jobs_userId_user_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_jobs_jobId_job_id_fk": {
+          "name": "users_jobs_jobId_job_id_fk",
+          "tableFrom": "users_jobs",
+          "tableTo": "job",
+          "columnsFrom": [
+            "jobId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.users_newsletters": {
+      "name": "users_newsletters",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "newsletterId": {
+          "name": "newsletterId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_newsletters_userId_user_id_fk": {
+          "name": "users_newsletters_userId_user_id_fk",
+          "tableFrom": "users_newsletters",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_newsletters_newsletterId_newsletter_id_fk": {
+          "name": "users_newsletters_newsletterId_newsletter_id_fk",
+          "tableFrom": "users_newsletters",
+          "tableTo": "newsletter",
+          "columnsFrom": [
+            "newsletterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.verificationToken": {
+      "name": "verificationToken",
+      "schema": "",
+      "columns": {
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "verificationToken_identifier_token_pk": {
+          "name": "verificationToken_identifier_token_pk",
+          "columns": [
+            "identifier",
+            "token"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.widgets": {
       "name": "widgets",
 =======
@@ -4735,6 +5555,7 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+<<<<<<< HEAD
     },
 <<<<<<< Updated upstream
     "public.notification": {
@@ -5068,6 +5889,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     }
   },
   "enums": {
@@ -5108,8 +5931,11 @@
         "none"
       ]
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.company_membership_role": {
       "name": "company_membership_role",
       "schema": "public",
@@ -5120,7 +5946,10 @@
         "ADMIN"
       ]
     },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.plan": {
       "name": "plan",
       "schema": "public",
@@ -5131,8 +5960,11 @@
         "NONE"
       ]
     },
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.notificationType": {
       "name": "notificationType",
       "schema": "public",
@@ -5143,7 +5975,10 @@
         "newAskReservation"
       ]
     },
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     "public.petType": {
       "name": "petType",
       "schema": "public",
@@ -5192,6 +6027,7 @@
         "Square",
         "Rectangle"
       ]
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     },
     "public.notificationType": {
@@ -5205,6 +6041,8 @@
       ]
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> c6c0955d4bbb6749ebc336179a69ab350d4c3f63
     }
   },
   "schemas": {},

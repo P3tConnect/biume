@@ -18,7 +18,7 @@ export const report = pgTable("report", {
       onDelete: "cascade",
     },
   ),
-  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 

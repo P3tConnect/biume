@@ -1,20 +1,21 @@
-import NextAuth from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import Credentials from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
-import Resend from "next-auth/providers/resend";
-import { db } from "./db";
-import { user } from "../db/user";
-import { sessions } from "../db/session";
-import { accounts } from "../db/accounts";
-import { verificationTokens } from "../db/verificationToken";
-import { authenticator } from "../db";
 import { Adapter, AdapterUser } from "next-auth/adapters";
-import { logger } from "./logger";
-import { stripe } from "./stripe";
-import { user as dbUser } from "@/src/db";
+
+import Credentials from "next-auth/providers/credentials";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import FacebookProvider from "next-auth/providers/facebook";
+import GoogleProvider from "next-auth/providers/google";
+import NextAuth from "next-auth";
+import Resend from "next-auth/providers/resend";
+import { accounts } from "../db/accounts";
+import { authenticators } from "../db/authenticator";
+import { db } from "./db";
+import { user as dbUser } from "@/src/db/user";
 import { eq } from "drizzle-orm";
+import { logger } from "./logger";
+import { sessions } from "../db/session";
+import { stripe } from "./stripe";
+import { user } from "../db/user";
+import { verificationTokens } from "../db/verificationToken";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -22,7 +23,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     accountsTable: accounts,
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
-    authenticatorsTable: authenticator,
+    authenticatorsTable: authenticators,
   }) as Adapter,
   providers: [
     Credentials({
