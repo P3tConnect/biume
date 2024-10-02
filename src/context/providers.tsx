@@ -12,29 +12,29 @@ import { safeConfig } from "../lib";
 const Providers = async ({ children }: PropsWithChildren) => {
   const queryClient = new QueryClient();
 
-  // useEffect(() => {
-  //   posthog.init(safeConfig.NEXT_PUBLIC_POSTHOG_KEY, {
-  //     api_host: safeConfig.NEXT_PUBLIC_POSTHOG_HOST,
-  //     person_profiles: "always",
-  //   });
-  // }, []);
+  useEffect(() => {
+    posthog.init(safeConfig.NEXT_PUBLIC_POSTHOG_KEY, {
+      api_host: safeConfig.NEXT_PUBLIC_POSTHOG_HOST,
+      person_profiles: "always",
+    });
+  }, []);
 
   return (
-    // <PostHogProvider client={posthog}>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="light"
-        enableSystem={false}
-        disableTransitionOnChange={true}
-      >
-        <TooltipProvider disableHoverableContent>
-          {children}
-          <Toaster />
-        </TooltipProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-    // </PostHogProvider>
+    <PostHogProvider client={posthog}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange={true}
+        >
+          <TooltipProvider disableHoverableContent>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </PostHogProvider>
   );
 };
 
