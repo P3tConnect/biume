@@ -1,7 +1,8 @@
+import { ZSAError, createServerAction, createServerActionProcedure } from "zsa";
+
+import { companyMembership } from "../db/company_membership";
 import { currentUser } from "./current-user";
-import { createServerAction, createServerActionProcedure, ZSAError } from "zsa";
 import { db } from "./db";
-import { company, companyMembership } from "../db";
 import { eq } from "drizzle-orm";
 
 export const action = createServerAction();

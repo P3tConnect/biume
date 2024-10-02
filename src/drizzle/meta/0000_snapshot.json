@@ -1,5 +1,5 @@
 {
-  "id": "9a210793-ae06-4875-9463-cfe8f1984f78",
+  "id": "77c9e83a-a749-4b46-af1b-a53ceeb502a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -147,7 +147,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.457'"
+          "default": "'2024-09-25 11:07:27.255'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -194,7 +194,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.449'"
+          "default": "'2024-09-25 11:07:27.247'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -289,7 +289,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.403'"
+          "default": "'2024-09-25 11:07:27.209'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -516,7 +516,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.439'"
+          "default": "'2024-09-25 11:07:27.239'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -590,7 +590,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.389'"
+          "default": "'2024-09-25 11:07:27.198'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -651,7 +651,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.416'"
+          "default": "'2024-09-25 11:07:27.220'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -706,7 +706,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.441'"
+          "default": "'2024-09-25 11:07:27.241'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -987,7 +987,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.435'"
+          "default": "'2024-09-25 11:07:27.235'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1040,7 +1040,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.395'"
+          "default": "'2024-09-25 11:07:27.202'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1101,7 +1101,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.462'"
+          "default": "'2024-09-25 11:07:27.259'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1156,7 +1156,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.396'"
+          "default": "'2024-09-25 11:07:27.202'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1218,6 +1218,133 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripeId": {
+          "name": "stripeId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isPro": {
+          "name": "isPro",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "locked": {
+          "name": "locked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "lang": {
+          "name": "lang",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'fr'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'2024-09-25 11:07:27.256'"
+        },
+        "updateAt": {
+          "name": "updateAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_address_address_id_fk": {
+          "name": "user_address_address_id_fk",
+          "tableFrom": "user",
+          "tableTo": "address",
+          "columnsFrom": [
+            "address"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
+    },
     "public.intolerences": {
       "name": "intolerences",
       "schema": "",
@@ -1251,7 +1378,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-24 13:47:36.452'"
+          "default": "'2024-09-25 11:07:27.250'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1306,7 +1433,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-24 13:47:36.408'"
+          "default": "'2024-09-25 11:07:27.212'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1450,7 +1577,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.399'"
+          "default": "'2024-09-25 11:07:27.205'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1578,7 +1705,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.443'"
+          "default": "'2024-09-25 11:07:27.242'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1631,7 +1758,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-09-24 13:47:36.409'"
+          "default": "'2024-09-25 11:07:27.214'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1944,12 +2071,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "serviceId": {
-          "name": "serviceId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "beginAt": {
           "name": "beginAt",
           "type": "date",
@@ -1990,7 +2111,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.443'"
+          "default": "'2024-09-25 11:07:27.243'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2052,19 +2173,6 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
-        },
-        "pro_session_serviceId_service_id_fk": {
-          "name": "pro_session_serviceId_service_id_fk",
-          "tableFrom": "pro_session",
-          "tableTo": "service",
-          "columnsFrom": [
-            "serviceId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2115,7 +2223,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.417'"
+          "default": "'2024-09-25 11:07:27.220'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2257,7 +2365,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.421'"
+          "default": "'2024-09-25 11:07:27.224'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2380,7 +2488,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.422'"
+          "default": "'2024-09-25 11:07:27.225'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2552,7 +2660,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.417'"
+          "default": "'2024-09-25 11:07:27.220'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2990,7 +3098,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.426'"
+          "default": "'2024-09-25 11:07:27.228'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3051,7 +3159,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.433'"
+          "default": "'2024-09-25 11:07:27.234'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3118,7 +3226,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-09-24 13:47:36.436'"
+          "default": "'2024-09-25 11:07:27.236'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3158,133 +3266,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
-    },
-    "public.user": {
-      "name": "user",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripeId": {
-          "name": "stripeId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "isPro": {
-          "name": "isPro",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "isAdmin": {
-          "name": "isAdmin",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "locked": {
-          "name": "locked",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "lang": {
-          "name": "lang",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'fr'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-09-24 13:47:36.459'"
-        },
-        "updateAt": {
-          "name": "updateAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_address_address_id_fk": {
-          "name": "user_address_address_id_fk",
-          "tableFrom": "user",
-          "tableTo": "address",
-          "columnsFrom": [
-            "address"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "user_email_unique": {
-          "name": "user_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      }
     },
     "public.users_jobs": {
       "name": "users_jobs",

@@ -4,10 +4,6 @@ dotenv.config();
 
 interface ENV {
   DATABASE_URL: string | undefined;
-  DATABASE_HOST: string | undefined;
-  DATABASE_NAME: string | undefined;
-  DATABASE_USER: string | undefined;
-  DATABASE_PASSWORD: string | undefined;
   RESEND_API_KEY: string | undefined;
   TRIGGER_PUBLIC_API_KEY: string | undefined;
   TRIGGER_SECRET_KEY: string | undefined;
@@ -20,14 +16,14 @@ interface ENV {
   GOOGLE_CLIENT_SECRET: string | undefined;
   FACEBOOK_CLIENT_ID: string | undefined;
   FACEBOOK_CLIENT_SECRET: string | undefined;
+  NEXT_PUBLIC_POSTHOG_KEY: string | undefined;
+  NEXT_PUBLIC_POSTHOG_HOST: string | undefined;
+  STRIPE_SECRET_KEY: string | undefined;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string | undefined;
 }
 
 interface Config {
   DATABASE_URL: string;
-  DATABASE_HOST: string;
-  DATABASE_NAME: string;
-  DATABASE_USER: string;
-  DATABASE_PASSWORD: string;
   RESEND_API_KEY: string;
   TRIGGER_PUBLIC_API_KEY: string;
   TRIGGER_SECRET_KEY: string;
@@ -40,6 +36,10 @@ interface Config {
   GOOGLE_CLIENT_SECRET: string;
   FACEBOOK_CLIENT_ID: string;
   FACEBOOK_CLIENT_SECRET: string;
+  NEXT_PUBLIC_POSTHOG_KEY: string;
+  NEXT_PUBLIC_POSTHOG_HOST: string;
+  STRIPE_SECRET_KEY: string;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
 }
 
 const getConfig = (): ENV => {
@@ -57,10 +57,11 @@ const getConfig = (): ENV => {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
     FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
-    DATABASE_HOST: process.env.DATABASE_HOST,
-    DATABASE_NAME: process.env.DATABASE_NAME,
-    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
-    DATABASE_USER: process.env.DATABASE_USER,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   };
 };
 

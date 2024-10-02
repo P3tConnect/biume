@@ -1,9 +1,6 @@
 "use server";
 import { z } from "zod";
-import {
-  companyAddress,
-  CreateCompanyAddressSchema,
-} from "../db/companyAddress";
+import { companyAddress, CreateCompanyAddressSchema } from "../db";
 import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";

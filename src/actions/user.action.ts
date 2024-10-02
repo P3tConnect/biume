@@ -1,19 +1,23 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, db, signIn, signOut } from "../lib";
+import { action, clientAction, db, signIn, signOut } from "../lib";
 import { CreateUserSchema, user } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const loginWithCredentials = async ({ email, password }: { email: string, password: string }) => {
-  await signIn("credentials", {
-    email,
-    password,
-    redirect: true,
-    redirectTo: "/dashboard",
+export const loginWithCredentials = action
+  .input(z.object({ email: z.string(), password: z.string() }))
+  .handler(async ({ input }) => {
+    const { email, password } = input;
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: true,
+      redirectTo: "/dashboard",
+    });
   });
-};
 
 export const logout = async () => {
   await signOut();
@@ -29,7 +33,7 @@ export const loginWithGoogle = async () => {
 export const loginWithFacebook = async () => {
   await signIn("facebook", {
     redirect: true,
-    redirectTo: "/dashboard"
+    redirectTo: "/dashboard",
   });
 };
 

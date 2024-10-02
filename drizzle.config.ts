@@ -8,11 +8,6 @@ export default defineConfig({
   out: "./src/drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    host: safeConfig.DATABASE_HOST,
-    port: 5432,
-    user: safeConfig.DATABASE_USER,
-    password: safeConfig.DATABASE_PASSWORD,
-    database: safeConfig.DATABASE_NAME,
-    ssl: false,
+    url: safeConfig.DATABASE_URL,
   },
 });
