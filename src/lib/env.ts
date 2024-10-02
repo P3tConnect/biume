@@ -16,6 +16,10 @@ interface ENV {
   GOOGLE_CLIENT_SECRET: string | undefined;
   FACEBOOK_CLIENT_ID: string | undefined;
   FACEBOOK_CLIENT_SECRET: string | undefined;
+  NEXT_PUBLIC_POSTHOG_KEY: string | undefined;
+  NEXT_PUBLIC_POSTHOG_HOST: string | undefined;
+  STRIPE_SECRET_KEY: string | undefined;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string | undefined;
 }
 
 interface Config {
@@ -32,6 +36,10 @@ interface Config {
   GOOGLE_CLIENT_SECRET: string;
   FACEBOOK_CLIENT_ID: string;
   FACEBOOK_CLIENT_SECRET: string;
+  NEXT_PUBLIC_POSTHOG_KEY: string;
+  NEXT_PUBLIC_POSTHOG_HOST: string;
+  STRIPE_SECRET_KEY: string;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
 }
 
 const getConfig = (): ENV => {
@@ -49,6 +57,11 @@ const getConfig = (): ENV => {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
     FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   };
 };
 
