@@ -1,0 +1,25 @@
+ALTER TABLE "address" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:15.009';--> statement-breakpoint
+ALTER TABLE "allergies" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:15.002';--> statement-breakpoint
+ALTER TABLE "ask_estimate" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.962';--> statement-breakpoint
+ALTER TABLE "bg_jobs" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.994';--> statement-breakpoint
+ALTER TABLE "cancel_policies" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.950';--> statement-breakpoint
+ALTER TABLE "category" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.973';--> statement-breakpoint
+ALTER TABLE "company_membership" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.996';--> statement-breakpoint
+ALTER TABLE "company_address" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.990';--> statement-breakpoint
+ALTER TABLE "company_certifications" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.954';--> statement-breakpoint
+ALTER TABLE "company_disponibilities" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:15.015';--> statement-breakpoint
+ALTER TABLE "company_documents" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.955';--> statement-breakpoint
+ALTER TABLE "intolerences" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:15.005';--> statement-breakpoint
+ALTER TABLE "invoice" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.965';--> statement-breakpoint
+ALTER TABLE "newsletter" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.958';--> statement-breakpoint
+ALTER TABLE "observations" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.998';--> statement-breakpoint
+ALTER TABLE "options" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.967';--> statement-breakpoint
+ALTER TABLE "pro_session" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.998';--> statement-breakpoint
+ALTER TABLE "product" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.974';--> statement-breakpoint
+ALTER TABLE "project" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.978';--> statement-breakpoint
+ALTER TABLE "ratings" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.979';--> statement-breakpoint
+ALTER TABLE "receipt" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.974';--> statement-breakpoint
+ALTER TABLE "task" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.983';--> statement-breakpoint
+ALTER TABLE "topic" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.988';--> statement-breakpoint
+ALTER TABLE "transaction" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:14.991';--> statement-breakpoint
+ALTER TABLE "user" ALTER COLUMN "createdAt" SET DEFAULT '2024-09-25 07:29:15.011';
