@@ -6,13 +6,20 @@ import React from 'react'
 const DashboardCompanyTimetablePage = () => {
   return (
     <>
-    <div className='flex flex-col gap-5'>
-      <TimetableWidget />
-      <div className='flex flex-col gap-5 lg:flex lg:flex-row'>
-        <IncomingReservationsWidget />
-        <ReservationsStatusesWidget />
+      <div className='flex flex-col gap-5'>
+        <TimetableWidget />
+        <div className='flex flex-col gap-5 lg:flex lg:flex-row'>
+          <IncomingReservationsWidget />
+          <ReservationsStatusesWidget />
+        </div>
       </div>
-    </div>
+      <div className='flex flex-col gap-5'>
+        <TimetableWidget />
+        <div className='flex flex-col gap-5 lg:flex lg:flex-row'>
+          <IncomingReservationsWidget />
+          <ReservationsStatusesWidget />
+        </div>
+      </div>
     </>
   )
 }
