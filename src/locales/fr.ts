@@ -2,7 +2,7 @@ export default {
   landingPage: {
     waitlistShortcut: "Inscrivez-vous sur la liste d'attente !",
     title1: "Bienvenue sur",
-    title2: "PawThera.",
+    title2: "PawThera",
     presentation1:
       "Simplifiez la gestion de votre entreprise animalière avec PawThera.",
     presentation2: "Et consacrez votre énergie sur nos amis a quatre pattes.",
