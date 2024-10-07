@@ -16,18 +16,6 @@ export default function Home() {
         <FeaturesSection />
         <CallToActionSection />
         <Footer />
-        {/*<SphereMask />*/}
-        {/* <PricingSection /> */}
-        {/*<CallToActionSection />*/}
-        {/*<SiteFooter />*/}
-        {/*<Particles*/}
-        {/*  className="absolute inset-0 -z-10"*/}
-        {/*  quantity={50}*/}
-        {/*  ease={70}*/}
-        {/*  size={0.05}*/}
-        {/*  staticity={40}*/}
-        {/*  color={"#ffffff"}*/}
-        {/*/>*/}
         <Bubbles />
         <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
           <Image
