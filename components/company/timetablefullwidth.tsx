@@ -1,5 +1,7 @@
 "use client";
 
+import './calendar.css';
+
 import {ArrowLeft, ArrowRight} from "lucide-react";
 import {
   Button,
@@ -191,8 +193,15 @@ const TimeTableFullWidth = () => {
           height={760}
           contentHeight={760}
           dayMaxEvents={3}
-          dayCellClassNames={(info) => {
-            return 'bg-gray-200 border border-gray-400 rounded-lg p-2 hover:bg-gray-300';
+          dayCellClassNames={() => {
+            return 'bg-white';
+          }}
+          dayCellContent={() => {
+            return (
+              <div className="h-full w-full bg-blue-500">
+
+              </div>
+            )
           }}
           // dateClick={(date) => {
           //   console.log(date.date, "date click");

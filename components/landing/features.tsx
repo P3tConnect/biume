@@ -11,6 +11,8 @@ import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 
 import React from "react";
 import { useScopedI18n } from "@/src/locales";
+import Section from "./section";
+import { FeatureScroll1 } from "../feature_scroll";
 
 export default function FeaturesSection() {
   const t = useScopedI18n("landingPage");
@@ -91,29 +93,8 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section id="features" className="h-full w-full overflow-hidden relative">
-      <div className="flex flex-col justify-center h-full w-full items-center content-center py-10 px-10">
-        <div className="bg-gray/75 rounded-[32px] border-1 p-10 border-[#D8D8D8] w-full dark:border-gray-300/50 dark:bg-black dark:bg-opacity-50 dark:backdrop-blur-lg">
-          <div className="flex flex-col text-center justify-center items-center content-center mt-10 px-4">
-            <h1 className="text-[20px] md:text-[24px] font-bold">
-              Notre application
-            </h1>
-            <h1 className="text-[40px] md:text-[75px] font-extrabold leading-[2.5rem] md:leading-[3.5rem]">
-              Les fonctionnalités
-            </h1>
-            <p className="text-[14px] md:text-[16px] font-semibold leading-[1.5rem] md:leading-[3rem] px-2">
-              Ce sont les fonctionnalités que nous avons prévues, aidez-nous à
-              l&apos;améliorer pour en faire votre outil.
-            </p>
-          </div>
-
-          <BentoGrid className="lg:grid-rows-3">
-            {features.map((feature, index) => (
-              <BentoCard key={index} {...feature} />
-            ))}
-          </BentoGrid>
-        </div>
-      </div>
-    </section>
+    <Section title="Fonctionnalités" subtitle="Découvrez les fonctionnalités que nous avons prévus">
+      <FeatureScroll1 />
+    </Section>
   );
 }

@@ -16,6 +16,7 @@ import { sessions } from "../db/session";
 import { stripe } from "./stripe";
 import { user } from "../db/user";
 import { verificationTokens } from "../db/verificationToken";
+import { hash, compare } from "bcryptjs";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -57,7 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user) {
           logger.debug("User not found");
 
-          // const hashedPassword = await handleCryptPassword(userPassword);
+          const hashedPassword = await handleCryptPassword(userPassword);
 
           const createUser = await db
             .insert(dbUser)
@@ -86,10 +87,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return user;
         }
 
-        // if (!(await handleComparePassword(userPassword, user.password!))) {
-        //   logger.debug("Password not correct");
-        //   return null;
-        // }
+        if (!(await handleComparePassword(user.password!, userPassword))) {
+          logger.debug("Password not correct");
+          return null;
+        }
 
         return user;
       },
@@ -140,3 +141,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+const handleCryptPassword = async (password: string) => {
+  return await hash(password, 10);
+};
+
+const handleComparePassword = async (
+  password: string,
+  hashedPassword: string,
+) => {
+  return await compare(password, hashedPassword);
+};

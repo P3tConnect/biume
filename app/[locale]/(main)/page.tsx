@@ -1,33 +1,28 @@
-import { Bubbles } from "@/components/landing/bubbles";
+// import { Bubbles } from "@/components/landing/bubbles";
 import CallToActionSection from "@/components/landing/cta-section";
-import FeaturesSection from "@/components/landing/features-section";
+import FeaturesSection from "@/components/landing/features";
 import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
-import HeroSection from "@/components/landing/hero-section";
-import Image from "next/image";
-import ImagePawthera from "@/public/assets/images/window-pawthera-hero-section.png";
+import Hero from "@/components/landing/hero";
+import Problem from "@/components/landing/problem";
+import { Pricing } from "@/components/landing/pricings";
+import Solution from "@/components/landing/solution";
+import FAQ from "@/components/landing/faq";
 
 export default function Home() {
   return (
-    <>
-      <div className="overflow-hidden relative">
-        <Header />
-        <HeroSection />
-        <FeaturesSection />
-        <CallToActionSection />
-        <Footer />
-        {/*<SphereMask />*/}
-        {/* <PricingSection /> */}
-        {/*<CallToActionSection />*/}
-        {/*<SiteFooter />*/}
-        {/*<Particles*/}
-        {/*  className="absolute inset-0 -z-10"*/}
-        {/*  quantity={50}*/}
-        {/*  ease={70}*/}
-        {/*  size={0.05}*/}
-        {/*  staticity={40}*/}
-        {/*  color={"#ffffff"}*/}
-        {/*/>*/}
+    <main>
+      <Header />
+      <Hero />
+      <Problem />
+      <Solution />
+      <FeaturesSection />
+      {/* <Pricing /> */}
+      <FAQ />
+      <CallToActionSection />
+      <Footer />
+      {/* <Bubbles /> */}
+      {/* <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
         <Bubbles />
         <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
           <Image
@@ -36,8 +31,7 @@ export default function Home() {
             width={1404}
             height={938}
           />
-        </div>
-      </div>
-    </>
+        </div> */}
+    </main>
   );
 }

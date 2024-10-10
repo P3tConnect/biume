@@ -1,31 +1,85 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import Drawer from "./drawer";
+import { Icons } from "@/components/landing/icons";
+import Menu from "./menu";
+import { buttonVariants } from "@/components/ui/button";
+import { siteConfig } from "@/src/config";
+import { cn } from "@/src/lib/utils";
 import Link from "next/link";
-import { ToggleTheme } from "../toggle-theme";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const [addBorder, setAddBorder] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setAddBorder(true);
+      } else {
+        setAddBorder(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-row items-center justify-between light:bg-background dark:bg-background h-auto pt-10 px-4 md:px-16">
-      <Link href="/" className="flex-shrink-0">
-        <Image
-          src="/assets/images/logo-couleur.png"
-          alt="logo Pawthera"
-          width={218}
-          height={66}
-          className="w-20 sm:w-20 md:w-32 lg:w-44"
-        />
-      </Link>
-      <div className="flex flex-row items-center justify-between">
-        <Button
-          onClick={() => {}}
-          className="mr-2 md:mt-0 h-auto md:h-12 px-4 md:px-6 rounded-full bg-black text-white hover:bg-black hover:text-white dark:bg-white dark:text-black dark:hover:bg-white dark:hover:text-black text-sm md:text-base"
+    <header
+      className={
+        "relative sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"
+      }
+    >
+      <div className="flex justify-between items-center container">
+        <Link
+          href="/"
+          title="brand-logo"
+          className="relative mr-6 flex items-center space-x-2"
         >
-          Inscrivez-vous sur la liste d&apos;attente
-        </Button>
-        <ToggleTheme />
+          <Icons.logo className="w-auto h-[40px]" />
+          <span className="font-bold text-xl">{siteConfig.name}</span>
+        </Link>
+
+        <div className="hidden lg:block">
+          <div className="flex items-center ">
+            <nav className="mr-10">
+              <Menu />
+            </nav>
+
+            <div className="gap-2 flex">
+              <Link
+                href="/login"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Login
+              </Link>
+              <Link
+                href="/signup"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "w-full sm:w-auto text-background flex gap-2"
+                )}
+              >
+                <Icons.logo className="h-6 w-6" />
+                Get Started for Free
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="mt-2 cursor-pointer block lg:hidden">
+          <Drawer />
+        </div>
       </div>
-    </div>
+      <hr
+        className={cn(
+          "absolute w-full bottom-0 transition-opacity duration-300 ease-in-out",
+          addBorder ? "opacity-100" : "opacity-0"
+        )}
+      />
+    </header>
   );
 }

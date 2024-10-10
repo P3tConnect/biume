@@ -1,71 +1,62 @@
-import {
-  InstagramLogoIcon,
-  LinkedInLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
-import Image from "next/image";
-
-interface Icon {
-  icon: JSX.Element;
-  url: string;
-}
-
-const icons: Icon[] = [
-  { icon: <LinkedInLogoIcon />, url: "#" },
-  { icon: <InstagramLogoIcon />, url: "#" },
-  { icon: <TwitterLogoIcon />, url: "#" },
-];
-
-type Link = {
-  text: string;
-  url: string;
-};
-
-const links: Link[] = [
-  { text: "About", url: "#" },
-  { text: "Services", url: "#" },
-  { text: "Contact", url: "#" },
-];
+import { Icons } from "@/components/landing/icons";
+import { siteConfig } from "@/src/config";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="flex flex-col gap-y-5 rounded-lg px-7 py-5 md:px-10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2">
-          <Image
-            className="h-24 w-24"
-            src="/assets/svg/Logo couleur.svg"
-            width={120}
-            height={120}
-            alt="MagicUI Logo"
-          />
-        </div>
+    <footer>
+      <div className="max-w-6xl mx-auto py-16 sm:px-10 px-5 pb-0">
+        <a
+          href="/"
+          title={siteConfig.name}
+          className="relative mr-6 flex items-center space-x-2"
+        >
+          <Icons.logo className="w-auto h-[40px]" />
+          <span className="font-bold text-xl">{siteConfig.name}</span>
+        </a>
 
-        <div className="flex gap-x-2">
-          {icons.map((icon, index) => (
-            <a
-              key={index}
-              href={icon.url}
-              className="flex h-5 w-5 items-center justify-center text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-500 hover:dark:text-neutral-100"
-            >
-              {icon.icon}
-            </a>
+        <div className="grid md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 mt-8">
+          {siteConfig.footer.map((section, index) => (
+            <div key={index} className="mb-5">
+              <h2 className="font-semibold">{section.title}</h2>
+              <ul>
+                {section.links.map((link, linkIndex) => (
+                  <li key={linkIndex} className="my-2">
+                    <Link
+                      href={link.href}
+                      className="group inline-flex cursor-pointer items-center justify-start gap-1 text-muted-foreground duration-200 hover:text-foreground hover:opacity-90"
+                    >
+                      {link.icon && link.icon}
+                      {link.text}
+                      <ChevronRight className="h-4 w-4 translate-x-0 transform opacity-0 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:opacity-100" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
-      </div>
-      <div className="flex flex-col justify-between gap-y-5 md:flex-row md:items-center">
-        <ul className="flex flex-col gap-x-5 gap-y-2 text-neutral-500 md:flex-row md:items-center ">
-          {links.map((link, index) => (
-            <li
-              key={index}
-              className="text-[15px]/normal font-medium text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-400 hover:dark:text-neutral-100"
-            >
-              <a href={link.url}>{link.text}</a>
+        <div className="max-w-6xl mx-auto border-t py-2 grid md:grid-cols-2 h-full justify-between w-full grid-cols-1 gap-1">
+          <span className="text-sm tracking-tight text-foreground">
+            Copyright © {new Date().getFullYear()}{" "}
+            <Link href="/" className="cursor-pointer">
+              {siteConfig.name}
+            </Link>{" "}
+            - {siteConfig.description}
+          </span>
+          <ul className="flex justify-start md:justify-end text-sm tracking-tight text-foreground">
+            <li className="mr-3 md:mx-4">
+              <Link href="#" target="_blank" rel="noopener noreferrer">
+                Privacy Policy
+              </Link>
             </li>
-          ))}
-        </ul>
-        <div className="flex items-center justify-between text-sm font-medium tracking-tight text-neutral-500 dark:text-neutral-400">
-          <p>All right reserverd.</p>
+            <li className="mr-3 md:mx-4">
+              <Link href="#" target="_blank" rel="noopener noreferrer">
+                Terms of Service
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
