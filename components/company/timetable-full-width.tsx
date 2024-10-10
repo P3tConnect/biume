@@ -1,5 +1,7 @@
 "use client";
 
+import './calendar.css'
+
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Button,
@@ -145,13 +147,13 @@ const TimeTableFullWidth = () => {
           </div>
         </div>
         <div className="flex flex-row gap-2">
-          <Button variant="secondary" onClick={() => {}} className="rounded-md">
+          <Button variant="secondary" onClick={() => { }} className="rounded-md">
             Mois
           </Button>
-          <Button variant="secondary" onClick={() => {}} className="rounded-md">
+          <Button variant="secondary" onClick={() => { }} className="rounded-md">
             Semaine
           </Button>
-          <Button variant="secondary" onClick={() => {}} className="rounded-md">
+          <Button variant="secondary" onClick={() => { }} className="rounded-md">
             jours
           </Button>
         </div>
@@ -180,8 +182,8 @@ const TimeTableFullWidth = () => {
             left: "",
             right: "",
           }}
-          dayCellClassNames={() => {
-            return "bg-white dark:bg-background";
+          dayCellClassNames={(info) => {
+            return "bg-white font-bold dark:bg-background";
           }}
         />
       </CardContent>
