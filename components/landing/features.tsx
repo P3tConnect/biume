@@ -12,6 +12,7 @@ import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 import React from "react";
 import { useScopedI18n } from "@/src/locales";
 import Section from "./section";
+import { FeatureScroll1 } from "../feature_scroll";
 
 export default function FeaturesSection() {
   const t = useScopedI18n("landingPage");
@@ -93,11 +94,7 @@ export default function FeaturesSection() {
 
   return (
     <Section title="Fonctionnalités" subtitle="Découvrez les fonctionnalités que nous avons prévus">
-      <BentoGrid className="lg:grid-rows-3">
-        {features.map((feature, index) => (
-          <BentoCard key={index} {...feature} />
-        ))}
-      </BentoGrid>
+      <FeatureScroll1 />
     </Section>
   );
 }

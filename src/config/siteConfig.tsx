@@ -11,10 +11,8 @@ export const siteConfig = {
   url: safeConfig.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   keywords: ["SaaS", "Template", "Next.js", "React", "Tailwind CSS"],
   links: {
-    email: "support@acme.ai",
-    twitter: "https://twitter.com/magicuidesign",
-    discord: "https://discord.gg/87p2vpsat5",
-    github: "https://github.com/magicuidesign/magicui",
+    email: "contact@pawthera.com",
+    linkedin: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/",
     instagram: "https://instagram.com/magicuidesign/",
   },
   header: [
@@ -83,10 +81,6 @@ export const siteConfig = {
           },
         ],
       },
-    },
-    {
-      href: "/blog",
-      label: "Blog",
     },
   ],
   pricing: [

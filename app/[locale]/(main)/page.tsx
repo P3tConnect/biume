@@ -5,25 +5,24 @@ import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
 import Hero from "@/components/landing/hero";
 import Problem from "@/components/landing/problem";
-import PricingSection from "@/components/landing/pricings";
+import { Pricing } from "@/components/landing/pricings";
 import Solution from "@/components/landing/solution";
 import FAQ from "@/components/landing/faq";
 
 export default function Home() {
   return (
-    <>
-      <div className="overflow-hidden relative">
-        <Header />
-        <Hero />
-        <Problem />
-        <Solution />
-        <FeaturesSection />
-        <PricingSection />
-        <FAQ />
-        <CallToActionSection />
-        <Footer />
-        {/* <Bubbles /> */}
-        {/* <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
+    <main>
+      <Header />
+      <Hero />
+      <Problem />
+      <Solution />
+      <FeaturesSection />
+      {/* <Pricing /> */}
+      <FAQ />
+      <CallToActionSection />
+      <Footer />
+      {/* <Bubbles /> */}
+      {/* <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
         <Bubbles />
         <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
           <Image
@@ -33,7 +32,6 @@ export default function Home() {
             height={938}
           />
         </div> */}
-      </div>
-    </>
+    </main>
   );
 }

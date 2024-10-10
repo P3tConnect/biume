@@ -7,6 +7,10 @@ const nextConfig = {
         hostname: "i.imgur.com",
         protocol: "https",
       },
+      {
+        hostname: "cdn.magicui.design",
+        protocol: "https",
+      }
     ],
   },
   env: {

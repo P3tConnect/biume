@@ -14,7 +14,7 @@ function HeroPill() {
   return (
     <motion.a
       href="/"
-      className="flex w-auto items-center space-x-2 rounded-full bg-secondary/20 px-2 py-1 ring-accent whitespace-pre"
+      className="flex w-auto items-center space-x-2 rounded-full bg-secondary/20 px-2 py-1 ring-accent whitespace-pre border dark:border-white/10"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease }}
@@ -23,7 +23,7 @@ function HeroPill() {
         📣 Announcement
       </div>
       <p className="text-xs font-medium text-secondary sm:text-sm">
-        Introducing Acme.ai
+        Incoming PawThera App
       </p>
       <svg
         width="12"
@@ -100,7 +100,7 @@ function HeroCTA() {
           href="/signup"
           className={cn(
             buttonVariants({ variant: "secondary" }),
-            "w-full sm:w-auto text-background flex gap-2 rounded-3xl",
+            "w-full sm:w-auto text-background flex gap-2 rounded-3xl dark:text-white",
           )}
         >
           <Icons.logo className="h-6 w-6" />
