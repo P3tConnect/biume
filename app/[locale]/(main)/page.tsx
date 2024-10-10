@@ -1,12 +1,13 @@
-import { Bubbles } from "@/components/landing/bubbles";
+// import { Bubbles } from "@/components/landing/bubbles";
 import CallToActionSection from "@/components/landing/cta-section";
 import FeaturesSection from "@/components/landing/features";
 import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
-import Image from "next/image";
-import ImagePawthera from "@/public/assets/images/window-pawthera-hero-section.png";
 import Hero from "@/components/landing/hero";
 import Problem from "@/components/landing/problem";
+import PricingSection from "@/components/landing/pricings";
+import Solution from "@/components/landing/solution";
+import FAQ from "@/components/landing/faq";
 
 export default function Home() {
   return (
@@ -15,8 +16,11 @@ export default function Home() {
         <Header />
         <Hero />
         <Problem />
-        {/* <FeaturesSection />
-        <CallToActionSection /> */}
+        <Solution />
+        <FeaturesSection />
+        <PricingSection />
+        <FAQ />
+        <CallToActionSection />
         <Footer />
         {/* <Bubbles /> */}
         {/* <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">

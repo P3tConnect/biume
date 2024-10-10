@@ -5,31 +5,28 @@ import { Brain, Shield, Zap } from "lucide-react";
 
 const problems = [
   {
-    title: "Data Overload",
+    title: "Optimisation du temps de travail",
     description:
-      "Businesses struggle to make sense of vast amounts of complex data, missing out on valuable insights that could drive growth and innovation.",
+      "Nous nous sommes rendus comptes que beaucoup de professionnels du secteur animalier n'ont pas ou n'utilisent pas d'outils pour gérer leurs entreprises et la relation client.",
     icon: Brain,
   },
   {
-    title: "Slow Decision-Making",
+    title: "Un outil tout-en-un",
     description:
-      "Traditional data processing methods are too slow, causing businesses to lag behind market changes and miss crucial opportunities.",
+      "Beaucoup d'entreprises du secteur, la plupart du temps, utilisent des outils divers et variés pour différentes tâches.",
     icon: Zap,
   },
   {
-    title: "Data Security Concerns",
+    title: "Sécurité des données",
     description:
-      "With increasing cyber threats, businesses worry about the safety of their sensitive information when adopting new technologies.",
+      "Ajouté à cela, les documents qui sont rédigés sont souvent en l'état sur l'ordinateur et peuvent êtres perdus ou endommagés.",
     icon: Shield,
   },
 ];
 
 export default function Problem() {
   return (
-    <Section
-      title="Problem"
-      subtitle="Manually entering your data is a hassle."
-    >
+    <Section title="Problèmes" subtitle="">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
         {problems.map((problem, index) => (
           <BlurFade key={index} delay={0.2 + index * 0.2} inView>

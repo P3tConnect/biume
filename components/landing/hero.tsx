@@ -46,7 +46,7 @@ function HeroTitles() {
   return (
     <div className="flex w-full max-w-2xl flex-col space-y-4 overflow-hidden pt-8">
       <motion.h1
-        className="text-center text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-6xl"
+        className="text-center text-4xl font-medium leading-tight text-foreground sm:text-5xl md:text-6xl"
         initial={{ filter: "blur(10px)", opacity: 0, y: 50 }}
         animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
         transition={{
@@ -58,7 +58,7 @@ function HeroTitles() {
         {["Automate", "your", "workflow", "with AI"].map((text, index) => (
           <motion.span
             key={index}
-            className="inline-block px-1 md:px-2"
+            className="inline-block px-1 md:px-2 text-balance font-extrabold"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -72,7 +72,7 @@ function HeroTitles() {
         ))}
       </motion.h1>
       <motion.p
-        className="mx-auto max-w-xl text-center text-lg leading-7 text-muted-foreground sm:text-xl sm:leading-9"
+        className="mx-auto max-w-xl text-center text-lg leading-7 text-muted-foreground sm:text-xl sm:leading-9 text-balance"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -100,7 +100,7 @@ function HeroCTA() {
           href="/signup"
           className={cn(
             buttonVariants({ variant: "secondary" }),
-            "w-full sm:w-auto text-background flex gap-2 rounded-3xl"
+            "w-full sm:w-auto text-background flex gap-2 rounded-3xl",
           )}
         >
           <Icons.logo className="h-6 w-6" />
