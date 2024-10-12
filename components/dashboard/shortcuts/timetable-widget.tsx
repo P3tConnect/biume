@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  desktop,
 } from "@/components/ui";
 import {
   ArrowLeft,
@@ -16,13 +17,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useSidebarToggle, useStore } from "@/src/hooks";
+import { useMediaQuery, useSidebarToggle, useStore } from "@/src/hooks";
 import { useEffect, useRef, useState } from "react";
 import { CalendarApi } from "@fullcalendar/core/index.js";
 import { useCurrentLocale } from "@/src/locales";
-import { logger } from "@/src/lib";
+import { cn, logger } from "@/src/lib";
 import { toast } from "sonner";
 import CalendarDropdown from "./components/calendar-dropdown";
+import useWindowSize from "@/src/hooks/use-window-size";
 
 const TimetableWidget = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -32,6 +34,7 @@ const TimetableWidget = () => {
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
   const locale = useCurrentLocale();
+  const { windowSize } = useWindowSize();
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -93,7 +96,7 @@ const TimetableWidget = () => {
   return (
     <Card
       ref={containerRef}
-      className="w-full bg-secondary h-1/2 rounded-2xl border border-border dark:border-white"
+      className={cn("w-full bg-secondary rounded-2xl border border-border dark:border-white")}
     >
       <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle className="text-xl text-white">
@@ -136,8 +139,8 @@ const TimetableWidget = () => {
           firstDay={1}
           selectable={true}
           selectMirror={true}
-          height={375}
-          contentHeight={375}
+          height={windowSize.height! * 0.4}
+          contentHeight={windowSize.height! * 0.4}
           dayMaxEvents={3}
           // dateClick={(date) => {
           //   console.log(date.date, "date click");

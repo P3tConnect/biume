@@ -19,7 +19,7 @@ export function Sidebar({ companyId }: { companyId: string }) {
 
   return (
     <div className={cn(
-      "h-full bg-background m-5 rounded-2xl translate-x-0 transition-[width] ease-in-out duration-200 border border-border",
+      "h-full bg-background m-5 rounded-2xl translate-x-0 transition-[width] ease-in-out duration-200 border border-border z-10",
       sidebar?.isOpen === false ? "w-[68px]" : "w-72",
       "hidden lg:block"
     )}>

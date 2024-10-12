@@ -8,6 +8,7 @@ import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
@@ -31,7 +32,7 @@ export default function Header() {
   return (
     <header
       className={
-        "relative sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"
+        "sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"
       }
     >
       <div className="flex justify-between items-center container">
@@ -40,12 +41,17 @@ export default function Header() {
           title="brand-logo"
           className="relative mr-6 flex items-center space-x-2"
         >
-          <Icons.logo className="w-auto h-[40px]" />
+          <Image
+            width={40}
+            height={40}
+            src="/assets/images/Icone.png"
+            alt="logo pawthera"
+          />
           <span className="font-bold text-xl">{siteConfig.name}</span>
         </Link>
 
         <div className="hidden lg:block">
-          <div className="flex items-center ">
+          <div className="flex items-center">
             <nav className="mr-10">
               <Menu />
             </nav>
@@ -53,14 +59,14 @@ export default function Header() {
             <div className="gap-2 flex">
               <Link
                 href="/login"
-                className={buttonVariants({ variant: "outline" })}
+                className={buttonVariants({ variant: "secondary" })}
               >
                 Login
               </Link>
               <Link
                 href="/signup"
                 className={cn(
-                  buttonVariants({ variant: "default" }),
+                  buttonVariants({ variant: "secondary" }),
                   "w-full sm:w-auto text-background flex gap-2"
                 )}
               >

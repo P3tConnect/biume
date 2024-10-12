@@ -1,4 +1,4 @@
 export * from "./loader";
 export * from "./ui";
-export * from "./company";
+export * from "./company-details";
 export * from "./safari";
