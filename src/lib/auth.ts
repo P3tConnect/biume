@@ -58,38 +58,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user) {
           logger.debug("User not found");
 
-          const hashedPassword = await handleCryptPassword(userPassword);
-
-          const createUser = await db
-            .insert(dbUser)
-            .values({
-              email: userEmail,
-              password: userPassword,
-            })
-            .returning()
-            .execute()
-            .then((res) => res[0]);
-
-          const user = {
-            id: createUser.id,
-            email: createUser.email,
-            emailVerified: createUser.emailVerified,
-            image: createUser.image,
-            stripeId: createUser.stripeId,
-            isPro: createUser.isPro,
-            lang: createUser.lang,
-            isAdmin: createUser.isAdmin,
-            locked: createUser.locked,
-            phone: createUser.phone,
-            password: createUser.password,
-          };
-
-          return user;
+          return null;
         }
 
         if (!(await handleComparePassword(user.password!, userPassword))) {
           logger.debug("Password not correct");
-          return null;
+          throw new Error("Password not correct");
         }
 
         return user;

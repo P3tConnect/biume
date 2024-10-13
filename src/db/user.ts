@@ -1,10 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { pets } from "./pets";
 import { ratings } from "./ratings";
 import { projectsInvitees } from "./projectsInvitees";
@@ -24,6 +19,7 @@ export const user = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
+  firstname: text("firstname"),
   email: text("email").unique().notNull(),
   emailVerified: timestamp("emailVerified"),
   image: text("image"),
