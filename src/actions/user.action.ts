@@ -13,6 +13,9 @@ import { CreateUserSchema, user } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 import * as bcrypt from "bcryptjs";
+import { getCurrentLocale } from "@/src/locales";
+import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 
 export const loginWithCredentials = action
   .input(z.object({ email: z.string(), password: z.string() }))
@@ -63,39 +66,19 @@ export const getUsers = clientAction.handler(async () => {});
 
 export const registerNewUser = action
   .input(registerSchema)
-  .handler(async ({ input, ctx }) => {
-    try {
-      const retreiveUser = await db.query.user.findFirst({
-        where: eq(user.email, input.email),
-      });
+  .handler(async ({ input }) => {
+    const response = await signIn("credentials", {
+      firstname: input.firstname,
+      name: input.name,
+      email: input.email,
+      password: input.password,
+      redirect: false,
+    });
 
-      if (retreiveUser) {
-        throw new ZSAError("ERROR", "User already exists");
-      }
-
-      const hashPassword = await bcrypt.hash(input.password, 10);
-
-      const data = await db
-        .insert(user)
-        .values({
-          ...input,
-          password: hashPassword,
-        })
-        .returning()
-        .execute();
-
-      if (!data) {
-        throw new ZSAError("ERROR", "User not created");
-      }
-
-      await signIn("credentials", {
-        email: input.email,
-        password: input.password,
-        redirect: true,
-        redirectTo: "/dashboard",
-      });
-    } catch (err) {
-      throw new ZSAError("ERROR", err);
+    if (response.ok) {
+      redirect("/onboarding");
+    } else {
+      throw new ZSAError("ERROR", response.message);
     }
   });
 

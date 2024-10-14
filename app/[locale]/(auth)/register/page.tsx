@@ -5,15 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { logger, registerSchema } from "@/src/lib";
+import { logger, registerSchema, signIn } from "@/src/lib";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { registerNewUser } from "@/src/actions";
+import { registerNewUser } from "@/src/actions/user.action";
 import { useServerActionMutation } from "@/src/hooks";
+import { redirect, useRouter } from "next/navigation";
 
-const RegisterClientPage = () => {
+const RegisterClientPage = (params: { locale: string }) => {
   // redirect('/')
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -27,11 +29,7 @@ const RegisterClientPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      await mutateAsync(data);
-    } catch (err) {
-      logger.error(err);
-    }
+    await mutateAsync(data);
   });
 
   return (
@@ -43,14 +41,13 @@ const RegisterClientPage = () => {
           s'inscrire sur notre plateforme PawThera
         </p>
         <form className="flex flex-col items-center justify-center w-1/2 space-y-4" onSubmit={onSubmit}>
-          <div className="flex gap-5">
-            <Input className="rounded-3xl" type="text" placeholder="Nom" {...register("name")} />
-            <Input
-              className="rounded-3xl"
-              type="text"
-              placeholder="Prénom"
-            />
-          </div>
+          <Input className="w-96 rounded-3xl" type="text" placeholder="Nom" {...register("name")} />
+          <Input
+            className="rounded-3xl w-96"
+            type="text"
+            placeholder="Prénom"
+            {...register("firstname")}
+          />
           <Input
             className="w-96 rounded-3xl"
             type="email"
@@ -63,18 +60,13 @@ const RegisterClientPage = () => {
             placeholder="Mot de passe"
             {...register("password")}
           />
-          <Input
-            className="w-96 rounded-3xl"
-            type="password"
-            placeholder="Confirmer le mot de passe"
-            {...register("confirmPassword")}
-          />
 
           <div className="h-5" />
 
           <Button
             className="w-96 rounded-3xl"
             variant={"secondary"}
+            disabled={isPending}
             type="submit"
           >
             S'inscrire

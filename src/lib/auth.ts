@@ -1,6 +1,7 @@
 import { Adapter, AdapterUser } from "next-auth/adapters";
 
 import Credentials from "next-auth/providers/credentials";
+import { AuthError } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
@@ -26,17 +27,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     verificationTokensTable: verificationTokens,
     authenticatorsTable: authenticators,
   }) as Adapter,
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     Credentials({
       name: "Credentials",
       type: "credentials",
       credentials: {
+        firstname: { label: "Prénom", type: "text" },
+        name: { label: "Nom", type: "text" },
         email: { label: "Email", type: "email" },
         password: { label: "Mot de passe", type: "password" },
       },
       authorize: async (credentials) => {
+        const userFirstname = credentials.firstname as string;
+        const userName = credentials.name as string;
         const userEmail = credentials.email as string;
         const userPassword = credentials.password as string;
+
+        if (!userEmail || !userPassword) {
+          throw new Error("Missing credentials");
+        }
 
         const user = (await db.query.user.findFirst({
           where: eq(dbUser.email, userEmail),
@@ -55,18 +67,59 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           },
         })) as AdapterUser;
 
+        if (user) {
+          if (!user.password) {
+            throw new AuthError("Missing credentials");
+          }
+
+          const isAuthenticated = await handleComparePassword(
+            user.password!,
+            userPassword,
+          );
+
+          if (isAuthenticated) {
+            return user;
+          } else {
+            return null;
+          }
+        }
+
         if (!user) {
-          logger.debug("User not found");
+          if (!userFirstname || !userName) {
+            throw new AuthError("Missing credentials");
+          }
 
-          return null;
+          const hashPassword = await handleCryptPassword(userPassword);
+          const createUser = await db
+            .insert(dbUser)
+            .values({
+              name: userName,
+              firstname: userFirstname,
+              email: userEmail,
+              password: hashPassword,
+            })
+            .returning()
+            .execute()
+            .then((res) => res[0]);
+
+          const user = {
+            id: createUser.id,
+            email: createUser.email,
+            emailVerified: createUser.emailVerified,
+            image: createUser.image,
+            stripeId: createUser.stripeId,
+            isPro: createUser.isPro,
+            lang: createUser.lang,
+            isAdmin: createUser.isAdmin,
+            locked: createUser.locked,
+            phone: createUser.phone,
+            password: createUser.password,
+          };
+
+          return user;
         }
 
-        if (!(await handleComparePassword(user.password!, userPassword))) {
-          logger.debug("Password not correct");
-          throw new Error("Password not correct");
-        }
-
-        return user;
+        throw new AuthError("User not found");
       },
     }),
     GoogleProvider({
@@ -113,6 +166,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         .where(eq(dbUser.id, userId))
         .execute();
     },
+  },
+  session: {
+    strategy: "jwt",
   },
 });
 
