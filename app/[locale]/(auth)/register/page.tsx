@@ -21,15 +21,18 @@ const RegisterClientPage = (params: { locale: string }) => {
     resolver: zodResolver(registerSchema),
   });
 
-  const { mutateAsync, isPending } = useServerActionMutation(registerNewUser, {
-    onError({ message, data }) {
-      setMessage(data);
-      logger.error(data);
-    },
-  });
+  const { mutateAsync, isPending } = useServerActionMutation(registerNewUser);
 
   const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
+    const response = await mutateAsync(data);
+
+    if (response.ok) {
+      router.push(`/${params.locale}/onboarding`);
+    }
+
+    if (response.message) {
+      setMessage(response.message);
+    }
   });
 
   return (
