@@ -67,7 +67,7 @@ export default function Header() {
                 href="/signup"
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
-                  "w-full sm:w-auto text-background flex gap-2"
+                  "w-full sm:w-auto text-white flex gap-2"
                 )}
               >
                 <Icons.logo className="h-6 w-6" />

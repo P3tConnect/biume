@@ -22,9 +22,9 @@ const RegisterClientPage = (params: { locale: string }) => {
   });
 
   const { mutateAsync, isPending } = useServerActionMutation(registerNewUser, {
-    onError({ message }) {
-      setMessage(message);
-      logger.error(message);
+    onError({ message, data }) {
+      setMessage(data);
+      logger.error(data);
     },
   });
 
@@ -77,7 +77,7 @@ const RegisterClientPage = (params: { locale: string }) => {
           <p className="text-muted-foreground text-sm py-5">Ou</p>
 
           <Button
-            className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
+            className="w-96 h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
           >
             <Image
@@ -89,7 +89,7 @@ const RegisterClientPage = (params: { locale: string }) => {
             <p className="text-muted-foreground">S'inscrire avec Facebook</p>
           </Button>
           <Button
-            className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
+            className="w-96 h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
           >
             <Image
