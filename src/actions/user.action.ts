@@ -67,26 +67,14 @@ export const getUsers = clientAction.handler(async () => {});
 export const registerNewUser = action
   .input(registerSchema)
   .handler(async ({ input }) => {
-    try {
-      await signIn("credentials", {
-        firstname: input.firstname,
-        name: input.name,
-        email: input.email,
-        password: input.password,
-        redirect: false,
-      });
-
-      return { ok: true, message: "Connexion réussie" };
-    } catch (err) {
-      if (err instanceof AuthError) {
-        switch (err.type) {
-          case "CredentialsSignin":
-            return { ok: false, message: "Email ou mot de passe incorrect" };
-          default:
-            return { ok: false, message: "Erreur lors de la connexion" };
-        }
-      }
-    }
+    await signIn("credentials", {
+      firstname: input.firstname,
+      name: input.name,
+      email: input.email,
+      password: input.password,
+      redirect: true,
+      redirectTo: "/onboarding",
+    });
   });
 
 export const createUser = clientAction

@@ -28,7 +28,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     authenticatorsTable: authenticators,
   }) as Adapter,
   pages: {
-    signIn: "/login",
+    signIn: "/auth",
+    error: "/auth",
+    newUser: "/onboarding",
   },
   providers: [
     Credentials({
@@ -69,7 +71,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (user) {
           if (!user.password) {
-            throw new AuthError("Missing credentials");
+            throw new AuthError("Missing password");
           }
 
           const isAuthenticated = await handleComparePassword(
@@ -90,6 +92,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           const hashPassword = await handleCryptPassword(userPassword);
+
+          const stripeCustomer = await stripe.customers.create({
+            email: userEmail,
+            name: userName ?? "",
+          });
+
           const createUser = await db
             .insert(dbUser)
             .values({
@@ -97,6 +105,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               firstname: userFirstname,
               email: userEmail,
               password: hashPassword,
+              stripeId: stripeCustomer.id,
             })
             .returning()
             .execute()
@@ -167,9 +176,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         .execute();
     },
   },
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
 });
 
 const handleCryptPassword = async (password: string) => {
