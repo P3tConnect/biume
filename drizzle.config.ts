@@ -1,4 +1,5 @@
 import "dotenv/config";
+
 import { defineConfig } from "drizzle-kit";
 import { safeConfig } from "./src/lib/env";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -11,6 +10,8 @@ import {
   CardTitle,
   Progress,
 } from "../ui";
+
+import React from "react";
 import { Star } from "lucide-react";
 
 const RatesSection = () => {

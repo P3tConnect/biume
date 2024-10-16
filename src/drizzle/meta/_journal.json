@@ -29,6 +29,13 @@
       "when": 1727198503831,
       "tag": "0001_broken_greymalkin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1727249355049,
+      "tag": "0001_fancy_hex",
+      "breakpoints": true
     }
   ]
 }
