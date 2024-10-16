@@ -6,11 +6,11 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
 import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
 import { I18nProviderClient } from "@/src/locales/client";
 import { getScopedI18n } from "@/src/locales/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
 
@@ -103,17 +103,16 @@ export default async function RootLayout({
           nunito.className,
         )}
       >
-        <I18nProviderClient locale={params.locale}>
-          <Providers>
-            <NextSSRPlugin
-              routerConfig={extractRouterConfig(ourFileRouter)}
-            />
-            <div vaul-drawer-wrapper="">
-              {children}
-            </div>
-            <TailwindIndicator />
-          </Providers>
-        </I18nProviderClient>
+        <ClerkProvider>
+          <I18nProviderClient locale={params.locale}>
+            <Providers>
+              <div vaul-drawer-wrapper="">
+                {children}
+              </div>
+              <TailwindIndicator />
+            </Providers>
+          </I18nProviderClient>
+        </ClerkProvider>
       </body>
     </html>
   );

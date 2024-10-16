@@ -20,6 +20,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^0.0.63",
     "@auth/drizzle-adapter": "^1.5.3",
+    "@clerk/nextjs": "^5.7.3",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",

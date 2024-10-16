@@ -1,16 +1,26 @@
 // middleware.ts
-import { createI18nMiddleware } from 'next-international/middleware'
-import { NextRequest } from 'next/server'
+import { createI18nMiddleware } from "next-international/middleware";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const I18nMiddleware = createI18nMiddleware({
-  locales: ['en', 'fr'],
-  defaultLocale: 'en'
-})
+const i18nMiddleware = createI18nMiddleware({
+  locales: ["en", "fr"],
+  defaultLocale: "fr",
+});
 
-export function middleware(request: NextRequest) {
-  return I18nMiddleware(request)
-}
+const protectedRoutes = createRouteMatcher([
+  "/dashboard(.*)",
+  "/onboarding(.*)",
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (protectedRoutes(req)) auth().protect();
+
+  return i18nMiddleware(req);
+});
 
 export const config = {
-  matcher: ['/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)']
-}
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
+};

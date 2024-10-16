@@ -5,6 +5,7 @@ import {
   action,
   clientAction,
   db,
+  loginSchema,
   registerSchema,
   signIn,
   signOut,
@@ -12,29 +13,11 @@ import {
 import { CreateUserSchema, user } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
-import * as bcrypt from "bcryptjs";
-import { getCurrentLocale } from "@/src/locales";
-import { AuthError } from "next-auth";
-import { redirect } from "next/navigation";
 
 export const loginWithCredentials = action
-  .input(z.object({ email: z.string(), password: z.string() }))
+  .input(loginSchema)
   .handler(async ({ input }) => {
     const { email, password } = input;
-
-    const dbUser = await db.query.user.findFirst({
-      where: eq(user.email, email),
-    });
-
-    if (!dbUser) {
-      throw new ZSAError("ERROR", "User not found");
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, dbUser.password!);
-
-    if (!isPasswordCorrect) {
-      throw new ZSAError("ERROR", "Password not correct");
-    }
 
     await signIn("credentials", {
       email,
@@ -45,7 +28,10 @@ export const loginWithCredentials = action
   });
 
 export const logout = async () => {
-  await signOut();
+  await signOut({
+    redirect: true,
+    redirectTo: "/",
+  });
 };
 
 export const loginWithGoogle = async () => {
@@ -67,7 +53,7 @@ export const getUsers = clientAction.handler(async () => {});
 export const registerNewUser = action
   .input(registerSchema)
   .handler(async ({ input }) => {
-    await signIn("credentials", {
+    const response = await signIn("credentials", {
       firstname: input.firstname,
       name: input.name,
       email: input.email,
@@ -75,6 +61,8 @@ export const registerNewUser = action
       redirect: true,
       redirectTo: "/onboarding",
     });
+
+    console.log(response, "response nextauth");
   });
 
 export const createUser = clientAction

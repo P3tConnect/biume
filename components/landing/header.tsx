@@ -3,15 +3,17 @@
 import Drawer from "./drawer";
 import { Icons } from "@/components/landing/icons";
 import Menu from "./menu";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,12 +59,15 @@ export default function Header() {
             </nav>
 
             <div className="gap-2 flex">
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "secondary" })}
-              >
-                Login
-              </Link>
+              {isSignedIn ? (
+                <Link href='/dashboard/123' className={buttonVariants({ variant: "secondary" })}>
+                  Dashboard
+                </Link>
+              ) : <SignInButton>
+                <Button variant={'secondary'}>
+                  Login
+                </Button>
+              </SignInButton>}
               <Link
                 href="/signup"
                 className={cn(

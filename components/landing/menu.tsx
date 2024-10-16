@@ -35,7 +35,7 @@ export default function NavigationMenuDemo() {
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-primary/10 from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-secondary/10 from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                           href={item.content.main.href}
                         >
                           {item.content.main.icon}
@@ -54,7 +54,7 @@ export default function NavigationMenuDemo() {
                       key={subIndex}
                       href={subItem.href}
                       title={subItem.title}
-                      className="hover:bg-primary/10"
+                      className="hover:bg-secondary/10"
                     >
                       {subItem.description}
                     </ListItem>

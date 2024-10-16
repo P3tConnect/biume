@@ -1,10 +1,4 @@
-import {
-  integer,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { proSession } from "./pro_session";
@@ -31,7 +25,7 @@ export const pets = pgTable("pets", {
   weight: integer("weight"),
   height: integer("height"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").primaryKey().notNull(),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),

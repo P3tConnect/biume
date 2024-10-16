@@ -17,9 +17,7 @@ export const ratings = pgTable("ratings", {
   rate: integer("rate").notNull(),
   comment: text("comment"),
   proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
-  writerId: text("writerId").references(() => user.id, {
-    onDelete: "cascade",
-  }),
+  writerId: text("writerId").primaryKey().notNull(),
   isRecommanded: boolean("isRecommanded").default(false).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
