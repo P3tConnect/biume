@@ -1,9 +1,16 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ChartContainer } from '@/components/ui/chart';
+import React from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { ChartContainer } from "@/components/ui/chart";
 
 const GraphSalesWidget = () => {
   const chartData = [
@@ -19,7 +26,7 @@ const GraphSalesWidget = () => {
     { month: "Octobre", revenues: 654 },
     { month: "Novembre", revenues: 890 },
     { month: "Décembre", revenues: 432 },
-];
+  ];
 
   const chartConfig = {
     revenues: {
@@ -29,18 +36,22 @@ const GraphSalesWidget = () => {
   };
 
   return (
-    <Card className='h-[450px] w-full overflow-hidden'>
+    <Card className="h-full w-full overflow-auto">
       <CardHeader className="flex flex-wrap items-start justify-start content-start text-start">
         <h1 className="text-2xl font-bold">Graphique des revenues</h1>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[380px] w-full">
+        <ChartContainer config={chartConfig} className="h-[340px] w-full">
           <ResponsiveContainer>
             <BarChart data={chartData}>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="revenues" fill={chartConfig.revenues.color} radius={4} />
+              <Bar
+                dataKey="revenues"
+                fill={chartConfig.revenues.color}
+                radius={4}
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>

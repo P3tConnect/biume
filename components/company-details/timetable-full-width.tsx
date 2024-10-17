@@ -94,7 +94,7 @@ const TimeTableFullWidth = () => {
       ref={containerRef}
       className="w-full bg-[#EEEFF5] h-full rounded-2xl border border-border dark:border-white dark:bg-background"
     >
-      <CardHeader className="px-7 flex flex-row justify-between items-center">
+      <CardHeader className="flex flex-col items-start justify-start sm:px-7 sm:flex sm:flex-row sm:justify-between sm:items-center">
         <CardTitle className="text-xl text-black dark:text-white">
           Calendrier et prochains rendez-vous
         </CardTitle>
@@ -121,27 +121,23 @@ const TimeTableFullWidth = () => {
           <CalendarDropdown viewMode={viewMode} setViewMode={setViewMode} />
         </div>
       </CardHeader>
-      <div className="mt-5 flex justify-between items-center px-7">
-        <div className="flex flew-row items-center gap-3">
-          <div className="flex items-center justify-center gap-1">
+      <div className="flex flex-col items-start justify-start px-7 2xl:mt-5 2xl:flex-row 2xl:items-center 2xl:justify-between">
+        <div className="grid grid-cols-2 gap-4 sm:flex flex-row items-center justify-center">
+          <div className="flex items-center gap-1">
             <div className="rounded-full bg-primary h-4 w-4"></div>
             <h1>Terminée</h1>
           </div>
-          <div className="flex flex-row justify-center items-center gap-1">
+          <div className="flex items-center gap-1">
             <div className="rounded-full bg-secondary h-4 w-4"></div>
             <h1>En demande</h1>
           </div>
-          <div className="flex flex-row justify-center items-center gap-1">
+          <div className="flex items-center gap-1">
             <div className="rounded-full bg-blue-500 h-4 w-4"></div>
             <h1>À payer</h1>
           </div>
-          <div className="flex flex-row justify-center items-center gap-1">
+          <div className="flex flex-row items-center gap-1">
             <div className="rounded-full bg-yellow-500 h-4 w-4"></div>
-            <h1>En attente de confirmaton</h1>
-          </div>
-          <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-red-500 h-4 w-4"></div>
-            <h1>Annulée</h1>
+            <h1>En attente de confirmation</h1>
           </div>
         </div>
         <div className="flex flex-row gap-2">
@@ -170,8 +166,8 @@ const TimeTableFullWidth = () => {
           firstDay={1}
           selectable={true}
           selectMirror={true}
-          height={760}
-          contentHeight={760}
+          height={700}
+          contentHeight={700}
           dayMaxEvents={3}
           datesSet={(dates) => {
             setCurrentMonth(dates.view.title);
