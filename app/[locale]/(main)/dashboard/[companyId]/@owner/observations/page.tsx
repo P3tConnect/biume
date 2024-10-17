@@ -1,9 +1,8 @@
-import React from 'react'
+import ObeservationWidget from "@/components/dashboard/shortcuts/observations-widget";
+import React from "react";
 
 const DashboardCompanyObservationsPage = () => {
-  return (
-    <div>DashboardCompanyObservationsPage</div>
-  )
-}
+  return <ObeservationWidget />;
+};
 
-export default DashboardCompanyObservationsPage
+export default DashboardCompanyObservationsPage;

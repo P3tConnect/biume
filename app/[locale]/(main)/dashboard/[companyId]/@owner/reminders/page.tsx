@@ -1,9 +1,8 @@
-import React from 'react'
+import { RemindersWidget } from "@/components/dashboard/shortcuts/reminders-widget";
+import React from "react";
 
 const DashboardCompanyRemindersPage = () => {
-  return (
-    <div>DashboardCompanyRemindersPage</div>
-  )
-}
+  return <RemindersWidget />;
+};
 
-export default DashboardCompanyRemindersPage
+export default DashboardCompanyRemindersPage;
