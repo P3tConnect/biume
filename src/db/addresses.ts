@@ -16,10 +16,6 @@ export const address = pgTable("address", {
   updatedAt: timestamp("updatedAt"),
 });
 
-export const addressRelations = relations(address, ({ one }) => ({
-  owner: one(user),
-}));
-
 export type Address = typeof address.$inferSelect;
 export type CreateAddress = typeof address.$inferInsert;
 

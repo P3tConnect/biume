@@ -10,15 +10,11 @@ export const deseases = pgTable("deseases", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").primaryKey().notNull(),
 });
 
 export const deseasesRelations = relations(deseases, ({ one, many }) => ({
   pets: many(petsDeseases),
-  owner: one(user, {
-    fields: [deseases.ownerId],
-    references: [user.id],
-  }),
 }));
 
 export type Desease = typeof deseases.$inferSelect;

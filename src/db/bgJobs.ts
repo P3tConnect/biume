@@ -1,6 +1,5 @@
 import { date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { company } from "./company";
-import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -28,9 +27,7 @@ export const bgJobs = pgTable("bg_jobs", {
   from: text("from").references(() => company.id, {
     onDelete: "cascade",
   }),
-  to: text("to").references(() => user.id, {
-    onDelete: "cascade",
-  }),
+  to: text("to").primaryKey().notNull(),
   dateToExecute: date("dateToExecute"),
   status: bgJobsStatus("status").default("pending"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
@@ -41,10 +38,6 @@ export const jobsRelations = relations(bgJobs, ({ one }) => ({
   company: one(company, {
     fields: [bgJobs.from],
     references: [company.id],
-  }),
-  user: one(user, {
-    fields: [bgJobs.to],
-    references: [user.id],
   }),
 }));
 

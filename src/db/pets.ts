@@ -35,10 +35,6 @@ export const pets = pgTable("pets", {
 });
 
 export const petsRelations = relations(pets, ({ one, many }) => ({
-  owner: one(user, {
-    fields: [pets.ownerId],
-    references: [user.id],
-  }),
   sessions: many(proSession),
   deseases: many(petsDeseases),
   allergies: many(petsAllergies),

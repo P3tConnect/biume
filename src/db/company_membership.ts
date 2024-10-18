@@ -33,10 +33,6 @@ export const companyMembershipRelations = relations(
       fields: [companyMembership.companyId],
       references: [company.id],
     }),
-    user: one(user, {
-      fields: [companyMembership.userId],
-      references: [user.id],
-    }),
   }),
 );
 

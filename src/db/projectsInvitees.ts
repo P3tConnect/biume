@@ -5,7 +5,7 @@ import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 
 export const projectsInvitees = pgTable("projects_invitees", {
-  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
+  userId: text("userId").primaryKey().notNull(),
   projectId: text("projectId").references(() => project.id, {
     onDelete: "cascade",
   }),
@@ -14,10 +14,6 @@ export const projectsInvitees = pgTable("projects_invitees", {
 export const projectInviteesRelations = relations(
   projectsInvitees,
   ({ one }) => ({
-    user: one(user, {
-      fields: [projectsInvitees.userId],
-      references: [user.id],
-    }),
     project: one(project, {
       fields: [projectsInvitees.projectId],
       references: [project.id],

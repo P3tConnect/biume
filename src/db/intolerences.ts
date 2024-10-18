@@ -10,9 +10,7 @@ export const intolerences = pgTable("intolerences", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, {
-    onDelete: "cascade",
-  }),
+  ownerId: text("ownerId").primaryKey().notNull(),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
@@ -22,10 +20,6 @@ export const intolerences = pgTable("intolerences", {
 export const intolerencesRelations = relations(
   intolerences,
   ({ one, many }) => ({
-    owner: one(user, {
-      fields: [intolerences.ownerId],
-      references: [user.id],
-    }),
     pets: many(petsIntolerences),
   }),
 );

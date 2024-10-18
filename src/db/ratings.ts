@@ -24,10 +24,6 @@ export const ratings = pgTable("ratings", {
 });
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
-  writer: one(user, {
-    fields: [ratings.writerId],
-    references: [user.id],
-  }),
   for: one(company, {
     fields: [ratings.proId],
     references: [company.id],
