@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { project } from "./project";
-import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 
 export const projectsInvitees = pgTable("projects_invitees", {

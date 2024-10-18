@@ -16,7 +16,7 @@ export const notification = pgTable("notification", {
   title: text("title").notNull(),
   notificationType: text("notificationType").notNull(),
   message: text("message").notNull(),
-  userId: text("userId").primaryKey().notNull(),
+  userId: text("userId").notNull(),
   new: boolean("new").default(true),
   createdAt: text("createdAt").notNull(),
   updatedAt: text("updatedAt").notNull(),

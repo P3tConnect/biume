@@ -1,5 +1,4 @@
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { proSession } from "./pro_session";
 import { createInsertSchema } from "drizzle-zod";
@@ -25,7 +24,7 @@ export const pets = pgTable("pets", {
   weight: integer("weight"),
   height: integer("height"),
   description: text("description"),
-  ownerId: text("ownerId").primaryKey().notNull(),
+  ownerId: text("ownerId").notNull(),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),

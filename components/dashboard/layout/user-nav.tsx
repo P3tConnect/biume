@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCurrentLocale } from "@/src/locales";
-import { logout } from "@/src/actions";
 
 export function UserNav() {
   const locale = useCurrentLocale();
@@ -84,9 +83,6 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="hover:cursor-pointer"
-            onClick={async () => {
-              await logout();
-            }}
           >
             <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
             Sign out

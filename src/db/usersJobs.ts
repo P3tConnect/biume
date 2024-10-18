@@ -1,5 +1,4 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { job } from "./job";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";

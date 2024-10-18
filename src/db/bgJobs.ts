@@ -27,7 +27,7 @@ export const bgJobs = pgTable("bg_jobs", {
   from: text("from").references(() => company.id, {
     onDelete: "cascade",
   }),
-  to: text("to").primaryKey().notNull(),
+  to: text("to").notNull(),
   dateToExecute: date("dateToExecute"),
   status: bgJobsStatus("status").default("pending"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),

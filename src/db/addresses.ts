@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 
 export const address = pgTable("address", {

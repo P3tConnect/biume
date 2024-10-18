@@ -8,7 +8,7 @@ export const transaction = pgTable("transaction", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   amount: integer("amount").notNull(),
-  from: text("from").primaryKey().notNull(),
+  from: text("from").notNull(),
   to: text("to").references(() => company.id, {
     onDelete: "cascade",
   }),

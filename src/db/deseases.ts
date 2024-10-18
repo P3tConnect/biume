@@ -1,5 +1,4 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { petsDeseases } from "./petsDeseases";
 import { createInsertSchema } from "drizzle-zod";
@@ -10,7 +9,7 @@ export const deseases = pgTable("deseases", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  ownerId: text("ownerId").primaryKey().notNull(),
+  ownerId: text("ownerId").notNull(),
 });
 
 export const deseasesRelations = relations(deseases, ({ one, many }) => ({

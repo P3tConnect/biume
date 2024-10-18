@@ -1,107 +1,9 @@
 {
-  "id": "043cb571-1b2e-4d0a-aa84-a03404870463",
+  "id": "00d6098a-4089-4dc1-a819-6104c8a087f5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.accounts": {
-      "name": "accounts",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider": {
-          "name": "provider",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "providerAccountId": {
-          "name": "providerAccountId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "token_type": {
-          "name": "token_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "scope": {
-          "name": "scope",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id_token": {
-          "name": "id_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "session_state": {
-          "name": "session_state",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "accounts_userId_user_id_fk": {
-          "name": "accounts_userId_user_id_fk",
-          "tableFrom": "accounts",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "accounts_provider_providerAccountId_pk": {
-          "name": "accounts_provider_providerAccountId_pk",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
     "public.address": {
       "name": "address",
       "schema": "",
@@ -147,7 +49,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.257'"
+          "default": "'2024-10-18 14:12:49.869'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -187,14 +89,14 @@
           "name": "ownerId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.245'"
+          "default": "'2024-10-18 14:12:49.986'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -204,21 +106,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "allergies_ownerId_user_id_fk": {
-          "name": "allergies_ownerId_user_id_fk",
-          "tableFrom": "allergies",
-          "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -256,7 +144,7 @@
           "name": "creator",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "for": {
           "name": "for",
@@ -289,7 +177,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.170'"
+          "default": "'2024-10-18 14:12:49.919'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -300,19 +188,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ask_estimate_creator_user_id_fk": {
-          "name": "ask_estimate_creator_user_id_fk",
-          "tableFrom": "ask_estimate",
-          "tableTo": "user",
-          "columnsFrom": [
-            "creator"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "ask_estimate_for_company_id_fk": {
           "name": "ask_estimate_for_company_id_fk",
           "tableFrom": "ask_estimate",
@@ -379,94 +254,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.authenticator": {
-      "name": "authenticator",
-      "schema": "",
-      "columns": {
-        "credentialID": {
-          "name": "credentialID",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "providerAccountId": {
-          "name": "providerAccountId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialPublicKey": {
-          "name": "credentialPublicKey",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "counter": {
-          "name": "counter",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialDeviceType": {
-          "name": "credentialDeviceType",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialBackedUp": {
-          "name": "credentialBackedUp",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "transports": {
-          "name": "transports",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "authenticator_userId_user_id_fk": {
-          "name": "authenticator_userId_user_id_fk",
-          "tableFrom": "authenticator",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "authenticator_userId_credentialID_pk": {
-          "name": "authenticator_userId_credentialID_pk",
-          "columns": [
-            "userId",
-            "credentialID"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "authenticator_credentialID_unique": {
-          "name": "authenticator_credentialID_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "credentialID"
-          ]
-        }
-      }
-    },
     "public.bg_jobs": {
       "name": "bg_jobs",
       "schema": "",
@@ -495,7 +282,7 @@
           "name": "to",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "dateToExecute": {
           "name": "dateToExecute",
@@ -516,7 +303,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.227'"
+          "default": "'2024-10-18 14:12:49.970'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -533,19 +320,6 @@
           "tableTo": "company",
           "columnsFrom": [
             "from"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "bg_jobs_to_user_id_fk": {
-          "name": "bg_jobs_to_user_id_fk",
-          "tableFrom": "bg_jobs",
-          "tableTo": "user",
-          "columnsFrom": [
-            "to"
           ],
           "columnsTo": [
             "id"
@@ -590,7 +364,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.141'"
+          "default": "'2024-10-18 14:12:49.894'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -651,7 +425,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.191'"
+          "default": "'2024-10-18 14:12:49.939'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -693,7 +467,7 @@
           "name": "userId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "role": {
           "name": "role",
@@ -706,7 +480,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.229'"
+          "default": "'2024-10-18 14:12:49.973'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -723,19 +497,6 @@
           "tableTo": "company",
           "columnsFrom": [
             "companyId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "company_membership_userId_user_id_fk": {
-          "name": "company_membership_userId_user_id_fk",
-          "tableFrom": "company_membership",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
           ],
           "columnsTo": [
             "id"
@@ -811,12 +572,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "ownerId": {
-          "name": "ownerId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "atHome": {
           "name": "atHome",
           "type": "boolean",
@@ -884,19 +639,6 @@
           "tableTo": "company_address",
           "columnsFrom": [
             "address"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "company_ownerId_user_id_fk": {
-          "name": "company_ownerId_user_id_fk",
-          "tableFrom": "company",
-          "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
           ],
           "columnsTo": [
             "id"
@@ -987,7 +729,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.219'"
+          "default": "'2024-10-18 14:12:49.963'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1040,7 +782,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.152'"
+          "default": "'2024-10-18 14:12:49.904'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1101,7 +843,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.266'"
+          "default": "'2024-10-18 14:12:49.989'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1156,7 +898,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.154'"
+          "default": "'2024-10-18 14:12:49.905'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1196,154 +938,13 @@
           "name": "ownerId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "deseases_ownerId_user_id_fk": {
-          "name": "deseases_ownerId_user_id_fk",
-          "tableFrom": "deseases",
-          "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
-    },
-    "public.user": {
-      "name": "user",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "stripeId": {
-          "name": "stripeId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "isPro": {
-          "name": "isPro",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "isAdmin": {
-          "name": "isAdmin",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "locked": {
-          "name": "locked",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "lang": {
-          "name": "lang",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'fr'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'2024-10-12 20:35:19.260'"
-        },
-        "updateAt": {
-          "name": "updateAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_address_address_id_fk": {
-          "name": "user_address_address_id_fk",
-          "tableFrom": "user",
-          "tableTo": "address",
-          "columnsFrom": [
-            "address"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "user_email_unique": {
-          "name": "user_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      }
     },
     "public.intolerences": {
       "name": "intolerences",
@@ -1371,14 +972,14 @@
           "name": "ownerId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-10-12 20:35:19.250'"
+          "default": "'2024-10-18 14:12:49.985'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1388,21 +989,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "intolerences_ownerId_user_id_fk": {
-          "name": "intolerences_ownerId_user_id_fk",
-          "tableFrom": "intolerences",
-          "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -1433,7 +1020,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-10-12 20:35:19.177'"
+          "default": "'2024-10-18 14:12:49.925'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1577,7 +1164,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.161'"
+          "default": "'2024-10-18 14:12:49.912'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1637,7 +1224,7 @@
           "name": "userId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "new": {
           "name": "new",
@@ -1660,21 +1247,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "notification_userId_user_id_fk": {
-          "name": "notification_userId_user_id_fk",
-          "tableFrom": "notification",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -1705,7 +1278,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.234'"
+          "default": "'2024-10-18 14:12:49.976'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1758,7 +1331,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "'2024-10-12 20:35:19.181'"
+          "default": "'2024-10-18 14:12:49.929'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1832,7 +1405,7 @@
           "name": "ownerId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "nacType": {
           "name": "nacType",
@@ -1872,21 +1445,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "pets_ownerId_user_id_fk": {
-          "name": "pets_ownerId_user_id_fk",
-          "tableFrom": "pets",
-          "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -2117,7 +1676,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.235'"
+          "default": "'2024-10-18 14:12:49.976'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2242,7 +1801,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.192'"
+          "default": "'2024-10-18 14:12:49.940'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2384,7 +1943,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.199'"
+          "default": "'2024-10-18 14:12:49.946'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2419,8 +1978,8 @@
         "userId": {
           "name": "userId",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "projectId": {
           "name": "projectId",
@@ -2431,19 +1990,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "projects_invitees_userId_user_id_fk": {
-          "name": "projects_invitees_userId_user_id_fk",
-          "tableFrom": "projects_invitees",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "projects_invitees_projectId_project_id_fk": {
           "name": "projects_invitees_projectId_project_id_fk",
           "tableFrom": "projects_invitees",
@@ -2493,7 +2039,7 @@
           "name": "writerId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "isRecommanded": {
           "name": "isRecommanded",
@@ -2507,7 +2053,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.201'"
+          "default": "'2024-10-18 14:12:49.949'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2524,19 +2070,6 @@
           "tableTo": "company",
           "columnsFrom": [
             "proId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "ratings_writerId_user_id_fk": {
-          "name": "ratings_writerId_user_id_fk",
-          "tableFrom": "ratings",
-          "tableTo": "user",
-          "columnsFrom": [
-            "writerId"
           ],
           "columnsTo": [
             "id"
@@ -2679,7 +2212,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.192'"
+          "default": "'2024-10-18 14:12:49.940'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -2969,48 +2502,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.session": {
-      "name": "session",
-      "schema": "",
-      "columns": {
-        "sessionToken": {
-          "name": "sessionToken",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "session_userId_user_id_fk": {
-          "name": "session_userId_user_id_fk",
-          "tableFrom": "session",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.session_options": {
       "name": "session_options",
       "schema": "",
@@ -3117,7 +2608,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.207'"
+          "default": "'2024-10-18 14:12:49.953'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3178,7 +2669,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.215'"
+          "default": "'2024-10-18 14:12:49.961'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3226,7 +2717,7 @@
           "name": "from",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "to": {
           "name": "to",
@@ -3245,7 +2736,7 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
-          "default": "'2024-10-12 20:35:19.222'"
+          "default": "'2024-10-18 14:12:49.965'"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -3256,19 +2747,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "transaction_from_user_id_fk": {
-          "name": "transaction_from_user_id_fk",
-          "tableFrom": "transaction",
-          "tableTo": "user",
-          "columnsFrom": [
-            "from"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "transaction_to_company_id_fk": {
           "name": "transaction_to_company_id_fk",
           "tableFrom": "transaction",
@@ -3293,8 +2771,8 @@
         "userId": {
           "name": "userId",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "jobId": {
           "name": "jobId",
@@ -3305,19 +2783,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_jobs_userId_user_id_fk": {
-          "name": "users_jobs_userId_user_id_fk",
-          "tableFrom": "users_jobs",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "users_jobs_jobId_job_id_fk": {
           "name": "users_jobs_jobId_job_id_fk",
           "tableFrom": "users_jobs",
@@ -3342,8 +2807,8 @@
         "userId": {
           "name": "userId",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "newsletterId": {
           "name": "newsletterId",
@@ -3354,19 +2819,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_newsletters_userId_user_id_fk": {
-          "name": "users_newsletters_userId_user_id_fk",
-          "tableFrom": "users_newsletters",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "users_newsletters_newsletterId_newsletter_id_fk": {
           "name": "users_newsletters_newsletterId_newsletter_id_fk",
           "tableFrom": "users_newsletters",
@@ -3382,42 +2834,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.verificationToken": {
-      "name": "verificationToken",
-      "schema": "",
-      "columns": {
-        "identifier": {
-          "name": "identifier",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "token": {
-          "name": "token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "verificationToken_identifier_token_pk": {
-          "name": "verificationToken_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
-        }
-      },
       "uniqueConstraints": {}
     },
     "public.widgets": {

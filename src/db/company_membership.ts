@@ -1,5 +1,4 @@
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { company } from "./company";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -20,7 +19,7 @@ export const companyMembership = pgTable("company_membership", {
   companyId: text("companyId").references(() => company.id, {
     onDelete: "cascade",
   }),
-  userId: text("userId").primaryKey().notNull(),
+  userId: text("userId").notNull(),
   role: text("role").notNull(),
   createdAt: timestamp("createdAt").default(new Date()),
   updatedAt: timestamp("updatedAt"),
