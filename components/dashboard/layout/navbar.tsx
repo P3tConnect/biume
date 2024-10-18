@@ -13,9 +13,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Button,
+  Skeleton,
 } from "@/components/ui";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { UserButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   sidebar: useSidebarToggleStore;
@@ -43,7 +44,12 @@ export function Navbar(
           <ModeToggle />
           <Notifications />
           {/* <UserNav /> */}
-          <UserButton />
+          <ClerkLoading>
+            <Skeleton className="h-6 w-6 rounded-full" />
+          </ClerkLoading>
+          <ClerkLoaded>
+            <UserButton />
+          </ClerkLoaded>
         </div>
 
         <div className="flex gap-1 items-center justify-end md:justify-between flex-row max-w-full overflow-hidden lg:hidden">
