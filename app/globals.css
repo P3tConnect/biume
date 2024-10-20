@@ -106,4 +106,8 @@
   body {
     @apply text-foreground;
   }
+
+  .fc .fc-col-header-cell-cushion {
+    @apply p-5;
+  }
 }
