@@ -1,8 +1,11 @@
+import ButtonsSection from '@/components/dashboard/pages/accounting-page/buttons-section'
 import React from 'react'
 
 const DashboardCompanyAccoutingPage = () => {
   return (
-    <div>DashboardCompanyAccoutingPage</div>
+    <div className='w-full h-full flex flex-col'>
+      <ButtonsSection />
+    </div>
   )
 }
 

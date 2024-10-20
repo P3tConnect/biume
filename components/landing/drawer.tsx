@@ -43,14 +43,14 @@ export default function drawerDemo() {
         <DrawerFooter>
           <Link
             href="/login"
-            className={buttonVariants({ variant: "outline" })}
+            className={buttonVariants({ variant: "secondary" })}
           >
             Login
           </Link>
           <Link
             href="/signup"
             className={cn(
-              buttonVariants({ variant: "default" }),
+              buttonVariants({ variant: "secondary" }),
               "w-full sm:w-auto text-background flex gap-2"
             )}
           >
