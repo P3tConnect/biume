@@ -16,7 +16,7 @@ import {
   Skeleton,
 } from "@/components/ui";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, SignIn, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   sidebar: useSidebarToggleStore;
@@ -44,12 +44,12 @@ export function Navbar(
           <ModeToggle />
           <Notifications />
           {/* <UserNav /> */}
-          <ClerkLoading>
+          <SignedOut>
             <Skeleton className="h-6 w-6 rounded-full" />
-          </ClerkLoading>
-          <ClerkLoaded>
+          </SignedOut>
+          <SignedIn>
             <UserButton />
-          </ClerkLoaded>
+          </SignedIn>
         </div>
 
         <div className="flex gap-1 items-center justify-end md:justify-between flex-row max-w-full overflow-hidden lg:hidden">

@@ -68,7 +68,7 @@ export default function Header() {
                   Login
                 </Button>
               </SignInButton>}
-              <Link
+              {isSignedIn ? null : <Link
                 href="/signup"
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
@@ -77,7 +77,7 @@ export default function Header() {
               >
                 <Icons.logo className="h-6 w-6" />
                 Get Started for Free
-              </Link>
+              </Link>}
             </div>
           </div>
         </div>

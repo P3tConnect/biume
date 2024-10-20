@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut } from "@clerk/nextjs";
 import Loader from "@/components/loader";
 
 const DashboardCompanyLayout = ({
@@ -13,19 +13,14 @@ const DashboardCompanyLayout = ({
   params: { companyId: string };
 }) => {
   return (
-    <>
-      <SignedIn>
-        <DashboardLayoutComponents companyId={params.companyId}>
-          {owner}
-        </DashboardLayoutComponents>
-      </SignedIn>
-      <SignedOut>
-        <div className="w-screen h-screen flex flex-col items-center justify-center">
-          <Loader />
-          <h1>You are now disconnected, redirecting ...</h1>
-        </div>
-      </SignedOut>
-    </>
+    <DashboardLayoutComponents companyId={params.companyId}>
+      <ClerkLoaded>
+        {owner}
+      </ClerkLoaded>
+      <ClerkLoading>
+        <Loader />
+      </ClerkLoading>
+    </DashboardLayoutComponents>
   );
 };
 
