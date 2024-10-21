@@ -13,7 +13,6 @@ export const getCompanyMemberships = async ({
     .findMany({
       with: {
         company: true,
-        user: true,
       },
       where: eq(companyMembership.companyId, companyId),
     })
@@ -67,7 +66,10 @@ export const deleteCompanyMembership = ownerAction
   .handler(async ({ input, ctx }) => {
     const data = await db
       .delete(companyMembership)
-      .where(eq(companyMembership.companyId, ctx.company?.id as string) && eq(companyMembership.userId, input))
+      .where(
+        eq(companyMembership.companyId, ctx.company?.id as string) &&
+          eq(companyMembership.userId, input),
+      )
       .returning()
       .execute();
 

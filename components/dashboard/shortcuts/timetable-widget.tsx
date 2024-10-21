@@ -5,8 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
-  desktop,
+  CardTitle
 } from "@/components/ui";
 import {
   ArrowLeft,
@@ -17,7 +16,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useMediaQuery, useSidebarToggle, useStore } from "@/src/hooks";
+import { useSidebarToggle, useStore } from "@/src/hooks";
 import { useEffect, useRef, useState } from "react";
 import { CalendarApi } from "@fullcalendar/core/index.js";
 import { useCurrentLocale } from "@/src/locales";

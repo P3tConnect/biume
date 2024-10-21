@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { report } from "./report";
+import { company } from "./company";
 
 export const reportTemplate = pgTable("report_template", {
   id: text("id")
@@ -13,7 +13,7 @@ export const reportTemplate = pgTable("report_template", {
   description: text("description").notNull(),
   ownerId: text("owner_id")
     .notNull()
-    .references(() => user.id, {
+    .references(() => company.id, {
       onDelete: "cascade",
     }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -23,9 +23,9 @@ export const reportTemplate = pgTable("report_template", {
 export const reportTemplateRelations = relations(
   reportTemplate,
   ({ one, many }) => ({
-    owner: one(user, {
+    owner: one(company, {
       fields: [reportTemplate.ownerId],
-      references: [user.id],
+      references: [company.id],
     }),
     reports: many(report),
   }),

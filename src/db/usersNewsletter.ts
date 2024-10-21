@@ -1,11 +1,10 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { newsletter } from "./newsletter";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const usersNewsletters = pgTable("users_newsletters", {
-  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
+  userId: text("userId").primaryKey().notNull(),
   newsletterId: text("newsletterId").references(() => newsletter.id, {
     onDelete: "cascade",
   }),
@@ -14,10 +13,6 @@ export const usersNewsletters = pgTable("users_newsletters", {
 export const userNewslettersRelations = relations(
   usersNewsletters,
   ({ one }) => ({
-    user: one(user, {
-      fields: [usersNewsletters.userId],
-      references: [user.id],
-    }),
     newsletter: one(newsletter, {
       fields: [usersNewsletters.newsletterId],
       references: [newsletter.id],

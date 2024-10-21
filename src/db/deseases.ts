@@ -1,5 +1,4 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { user } from "./user";
 import { relations } from "drizzle-orm";
 import { petsDeseases } from "./petsDeseases";
 import { createInsertSchema } from "drizzle-zod";
@@ -10,15 +9,11 @@ export const deseases = pgTable("deseases", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").notNull(),
 });
 
 export const deseasesRelations = relations(deseases, ({ one, many }) => ({
   pets: many(petsDeseases),
-  owner: one(user, {
-    fields: [deseases.ownerId],
-    references: [user.id],
-  }),
 }));
 
 export type Desease = typeof deseases.$inferSelect;

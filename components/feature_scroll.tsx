@@ -12,7 +12,7 @@ interface FeatureScrollProps {
   topPosition?: string;
 }
 
-const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
+export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
   direction,
   children,
   imageSrc,
@@ -56,48 +56,7 @@ const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
 export function FeatureScroll1() {
   return (
     <section>
-      <div className="flex flex-col gap-20 container p-10">
-        <FeatureScrollContainer
-          topPosition="10%"
-          direction="rtl"
-          imageSrc="https://cdn.magicui.design/iphone.png"
-        >
-          <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0 items-center justify-center lg:items-start lg:justify-start text-center lg:text-left">
-            <h1 className="text-4xl font-bold">Scroll Feature</h1>
-            <p className="text-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptates, quibusdam.
-            </p>
-            <div className="flex gap-4 w-full">
-              <button className="bg-neutral-100 text-black px-4 py-2 rounded-md w-full">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </FeatureScrollContainer>
 
-        <FeatureScrollContainer
-          topPosition="10%"
-          direction="ltr"
-          imageSrc="https://cdn.magicui.design/iphone.png"
-        >
-          <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0 items-center justify-center lg:items-start lg:justify-start text-center lg:text-left">
-            <h1 className="text-4xl font-bold">Scroll Feature</h1>
-            <p className="text-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptates, quibusdam.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-neutral-100 text-black px-4 py-2 rounded-md">
-                Learn More
-              </button>
-              <button className="bg-neutral-800 text-white px-4 py-2 rounded-md">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </FeatureScrollContainer>
-      </div>
     </section>
   );
 }

@@ -3,15 +3,17 @@
 import Drawer from "./drawer";
 import { Icons } from "@/components/landing/icons";
 import Menu from "./menu";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,27 +54,26 @@ export default function Header() {
 
         <div className="hidden lg:block">
           <div className="flex items-center">
-            <nav className="mr-10">
-              <Menu />
-            </nav>
-
             <div className="gap-2 flex">
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "secondary" })}
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
+              {isSignedIn ? (
+                <Link href='/dashboard/123' className={buttonVariants({ variant: "secondary" })}>
+                  Dashboard
+                </Link>
+              ) : <SignInButton>
+                <Button variant={'secondary'}>
+                  Login
+                </Button>
+              </SignInButton>}
+              {isSignedIn ? null : <Link
+                href="/sign-up"
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
-                  "w-full sm:w-auto text-background flex gap-2"
+                  "w-full sm:w-auto text-white flex gap-2"
                 )}
               >
                 <Icons.logo className="h-6 w-6" />
                 Get Started for Free
-              </Link>
+              </Link>}
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { user } from "./user";
 import { petsAllergies } from "./petsAllergies";
 
 export const allergies = pgTable("allergies", {
@@ -10,16 +9,12 @@ export const allergies = pgTable("allergies", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const allergiesRelations = relations(allergies, ({ one, many }) => ({
-  owner: one(user, {
-    fields: [allergies.ownerId],
-    references: [user.id],
-  }),
   pets: many(petsAllergies),
 }));
 

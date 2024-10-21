@@ -6,20 +6,22 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
 import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
 import { I18nProviderClient } from "@/src/locales/client";
 import { getScopedI18n } from "@/src/locales/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { ClerkProvider } from "@clerk/nextjs";
+import { GeistSans } from "geist/font/sans";
 
-const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
+// const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
+const geist = GeistSans;
 
 export async function generateMetadata({
   params,
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const t = await getScopedI18n('metadata');
+  const t = await getScopedI18n("metadata");
   return {
     title: "PawThera",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -98,22 +100,16 @@ export default async function RootLayout({
   return (
     <html lang={params.locale}>
       <body
-        className={cn(
-          "min-h-screen font-sans antialiased",
-          nunito.className,
-        )}
+        className={cn("min-h-screen font-sans antialiased", geist.className)}
       >
-        <I18nProviderClient locale={params.locale}>
-          <Providers>
-            <NextSSRPlugin
-              routerConfig={extractRouterConfig(ourFileRouter)}
-            />
-            <div vaul-drawer-wrapper="">
-              {children}
-            </div>
-            <TailwindIndicator />
-          </Providers>
-        </I18nProviderClient>
+        <ClerkProvider>
+          <I18nProviderClient locale={params.locale}>
+            <Providers>
+              <div vaul-drawer-wrapper="">{children}</div>
+              <TailwindIndicator />
+            </Providers>
+          </I18nProviderClient>
+        </ClerkProvider>
       </body>
     </html>
   );

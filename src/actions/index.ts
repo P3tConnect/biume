@@ -36,6 +36,5 @@ export * from "./service.action";
 export * from "./task.action";
 export * from "./topic.action";
 export * from "./transactions.action";
-export * from "./user.action";
 export * from "./usersJob.action";
 export * from "./widgets.action";
