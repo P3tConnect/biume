@@ -54,10 +54,6 @@ export default function Header() {
 
         <div className="hidden lg:block">
           <div className="flex items-center">
-            <nav className="mr-10">
-              <Menu />
-            </nav>
-
             <div className="gap-2 flex">
               {isSignedIn ? (
                 <Link href='/dashboard/123' className={buttonVariants({ variant: "secondary" })}>
@@ -69,7 +65,7 @@ export default function Header() {
                 </Button>
               </SignInButton>}
               {isSignedIn ? null : <Link
-                href="/signup"
+                href="/sign-up"
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
                   "w-full sm:w-auto text-white flex gap-2"

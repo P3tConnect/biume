@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { BorderBeam } from "../ui/border-beam";
+import Safari from "../safari";
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -55,7 +56,7 @@ function HeroTitles() {
           staggerChildren: 0.2,
         }}
       >
-        {["Votre", "activité", "animalière,", "sans", "effort", "!"].map((text, index) => (
+        {["Votre", "activité", "animalière", "sans", "effort", "!"].map((text, index) => (
           <motion.span
             key={index}
             className="inline-block px-1 md:px-2 text-balance font-extrabold"
@@ -81,7 +82,7 @@ function HeroTitles() {
           ease,
         }}
       >
-        No matter what problem you have, our AI can help you solve it.
+        Et concentrez-vous sur nos amis a quatre pattes !
       </motion.p>
     </div>
   );
@@ -113,7 +114,7 @@ function HeroCTA() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
       >
-        7 day free trial. No credit card required.
+        2 mois d'essai inclus. Pas de carte bancaire requise.
       </motion.p>
     </>
   );
@@ -127,10 +128,15 @@ function HeroImage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.2, duration: 1, ease }}
     >
-      <img
+      <Safari
         src="/PawThera.jpeg"
-        className="border rounded-lg shadow-lg max-w-screen-lg mt-16"
+        url="pawthera.com"
+        className="shadow-lg max-w-screen-xl mt-16"
       />
+      {/* <img
+        src="/PawThera.jpeg"
+        className="border rounded-lg shadow-lg max-w-screen-xl mt-16"
+      /> */}
     </motion.div>
   );
 }

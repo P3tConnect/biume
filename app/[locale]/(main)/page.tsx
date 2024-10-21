@@ -1,5 +1,5 @@
 // import { Bubbles } from "@/components/landing/bubbles";
-import CallToActionSection from "@/components/landing/cta-section";
+import { CallToAction } from "@/components/landing/cta-section";
 import FeaturesSection from "@/components/landing/features";
 import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
@@ -15,11 +15,11 @@ export default function Home() {
       <Header />
       <Hero />
       <Problem />
-      <Solution />
+      {/* <Solution /> */}
       <FeaturesSection />
       {/* <Pricing /> */}
       <FAQ />
-      <CallToActionSection />
+      <CallToAction />
       <Footer />
       {/* <Bubbles /> */}
       {/* <div className="hidden lg:block w-full absolute top-[0%] right-[-28%] -z-30">
