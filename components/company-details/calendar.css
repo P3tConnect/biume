@@ -1,0 +1,40 @@
+.fc-toolbar-title {
+  font-size: 1.25rem !important;
+  margin: 0;
+  font-weight: 300;
+  padding: 20px 0 0px 20px;
+}
+
+.fc-button {
+  background-color: #006082 !important;
+  border-color: #006082 !important;
+}
+
+.fc {
+  border: none !important;
+}
+
+.fc-day {
+  border: none !important;
+  border-radius: 1rem !important;
+  margin: 0.5rem !important;
+}
+
+.fc-theme-standard td {
+  border: none !important;
+}
+
+.fc-daygrid-frame {
+  color: aquamarine !important;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border: none !important;
+}
+
+/* .fc .fc-daygrid-day-top {
+  flex-direction: inherit !important;
+  padding: 5px !important;
+  font-size: 0.75em !important;
+  color: #6b7280 !important;
+} */
