@@ -5,12 +5,9 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui";
-import {
-  ArrowLeft,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
@@ -66,7 +63,7 @@ const TimetableWidget = () => {
       resizeObserver.disconnect();
     };
   }, []);
-  // !!! 
+  // !!!
 
   const handleNext = () => {
     if (calendarApi) {
@@ -95,7 +92,9 @@ const TimetableWidget = () => {
   return (
     <Card
       ref={containerRef}
-      className={cn("w-full bg-secondary rounded-2xl border border-border dark:border-white")}
+      className={cn(
+        "w-full bg-primary rounded-2xl border border-border dark:border-white",
+      )}
     >
       <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle className="text-xl text-white">
@@ -103,14 +102,14 @@ const TimetableWidget = () => {
         </CardTitle>
         <div className="flex justify-center items-center gap-2">
           <Button
-            variant="secondary"
+            variant="default"
             onClick={handlePrev}
             className="rounded-full h-7 w-7 p-0"
           >
             <ArrowLeft size={18} />
           </Button>
           <Button
-            variant="secondary"
+            variant="default"
             onClick={handleNext}
             className="rounded-full h-7 w-7 p-0"
           >

@@ -2,7 +2,6 @@
 
 import Drawer from "./drawer";
 import { Icons } from "@/components/landing/icons";
-import Menu from "./menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
@@ -32,11 +31,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={
-        "sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"
-      }
-    >
+    <header className={"sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"}>
       <div className="flex justify-between items-center container">
         <Link
           href="/"
@@ -56,24 +51,29 @@ export default function Header() {
           <div className="flex items-center">
             <div className="gap-2 flex">
               {isSignedIn ? (
-                <Link href='/dashboard/123' className={buttonVariants({ variant: "secondary" })}>
+                <Link
+                  href="/dashboard/123"
+                  className={buttonVariants({ variant: "default" })}
+                >
                   Dashboard
                 </Link>
-              ) : <SignInButton>
-                <Button variant={'secondary'}>
-                  Login
-                </Button>
-              </SignInButton>}
-              {isSignedIn ? null : <Link
-                href="/sign-up"
-                className={cn(
-                  buttonVariants({ variant: "secondary" }),
-                  "w-full sm:w-auto text-white flex gap-2"
-                )}
-              >
-                <Icons.logo className="h-6 w-6" />
-                Get Started for Free
-              </Link>}
+              ) : (
+                <SignInButton>
+                  <Button variant={"default"}>Login</Button>
+                </SignInButton>
+              )}
+              {isSignedIn ? null : (
+                <Link
+                  href="/sign-up"
+                  className={cn(
+                    buttonVariants({ variant: "secondary" }),
+                    "w-full sm:w-auto text-black flex gap-2",
+                  )}
+                >
+                  <Icons.logo className="h-6 w-6" />
+                  Get Started for Free
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@ export default function Header() {
       <hr
         className={cn(
           "absolute w-full bottom-0 transition-opacity duration-300 ease-in-out",
-          addBorder ? "opacity-100" : "opacity-0"
+          addBorder ? "opacity-100" : "opacity-0",
         )}
       />
     </header>

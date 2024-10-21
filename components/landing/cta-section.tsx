@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
 import Marquee from "@/components/ui/marquee";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
+  ArrowRight,
   BarChart,
   ChevronRight,
   File,
@@ -14,6 +15,10 @@ import {
   Shield,
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
+import Section from "./section";
+import { Icons } from "./icons";
+import { Input } from "../ui";
 
 const tiles = [
   {
@@ -123,69 +128,22 @@ export const CallToAction = () => {
   }, []);
 
   return (
-    <section id="cta">
-      <div className="py-14">
-        <div className="container flex w-full flex-col items-center justify-center p-4">
-          <div className="relative flex w-full max-w-[1000px] flex-col items-center justify-center overflow-hidden rounded-[2rem] border">
-            <Marquee
-              reverse
-              className="-delay-[200ms] [--duration:20s]"
-              repeat={4}
-            >
-              {randomTiles1.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee reverse className="[--duration:30s]" repeat={4}>
-              {randomTiles2.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee
-              reverse
-              className="-delay-[200ms] [--duration:20s]"
-              repeat={4}
-            >
-              {randomTiles3.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee reverse className="[--duration:30s]" repeat={4}>
-              {randomTiles4.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <div className="absolute z-10">
-              <div className="mx-auto size-24 rounded-[2rem] border bg-white/10 p-3 shadow-2xl backdrop-blur-md dark:bg-black/10 lg:size-32">
-                <HeartHandshake className="mx-auto size-16 text-black dark:text-white lg:size-24" />
-              </div>
-              <div className="z-10 mt-4 flex flex-col items-center text-center text-black dark:text-white">
-                <h1 className="text-3xl font-bold lg:text-4xl">
-                  Stop wasting time on design.
-                </h1>
-                <p className="mt-2">
-                  Start your 7-day free trial. No credit card required.
-                </p>
-                <a
-                  href="/"
-                  className={cn(
-                    buttonVariants({
-                      size: "lg",
-                      variant: "outline",
-                    }),
-                    "group mt-4 rounded-[2rem] px-6",
-                  )}
-                >
-                  Get Started
-                  <ChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                </a>
-              </div>
-              <div className="absolute inset-0 -z-10 rounded-full  bg-white opacity-40 blur-xl dark:bg-black" />
-            </div>
-            <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-b from-transparent to-white to-70% dark:to-black" />
-          </div>
-        </div>
+    <Section
+      id="cta"
+      title="Notre application vous plait ?"
+      subtitle="Inscrivez-vous la liste d'attente !"
+      className="bg-secondary/10 rounded-xl py-16"
+    >
+      <div className="flex flex-col w-full sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
+        <Input placeholder="Email" className="rounded-3xl w-96" />
+        <Button
+          variant={"outline"}
+          className="w-full rounded-full sm:w-auto text-black flex gap-2"
+        >
+          <p>M'inscrire</p>
+          <ArrowRight className="h-4 w-4" />
+        </Button>
       </div>
-    </section>
+    </Section>
   );
-}
+};

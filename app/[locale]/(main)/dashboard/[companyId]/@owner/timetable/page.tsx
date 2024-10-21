@@ -1,4 +1,4 @@
-import TimeTableFullWidth from "@/components/company/timetable-full-width";
+import TimeTableFullWidth from "@/components/company-details/timetable-full-width";
 import React from "react";
 
 const DashboardCompanyTimetablePage = () => {

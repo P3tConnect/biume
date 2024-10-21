@@ -1,14 +1,35 @@
-import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui";
 import { Dispatch, SetStateAction } from "react";
 import { MoreHorizontal, MoreVertical } from "lucide-react";
 
 import Link from "next/link";
 
-const CalendarDropdown = ({ viewMode, setViewMode }: { viewMode: string, setViewMode: Dispatch<SetStateAction<string>> }) => {
+const CalendarDropdown = ({
+  viewMode,
+  setViewMode,
+}: {
+  viewMode: string;
+  setViewMode: Dispatch<SetStateAction<string>>;
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="rounded-full h-7 w-7 p-0 text-white bg-secondary dark:bg-white dark:text-black">
+        <Button
+          variant="default"
+          className="rounded-full h-7 w-7 p-0 text-white bg-primary dark:bg-white dark:text-black"
+        >
           <MoreVertical size={18} />
         </Button>
       </DropdownMenuTrigger>

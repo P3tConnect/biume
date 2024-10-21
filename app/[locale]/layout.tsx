@@ -9,6 +9,7 @@ import { getScopedI18n } from "@/src/locales/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
+import { frFR, enUS } from "@clerk/localizations";
 
 const geist = GeistSans;
 
@@ -94,19 +95,31 @@ export default async function RootLayout({
   params: { locale: string };
 }>) {
   return (
-    <html lang={params.locale}>
-      <body
-        className={cn("min-h-screen font-sans antialiased", geist.className)}
-      >
-        <ClerkProvider>
+    <ClerkProvider
+      localization={{
+        backButton: "Retour",
+        locale: params.locale,
+        formFieldLabel__emailAddress: "Email",
+        formFieldLabel__password: "Mot de passe",
+        formFieldLabel__emailAddress_username: "Email ou nom d'utilisateur",
+        formFieldInputPlaceholder__password: "Mot de passe",
+        formFieldInputPlaceholder__emailAddress: "Email",
+        formFieldInputPlaceholder__emailAddress_username:
+          "Email ou nom d'utilisateur",
+      }}
+    >
+      <html lang={params.locale}>
+        <body
+          className={cn("min-h-screen font-sans antialiased", geist.className)}
+        >
           <I18nProviderClient locale={params.locale}>
             <Providers>
               <div vaul-drawer-wrapper="">{children}</div>
               <TailwindIndicator />
             </Providers>
           </I18nProviderClient>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

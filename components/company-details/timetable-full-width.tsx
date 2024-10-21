@@ -1,6 +1,6 @@
 "use client";
 
-import './calendar.css'
+import "./calendar.css";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
@@ -102,14 +102,14 @@ const TimeTableFullWidth = () => {
         </CardTitle>
         <div className="flex flew-row items-center gap-2">
           <Button
-            variant="secondary"
+            variant="default"
             onClick={handlePrev}
             className="rounded-full h-7 w-7 p-0"
           >
             <ArrowLeft size={18} />
           </Button>
           <Button
-            variant="secondary"
+            variant="default"
             onClick={handleNext}
             className="rounded-full h-7 w-7 p-0"
           >
@@ -130,7 +130,7 @@ const TimeTableFullWidth = () => {
             <h1>Terminée</h1>
           </div>
           <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-secondary h-4 w-4"></div>
+            <div className="rounded-full bg-primary h-4 w-4"></div>
             <h1>En demande</h1>
           </div>
           <div className="flex flex-row justify-center items-center gap-1">
@@ -147,13 +147,13 @@ const TimeTableFullWidth = () => {
           </div>
         </div>
         <div className="flex flex-row gap-2">
-          <Button variant="secondary" onClick={() => { }} className="rounded-md">
+          <Button variant="default" onClick={() => {}} className="rounded-md">
             Mois
           </Button>
-          <Button variant="secondary" onClick={() => { }} className="rounded-md">
+          <Button variant="default" onClick={() => {}} className="rounded-md">
             Semaine
           </Button>
-          <Button variant="secondary" onClick={() => { }} className="rounded-md">
+          <Button variant="default" onClick={() => {}} className="rounded-md">
             jours
           </Button>
         </div>

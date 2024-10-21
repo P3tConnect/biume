@@ -70,10 +70,12 @@ export function Pricing() {
               {tiers.map((tier, index) => (
                 <th key={tier.name} className="p-4 text-center font-medium">
                   <div
-                    className={`rounded-2xl p-6 ${tier.popular ? "bg-gray-100 ring-2 ring-secondary" : ""}`}
+                    className={`rounded-2xl p-6 ${
+                      tier.popular ? "bg-gray-100 ring-2 ring-primary" : ""
+                    }`}
                   >
                     {tier.popular && (
-                      <span className="bg-secondary text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">
+                      <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">
                         Most popular
                       </span>
                     )}
@@ -109,10 +111,11 @@ export function Pricing() {
               {tiers.map((tier, index) => (
                 <td key={`button-${tier.name}`} className="p-4 text-center">
                   <Button
-                    className={`w-full ${tier.popular
-                      ? "bg-secondary text-white hover:bg-secondary/90"
-                      : "bg-white text-secondary border border-secondary hover:bg-secondary/10"
-                      }`}
+                    className={`w-full ${
+                      tier.popular
+                        ? "bg-primary text-white hover:bg-primary/90"
+                        : "bg-white text-primary border border-primary hover:bg-primary/10"
+                    }`}
                   >
                     {tier.buttonText}
                   </Button>
@@ -143,9 +146,7 @@ export function Pricing() {
                         />
                       )
                     ) : (
-                      <span className="text-sm text-gray-600">
-                        {available}
-                      </span>
+                      <span className="text-sm text-gray-600">{available}</span>
                     )}
                   </td>
                 ))}
@@ -157,6 +158,6 @@ export function Pricing() {
       {/* <p className="mt-12 text-center text-sm text-gray-500">
         All plans include a 14-day free trial. No credit card required.
       </p> */}
-    </Section >
+    </Section>
   );
 }

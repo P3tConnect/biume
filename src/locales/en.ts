@@ -14,8 +14,8 @@ export default {
         "These are the features we have planned, help us improve it to make it your tool !",
       more: "More",
       ia: {
-        title: "AI",
-        description: "We are also riding the AI wave",
+        title: "Artificial Intelligence",
+        description: "We are also riding the AI wave to make your life easier",
         points: {
           point1:
             "For your home visits, artificial intelligence will suggest the shortest or most efficient route for your day.",

@@ -14,7 +14,7 @@ export default {
         "Ce sont les fonctionnalités que nous avons prévus, aidez-nous à l'améliorer pour en faire votre outil !",
       more: "En savoir plus",
       ia: {
-        title: "IA",
+        title: "Intelligence Artificielle",
         description: "Nous voguons nous aussi sur la vague de l'IA",
         points: {
           point1:
