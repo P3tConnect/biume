@@ -125,23 +125,19 @@ function HeroCTA() {
 
 function HeroImage() {
   return (
-    // <motion.div
-    //   className="relative mx-auto flex w-full items-center justify-center"
-    //   initial={{ opacity: 0, y: 50 }}
-    //   animate={{ opacity: 1, y: 0 }}
-    //   transition={{ delay: 1.2, duration: 1, ease }}
-    // >
-    //   <Safari
-    //     src="/PawThera.jpeg"
-    //     url="pawthera.com"
-    //     className="shadow-lg max-w-screen-2xl mt-16"
-    //   />
-    //   {/* <img
-    //     src="/PawThera.jpeg"
-    //     className="border rounded-lg shadow-lg max-w-screen-xl mt-16"
-    //   /> */}
-    // </motion.div>
-    <MacbookScroll showGradient={false} src="/PawThera.jpeg" />
+    <motion.div
+      className="relative mx-auto flex w-full items-center justify-center"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.2, duration: 1, ease }}
+    >
+      <Safari
+        src="/PawThera.jpeg"
+        url="pawthera.com"
+        className="shadow-lg max-w-screen-2xl mt-16"
+      />
+    </motion.div>
+    // <MacbookScroll showGradient={false} src="/PawThera.jpeg" />
   );
 }
 
