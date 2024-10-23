@@ -77,6 +77,29 @@ export default {
         },
       },
     },
+    faqSection: {
+      q1: {
+        title: "Qu'est ce que PawThera ?",
+        answer:
+          "PawThera est une application web qui permet de gérer votre entreprise du secteur animalier.",
+      },
+      q2: {
+        title: "",
+        answer: "",
+      },
+      q3: {
+        title: "",
+        answer: "",
+      },
+      q4: {
+        title: "",
+        answer: "",
+      },
+      q5: {
+        title: "",
+        answer: "",
+      },
+    },
     ctaSection: {
       title: "Notre application vous plait ?",
       description: "Rejoignez-nous et inscrivez-vous sur la liste d'attente",

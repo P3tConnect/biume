@@ -76,6 +76,28 @@ export default {
         },
       },
     },
+    faqSection: {
+      q1: {
+        title: "",
+        answer: "",
+      },
+      q2: {
+        title: "",
+        answer: "",
+      },
+      q3: {
+        title: "",
+        answer: "",
+      },
+      q4: {
+        title: "",
+        answer: "",
+      },
+      q5: {
+        title: "",
+        answer: "",
+      },
+    },
     ctaSection: {
       title: "Do you like our application ?",
       description: "Join us and get on the waiting list",
