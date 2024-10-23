@@ -59,7 +59,7 @@ export default function Header() {
                 </Link>
               ) : (
                 <SignInButton>
-                  <Button variant={"default"}>Login</Button>
+                  <Button variant={"default"} className="rounded-xl">Login</Button>
                 </SignInButton>
               )}
               {isSignedIn ? null : (
@@ -67,7 +67,7 @@ export default function Header() {
                   href="/sign-up"
                   className={cn(
                     buttonVariants({ variant: "secondary" }),
-                    "w-full sm:w-auto text-black flex gap-2",
+                    "w-full sm:w-auto text-black flex gap-2 rounded-xl",
                   )}
                 >
                   <Icons.logo className="h-6 w-6" />

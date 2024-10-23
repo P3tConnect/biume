@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { siteConfig } from "@/src/config";
+import BlurFade from "../blur-fade";
 
 export default function FAQ() {
   return (
@@ -17,16 +18,18 @@ export default function FAQ() {
           className="flex w-full flex-col items-center justify-center space-y-2"
         >
           {siteConfig.faqs.map((faq, idx) => (
-            <AccordionItem
-              key={idx}
-              value={faq.question}
-              className="w-full border rounded-lg overflow-hidden"
-            >
-              <AccordionTrigger className="px-4">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="px-4">{faq.answer}</AccordionContent>
-            </AccordionItem>
+            <BlurFade key={idx} className="w-full" delay={0.2 + idx * 0.2} inView>
+              <AccordionItem
+                key={idx}
+                value={faq.question}
+                className="w-full border rounded-lg overflow-hidden"
+              >
+                <AccordionTrigger className="px-4">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="px-4">{faq.answer}</AccordionContent>
+              </AccordionItem>
+            </BlurFade>
           ))}
         </Accordion>
       </div>
