@@ -22,7 +22,7 @@ export default function FAQ() {
               <AccordionItem
                 key={idx}
                 value={faq.question}
-                className="w-full border rounded-lg overflow-hidden"
+                className="w-full border rounded-xl overflow-hidden"
               >
                 <AccordionTrigger className="px-4">
                   {faq.question}

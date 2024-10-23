@@ -104,7 +104,7 @@ function HeroCTA() {
           href="/signup"
           className={cn(
             buttonVariants({ variant: "default" }),
-            "w-full sm:w-auto text-background flex gap-2 rounded-3xl dark:text-white",
+            "w-full sm:w-auto text-background flex gap-2 rounded-xl dark:text-white",
           )}
         >
           <Icons.logo className="h-6 w-6" />

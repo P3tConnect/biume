@@ -23,7 +23,6 @@ export default function FeaturesSection() {
       description: t("features.ia.description"),
       href: "/",
       cta: t("features.more"),
-      direction: "ltr" as "rtl" | "ltr",
       points: [
         t("features.ia.points.point1"),
         t("features.ia.points.point2"),
@@ -40,7 +39,6 @@ export default function FeaturesSection() {
       description: t("features.accounting.description"),
       href: "/",
       cta: t("features.more"),
-      direction: "rtl" as "rtl" | "ltr",
       points: [
         t("features.accounting.points.point1"),
         t("features.accounting.points.point2"),
@@ -58,7 +56,6 @@ export default function FeaturesSection() {
       description: t("features.reservations.description"),
       href: "/",
       cta: t("features.more"),
-      direction: "ltr" as "rtl" | "ltr",
       points: [
         t("features.reservations.points.point1"),
         t("features.reservations.points.point2"),
@@ -74,7 +71,6 @@ export default function FeaturesSection() {
       description: t("features.calendar.description"),
       href: "/",
       cta: t("features.more"),
-      direction: "rtl" as "rtl" | "ltr",
       points: [
         t("features.calendar.points.point1"),
         t("features.calendar.points.point2"),
@@ -89,7 +85,6 @@ export default function FeaturesSection() {
       description: t("features.notifications.description"),
       href: "/",
       cta: t("features.more"),
-      direction: "ltr" as "rtl" | "ltr",
       points: [
         t("features.notifications.points.point1"),
         t("features.notifications.points.point2"),
