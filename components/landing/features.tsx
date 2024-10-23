@@ -137,7 +137,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <Section title="Solution" subtitle="Découvrez les fonctionnalités">
+    <Section title="Solution" subtitle="Voice notre réponse à vos problèmes">
       <div className="mx-auto mt-16 grid max-w-sm grid-cols-1 gap-6 text-gray-500 md:max-w-3xl md:grid-cols-2 xl:grid-rows-2 md:grid-rows-3 xl:max-w-6xl xl:auto-rows-fr xl:grid-cols-3">
         {features.map((feature, index) => (
           <motion.div
