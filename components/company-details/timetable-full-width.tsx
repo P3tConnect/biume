@@ -22,7 +22,7 @@ import { logger } from "@/src/lib";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import { toast } from "sonner";
-import { useCurrentLocale } from "@/src/locales";
+import { useLocale } from "next-intl";
 
 const TimeTableFullWidth = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -31,7 +31,7 @@ const TimeTableFullWidth = () => {
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -147,13 +147,13 @@ const TimeTableFullWidth = () => {
           </div>
         </div>
         <div className="flex flex-row gap-2">
-          <Button variant="default" onClick={() => {}} className="rounded-md">
+          <Button variant="default" onClick={() => { }} className="rounded-md">
             Mois
           </Button>
-          <Button variant="default" onClick={() => {}} className="rounded-md">
+          <Button variant="default" onClick={() => { }} className="rounded-md">
             Semaine
           </Button>
-          <Button variant="default" onClick={() => {}} className="rounded-md">
+          <Button variant="default" onClick={() => { }} className="rounded-md">
             jours
           </Button>
         </div>

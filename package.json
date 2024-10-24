@@ -83,6 +83,7 @@
     "next": "14.2.14",
     "next-auth": "^5.0.0-beta.22",
     "next-international": "^1.2.4",
+    "next-intl": "^3.23.5",
     "next-safe-action": "^7.9.3",
     "next-themes": "^0.3.0",
     "next-typesafe-url": "^4.1.0",

@@ -16,11 +16,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useSidebarToggle, useStore } from "@/src/hooks";
 import { useEffect, useRef, useState } from "react";
 import { CalendarApi } from "@fullcalendar/core/index.js";
-import { useCurrentLocale } from "@/src/locales";
 import { cn, logger } from "@/src/lib";
 import { toast } from "sonner";
 import CalendarDropdown from "./components/calendar-dropdown";
 import useWindowSize from "@/src/hooks/use-window-size";
+import { useLocale } from "next-intl";
 
 const TimetableWidget = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -29,7 +29,7 @@ const TimetableWidget = () => {
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
   const { windowSize } = useWindowSize();
 
   useEffect(() => {

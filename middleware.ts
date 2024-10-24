@@ -1,12 +1,10 @@
 // middleware.ts
-import { createI18nMiddleware } from "next-international/middleware";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./src/i18n/routing";
 
-const i18nMiddleware = createI18nMiddleware({
-  locales: ["en", "fr"],
-  defaultLocale: "fr",
-});
+const i18nMiddleware = createMiddleware(routing);
 
 const protectedRoutes = createRouteMatcher([
   "/(.*)/dashboard(.*)",
@@ -34,5 +32,6 @@ export const config = {
   matcher: [
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
+    "/(en|fr)/:path*",
   ],
 };

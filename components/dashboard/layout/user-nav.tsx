@@ -19,10 +19,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentLocale } from "@/src/locales";
+import { useLocale } from "next-intl";
 
 export function UserNav() {
-  const locale = useCurrentLocale();
+  const locale = useLocale();
 
   return (
     <>

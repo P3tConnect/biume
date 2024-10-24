@@ -22,7 +22,7 @@ import { logger } from "@/src/lib";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import { toast } from "sonner";
-import { useCurrentLocale } from "@/src/locales";
+import { useLocale } from "next-intl";
 
 const TimeTableFullWidth = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -31,7 +31,7 @@ const TimeTableFullWidth = () => {
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -152,7 +152,7 @@ const TimeTableFullWidth = () => {
             <Button
               variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Mois
@@ -160,7 +160,7 @@ const TimeTableFullWidth = () => {
             <Button
               variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Semaine
@@ -168,7 +168,7 @@ const TimeTableFullWidth = () => {
             <Button
               variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Jours

@@ -10,11 +10,11 @@ import {
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 
 import React from "react";
-import { useScopedI18n } from "@/src/locales";
 import Section from "./section";
+import { useTranslations } from "next-intl";
 
 export default function FeaturesSection() {
-  const t = useScopedI18n("landingPage");
+  const t = useTranslations("landingPage");
 
   const features = [
     {

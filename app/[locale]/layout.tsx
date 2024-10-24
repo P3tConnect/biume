@@ -4,8 +4,8 @@ import "../globals.css";
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
 import { safeConfig } from "@/src/lib";
-import { I18nProviderClient } from "@/src/locales/client";
-import { getScopedI18n } from "@/src/locales/server";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getTranslations } from "next-intl/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
@@ -18,7 +18,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
-  const t = await getScopedI18n("metadata");
+  const t = await getTranslations({ locale: params.locale, namespace: "metadata" });
   return {
     title: "PawThera",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -96,6 +96,7 @@ export default async function RootLayout({
 }>) {
 
   const localisation = params.locale == "fr" ? frFR : enUS;
+  const messages = await getMessages({ locale: params.locale });
 
   return (
     <ClerkProvider
@@ -105,12 +106,12 @@ export default async function RootLayout({
         <body
           className={cn("min-h-screen font-sans antialiased", geist.className)}
         >
-          <I18nProviderClient locale={params.locale}>
+          <NextIntlClientProvider messages={messages}>
             <Providers>
               <div vaul-drawer-wrapper="">{children}</div>
               <TailwindIndicator />
             </Providers>
-          </I18nProviderClient>
+          </NextIntlClientProvider>
         </body>
       </html>
     </ClerkProvider>

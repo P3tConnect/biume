@@ -14,7 +14,7 @@ import {
   TooltipProvider,
   Button,
 } from "@/components/ui";
-import { useCurrentLocale } from "@/src/locales";
+import { useLocale } from "next-intl";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -23,7 +23,7 @@ interface MenuProps {
 
 export function Menu({ isOpen, companyId }: MenuProps) {
   const pathname = usePathname();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
   const menuList = proMenuList(pathname, locale, companyId);
 
   return (
@@ -109,7 +109,7 @@ export function Menu({ isOpen, companyId }: MenuProps) {
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
             <Button
-              onClick={() => {}}
+              onClick={() => { }}
               variant="outline"
               className="w-full justify-center h-10 mt-5"
             >

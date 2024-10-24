@@ -6,10 +6,10 @@ import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { Navbar } from "./navbar";
 import { Menu, proMenuList } from "@/src/config/menu-list";
 import { usePathname } from "next/navigation";
-import { useCurrentLocale } from "@/src/locales";
 import DashboardBubbles from "./dashboard-bubbles";
 import { ScrollArea } from "@/components/ui";
 import useWindowSize from "@/src/hooks/use-window-size";
+import { useLocale } from "next-intl";
 
 export default function DashboardLayout({
   children,
@@ -19,7 +19,7 @@ export default function DashboardLayout({
   companyId: string;
 }) {
   const pathname = usePathname();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
   const sidebar = useStore(useSidebarToggle, (state) => state);
   const { windowSize } = useWindowSize();
 
