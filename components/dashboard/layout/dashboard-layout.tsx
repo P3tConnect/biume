@@ -10,7 +10,6 @@ import { useCurrentLocale } from "@/src/locales";
 import DashboardBubbles from "./dashboard-bubbles";
 import { ScrollArea } from "@/components/ui";
 import useWindowSize from "@/src/hooks/use-window-size";
-import { cn } from "@/src/lib";
 
 export default function DashboardLayout({
   children,
@@ -37,7 +36,12 @@ export default function DashboardLayout({
         <Sidebar companyId={companyId} />
         <main className="min-h-[calc(100vh_-_56px)] w-full pr-5 transition-[margin-left] ease-in-out duration-300 flex flex-col">
           <Navbar menu={menu as Menu} sidebar={sidebar} />
-          <ScrollArea className={cn(`h-[${windowSize.height! * 0.8}px] pr-3`)}>{children}</ScrollArea>
+          <ScrollArea
+            className='pr-3'
+            style={{ height: `${windowSize.height! * 0.9 - 28}px` }}
+          >
+            {children}
+          </ScrollArea>
         </main>
       </div>
       <DashboardBubbles />

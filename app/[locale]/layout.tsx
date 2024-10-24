@@ -94,19 +94,12 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
+
+  const localisation = params.locale == "fr" ? frFR : enUS;
+
   return (
     <ClerkProvider
-      localization={{
-        backButton: "Retour",
-        locale: params.locale,
-        formFieldLabel__emailAddress: "Email",
-        formFieldLabel__password: "Mot de passe",
-        formFieldLabel__emailAddress_username: "Email ou nom d'utilisateur",
-        formFieldInputPlaceholder__password: "Mot de passe",
-        formFieldInputPlaceholder__emailAddress: "Email",
-        formFieldInputPlaceholder__emailAddress_username:
-          "Email ou nom d'utilisateur",
-      }}
+      localization={localisation}
     >
       <html lang={params.locale}>
         <body

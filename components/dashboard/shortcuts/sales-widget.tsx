@@ -26,7 +26,7 @@ const SalesProWidget = () => {
           </CardHeader>
           <CardContent className="flex justify-start items-center gap-5">
             <h3 className="font-bold text-4xl">7500€</h3>
-            <Badge>+ 20%</Badge>
+            <Badge variant="secondary">+ 20%</Badge>
           </CardContent>
         </Card>
       </DialogTrigger>

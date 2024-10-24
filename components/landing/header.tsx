@@ -58,9 +58,9 @@ export default function Header() {
                   Dashboard
                 </Link>
               ) : (
-                <SignInButton>
-                  <Button variant={"default"} className="rounded-xl">Login</Button>
-                </SignInButton>
+                <Link href="/sign-in" className={cn(buttonVariants({ variant: "default" }), "rounded-xl")}>
+                  Login
+                </Link>
               )}
               {isSignedIn ? null : (
                 <Link
