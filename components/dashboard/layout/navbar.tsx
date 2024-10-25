@@ -17,6 +17,7 @@ import {
 } from "@/components/ui";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Suspense } from "react";
 
 interface NavbarProps {
   sidebar: useSidebarToggleStore;
@@ -43,12 +44,15 @@ export function Navbar(
           <SearchButton />
           <ModeToggle />
           <Notifications />
-          <SignedOut>
+          {/* <SignedOut>
             <Skeleton className="h-6 w-6 rounded-full" />
           </SignedOut>
           <SignedIn>
             <UserButton />
-          </SignedIn>
+          </SignedIn> */}
+          <Suspense fallback={<Skeleton className="h-6 w-6 rounded-full" />}>
+            <UserButton />
+          </Suspense>
         </div>
 
         <div className="flex gap-1 items-center justify-end md:justify-between flex-row max-w-full overflow-hidden lg:hidden">
