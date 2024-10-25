@@ -1,8 +1,9 @@
+import PatientsPageComponent from '@/components/dashboard/pages/patients-page/patients-page'
 import React from 'react'
 
 const DashboardCompanyPatientsPage = () => {
   return (
-    <div>DashboardCompanyPatientsPage</div>
+    <PatientsPageComponent />
   )
 }
 

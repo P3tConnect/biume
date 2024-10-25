@@ -11,10 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui";
 import { useEffect, useRef, useState } from "react";
-import { useSidebarToggle, useStore } from "@/src/hooks";
-
 import { CalendarApi } from "@fullcalendar/core/index.js";
-import CalendarDropdown from "../../../dashboard/shortcuts/components/calendar-dropdown";
+import CalendarDropdown from "./components/calendar-dropdown";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -25,7 +23,6 @@ import { toast } from "sonner";
 import { useLocale } from "next-intl";
 
 const TimeTableFullWidth = () => {
-  const sidebar = useStore(useSidebarToggle, (state) => state);
   const calendarRef = useRef<FullCalendar>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState("month");
