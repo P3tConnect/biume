@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import CalendarDropdown from "./components/calendar-dropdown";
 import useWindowSize from "@/src/hooks/use-window-size";
 import { useLocale } from "next-intl";
+import "../../company-details/calendar.css";
 
 const TimetableWidget = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -93,11 +94,11 @@ const TimetableWidget = () => {
     <Card
       ref={containerRef}
       className={cn(
-        "w-full bg-primary rounded-2xl border border-border dark:border-white",
+        "w-full bg-background rounded-2xl border border-border dark:border-white",
       )}
     >
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl text-white">
+        <CardTitle className="text-xl">
           Calendrier et prochains rendez-vous
         </CardTitle>
         <div className="flex justify-center items-center gap-2">
@@ -155,6 +156,15 @@ const TimetableWidget = () => {
           headerToolbar={{
             left: "",
             right: "",
+          }}
+          viewClassNames={() => {
+            return "text-primary"
+          }}
+          allDayClassNames={() => {
+            return "text-primary"
+          }}
+          dayCellClassNames={() => {
+            return "bg-background";
           }}
         />
       </CardContent>

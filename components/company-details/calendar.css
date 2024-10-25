@@ -14,14 +14,23 @@
   border: none !important;
 }
 
-.fc-day {
-  border: none !important;
-  border-radius: 1rem !important;
-  margin: 0.5rem !important;
+.fc .fc-day {
+  border: none;
+  border-radius: 1rem;
+  margin: 0.5rem;
 }
 
-.fc-theme-standard td {
+.fc-theme-standard td,
+.fc-theme-standard th {
   border: none !important;
+}
+
+.fc-day-today {
+  background-color: hsl(var(--secondary)) !important;
+}
+
+.fc-highlight {
+  color: hsl(var(--primary)) !important;
 }
 
 .fc-daygrid-frame {
