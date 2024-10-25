@@ -8,34 +8,37 @@ const data = [
     title: "AI-Powered Dashboard",
     content: "Visualize trends and gain insights at a glance.",
     image: "/PawThera.jpeg",
-    icon: <BarChart3 className="h-6 w-6 text-secondary" />,
+    icon: <BarChart3 className="h-6 w-6 text-primary" />,
   },
   {
     id: 2,
     title: "Natural Language Processing",
     content: "Analyze text and extract sentiment effortlessly.",
     image: "/PawThera.jpeg",
-    icon: <Brain className="h-6 w-6 text-secondary" />,
+    icon: <Brain className="h-6 w-6 text-primary" />,
   },
   {
     id: 3,
     title: "Predictive Analytics",
     content: "Forecast trends and make data-driven decisions.",
     image: "/PawThera.jpeg",
-    icon: <LineChart className="h-6 w-6 text-secondary" />,
+    icon: <LineChart className="h-6 w-6 text-primary" />,
   },
   {
     id: 4,
     title: "Automated Reporting",
     content: "Generate comprehensive reports with one click.",
     image: "/PawThera.jpeg",
-    icon: <FileText className="h-6 w-6 text-secondary" />,
+    icon: <FileText className="h-6 w-6 text-primary" />,
   },
 ];
 
 export default function Solution() {
   return (
-    <Section title="Solution" subtitle="La solution pour résoudre vos problèmes">
+    <Section
+      title="Solution"
+      subtitle="La solution pour résoudre vos problèmes"
+    >
       <Features collapseDelay={5000} linePosition="bottom" data={data} />
     </Section>
   );

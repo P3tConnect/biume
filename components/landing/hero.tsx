@@ -8,6 +8,7 @@ import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { BorderBeam } from "../ui/border-beam";
 import Safari from "../safari";
+import { MacbookScroll } from "../macbook-scroll";
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -15,15 +16,15 @@ function HeroPill() {
   return (
     <motion.a
       href="/"
-      className="flex w-auto items-center space-x-2 rounded-full bg-secondary/20 px-2 py-1 ring-accent whitespace-pre border dark:border-white/10"
+      className="flex w-auto items-center space-x-2 rounded-full bg-primary/20 px-2 py-1 ring-accent whitespace-pre border dark:border-white/10"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease }}
     >
-      <div className="w-fit rounded-full bg-gray-200 px-2 py-0.5 text-center text-xs font-medium text-secondary sm:text-sm">
+      <div className="w-fit rounded-full bg-gray-200 px-2 py-0.5 text-center text-xs font-medium text-primary sm:text-sm">
         📣 Announcement
       </div>
-      <p className="text-xs font-medium text-secondary sm:text-sm">
+      <p className="text-xs font-medium text-primary sm:text-sm">
         Incoming PawThera App
       </p>
       <svg
@@ -36,7 +37,7 @@ function HeroPill() {
       >
         <path
           d="M8.78141 5.33312L5.20541 1.75712L6.14808 0.814453L11.3334 5.99979L6.14808 11.1851L5.20541 10.2425L8.78141 6.66645H0.666748V5.33312H8.78141Z"
-          fill="hsl(var(--secondary))"
+          fill="hsl(var(--primary))"
         />
       </svg>
     </motion.a>
@@ -56,21 +57,23 @@ function HeroTitles() {
           staggerChildren: 0.2,
         }}
       >
-        {["Votre", "activité", "animalière", "sans", "effort", "!"].map((text, index) => (
-          <motion.span
-            key={index}
-            className="inline-block px-1 md:px-2 text-balance font-extrabold"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.8,
-              delay: index * 0.2,
-              ease,
-            }}
-          >
-            {text}
-          </motion.span>
-        ))}
+        {["Votre", "activité", "animalière", "sans", "effort", "!"].map(
+          (text, index) => (
+            <motion.span
+              key={index}
+              className="inline-block px-1 md:px-2 text-balance font-extrabold"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: index * 0.2,
+                ease,
+              }}
+            >
+              {text}
+            </motion.span>
+          ),
+        )}
       </motion.h1>
       <motion.p
         className="mx-auto max-w-xl text-center text-lg leading-7 text-muted-foreground sm:text-xl sm:leading-9 text-balance"
@@ -100,8 +103,8 @@ function HeroCTA() {
         <Link
           href="/signup"
           className={cn(
-            buttonVariants({ variant: "secondary" }),
-            "w-full sm:w-auto text-background flex gap-2 rounded-3xl dark:text-white",
+            buttonVariants({ variant: "default" }),
+            "w-full sm:w-auto text-background flex gap-2 rounded-xl dark:text-white",
           )}
         >
           <Icons.logo className="h-6 w-6" />
@@ -131,13 +134,10 @@ function HeroImage() {
       <Safari
         src="/PawThera.jpeg"
         url="pawthera.com"
-        className="shadow-lg max-w-screen-xl mt-16"
+        className="shadow-lg max-w-screen-2xl mt-16"
       />
-      {/* <img
-        src="/PawThera.jpeg"
-        className="border rounded-lg shadow-lg max-w-screen-xl mt-16"
-      /> */}
     </motion.div>
+    // <MacbookScroll showGradient={false} src="/PawThera.jpeg" />
   );
 }
 

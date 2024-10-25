@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Safari from "./safari";
 
 // If using Next.js, uncomment the following line
 // import Image from 'next/image';
@@ -27,7 +28,9 @@ export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
         <img
           src={imageSrc}
           alt="Scrolling"
-          className={`w-full max-w-[300px] mx-auto mb-4 ${isLTR ? "order-1" : "order-2"}`}
+          className={`w-full max-w-[300px] mx-auto mb-4 ${
+            isLTR ? "order-1" : "order-2"
+          }`}
         />
         <div className={isLTR ? "order-2" : "order-1"}>{children}</div>
       </div>
@@ -39,14 +42,21 @@ export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
           {children}
         </div>
         <div
-          className={`flex items-center justify-center h-fit ${isLTR ? "" : "row-start-1"}`}
+          className={`flex items-center justify-center w-full h-fit ${
+            isLTR ? "" : "row-start-1"
+          }`}
         >
           {/* If using Next.js, replace img with Image component */}
-          <img
+          <Safari
+            src={imageSrc}
+            url="pawthera.com"
+            className="w-full max-w-[900px]"
+          />
+          {/* <img
             src={imageSrc}
             alt="Scrolling"
             className="w-full max-w-[300px]"
-          />
+          /> */}
         </div>
       </div>
     </div>
@@ -54,9 +64,5 @@ export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
 };
 
 export function FeatureScroll1() {
-  return (
-    <section>
-
-    </section>
-  );
+  return <section></section>;
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const DashboardBubbles = () => {
   return (
@@ -16,7 +16,7 @@ const DashboardBubbles = () => {
         <div className="w-[800px] h-[800px] bg-primary rounded-full blur-3xl opacity-55"></div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default DashboardBubbles
+export default DashboardBubbles;

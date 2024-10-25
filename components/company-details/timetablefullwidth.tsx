@@ -1,8 +1,8 @@
 "use client";
 
-import './calendar.css';
+import "./calendar.css";
 
-import {ArrowLeft, ArrowRight} from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Button,
   Card,
@@ -22,7 +22,7 @@ import { logger } from "@/src/lib";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import { toast } from "sonner";
-import { useCurrentLocale } from "@/src/locales";
+import { useLocale } from "next-intl";
 
 const TimeTableFullWidth = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -31,7 +31,7 @@ const TimeTableFullWidth = () => {
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
-  const locale = useCurrentLocale();
+  const locale = useLocale();
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -104,14 +104,14 @@ const TimeTableFullWidth = () => {
           <div className="flex flew-row gap-2 items-center">
             <Button
               onClick={handlePrev}
-              className="rounded-full h-7 w-7 p-0 text-white bg-secondary dark:bg-white dark:text-black"
+              className="rounded-full h-7 w-7 p-0 text-white bg-primary dark:bg-white dark:text-black"
             >
               <ArrowLeft size={18} />
             </Button>
             <Button
-              variant="secondary"
+              variant="default"
               onClick={handleNext}
-              className="rounded-full h-7 w-7 p-0 text-white bg-secondary dark:bg-white dark:text-black"
+              className="rounded-full h-7 w-7 p-0 text-white bg-primary dark:bg-white dark:text-black"
             >
               <ArrowRight size={18} />
             </Button>
@@ -130,7 +130,7 @@ const TimeTableFullWidth = () => {
               <h1 className="text-sm text-black dark:text-white">Terminé</h1>
             </div>
             <div className="flex flex-row gap-2 items-center">
-              <div className="h-4 w-4 rounded-sm bg-secondary"></div>
+              <div className="h-4 w-4 rounded-sm bg-primary"></div>
               <h1 className="text-sm text-black dark:text-white">En demande</h1>
             </div>
             <div className="flex flex-row gap-2 items-center">
@@ -150,25 +150,25 @@ const TimeTableFullWidth = () => {
           </div>
           <div className="flex flex-row gap-2 items-center text-sm text-white">
             <Button
-              variant="secondary"
+              variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Mois
             </Button>
             <Button
-              variant="secondary"
+              variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Semaine
             </Button>
             <Button
-              variant="secondary"
+              variant="default"
               size="sm"
-              onClick={() => {}}
+              onClick={() => { }}
               className="rounded-md"
             >
               Jours
@@ -194,14 +194,10 @@ const TimeTableFullWidth = () => {
           contentHeight={760}
           dayMaxEvents={3}
           dayCellClassNames={() => {
-            return 'bg-white';
+            return "bg-white";
           }}
           dayCellContent={() => {
-            return (
-              <div className="h-full w-full bg-blue-500">
-
-              </div>
-            )
+            return <div className="h-full w-full bg-blue-500"></div>;
           }}
           // dateClick={(date) => {
           //   console.log(date.date, "date click");

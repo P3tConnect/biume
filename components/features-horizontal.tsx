@@ -23,14 +23,14 @@ const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>(
     <Accordion.Item
       className={cn(
         "mt-px  focus-within:relative focus-within:z-10",
-        className
+        className,
       )}
       {...props}
       ref={forwardedRef}
     >
       {children}
     </Accordion.Item>
-  )
+  ),
 );
 
 AccordionItem.displayName = "AccordionItem";
@@ -50,7 +50,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
         {children}
       </Accordion.Trigger>
     </Accordion.Header>
-  )
+  ),
 );
 AccordionTrigger.displayName = "AccordionTrigger";
 type AccordionContentProps = {
@@ -63,14 +63,14 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
     <Accordion.Content
       className={cn(
         "data-[state=closed]:animate-slide-up data-[state=open]:animate-slide-down",
-        className
+        className,
       )}
       {...props}
       ref={forwardedRef}
     >
       <div className="px-5 py-2">{children}</div>
     </Accordion.Content>
-  )
+  ),
 );
 AccordionContent.displayName = "AccordionContent";
 
@@ -139,7 +139,7 @@ export default function Features({
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) =>
-        prevIndex !== undefined ? (prevIndex + 1) % data.length : 0
+        prevIndex !== undefined ? (prevIndex + 1) % data.length : 0,
       );
     }, collapseDelay);
 
@@ -166,7 +166,7 @@ export default function Features({
         const cardWidth = carousel.querySelector(".card")?.clientWidth || 0;
         const newIndex = Math.min(
           Math.floor(scrollLeft / cardWidth),
-          data.length - 1
+          data.length - 1,
         );
         setCurrentIndex(newIndex);
       };
@@ -182,8 +182,9 @@ export default function Features({
         <div className="max-w-6xl mx-auto ">
           <div className="">
             <div
-              className={`hidden md:flex order-1 md:order-[0]  ${ltr ? "md:order-2 md:justify-end" : "justify-start"
-                }`}
+              className={`hidden md:flex order-1 md:order-[0]  ${
+                ltr ? "md:order-2 md:justify-end" : "justify-start"
+              }`}
             >
               <Accordion.Root
                 className="grid md:grid-cols-4 gap-x-10 py-8"
@@ -202,14 +203,16 @@ export default function Features({
                   >
                     {linePosition === "left" || linePosition === "right" ? (
                       <div
-                        className={`absolute bottom-0 top-0 h-full w-0.5 overflow-hidden rounded-lg bg-neutral-300/50 dark:bg-neutral-300/30 ${linePosition === "right"
-                          ? "left-auto right-0"
-                          : "left-0 right-auto"
-                          }`}
+                        className={`absolute bottom-0 top-0 h-full w-0.5 overflow-hidden rounded-lg bg-neutral-300/50 dark:bg-neutral-300/30 ${
+                          linePosition === "right"
+                            ? "left-auto right-0"
+                            : "left-0 right-auto"
+                        }`}
                       >
                         <div
-                          className={`absolute left-0 top-0 w-full ${currentIndex === index ? "h-full" : "h-0"
-                            } origin-top bg-primary transition-all ease-linear dark:bg-white`}
+                          className={`absolute left-0 top-0 w-full ${
+                            currentIndex === index ? "h-full" : "h-0"
+                          } origin-top bg-primary transition-all ease-linear dark:bg-white`}
                           style={{
                             transitionDuration:
                               currentIndex === index
@@ -222,13 +225,16 @@ export default function Features({
 
                     {linePosition === "top" || linePosition === "bottom" ? (
                       <div
-                        className={`absolute left-0 right-0 w-full h-0.5 overflow-hidden rounded-lg bg-neutral-300/50 dark:bg-neutral-300/30 ${linePosition === "bottom" ? "bottom-0" : "top-0"
-                          }`}
+                        className={`absolute left-0 right-0 w-full h-0.5 overflow-hidden rounded-lg bg-neutral-300/50 dark:bg-neutral-300/30 ${
+                          linePosition === "bottom" ? "bottom-0" : "top-0"
+                        }`}
                       >
                         <div
-                          className={`absolute left-0 ${linePosition === "bottom" ? "bottom-0" : "top-0"
-                            } h-full ${currentIndex === index ? "w-full" : "w-0"
-                            } origin-left bg-secondary transition-all ease-linear dark:bg-white`}
+                          className={`absolute left-0 ${
+                            linePosition === "bottom" ? "bottom-0" : "top-0"
+                          } h-full ${
+                            currentIndex === index ? "w-full" : "w-0"
+                          } origin-left bg-primary transition-all ease-linear dark:bg-white`}
                           style={{
                             transitionDuration:
                               currentIndex === index
@@ -241,7 +247,7 @@ export default function Features({
 
                     <AccordionTrigger>
                       <div className="flex items-center relative flex-col">
-                        <div className="item-box size-16 bg-secondary/10 rounded-full sm:mx-6 mx-2 shrink-0 flex items-center justify-center">
+                        <div className="item-box size-16 bg-primary/10 rounded-full sm:mx-6 mx-2 shrink-0 flex items-center justify-center">
                           {item.icon}
                         </div>
                         <div className="font-bold text-xl my-3 ">
@@ -257,8 +263,9 @@ export default function Features({
               </Accordion.Root>
             </div>
             <div
-              className={`w-auto overflow-hidden relative rounded-lg ${ltr && "md:order-1"
-                }`}
+              className={`w-auto overflow-hidden relative rounded-lg ${
+                ltr && "md:order-1"
+              }`}
             >
               {data[currentIndex]?.image ? (
                 <motion.img
@@ -288,8 +295,8 @@ export default function Features({
                 duration={12}
                 delay={9}
                 borderWidth={1.5}
-                colorFrom="hsl(var(--secondary))"
-                colorTo="hsl(var(--secondary)/0)"
+                colorFrom="hsl(var(--primary))"
+                colorTo="hsl(var(--primary)/0)"
               />
             </div>
 
@@ -311,8 +318,9 @@ export default function Features({
                 >
                   <div className="absolute bottom-0 left-0 right-auto top-0 h-0.5 w-full overflow-hidden rounded-lg bg-neutral-300/50 dark:bg-neutral-300/30">
                     <div
-                      className={`absolute left-0 top-0 h-full ${currentIndex === index ? "w-full" : "w-0"
-                        } origin-top bg-secondary transition-all ease-linear dark:bg-white`}
+                      className={`absolute left-0 top-0 h-full ${
+                        currentIndex === index ? "w-full" : "w-0"
+                      } origin-top bg-primary transition-all ease-linear dark:bg-white`}
                       style={{
                         transitionDuration:
                           currentIndex === index ? `${collapseDelay}ms` : "0s",

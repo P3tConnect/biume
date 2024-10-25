@@ -16,7 +16,6 @@ import {
 import { ArrowUpRight } from "lucide-react";
 
 const ClientsProWidget = () => {
-
   return (
     <Dialog>
       <DialogTrigger asChild className="group hover:cursor-pointer">
@@ -28,7 +27,7 @@ const ClientsProWidget = () => {
             <ArrowUpRight className="h-4 w-4 group-hover:h-6 group-hover:w-6 transition-all duration-600" />
           </CardHeader>
           <CardContent className="flex justify-start items-center gap-5">
-            <h3 className="font-bold text-4xl text-secondary">450</h3>
+            <h3 className="font-bold text-4xl text-primary">450</h3>
             <Badge>+ 130%</Badge>
           </CardContent>
         </Card>

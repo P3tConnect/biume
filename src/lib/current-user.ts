@@ -10,7 +10,7 @@ export const currentUser = async () => {
   }
 
   if (!user) {
-    return null;
+    throw new Error("User not found");
   }
 
   return user;
