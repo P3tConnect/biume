@@ -1,13 +1,12 @@
-import { MonthView, BaseView } from "@devexpress/dx-react-scheduler";
+import { BaseView } from "@devexpress/dx-react-scheduler";
 
-export const TimetableCell = ({ props }: { props: BaseView.TimeTableCellProps }) => {
+export const TimetableCell = ({props}: { props: BaseView.TimeTableCellProps }) => {
 
-  const { startDate, children, onDoubleClick, endDate } = props;
+  const {startDate, children, onDoubleClick, endDate} = props;
 
   return (
-    <td className="w-full flex flex-col bg-gray-300 border border-slate-700">
-      <p className="text-black">{startDate?.getDate()}</p>
-      {children}
-    </td>
+      <td className="relative bg-gray-100 border border-gray-300 h-24 w-full">
+        <div className="absolute top-1 left-1 text-xs text-gray-600">{startDate?.getDate()}</div>
+      </td>
   );
 };

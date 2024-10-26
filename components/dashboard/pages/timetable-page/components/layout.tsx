@@ -10,7 +10,7 @@ const Layout = ({ props }: { props: BaseView.LayoutProps }) => {
   const { timeTableComponent: TimeTable, dayScaleComponent: DayScale, setScrollingStrategy } = props;
 
   return (
-    <table className='w-full h-full bg-white rounded-xl'>
+    <table className='w-full h-full mt-5'>
       <thead>
         <DayScale
           cellsData={[]}
