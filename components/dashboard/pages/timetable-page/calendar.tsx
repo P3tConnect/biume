@@ -1,7 +1,5 @@
 "use client";
 
-import "./calendar.css";
-
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Button,
@@ -21,6 +19,17 @@ import multiMonthPlugin from "@fullcalendar/multimonth";
 import timeGridDayPlugin from "@fullcalendar/timegrid";
 import { toast } from "sonner";
 import { useLocale } from "next-intl";
+import { Appointments, AppointmentTooltip, DayView, MonthView, Scheduler, ViewState } from "@devexpress/dx-react-scheduler";
+import { TimetableCell } from "./components/timetable/timetable-cell";
+import Layout from "./components/layout";
+import AppointmentLayer from "./components/appointment/appointment-layer";
+import TimetableRow from "./components/timetable/timetable-row";
+import AppointementComponent from "./components/appointment/appointment-component";
+import AppointmentContent from "./components/appointment/appointement-content";
+import DayScaleLayout from "./components/day-scale/day-scale-layout";
+import TimeTableLayout from "./components/timetable/timetable-layout";
+import DayScaleCell from "./components/day-scale/day-scale-cell";
+import DayScaleRow from "./components/day-scale/day-scale-row";
 
 const TimeTableFullWidth = () => {
   const calendarRef = useRef<FullCalendar>(null);
@@ -156,7 +165,7 @@ const TimeTableFullWidth = () => {
         </div>
       </div>
       <CardContent className="text-black dark:text-white">
-        <FullCalendar
+        {/* <FullCalendar
           ref={calendarRef}
           locale={locale}
           plugins={[
@@ -182,10 +191,45 @@ const TimeTableFullWidth = () => {
           dayCellClassNames={(info) => {
             return "bg-white font-bold dark:bg-background";
           }}
-        />
+        /> */}
+        <Scheduler height={660} rootComponent={({ height, children }) => <div className="w-full" style={{ height }}>{children}</div>}
+          data={[]}
+          locale={locale}
+          firstDayOfWeek={1}
+        >
+          <ViewState
+            currentDate={new Date()}
+          />
+          <MonthView
+            layoutComponent={(props) => <Layout props={props} />}
+            dayScaleLayoutComponent={(props) => <DayScaleLayout props={props} />}
+            timeTableLayoutComponent={(props) => <TimeTableLayout props={props} />}
+            dayScaleCellComponent={(props) => <DayScaleCell props={props} />}
+            dayScaleRowComponent={(props) => <DayScaleRow props={props} />}
+            timeTableCellComponent={(props) => <TimetableCell props={props} />}
+            timeTableRowComponent={(props) => <TimetableRow props={props} />}
+            appointmentLayerComponent={(props) => <AppointmentLayer props={props} />}
+          />
+          {/* <Appointments
+            appointmentComponent={(props) => <AppointementComponent props={props} />}
+            appointmentContentComponent={(props) => <AppointmentContent props={props} />}
+            splitIndicatorComponent={(props) => <></>}
+            recurringIconComponent={(props) => <></>}
+            containerComponent={(props) => <></>}
+          /> */}
+          {/* <AppointmentTooltip
+            layoutComponent={(props) => <div className="p-2 bg-gray-100" {...props} />}
+            headerComponent={(props) => <div className="font-semibold" {...props} />}
+            contentComponent={(props) => <div className="text-sm" {...props} />}
+            commandButtonComponent={(props) => <div className="p-2 bg-gray-100" {...props} />}
+            recurringIconComponent={(props) => <div className="p-2 bg-gray-100" {...props} />}
+          /> */}
+        </Scheduler>
       </CardContent>
     </Card>
   );
 };
+
+
 
 export default TimeTableFullWidth;
