@@ -5,7 +5,7 @@ const DayScaleRow = ({ props }: { props: BaseView.RowProps }) => {
   const { children } = props;
 
   return (
-    <tr className='flex border-b w-full justify-between'>
+    <tr className="flex w-full border-b">
       {children}
     </tr>
   )
