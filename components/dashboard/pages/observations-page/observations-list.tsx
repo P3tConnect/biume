@@ -1,4 +1,11 @@
-import { Button } from "@/components/ui";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui";
 import Image from "next/image";
 import React from "react";
 import { Share2, FilePenLine } from "lucide-react";
@@ -110,55 +117,64 @@ const ObservationsList = async () => {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white dark:bg-background">
           <thead>
-            <tr>
-              <th className="pb-2 py-2 border-b-2 border-gray-300 text-start text-xl text-black font-bold tracking-wider dark:text-white">
-                Nom
-              </th>
-              <th className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white">
-                Espèce
-              </th>
-              <th className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white">
-                Notes
-              </th>
-              <th className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white"></th>
-            </tr>
+          <tr>
+            <th
+              className="pb-2 py-2 border-b-2 border-gray-300 text-start text-xl text-black font-bold tracking-wider dark:text-white">
+              Nom
+            </th>
+            <th
+              className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white">
+              Espèce
+            </th>
+            <th
+              className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white">
+              Notes
+            </th>
+            <th
+              className="pb-2 py-2 border-b-2 border-gray-300 text-center text-xl text-black font-bold tracking-wider dark:text-white"></th>
+          </tr>
           </thead>
           <tbody>
-            {animals.map((animal, index) => (
-              <tr key={index} className="bg-white-50">
-                <td className="px-2 py-2 flex items-center justify-start text-start whitespace-no-wrap border-b border-gray-200">
-                  <Image
-                    src={animal.avatar}
-                    alt="Avatar"
-                    className="rounded-full mr-4"
-                    width={40}
-                    height={40}
-                  />
-                  {animal.name}
-                </td>
-                <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">
-                  {animal.espece}
-                </td>
-                <td className="px-2 py-2 whitespace-no-wrap border-b text-end border-gray-200">
-                  {animal.notes}
-                </td>
-                <td className="px-2 py-2 whitespace-nowrap border-b text-start border-gray-200 gap-2">
-                  <Button
-                    variant="ghost"
-                    className="text-secondary hover:bg-transparent hover:text-secondary/80"
-                  >
-                    <FilePenLine />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="text-secondary hover:bg-transparent hover:text-secondary/80"
-                  >
-                    <Share2 />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+          {animals.map((animal, index) => (
+            <tr key={index} className="bg-white dark:bg-background">
+              <td className="px-2 py-2 flex items-center border-b border-gray-200">
+                <Image src={animal.avatar} alt="Avatar" className="rounded-full mr-4" width={40} height={40}/>
+                {animal.name}
+              </td>
+              <td className="px-2 py-2 text-center border-b border-gray-200">
+                {animal.espece}
+              </td>
+              <td className="px-2 py-2 border-b border-gray-200">
+                {animal.notes}
+              </td>
+              <td className="px-2 py-2 text-center border-b border-gray-200 flex gap-2">
+                <Dialog>
+                  <DialogTrigger asChild className="group hover:cursor-pointer">
+                    <FilePenLine/>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Modifier l&apos;observation</DialogTitle>
+                      <DialogClose/>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                <Dialog>
+                  <DialogTrigger asChild className="group hover:cursor-pointer">
+                    <Share2/>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Partager l&apos;observation</DialogTitle>
+                      <DialogClose/>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </td>
+            </tr>
+          ))}
           </tbody>
+
         </table>
       </div>
     </div>

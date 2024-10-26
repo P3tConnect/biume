@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Card, CardContent, CardHeader, Checkbox, Input } from '@/components/ui';
-import { Search } from 'lucide-react'; // Ensure you have lucide-react for icons
+import { Button, Card, CardContent, CardHeader, Checkbox } from '@/components/ui';
+import { Search } from 'lucide-react';
 
 const ReservationRequestWidget = () => {
   const clients = [

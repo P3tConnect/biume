@@ -1,9 +1,8 @@
-import React from 'react'
+import TeamWidget from "@/components/dashboard/shortcuts/team-widget";
+import React from "react";
 
 const DashboardCompanyTeamPage = () => {
-  return (
-    <div>DashboardCompanyTeamPage</div>
-  )
-}
+  return <TeamWidget />;
+};
 
-export default DashboardCompanyTeamPage
+export default DashboardCompanyTeamPage;

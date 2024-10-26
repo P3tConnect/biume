@@ -24,19 +24,12 @@ import { useCurrentLocale } from "@/src/locales";
 
 const TimeTableFullWidth = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
-  const calendarRef = useRef<FullCalendar>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<FullCalendar>();
+  const containerRef = useRef<HTMLDivElement>();
   const [viewMode, setViewMode] = useState("month");
   const [currentMonth, setCurrentMonth] = useState("");
   const [calendarApi, setCalendarApi] = useState<CalendarApi>();
   const locale = useCurrentLocale();
-
-  useEffect(() => {
-    const calendar = calendarRef.current;
-    if (calendar) {
-      setCalendarApi(calendar.getApi());
-    }
-  }, []);
 
   useEffect(() => {
     const calendar = calendarRef.current;
@@ -62,7 +55,6 @@ const TimeTableFullWidth = () => {
       resizeObserver.disconnect();
     };
   }, []);
-
   // !!!
 
   const handleNext = () => {
@@ -92,7 +84,7 @@ const TimeTableFullWidth = () => {
   return (
     <Card
       ref={containerRef}
-      className="w-full bg-[#EEEFF5] h-full rounded-2xl border border-border dark:border-white dark:bg-background"
+      className="w-full bg-[#EEEFF5] h-full rounded-2xl dark:bg-background"
     >
       <CardHeader className="flex flex-col items-start justify-start sm:px-7 sm:flex sm:flex-row sm:justify-between sm:items-center">
         <CardTitle className="text-xl text-black dark:text-white">
