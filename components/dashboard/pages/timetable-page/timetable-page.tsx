@@ -1,4 +1,4 @@
-import TimeTableFullWidth from '@/components/company-details/timetable-full-width'
+import TimeTableFullWidth from './calendar'
 import React from 'react'
 
 const TimeTablePageComponent = () => {

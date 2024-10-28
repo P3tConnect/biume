@@ -1,7 +1,5 @@
 "use client";
 
-import "./calendar.css";
-
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Button,
@@ -156,36 +154,12 @@ const TimeTableFullWidth = () => {
         </div>
       </div>
       <CardContent className="text-black dark:text-white">
-        <FullCalendar
-          ref={calendarRef}
-          locale={locale}
-          plugins={[
-            dayGridPlugin,
-            timeGridDayPlugin,
-            multiMonthPlugin,
-            interactionPlugin,
-          ]}
-          editable={true}
-          firstDay={1}
-          selectable={true}
-          selectMirror={true}
-          height={760}
-          contentHeight={760}
-          dayMaxEvents={3}
-          datesSet={(dates) => {
-            setCurrentMonth(dates.view.title);
-          }}
-          headerToolbar={{
-            left: "",
-            right: "",
-          }}
-          dayCellClassNames={(info) => {
-            return "bg-white font-bold dark:bg-background";
-          }}
-        />
+
       </CardContent>
     </Card>
   );
 };
+
+
 
 export default TimeTableFullWidth;
