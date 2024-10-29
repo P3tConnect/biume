@@ -41,6 +41,7 @@ export const company = pgTable("company", {
   logo: text("logo"),
   coverImage: text("coverImage"),
   description: text("description"),
+  onBoardingComplete: boolean("onBoardingComplete"),
   addressId: text("address").references(() => companyAddress.id, {
     onDelete: "cascade",
   }),
