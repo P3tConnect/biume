@@ -137,6 +137,16 @@
       "notifications": "Notifications",
       "search": "Search",
       "switch": "Switch Theme"
+    },
+    "content": {
+      "home": {
+        "totalClients": "Total customers this month",
+        "lastExpenses": "Last Expenses",
+        "upcomingAppointments": "Upcoming Appointments",
+        "reminders": "My reminders",
+        "reservations": "My reservations",
+        "nextSessions": "Calendar and next sessions"
+      }
     }
   }
 }
