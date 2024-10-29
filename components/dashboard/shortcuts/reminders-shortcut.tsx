@@ -10,15 +10,14 @@ import React from "react";
 
 const RemindersShortcut = () => {
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <CardTitle>Reminders</CardTitle>
+    <Card className="w-full h-full bg-background rounded-2xl">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-xl font-bold">Mes Rappels</CardTitle>
         <Button
           variant="outline"
-          size="sm"
-          className="p-0 rounded-full h-8 w-8"
+          className="p-0 rounded-full h-7 w-7"
         >
-          <EllipsisVertical className="h-4 w-4" />
+          <EllipsisVertical size={18} />
         </Button>
       </CardHeader>
       <CardContent></CardContent>
