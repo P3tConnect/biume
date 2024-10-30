@@ -13,8 +13,8 @@ const protectedRoutes = createRouteMatcher([
 
 const isOnboardingRoute = createRouteMatcher(["/(.*)/onboarding(.*)"]);
 
-export default clerkMiddleware((auth, req) => {
-  const { userId, redirectToSignIn, sessionClaims } = auth();
+export default clerkMiddleware(async (auth, req) => {
+  const { userId, sessionClaims, redirectToSignIn } = await auth();
 
   if (protectedRoutes(req) && !userId) {
     redirectToSignIn({ returnBackUrl: req.nextUrl.pathname });

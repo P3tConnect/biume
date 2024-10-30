@@ -10,15 +10,18 @@ import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { frFR, enUS } from "@clerk/localizations";
+import { Suspense } from "react";
 
 const geist = GeistSans;
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: "metadata" });
+  const { locale } = await params;
+
+  const t = await getTranslations({ locale: locale, namespace: "metadata" });
   return {
     title: "PawThera",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -31,7 +34,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      locale: params.locale,
+      locale: locale,
       url: "https://pawthera.com",
       description: t("description"),
       siteName: "PawThera",
@@ -92,17 +95,16 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
 
-  const localisation = params.locale == "fr" ? frFR : enUS;
-  const messages = await getMessages({ locale: params.locale });
+  const localisation = locale == "fr" ? frFR : enUS;
+  const messages = await getMessages({ locale: locale });
 
   return (
-    <ClerkProvider
-      localization={localisation}
-    >
-      <html lang={params.locale}>
+    <ClerkProvider localization={localisation}>
+      <html lang={locale}>
         <body
           className={cn("min-h-screen font-sans antialiased", geist.className)}
         >

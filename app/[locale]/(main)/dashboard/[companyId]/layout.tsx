@@ -13,11 +13,13 @@ const DashboardCompanyLayout = async ({
 }: {
   member: ReactNode;
   owner: ReactNode;
-  params: { companyId: string; locale: string };
+  params: Promise<{ companyId: string; locale: string }>;
 }) => {
+  const { companyId } = await params;
+  console.log(companyId, "companyId");
 
   return (
-    <DashboardLayoutComponents companyId={params.companyId}>
+    <DashboardLayoutComponents companyId={companyId}>
       {owner}
     </DashboardLayoutComponents>
   );

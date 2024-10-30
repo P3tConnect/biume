@@ -19,7 +19,7 @@ const ClientsProWidget = () => {
   return (
     <Dialog>
       <DialogTrigger asChild className="group hover:cursor-pointer">
-        <Card className="w-full bg-background rounded-2xl hover:bg-[#EEEFF6] hover:dark:bg-[#313131] transition-all duration-400">
+        <Card className="w-full rounded-2xl hover:bg-[#EEEFF6] hover:dark:bg-[#313131] transition-all duration-400">
           <CardHeader className="flex flex-row justify-between items-center">
             <CardTitle className="text-2xl font-bold">
               Total des clients ce mois

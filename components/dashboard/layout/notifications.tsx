@@ -1,6 +1,17 @@
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui'
-import { Bell } from 'lucide-react'
-import React from 'react'
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui";
+import { Bell } from "lucide-react";
+import React from "react";
 
 const Notifications = () => {
   return (
@@ -10,27 +21,23 @@ const Notifications = () => {
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="rounded-full h-8 w-8 p-0"
+              className="rounded-full h-8 w-8 p-0 bg-card"
             >
               <Bell className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent side='bottom'>
-          Notifications
-        </TooltipContent>
+        <TooltipContent side="bottom">Notifications</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent className='w-56' side='bottom' align='end'>
-        <DropdownMenuLabel className='font-bold'>
+      <DropdownMenuContent className="w-56" side="bottom" align="end">
+        <DropdownMenuLabel className="font-bold">
           Notifications
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-
-        </DropdownMenuGroup>
+        <DropdownMenuGroup></DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;

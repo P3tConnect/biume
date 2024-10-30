@@ -6,10 +6,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { siteConfig } from "@/src/config";
-import BlurFade from "../blur-fade";
+import BlurFade from "../magicui/blur-fade";
 
 export default function FAQ() {
-
   const faqs = [
     {
       question: "What is acme.ai?",
@@ -74,7 +73,12 @@ export default function FAQ() {
           className="flex w-full flex-col items-center justify-center space-y-2"
         >
           {faqs.map((faq, idx) => (
-            <BlurFade key={idx} className="w-full" delay={0.2 + idx * 0.2} inView>
+            <BlurFade
+              key={idx}
+              className="w-full"
+              delay={0.2 + idx * 0.2}
+              inView
+            >
               <AccordionItem
                 key={idx}
                 value={faq.question}
@@ -83,7 +87,9 @@ export default function FAQ() {
                 <AccordionTrigger className="px-4">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="px-4">{faq.answer}</AccordionContent>
+                <AccordionContent className="px-4">
+                  {faq.answer}
+                </AccordionContent>
               </AccordionItem>
             </BlurFade>
           ))}
