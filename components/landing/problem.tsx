@@ -1,4 +1,4 @@
-import BlurFade from "@/components/blur-fade";
+import BlurFade from "@/components/magicui/blur-fade";
 import Section from "@/components/landing/section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Shield, Zap } from "lucide-react";

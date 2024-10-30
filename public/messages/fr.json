@@ -137,6 +137,16 @@
       "notifications": "Notifications",
       "search": "Rechercher",
       "switch": "Changer de thème"
+    },
+    "content": {
+      "home": {
+        "totalClients": "Total des clients ce mois",
+        "lastExpenses": "Dernières dépenses",
+        "upcomingAppointments": "Prochaines prestations",
+        "reminders": "Mes rappels",
+        "reservations": "Mes réservations",
+        "nextSessions": "Calendrier et prochains rendez-vous"
+      }
     }
   }
 }

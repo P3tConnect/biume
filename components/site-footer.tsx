@@ -1,4 +1,4 @@
-import { getScopedI18n } from "@/src/locales";
+import { getTranslations } from "next-intl/server";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 
 import Image from "next/image";
@@ -18,7 +18,7 @@ const footerSocials = [
 ];
 
 export async function SiteFooter() {
-  const t = await getScopedI18n("footer");
+  const t = await getTranslations("footer");
 
   return (
     <footer>
