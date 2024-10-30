@@ -1,14 +1,13 @@
 "use client";
 
-import { useStore } from "@/src/hooks/useStore";
 import { SidebarComponent } from "@/components/dashboard/layout/sidebar";
-import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import { Navbar } from "./navbar";
 import { Menu, proMenuList } from "@/src/config/menu-list";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ScrollArea } from "@/components/ui";
 import useWindowSize from "@/src/hooks/use-window-size";
 import { useLocale } from "next-intl";
+import { Suspense } from "react";
 
 export default function DashboardLayout({
   children,
@@ -34,7 +33,7 @@ export default function DashboardLayout({
         <Navbar menu={menu as Menu} companyId={companyId} />
         <ScrollArea
           className="pr-3"
-          style={{ height: `${windowSize.height! * 0.92}px` }}
+          style={{ height: `${windowSize.height! - 90}px` }}
         >
           {children}
         </ScrollArea>

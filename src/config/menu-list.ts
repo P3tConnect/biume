@@ -12,6 +12,7 @@ import {
   Timer,
   UsersRound,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 type Submenu = {
   href: string;
@@ -43,14 +44,14 @@ export function proMenuList(
       menus: [
         {
           href: `/${locale}/dashboard/${companyId}`,
-          label: "Dashboard",
+          label: "dashboard.sidebar.dashboard",
           active: pathname == `/${locale}/dashboard/${companyId}`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/timetable`,
-          label: "Agenda",
+          label: "dashboard.sidebar.calendar",
           active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
           icon: Calendar,
           submenus: [],
@@ -62,21 +63,21 @@ export function proMenuList(
       menus: [
         {
           href: `/${locale}/dashboard/${companyId}/accounting`,
-          label: "Administratif",
+          label: "dashboard.sidebar.accounting",
           active: pathname == `/${locale}/dashboard/${companyId}/accounting`,
           icon: FolderOpen,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/team`,
-          label: "Equipe",
+          label: "dashboard.sidebar.team",
           active: pathname == `/${locale}/dashboard/${companyId}/team`,
           icon: UsersRound,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/reminders`,
-          label: "Rappels",
+          label: "dashboard.sidebar.reminders",
           active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
           icon: Timer,
           submenus: [],
@@ -88,28 +89,28 @@ export function proMenuList(
       menus: [
         {
           href: `/${locale}/dashboard/${companyId}/clients`,
-          label: "Clients",
+          label: "dashboard.sidebar.clients",
           active: pathname == `/${locale}/dashboard/${companyId}/clients`,
           icon: Contact2,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/patients`,
-          label: "Patients",
+          label: "dashboard.sidebar.patients",
           active: pathname == `/${locale}/dashboard/${companyId}/patients`,
           icon: PawPrint,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/reports`,
-          label: "Rapports",
+          label: "dashboard.sidebar.reports",
           active: pathname == `/${locale}/dashboard/${companyId}/reports`,
           icon: LineChart,
           submenus: [],
         },
         {
           href: `/${locale}/dashboard/${companyId}/observations`,
-          label: "Observations",
+          label: "dashboard.sidebar.observations",
           active: pathname == `/${locale}/dashboard/${companyId}/observations`,
           icon: Eye,
           submenus: [],
@@ -121,7 +122,7 @@ export function proMenuList(
       menus: [
         {
           href: `/${locale}/help`,
-          label: "Aide et Assistance",
+          label: "dashboard.sidebar.help",
           active: pathname == `/${locale}/help`,
           icon: LucideMessageCircleQuestion,
           submenus: [],
@@ -168,7 +169,7 @@ export function clientMenuList(pathname: string, locale: string): Group[] {
           active: pathname == `/${locale}/dashboard/pets`,
           icon: PawPrint,
           submenus: [],
-        }
+        },
       ],
     },
   ];

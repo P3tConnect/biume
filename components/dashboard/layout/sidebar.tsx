@@ -23,6 +23,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -46,14 +47,15 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { proMenuList } from "@/src/config";
-import { useLocale } from "next-intl";
-import { useUser } from "@clerk/nextjs";
+import { useLocale, useTranslations } from "next-intl";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 
 export function SidebarComponent({ companyId }: { companyId: string }) {
   const pathname = usePathname();
   const locale = useLocale();
   const { isMobile } = useSidebar();
   const { user } = useUser();
+  const t = useTranslations();
 
   const menuList = proMenuList(pathname, locale, companyId);
 
@@ -101,10 +103,10 @@ export function SidebarComponent({ companyId }: { companyId: string }) {
             <SidebarMenu>
               {menus.map(({ active, href, icon: Icon, label }) => (
                 <SidebarMenuItem key={label}>
-                  <SidebarMenuButton asChild isActive={active}>
+                  <SidebarMenuButton asChild tooltip={label} isActive={active}>
                     <a href={href}>
                       <Icon />
-                      <span>{label}</span>
+                      <span>{t(label)}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -190,10 +192,12 @@ export function SidebarComponent({ companyId }: { companyId: string }) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="gap-2">
-                  <LogOut size={14} />
-                  Log out
-                </DropdownMenuItem>
+                <SignOutButton redirectUrl="/">
+                  <DropdownMenuItem className="gap-2">
+                    <LogOut size={14} />
+                    Log out
+                  </DropdownMenuItem>
+                </SignOutButton>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

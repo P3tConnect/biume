@@ -120,6 +120,10 @@
   },
   "dashboard": {
     "sidebar": {
+      "groups": {
+        "informations": "Informations",
+        "administration": "Administration"
+      },
       "dashboard": "Tableau de bord",
       "calendar": "Agenda",
       "accounting": "Administratif",

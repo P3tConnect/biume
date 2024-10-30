@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
+  TooltipTrigger
 } from "@/components/ui/tooltip";
 
 export function ModeToggle() {
@@ -19,7 +18,7 @@ export function ModeToggle() {
     <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>
         <Button
-          className="rounded-full w-8 h-8"
+          className="rounded-full w-8 h-8 bg-card"
           variant="outline"
           size="icon"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
