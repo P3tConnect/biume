@@ -15,7 +15,6 @@ const DashboardCompanyLayout = async ({
   owner: ReactNode;
   params: { companyId: string; locale: string };
 }) => {
-
   return (
     <DashboardLayoutComponents companyId={params.companyId}>
       {owner}

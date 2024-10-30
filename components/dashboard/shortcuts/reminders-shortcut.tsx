@@ -13,10 +13,7 @@ const RemindersShortcut = () => {
     <Card className="w-full h-full bg-background rounded-2xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl font-bold">Mes Rappels</CardTitle>
-        <Button
-          variant="outline"
-          className="p-0 rounded-full h-7 w-7"
-        >
+        <Button variant="outline" className="p-0 rounded-full h-7 w-7">
           <EllipsisVertical size={18} />
         </Button>
       </CardHeader>

@@ -1,10 +1,6 @@
 import { ReactNode } from "react";
 
-const DashboardLayout = async ({
-  children
-}: {
-  children: ReactNode;
-}) => {
+const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   return <>{children}</>;
 };
 
