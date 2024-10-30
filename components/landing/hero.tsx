@@ -7,8 +7,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { BorderBeam } from "../ui/border-beam";
-import Safari from "../safari";
-import { MacbookScroll } from "../macbook-scroll";
+import Safari from "../magicui/safari";
+import { MacbookScroll } from "../magicui/macbook-scroll";
 
 const ease = [0.16, 1, 0.3, 1];
 

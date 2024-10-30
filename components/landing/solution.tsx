@@ -1,4 +1,4 @@
-import Features from "@/components/features-horizontal";
+import Features from "@/components/magicui/features-horizontal";
 import Section from "@/components/landing/section";
 import { BarChart3, Brain, FileText, LineChart } from "lucide-react";
 

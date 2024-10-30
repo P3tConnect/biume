@@ -20,23 +20,17 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Suspense } from "react";
 
 interface NavbarProps {
-  sidebar: useSidebarToggleStore;
   menu: Menu;
+  companyId: string;
 }
 
-export function Navbar(
-  { menu, sidebar }: NavbarProps,
-  { companyId }: { companyId: string },
-) {
+export function Navbar({ menu, companyId }: NavbarProps) {
   return (
-    <header className="top-0 flex w-full mt-1 mb-3 bg-background border border-border dark:shadow-primary rounded-2xl">
+    <header className="top-0 flex w-full mb-3 bg-card border border-border shadow rounded-2xl">
       <div className="mx-2 flex items-center justify-between gap-2 w-full h-14 lg:mx-4 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-5 lg:flex lg:items-center lg:justify-between">
           <SheetMenu companyId={companyId} />
-          <SidebarToggle
-            isOpen={sidebar?.isOpen}
-            setIsOpen={sidebar?.setIsOpen}
-          />
+          <SidebarToggle />
           <h1 className="font-bold">{menu.label}</h1>
           <NewShortcut />
         </div>
@@ -44,15 +38,6 @@ export function Navbar(
           <SearchButton />
           <ModeToggle />
           <Notifications />
-          {/* <SignedOut>
-            <Skeleton className="h-6 w-6 rounded-full" />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn> */}
-          <Suspense fallback={<Skeleton className="h-6 w-6 rounded-full" />}>
-            <UserButton />
-          </Suspense>
         </div>
 
         <div className="flex gap-1 items-center justify-end md:justify-between flex-row max-w-full overflow-hidden lg:hidden">
