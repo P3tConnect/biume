@@ -1,10 +1,37 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
+import { loginWithCredentials } from "@/src/actions";
+import { useServerActionMutation } from "@/src/hooks";
+import { loginSchema } from "@/src/lib";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const LoginPage = () => {
+
+  const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(z.object({ email: z.string(), password: z.string() })),
+  })
+  const { mutateAsync, isPending } = useServerActionMutation(loginWithCredentials, {
+    onError({ message }) {
+      toast.error(message);
+    }
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await mutateAsync(data);
+    } catch (err) {
+      toast.error(`${err}`);
+    }
+  });
+
+
+
   return (
     <div className="w-screen flex items-center justify-between max-h-screen px-5">
       <div className="flex flex-col items-center justify-center w-1/2 space-y-4">
@@ -13,16 +40,18 @@ const LoginPage = () => {
           Ceci est du texte de description pour justifier de l'utilité de
           s'inscrire sur notre plateforme PawThera
         </p>
-        <form className="flex flex-col items-center justify-center w-1/2 space-y-4">
+        <form className="flex flex-col items-center justify-center w-1/2 space-y-4" onSubmit={onSubmit}>
           <Input
             className="w-96 rounded-3xl"
             type="email"
             placeholder="Email"
+            {...register("email")}
           />
           <Input
             className="w-96 rounded-3xl"
             type="password"
             placeholder="Mot de passe"
+            {...register("password")}
           />
           <Link href="/forgot-password" className="pb-5">
             <p className="text-xs underline">Mot de passe oublié ?</p>
