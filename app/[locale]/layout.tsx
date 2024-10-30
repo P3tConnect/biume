@@ -11,6 +11,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { frFR, enUS } from "@clerk/localizations";
 import { Suspense } from "react";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 
 const geist = GeistSans;
 
@@ -101,6 +103,8 @@ export default async function RootLayout({
 
   const localisation = locale == "fr" ? frFR : enUS;
   const messages = await getMessages({ locale: locale });
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
   return (
     <ClerkProvider localization={localisation}>
@@ -110,8 +114,10 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <Providers>
-              <div vaul-drawer-wrapper="">{children}</div>
-              <TailwindIndicator />
+              <SidebarProvider defaultOpen={defaultOpen}>
+                <div vaul-drawer-wrapper="">{children}</div>
+                <TailwindIndicator />
+              </SidebarProvider>
             </Providers>
           </NextIntlClientProvider>
         </body>

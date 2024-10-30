@@ -16,7 +16,6 @@ const DashboardCompanyLayout = async ({
   params: Promise<{ companyId: string; locale: string }>;
 }) => {
   const { companyId } = await params;
-  console.log(companyId, "companyId");
 
   return (
     <DashboardLayoutComponents companyId={companyId}>
