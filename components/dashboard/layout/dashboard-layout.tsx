@@ -34,7 +34,7 @@ export default function DashboardLayout({
         <Navbar menu={menu as Menu} companyId={companyId} />
         <ScrollArea
           className="pr-3"
-          style={{ height: `${windowSize.height! * 0.92}px` }}
+          style={{ height: `${windowSize.height! * 0.90}px` }}
         >
           {children}
         </ScrollArea>

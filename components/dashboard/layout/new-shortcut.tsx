@@ -15,7 +15,7 @@ const NewShortcut = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="hidden rounded-xl md:flex items-center justify-center gap-2 ml-10"
+          className="hidden rounded-xl md:flex items-center justify-center gap-2 ml-2"
           size="sm"
           variant="default"
         >

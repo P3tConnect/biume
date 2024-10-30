@@ -4,27 +4,17 @@ import {
   BadgeCheck,
   Bell,
   Building,
-  ChevronDown,
-  ChevronRight,
   ChevronsUpDown,
   CreditCard,
   LogOut,
-  MoreHorizontal,
-  MoveLeft,
-  Plus,
   Sparkles,
 } from "lucide-react";
 
-import { cn } from "@/src/lib";
-import { useStore } from "@/src/hooks/useStore";
-import { Menu } from "./menu";
-import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
