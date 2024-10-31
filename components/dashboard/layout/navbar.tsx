@@ -75,7 +75,7 @@ export function Navbar({ menu, companyId }: NavbarProps) {
             </DropdownMenu>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

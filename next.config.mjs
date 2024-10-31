@@ -13,6 +13,10 @@ const nextConfig = {
       {
         hostname: "cdn.magicui.design",
         protocol: "https",
+      },
+      {
+        hostname: 'randomuser.me',
+        protocol: 'https',
       }
     ],
   },
