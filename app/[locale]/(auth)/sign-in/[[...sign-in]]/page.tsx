@@ -3,8 +3,8 @@ import React from "react";
 
 const SignInPage = () => {
   return (
-    <div className="flex justify-center pt-24">
-      <SignIn />
+    <div className="h-screen w-screen flex items-center justify-center">
+      <SignIn signUpUrl="/sign-up" />
     </div>
   );
 };

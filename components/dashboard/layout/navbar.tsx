@@ -1,6 +1,5 @@
 import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
-import { SheetMenu } from "./sheet-menu";
 import { SidebarToggle } from "./sidebar-toggle";
 import { useSidebarToggleStore } from "@/src/hooks/useSidebarToggle";
 import SearchButton from "./search-button";
@@ -18,6 +17,7 @@ import {
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Suspense } from "react";
+import { useTranslations } from "next-intl";
 
 interface NavbarProps {
   menu: Menu;
@@ -25,13 +25,14 @@ interface NavbarProps {
 }
 
 export function Navbar({ menu, companyId }: NavbarProps) {
+  const t = useTranslations();
+
   return (
     <header className="top-0 flex w-full mb-3 bg-card border border-border shadow rounded-2xl">
       <div className="mx-2 flex items-center justify-between gap-2 w-full h-14 lg:mx-4 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-5 lg:flex lg:items-center lg:justify-between">
-          <SheetMenu companyId={companyId} />
           <SidebarToggle />
-          <h1 className="font-bold">{menu.label}</h1>
+          <h1 className="font-bold">{t(menu.label)}</h1>
           <NewShortcut />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-2">

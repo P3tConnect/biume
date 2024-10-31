@@ -15,7 +15,7 @@ const IncomingReservationsWidget = () => {
         <CardTitle className="text-xl font-bold">
           Réservations a traiter
         </CardTitle>
-        <Button variant="outline" className="rounded-full h-7 w-7 p-0">
+        <Button variant="outline" className="rounded-full h-7 w-7 p-0 bg-card">
           <MoreVertical size={18} />
         </Button>
       </CardHeader>

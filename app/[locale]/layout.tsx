@@ -103,12 +103,12 @@ export default async function RootLayout({
 
   const localisation = locale == "fr" ? frFR : enUS;
   const messages = await getMessages({ locale: locale });
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
   return (
-    <ClerkProvider localization={localisation}>
-      <html lang={locale}>
+    <ClerkProvider dynamic localization={localisation}>
+      <html suppressHydrationWarning lang={locale}>
         <body
           className={cn("min-h-screen font-sans antialiased", geist.className)}
         >

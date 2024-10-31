@@ -1,11 +1,9 @@
 "use client";
 
-import { useStore } from "@/src/hooks/useStore";
-import { SidebarComponent } from "@/components/dashboard/layout/sidebar";
-import { useSidebarToggle } from "@/src/hooks/useSidebarToggle";
+import { SidebarComponent } from "./sidebar/sidebar";
 import { Navbar } from "./navbar";
 import { Menu, proMenuList } from "@/src/config/menu-list";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ScrollArea } from "@/components/ui";
 import useWindowSize from "@/src/hooks/use-window-size";
 import { useLocale } from "next-intl";
@@ -17,7 +15,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
   companyId: string;
 }) {
-  console.log(companyId, "companyId in DashboardLayout");
   const pathname = usePathname();
   const locale = useLocale();
   const { windowSize } = useWindowSize();
@@ -34,7 +31,7 @@ export default function DashboardLayout({
         <Navbar menu={menu as Menu} companyId={companyId} />
         <ScrollArea
           className="pr-3"
-          style={{ height: `${windowSize.height! * 0.90}px` }}
+          style={{ height: `${windowSize.height! - 85}px` }}
         >
           {children}
         </ScrollArea>

@@ -7,6 +7,7 @@ declare global {
       stripeId: string;
       isPro: boolean;
       isAdmin: boolean;
+      phone: string;
     };
   }
 
@@ -17,5 +18,6 @@ declare global {
 
   interface UserPrivateMetadata {
     stripeId: string;
+    phone: string;
   }
 }

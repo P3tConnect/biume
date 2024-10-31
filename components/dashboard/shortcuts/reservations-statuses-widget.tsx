@@ -13,7 +13,7 @@ const ReservationsStatusesWidget = () => {
     <Card className="w-full h-full rounded-2xl">
       <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle className="text-xl font-bold">Mes réservations</CardTitle>
-        <Button variant="outline" className="rounded-full h-7 w-7 p-0">
+        <Button variant="outline" className="rounded-full h-7 w-7 p-0 bg-card">
           <MoreVertical size={18} />
         </Button>
       </CardHeader>

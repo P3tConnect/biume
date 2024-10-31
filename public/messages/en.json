@@ -120,8 +120,13 @@
   },
   "dashboard": {
     "sidebar": {
+      "groupLabels": {
+        "management": "Management",
+        "services": "Services",
+        "informations": "Informations"
+      },
       "dashboard": "Dashboard",
-      "calendar": "Timetable",
+      "calendar": "TimeTable",
       "accounting": "Accounting",
       "team": "Team",
       "reminders": "Reminders",

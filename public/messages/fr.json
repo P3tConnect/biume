@@ -120,6 +120,11 @@
   },
   "dashboard": {
     "sidebar": {
+      "groupLabels": {
+        "management": "Gestion",
+        "services": "Services",
+        "informations": "Informations"
+      },
       "dashboard": "Tableau de bord",
       "calendar": "Agenda",
       "accounting": "Administratif",
