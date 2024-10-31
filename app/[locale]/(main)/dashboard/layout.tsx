@@ -1,11 +1,21 @@
+import { currentUser } from "@/src/lib";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 const DashboardLayout = async ({
-  children
+  company,
+  client,
 }: {
-  children: ReactNode;
+  company: ReactNode;
+  client: ReactNode;
 }) => {
-  return <>{children}</>;
+  const user = await currentUser();
+
+  if (user?.publicMetadata.isPro) {
+    return <>{company}</>
+  }
+
+  return <>{client}</>;
 };
 
 export default DashboardLayout;
