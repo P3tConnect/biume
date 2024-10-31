@@ -25,7 +25,7 @@ const RatesSection = () => {
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src="#" alt="avatar" />
-              <AvatarFallback className="bg-secondary border border-border">
+              <AvatarFallback className="bg-primary border border-border">
                 JD
               </AvatarFallback>
             </Avatar>
@@ -78,7 +78,9 @@ const RatesSection = () => {
       </CardContent>
       <CardFooter>
         <Button className="rounded-3xl w-full bg-primary/30 group">
-          <p className="text-primary font-bold group-hover:text-white transition-colors duration-300">Voir plus</p>
+          <p className="text-primary font-bold group-hover:text-white transition-colors duration-300">
+            Voir plus
+          </p>
         </Button>
       </CardFooter>
     </Card>

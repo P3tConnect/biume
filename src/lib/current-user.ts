@@ -1,20 +1,13 @@
-import { User } from "../db/user";
-import { auth } from "./auth";
+"use server";
+import { currentUser as connectedUser, auth } from "@clerk/nextjs/server";
 
 export const currentUser = async () => {
-  const session = await auth();
+  const session = auth();
+  const user = await connectedUser();
 
-  if (!session?.user) {
-    return null;
+  if (!session) {
+    throw new Error("You are not logged in");
   }
-
-  const user = session.user as unknown as User;
-
-  return user;
-};
-
-export const requiredCurrentUser = async () => {
-  const user = await currentUser();
 
   if (!user) {
     throw new Error("User not found");

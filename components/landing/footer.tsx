@@ -1,6 +1,7 @@
 import { Icons } from "@/components/landing/icons";
 import { siteConfig } from "@/src/config";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -12,7 +13,13 @@ export default function Footer() {
           title={siteConfig.name}
           className="relative mr-6 flex items-center space-x-2"
         >
-          <Icons.logo className="w-auto h-[40px]" />
+          <Image
+            src="/assets/images/Icone.png"
+            alt="logo pawthera"
+            width={40}
+            height={40}
+            className="w-auto h-[40px]"
+          />
           <span className="font-bold text-xl">{siteConfig.name}</span>
         </a>
 

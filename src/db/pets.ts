@@ -1,11 +1,4 @@
-import {
-  integer,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { user } from "./user";
+import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { proSession } from "./pro_session";
 import { createInsertSchema } from "drizzle-zod";
@@ -31,7 +24,7 @@ export const pets = pgTable("pets", {
   weight: integer("weight"),
   height: integer("height"),
   description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
+  ownerId: text("ownerId").notNull(),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),
@@ -41,10 +34,6 @@ export const pets = pgTable("pets", {
 });
 
 export const petsRelations = relations(pets, ({ one, many }) => ({
-  owner: one(user, {
-    fields: [pets.ownerId],
-    references: [user.id],
-  }),
   sessions: many(proSession),
   deseases: many(petsDeseases),
   allergies: many(petsAllergies),

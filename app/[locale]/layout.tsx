@@ -1,25 +1,29 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
 import "../globals.css";
 
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
-import { extractRouterConfig } from "uploadthing/server";
-import { ourFileRouter } from "../api/uploadthing/core";
 import { safeConfig } from "@/src/lib";
-import { I18nProviderClient } from "@/src/locales/client";
-import { getScopedI18n } from "@/src/locales/server";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getTranslations } from "next-intl/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { ClerkProvider } from "@clerk/nextjs";
+import { GeistSans } from "geist/font/sans";
+import { frFR, enUS } from "@clerk/localizations";
+import { Suspense } from "react";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 
-const nunito = Nunito({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"] });
+const geist = GeistSans;
 
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const t = await getScopedI18n('metadata');
+  const { locale } = await params;
+
+  const t = await getTranslations({ locale: locale, namespace: "metadata" });
   return {
     title: "PawThera",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -32,7 +36,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: "website",
-      locale: params.locale,
+      locale: locale,
       url: "https://pawthera.com",
       description: t("description"),
       siteName: "PawThera",
@@ -93,28 +97,31 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+
+  const localization = locale == "fr" ? frFR : enUS;
+  const messages = await getMessages({ locale: locale });
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+
   return (
-    <html lang={params.locale}>
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased",
-          nunito.className,
-        )}
-      >
-        <I18nProviderClient locale={params.locale}>
-          <Providers>
-            <NextSSRPlugin
-              routerConfig={extractRouterConfig(ourFileRouter)}
-            />
-            <div vaul-drawer-wrapper="">
-              {children}
-            </div>
-            <TailwindIndicator />
-          </Providers>
-        </I18nProviderClient>
-      </body>
-    </html>
+    <ClerkProvider dynamic localization={localization}>
+      <html suppressHydrationWarning lang={locale}>
+        <body
+          className={cn("min-h-screen font-sans antialiased", geist.className)}
+        >
+          <NextIntlClientProvider messages={messages}>
+            <Providers>
+              <SidebarProvider defaultOpen={defaultOpen}>
+                <div vaul-drawer-wrapper="">{children}</div>
+                <TailwindIndicator />
+              </SidebarProvider>
+            </Providers>
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

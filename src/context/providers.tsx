@@ -8,8 +8,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { safeConfig } from "../lib";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
-const Providers = async ({ children }: PropsWithChildren) => {
+const Providers = ({ children }: PropsWithChildren) => {
   const queryClient = new QueryClient();
 
   useEffect(() => {
@@ -28,10 +29,12 @@ const Providers = async ({ children }: PropsWithChildren) => {
           enableSystem={false}
           disableTransitionOnChange={true}
         >
+          {/* <SidebarProvider> */}
           <TooltipProvider disableHoverableContent>
             {children}
             <Toaster />
           </TooltipProvider>
+          {/* </SidebarProvider> */}
         </ThemeProvider>
       </QueryClientProvider>
     </PostHogProvider>

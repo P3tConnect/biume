@@ -2,16 +2,17 @@
 
 import Drawer from "./drawer";
 import { Icons } from "@/components/landing/icons";
-import Menu from "./menu";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,11 +31,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={
-        "sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"
-      }
-    >
+    <header className={"sticky top-0 z-50 py-2 bg-background/60 backdrop-blur"}>
       <div className="flex justify-between items-center container">
         <Link
           href="/"
@@ -52,27 +49,31 @@ export default function Header() {
 
         <div className="hidden lg:block">
           <div className="flex items-center">
-            <nav className="mr-10">
-              <Menu />
-            </nav>
-
             <div className="gap-2 flex">
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "secondary" })}
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className={cn(
-                  buttonVariants({ variant: "secondary" }),
-                  "w-full sm:w-auto text-background flex gap-2"
-                )}
-              >
-                <Icons.logo className="h-6 w-6" />
-                Get Started for Free
-              </Link>
+              {isSignedIn ? (
+                <Link
+                  href="/dashboard/123"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <Link href="/sign-in" className={cn(buttonVariants({ variant: "default" }), "rounded-xl")}>
+                  Login
+                </Link>
+              )}
+              {isSignedIn ? null : (
+                <Link
+                  href="/sign-up"
+                  className={cn(
+                    buttonVariants({ variant: "secondary" }),
+                    "w-full sm:w-auto text-black flex gap-2 rounded-xl",
+                  )}
+                >
+                  <Icons.logo className="h-6 w-6" />
+                  Get Started for Free
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -83,7 +84,7 @@ export default function Header() {
       <hr
         className={cn(
           "absolute w-full bottom-0 transition-opacity duration-300 ease-in-out",
-          addBorder ? "opacity-100" : "opacity-0"
+          addBorder ? "opacity-100" : "opacity-0",
         )}
       />
     </header>

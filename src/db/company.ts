@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  date,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { cancelPolicies } from "./cancelPolicies";
 import { companyDocuments } from "./companyDocuments";
@@ -13,7 +20,6 @@ import { receipt } from "./receipts";
 import { service } from "./service";
 import { task } from "./task";
 import { topic } from "./topic";
-import { user } from "./user";
 import { category } from "./category";
 import { companyAddress } from "./companyAddress";
 import { transaction } from "./transaction";
@@ -21,6 +27,7 @@ import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { z } from "zod";
 import { companyMembership } from "./company_membership";
+import { reportTemplate } from "./report_template";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -34,6 +41,7 @@ export const company = pgTable("company", {
   logo: text("logo"),
   coverImage: text("coverImage"),
   description: text("description"),
+  onBoardingComplete: boolean("onBoardingComplete"),
   addressId: text("address").references(() => companyAddress.id, {
     onDelete: "cascade",
   }),
@@ -41,7 +49,6 @@ export const company = pgTable("company", {
   closeAt: date("closeAt"),
   stripeId: text("stripeId"),
   email: text("email").notNull().unique(),
-  ownerId: text("ownerId").references(() => user.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").notNull(),
   plan: plan("plan").default("NONE"),
   documentsId: text("documentsId").references(() => companyDocuments.id, {
@@ -58,11 +65,8 @@ export const company = pgTable("company", {
 });
 
 export const companyRelations = relations(company, ({ one, many }) => ({
-  owner: one(user, {
-    fields: [company.ownerId],
-    references: [user.id],
-  }),
   memberships: many(companyMembership),
+  reportTemplates: many(reportTemplate),
   progression: one(progression, {
     fields: [company.progressionId],
     references: [progression.id],

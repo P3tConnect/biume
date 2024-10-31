@@ -10,12 +10,11 @@ import {
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 
 import React from "react";
-import { useScopedI18n } from "@/src/locales";
 import Section from "./section";
-import { FeatureScroll1 } from "../feature_scroll";
+import { useTranslations } from "next-intl";
 
 export default function FeaturesSection() {
-  const t = useScopedI18n("landingPage");
+  const t = useTranslations("landingPage");
 
   const features = [
     {
@@ -48,7 +47,8 @@ export default function FeaturesSection() {
         t("features.accounting.points.point5"),
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
+      className:
+        "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
     },
     {
       Icon: ReceiptEuro,
@@ -62,7 +62,8 @@ export default function FeaturesSection() {
         t("features.reservations.points.point3"),
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
+      className:
+        "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
     },
     {
       Icon: CalendarIcon,
@@ -75,7 +76,8 @@ export default function FeaturesSection() {
         t("features.calendar.points.point2"),
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
+      className:
+        "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
     },
     {
       Icon: BellIcon,
@@ -88,13 +90,18 @@ export default function FeaturesSection() {
         t("features.notifications.points.point2"),
       ],
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
-      className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
+      className:
+        "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
     },
   ];
 
   return (
-    <Section title="Fonctionnalités" subtitle="Découvrez les fonctionnalités que nous avons prévus">
-      <FeatureScroll1 />
+    <Section title="Solution" subtitle="La réponse à vos problèmes">
+      <BentoGrid className="lg:grid-rows-3">
+        {features.map((feature, index) => (
+          <BentoCard key={index} {...feature} index={index} />
+        ))}
+      </BentoGrid>
     </Section>
   );
 }

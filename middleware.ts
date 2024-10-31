@@ -1,16 +1,37 @@
 // middleware.ts
-import { createI18nMiddleware } from 'next-international/middleware'
-import { NextRequest } from 'next/server'
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./src/i18n/routing";
 
-const I18nMiddleware = createI18nMiddleware({
-  locales: ['en', 'fr'],
-  defaultLocale: 'en'
-})
+const i18nMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
-  return I18nMiddleware(request)
-}
+const protectedRoutes = createRouteMatcher([
+  "/(.*)/dashboard(.*)",
+  "/(.*)/onboarding(.*)",
+]);
+
+const isOnboardingRoute = createRouteMatcher(["/(.*)/onboarding(.*)"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  const { userId, sessionClaims, redirectToSignIn } = await auth();
+
+  if (protectedRoutes(req) && !userId) {
+    redirectToSignIn({ returnBackUrl: req.nextUrl.pathname });
+  }
+
+  if (isOnboardingRoute(req) && sessionClaims?.metadata.onBoardingComplete) {
+    const onboardingUrl = new URL("/(.*)/onboarding", req.url);
+    return NextResponse.redirect(onboardingUrl);
+  }
+
+  return i18nMiddleware(req);
+});
 
 export const config = {
-  matcher: ['/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)']
-}
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+    "/(en|fr)/:path*",
+  ],
+};
