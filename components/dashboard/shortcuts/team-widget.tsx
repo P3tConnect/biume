@@ -16,7 +16,6 @@ const TeamWidget = () => {
           <div className="flex flex-row items-end justify-end text-center gap-2">
             <Button
               variant="outline"
-              className="border border-secondary bg-transparent text-secondary"
               size="sm"
             >
               <Search size={15} className="text-secondary dark:text-white" />

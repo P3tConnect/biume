@@ -1,8 +1,9 @@
 import React from 'react'
+import RemindersShortcut from '../../shortcuts/reminders-shortcut'
 
 const RemindersPageComponent = () => {
   return (
-    <div>RemindersPageComponent</div>
+    <RemindersShortcut />
   )
 }
 

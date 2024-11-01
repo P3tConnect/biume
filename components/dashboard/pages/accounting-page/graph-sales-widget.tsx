@@ -36,7 +36,7 @@ const GraphSalesWidget = () => {
   };
 
   return (
-    <Card className="h-full w-full overflow-auto">
+    <Card className="h-full w-full rounded-2xl">
       <CardHeader className="flex flex-wrap items-start justify-start content-start text-start">
         <h1 className="text-2xl font-bold">Graphique des revenues</h1>
       </CardHeader>

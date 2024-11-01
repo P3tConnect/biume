@@ -13,14 +13,18 @@
     "email-dev": "email dev --port=3001",
     "email-build": "email build --packageManager=bun",
     "email-start": "email start",
-    "trigger-dev": "bunx --bun trigger.dev@beta dev",
-    "trigger-deploy": "bunx --bun trigger.dev@beta deploy"
+    "trigger-dev": "bunx --bun trigger.dev@latest dev",
+    "trigger-deploy": "bunx --bun trigger.dev@latest deploy"
   },
   "packageManager": "bun@1.1.26",
   "dependencies": {
     "@ai-sdk/openai": "^0.0.70",
     "@clerk/localizations": "^3.4.0",
     "@clerk/nextjs": "^6.0.2",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
     "@neondatabase/serverless": "^0.10.1",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -79,7 +83,7 @@
     "next-themes": "^0.3.0",
     "nuqs": "^2.1.0",
     "react": "^18.3.1",
-    "react-day-picker": "9.2.1",
+    "react-day-picker": "8.10.1",
     "react-dom": "^18.3.1",
     "react-email": "^3.0.1",
     "react-hook-form": "^7.53.1",
@@ -102,6 +106,9 @@
     "zsa-react": "^0.2.3",
     "zsa-react-query": "^0.2.1",
     "zustand": "^5.0.1"
+  },
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

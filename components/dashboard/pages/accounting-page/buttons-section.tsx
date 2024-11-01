@@ -7,20 +7,20 @@ const ButtonsSection = () => {
       <div className="flex gap-2">
         <Button
           variant="outline"
-          className="border border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-white dark:border-white dark:text-white dark:hover:border-secondary"
+          className="rounded-2xl border border-primary bg-transparent text-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:border-primary"
         >
           Mes derniers devis
         </Button>
         <Button
           variant="outline"
-          className="border border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-white  dark:border-white dark:text-white dark:hover:border-secondary"
+          className="rounded-2xl border border-primary bg-transparent text-primary hover:bg-primary hover:text-white  dark:border-white dark:text-white dark:hover:border-primary"
         >
           Mes dernières factures
         </Button>
       </div>
       <div className="flex gap-2">
-        <Button variant="secondary">Créer un devis</Button>
-        <Button variant="secondary">Créer une facture</Button>
+        <Button className="rounded-2xl">Créer un devis</Button>
+        <Button className="rounded-2xl">Créer une facture</Button>
       </div>
     </div>
   );

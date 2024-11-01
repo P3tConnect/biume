@@ -1,69 +1,37 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
-  Button,
+  Calendar,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui";
-import { useEffect, useRef, useState } from "react";
-import CalendarDropdown from "./components/calendar-dropdown";
-import { logger } from "@/src/lib";
-import { toast } from "sonner";
+import { useRef, useState } from "react";
 import { useLocale } from "next-intl";
+import CalendarHeader from "./components/calendar-header";
+import CalendarMonth from "./components/calendar-month";
+import CalendarDay from "./components/calendar-day";
+import CalendarWeek from "./components/calendar-week";
 
-const TimeTableFullWidth = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+const CalendarComponent = () => {
   const [viewMode, setViewMode] = useState("month");
-  const [currentMonth, setCurrentMonth] = useState("");
   const locale = useLocale();
 
   return (
-    <Card
-      ref={containerRef}
-      className="w-full bg-[#EEEFF5] h-full rounded-2xl border border-border dark:border-white dark:bg-background"
-    >
-      <CardHeader className="px-7 flex flex-row justify-between items-center">
-        <CardTitle className="text-xl text-black dark:text-white">
-          Calendrier et prochains rendez-vous
-        </CardTitle>
-        <div className="flex flew-row items-center gap-2">
-          <CalendarDropdown viewMode={viewMode} setViewMode={setViewMode} />
+    <div className="w-full h-full flex flex-col justify-start items-start gap-3">
+      <CalendarHeader />
+      <div className="w-full h-full flex flex-row justify-center items-center gap-3">
+        <div className="flex flex-col gap-3 w-1/3 h-full">
+          <CalendarMonth />
+          <CalendarDay />
         </div>
-      </CardHeader>
-      <div className="mt-5 flex justify-between items-center px-7">
-        <div className="flex flew-row items-center gap-3">
-          <div className="flex items-center justify-center gap-1">
-            <div className="rounded-full bg-primary h-4 w-4"></div>
-            <h1>Terminée</h1>
-          </div>
-          <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-primary h-4 w-4"></div>
-            <h1>En demande</h1>
-          </div>
-          <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-blue-500 h-4 w-4"></div>
-            <h1>À payer</h1>
-          </div>
-          <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-yellow-500 h-4 w-4"></div>
-            <h1>En attente de confirmaton</h1>
-          </div>
-          <div className="flex flex-row justify-center items-center gap-1">
-            <div className="rounded-full bg-red-500 h-4 w-4"></div>
-            <h1>Annulée</h1>
-          </div>
-        </div>
+        <CalendarWeek />
       </div>
-      <CardContent className="text-black dark:text-white">
-
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 
 
 
-export default TimeTableFullWidth;
+export default CalendarComponent;
