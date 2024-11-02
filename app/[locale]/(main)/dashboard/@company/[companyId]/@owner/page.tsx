@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const DashboardHomeProPage = () => {
   return (
-    <div className="w-full flex flex-col-reverse mt-52 md:flex-row items-start justify-start h-full gap-3 md:mt-0 sm:mt-44 lg:mt-0">
+    <div className="w-full flex flex-col-reverse md:flex-row items-start justify-start h-full gap-3 md:mt-0 sm:mt-44 lg:mt-0">
       <div className="flex flex-col w-full md:w-1/4 h-full gap-3">
         <ClientsProWidget />
         <ExpensesProWidget />
