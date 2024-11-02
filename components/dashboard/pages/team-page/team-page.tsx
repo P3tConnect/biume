@@ -1,5 +1,5 @@
 import React from 'react'
-import TeamWidget from '../../shortcuts/team-widget'
+import TeamWidget from './team-widget'
 
 const TeamPageComponent = () => {
   return (

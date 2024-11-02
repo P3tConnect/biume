@@ -79,7 +79,7 @@ const LastClientMonthWidget = () => {
   const maxVisibleClients = 4;
 
   return (
-    <Card className="w-full h-full bg-background border flex flex-col rounded-3xl">
+    <Card className="w-full h-full flex flex-col rounded-3xl">
       <CardHeader className='flex flex-row w-full justify-between'>
         <h1 className='font-bold text-2xl'>Derniers clients</h1>
         <div className='flex flex-row gap-3'>

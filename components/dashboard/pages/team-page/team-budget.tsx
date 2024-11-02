@@ -3,7 +3,7 @@ import React from "react";
 
 const TeamBudget = () => {
   return (
-    <Card className="bg-secondary text-white w-full mb-5">
+    <Card className="bg-primary text-white w-full mb-5">
       <CardContent>
         <div className="flex flex-row justify-between items-center content-center text-center mt-4">
           <div className="flex flex-col items-start justify-start text-start content-start">

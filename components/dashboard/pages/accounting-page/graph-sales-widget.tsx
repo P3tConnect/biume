@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ChartContainer } from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
 const GraphSalesWidget = () => {
   const chartData = [
@@ -33,7 +33,7 @@ const GraphSalesWidget = () => {
       label: "revenues",
       color: "#9000FF",
     },
-  };
+  } satisfies ChartConfig;
 
   return (
     <Card className="h-full w-full rounded-2xl">
@@ -50,7 +50,9 @@ const GraphSalesWidget = () => {
               <Bar
                 dataKey="revenues"
                 fill={chartConfig.revenues.color}
-                radius={4}
+                width={10}
+                barSize={20}
+                radius={25}
               />
             </BarChart>
           </ResponsiveContainer>
