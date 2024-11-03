@@ -188,11 +188,11 @@ const TeamList = () => {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="icon" className="rounded-2xl">
               <MoreVerticalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align="start" side="right">
             <DropdownMenuItem>Voir le profil</DropdownMenuItem>
             <DropdownMenuItem>Modifier le profil</DropdownMenuItem>
             <DropdownMenuItem>Supprimer le profil</DropdownMenuItem>

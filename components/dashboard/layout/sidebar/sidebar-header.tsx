@@ -3,6 +3,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui";
 import {
@@ -11,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Building, ChevronsUpDown } from "lucide-react";
+import { Building, ChevronsUpDown, Plus } from "lucide-react";
 
 const SidebarHeaderComponent = () => {
   return (
@@ -33,16 +34,35 @@ const SidebarHeaderComponent = () => {
           <DropdownMenuContent
             side="right"
             align="start"
-            className="w-[--radix-popper-anchor-width]"
+            className="w-56"
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Companies
             </DropdownMenuLabel>
-            <DropdownMenuItem>
-              <span>Acme Inc</span>
+            <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <Building className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">Acme Inc.</span>
+                <span className="truncate text-xs">Acme Inc.</span>
+              </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Acme Corp.</span>
+            <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-secondary text-sidebar-secondary-foreground">
+                <Building className="size-4 text-black" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">Acme Corp.</span>
+                <span className="truncate text-xs">Acme Corp.</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="mx-1" />
+            <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
+              <div className="flex aspect-square size-6 items-center justify-center rounded-lg bg-gray-300/30 text-sidebar-accent-foreground">
+                <Plus className="size-4" />
+              </div>
+              <p>Ajouter une entreprise</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

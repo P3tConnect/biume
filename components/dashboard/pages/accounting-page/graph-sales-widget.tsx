@@ -46,7 +46,11 @@ const GraphSalesWidget = () => {
             <BarChart data={chartData}>
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: '0.7rem',
+                }}
+              />
               <Bar
                 dataKey="revenues"
                 fill={chartConfig.revenues.color}

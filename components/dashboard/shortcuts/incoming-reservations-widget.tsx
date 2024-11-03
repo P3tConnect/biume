@@ -12,7 +12,7 @@ const IncomingReservationsWidget = () => {
   return (
     <Card className="w-full h-full rounded-2xl">
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl font-bold">
+        <CardTitle className="text-lg font-bold text-gray-600 dark:text-gray-200">
           Réservations a traiter
         </CardTitle>
         <Button variant="outline" className="rounded-full h-7 w-7 p-0 bg-card">
