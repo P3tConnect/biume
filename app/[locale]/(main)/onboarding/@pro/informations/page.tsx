@@ -1,11 +1,8 @@
-import { Card, CardContent } from '@/components'
+import { Card, CardContent } from "@/components";
+import ProInformationsStep from "@/components/onboarding/pro/informations-step";
 
 const ProInformationsStepPage = () => {
-  return (
-    <div>
+  return <ProInformationsStep />;
+};
 
-    </div>
-  )
-}
-
-export default ProInformationsStepPage
+export default ProInformationsStepPage;
