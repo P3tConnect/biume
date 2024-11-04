@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   buttonVariants,
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui";
 import { cn } from "@/src/lib";
+import clsx from "clsx";
 import { ArrowLeft, Check } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
@@ -67,40 +67,35 @@ const Stepper = () => {
         </div>
       </CardHeader>
       <CardContent className="h-3/4 flex flex-col justify-around items-start gap-2">
-        <>
-          {steps.map((step) => (
-            <Link
-              key={step.step}
-              href={step.href}
-              className={cn(
-                buttonVariants({
-                  variant: step.href == pathname ? "default" : "ghost",
-                }),
-                "flex flex-row items-center justify-start gap-3 rounded-xl w-full h-16 p-5",
-                successSteps.includes(step.step) ? "bg-primary/30" : "",
-              )}
-            >
-              <div className="flex items-center justify-center h-8 w-8 rounded-full p-0 bg-white">
-                <p
+        <div className="flex flex-col w-full">
+          {steps.map((step, index) => (
+            <div key={step.step} className="flex items-start gap-4">
+              <div className="flex flex-col items-center ">
+                <div
                   className={cn(
-                    "text-black",
-                    successSteps.includes(step.step) ? "hidden" : "visible",
+                    "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold",
+                    step.step === currentStep
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-muted bg-background text-muted-foreground"
                   )}
                 >
                   {step.step}
-                </p>
-
-                <Check
-                  className={cn(
-                    "h-6 w-6 text-primary",
-                    successSteps.includes(step.step) ? "visible" : "hidden",
-                  )}
-                />
+                </div>
+                {index !== steps.length - 1 && (
+                  <div className="w-px h-12 bg-muted my-1" />
+                )}
               </div>
-              <p className="text-lg font-semibold">{step.title}</p>
-            </Link>
+              <div
+                className={clsx(
+                  "flex-1 pt-1 pb-8",
+                  step.step === currentStep ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <p className="font-medium">{step.title}</p>
+              </div>
+            </div>
           ))}
-        </>
+        </div>
       </CardContent>
     </Card>
   );
