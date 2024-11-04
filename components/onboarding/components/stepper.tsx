@@ -20,7 +20,7 @@ const Stepper = () => {
   const pathname = usePathname();
   const locale = useLocale();
   const [successSteps, setSuccessSteps] = useState<number[]>([1]);
-  const [currentStep, setcurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const steps = [
     {
@@ -69,47 +69,36 @@ const Stepper = () => {
       <CardContent className="h-3/4 flex flex-col justify-around items-start gap-2">
         <>
           {steps.map((step) => (
-            <span className="w-full h-full" key={step.step}>
-              <Link
-                href={step.href}
-                className={cn(
-                  buttonVariants({
-                    variant: step.href == pathname ? "default" : "ghost",
-                  }),
-                  "flex flex-row items-center justify-start gap-3 rounded-xl w-full h-16 p-5",
-                  successSteps.includes(step.step) ? "bg-primary/30" : "",
-                )}
-              >
-                <div className="flex items-center justify-center h-8 w-8 rounded-full p-0 bg-white">
-                  <p
-                    className={cn(
-                      "text-black",
-                      successSteps.includes(step.step) ? "hidden" : "visible",
-                    )}
-                  >
-                    {step.step}
-                  </p>
-
-                  <Check
-                    className={cn(
-                      "h-6 w-6 text-primary",
-                      successSteps.includes(step.step) ? "visible" : "hidden",
-                    )}
-                  />
-                </div>
-                <p className="text-lg font-semibold">{step.title}</p>
-              </Link>
-              {step.step == 4 ? null : (
-                <div
-                  className={cn(
-                    "w-[3px] h-full mx-9 my-2",
-                    successSteps.includes(step.step)
-                      ? "bg-primary/40"
-                      : "bg-border",
-                  )}
-                ></div>
+            <Link
+              key={step.step}
+              href={step.href}
+              className={cn(
+                buttonVariants({
+                  variant: step.href == pathname ? "default" : "ghost",
+                }),
+                "flex flex-row items-center justify-start gap-3 rounded-xl w-full h-16 p-5",
+                successSteps.includes(step.step) ? "bg-primary/30" : "",
               )}
-            </span>
+            >
+              <div className="flex items-center justify-center h-8 w-8 rounded-full p-0 bg-white">
+                <p
+                  className={cn(
+                    "text-black",
+                    successSteps.includes(step.step) ? "hidden" : "visible",
+                  )}
+                >
+                  {step.step}
+                </p>
+
+                <Check
+                  className={cn(
+                    "h-6 w-6 text-primary",
+                    successSteps.includes(step.step) ? "visible" : "hidden",
+                  )}
+                />
+              </div>
+              <p className="text-lg font-semibold">{step.title}</p>
+            </Link>
           ))}
         </>
       </CardContent>
