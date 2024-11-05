@@ -9,15 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui";
 import { cn } from "@/src/lib";
-import clsx from "clsx";
 import { ArrowLeft, Check } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 const Stepper = () => {
-  const pathname = usePathname();
   const locale = useLocale();
   const [successSteps, setSuccessSteps] = useState<number[]>([1]);
   const [currentStep, setCurrentStep] = useState(1);
@@ -67,28 +64,45 @@ const Stepper = () => {
         </div>
       </CardHeader>
       <CardContent className="h-3/4 flex flex-col justify-around items-start gap-2">
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full h-full">
           {steps.map((step, index) => (
             <div key={step.step} className="flex items-start gap-4">
               <div className="flex flex-col items-center ">
-                <div
+                <Link
+                  href={step.href}
                   className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-full border-2 font-semibold",
+                    buttonVariants({ variant: "default" }),
+                    "flex h-12 w-12 items-center justify-center rounded-full border-2 font-semibold",
                     step.step === currentStep
                       ? "border-primary bg-primary text-primary-foreground"
-                      : "border-muted bg-background text-muted-foreground"
+                      : "border-muted bg-background text-muted-foreground",
                   )}
                 >
-                  {step.step}
-                </div>
+                  <Check
+                    className={cn(
+                      "h-8 w-8",
+                      successSteps.includes(step.step) ? "visible" : "hidden",
+                    )}
+                  />
+                  <p
+                    className={cn(
+                      "text-lg font-semibold",
+                      successSteps.includes(step.step) ? "hidden" : "visible",
+                    )}
+                  >
+                    {step.step}
+                  </p>
+                </Link>
                 {index !== steps.length - 1 && (
-                  <div className="w-px h-12 bg-muted my-1" />
+                  <div className="w-px h-56 bg-border my-1" />
                 )}
               </div>
               <div
-                className={clsx(
-                  "flex-1 pt-1 pb-8",
-                  step.step === currentStep ? "text-primary" : "text-muted-foreground"
+                className={cn(
+                  "flex-1 pt-3 pb-8",
+                  step.step === currentStep
+                    ? "text-primary"
+                    : "text-muted-foreground",
                 )}
               >
                 <p className="font-medium">{step.title}</p>
