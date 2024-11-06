@@ -117,7 +117,7 @@ function HeroCTA() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
       >
-        2 mois d'essai inclus. Pas de carte bancaire requise.
+        2 mois d&apos;essai inclus. Pas de carte bancaire requise.
       </motion.p>
     </>
   );

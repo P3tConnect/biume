@@ -45,7 +45,7 @@ const TeamPageComponent = () => {
         </Card>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Ajouter un membre à l'équipe</DialogTitle>
+            <DialogTitle>Ajouter un membre à l&apos;équipe</DialogTitle>
             <DialogDescription>
               Invitez un nouveau membre à rejoindre votre équipe. Ils recevront une invitation par email.
             </DialogDescription>
@@ -77,9 +77,9 @@ const TeamPageComponent = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.MEMBER}>Member</SelectItem>
+                          <SelectItem value={CompanyMembershipRoleEnum.Values.MEMBER}>Membre</SelectItem>
                           <SelectItem value={CompanyMembershipRoleEnum.Values.ADMIN}>Admin</SelectItem>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.OWNER}>Owner</SelectItem>
+                          <SelectItem value={CompanyMembershipRoleEnum.Values.OWNER}>Propriétaire</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -87,7 +87,7 @@ const TeamPageComponent = () => {
                   )}
                 />
                 <DialogFooter>
-                  <Button type="submit">Add Member</Button>
+                  <Button type="submit">Ajouter un membre</Button>
                 </DialogFooter>
               </form>
             </Form>

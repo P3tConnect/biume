@@ -138,9 +138,9 @@ export const CallToAction = () => {
         <Input placeholder="Email" className="rounded-3xl w-96" />
         <Button
           variant={"outline"}
-          className="w-full rounded-full sm:w-auto text-black flex gap-2"
+          className="w-full rounded-full sm:w-auto flex gap-2"
         >
-          <p>M'inscrire</p>
+          <p>M&apos;inscrire</p>
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>

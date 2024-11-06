@@ -12,6 +12,7 @@ import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 import React from "react";
 import Section from "./section";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function FeaturesSection() {
   const t = useTranslations("landingPage");
@@ -30,7 +31,7 @@ export default function FeaturesSection() {
         t("features.ia.points.point4"),
         t("features.ia.points.point5"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
+      background: <Image src="" width={100} height={100} alt="image" className="absolute -right-20 -top-20 opacity-60" />,
       className: "lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3",
     },
     {
@@ -46,7 +47,7 @@ export default function FeaturesSection() {
         t("features.accounting.points.point4"),
         t("features.accounting.points.point5"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
+      background: <Image src="" width={100} height={100} alt="image" className="absolute -right-20 -top-20 opacity-60" />,
       className:
         "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
     },
@@ -61,7 +62,7 @@ export default function FeaturesSection() {
         t("features.reservations.points.point2"),
         t("features.reservations.points.point3"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
+      background: <Image src="" width={100} height={100} alt="image" className="absolute -right-20 -top-20 opacity-60" />,
       className:
         "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
     },
@@ -75,7 +76,7 @@ export default function FeaturesSection() {
         t("features.calendar.points.point1"),
         t("features.calendar.points.point2"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
+      background: <Image src="" width={100} height={100} alt="image" className="absolute -right-20 -top-20 opacity-60" />,
       className:
         "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
     },
@@ -89,7 +90,7 @@ export default function FeaturesSection() {
         t("features.notifications.points.point1"),
         t("features.notifications.points.point2"),
       ],
-      background: <img className="absolute -right-20 -top-20 opacity-60" />,
+      background: <Image src="" width={100} height={100} alt="image" className="absolute -right-20 -top-20 opacity-60" />,
       className:
         "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
     },

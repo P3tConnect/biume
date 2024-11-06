@@ -58,7 +58,7 @@ const Stepper = () => {
         <div className="flex flex-col gap-1">
           <CardTitle>Informations</CardTitle>
           <CardDescription>
-            Ceci est la description de l'étape en cours de création d'une
+            Ceci est la description de l&apos;étape en cours de création d&apos;une
             entreprise
           </CardDescription>
         </div>
