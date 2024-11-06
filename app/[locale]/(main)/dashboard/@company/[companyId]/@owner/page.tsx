@@ -7,6 +7,7 @@ import TimetableWidget from "@/components/dashboard/shortcuts/timetable-widget";
 import IncomingReservationsWidget from "@/components/dashboard/shortcuts/incoming-reservations-widget";
 import ReservationsStatusesWidget from "@/components/dashboard/shortcuts/reservations-statuses-widget";
 import RemindersShortcut from "@/components/dashboard/shortcuts/reminders-shortcut";
+import ProgressionWidget from "@/components/dashboard/shortcuts/progression-widget";
 
 export const metadata: Metadata = {
   title: "Home - Dashboard",
@@ -23,7 +24,10 @@ const DashboardHomeProPage = () => {
         <IncomingReservationsWidget />
       </div>
       <div className="flex flex-col w-full md:w-3/4 h-full gap-3">
-        <TimetableWidget />
+        <div className="flex flex-col lg:flex-row w-full h-full gap-3">
+          <TimetableWidget />
+          <ProgressionWidget />
+        </div>
         <div className="flex w-full h-full gap-3">
           <ReservationsStatusesWidget />
           <RemindersShortcut />

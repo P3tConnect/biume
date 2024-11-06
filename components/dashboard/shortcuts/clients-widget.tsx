@@ -27,8 +27,8 @@ const ClientsProWidget = () => {
             <ArrowUpRight className="h-4 w-4 group-hover:h-6 group-hover:w-6 transition-all duration-600 text-gray-600 dark:text-gray-200" />
           </CardHeader>
           <CardContent className="flex justify-start items-center gap-5">
-            <h3 className="font-bold text-4xl text-primary">450</h3>
-            <Badge>+ 130%</Badge>
+            <h3 className="font-bold text-4xl">450</h3>
+            <Badge variant="secondary">+ 130%</Badge>
           </CardContent>
         </Card>
       </DialogTrigger>

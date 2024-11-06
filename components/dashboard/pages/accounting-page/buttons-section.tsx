@@ -3,18 +3,12 @@ import React from "react";
 
 const ButtonsSection = () => {
   return (
-    <div className="flex flex-col w-full h-full justify-between items-center sm:flex-row">
+    <div className="flex flex-col w-full justify-between items-center sm:flex-row">
       <div className="flex gap-2">
-        <Button
-          variant="outline"
-          className="rounded-2xl border border-primary bg-transparent text-primary hover:bg-primary hover:text-white dark:border-white dark:text-white dark:hover:border-primary"
-        >
+        <Button variant="secondary" className="text-black rounded-2xl">
           Mes derniers devis
         </Button>
-        <Button
-          variant="outline"
-          className="rounded-2xl border border-primary bg-transparent text-primary hover:bg-primary hover:text-white  dark:border-white dark:text-white dark:hover:border-primary"
-        >
+        <Button variant="secondary" className="text-black rounded-2xl">
           Mes dernières factures
         </Button>
       </div>
