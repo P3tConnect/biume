@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader } from "@/components/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import React from "react";
 import ObservationsList from "../pages/observations-page/observations-list";
 
@@ -6,12 +6,10 @@ const ObeservationWidget = () => {
   return (
     <Card>
       <CardHeader className="flex items-start justify-start text-2xl font-bold">
-        Mes Observations
+        <CardTitle className="text-lg font-bold text-gray-700 dark:text-gray-200">Mes Observations</CardTitle>
+        <Button variant="outline">Ajouter</Button>
       </CardHeader>
-      <CardContent className="">
-        <div className="flex flex-row items-end justify-end text-center gap-2">
-          <Button variant="secondary">Ajouter</Button>
-        </div>
+      <CardContent>
         <ObservationsList />
       </CardContent>
     </Card>

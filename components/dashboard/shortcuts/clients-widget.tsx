@@ -21,7 +21,7 @@ const ClientsProWidget = () => {
       <DialogTrigger asChild className="group hover:cursor-pointer">
         <Card className="w-full rounded-2xl hover:bg-[#EEEFF6] hover:dark:bg-[#313131] transition-all duration-400">
           <CardHeader className="flex flex-row justify-between items-center">
-            <CardTitle className="text-lg font-bold text-gray-600 dark:text-gray-200">
+            <CardTitle className="text-lg font-bold text-gray-700 dark:text-gray-200">
               Total des clients ce mois
             </CardTitle>
             <ArrowUpRight className="h-4 w-4 group-hover:h-6 group-hover:w-6 transition-all duration-600 text-gray-600 dark:text-gray-200" />

@@ -6,7 +6,7 @@ const ProgressionWidget = () => {
   return (
     <Card className="lg:w-1/3 w-full h-full rounded-2xl">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg dark:text-gray-200 text-gray-600">
+        <CardTitle className="text-lg dark:text-gray-200 text-gray-700">
           Progression
         </CardTitle>
         <Button
