@@ -1,11 +1,17 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, useSidebar } from '@/components/ui'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  useSidebar,
+} from "@/components/ui";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import React, { useEffect, useRef } from 'react'
-import { cn } from '@/src/lib';
+import React, { useEffect, useRef } from "react";
+import { cn } from "@/src/lib";
 
 const CalendarWeek = () => {
   const calendarRef = useRef<FullCalendar>(null);
@@ -33,11 +39,17 @@ const CalendarWeek = () => {
   // !!!
 
   return (
-    <Card ref={containerRef} className={cn('transition-transform duration-200',
-      state === "collapsed" ? "w-3/4" : "w-2/3"
-    )}>
+    <Card
+      ref={containerRef}
+      className={cn(
+        "transition-transform duration-200 h-full",
+        state === "collapsed" ? "w-3/4" : "w-2/3",
+      )}
+    >
       <CardHeader>
-        <CardTitle className='text-lg font-bold text-gray-600 dark:text-gray-200'>Semaine</CardTitle>
+        <CardTitle className="text-lg font-bold text-gray-600 dark:text-gray-200">
+          Semaine
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <FullCalendar
@@ -52,7 +64,7 @@ const CalendarWeek = () => {
         />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CalendarWeek
+export default CalendarWeek;
