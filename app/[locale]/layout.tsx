@@ -10,9 +10,11 @@ import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { frFR, enUS } from "@clerk/localizations";
-import { Suspense } from "react";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
+import { ourFileRouter } from "../api/uploadthing/core";
 
 const geist = GeistSans;
 
@@ -115,7 +117,10 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages}>
             <Providers>
               <SidebarProvider defaultOpen={defaultOpen}>
-                <div vaul-drawer-wrapper="">{children}</div>
+                <div vaul-drawer-wrapper="">
+                  <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+                  {children}
+                </div>
                 <TailwindIndicator />
               </SidebarProvider>
             </Providers>

@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui";
 import React from "react";
+import InformationsForm from "../components/pro/informations-form";
 
 const ProInformationsStep = () => {
   return (
@@ -18,7 +19,9 @@ const ProInformationsStep = () => {
           &quot;Informations&quot; depuis le menu &quot;Réglages&quot; sur le tableau de bord.
         </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <InformationsForm />
+      </CardContent>
     </Card>
   );
 };

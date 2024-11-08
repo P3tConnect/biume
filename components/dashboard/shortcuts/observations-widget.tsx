@@ -2,7 +2,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/u
 import React from "react";
 import ObservationsList from "../pages/observations-page/observations-list";
 
-const ObeservationWidget = () => {
+const ObservationWidget = () => {
   return (
     <Card>
       <CardHeader className="flex items-start justify-start text-2xl font-bold">
@@ -16,4 +16,4 @@ const ObeservationWidget = () => {
   );
 };
 
-export default ObeservationWidget;
+export default ObservationWidget;
