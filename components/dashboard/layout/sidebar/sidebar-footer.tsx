@@ -28,6 +28,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Settings,
   Sparkles,
 } from "lucide-react";
 import React from "react";
@@ -37,6 +38,14 @@ const SidebarFooterComponent = () => {
 
   return (
     <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton tooltip="Réglages de l'entreprise" asChild>
+          <a href="/dashboard/123/settings">
+            <Settings />
+            <span>Réglages de l&apos;entreprise</span>
+          </a>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
