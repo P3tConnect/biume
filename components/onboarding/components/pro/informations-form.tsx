@@ -3,7 +3,7 @@
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Textarea } from '@/components/ui'
 import { createCompany } from '@/src/actions'
 import { CreateCompanySchema } from '@/src/db'
-import { useServerActionMutation } from '@/src/hooks'
+import { useServerActionMutation, useStore } from '@/src/hooks'
 import { UploadDropzone } from '@/src/lib/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadCloudIcon } from 'lucide-react';
@@ -11,16 +11,21 @@ import { useLocale } from 'next-intl'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useStepper } from '../../hooks/useStepper';
+import { useRouter } from 'next/navigation';
 
 const InformationsForm = () => {
   const locale = useLocale();
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [logo, setLogo] = useState("");
+  const stepperStore = useStore(useStepper, (state) => state);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof CreateCompanySchema>>({
     resolver: zodResolver(CreateCompanySchema),
     defaultValues: {
       name: '',
-      logo: '',
+      logo,
       coverImage: '',
       description: '',
       email: '',
@@ -28,7 +33,12 @@ const InformationsForm = () => {
     },
   });
 
-  const { mutateAsync } = useServerActionMutation(createCompany, {});
+  const { mutateAsync } = useServerActionMutation(createCompany, {
+    onSuccess: () => {
+      stepperStore?.setCurrentStep(1)
+      router.push("/onboarding/services");
+    },
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     await mutateAsync(data);
@@ -41,16 +51,6 @@ const InformationsForm = () => {
           <p className='text-sm font-semibold'>Image de couverture de votre entreprise</p>
           <UploadDropzone
             endpoint="imageUploader"
-            content={{
-              button: ({ uploadProgress, files, }) => (
-                <Button className='rounded-xl mx-2'>
-                  <p>Ajouter une image</p>
-                </Button>
-              ),
-              // label: ({ files, isUploading, uploadProgress }) => (
-              //   <></>
-              // ),
-            }}
             onUploadProgress={setUploadProgress}
           />
         </div>

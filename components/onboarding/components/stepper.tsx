@@ -17,26 +17,21 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from "@/components/ui";
+import { useStore } from "@/src/hooks";
 import { cn } from "@/src/lib";
 import { ArrowLeft, Check } from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useStepper } from "../hooks/useStepper";
 
 const Stepper = () => {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const [successSteps, setSuccessSteps] = useState<number[]>([]);
-  const [currentStep, setCurrentStep] = useState(2);
+  const stepperStore = useStore(useStepper, (state) => state);
 
   const steps = [
     {
@@ -94,7 +89,7 @@ const Stepper = () => {
                     className={cn(
                       buttonVariants({ variant: "default" }),
                       "flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold hover:text-white",
-                      successSteps.includes(step.step) ? "border-primary bg-primary" : "border-muted",
+                      stepperStore?.successSteps.includes(step.step) ? "border-primary bg-primary" : "border-muted",
                       step.href === pathname
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-muted bg-background text-muted-foreground",
@@ -103,20 +98,20 @@ const Stepper = () => {
                     <Check
                       className={cn(
                         "h-8 w-8",
-                        successSteps.includes(step.step) ? "visible" : "hidden",
+                        stepperStore?.successSteps.includes(step.step) ? "visible" : "hidden",
                       )}
                     />
                     <p
                       className={cn(
                         "text-lg font-semibold",
-                        successSteps.includes(step.step) ? "hidden" : "visible",
+                        stepperStore?.successSteps.includes(step.step) ? "hidden" : "visible",
                       )}
                     >
                       {step.step}
                     </p>
                   </Link>
                   {index !== steps.length - 1 && (
-                    <div className={cn("w-px h-40 my-1", successSteps.includes(step.step) ? "bg-primary" : "bg-border")} />
+                    <div className={cn("w-px h-40 my-1", stepperStore?.successSteps.includes(step.step) ? "bg-primary" : "bg-border")} />
                   )}
                 </div>
                 <div
