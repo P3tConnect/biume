@@ -4,15 +4,17 @@ import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Texta
 import { createCompany } from '@/src/actions'
 import { CreateCompanySchema } from '@/src/db'
 import { useServerActionMutation, useStore } from '@/src/hooks'
-import { UploadDropzone } from '@/src/lib/uploadthing';
+import { UploadButton, UploadDropzone } from '@/src/lib/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UploadCloudIcon } from 'lucide-react';
+import { PenBox, Trash2 } from 'lucide-react';
 import { useLocale } from 'next-intl'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useStepper } from '../../hooks/useStepper';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { cn } from '@/src/lib';
 
 const InformationsForm = () => {
   const locale = useLocale();
@@ -44,28 +46,54 @@ const InformationsForm = () => {
     await mutateAsync(data);
   });
 
+  console.log(logo);
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className='space-y-4'>
-        <div className=''>
+        <div className='flex flex-row items-center gap-2'>
+          <div className='flex flex-col items-start gap-2 w-1/2'>
+            <p className='text-sm font-semibold'>Logo de votre entreprise</p>
+            {logo == "" ? <UploadButton
+              endpoint="imageUploader"
+              config={{ cn: cn }}
+              className='ut-button:bg-primary ut-button:rounded-xl'
+              appearance={{
+                button: "",
+                allowedContent: "",
+                container: "",
+                clearBtn: "",
+              }}
+              onUploadProgress={setUploadProgress}
+              onClientUploadComplete={(value) => {
+                setLogo(value[0].url)
+              }}
+            /> : (
+              <div className='flex flex-col items-center gap-2'>
+                <Image src={logo} alt='logo' width={100} height={100} className='rounded-2xl' />
+                <div className='flex flex-row items-center gap-2'>
+                  <Button variant="ghost" size="icon" className='rounded-2xl'>
+                    <PenBox size={16} />
+                  </Button>
+                  <Button variant="destructive" size="icon" className='rounded-2xl'>
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </div>
+        <div className='flex flex-col items-start gap-2 w-1/2'>
           <p className='text-sm font-semibold'>Image de couverture de votre entreprise</p>
           <UploadDropzone
             endpoint="imageUploader"
             onUploadProgress={setUploadProgress}
+            onClientUploadComplete={(value) => {
+              setLogo(value[0].url)
+            }}
           />
         </div>
-        <FormField
-          control={form.control}
-          name='coverImage'
-          render={({ field }) => (
-            <FormItem className='w-1/2'>
-              <FormLabel className='text-sm font-semibold' htmlFor='picture'>Image de couverture de votre entreprise</FormLabel>
-              <FormControl>
-                <Input type='file' placeholder='Image de couverture de votre entreprise' {...field} value={field.value ?? ''} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name='name'

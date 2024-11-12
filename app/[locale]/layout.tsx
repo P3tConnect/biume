@@ -14,7 +14,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { ourFileRouter } from "../api/uploadthing/core";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 const geist = GeistSans;
 
