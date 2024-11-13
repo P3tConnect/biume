@@ -3,12 +3,13 @@ import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { usersNewsletters } from "./usersNewsletter";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const newsletter = pgTable("newsletter", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  redactor: text("redactor").references(() => company.id, {
+  redactor: text("redactor").references(() => organization.id, {
     onDelete: "cascade",
   }),
   images: text("images").array(),
@@ -20,9 +21,9 @@ export const newsletter = pgTable("newsletter", {
 
 export const newsletterRelations = relations(newsletter, ({ one, many }) => ({
   usersNewsletters: many(usersNewsletters),
-  redactor: one(company, {
+  redactor: one(organization, {
     fields: [newsletter.redactor],
-    references: [company.id],
+    references: [organization.id],
   }),
 }));
 

@@ -1,37 +1,26 @@
 // middleware.ts
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./src/i18n/routing";
+import { NextRequest, NextResponse } from "next/server";
+import { betterFetch } from "@better-fetch/fetch";
+import type { Session } from "better-auth/types";
 
-const i18nMiddleware = createMiddleware(routing);
+export default async function authMiddleware(request: NextRequest) {
+  const { data: session } = await betterFetch<Session>(
+    `/api/auth/get-session`,
+    {
+      baseURL: request.nextUrl.origin,
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+    },
+  );
 
-const protectedRoutes = createRouteMatcher([
-  "/(.*)/dashboard(.*)",
-  "/(.*)/onboarding(.*)",
-]);
-
-const isOnboardingRoute = createRouteMatcher(["/(.*)/onboarding(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims, redirectToSignIn } = await auth();
-
-  if (protectedRoutes(req) && !userId) {
-    redirectToSignIn({ returnBackUrl: req.nextUrl.pathname });
+  if (!session) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  if (isOnboardingRoute(req) && sessionClaims?.metadata.onBoardingComplete) {
-    const onboardingUrl = new URL("/(.*)/onboarding", req.url);
-    return NextResponse.redirect(onboardingUrl);
-  }
-
-  return i18nMiddleware(req);
-});
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
-    "/(en|fr)/:path*",
-  ],
+  matcher: ["/dashboard/:path*"],
 };

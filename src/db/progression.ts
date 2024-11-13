@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { boolean, pgTable, text } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const progression = pgTable("progression", {
   id: text("id")
@@ -14,7 +14,7 @@ export const progression = pgTable("progression", {
 });
 
 export const progressionRelations = relations(progression, ({ one }) => ({
-  company: one(company),
+  organization: one(organization),
 }));
 
 export type Progression = typeof progression.$inferSelect;

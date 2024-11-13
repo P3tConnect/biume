@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { report } from "./report";
-import { company } from "./company";
+import { organization } from "./organization";
 
 export const reportTemplate = pgTable("report_template", {
   id: text("id")
@@ -13,7 +13,7 @@ export const reportTemplate = pgTable("report_template", {
   description: text("description").notNull(),
   ownerId: text("owner_id")
     .notNull()
-    .references(() => company.id, {
+    .references(() => organization.id, {
       onDelete: "cascade",
     }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -23,9 +23,9 @@ export const reportTemplate = pgTable("report_template", {
 export const reportTemplateRelations = relations(
   reportTemplate,
   ({ one, many }) => ({
-    owner: one(company, {
+    owner: one(organization, {
       fields: [reportTemplate.ownerId],
-      references: [company.id],
+      references: [organization.id],
     }),
     reports: many(report),
   }),
@@ -34,4 +34,5 @@ export const reportTemplateRelations = relations(
 export type ReportTemplate = typeof reportTemplate.$inferSelect;
 export type ReportTemplateWithOwner = typeof reportTemplate.$inferSelect;
 
-export const reportTemplateSchema = createInsertSchema(reportTemplate);
+export const reporttemplateSchema = createSelectSchema(reportTemplate);
+export const createReportTemplateSchema = createInsertSchema(reportTemplate);

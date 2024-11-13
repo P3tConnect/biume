@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "./globals.css";
 
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
 import { safeConfig } from "@/src/lib";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
-import { frFR, enUS } from "@clerk/localizations";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { ourFileRouter } from "./api/uploadthing/core";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 const geist = GeistSans;
 
@@ -96,37 +94,34 @@ export async function generateMetadata({
 
 export default async function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
+  const locale = await getLocale();
 
-  const localization = locale == "fr" ? frFR : enUS;
   const messages = await getMessages({ locale: locale });
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
   return (
-    <ClerkProvider dynamic localization={localization}>
-      <html suppressHydrationWarning lang={locale}>
-        <body
-          className={cn("min-h-screen font-sans antialiased", geist.className)}
-        >
-          <NextIntlClientProvider messages={messages}>
-            <Providers>
-              <SidebarProvider defaultOpen={defaultOpen}>
-                <div vaul-drawer-wrapper="">
-                  <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-                  {children}
-                </div>
-                <TailwindIndicator />
-              </SidebarProvider>
-            </Providers>
-          </NextIntlClientProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html suppressHydrationWarning lang={locale}>
+      <body
+        className={cn("min-h-screen font-sans antialiased", geist.className)}
+      >
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <div vaul-drawer-wrapper="">
+                <NextSSRPlugin
+                  routerConfig={extractRouterConfig(ourFileRouter)}
+                />
+                {children}
+              </div>
+              <TailwindIndicator />
+            </SidebarProvider>
+          </Providers>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

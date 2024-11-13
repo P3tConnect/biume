@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
-export const companyAddress = pgTable("company_address", {
+export const organizationAddress = pgTable("organization_address", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -16,11 +16,12 @@ export const companyAddress = pgTable("company_address", {
   updatedAt: timestamp("updatedAt"),
 });
 
-export const companyAddressRelations = relations(companyAddress, ({ one }) => ({
-  company: one(company),
+export const organizationAddressRelations = relations(organizationAddress, ({ one }) => ({
+  organization: one(organization),
 }));
 
-export type CompanyAddress = typeof companyAddress.$inferSelect;
-export type CreateCompanyAddress = typeof companyAddress.$inferInsert;
+export type CompanyAddress = typeof organizationAddress.$inferSelect;
+export type CreateCompanyAddress = typeof organizationAddress.$inferInsert;
 
-export const CreateCompanyAddressSchema = createInsertSchema(companyAddress);
+export const CompanyAddressSchema = createSelectSchema(organizationAddress);
+export const CreateCompanyAddressSchema = createInsertSchema(organizationAddress);

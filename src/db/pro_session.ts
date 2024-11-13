@@ -6,16 +6,16 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { invoice } from "./invoice";
 import { sessionOptions } from "./sessionOptions";
 import { pets } from "./pets";
 import { report } from "./report";
 import { observation } from "./observation";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { service } from "./service";
+import { organization } from "./organization";
 
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
@@ -34,7 +34,7 @@ export const proSession = pgTable("pro_session", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
+  proId: text("proId").references(() => organization.id, { onDelete: "cascade" }),
   clientId: text("clientId").references(() => pets.id, {
     onDelete: "cascade",
   }),
@@ -82,4 +82,5 @@ export type CreateProSession = typeof proSession.$inferInsert;
 export const SessionTypeEnum = z.enum(sessionType.enumValues);
 export const SessionStatusTypeEnum = z.enum(sessionStatusType.enumValues);
 
+export const ProSessionSchema = createSelectSchema(proSession);
 export const CreateProSessionSchema = createInsertSchema(proSession);

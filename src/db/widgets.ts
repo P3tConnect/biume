@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
 
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { company } from "./company";
+import { organization } from "./organization";
 
 export const widgetsType = pgEnum("widgetsType", ["Square", "Rectangle"]);
 
@@ -20,15 +20,15 @@ export const widgets = pgTable("widgets", {
   height: integer("height").notNull(),
   type: widgetsType("type").default("Square").notNull(),
   orientation: widgetsOrientation("type").default("Horizontal").notNull(),
-  companyId: text("companyId").references(() => company.id, {
+  organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
 });
 
 export const widgetsRelations = relations(widgets, ({ one, many }) => ({
-  company: one(company, {
-    fields: [widgets.companyId],
-    references: [company.id],
+  company: one(organization, {
+    fields: [widgets.organizationId],
+    references: [organization.id],
   }),
 }));
 
@@ -38,4 +38,5 @@ export type CreateWidget = typeof widgets.$inferInsert;
 export const WidgetsType = z.enum(widgetsType.enumValues);
 export const WidgetsOrientation = z.enum(widgetsOrientation.enumValues);
 
+export const WidgetsSchema = createSelectSchema(widgets);
 export const CreateWidgetsSchema = createInsertSchema(widgets);

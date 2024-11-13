@@ -1,10 +1,10 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
-import { companyCertifications } from "./companyCertifications";
+import { organizationCertifications } from "./companyCertifications";
+import { organization } from "./organization";
 
-export const companyDocuments = pgTable("company_documents", {
+export const organizationDocuments = pgTable("organization_documents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -14,16 +14,18 @@ export const companyDocuments = pgTable("company_documents", {
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const companyDocumentsRelations = relations(
-  companyDocuments,
+export const organizationDocumentsRelations = relations(
+  organizationDocuments,
   ({ one, many }) => ({
-    company: one(company),
-    certifications: many(companyCertifications),
+    organization: one(organization),
+    certifications: many(organizationCertifications),
   }),
 );
 
-export type CompanyDocuments = typeof companyDocuments.$inferSelect;
-export type CreateCompanyDocuments = typeof company.$inferInsert;
+export type OrganizationDocuments = typeof organizationDocuments.$inferSelect;
+export type CreateOrganizationDocuments = typeof organizationDocuments.$inferInsert;
 
-export const CreateCompanyDocumentsSchema =
-  createInsertSchema(companyDocuments);
+export const OrganizationDocumentsSchema =
+  createInsertSchema(organizationDocuments);
+export const CreateOrganizationDocumentsSchema =
+  createInsertSchema(organizationDocuments);

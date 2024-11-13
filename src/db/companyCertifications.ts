@@ -1,16 +1,16 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { companyDocuments } from "./companyDocuments";
+import { organizationDocuments } from "./companyDocuments";
 import { relations } from "drizzle-orm";
 
-export const companyCertifications = pgTable("company_certifications", {
+export const organizationCertifications = pgTable("organization_certifications", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description"),
   image: text("image"),
-  companyDocumentsId: text("companyId").references(() => companyDocuments.id, {
+  organizationDocumentsId: text("organizationDocumentsId").references(() => organizationDocuments.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt").default(new Date()),
@@ -18,22 +18,22 @@ export const companyCertifications = pgTable("company_certifications", {
 });
 
 export const companyCertificationsRelations = relations(
-  companyCertifications,
+  organizationCertifications,
   ({ one }) => ({
-    companyDocuments: one(companyDocuments, {
-      fields: [companyCertifications.companyDocumentsId],
-      references: [companyDocuments.id],
+    organizationDocuments: one(organizationDocuments, {
+      fields: [organizationCertifications.organizationDocumentsId],
+      references: [organizationDocuments.id],
     }),
   }),
 );
 
-export type CompanyCertifications = typeof companyCertifications.$inferSelect;
+export type CompanyCertifications = typeof organizationCertifications.$inferSelect;
 export type CreateCompanyCertifications =
-  typeof companyCertifications.$inferInsert;
+  typeof organizationCertifications.$inferInsert;
 
 export const SelectCompanyCertificationsSchema = createSelectSchema(
-  companyCertifications,
+  organizationCertifications,
 );
 export const CreateCompanyCertificationsSchema = createInsertSchema(
-  companyCertifications,
+  organizationCertifications,
 );

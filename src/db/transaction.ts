@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import { company } from "./company";
+import { organization } from "./organization";
 
 export const transaction = pgTable("transaction", {
   id: text("id")
@@ -9,7 +9,7 @@ export const transaction = pgTable("transaction", {
     .$defaultFn(() => crypto.randomUUID()),
   amount: integer("amount").notNull(),
   from: text("from").notNull(),
-  to: text("to").references(() => company.id, {
+  to: text("to").references(() => organization.id, {
     onDelete: "cascade",
   }),
   status: text("status").notNull(),
@@ -18,9 +18,9 @@ export const transaction = pgTable("transaction", {
 });
 
 export const transactionRelations = relations(transaction, ({ one }) => ({
-  from: one(company, {
+  from: one(organization, {
     fields: [transaction.from],
-    references: [company.id],
+    references: [organization.id],
   }),
 }));
 

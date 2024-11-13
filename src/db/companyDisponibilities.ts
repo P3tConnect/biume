@@ -1,43 +1,44 @@
 import {
   date,
   pgTable,
-  primaryKey,
-  serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import { sessionType } from "./pro_session";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
-export const companyDisponibilities = pgTable("company_disponibilities", {
+export const organizationDisponibilities = pgTable("organization_disponibilities", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
-  companyId: text("companyId").references(() => company.id, {
+  organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const companyDisponibilitiesRelations = relations(
-  companyDisponibilities,
+export const organizationDisponibilitiesRelations = relations(
+  organizationDisponibilities,
   ({ one }) => ({
-    company: one(company, {
-      fields: [companyDisponibilities.companyId],
-      references: [company.id],
+    organization: one(organization, {
+      fields: [organizationDisponibilities.organizationId],
+      references: [organization.id],
     }),
   }),
 );
 
-export type CompanyDisponibilities = typeof companyDisponibilities.$inferSelect;
-export type CreateCompanyDisponibilities =
-  typeof companyDisponibilities.$inferInsert;
+export type OrganizationDisponibilities = typeof organizationDisponibilities.$inferSelect;
+export type CreateOrganizationDisponibilities =
+  typeof organizationDisponibilities.$inferInsert;
 
-export const CreateCompanyDisponibilitiesSchema = createInsertSchema(
-  companyDisponibilities,
+export const OrganizationDisponibilitiesSchema = createInsertSchema(
+  organizationDisponibilities,
+);
+export const CreateOrganizationDisponibilitiesSchema = createInsertSchema(
+  organizationDisponibilities,
 );

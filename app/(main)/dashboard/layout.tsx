@@ -1,4 +1,5 @@
 import { currentUser } from "@/src/lib";
+import { getSession } from "@/src/lib/auth-client";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -9,10 +10,10 @@ const DashboardLayout = async ({
   company: ReactNode;
   client: ReactNode;
 }) => {
-  const user = await currentUser();
+  const { data: session } = await getSession();
 
-  if (user?.publicMetadata.isPro) {
-    return <>{company}</>
+  if (session?.user) {
+    return <>{company}</>;
   }
 
   return <>{client}</>;

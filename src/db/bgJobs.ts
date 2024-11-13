@@ -3,6 +3,7 @@ import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const bgJobsStatus = pgEnum("jobStatus", [
   "pending",
@@ -24,7 +25,7 @@ export const bgJobs = pgTable("bg_jobs", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   jobType: bgJobsType("jobType").default("none"),
-  from: text("from").references(() => company.id, {
+  from: text("from").references(() => organization.id, {
     onDelete: "cascade",
   }),
   to: text("to").notNull(),
@@ -35,9 +36,9 @@ export const bgJobs = pgTable("bg_jobs", {
 });
 
 export const jobsRelations = relations(bgJobs, ({ one }) => ({
-  company: one(company, {
+  organization: one(organization, {
     fields: [bgJobs.from],
-    references: [company.id],
+    references: [organization.id],
   }),
 }));
 

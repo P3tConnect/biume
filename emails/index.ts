@@ -8,5 +8,5 @@ export * from "./NewsletterEmail";
 export * from "./RateEmail";
 export * from "./ReminderEmail";
 export * from "./ReservationCancelledEmail";
-export * from "./SubscriptionReceipEmail";
+export * from "./SubscriptionReceiptEmail";
 export * from "./WelcomePawTheraEmail";

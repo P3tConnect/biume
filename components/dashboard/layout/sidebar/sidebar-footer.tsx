@@ -16,12 +16,7 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import {
-  ClerkLoaded,
-  ClerkLoading,
-  SignOutButton,
-  useUser,
-} from "@clerk/nextjs";
+import { useSession } from "@/src/lib/auth-client";
 import {
   BadgeCheck,
   Bell,
@@ -34,7 +29,7 @@ import {
 import React from "react";
 
 const SidebarFooterComponent = () => {
-  const { user } = useUser();
+  const { data: session, isPending } = useSession();
 
   return (
     <SidebarMenu>
@@ -55,8 +50,8 @@ const SidebarFooterComponent = () => {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user?.imageUrl}
-                  alt={user?.fullName!}
+                  src={session.user?.image}
+                  alt={session.user?.name}
                   className="object-cover"
                 />
                 <AvatarFallback className="rounded-lg">
@@ -64,10 +59,10 @@ const SidebarFooterComponent = () => {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user?.fullName}</span>
-                <span className="truncate text-xs">
-                  {user?.emailAddresses[0].emailAddress}
+                <span className="truncate font-semibold">
+                  {session.user?.name}
                 </span>
+                <span className="truncate text-xs">{session.user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -82,8 +77,8 @@ const SidebarFooterComponent = () => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user?.imageUrl}
-                    alt={user?.fullName!}
+                    src={session.user.image}
+                    alt={session.user.name}
                     className="object-cover"
                   />
                   <AvatarFallback className="rounded-lg">
@@ -91,18 +86,21 @@ const SidebarFooterComponent = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <ClerkLoaded>
-                    <span className="truncate font-semibold">
-                      {user?.fullName}
-                    </span>
-                    <span className="truncate text-xs">
-                      {user?.emailAddresses[0].emailAddress}
-                    </span>
-                  </ClerkLoaded>
-                  <ClerkLoading>
-                    <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
-                    <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
-                  </ClerkLoading>
+                  {isPending ? (
+                    <>
+                      <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
+                      <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
+                    </>
+                  ) : (
+                    <>
+                      <span className="truncate font-semibold">
+                        {session.user.name}
+                      </span>
+                      <span className="truncate text-xs">
+                        {session.user.email}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -129,12 +127,10 @@ const SidebarFooterComponent = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <SignOutButton redirectUrl="/">
-              <DropdownMenuItem className="gap-2">
-                <LogOut size={14} />
-                Log out
-              </DropdownMenuItem>
-            </SignOutButton>
+            <DropdownMenuItem className="gap-2">
+              <LogOut size={14} />
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
