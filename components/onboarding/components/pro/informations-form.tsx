@@ -20,6 +20,7 @@ const InformationsForm = () => {
   const locale = useLocale();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [logo, setLogo] = useState("");
+  const [coverImage, setCoverImage] = useState("");
   const stepperStore = useStore(useStepper, (state) => state);
   const router = useRouter();
 
@@ -37,7 +38,7 @@ const InformationsForm = () => {
 
   const { mutateAsync } = useServerActionMutation(createCompany, {
     onSuccess: () => {
-      stepperStore?.setCurrentStep(1)
+      stepperStore?.setSuccessStep(1)
       router.push("/onboarding/services");
     },
   });
@@ -86,13 +87,13 @@ const InformationsForm = () => {
         </div>
         <div className='flex flex-col items-start gap-2 w-1/2'>
           <p className='text-sm font-semibold'>Image de couverture de votre entreprise</p>
-          <UploadDropzone
+          {coverImage == "" ? <UploadDropzone
             endpoint="imageUploader"
             onUploadProgress={setUploadProgress}
             onClientUploadComplete={(value) => {
-              setLogo(value[0].url)
+              setCoverImage(value[0].url)
             }}
-          />
+          /> : <Image src={coverImage} alt='logo' width={100} height={100} className='rounded-2xl' />}
         </div>
         <FormField
           control={form.control}
