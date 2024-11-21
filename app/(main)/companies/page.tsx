@@ -1,4 +1,4 @@
-const CompanyListPage = () => {
+const OrganizationListPage = () => {
   return (
     <>
       <h1>Companies List Page with big search bar</h1>
@@ -6,4 +6,4 @@ const CompanyListPage = () => {
   )
 }
 
-export default CompanyListPage
+export default OrganizationListPage

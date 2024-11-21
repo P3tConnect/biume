@@ -1,9 +1,9 @@
 import AccountingPageComponent from '@/components/dashboard/pages/accounting-page/accounting-page'
 
-const DashboardCompanyAccoutingPage = () => {
+const DashboardOrganizationAccoutingPage = () => {
   return (
     <AccountingPageComponent />
   )
 }
 
-export default DashboardCompanyAccoutingPage
+export default DashboardOrganizationAccoutingPage

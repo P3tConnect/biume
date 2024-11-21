@@ -1,7 +1,7 @@
 import Loader from '@/components/loader'
 import React from 'react'
 
-const DashboardCompanyObservationsLoading = () => {
+const DashboardOrganizationObservationsLoading = () => {
   return (
     <div className='flex flex-col items-center justify-center h-full w-full'>
       <Loader />
@@ -9,4 +9,4 @@ const DashboardCompanyObservationsLoading = () => {
   )
 }
 
-export default DashboardCompanyObservationsLoading
+export default DashboardOrganizationObservationsLoading

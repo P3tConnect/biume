@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
 
-const DashboardCompanyLayout = async ({
+const DashboardOrganizationLayout = async ({
   member,
   owner,
   params,
@@ -19,4 +19,4 @@ const DashboardCompanyLayout = async ({
   );
 };
 
-export default DashboardCompanyLayout;
+export default DashboardOrganizationLayout;

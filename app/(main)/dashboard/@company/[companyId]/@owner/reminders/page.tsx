@@ -1,10 +1,10 @@
 import RemindersPageComponent from '@/components/dashboard/pages/reminders-page/reminders-page'
 import React from 'react'
 
-const DashboardCompanyRemindersPage = () => {
+const DashboardOrganizationRemindersPage = () => {
   return (
     <RemindersPageComponent />
   )
 }
 
-export default DashboardCompanyRemindersPage
+export default DashboardOrganizationRemindersPage

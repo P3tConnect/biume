@@ -1,7 +1,7 @@
 import Loader from "@/components/loader";
 import React from "react";
 
-const DashboardCompanyAccountingLoading = () => {
+const DashboardOrganizationAccountingLoading = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
       <Loader />
@@ -9,4 +9,4 @@ const DashboardCompanyAccountingLoading = () => {
   );
 };
 
-export default DashboardCompanyAccountingLoading;
+export default DashboardOrganizationAccountingLoading;

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const DashboardCompanyMemberSettings = () => {
+const DashboardOrganizationMemberSettings = () => {
   return (
     <div>Page Settings</div>
   )
 }
 
-export default DashboardCompanyMemberSettings
+export default DashboardOrganizationMemberSettings

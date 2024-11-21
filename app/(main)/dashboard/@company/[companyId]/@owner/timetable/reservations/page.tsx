@@ -1,9 +1,9 @@
 import React from 'react'
 
-const DashboardCompanyReservationsPage = () => {
+const DashboardOrganizationReservationsPage = () => {
   return (
-    <div>DashboardCompanyReservationsPage</div>
+    <div>DashboardOrganizationReservationsPage</div>
   )
 }
 
-export default DashboardCompanyReservationsPage
+export default DashboardOrganizationReservationsPage

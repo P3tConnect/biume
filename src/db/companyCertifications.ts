@@ -31,9 +31,9 @@ export type CompanyCertifications = typeof organizationCertifications.$inferSele
 export type CreateCompanyCertifications =
   typeof organizationCertifications.$inferInsert;
 
-export const SelectCompanyCertificationsSchema = createSelectSchema(
+export const SelectOrganizationCertificationsSchema = createSelectSchema(
   organizationCertifications,
 );
-export const CreateCompanyCertificationsSchema = createInsertSchema(
+export const CreateOrganizationCertificationsSchema = createInsertSchema(
   organizationCertifications,
 );

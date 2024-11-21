@@ -1,7 +1,7 @@
-const DashboardCompanyClientDetailsPage = () => {
+const DashboardOrganizationClientDetailsPage = () => {
   return (
-    <div>DashboardCompanyClientDetailsPage</div>
+    <div>DashboardOrganizationClientDetailsPage</div>
   )
 }
 
-export default DashboardCompanyClientDetailsPage
+export default DashboardOrganizationClientDetailsPage
