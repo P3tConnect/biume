@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   SortingState,
   VisibilityState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage, Button, Checkbox, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Input, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
 import { ChevronDownIcon, MoreVertical, MoreVerticalIcon } from "lucide-react";
@@ -188,11 +189,11 @@ const TeamList = () => {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="icon" className="rounded-2xl">
               <MoreVerticalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align="start" side="right">
             <DropdownMenuItem>Voir le profil</DropdownMenuItem>
             <DropdownMenuItem>Modifier le profil</DropdownMenuItem>
             <DropdownMenuItem>Supprimer le profil</DropdownMenuItem>
@@ -216,18 +217,20 @@ const TeamList = () => {
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
     },
-  });
+  })
+
 
   return (
     <div className="w-full">

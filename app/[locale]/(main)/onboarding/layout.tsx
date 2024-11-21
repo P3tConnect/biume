@@ -1,8 +1,6 @@
-import { redirect } from 'next/navigation'
-import React, { PropsWithChildren, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 const OnBoardingLayout = ({ pro, client }: { pro: ReactNode, client: ReactNode }) => {
-  // redirect('/')
   return (
     <>{pro}</>
   )

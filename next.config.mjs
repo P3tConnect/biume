@@ -17,6 +17,14 @@ const nextConfig = {
       {
         hostname: 'randomuser.me',
         protocol: 'https',
+      },
+      {
+        hostname: 'sea1.ingest.uploadthing.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'utfs.io',
+        protocol: 'https',
       }
     ],
   },

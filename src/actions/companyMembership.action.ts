@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { companyMembership, CreateCompanyMembershipSchema } from "../db";
+import {
+  companyMembership,
+  companyMembershipRole,
+  CompanyMembershipRoleEnum,
+  CreateCompanyMembershipSchema,
+} from "../db";
 import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
@@ -24,6 +29,16 @@ export const getCompanyMemberships = async ({
 
   return data;
 };
+
+export const getMembersOfCompany = ownerAction.handler(async ({ ctx }) => {
+  const data = await db.query.companyMembership.findMany({
+    where:
+      eq(companyMembership.role, CompanyMembershipRoleEnum.Values.MEMBER) &&
+      eq(companyMembership.userId, ctx.user.id),
+  });
+
+  return data;
+});
 
 export const createCompanyMembership = ownerAction
   .input(CreateCompanyMembershipSchema)

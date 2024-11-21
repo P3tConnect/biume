@@ -2,6 +2,7 @@
 
 import React from "react";
 import Safari from "./safari";
+import Image from "next/image";
 
 // If using Next.js, uncomment the following line
 // import Image from 'next/image';
@@ -25,12 +26,13 @@ export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
     <div className="w-full">
       <div className="lg:hidden flex flex-col gap-y-10">
         {/* If using Next.js, replace img with Image component */}
-        <img
+        <Image
           src={imageSrc}
+          width={300}
+          height={300}
           alt="Scrolling"
-          className={`w-full max-w-[300px] mx-auto mb-4 ${
-            isLTR ? "order-1" : "order-2"
-          }`}
+          className={`w-full max-w-[300px] mx-auto mb-4 ${isLTR ? "order-1" : "order-2"
+            }`}
         />
         <div className={isLTR ? "order-2" : "order-1"}>{children}</div>
       </div>
@@ -42,9 +44,8 @@ export const FeatureScrollContainer: React.FC<FeatureScrollProps> = ({
           {children}
         </div>
         <div
-          className={`flex items-center justify-center w-full h-fit ${
-            isLTR ? "" : "row-start-1"
-          }`}
+          className={`flex items-center justify-center w-full h-fit ${isLTR ? "" : "row-start-1"
+            }`}
         >
           {/* If using Next.js, replace img with Image component */}
           <Safari

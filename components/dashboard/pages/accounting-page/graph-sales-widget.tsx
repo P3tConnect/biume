@@ -42,20 +42,22 @@ const GraphSalesWidget = () => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[340px] w-full">
-          <ResponsiveContainer>
-            <BarChart data={chartData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Bar
-                dataKey="revenues"
-                fill={chartConfig.revenues.color}
-                width={10}
-                barSize={20}
-                radius={25}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <BarChart data={chartData}>
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip
+              contentStyle={{
+                borderRadius: '0.7rem',
+              }}
+            />
+            <Bar
+              dataKey="revenues"
+              fill={chartConfig.revenues.color}
+              width={10}
+              barSize={20}
+              radius={25}
+            />
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

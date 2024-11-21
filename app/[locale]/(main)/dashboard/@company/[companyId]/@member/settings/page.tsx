@@ -2,7 +2,7 @@ import React from 'react'
 
 const DashboardCompanyMemberSettings = () => {
   return (
-    <div>DashboardCompanyMemberSettings</div>
+    <div>Page Settings</div>
   )
 }
 
