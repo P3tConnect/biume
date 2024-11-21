@@ -2,9 +2,10 @@ import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { project } from "./project";
 import { createInsertSchema } from "drizzle-zod";
+import { user } from "./user";
 
 export const projectsInvitees = pgTable("projects_invitees", {
-  userId: text("userId").primaryKey().notNull(),
+  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
   projectId: text("projectId").references(() => project.id, {
     onDelete: "cascade",
   }),

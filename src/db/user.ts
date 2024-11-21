@@ -1,4 +1,9 @@
+import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pets } from "./pets";
+import { usersJobs } from "./usersJobs";
+import { proSession } from "./pro_session";
+import { usersNewsletters } from "./usersNewsletter";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -13,3 +18,10 @@ export const user = pgTable("user", {
   onBoardingComplete: boolean("onBoardingComplete").notNull(),
   stripeId: text("stripeId"),
 });
+
+export const userRelations = relations(user, ({ one, many }) => ({
+  pets: many(pets),
+  jobs: many(usersJobs),
+  sessions: many(proSession),
+  newsletter: many(usersNewsletters),
+}));
