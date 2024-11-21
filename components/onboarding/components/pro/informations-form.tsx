@@ -1,8 +1,6 @@
 "use client";
 
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Textarea } from '@/components/ui'
-import { createCompany } from '@/src/actions'
-import { CreateCompanySchema } from '@/src/db'
 import { useServerActionMutation, useStore } from '@/src/hooks'
 import { UploadButton, UploadDropzone } from '@/src/lib/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +13,7 @@ import { useStepper } from '../../hooks/useStepper';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { CreateOrganizationSchema } from '@/src/db';
 
 const InformationsForm = () => {
   const locale = useLocale();
@@ -25,38 +24,15 @@ const InformationsForm = () => {
   const stepperStore = useStore(useStepper, (state) => state);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof CreateCompanySchema>>({
-    resolver: zodResolver(CreateCompanySchema),
+  const form = useForm<z.infer<typeof CreateOrganizationSchema>>({
+    resolver: zodResolver(CreateOrganizationSchema),
     defaultValues: {
-      name: '',
-      logo,
-      coverImage: '',
-      description: '',
-      email: '',
-      lang: locale,
-    },
-  });
-
-  const { mutateAsync } = useServerActionMutation(createCompany, {
-    onSuccess: () => {
-      stepperStore?.setSuccessStep(1)
-      router.push("/onboarding/services");
+      
     },
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await mutateAsync(data);
   });
-
-  const handleDeleteLogo = () => {
-    setLogo("");
-    form.setValue('logo', '');
-  };
-
-  const handleDeleteCover = () => {
-    setCoverImage("");
-    form.setValue('coverImage', '');
-  };
 
   return (
     <Form {...form}>
@@ -166,7 +142,6 @@ const InformationsForm = () => {
                       variant="ghost" 
                       size="icon" 
                       className='rounded-xl text-white hover:text-white'
-                      onClick={handleDeleteLogo}
                     >
                       <Trash2 size={16} />
                     </Button>
@@ -266,7 +241,6 @@ const InformationsForm = () => {
                     variant="destructive" 
                     size="icon" 
                     className='rounded-xl'
-                    onClick={handleDeleteCover}
                   >
                     <Trash2 size={16} />
                   </Button>

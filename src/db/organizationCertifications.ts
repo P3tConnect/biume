@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organizationDocuments } from "./companyDocuments";
+import { organizationDocuments } from "./organizationDocuments";
 import { relations } from "drizzle-orm";
 
 export const organizationCertifications = pgTable("organization_certifications", {

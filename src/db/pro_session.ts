@@ -57,6 +57,10 @@ export const proSession = pgTable("pro_session", {
 });
 
 export const proSessionRelations = relations(proSession, ({ one, many }) => ({
+  pro: one(organization, {
+    fields: [proSession.proId],
+    references: [organization.id],
+  }),
   invoice: one(invoice),
   service: one(service, {
     fields: [proSession.serviceId],
