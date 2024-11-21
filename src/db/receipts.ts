@@ -1,16 +1,16 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { receiptProduct } from "./receiptProducts";
-import { company } from "./company";
 import { createInsertSchema } from "drizzle-zod";
 import { receiptCategory } from "./receiptCategory";
+import { organization } from "./organization";
 
 export const receipt = pgTable("receipt", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   image: text("image"),
-  companyId: text("companyId").references(() => company.id, {
+  organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   totalPrice: integer("totalPrice"),
@@ -20,9 +20,9 @@ export const receipt = pgTable("receipt", {
 
 export const receiptRelations = relations(receipt, ({ one, many }) => ({
   products: many(receiptProduct),
-  company: one(company, {
-    fields: [receipt.companyId],
-    references: [company.id],
+  organization: one(organization, {
+    fields: [receipt.organizationId],
+    references: [organization.id],
   }),
   categories: many(receiptCategory),
 }));

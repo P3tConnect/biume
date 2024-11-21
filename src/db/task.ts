@@ -1,14 +1,14 @@
 import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const task = pgTable("task", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
-  ownerId: text("ownerId").references(() => company.id, {
+  ownerId: text("ownerId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   description: text("description"),
@@ -21,9 +21,9 @@ export const task = pgTable("task", {
 });
 
 export const taskRelations = relations(task, ({ one }) => ({
-  owner: one(company, {
+  owner: one(organization, {
     fields: [task.ownerId],
-    references: [company.id],
+    references: [organization.id],
   }),
 }));
 

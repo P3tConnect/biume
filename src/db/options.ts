@@ -5,6 +5,7 @@ import { askEstimateOptions } from "./askEstimateOptions";
 import { invoiceOptions } from "./invoiceOptions";
 import { sessionOptions } from "./sessionOptions";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const options = pgTable("options", {
   id: text("id")
@@ -13,7 +14,7 @@ export const options = pgTable("options", {
   title: text("title").notNull(),
   description: text("description"),
   price: integer("price").notNull(),
-  companyId: text("companyId").references(() => company.id, {
+  organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt", { mode: "date" })
@@ -26,9 +27,9 @@ export const optionsRelations = relations(options, ({ one, many }) => ({
   askEstimates: many(askEstimateOptions),
   invoices: many(invoiceOptions),
   sessions: many(sessionOptions),
-  company: one(company, {
-    fields: [options.companyId],
-    references: [company.id],
+  organization: one(organization, {
+    fields: [options.organizationId],
+    references: [organization.id],
   }),
 }));
 

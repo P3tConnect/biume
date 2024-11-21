@@ -1,9 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import { Avatar, AvatarImage } from "../ui";
 import { User } from "lucide-react";
 
-const CompanyDetailsHero = () => {
+const OrganizationDetailsHero = () => {
   return (
     <section className="relative w-full h-[400px] overflow-hidden">
       {/* <Image
@@ -15,7 +14,7 @@ const CompanyDetailsHero = () => {
       /> */}
       <Image
         src={"/assets/images/default-company-bg-img.jpg"}
-        alt="company hero image"
+        alt="organization hero image"
         width={1404}
         height={938}
         className="w-full h-full object-cover"
@@ -32,4 +31,4 @@ const CompanyDetailsHero = () => {
   );
 };
 
-export default CompanyDetailsHero;
+export default OrganizationDetailsHero;
