@@ -1,5 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./user";
+import { relations } from "drizzle-orm";
 
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
@@ -14,3 +15,10 @@ export const account = pgTable("account", {
   expiresAt: timestamp("expiresAt"),
   password: text("password"),
 });
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));

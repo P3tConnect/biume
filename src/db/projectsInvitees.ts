@@ -18,6 +18,10 @@ export const projectInviteesRelations = relations(
       fields: [projectsInvitees.projectId],
       references: [project.id],
     }),
+    user: one(user, {
+      fields: [projectsInvitees.userId],
+      references: [user.id],
+    }),
   }),
 );
 

@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { petsAllergies } from "./petsAllergies";
+import { user } from "./user";
 
 export const allergies = pgTable("allergies", {
   id: text("id")
@@ -9,13 +10,19 @@ export const allergies = pgTable("allergies", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").notNull(),
+  ownerId: text("ownerId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const allergiesRelations = relations(allergies, ({ one, many }) => ({
   pets: many(petsAllergies),
+  owner: one(user, {
+    fields: [allergies.ownerId],
+    references: [user.id],
+  }),
 }));
 
 export type Allergy = typeof allergies.$inferSelect;

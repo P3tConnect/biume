@@ -1,5 +1,4 @@
 import { date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";

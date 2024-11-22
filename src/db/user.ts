@@ -4,6 +4,14 @@ import { pets } from "./pets";
 import { usersJobs } from "./usersJobs";
 import { proSession } from "./pro_session";
 import { usersNewsletters } from "./usersNewsletter";
+import { allergies } from "./allergies";
+import { deseases } from "./deseases";
+import { intolerences } from "./intolerences";
+import { session } from "./session";
+import { account } from "./account";
+import { member } from "./member";
+import { notification } from "./notifications";
+import { projectsInvitees } from "./projectsInvitees";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -22,6 +30,14 @@ export const user = pgTable("user", {
 export const userRelations = relations(user, ({ one, many }) => ({
   pets: many(pets),
   jobs: many(usersJobs),
-  sessions: many(proSession),
+  proSessions: many(proSession),
   newsletter: many(usersNewsletters),
+  allergies: many(allergies),
+  deseases: many(deseases),
+  intolerences: many(intolerences),
+  sessions: many(session),
+  accounts: many(account),
+  memberships: many(member),
+  notifications: many(notification),
+  projects: many(projectsInvitees),
 }));

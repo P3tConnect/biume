@@ -16,6 +16,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { service } from "./service";
 import { organization } from "./organization";
+import { user } from "./user";
 
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
@@ -35,7 +36,8 @@ export const proSession = pgTable("pro_session", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   proId: text("proId").references(() => organization.id, { onDelete: "cascade" }),
-  clientId: text("clientId").references(() => pets.id, {
+  clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
+  patientId: text("patientId").references(() => pets.id, {
     onDelete: "cascade",
   }),
   reportId: text("reportId").references(() => report.id, {
@@ -68,7 +70,7 @@ export const proSessionRelations = relations(proSession, ({ one, many }) => ({
   }),
   options: many(sessionOptions),
   pet: one(pets, {
-    fields: [proSession.clientId],
+    fields: [proSession.patientId],
     references: [pets.id],
   }),
   report: one(report, {
@@ -78,6 +80,10 @@ export const proSessionRelations = relations(proSession, ({ one, many }) => ({
   observation: one(observation, {
     fields: [proSession.observationId],
     references: [observation.id],
+  }),
+  client: one(user, {
+    fields: [proSession.clientId],
+    references: [user.id],
   }),
 }));
 

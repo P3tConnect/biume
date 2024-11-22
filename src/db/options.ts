@@ -1,5 +1,4 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { askEstimateOptions } from "./askEstimateOptions";
 import { invoiceOptions } from "./invoiceOptions";
