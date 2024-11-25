@@ -2,6 +2,7 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { petsIntolerences } from "./petsIntolerences";
+import { user } from "./user";
 
 export const intolerences = pgTable("intolerences", {
   id: text("id")
@@ -9,7 +10,9 @@ export const intolerences = pgTable("intolerences", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title"),
   description: text("description"),
-  ownerId: text("ownerId").notNull(),
+  ownerId: text("ownerId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("createdAt", { mode: "date" })
     .default(new Date())
     .notNull(),
@@ -20,6 +23,10 @@ export const intolerencesRelations = relations(
   intolerences,
   ({ one, many }) => ({
     pets: many(petsIntolerences),
+    owner: one(user, {
+      fields: [intolerences.ownerId],
+      references: [user.id],
+    }),
   }),
 );
 

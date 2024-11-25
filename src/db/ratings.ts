@@ -5,9 +5,9 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const ratings = pgTable("ratings", {
   id: text("id")
@@ -15,7 +15,7 @@ export const ratings = pgTable("ratings", {
     .$defaultFn(() => crypto.randomUUID()),
   rate: integer("rate").notNull(),
   comment: text("comment"),
-  proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
+  proId: text("proId").references(() => organization.id, { onDelete: "cascade" }),
   writerId: text("writerId").notNull(),
   isRecommanded: boolean("isRecommanded").default(false).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
@@ -23,9 +23,9 @@ export const ratings = pgTable("ratings", {
 });
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
-  for: one(company, {
+  for: one(organization, {
     fields: [ratings.proId],
-    references: [company.id],
+    references: [organization.id],
   }),
 }));
 

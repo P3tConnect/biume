@@ -9,9 +9,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { askEstimateOptions } from "./askEstimateOptions";
 import { createInsertSchema } from "drizzle-zod";
-import { company } from "./company";
 import { z } from "zod";
-import { invoice } from "./invoice";
+import { organization } from "./organization";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
   "USER PENDING",
@@ -34,7 +33,7 @@ export const askEstimate = pgTable("ask_estimate", {
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
   creator: text("creator").notNull(),
-  for: text("for").references(() => company.id, { onDelete: "cascade" }),
+  for: text("for").references(() => organization.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").default(false),
   message: text("message"),
   new: boolean("new").default(false),

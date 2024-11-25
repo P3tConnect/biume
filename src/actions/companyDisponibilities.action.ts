@@ -2,20 +2,20 @@
 
 import { z } from "zod";
 import {
-  companyDisponibilities,
-  CreateCompanyDisponibilitiesSchema,
+  organizationDisponibilities,
+  CreateOrganizationDisponibilitiesSchema,
 } from "../db";
 import { clientAction, ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getCompanyDisponibilities = clientAction.handler(async () => {});
+export const getOrganizationDisponibilities = clientAction.handler(async () => {});
 
-export const createCompanyDisponibilities = ownerAction
-  .input(CreateCompanyDisponibilitiesSchema)
+export const createOrganizationDisponibilities = ownerAction
+  .input(CreateOrganizationDisponibilitiesSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .insert(companyDisponibilities)
+      .insert(organizationDisponibilities)
       .values(input)
       .returning()
       .execute();
@@ -27,13 +27,13 @@ export const createCompanyDisponibilities = ownerAction
     return data;
   });
 
-export const updateCompanyDisponibilities = ownerAction
-  .input(CreateCompanyDisponibilitiesSchema)
+export const updateOrganizationDisponibilities = ownerAction
+  .input(CreateOrganizationDisponibilitiesSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .update(companyDisponibilities)
+      .update(organizationDisponibilities)
       .set(input)
-      .where(eq(companyDisponibilities.id, input.id as string))
+      .where(eq(organizationDisponibilities.id, input.id as string))
       .returning()
       .execute();
 
@@ -44,12 +44,12 @@ export const updateCompanyDisponibilities = ownerAction
     return data;
   });
 
-export const deleteCompanyDisponibilities = ownerAction
+export const deleteOrganizationDisponibilities = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db
-      .delete(companyDisponibilities)
-      .where(eq(companyDisponibilities.id, input))
+      .delete(organizationDisponibilities)
+      .where(eq(organizationDisponibilities.id, input))
       .execute();
 
     if (!data) {

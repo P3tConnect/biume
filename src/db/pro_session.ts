@@ -6,16 +6,17 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { invoice } from "./invoice";
 import { sessionOptions } from "./sessionOptions";
 import { pets } from "./pets";
 import { report } from "./report";
 import { observation } from "./observation";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { service } from "./service";
+import { organization } from "./organization";
+import { user } from "./user";
 
 export const sessionType = pgEnum("session_type", ["oneToOne", "multiple"]);
 
@@ -34,8 +35,9 @@ export const proSession = pgTable("pro_session", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  proId: text("proId").references(() => company.id, { onDelete: "cascade" }),
-  clientId: text("clientId").references(() => pets.id, {
+  proId: text("proId").references(() => organization.id, { onDelete: "cascade" }),
+  clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
+  patientId: text("patientId").references(() => pets.id, {
     onDelete: "cascade",
   }),
   reportId: text("reportId").references(() => report.id, {
@@ -57,6 +59,10 @@ export const proSession = pgTable("pro_session", {
 });
 
 export const proSessionRelations = relations(proSession, ({ one, many }) => ({
+  pro: one(organization, {
+    fields: [proSession.proId],
+    references: [organization.id],
+  }),
   invoice: one(invoice),
   service: one(service, {
     fields: [proSession.serviceId],
@@ -64,7 +70,7 @@ export const proSessionRelations = relations(proSession, ({ one, many }) => ({
   }),
   options: many(sessionOptions),
   pet: one(pets, {
-    fields: [proSession.clientId],
+    fields: [proSession.patientId],
     references: [pets.id],
   }),
   report: one(report, {
@@ -75,6 +81,10 @@ export const proSessionRelations = relations(proSession, ({ one, many }) => ({
     fields: [proSession.observationId],
     references: [observation.id],
   }),
+  client: one(user, {
+    fields: [proSession.clientId],
+    references: [user.id],
+  }),
 }));
 
 export type ProSession = typeof proSession.$inferSelect;
@@ -82,4 +92,5 @@ export type CreateProSession = typeof proSession.$inferInsert;
 export const SessionTypeEnum = z.enum(sessionType.enumValues);
 export const SessionStatusTypeEnum = z.enum(sessionStatusType.enumValues);
 
+export const ProSessionSchema = createSelectSchema(proSession);
 export const CreateProSessionSchema = createInsertSchema(proSession);

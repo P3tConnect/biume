@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { companyAddress, CreateCompanyAddressSchema } from "../db";
+import { organizationAddress, CreateCompanyAddressSchema } from "../db";
 import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
@@ -11,7 +11,7 @@ export const createCompanyAddress = ownerAction
   .input(CreateCompanyAddressSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .insert(companyAddress)
+      .insert(organizationAddress)
       .values(input)
       .returning()
       .execute();
@@ -27,9 +27,9 @@ export const updateCompanyAddress = ownerAction
   .input(CreateCompanyAddressSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .update(companyAddress)
+      .update(organizationAddress)
       .set(input)
-      .where(eq(companyAddress.id, input.id as string))
+      .where(eq(organizationAddress.id, input.id as string))
       .returning()
       .execute();
 
@@ -44,8 +44,8 @@ export const deleteCompanyAddress = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db
-      .delete(companyAddress)
-      .where(eq(companyAddress.id, input))
+      .delete(organizationAddress)
+      .where(eq(organizationAddress.id, input))
       .execute();
 
     if (!data) {

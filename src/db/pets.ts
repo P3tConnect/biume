@@ -6,6 +6,7 @@ import { petsDeseases } from "./petsDeseases";
 import { z } from "zod";
 import { petsAllergies } from "./petsAllergies";
 import { petsIntolerences } from "./petsIntolerences";
+import { user } from "./user";
 
 export const petType = pgEnum("petType", [
   "Dog",
@@ -24,7 +25,9 @@ export const pets = pgTable("pets", {
   weight: integer("weight"),
   height: integer("height"),
   description: text("description"),
-  ownerId: text("ownerId").notNull(),
+  ownerId: text("ownerId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),
@@ -38,6 +41,10 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
   deseases: many(petsDeseases),
   allergies: many(petsAllergies),
   intolerences: many(petsIntolerences),
+  owner: one(user, {
+    fields: [pets.ownerId],
+    references: [user.id],
+  }),
 }));
 
 export type Pet = typeof pets.$inferSelect;
