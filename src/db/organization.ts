@@ -29,12 +29,13 @@ import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { proSession } from "./pro_session";
+import { invitation } from "./invitation";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
 export const PlanEnum = z.enum(plan.enumValues);
 
-export const organization = pgTable("organization", {
+export const organization = pgTable("organizations", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").unique(),
@@ -94,6 +95,7 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   transactions: many(transaction),
   widgets: many(widgets),
   bgJobs: many(bgJobs),
+  invitations: many(invitation),
 }));
 
 export type Organization = typeof organization.$inferSelect;

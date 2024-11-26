@@ -12,8 +12,9 @@ import { account } from "./account";
 import { member } from "./member";
 import { notification } from "./notifications";
 import { projectsInvitees } from "./projectsInvitees";
+import { invitation } from "./invitation";
 
-export const user = pgTable("user", {
+export const user = pgTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -40,4 +41,5 @@ export const userRelations = relations(user, ({ one, many }) => ({
   memberships: many(member),
   notifications: many(notification),
   projects: many(projectsInvitees),
+  invitations: many(invitation),
 }));

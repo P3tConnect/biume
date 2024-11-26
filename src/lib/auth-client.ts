@@ -4,7 +4,7 @@ import {
   twoFactorClient,
   inferAdditionalFields,
 } from "better-auth/client/plugins";
-import { ac, auth } from "./auth";
+import { ac, member, admin, owner } from "./auth";
 
 export const {
   signIn,
@@ -28,6 +28,11 @@ export const {
   plugins: [
     organizationClient({
       ac: ac,
+      roles: {
+        member,
+        admin,
+        owner,
+      },
     }),
     twoFactorClient(),
     inferAdditionalFields({

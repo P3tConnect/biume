@@ -21,15 +21,15 @@ const statement = {
 
 export const ac = createAccessControl(statement);
 
-const member = ac.newRole({
+export const member = ac.newRole({
   organization: ["create"],
 });
 
-const admin = ac.newRole({
+export const admin = ac.newRole({
   organization: ["create", "update"],
 });
 
-const owner = ac.newRole({
+export const owner = ac.newRole({
   organization: ["create", "update", "delete"],
 });
 
@@ -38,33 +38,19 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
-      user: user,
-      organization: organizationSchema,
-      account: account,
-      verification: verification,
-      twoFactor: twoFactorSchema,
-      session: session,
-      member: memberSchema,
-      invitation: invitation,
+      organizations: organizationSchema,
+      users: user,
+      accounts: account,
+      verifications: verification,
+      twoFactors: twoFactorSchema,
+      sessions: session,
+      invitations: invitation,
+      members: memberSchema,
     },
     usePlural: true,
   }),
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async () => {},
-  },
-  organization: {
-    additionnalFieds: {
-      stripeId: {
-        type: "string",
-        defaultValue: "",
-      },
-      onBoardingComplete: {
-        type: "boolean",
-        defaultValue: false,
-        required: true,
-      },
-    },
   },
   user: {
     additionalFields: {
@@ -86,17 +72,13 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    twoFactor(),
     organization({
       ac: ac,
       roles: {
         member,
         admin,
         owner,
-      },
-    }),
-    twoFactor({
-      otpOptions: {
-        sendOTP: ({}, otp) => {},
       },
     }),
   ],

@@ -20,10 +20,9 @@ import { useTranslations } from "next-intl";
 
 interface NavbarProps {
   menu: Menu;
-  companyId: string;
 }
 
-export function Navbar({ menu, companyId }: NavbarProps) {
+export function Navbar({ menu }: NavbarProps) {
   const t = useTranslations();
 
   return (

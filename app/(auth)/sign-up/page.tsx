@@ -16,7 +16,6 @@ const RegisterClientPage = () => {
     defaultValues: {
       email: "",
       name: "",
-      image: "",
       password: "",
     },
   });
@@ -26,7 +25,10 @@ const RegisterClientPage = () => {
       email: data.email,
       password: data.password,
       name: data.name,
-      image: data.image,
+      isPro: false,
+      stripeId: "",
+      image: "",
+      onBoardingComplete: false,
       callbackURL: "/",
     });
   });

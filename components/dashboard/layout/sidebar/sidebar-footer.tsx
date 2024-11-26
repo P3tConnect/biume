@@ -53,7 +53,7 @@ const SidebarFooterComponent = () => {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={session?.user.image as string}
+                  src={session?.user.image ?? "#"}
                   alt={session?.user.name}
                   className="object-cover"
                 />
@@ -130,18 +130,16 @@ const SidebarFooterComponent = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <Button onClick={() => signOut({
+            <DropdownMenuItem className="gap-2" onClick={() => signOut({
               fetchOptions: {
                 onSuccess: () => {
                   router.push("/login")
                 }
               }
-            })} asChild>
-              <DropdownMenuItem className="gap-2">
-                <LogOut size={14} />
-                Log out
-              </DropdownMenuItem>
-            </Button>
+            })}>
+              <LogOut size={14} />
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

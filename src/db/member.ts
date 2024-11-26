@@ -3,7 +3,7 @@ import { organization } from "./organization";
 import { relations } from "drizzle-orm";
 import { user } from "./user";
 
-export const member = pgTable("member", {
+export const member = pgTable("members", {
   id: text("id").primaryKey(),
   organizationId: text("organizationId")
     .notNull()
