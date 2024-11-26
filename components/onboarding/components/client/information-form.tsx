@@ -15,6 +15,7 @@ const ClientInformationForm = () => {
       lastname: "",
       phone: "",
       birthday: "",
+      // sexe: "",
       city: "",
       zipcode: "",
       address: "",
@@ -32,11 +33,6 @@ const ClientInformationForm = () => {
     <>
       <Form {...form}>
         <form onSubmit={onSubmit}>
-          <div className="flex items-center justify-center w-full h-48 border-2 border-dashed border-gray-500 rounded-lg mb-4">
-            <span className="text-xl font-bold text-gray-500">
-              Ajouter des photos
-            </span>
-          </div>
           <div className="flex flex-row gap-4 mb-4">
             <Controller
               name="lastname"
@@ -68,7 +64,7 @@ const ClientInformationForm = () => {
               )}
             />
             {/* <Controller
-              name=""
+              name="sexe"
               control={control}
               render={({ field }) => (
                 <Input

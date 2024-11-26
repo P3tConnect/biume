@@ -10,6 +10,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   phone: varchar("phone", { length: 20 }),
   birthday: text("birthday"), // adjust the type if you want a date type instead
+  // sexe: , // faire le enum pour masculin féminin
   city: varchar("city", { length: 255 }),
   zipcode: varchar("zipcode", { length: 20 }),
   address: text("address"),
