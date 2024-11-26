@@ -1,11 +1,15 @@
-import React from 'react'
+'use client'
 
-const OnBoardingLayout = ({ children }: { children: React.ReactNode }) => {
+import React from "react"
+import StepperClient from "@/components/onboarding/components/stepper-client";
+
+const OnBoardingClientLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
-      {children}
-    </>
+    <div className="h-screen w-screen flex items-center justify-center p-3 gap-3">
+      <StepperClient />
+      <div className="w-3/4 h-full">{children}</div>
+    </div>
   )
 }
 
-export default OnBoardingLayout
+export default OnBoardingClientLayout

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const ClientOnBoardingPage = () => {
-  return (
-    <div>ClientOnBoardingPage</div>
-  )
-}
+  return <div>ClientOnBoardingPage</div>;
+};
 
-export default ClientOnBoardingPage
+export default ClientOnBoardingPage;

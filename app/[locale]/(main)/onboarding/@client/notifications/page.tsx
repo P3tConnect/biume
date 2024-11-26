@@ -1,9 +1,13 @@
-import React from 'react'
+import { Metadata } from "next";
+import ClientNotificationStep from "@/components/onboarding/client/notifications-step";
 
-const NotificationsStepPage = () => {
-  return (
-    <div>NotificationsStepPage</div>
-  )
-}
+export const metadata: Metadata = {
+  title: "Notification - Onboarding",
+  description: "Notification - Onboarding",
+};
 
-export default NotificationsStepPage
+const ClientNotificationsPage = () => {
+  return <ClientNotificationStep />;
+};
+
+export default ClientNotificationsPage;

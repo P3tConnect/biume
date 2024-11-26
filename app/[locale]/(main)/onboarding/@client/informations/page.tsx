@@ -1,9 +1,13 @@
-import React from 'react'
+import { Metadata } from "next";
+import ClientInformationStep from "@/components/onboarding/client/informations-step";
 
-const InformationsStepPage = () => {
-  return (
-    <div>InformationsStepPage</div>
-  )
-}
+export const metadata: Metadata = {
+  title: "Informations - Onboarding",
+  description: "Informations - Onboarding",
+};
 
-export default InformationsStepPage
+const ClientInformationsPage = () => {
+  return <ClientInformationStep />;
+};
+
+export default ClientInformationsPage;

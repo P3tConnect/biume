@@ -1,15 +1,12 @@
 import { create } from "zustand";
 
 export type StepperStore = {
-  currentStep: number;
+  successSteps: number[];
   setCurrentStep: (step: number) => void;
-  nextStep: () => void;
-  prevStep: () => void;
 };
 
 export const useStepper = create<StepperStore>((set, get) => ({
-  currentStep: 0,
-  setCurrentStep: (step: number) => set({ currentStep: step }),
-  nextStep: () => set({ currentStep: get().currentStep + 1 }),
-  prevStep: () => set({ currentStep: get().currentStep - 1 }),
+  successSteps: [],
+  setCurrentStep: (step: number) =>
+    set({ successSteps: [...get().successSteps, step] }),
 }));

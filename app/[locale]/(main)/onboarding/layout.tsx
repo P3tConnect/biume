@@ -1,8 +1,18 @@
+import { currentUser } from "@/src/lib";
 import { ReactNode } from 'react'
 
-const OnBoardingLayout = ({ pro, client }: { pro: ReactNode, client: ReactNode }) => {
+const OnBoardingLayout = async ({ pro, client }: { pro: ReactNode, client: ReactNode }) => {
+
+  const user = await currentUser();
+
+  if(user.publicMetadata.isPro === true) {
+    return (
+      <>{pro}</>
+    )
+  }
+
   return (
-    <>{pro}</>
+    <>{client}</>
   )
 }
 
