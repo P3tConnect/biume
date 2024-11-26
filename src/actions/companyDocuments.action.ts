@@ -2,17 +2,17 @@
 
 import { z } from "zod";
 import { ownerAction, db } from "../lib";
-import { companyDocuments, CreateCompanyDocumentsSchema } from "../db";
+import { organizationDocuments, CreateOrganizationDocumentsSchema } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
 export const getCompanyDocuments = ownerAction.handler(async () => {});
 
 export const createCompanyDocuments = ownerAction
-  .input(CreateCompanyDocumentsSchema)
+  .input(CreateOrganizationDocumentsSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .insert(companyDocuments)
+      .insert(organizationDocuments)
       .values(input)
       .returning()
       .execute();
@@ -25,12 +25,12 @@ export const createCompanyDocuments = ownerAction
   });
 
 export const updateCompanyDocuments = ownerAction
-  .input(CreateCompanyDocumentsSchema)
+  .input(CreateOrganizationDocumentsSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .update(companyDocuments)
+      .update(organizationDocuments)
       .set(input)
-      .where(eq(companyDocuments.id, input.id as string))
+      .where(eq(organizationDocuments.id, input.id as string))
       .returning()
       .execute();
 
@@ -45,8 +45,8 @@ export const deleteCompanyDocuments = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db
-      .delete(companyDocuments)
-      .where(eq(companyDocuments.id, input))
+      .delete(organizationDocuments)
+      .where(eq(organizationDocuments.id, input))
       .execute();
 
     if (!data) {

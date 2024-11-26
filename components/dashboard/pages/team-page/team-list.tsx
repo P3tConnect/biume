@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   SortingState,
   VisibilityState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage, Button, Checkbox, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Input, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
 import { ChevronDownIcon, MoreVertical, MoreVerticalIcon } from "lucide-react";
@@ -216,18 +217,20 @@ const TeamList = () => {
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
     },
-  });
+  })
+
 
   return (
     <div className="w-full">

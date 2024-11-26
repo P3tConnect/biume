@@ -1,28 +1,45 @@
-import { boolean, date, pgEnum } from "drizzle-orm/pg-core";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pets } from "./pets";
+import { usersJobs } from "./usersJobs";
+import { proSession } from "./pro_session";
+import { usersNewsletters } from "./usersNewsletter";
+import { allergies } from "./allergies";
+import { deseases } from "./deseases";
+import { intolerences } from "./intolerences";
+import { session } from "./session";
+import { account } from "./account";
+import { member } from "./member";
+import { notification } from "./notifications";
+import { projectsInvitees } from "./projectsInvitees";
+import { invitation } from "./invitation";
 
-export const sexeEnum = pgEnum("sexe", ["masculin", "féminin"]);
-
-// Define the users table
-export const users = pgTable("users", {
-  id: text("id").primaryKey().notNull(),
-  firstname: varchar("firstname", { length: 255 }).notNull(),
-  lastname: varchar("lastname", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  phone: varchar("phone", { length: 10 }).notNull(),
-  birthday: date("birthday").notNull(),
-  sexe: sexeEnum("sexe").notNull(),
-  city: varchar("city", { length: 255 }).notNull(),
-  zipcode: varchar("zipcode", { length: 20 }).notNull(),
-  address: text("address").notNull(),
-  profilImage: text("profilImage"),
-  smsNotification: boolean("smsNotification").notNull().default(false),
-  emailNotification: boolean("emailNotification").notNull().default(false),
+export const user = pgTable("users", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("emailVerified").notNull(),
+  image: text("image"),
+  createdAt: timestamp("createdAt").notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+  twoFactorEnabled: boolean("twoFactorEnabled"),
+  isPro: boolean("isPro").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull(),
+  stripeId: text("stripeId"),
 });
 
-// Define the schema for inserting users
-export const CreateUserSchema = createInsertSchema(users);
-
-export type User = typeof users.$inferSelect;
-export type CreateUser = typeof users.$inferInsert;
+export const userRelations = relations(user, ({ one, many }) => ({
+  pets: many(pets),
+  jobs: many(usersJobs),
+  proSessions: many(proSession),
+  newsletter: many(usersNewsletters),
+  allergies: many(allergies),
+  deseases: many(deseases),
+  intolerences: many(intolerences),
+  sessions: many(session),
+  accounts: many(account),
+  memberships: many(member),
+  notifications: many(notification),
+  projects: many(projectsInvitees),
+  invitations: many(invitation),
+}));

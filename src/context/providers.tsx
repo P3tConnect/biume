@@ -29,12 +29,10 @@ const Providers = ({ children }: PropsWithChildren) => {
           enableSystem={false}
           disableTransitionOnChange={true}
         >
-          {/* <SidebarProvider> */}
           <TooltipProvider disableHoverableContent>
             {children}
             <Toaster />
           </TooltipProvider>
-          {/* </SidebarProvider> */}
         </ThemeProvider>
       </QueryClientProvider>
     </PostHogProvider>

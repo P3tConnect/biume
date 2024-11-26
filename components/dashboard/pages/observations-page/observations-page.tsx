@@ -1,9 +1,9 @@
 import React from 'react'
-import ObeservationWidget from '../../shortcuts/observations-widget'
+import ObservationWidget from '../../shortcuts/observations-widget'
 
 const ObservationsPageComponent = () => {
   return (
-    <ObeservationWidget />
+    <ObservationWidget />
   )
 }
 

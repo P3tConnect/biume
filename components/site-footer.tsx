@@ -27,7 +27,7 @@ export async function SiteFooter() {
           <div className="mb-12 flex-col flex gap-4">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                alt="company logo"
+                alt="organization logo"
                 src="https://i.imgur.com/ul79l8a.png"
                 className="h-8 w-8 text-primary rounded-xl"
                 width={50}

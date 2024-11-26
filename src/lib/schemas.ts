@@ -7,11 +7,11 @@ export const emailSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
+  rememberMe: z.boolean(),
 });
 
 export const registerSchema = z.object({
   name: z.string(),
-  firstname: z.string(),
   email: z.string().email(),
   password: z.string(),
 });

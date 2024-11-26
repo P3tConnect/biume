@@ -2,17 +2,17 @@
 
 import Drawer from "./drawer";
 import { Icons } from "@/components/landing/icons";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/src/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { useSession } from "@/src/lib/auth-client";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
-  const { isSignedIn } = useUser();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +50,7 @@ export default function Header() {
         <div className="hidden lg:block">
           <div className="flex items-center">
             <div className="gap-2 flex">
-              {isSignedIn ? (
+              {session ? (
                 <Link
                   href="/dashboard/123"
                   className={buttonVariants({ variant: "default" })}
@@ -58,11 +58,17 @@ export default function Header() {
                   Dashboard
                 </Link>
               ) : (
-                <Link href="/sign-in" className={cn(buttonVariants({ variant: "default" }), "rounded-xl")}>
+                <Link
+                  href="/sign-in"
+                  className={cn(
+                    buttonVariants({ variant: "default" }),
+                    "rounded-xl",
+                  )}
+                >
                   Login
                 </Link>
               )}
-              {isSignedIn ? null : (
+              {session ? null : (
                 <Link
                   href="/sign-up"
                   className={cn(

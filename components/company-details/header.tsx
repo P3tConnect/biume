@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import { Button } from '../ui'
 
-const CompanyDetailsHeader = () => {
+const OrganizationDetailsHeader = () => {
   return (
     <div className='absolute top-2 bg-background h-16 w-screen rounded-full flex justify-between items-center px-5'>
       <Image 
@@ -19,4 +19,4 @@ const CompanyDetailsHeader = () => {
   )
 }
 
-export default CompanyDetailsHeader
+export default OrganizationDetailsHeader

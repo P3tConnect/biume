@@ -34,7 +34,6 @@ type Group = {
 
 export function proMenuList(
   pathname: string,
-  locale: string,
   companyId: string,
 ): Group[] {
   return [
@@ -42,16 +41,16 @@ export function proMenuList(
       groupLabel: "",
       menus: [
         {
-          href: `/${locale}/dashboard/${companyId}`,
+          href: `/dashboard/${companyId}`,
           label: "dashboard.sidebar.dashboard",
-          active: pathname == `/${locale}/dashboard/${companyId}`,
+          active: pathname == `/dashboard/${companyId}`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/timetable`,
+          href: `/dashboard/${companyId}/timetable`,
           label: "dashboard.sidebar.calendar",
-          active: pathname == `/${locale}/dashboard/${companyId}/timetable`,
+          active: pathname == `/dashboard/${companyId}/timetable`,
           icon: Calendar,
           submenus: [],
         },
@@ -61,23 +60,23 @@ export function proMenuList(
       groupLabel: "dashboard.sidebar.groupLabels.management",
       menus: [
         {
-          href: `/${locale}/dashboard/${companyId}/accounting`,
+          href: `/dashboard/${companyId}/accounting`,
           label: "dashboard.sidebar.accounting",
-          active: pathname == `/${locale}/dashboard/${companyId}/accounting`,
+          active: pathname == `/dashboard/${companyId}/accounting`,
           icon: FolderOpen,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/team`,
+          href: `/dashboard/${companyId}/team`,
           label: "dashboard.sidebar.team",
-          active: pathname == `/${locale}/dashboard/${companyId}/team`,
+          active: pathname == `/dashboard/${companyId}/team`,
           icon: UsersRound,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/reminders`,
+          href: `/dashboard/${companyId}/reminders`,
           label: "dashboard.sidebar.reminders",
-          active: pathname == `/${locale}/dashboard/${companyId}/reminders`,
+          active: pathname == `/dashboard/${companyId}/reminders`,
           icon: Timer,
           submenus: [],
         },
@@ -87,30 +86,30 @@ export function proMenuList(
       groupLabel: "dashboard.sidebar.groupLabels.services",
       menus: [
         {
-          href: `/${locale}/dashboard/${companyId}/clients`,
+          href: `/dashboard/${companyId}/clients`,
           label: "dashboard.sidebar.clients",
-          active: pathname == `/${locale}/dashboard/${companyId}/clients`,
+          active: pathname == `/dashboard/${companyId}/clients`,
           icon: Contact2,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/patients`,
+          href: `/dashboard/${companyId}/patients`,
           label: "dashboard.sidebar.patients",
-          active: pathname == `/${locale}/dashboard/${companyId}/patients`,
+          active: pathname == `/dashboard/${companyId}/patients`,
           icon: PawPrint,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/reports`,
+          href: `/dashboard/${companyId}/reports`,
           label: "dashboard.sidebar.reports",
-          active: pathname == `/${locale}/dashboard/${companyId}/reports`,
+          active: pathname == `/dashboard/${companyId}/reports`,
           icon: LineChart,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/${companyId}/observations`,
+          href: `/dashboard/${companyId}/observations`,
           label: "dashboard.sidebar.observations",
-          active: pathname == `/${locale}/dashboard/${companyId}/observations`,
+          active: pathname == `/dashboard/${companyId}/observations`,
           icon: Eye,
           submenus: [],
         },
@@ -120,9 +119,9 @@ export function proMenuList(
       groupLabel: "dashboard.sidebar.groupLabels.informations",
       menus: [
         {
-          href: `/${locale}/help`,
+          href: `/help`,
           label: "dashboard.sidebar.help",
-          active: pathname == `/${locale}/help`,
+          active: pathname == `/help`,
           icon: LucideMessageCircleQuestion,
           submenus: [],
         },
