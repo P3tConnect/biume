@@ -7,11 +7,13 @@ import { signIn } from "@/src/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const LoginPage = () => {
+  const router = useRouter();
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(
       z.object({
@@ -23,11 +25,17 @@ const LoginPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    signIn.email({
+    await signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: "/",
       rememberMe: data.rememberMe,
+    }, {
+      onSuccess: () => {
+        router.push("/")
+      },
+      onError: () => {
+        toast.error("Email ou mot de passe incorrect")
+      }
     });
   });
 

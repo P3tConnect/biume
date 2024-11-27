@@ -3,7 +3,7 @@ import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { organization, twoFactor } from "better-auth/plugins";
 import { db } from "./db";
-import { user } from "../db";
+import { user as dbUser } from "../db";
 import {
   organization as organizationSchema,
   account,
@@ -14,6 +14,8 @@ import {
   invitation,
 } from "../db";
 import { createAccessControl } from "better-auth/plugins/access";
+import { stripe } from "./stripe";
+import { eq } from "drizzle-orm";
 
 const statement = {
   organization: ["create", "share", "update", "delete"],
@@ -39,7 +41,7 @@ export const auth = betterAuth({
     provider: "pg",
     schema: {
       organizations: organizationSchema,
-      users: user,
+      users: dbUser,
       accounts: account,
       verifications: verification,
       twoFactors: twoFactorSchema,
@@ -69,6 +71,26 @@ export const auth = betterAuth({
         defaultValue: "",
       },
     },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const username = user.name;
+          const email = user.email;
+
+          const customer = await stripe.customers.create({
+            name: username,
+            email,
+          });
+
+          await db
+            .update(dbUser)
+            .set({ stripeId: customer.id })
+            .where(eq(dbUser.id, user.id));
+        }
+      }
+    }
   },
   plugins: [
     nextCookies(),
