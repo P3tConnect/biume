@@ -7,12 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const LoginPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(
       z.object({
@@ -29,10 +31,15 @@ const LoginPage = () => {
       password: data.password,
       rememberMe: data.rememberMe,
     }, {
-      onSuccess: () => {
-        router.push("/")
+      onRequest: () => {
+        setLoading(true)
       },
-      onError: () => {
+      onSuccess: () => {
+        router.push("/dashboard")
+      },
+      onError: (error) => {
+        setLoading(false)
+        console.log(error, "error")
         toast.error("Email ou mot de passe incorrect")
       }
     });
@@ -86,6 +93,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/google-icon.svg"}

@@ -17,7 +17,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
   const locale = useLocale();
   const t = useTranslations();
 
-  const menuList = proMenuList(pathname, locale, companyId);
+  const menuList = proMenuList(pathname, companyId);
 
   return (
     <>

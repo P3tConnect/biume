@@ -133,7 +133,7 @@ const SidebarFooterComponent = () => {
             <DropdownMenuItem className="gap-2" onClick={() => signOut({
               fetchOptions: {
                 onSuccess: () => {
-                  router.push("/login")
+                  router.push("/sign-in")
                 }
               }
             })}>

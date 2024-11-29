@@ -3,14 +3,18 @@
 import { Button, Input } from "@/components/ui";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { registerSchema } from "@/src/lib";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const RegisterClientPage = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -29,7 +33,18 @@ const RegisterClientPage = () => {
       stripeId: "",
       image: "",
       onBoardingComplete: false,
-      callbackURL: "/",
+    }, {
+      onRequest: () => {
+        setLoading(true)
+      },
+      onSuccess: () => {
+        router.push("/dashboard")
+      },
+      onError: (error) => {
+        setLoading(false)
+        console.log(error, "error")
+        toast.error("Email ou mot de passe incorrect")
+      }
     });
   });
 
@@ -66,7 +81,7 @@ const RegisterClientPage = () => {
 
           <div className="h-5" />
 
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button className="w-96 rounded-3xl" type="submit" disabled={loading}>
             S'inscrire
           </Button>
 

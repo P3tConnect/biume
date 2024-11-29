@@ -52,7 +52,7 @@ export default function Header() {
             <div className="gap-2 flex">
               {session ? (
                 <Link
-                  href="/dashboard/123"
+                  href="/dashboard"
                   className={buttonVariants({ variant: "default" })}
                 >
                   Dashboard
