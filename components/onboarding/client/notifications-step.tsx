@@ -2,14 +2,12 @@
 
 import React from "react";
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-  Checkbox,
 } from "@/components/ui";
 import NotificationForm from "../components/client/notification-form";
 
