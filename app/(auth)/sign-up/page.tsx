@@ -9,8 +9,10 @@ import { z } from "zod";
 import { registerSchema } from "@/src/lib";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
+import { redirect } from "next/navigation";
 
 const RegisterClientPage = () => {
+  redirect('/');
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -25,10 +27,7 @@ const RegisterClientPage = () => {
       email: data.email,
       password: data.password,
       name: data.name,
-      isPro: false,
-      stripeId: "",
       image: "",
-      onBoardingComplete: false,
       callbackURL: "/",
     });
   });
