@@ -1,7 +1,7 @@
 "use server";
 
 import { CreateAlertsSchema } from "../db";
-import { proAction } from "../utils/action";
+import { proAction } from "../lib/action";
 import { z } from "zod";
 
 export async function getAlerts() {}

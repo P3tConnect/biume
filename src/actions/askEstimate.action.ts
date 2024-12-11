@@ -1,14 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { ActionError, userAction } from "../utils/action";
+import { ActionError, userAction } from "../lib/action";
 import { CreateAskEstimateSchema, askEstimate } from "../db";
-// import { db } from "../utils/db";
 
-export async function getAskEstimates() {
-  // const res = await db.query.askEstimate.findMany();
-  // return res;
-}
+export async function getAskEstimates() {}
 
 export const createAskEstimate = userAction
   .schema(CreateAskEstimateSchema)

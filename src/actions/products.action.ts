@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { CreateProductSchema } from "../db/products";
-import { proAction } from "../utils/action";
+import { proAction } from "../lib/action";
 
 export async function getProduct() {}
 
