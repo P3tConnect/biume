@@ -16,7 +16,6 @@
     "trigger-dev": "bunx --bun trigger.dev@latest dev",
     "trigger-deploy": "bunx --bun trigger.dev@latest deploy"
   },
-  "packageManager": "bun@1.1.26",
   "dependencies": {
     "@ai-sdk/openai": "^1.0.8",
     "@better-fetch/fetch": "^1.1.12",
@@ -63,7 +62,6 @@
     "ai": "^4.0.14",
     "bcryptjs": "^2.4.3",
     "better-auth": "^1.0.15",
-    "bun": "^1.1.38",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
