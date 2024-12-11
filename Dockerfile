@@ -19,7 +19,6 @@ COPY emails ./emails
 COPY src ./src
 COPY next.config.mjs .
 COPY middleware.ts .
-COPY next-auth.d.ts .
 COPY components.json .
 COPY tailwind.config.js .
 COPY tsconfig.json .
