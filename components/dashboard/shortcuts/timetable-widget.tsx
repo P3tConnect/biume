@@ -28,7 +28,6 @@ const TimetableWidget = () => {
           mode="single"
           selected={currentDate}
           onSelect={setCurrentDate}
-          captionLayout="buttons"
           className="w-1/2"
         />
         <ScrollArea className="h-full w-1/2 flex flex-col justify-center items-center">

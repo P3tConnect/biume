@@ -14,7 +14,7 @@ import {
   Rss,
   Shield,
 } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { JSX, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Section from "./section";
 import { Icons } from "./icons";

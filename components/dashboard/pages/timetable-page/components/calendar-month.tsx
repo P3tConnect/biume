@@ -14,7 +14,6 @@ const CalendarMonth = () => {
           mode="single"
           selected={currentDate}
           onSelect={setCurrentDate}
-          captionLayout="buttons"
         />
       </CardContent>
     </Card>

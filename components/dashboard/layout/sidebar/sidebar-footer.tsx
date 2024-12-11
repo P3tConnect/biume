@@ -27,6 +27,7 @@ import {
   Settings,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -38,10 +39,10 @@ const SidebarFooterComponent = () => {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton tooltip="Réglages de l'entreprise" asChild>
-          <a href="/dashboard/123/settings">
+          <Link href="/dashboard/123/settings">
             <Settings />
             <span>Réglages de l&apos;entreprise</span>
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
       <SidebarMenuItem>

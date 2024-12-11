@@ -4,8 +4,7 @@ import React from 'react'
 import TeamBudget from './team-budget'
 import { Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
 import TeamList from './team-list'
-import { z } from 'zod'
-import { CompanyMembershipRoleEnum } from '@/src/db'
+import { z } from 'zod';
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -13,14 +12,14 @@ const TeamPageComponent = () => {
 
   const schema = z.object({
     email: z.string().email(),
-    role: CompanyMembershipRoleEnum
+    role: z.string(),
   });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     values: {
       email: '',
-      role: CompanyMembershipRoleEnum.Values.MEMBER
+      role: '',
     }
   });
 
@@ -77,9 +76,9 @@ const TeamPageComponent = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.MEMBER}>Membre</SelectItem>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.ADMIN}>Admin</SelectItem>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.OWNER}>Propriétaire</SelectItem>
+                          <SelectItem value={"member"}>Membre</SelectItem>
+                          <SelectItem value={"admin"}>Admin</SelectItem>
+                          <SelectItem value={"owner"}>Propriétaire</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
