@@ -6,9 +6,9 @@ FROM base AS builder
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json /
-COPY package-lock.json /
-COPY bun.lockb /
+COPY ./package.json /
+COPY ./package-lock.json /
+COPY ./bun.lockb /
 
 # Omit --production flag for TypeScript devDependencies
 RUN bun install --frozen-lockfile
