@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { receiptCategory } from "./receiptCategory";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const category = pgTable("category", {
   id: text("id")
@@ -10,7 +10,7 @@ export const category = pgTable("category", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   description: text("description"),
-  ownerId: text("ownerId").references(() => company.id, {
+  ownerId: text("ownerId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
@@ -18,9 +18,9 @@ export const category = pgTable("category", {
 });
 
 export const categoryRelations = relations(category, ({ one, many }) => ({
-  owner: one(company, {
+  owner: one(organization, {
     fields: [category.ownerId],
-    references: [company.id],
+    references: [organization.id],
   }),
   receipts: many(receiptCategory),
 }));

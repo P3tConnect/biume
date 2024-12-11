@@ -1,17 +1,50 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../lib/action";
-import { CreateOptionSchema } from "../db";
+import { clientAction, ownerAction, db } from "../lib";
+import { CreateOptionSchema, options } from "../db";
+import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export async function getOptions() {}
+export const getOptions = clientAction.handler(async () => {});
 
-export const createOption = proAction
-  .schema(CreateOptionSchema)
-  .action(async () => {});
+export const createOption = ownerAction
+  .input(CreateOptionSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(options).values(input).returning().execute();
+    if (!data) {
+      throw new ZSAError("ERROR", "Option not created");
+    }
+    return data;
+  });
 
-export const updateOption = proAction
-  .schema(CreateOptionSchema)
-  .action(async () => {});
+export const updateOption = ownerAction
+  .input(CreateOptionSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(options)
+      .set(input)
+      .where(eq(options.id, input.id as string))
+      .returning()
+      .execute();
 
-export const deleteOption = proAction.schema(z.string()).action(async () => {});
+    if (!data) {
+      throw new ZSAError("ERROR", "Option not updated");
+    }
+
+    return data;
+  });
+
+export const deleteOption = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db
+      .delete(options)
+      .where(eq(options.id, input))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Option not deleted");
+    }
+  });

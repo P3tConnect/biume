@@ -1,57 +1,75 @@
-import { createSafeActionClient } from "next-safe-action";
-// import { currentUser } from "./current-user";
+import { ZSAError, createServerAction, createServerActionProcedure } from "zsa";
 
-export class ActionError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "Action Error";
+import { currentUser } from "./current-user";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+
+export const action = createServerAction();
+
+const authedProcedure = createServerActionProcedure().handler(async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
+    }
+
+    return {
+      user,
+    };
+  } catch (err) {
+    throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
   }
-}
+});
 
-const handleReturnedServerError = (error: Error) => {
-  if (error instanceof ActionError) {
-    return error.message;
+export const authedAction = authedProcedure.createServerAction();
+
+const clientProcedure = createServerActionProcedure(authedProcedure).handler(
+  async ({ ctx }) => {
+    if (ctx.user) {
+      
+
+      throw new ZSAError(
+        "NOT_AUTHORIZED",
+        "You need to be registered to perform this action",
+      );
+    }
+
+    throw new ZSAError(
+      "NOT_AUTHORIZED",
+      "You need to be registered to perform this action",
+    );
+  },
+);
+
+export const clientAction = clientProcedure.createServerAction();
+
+const memberProcedure = createServerActionProcedure(authedProcedure).handler(
+  async ({ ctx }) => {
+    if (ctx.user) {
+
+    }
+
+    throw new ZSAError(
+      "NOT_AUTHORIZED",
+      "You need to be in a company to perform this action",
+    );
+  },
+);
+
+export const memberAction = memberProcedure.createServerAction();
+
+export const ownerProcedure = createServerActionProcedure(
+  authedProcedure,
+).handler(async ({ ctx }) => {
+  if (ctx.user) {
+    
   }
 
-  return "An unexpected error occured";
-};
-
-export const action = createSafeActionClient({
-  handleServerError: handleReturnedServerError,
+  throw new ZSAError(
+    "NOT_AUTHORIZED",
+    "You need to be registered to perform this action",
+  );
 });
 
-export const userAction = action.use(async ({ next }) => {
-  // const user = await currentUser();
-
-  // if (!user) {
-  //   throw new ActionError("You must be logged in !");
-  // }
-
-  return next({ ctx: undefined });
-});
-
-export const proAction = action.use(async ({ next }) => {
-  // const user = await currentUser();
-
-  // if (!user) {
-  //   throw new ActionError("You must be logged in !");
-  // }
-
-  // if (user.plan != "NONE") {
-  //   return next({ ctx: user });
-  // }
-  return next({ ctx: undefined });
-
-  // throw new ActionError(
-  //   "You need to subscribe to a plan to perform this action",
-  // );
-});
-
-export const adminAction = action.use(async ({ next }) => {
-  // const user = await currentUser();
-
-  // if (!user) {
-  //   throw new ActionError("You must be logged in !")
-  // }
-  return next({ ctx: undefined });
-});
+export const ownerAction = ownerProcedure.createServerAction();

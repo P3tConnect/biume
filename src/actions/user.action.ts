@@ -1,17 +1,24 @@
-"use server";
+import { action, registerSchema } from "../lib";
+import { APIError } from "better-auth/api";
+import { auth } from "../lib/auth";
 
-import { z } from "zod";
-import { userAction } from "../lib/action";
-import { CreateUserSchema } from "../db";
-
-export async function getUsers() {}
-
-export const createUser = userAction
-  .schema(CreateUserSchema)
-  .action(async () => {});
-
-export const updateUser = userAction
-  .schema(CreateUserSchema)
-  .action(async () => {});
-
-export const deleteUser = userAction.schema(z.string()).action(async () => {});
+export const signUp = action.input(registerSchema).handler(async ({ input }) => {
+    try {
+        await auth.api.signUpEmail({
+            body: {
+                name: input.name,
+                email: input.email,
+                password: input.password,
+                stripeId: "",
+                image: "",
+                onBoardingComplete: false,
+            },
+            asResponse: true,
+        })
+    } catch (err) {
+        if (err instanceof APIError) {
+            return err
+        }
+        console.log(err);
+    }
+});

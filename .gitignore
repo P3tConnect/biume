@@ -12,6 +12,7 @@
 # next.js
 /.next/
 /out/
+src/drizzle/**
 
 # production
 /build
@@ -19,6 +20,7 @@
 # misc
 .DS_Store
 *.pem
+bun.lockb
 
 # debug
 npm-debug.log*
@@ -38,4 +40,9 @@ next-env.d.ts
 
 .trigger
 .react-email
-bun.lockb
+.cursorrules
+
+/.idea
+.idea 
+/idea
+*.lockb

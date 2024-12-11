@@ -2,18 +2,18 @@
 
 import { z } from "zod";
 import { CreateProjectInviteeSchema } from "../db";
-import { proAction } from "../lib/action";
+import { ownerAction } from "../lib/action";
 
-export async function getProjectInvitees() {}
+export const getProjectInvitees = ownerAction.handler(async () => {});
 
-export const createProjectInvitee = proAction
-  .schema(CreateProjectInviteeSchema)
-  .action(async () => {});
+export const createProjectInvitee = ownerAction
+  .input(CreateProjectInviteeSchema)
+  .handler(async () => {});
 
-export const updateProjectInvitee = proAction
-  .schema(CreateProjectInviteeSchema)
-  .action(async () => {});
+export const updateProjectInvitee = ownerAction
+  .input(CreateProjectInviteeSchema)
+  .handler(async () => {});
 
-export const deleteProjectInvitee = proAction
-  .schema(z.string())
-  .action(async () => {});
+export const deleteProjectInvitee = ownerAction
+  .input(z.string())
+  .handler(async () => {});

@@ -1,24 +1,21 @@
-// import { User } from "../db";
-// import { auth } from "./auth";
+"use server";
 
-// export const currentUser = async () => {
-//   const session = await auth();
+import { headers } from "next/headers";
+import { auth } from "./auth";
 
-//   if (!session?.user) {
-//     return null;
-//   }
+export const currentUser = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
 
-//   const user = session.user as unknown as User;
+  if (!session) {
+    throw new Error("You are not logged in");
+  }
 
-//   return user;
-// };
+  if (!user) {
+    throw new Error("User not found");
+  }
 
-// export const requiredCurrentUser = async () => {
-//   const user = await currentUser();
-
-//   if (!user) {
-//     throw new Error("User not found");
-//   }
-
-//   return user;
-// };
+  return user;
+};

@@ -1,19 +1,64 @@
 "use server";
 
 import { z } from "zod";
-import { CreateProSessionSchema } from "../db";
-import { proAction } from "../lib/action";
+import { CreateProSessionSchema, proSession } from "../db";
+import { clientAction, ownerAction, db } from "../lib";
+import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export async function getProSessions() {}
+export const getProSessions = clientAction.handler(async () => {});
 
-export const createProSession = proAction
-  .schema(CreateProSessionSchema)
-  .action(async () => {});
+export const getProSessionById = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const updateProSession = proAction
-  .schema(CreateProSessionSchema)
-  .action(async () => {});
+export const getProSessionByCompany = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {});
 
-export const deleteProSession = proAction
-  .schema(z.string())
-  .action(async () => {});
+export const createProSession = ownerAction
+  .input(CreateProSessionSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .insert(proSession)
+      .values(input)
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "ProSession not created");
+    }
+
+    return data;
+  });
+
+export const updateProSession = ownerAction
+  .input(CreateProSessionSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(proSession)
+      .set(input)
+      .where(eq(proSession.id, input.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "ProSession not updated");
+    }
+
+    return data;
+  });
+
+export const deleteProSession = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db
+      .delete(proSession)
+      .where(eq(proSession.id, input))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "ProSession not deleted");
+    }
+  });

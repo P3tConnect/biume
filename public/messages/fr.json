@@ -1,8 +1,8 @@
 {
-  "LandingPage": {
+  "landingPage": {
     "waitlistShortcut": "Inscrivez-vous sur la liste d'attente !",
     "title1": "Bienvenue sur",
-    "title2": "PawThera.",
+    "title2": "PawThera",
     "presentation1": "Simplifiez la gestion de votre entreprise animalière avec PawThera.",
     "presentation2": "Et consacrez votre énergie sur nos amis a quatre pattes.",
     "survey": "Répondez à notre enquête",
@@ -12,7 +12,7 @@
       "description": "Ce sont les fonctionnalités que nous avons prévus, aidez-nous à l'améliorer pour en faire votre outil !",
       "more": "En savoir plus",
       "ia": {
-        "title": "IA",
+        "title": "Intelligence Artificielle",
         "description": "Nous voguons nous aussi sur la vague de l'IA",
         "points": {
           "point1": "Pour vos visites a domicile l'intelligence artificielle vous fera une proposition de votre journée en fonction du chemin le plus court ou le plus efficace à parcourir pour vous",
@@ -59,22 +59,44 @@
         }
       }
     },
+    "faqSection": {
+      "q1": {
+        "title": "Qu'est ce que PawThera ?",
+        "answer": "PawThera est une application web qui permet de gérer votre entreprise du secteur animalier."
+      },
+      "q2": {
+        "title": "",
+        "answer": ""
+      },
+      "q3": {
+        "title": "",
+        "answer": ""
+      },
+      "q4": {
+        "title": "",
+        "answer": ""
+      },
+      "q5": {
+        "title": "",
+        "answer": ""
+      }
+    },
     "ctaSection": {
       "title": "Notre application vous plait ?",
       "description": "Rejoignez-nous et inscrivez-vous sur la liste d'attente",
       "cta": "Je m'inscris"
     }
   },
-  "Waitlist": {
+  "waitlist": {
     "title": "Nous vous remercions de vous être inscrit sur notre liste d'attente !",
     "description": "Restez connectés avec nous pour en savoir plus sur l'avancement de la plateforme 😉",
     "button": "Retour a l'accueil"
   },
-  "Footer": {
+  "footer": {
     "rights": "Tous droits réservés.",
     "slogan": "L'application qui fait gagner du temps aux indépendants du secteur animalier"
   },
-  "Metadata": {
+  "metadata": {
     "description": "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
     "keywords": {
       "keyword1": "osteopathe animalier",
@@ -94,6 +116,42 @@
       "keyword15": "indépendant animalier",
       "keyword16": "auto-entreprise animale",
       "keyword17": "gestion"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "groupLabels": {
+        "management": "Gestion",
+        "services": "Services",
+        "informations": "Informations"
+      },
+      "dashboard": "Tableau de bord",
+      "calendar": "Agenda",
+      "accounting": "Administratif",
+      "team": "Equipe",
+      "reminders": "Rappels",
+      "clients": "Clients",
+      "patients": "Patients",
+      "reports": "Rapports",
+      "observations": "Observations",
+      "help": "Aide et Assistance"
+    },
+    "navbar": {
+      "new": "Nouveau",
+      "profile": "Profil",
+      "notifications": "Notifications",
+      "search": "Rechercher",
+      "switch": "Changer de thème"
+    },
+    "content": {
+      "home": {
+        "totalClients": "Total des clients ce mois",
+        "lastExpenses": "Dernières dépenses",
+        "upcomingAppointments": "Prochaines prestations",
+        "reminders": "Mes rappels",
+        "reservations": "Mes réservations",
+        "nextSessions": "Calendrier et prochains rendez-vous"
+      }
     }
   }
 }

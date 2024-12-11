@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const cancelPolicies = pgTable("cancel_policies", {
   id: text("id")
@@ -9,7 +9,7 @@ export const cancelPolicies = pgTable("cancel_policies", {
     .$defaultFn(() => crypto.randomUUID()),
   daysBefore: integer("daysBefore").notNull(),
   refundPercent: integer("refundPercent").notNull(),
-  companyId: text("companyId").references(() => company.id, {
+  organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
@@ -17,9 +17,9 @@ export const cancelPolicies = pgTable("cancel_policies", {
 });
 
 export const cancelPoliciesRelations = relations(cancelPolicies, ({ one }) => ({
-  company: one(company, {
-    fields: [cancelPolicies.companyId],
-    references: [company.id],
+  organization: one(organization, {
+    fields: [cancelPolicies.organizationId],
+    references: [organization.id],
   }),
 }));
 

@@ -1,5 +1,6 @@
-import { DiscordLogoIcon, TwitterLogoIcon, LinkedInLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
 import { getTranslations } from "next-intl/server";
+import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,7 +18,7 @@ const footerSocials = [
 ];
 
 export async function SiteFooter() {
-  const t = await getTranslations("Footer");
+  const t = await getTranslations("footer");
 
   return (
     <footer>
@@ -26,7 +27,7 @@ export async function SiteFooter() {
           <div className="mb-12 flex-col flex gap-4">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                alt="company logo"
+                alt="organization logo"
                 src="https://i.imgur.com/ul79l8a.png"
                 className="h-8 w-8 text-primary rounded-xl"
                 width={50}
@@ -36,7 +37,7 @@ export async function SiteFooter() {
                 PawThera
               </span>
             </Link>
-            <p className="max-w-xs">{t('slogan')}</p>
+            <p className="max-w-xs">{t("slogan")}</p>
           </div>
         </div>
 
@@ -58,7 +59,7 @@ export async function SiteFooter() {
             <Link href="/" className="cursor-pointer">
               PawThera
             </Link>
-            . {t('rights')}
+            . {t("rights")}
           </span>
         </div>
       </div>

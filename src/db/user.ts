@@ -1,65 +1,45 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  date,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { pets } from "./pets";
-import { employeeCompany } from "./employeeCompany";
-import { ratings } from "./ratings";
-import { projectsInvitees } from "./projectsInvitees";
-import { allergies } from "./allergies";
-import { intolerences } from "./intolerences";
-import { createInsertSchema } from "drizzle-zod";
 import { usersJobs } from "./usersJobs";
+import { proSession } from "./pro_session";
+import { usersNewsletters } from "./usersNewsletter";
+import { allergies } from "./allergies";
 import { deseases } from "./deseases";
-import { company } from "./company";
-import { address } from "./addresses";
-import { z } from "zod";
+import { intolerences } from "./intolerences";
+import { session } from "./session";
+import { account } from "./account";
+import { member } from "./member";
+import { notification } from "./notifications";
+import { projectsInvitees } from "./projectsInvitees";
+import { invitation } from "./invitation";
 
-export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
-
-export const PlanEnum = z.enum(plan.enumValues);
-
-export const user = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").unique().notNull(),
-  emailVerified: timestamp("emailVerified"),
+export const user = pgTable("users", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("emailVerified").notNull(),
   image: text("image"),
-  phone: text("phone"),
+  createdAt: timestamp("createdAt").notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+  twoFactorEnabled: boolean("twoFactorEnabled"),
+  isPro: boolean("isPro").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull(),
   stripeId: text("stripeId"),
-  addressId: text("address").references(() => address.id, {
-    onDelete: "cascade",
-  }),
-  plan: plan("plan").default("NONE"),
-  isPro: boolean("isPro").default(false),
-  createdAt: timestamp("createdAt").default(new Date()),
-  updatedAt: timestamp("updateAt"),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({
-  companiesOwner: many(company),
   pets: many(pets),
-  employeeOf: many(employeeCompany),
-  ratingsAuthor: many(ratings),
-  projectInvitees: many(projectsInvitees),
-  allergies: many(allergies),
-  intolerences: many(intolerences),
   jobs: many(usersJobs),
+  proSessions: many(proSession),
+  newsletter: many(usersNewsletters),
+  allergies: many(allergies),
   deseases: many(deseases),
-  address: one(address, {
-    fields: [user.addressId],
-    references: [address.id],
-  }),
+  intolerences: many(intolerences),
+  sessions: many(session),
+  accounts: many(account),
+  memberships: many(member),
+  notifications: many(notification),
+  projects: many(projectsInvitees),
+  invitations: many(invitation),
 }));
-
-export type User = typeof user.$inferSelect;
-export type CreateUser = typeof user.$inferInsert;
-
-export const CreateUserSchema = createInsertSchema(user);

@@ -1,19 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../lib/action";
-import { CreateCompanyDocumentsSchema } from "../db";
+import { ownerAction, db } from "../lib";
+import { organizationDocuments, CreateOrganizationDocumentsSchema } from "../db";
+import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export async function getCompanyDocuments(companyId: string) {}
+export const getCompanyDocuments = ownerAction.handler(async () => {});
 
-export const createCompanyDocuments = proAction
-  .schema(CreateCompanyDocumentsSchema)
-  .action(async ({ parsedInput }) => {});
+export const createCompanyDocuments = ownerAction
+  .input(CreateOrganizationDocumentsSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .insert(organizationDocuments)
+      .values(input)
+      .returning()
+      .execute();
 
-export const updateCompanyDocuments = proAction
-  .schema(CreateCompanyDocumentsSchema)
-  .action(async ({ parsedInput }) => {});
+    if (!data) {
+      throw new ZSAError("ERROR", "CompanyDocuments not created");
+    }
 
-export const deleteCompanyDocuments = proAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {});
+    return data;
+  });
+
+export const updateCompanyDocuments = ownerAction
+  .input(CreateOrganizationDocumentsSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(organizationDocuments)
+      .set(input)
+      .where(eq(organizationDocuments.id, input.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "CompanyDocuments not updated");
+    }
+
+    return data;
+  });
+
+export const deleteCompanyDocuments = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db
+      .delete(organizationDocuments)
+      .where(eq(organizationDocuments.id, input))
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "CompanyDocuments not deleted");
+    }
+  });

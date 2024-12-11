@@ -1,6 +1,5 @@
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 import { withUt } from 'uploadthing/tw'
-import { nextui } from '@nextui-org/react'
 
 const darkMode = ["class"]
 const content = [
@@ -9,7 +8,6 @@ const content = [
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./emails/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
 ];
 const prefix = "";
 const theme = {
@@ -35,6 +33,10 @@ const theme = {
                 DEFAULT: "hsl(var(--secondary))",
                 foreground: "hsl(var(--secondary-foreground))",
             },
+            gray: {
+                DEFAULT: "hsl(var(--gray))",
+                foreground: "hsl(var(--gray-foreground))",
+            },
             destructive: {
                 DEFAULT: "hsl(var(--destructive))",
                 foreground: "hsl(var(--destructive-foreground))",
@@ -55,6 +57,16 @@ const theme = {
                 DEFAULT: "hsl(var(--card))",
                 foreground: "hsl(var(--card-foreground))",
             },
+            sidebar: {
+                DEFAULT: 'hsl(var(--sidebar-background))',
+                foreground: 'hsl(var(--sidebar-foreground))',
+                primary: 'hsl(var(--sidebar-primary))',
+                'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+                accent: 'hsl(var(--sidebar-accent))',
+                'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+                border: 'hsl(var(--sidebar-border))',
+                ring: 'hsl(var(--sidebar-ring))',
+            },
         },
         borderRadius: {
             lg: "var(--radius)",
@@ -62,63 +74,6 @@ const theme = {
             sm: "calc(var(--radius) - 4px)",
         },
         keyframes: {
-            "accordion-down": {
-                from: { height: "0" },
-                to: { height: "var(--radix-accordion-content-height)" },
-            },
-            "accordion-up": {
-                from: { height: "var(--radix-accordion-content-height)" },
-                to: { height: "0" },
-            },
-            meteor: {
-                "0%": {
-                    transform: "rotate(215deg) translateX(0)",
-                    opacity: 1,
-                },
-                "70%": { opacity: 1 },
-                "100%": {
-                    transform: "rotate(215deg) translateX(-500px)",
-                    opacity: 0,
-                },
-            },
-            "border-beam": {
-                "100%": {
-                    "offset-distance": "100%",
-                },
-            },
-            "image-glow": {
-                "0%": {
-                    opacity: "0",
-                    "animation-timing-function":
-                        "cubic-bezier(0.74, 0.25, 0.76, 1)",
-                },
-                "10%": {
-                    opacity: "0.7",
-                    "animation-timing-function":
-                        "cubic-bezier(0.12, 0.01, 0.08, 0.99)",
-                },
-                "100%": {
-                    opacity: "0.4",
-                },
-            },
-            "fade-in": {
-                from: { opacity: "0", transform: "translateY(-10px)" },
-                to: { opacity: "1", transform: "none" },
-            },
-            "fade-up": {
-                from: { opacity: "0", transform: "translateY(20px)" },
-                to: { opacity: "1", transform: "none" },
-            },
-            shimmer: {
-                "0%, 90%, 100%": {
-                    "background-position":
-                        "calc(-100% - var(--shimmer-width)) 0",
-                },
-                "30%, 60%": {
-                    "background-position":
-                        "calc(100% + var(--shimmer-width)) 0",
-                },
-            },
             marquee: {
                 from: { transform: "translateX(0)" },
                 to: { transform: "translateX(calc(-100% - var(--gap)))" },
@@ -127,30 +82,39 @@ const theme = {
                 from: { transform: "translateY(0)" },
                 to: { transform: "translateY(calc(-100% - var(--gap)))" },
             },
-            "caret-blink": {
-                "0%,70%,100%": { opacity: "1" },
-                "20%,50%": { opacity: "0" },
+            "border-beam": {
+                "100%": {
+                    "offset-distance": "100%",
+                },
+            },
+            "accordion-down": {
+                from: { height: "0" },
+                to: { height: "var(--radix-accordion-content-height)" },
+            },
+            "accordion-up": {
+                from: { height: "var(--radix-accordion-content-height)" },
+                to: { height: "0" },
+            },
+            ripple: {
+                "0%, 100%": {
+                    transform: "translate(-50%, -50%) scale(1)",
+                },
+                "50%": {
+                    transform: "translate(-50%, -50%) scale(0.9)",
+                },
             },
         },
         animation: {
+            marquee: "marquee var(--duration) linear infinite",
+            "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+            "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
             "accordion-down": "accordion-down 0.2s ease-out",
-            "caret-blink": "caret-blink 1.25s ease-out infinite",
             "accordion-up": "accordion-up 0.2s ease-out",
-            "border-beam":
-                "border-beam calc(var(--duration)*1s) infinite linear",
-            "image-glow": "image-glow 4100ms 600ms ease-out forwards",
-            "fade-in":
-                "fade-in 1000ms var(--animation-delay, 0ms) ease forwards",
-            "fade-up":
-                "fade-up 1000ms var(--animation-delay, 0ms) ease forwards",
-            shimmer: "shimmer 8s infinite",
-            marquee: "marquee var(--duration) infinite linear",
-            "marquee-vertical":
-                "marquee-vertical var(--duration) linear infinite",
+            ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
         },
     },
 };
-const plugins = [require("tailwindcss-animate"), addVariablesForColors, nextui()];
+const plugins = [require("tailwindcss-animate"), addVariablesForColors];
 
 function addVariablesForColors({ addBase, theme }) {
     let allColors = flattenColorPalette(theme("colors"));

@@ -1,19 +1,19 @@
 "use server";
 
 import { z } from "zod";
-import { proAction } from "../lib/action";
+import { ownerAction, clientAction } from "../lib/action";
 import { CreateUserNewsletterSchema } from "../db";
 
-export async function getUserNewsletters() {}
+export const getUserNewsletters = clientAction.handler(async () => {});
 
-export const createUserNewsletter = proAction
-  .schema(CreateUserNewsletterSchema)
-  .action(async () => {});
+export const createUserNewsletter = ownerAction
+  .input(CreateUserNewsletterSchema)
+  .handler(async () => {});
 
-export const updateUserNewsletter = proAction
-  .schema(CreateUserNewsletterSchema)
-  .action(async () => {});
+export const updateUserNewsletter = ownerAction
+  .input(CreateUserNewsletterSchema)
+  .handler(async () => {});
 
-export const deleteUserNewsletter = proAction
-  .schema(z.string())
-  .action(async () => {});
+export const deleteUserNewsletter = ownerAction
+  .input(z.string())
+  .handler(async () => {});

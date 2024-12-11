@@ -8,31 +8,35 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { askEstimateOptions } from "./askEstimateOptions";
-import { sessionType } from "./pro_session";
-import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
-import { company } from "./company";
 import { z } from "zod";
+import { organization } from "./organization";
 
 export const askEstimateStatus = pgEnum("askEstimateStatus", [
-  "PENDING",
-  "PAYED",
-  "CANCELLED",
-  "REVOKED",
+  "USER PENDING",
+  "USER ACCEPTED",
+  "REJECTED BY USER",
+  "CANCELED BY USER",
+  "USER PAYED",
+  "COMPANY PENDING",
+  "COMPANY ACCEPTED",
+  "REJECTED BY COMPANY",
+  "POSTPONED BY COMPANY",
+  "CANCELED BY COMPANY",
 ]);
 
 export const askEstimate = pgTable("ask_estimate", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  status: askEstimateStatus("status").default("PENDING"),
+  status: askEstimateStatus("status").default("USER PENDING"),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
-  creator: text("creator").references(() => user.id, {
-    onDelete: "cascade",
-  }),
-  for: text("for").references(() => company.id, { onDelete: "cascade" }),
+  creator: text("creator").notNull(),
+  for: text("for").references(() => organization.id, { onDelete: "cascade" }),
   atHome: boolean("atHome").default(false),
+  message: text("message"),
+  new: boolean("new").default(false),
   //sessionType: sessionType("sessionType").default("oneToOne"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updateAt: timestamp("updatedAt", { mode: "date" }),

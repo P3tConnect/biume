@@ -1,15 +1,15 @@
 import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
 import { relations } from "drizzle-orm";
 import { projectsInvitees } from "./projectsInvitees";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { organization } from "./organization";
 
 export const project = pgTable("project", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
-  ownerId: text("ownerId").references(() => company.id, {
+  ownerId: text("ownerId").references(() => organization.id, {
     onDelete: "cascade",
   }),
   color: text("color"),
@@ -24,9 +24,9 @@ export const project = pgTable("project", {
 });
 
 export const projectRelations = relations(project, ({ one, many }) => ({
-  owner: one(company, {
+  owner: one(organization, {
     fields: [project.ownerId],
-    references: [company.id],
+    references: [organization.id],
   }),
   invitees: many(projectsInvitees),
 }));
@@ -34,4 +34,5 @@ export const projectRelations = relations(project, ({ one, many }) => ({
 export type Project = typeof project.$inferSelect;
 export type CreateProject = typeof project.$inferInsert;
 
+export const ProjectSchema = createSelectSchema(project);
 export const CreateProjectSchema = createInsertSchema(project);

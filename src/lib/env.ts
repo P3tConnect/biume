@@ -3,34 +3,50 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface ENV {
-  RESEND_API_KEY: string | undefined;
   DATABASE_URL: string | undefined;
-  UPLOADTHING_APP_ID: string | undefined;
-  UPLOADTHING_SECRET: string | undefined;
-  NEXT_PUBLIC_APP_URL: string | undefined;
+  RESEND_API_KEY: string | undefined;
   TRIGGER_PUBLIC_API_KEY: string | undefined;
   TRIGGER_SECRET_KEY: string | undefined;
+  NEXT_PUBLIC_APP_URL: string | undefined;
+  NODE_ENV: string | undefined;
+  NEXT_PUBLIC_POSTHOG_KEY: string | undefined;
+  NEXT_PUBLIC_POSTHOG_HOST: string | undefined;
+  STRIPE_SECRET_KEY: string | undefined;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string | undefined;
+  BETTER_AUTH_SECRET: string | undefined;
+  BETTER_AUTH_URL: string | undefined;
 }
 
 interface Config {
-  RESEND_API_KEY: string;
   DATABASE_URL: string;
-  UPLOADTHING_APP_ID: string;
-  UPLOADTHING_SECRET: string;
-  NEXT_PUBLIC_APP_URL: string;
+  RESEND_API_KEY: string;
   TRIGGER_PUBLIC_API_KEY: string;
   TRIGGER_SECRET_KEY: string;
+  NEXT_PUBLIC_APP_URL: string;
+  NODE_ENV: string;
+  NEXT_PUBLIC_POSTHOG_KEY: string;
+  NEXT_PUBLIC_POSTHOG_HOST: string;
+  STRIPE_SECRET_KEY: string;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_URL: string;
 }
 
 const getConfig = (): ENV => {
   return {
-    RESEND_API_KEY: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
-    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
-    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     TRIGGER_PUBLIC_API_KEY: process.env.TRIGGER_PUBLIC_API_KEY,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+      BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+      BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   };
 };
 

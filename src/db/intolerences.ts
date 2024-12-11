@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { user } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { petsIntolerences } from "./petsIntolerences";
+import { user } from "./user";
 
 export const intolerences = pgTable("intolerences", {
   id: text("id")
@@ -22,11 +22,11 @@ export const intolerences = pgTable("intolerences", {
 export const intolerencesRelations = relations(
   intolerences,
   ({ one, many }) => ({
+    pets: many(petsIntolerences),
     owner: one(user, {
       fields: [intolerences.ownerId],
       references: [user.id],
     }),
-    pets: many(petsIntolerences),
   }),
 );
 

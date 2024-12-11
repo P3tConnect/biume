@@ -1,19 +1,56 @@
 "use server";
 
 import { z } from "zod";
-import { CreateProgressionSchema } from "../db";
-import { proAction } from "../lib/action";
+import { CreateProgressionSchema, progression } from "../db";
+import { ownerAction, db } from "../lib";
+import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export async function getProgression() {}
+export const getProgression = ownerAction.handler(async () => {});
 
-export const createProgression = proAction
-  .schema(CreateProgressionSchema)
-  .action(async () => {});
+export const createProgression = ownerAction
+  .input(CreateProgressionSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .insert(progression)
+      .values(input)
+      .returning()
+      .execute();
 
-export const updateProgression = proAction
-  .schema(CreateProgressionSchema)
-  .action(async () => {});
+    if (!data) {
+      throw new ZSAError("ERROR", "Progression not created");
+    }
 
-export const deleteProgression = proAction
-  .schema(z.string())
-  .action(async () => {});
+    return data;
+  });
+
+export const updateProgression = ownerAction
+  .input(CreateProgressionSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(progression)
+      .set(input)
+      .where(eq(progression.id, input.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Progression not updated");
+    }
+
+    return data;
+  });
+
+export const deleteProgression = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db
+      .delete(progression)
+      .where(eq(progression.id, input))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Progression not deleted");
+    }
+  });

@@ -1,13 +1,26 @@
-import createMiddleware from "next-intl/middleware";
+// middleware.ts
+import { NextRequest, NextResponse } from "next/server";
+import { betterFetch } from "@better-fetch/fetch";
+import type { Session } from "better-auth/types";
 
-export default createMiddleware({
-  locales: ["fr", "en"],
+export default async function authMiddleware(request: NextRequest) {
+  const { data: session } = await betterFetch<Session>(
+    `/api/auth/get-session`,
+    {
+      baseURL: request.nextUrl.origin,
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+    },
+  );
 
-  // Used when no locale matches
-  defaultLocale: "fr",
-});
+  if (!session) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ["/", "/(fr|en)/:path*"],
+  matcher: ["/dashboard/:path*"],
 };

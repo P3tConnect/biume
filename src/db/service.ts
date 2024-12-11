@@ -1,7 +1,8 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { company } from "./company";
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { proSession } from "./pro_session";
+import { organization } from "./organization";
 
 export const service = pgTable("service", {
   id: text("id")
@@ -11,18 +12,20 @@ export const service = pgTable("service", {
   name: text("name"),
   description: text("description"),
   price: integer("price"),
-  companyId: text("proId").references(() => company.id, {
+  organizationId: text("proId").references(() => organization.id, {
     onDelete: "cascade",
   }),
-  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+  duration: integer("duration"), // in minutes
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const servicesRelations = relations(service, ({ one, many }) => ({
-  company: one(company, {
-    fields: [service.companyId],
-    references: [company.id],
+  organization: one(organization, {
+    fields: [service.organizationId],
+    references: [organization.id],
   }),
+  sessions: many(proSession),
 }));
 
 export type Service = typeof service.$inferSelect;

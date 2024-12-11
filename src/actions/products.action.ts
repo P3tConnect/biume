@@ -1,19 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { CreateProductSchema } from "../db/products";
-import { proAction } from "../lib/action";
+import { CreateProductSchema, product } from "../db/products";
+import { ownerAction, db } from "../lib";
+import { eq } from "drizzle-orm";
+import { ZSAError } from "zsa";
 
-export async function getProduct() {}
+export const getProduct = ownerAction.handler(async () => {});
 
-export const createProduct = proAction
-  .schema(CreateProductSchema)
-  .action(async () => {});
+export const createProduct = ownerAction
+  .input(CreateProductSchema)
+  .handler(async ({ input }) => {
+    const data = await db.insert(product).values(input).returning().execute();
 
-export const updateProduct = proAction
-  .schema(CreateProductSchema)
-  .action(async () => {});
+    if (!data) {
+      throw new ZSAError("ERROR", "Product not created");
+    }
 
-export const deleteProduct = proAction
-  .schema(z.string())
-  .action(async () => {});
+    return data;
+  });
+
+export const updateProduct = ownerAction
+  .input(CreateProductSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(product)
+      .set(input)
+      .where(eq(product.id, input.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Product not updated");
+    }
+
+    return data;
+  });
+
+export const deleteProduct = ownerAction
+  .input(z.string())
+  .handler(async ({ input }) => {
+    const data = await db
+      .delete(product)
+      .where(eq(product.id, input))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Product not deleted");
+    }
+  });

@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import Marquee from "@/components/magicui/marquee";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
+import Marquee from "@/components/ui/marquee";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
+  ArrowRight,
   BarChart,
   ChevronRight,
   File,
@@ -14,17 +15,10 @@ import {
   Shield,
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { Input } from "../ui/input";
-import { newSubWaitList } from "@/src/actions";
-import Loader from "../loader";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { emailSchema } from "@/src/lib/schemas";
-import { triggerAction } from "@/src/actions/trigger.action";
-import { getCompanyAddress } from "@/src/actions/companyAddress.action";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import Section from "./section";
+import { Icons } from "./icons";
+import { Input } from "../ui";
 
 const tiles = [
   {
@@ -108,7 +102,7 @@ const Card = (card: { icon: JSX.Element; bg: JSX.Element }) => {
         // light styles
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         // dark styles
-        "transform-gpu dark:bg-transparent dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
+        "transform-gpu dark:bg-transparent dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       )}
     >
       {card.icon}
@@ -117,14 +111,11 @@ const Card = (card: { icon: JSX.Element; bg: JSX.Element }) => {
   );
 };
 
-export default function CallToActionSection() {
+export const CallToAction = () => {
   const [randomTiles1, setRandomTiles1] = useState<typeof tiles>([]);
   const [randomTiles2, setRandomTiles2] = useState<typeof tiles>([]);
   const [randomTiles3, setRandomTiles3] = useState<typeof tiles>([]);
   const [randomTiles4, setRandomTiles4] = useState<typeof tiles>([]);
-  // const [isLoading, startTransition] = useTransition();
-  const t = useTranslations("LandingPage");
-
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -136,105 +127,23 @@ export default function CallToActionSection() {
     }
   }, []);
 
-  const { register, handleSubmit, formState: { errors, isLoading }, reset } = useForm<z.infer<typeof emailSchema>>({
-    resolver: zodResolver(emailSchema),
-    defaultValues: {
-      email: "",
-    }
-  });
-
-  const onSubmit = handleSubmit(async (data) => {
-    const response = await newSubWaitList({ email: data.email });
-
-    if (response?.serverError) {
-      toast.error(response.serverError)
-    } else {
-      reset()
-    }
-  })
-
   return (
-    <section id="cta">
-      <div className="py-14">
-        <div className="flex w-full flex-col items-center justify-center">
-          <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-            <Marquee
-              reverse
-              className="-delay-[200ms] [--duration:10s]"
-              repeat={5}
-            >
-              {randomTiles1.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee reverse className="[--duration:25s]" repeat={5}>
-              {randomTiles2.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee
-              reverse
-              className="-delay-[200ms] [--duration:20s]"
-              repeat={5}
-            >
-              {randomTiles1.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee reverse className="[--duration:30s]" repeat={5}>
-              {randomTiles2.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee
-              reverse
-              className="-delay-[200ms] [--duration:20s]"
-              repeat={5}
-            >
-              {randomTiles3.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <Marquee reverse className="[--duration:30s]" repeat={5}>
-              {randomTiles4.map((review, idx) => (
-                <Card key={idx} {...review} />
-              ))}
-            </Marquee>
-            <div className="absolute z-10">
-              <div className="mx-auto size-24 rounded-[2rem] border bg-white/10 p-3 shadow-2xl backdrop-blur-md dark:bg-black/10 lg:size-32">
-                <HeartHandshake className="mx-auto size-16 text-black dark:text-white lg:size-24" />
-              </div>
-              <div className="z-10 mt-4 flex flex-col items-center text-center text-primary">
-                <h1 className="text-3xl font-bold lg:text-4xl">
-                  {t('ctaSection.title')}
-                </h1>
-                <p className="mt-2">
-                  {t('ctaSection.description')}
-                </p>
-                {/* {localStorage.getItem("alreadySub") ?
-                  <div className="mt-5">
-                    <p>Vous êtes déjà inscrit à la liste d&apos;attente</p>
-                  </div>
-                  : */}
-                <form className="w-full gap-3 flex flex-col items-center justify-center" onSubmit={onSubmit}>
-                  <Input
-                    placeholder="Email"
-                    className="mt-10 border border-gray-400/70 rounded-lg"
-                    type="email"
-                    {...register("email")}
-                  />
-                  {errors.email ? <p className="font-medium text-red-400">{errors.email.message}</p> : null}
-                  {isLoading ? <Loader /> : <Button variant="outline" type="submit" className="w-32 rounded-xl">
-                    {t('ctaSection.cta')}
-                  </Button>}
-                </form>
-              </div>
-              <div className="absolute inset-0 -z-10 rounded-full  bg-backtround opacity-40 blur-xl dark:bg-background" />
-            </div>
-            <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-b from-transparent to-backtround to-70% dark:to-background" />
-          </div>
-        </div>
+    <Section
+      id="cta"
+      title="Notre application vous plait ?"
+      subtitle="Inscrivez-vous la liste d'attente !"
+      className="bg-secondary/10 rounded-xl py-16"
+    >
+      <div className="flex flex-col w-full sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
+        <Input placeholder="Email" className="rounded-3xl w-96" />
+        <Button
+          variant={"outline"}
+          className="w-full rounded-full sm:w-auto flex gap-2"
+        >
+          <p>M&apos;inscrire</p>
+          <ArrowRight className="h-4 w-4" />
+        </Button>
       </div>
-    </section >
+    </Section>
   );
-}
+};

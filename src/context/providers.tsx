@@ -1,21 +1,41 @@
 "use client";
+"use client";
 
-import { NextUIProvider } from "@nextui-org/react";
-import React, { PropsWithChildren } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { PropsWithChildren, useEffect } from "react";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import posthog from "posthog-js";
+import { PostHogProvider } from "posthog-js/react";
+import { safeConfig } from "../lib";
 
 const Providers = ({ children }: PropsWithChildren) => {
   const queryClient = new QueryClient();
 
+  useEffect(() => {
+    posthog.init(safeConfig.NEXT_PUBLIC_POSTHOG_KEY, {
+      api_host: safeConfig.NEXT_PUBLIC_POSTHOG_HOST,
+      person_profiles: "always",
+    });
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" forcedTheme="dark" enableSystem={false}>
-        {children}
-        <Toaster />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <PostHogProvider client={posthog}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange={true}
+        >
+          <TooltipProvider disableHoverableContent>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </PostHogProvider>
   );
 };
 
