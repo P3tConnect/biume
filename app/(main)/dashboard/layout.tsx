@@ -1,5 +1,4 @@
 import { auth } from "@/src/lib/auth";
-import { getSession } from "@/src/lib/auth-client";
 import { headers } from "next/headers";
 import { ReactNode } from "react";
 

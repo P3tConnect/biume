@@ -130,22 +130,22 @@ export function proMenuList(
   ];
 }
 
-export function clientMenuList(pathname: string, locale: string): Group[] {
+export function clientMenuList(pathname: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/${locale}/dashboard`,
+          href: `/dashboard`,
           label: "Dashboard",
-          active: pathname == `/${locale}/dashboard`,
+          active: pathname == `/dashboard`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/timetable`,
+          href: `/dashboard/timetable`,
           label: "Agenda",
-          active: pathname == `/${locale}/dashboard/timetable`,
+          active: pathname == `/dashboard/timetable`,
           icon: Calendar,
           submenus: [],
         },
@@ -155,19 +155,26 @@ export function clientMenuList(pathname: string, locale: string): Group[] {
       groupLabel: "Mon compte",
       menus: [
         {
-          href: `/${locale}/dashboard/reservations`,
+          href: `/dashboard/reservations`,
           label: "Mes réservations",
-          active: pathname == `/${locale}/dashboard/reservations`,
+          active: pathname == `/dashboard/reservations`,
           icon: Ticket,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/pets`,
+          href: `/dashboard/pets`,
           label: "Mes animaux",
-          active: pathname == `/${locale}/dashboard/pets`,
+          active: pathname == `/dashboard/pets`,
           icon: PawPrint,
           submenus: [],
         },
+        {
+          href: '/dashboard/settings',
+          label: "Réglages",
+          active: pathname == '/dashboard/settings',
+          icon: UsersRound,
+          submenus: [],
+        }
       ],
     },
   ];

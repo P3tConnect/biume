@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarComponent } from "./sidebar/sidebar";
+import { SidebarComponent } from "./sidebar-pro/sidebar";
 import { Navbar } from "./navbar";
 import { Menu, proMenuList } from "@/src/config/menu-list";
 import { usePathname } from "next/navigation";

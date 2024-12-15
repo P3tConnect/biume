@@ -4,7 +4,6 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -30,7 +29,7 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const SidebarFooterComponent = () => {
+const SidebarClientFooterComponent = () => {
   const router = useRouter();
   const { data: session, isPending } = useSession();
 
@@ -40,7 +39,7 @@ const SidebarFooterComponent = () => {
         <SidebarMenuButton tooltip="Réglages de l'entreprise" asChild>
           <a href="/dashboard/123/settings">
             <Settings />
-            <span>Réglages de l&apos;entreprise</span>
+            <span>Réglages</span>
           </a>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -111,7 +110,7 @@ const SidebarFooterComponent = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-2">
                 <Sparkles size={14} />
-                Upgrade to Pro
+                Become a pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -147,4 +146,4 @@ const SidebarFooterComponent = () => {
   );
 };
 
-export default SidebarFooterComponent;
+export default SidebarClientFooterComponent;

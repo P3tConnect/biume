@@ -9,12 +9,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui";
 import { proMenuList } from "@/src/config";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 
 const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
   const pathname = usePathname();
-  const locale = useLocale();
   const t = useTranslations();
 
   const menuList = proMenuList(pathname, companyId);
