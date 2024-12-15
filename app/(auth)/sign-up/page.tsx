@@ -29,8 +29,6 @@ const RegisterClientPage = () => {
       email: data.email,
       password: data.password,
       name: data.name,
-      isPro: false,
-      stripeId: "",
       image: "",
       onBoardingComplete: false,
     }, {
@@ -40,7 +38,7 @@ const RegisterClientPage = () => {
       onSuccess: () => {
         router.push("/dashboard")
       },
-      onError: (error) => {
+      onError: (error: any) => {
         setLoading(false)
         console.log(error, "error")
         toast.error("Email ou mot de passe incorrect")
