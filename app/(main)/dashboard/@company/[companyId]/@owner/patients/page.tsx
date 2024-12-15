@@ -1,4 +1,4 @@
-import PatientsPageComponent from '@/components/dashboard/pages/patients-page/patients-page'
+import PatientsPageComponent from '@/components/dashboard/pages/pro/patients-page/patients-page'
 import React from 'react'
 
 const DashboardCompanyPatientsPage = () => {

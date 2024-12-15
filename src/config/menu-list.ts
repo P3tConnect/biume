@@ -137,14 +137,14 @@ export function clientMenuList(pathname: string): Group[] {
       menus: [
         {
           href: `/dashboard`,
-          label: "Dashboard",
+          label: "dashboard.sidebar.dashboard",
           active: pathname == `/dashboard`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
           href: `/dashboard/timetable`,
-          label: "Agenda",
+          label: "dashboard.sidebar.calendar",
           active: pathname == `/dashboard/timetable`,
           icon: Calendar,
           submenus: [],
@@ -152,25 +152,25 @@ export function clientMenuList(pathname: string): Group[] {
       ],
     },
     {
-      groupLabel: "Mon compte",
+      groupLabel: "dashboard.sidebar.groupLabels.account",
       menus: [
         {
           href: `/dashboard/reservations`,
-          label: "Mes réservations",
+          label: "dashboard.sidebar.reservations",
           active: pathname == `/dashboard/reservations`,
           icon: Ticket,
           submenus: [],
         },
         {
           href: `/dashboard/pets`,
-          label: "Mes animaux",
+          label: "dashboard.sidebar.animals",
           active: pathname == `/dashboard/pets`,
           icon: PawPrint,
           submenus: [],
         },
         {
           href: '/dashboard/settings',
-          label: "Réglages",
+          label: "dashboard.sidebar.settings",
           active: pathname == '/dashboard/settings',
           icon: UsersRound,
           submenus: [],

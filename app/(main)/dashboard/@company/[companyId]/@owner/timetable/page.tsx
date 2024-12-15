@@ -1,4 +1,4 @@
-import CalendarComponent from "@/components/dashboard/pages/timetable-page/calendar";
+import CalendarComponent from "@/components/dashboard/pages/pro/timetable-page/calendar";
 
 const DashboardOrganizationTimetablePage = () => {
   return <CalendarComponent />;

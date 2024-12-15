@@ -10,7 +10,7 @@ const DashboardLayout = async ({
   company: ReactNode;
   client: ReactNode;
 }) => {
-  redirect("/");
+  // redirect("/");
   const session = await auth.api.getSession({
     headers: await headers(),
   });

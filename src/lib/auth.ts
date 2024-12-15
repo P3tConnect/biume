@@ -86,7 +86,7 @@ export const auth = betterAuth({
 
           await db
             .update(dbUser)
-            .set({ stripeId: customer.id })
+            .set({ stripeId: customer.id})
             .where(eq(dbUser.id, user.id));
         }
       },
