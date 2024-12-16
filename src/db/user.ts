@@ -13,13 +13,24 @@ import { member } from "./member";
 import { notification } from "./notifications";
 import { projectsInvitees } from "./projectsInvitees";
 import { invitation } from "./invitation";
+import { createInsertSchema } from "drizzle-zod";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
-  name: text("name").notNull(),
+  firstname: text("firstname").notNull(),
+  lastname: text("lastname").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("emailVerified").notNull(),
   image: text("image"),
+  phoneNumber: text("phoneNumber").notNull().unique(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  zipCode: text("zipCode").notNull(),
+  country: text("country").notNull(),
+  birthday: text("birthday").notNull(),
+  sexe: text("sexe").notNull(),
+  smsNotification: boolean("smsNotification").notNull(),
+  emailNotification: boolean("emailNotification").notNull(),
   createdAt: timestamp("createdAt").notNull(),
   updatedAt: timestamp("updatedAt").notNull(),
   twoFactorEnabled: boolean("twoFactorEnabled"),
@@ -43,3 +54,5 @@ export const userRelations = relations(user, ({ one, many }) => ({
   projects: many(projectsInvitees),
   invitations: many(invitation),
 }));
+
+export const CreateUserSchema = createInsertSchema(user);

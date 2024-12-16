@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui";
-import NotificationForm from "../components/client/notification-form";
+import ClientNotificationForm from "../components/client/notification-form";
 
 const ClientNotificationStep = () => {
   return (
@@ -22,7 +22,7 @@ const ClientNotificationStep = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <NotificationForm />
+        <ClientNotificationForm />
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
