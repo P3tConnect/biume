@@ -1,34 +1,48 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
-import { useServerActionMutation } from "@/src/hooks";
 import { loginSchema } from "@/src/lib";
 import { signIn } from "@/src/lib/auth-client";
+import { ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-        rememberMe: z.boolean(),
-      }),
-    ),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    signIn.email({
-      email: data.email,
-      password: data.password,
-      callbackURL: "/",
-      rememberMe: data.rememberMe,
-    });
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe,
+      },
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          toast.success("Connexion réussie");
+          router.push("/onboarding");
+        },
+        onError: (error: any) => {
+          setLoading(false);
+          toast.error(`error: ${error}`);
+          console.log(`error: ${error}`);
+        },
+      }
+    );
   });
 
   return (

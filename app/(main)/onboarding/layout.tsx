@@ -8,11 +8,11 @@ const OnBoardingLayout = async ({
   pro: ReactNode;
   client: ReactNode;
 }) => {
-  // const user = await currentUser();
+  const user = await currentUser();
 
-  // if (user.isPro === true) {
-  //   return <>{pro}</>;
-  // }
+  if (user.isPro === true) {
+    return <>{pro}</>;
+  }
 
   return <>{client}</>;
 };

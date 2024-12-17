@@ -41,7 +41,18 @@ const ClientInformationForm = () => {
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log("Form data:", data);
+    ({
+      image: data.image,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      birthday: data.birthday,
+      phoneNumber: data.phoneNumber,
+      sexe: data.sexe,
+      address: data.address,
+      city: data.city,
+      zipCode: data.zipCode,
+      country: data.country,
+    });
   });
 
   console.log(form.formState.errors);
@@ -138,7 +149,7 @@ const ClientInformationForm = () => {
             name="sexe"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Date de naissance</FormLabel>
+                <FormLabel>Sexe</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -233,6 +244,27 @@ const ClientInformationForm = () => {
                     onChange={field.onChange}
                     type="number"
                     placeholder="Code postal (ex: 75001)"
+                    required
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex flex-row gap-4 w-[49.5%]">
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>Pays</FormLabel>
+                <FormControl>
+                  <Input
+                    name={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    type="text"
+                    placeholder="France"
                     required
                   />
                 </FormControl>
