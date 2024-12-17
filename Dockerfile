@@ -27,7 +27,6 @@ COPY tailwind.config.js .
 COPY tsconfig.json .
 COPY postcss.config.mjs .
 COPY package.json .
-COPY bun.lockb .
 COPY trigger.config.ts .
 COPY drizzle.config.ts .
 

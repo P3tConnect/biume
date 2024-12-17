@@ -1,17 +1,24 @@
-"use server";
+import { action, registerSchema } from "../lib";
+import { APIError } from "better-auth/api";
+import { auth } from "../lib/auth";
 
-import { CreateUserSchema, user } from "../db";
-import { clientAction, db } from "../lib";
-import { ZSAError } from "zsa";
-
-export const createUser = clientAction
-  .input(CreateUserSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(user).values(input).returning().execute();
-
-    if (!data) {
-      throw new ZSAError("ERROR", "User not created");
+export const signUp = action.input(registerSchema).handler(async ({ input }) => {
+    try {
+        await auth.api.signUpEmail({
+            body: {
+                name: input.name,
+                email: input.email,
+                password: input.password,
+                stripeId: "",
+                image: "",
+                onBoardingComplete: false,
+            },
+            asResponse: true,
+        })
+    } catch (err) {
+        if (err instanceof APIError) {
+            return err
+        }
+        console.log(err);
     }
-
-    return data;
 });

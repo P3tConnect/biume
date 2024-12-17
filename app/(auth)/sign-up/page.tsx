@@ -3,14 +3,20 @@
 import { Button, Input } from "@/components/ui";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { registerSchema } from "@/src/lib";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { ErrorContext } from "@better-fetch/fetch";
 
 const RegisterClientPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  // redirect('/');
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -21,16 +27,28 @@ const RegisterClientPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      isPro: false,
-      stripeId: "",
-      image: "",
-      onBoardingComplete: false,
-      callbackURL: "/",
-    });
+    await signUp.email(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        image: "",
+      },
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          toast.success("Inscription réussie");
+          router.push("/onboarding");
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          toast.error(`error: ${error.error.message}`);
+          console.log(error.response);
+        },
+      }
+    );
   });
 
   return (

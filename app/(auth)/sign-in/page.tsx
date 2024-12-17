@@ -3,20 +3,20 @@
 import { Button, Input } from "@/components/ui";
 import { loginSchema } from "@/src/lib";
 import { signIn } from "@/src/lib/auth-client";
-import { ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
+  // redirect("/");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   });
@@ -33,13 +33,13 @@ const LoginPage = () => {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success("Connexion réussie");
-          router.push("/onboarding");
+          toast.success("Inscription réussie");
+          router.push("/dashboard");
         },
-        onError: (error: any) => {
+        onError: (error: ErrorContext) => {
           setLoading(false);
-          toast.error(`error: ${error}`);
-          console.log(`error: ${error}`);
+          toast.error(`error: ${error.error.message}`);
+          console.log(error.response);
         },
       }
     );
