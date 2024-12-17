@@ -31,9 +31,9 @@ const ClientInformationForm = () => {
       image: "",
       lastname: "",
       firstname: "",
-      birthday: "",
+      birthday: new Date(),
       phoneNumber: "",
-      sexe: "",
+      sexe: "MALE",
       address: "",
       city: "",
       zipCode: "",
@@ -43,6 +43,8 @@ const ClientInformationForm = () => {
   const onSubmit = form.handleSubmit((data) => {
     console.log("Form data:", data);
   });
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -116,8 +118,13 @@ const ClientInformationForm = () => {
                 <FormControl>
                   <Input
                     name={field.name}
-                    value={field.value}
-                    onChange={field.onChange}
+                    value={field.value?.toISOString().split("T")[0]}
+                    onChange={(e) => {
+                      const value = new Date(e.target.value);
+                      if (value instanceof Date && !isNaN(value.getTime())) {
+                        field.onChange(value);
+                      }
+                    }}
                     type="date"
                     placeholder="Date de naissance"
                     required
@@ -142,9 +149,9 @@ const ClientInformationForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Masculin">Masculin</SelectItem>
-                    <SelectItem value="Féminin">Féminin</SelectItem>
-                    <SelectItem value="Autre">Autre</SelectItem>
+                    <SelectItem value="MALE">Masculin</SelectItem>
+                    <SelectItem value="FEMALE">Féminin</SelectItem>
+                    <SelectItem value="OTHERS">Autre</SelectItem>
                   </SelectContent>
                 </Select>
               </FormItem>

@@ -33,7 +33,7 @@ export const user = pgTable("users", {
   city: text("city").notNull(),
   zipCode: text("zipCode").notNull(),
   country: text("country").notNull(),
-  birthday: timestamp("birthday", { mode: "date" }),
+  birthday: timestamp("birthday", { mode: "date" }).notNull(),
   sexe: sexeType("sexe").notNull(),
   smsNotification: boolean("smsNotification").notNull(),
   emailNotification: boolean("emailNotification").notNull(),
