@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { pets } from "./pets";
 import { usersJobs } from "./usersJobs";
 import { proSession } from "./pro_session";
@@ -15,6 +15,12 @@ import { projectsInvitees } from "./projectsInvitees";
 import { invitation } from "./invitation";
 import { createInsertSchema } from "drizzle-zod";
 
+export const sexeType = pgEnum("sexe_type", [
+  "MALE",
+  "FEMALE",
+  "OTHERS",
+]);
+
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
   firstname: text("firstname").notNull(),
@@ -27,8 +33,8 @@ export const user = pgTable("users", {
   city: text("city").notNull(),
   zipCode: text("zipCode").notNull(),
   country: text("country").notNull(),
-  birthday: text("birthday").notNull(),
-  sexe: text("sexe").notNull(),
+  birthday: timestamp("birthday", { mode: "date" }),
+  sexe: sexeType("sexe").notNull(),
   smsNotification: boolean("smsNotification").notNull(),
   emailNotification: boolean("emailNotification").notNull(),
   createdAt: timestamp("createdAt").notNull(),
