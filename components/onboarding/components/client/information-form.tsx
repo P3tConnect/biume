@@ -18,13 +18,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useLocale } from "next-intl";
 import { useStepper } from "../../hooks/useStepper";
 import { useStore } from "@/src/hooks";
 import { CreateUserSchema } from "@/src/db";
 
 const ClientInformationForm = () => {
-  const locale = useLocale();
   const stepperStore = useStore(useStepper, (state) => state);
 
   const form = useForm<z.infer<typeof CreateUserSchema>>({
@@ -43,7 +41,7 @@ const ClientInformationForm = () => {
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log(data);
+    console.log("Form data:", data);
   });
 
   return (

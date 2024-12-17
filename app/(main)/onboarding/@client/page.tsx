@@ -1,7 +1,8 @@
 import React from "react";
+import ClientInformationsPage from "./informations/page";
 
 const ClientOnBoardingPage = () => {
-  return <div>ClientOnBoardingPage</div>;
+  return <ClientInformationsPage />;
 };
 
 export default ClientOnBoardingPage;

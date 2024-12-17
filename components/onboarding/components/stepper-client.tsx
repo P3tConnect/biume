@@ -18,15 +18,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui";
-import {cn} from "@/src/lib";
-import {ArrowLeft, Check} from "lucide-react";
-import {useLocale} from "next-intl";
+import { cn } from "@/src/lib";
+import { ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
-import {usePathname, useRouter} from "next/navigation";
-import React, {useState} from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 const StepperClient = () => {
-  const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const [successSteps, setSuccessSteps] = useState<number[]>([]);
@@ -36,12 +34,12 @@ const StepperClient = () => {
     {
       step: 1,
       title: "Informations supplémentaires",
-      href: `/${locale}/onboarding/informations`,
+      href: `/onboarding/informations`,
     },
     {
-      step: 3,
+      step: 2,
       title: "Choix du moyen de notification",
-      href: `/${locale}/onboarding/notifications`,
+      href: `/onboarding/notifications`,
     },
   ];
 
@@ -53,18 +51,18 @@ const StepperClient = () => {
             <Button
               variant="ghost"
               className={cn(
-                "flex items-center justify-start gap-2 rounded-xl w-fit",
+                "flex items-center justify-start gap-2 rounded-xl w-fit"
               )}
             >
-              <ArrowLeft className="h-4 w-4"/>
+              <ArrowLeft className="h-4 w-4" />
               <p>Quitter</p>
             </Button>
           </AlertDialogTrigger>
           <div className="flex flex-col gap-1">
             <CardTitle>Informations</CardTitle>
             <CardDescription>
-              Ceci est la description de l&apos;étape en cours de création de profil et des informations liées a
-              votre compte
+              Ceci est la description de l&apos;étape en cours de création de
+              profil et des informations liées a votre compte
             </CardDescription>
           </div>
         </CardHeader>
@@ -76,24 +74,26 @@ const StepperClient = () => {
                   <Link
                     href={step.href}
                     className={cn(
-                      buttonVariants({variant: "default"}),
+                      buttonVariants({ variant: "default" }),
                       "flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold hover:text-white",
-                      successSteps.includes(step.step) ? "border-primary bg-primary" : "border-muted",
+                      successSteps.includes(step.step)
+                        ? "border-primary bg-primary"
+                        : "border-muted",
                       step.href === pathname
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-muted bg-background text-muted-foreground",
+                        : "border-muted bg-background text-muted-foreground"
                     )}
                   >
                     <Check
                       className={cn(
                         "h-8 w-8",
-                        successSteps.includes(step.step) ? "visible" : "hidden",
+                        successSteps.includes(step.step) ? "visible" : "hidden"
                       )}
                     />
                     <p
                       className={cn(
                         "text-lg font-semibold",
-                        successSteps.includes(step.step) ? "hidden" : "visible",
+                        successSteps.includes(step.step) ? "hidden" : "visible"
                       )}
                     >
                       {step.step}
@@ -101,17 +101,26 @@ const StepperClient = () => {
                   </Link>
                   {index !== steps.length - 1 && (
                     <div
-                      className={cn("w-px h-40 my-1", successSteps.includes(step.step) ? "bg-primary" : "bg-border")}/>
+                      className={cn(
+                        "w-px h-40 my-1",
+                        successSteps.includes(step.step)
+                          ? "bg-primary"
+                          : "bg-border"
+                      )}
+                    />
                   )}
                 </div>
-                <div
-                  className={cn(
-                    "flex-1 pt-2 pb-8",
-                  )}
-                >
-                  <p className={cn("font-medium", step.href === pathname
-                    ? "text-primary"
-                    : "text-muted-foreground",)}>{step.title}</p>
+                <div className={cn("flex-1 pt-2 pb-8")}>
+                  <p
+                    className={cn(
+                      "font-medium",
+                      step.href === pathname
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {step.title}
+                  </p>
                 </div>
               </div>
             ))}
@@ -122,15 +131,18 @@ const StepperClient = () => {
         <AlertDialogHeader>
           <AlertDialogTitle>Souhaitez-vous quitter ?</AlertDialogTitle>
           <AlertDescription>
-            Si vous quittez à cette étape, vous perdrez les données saisies. Etes-vous sûr ?
+            Si vous quittez à cette étape, vous perdrez les données saisies.
+            Etes-vous sûr ?
           </AlertDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="rounded-xl">
-            Annuler
-          </AlertDialogCancel>
+          <AlertDialogCancel className="rounded-xl">Annuler</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Button onClick={() => router.push('/')} variant="default" className="rounded-xl">
+            <Button
+              onClick={() => router.push("/")}
+              variant="default"
+              className="rounded-xl"
+            >
               Quitter
             </Button>
           </AlertDialogAction>
