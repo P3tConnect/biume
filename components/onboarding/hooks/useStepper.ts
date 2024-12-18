@@ -1,12 +1,34 @@
-import { create } from "zustand";
+import { defineStepper } from "@stepperize/react";
+import { z } from "zod";
 
-export type StepperStore = {
-  successSteps: number[];
-  setSuccessStep: (step: number) => void;
-};
-
-export const useStepper = create<StepperStore>((set, get) => ({
-  successSteps: [],
-  setSuccessStep: (step: number) =>
-    set({ successSteps: [...get().successSteps, step] }),
-}));
+export const { steps, useStepper } = defineStepper(
+  {
+    id: "informations",
+    title: "Informations",
+    description: "",
+    schema: z.object({})
+  },
+  {
+    id: "services",
+    title: "Services",
+    description: "",
+    schema: z.object({})
+  },
+  {
+    id: "options",
+    title: "Options",
+    description: "",
+    schema: z.object({})
+  },
+  {
+    id: "documents",
+    title: "Documents",
+    description: "",
+    schema: z.object({})
+  },
+  {
+    id: "complete",
+    title: "Complete",
+    description: "",
+  }
+);

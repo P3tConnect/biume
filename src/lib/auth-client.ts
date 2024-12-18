@@ -44,12 +44,12 @@ export const {
         isPro: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
         },
         onBoardingComplete: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
         },
       },
     }),

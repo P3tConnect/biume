@@ -59,12 +59,12 @@ export const auth = betterAuth({
       isPro: {
         type: "boolean",
         defaultValue: false,
-        required: true,
+        required: false,
       },
       onBoardingComplete: {
         type: "boolean",
         defaultValue: false,
-        required: true,
+        required: false,
       },
       stripeId: {
         type: "string",
