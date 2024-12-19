@@ -69,7 +69,7 @@ const LoginPage = () => {
           <Link href="/forgot-password" className="pb-5">
             <p className="text-xs underline">Mot de passe oublié ?</p>
           </Link>
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button disabled={loading} className="w-96 rounded-3xl" type="submit">
             Se connecter
           </Button>
 
@@ -78,6 +78,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/facebook-icon.svg"}

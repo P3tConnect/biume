@@ -1,5 +1,6 @@
 "use client";
 
+import Stepper from "@/components/onboarding/components/stepper";
 import {
   Avatar,
   AvatarFallback,
@@ -33,14 +34,15 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
   const { data: session, isPending } = useSession();
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
+    <>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -107,12 +109,10 @@ const SidebarClientFooterComponent = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DialogTrigger asChild>
-                <DropdownMenuItem className="gap-2">
-                  <Sparkles size={14} />
-                  Become a pro
-                </DropdownMenuItem>
-              </DialogTrigger>
+              <DropdownMenuItem className="gap-2" onClick={() => setOpen(true)}>
+                <Sparkles size={14} />
+                Become a pro
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
@@ -144,12 +144,8 @@ const SidebarClientFooterComponent = () => {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Become a pro</DialogTitle>
-      </DialogHeader>
-    </DialogContent>
-    </Dialog>
+    <Stepper open={open} />
+    </>
   );
 };
 
