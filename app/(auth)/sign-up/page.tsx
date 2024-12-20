@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ErrorContext } from "@better-fetch/fetch";
 
 const RegisterClientPage = () => {
   const [loading, setLoading] = useState(false);
@@ -39,10 +40,10 @@ const RegisterClientPage = () => {
       onSuccess: () => {
         router.push("/dashboard")
       },
-      onError: (error: any) => {
+      onError: (error: ErrorContext) => {
         setLoading(false)
         console.log(error, "error")
-        toast.error("Email ou mot de passe incorrect")
+        toast.error(`Error ${error.error.message}`)
       }
     });
   });

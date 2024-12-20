@@ -44,13 +44,38 @@ export const {
         isPro: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
         },
         onBoardingComplete: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
         },
+        address: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        zipCode: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        country: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        city: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        phoneNumber: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        }
       },
     }),
   ],
