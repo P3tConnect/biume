@@ -16,6 +16,7 @@ import {
 import { createAccessControl } from "better-auth/plugins/access";
 import { stripe } from "./stripe";
 import { eq } from "drizzle-orm";
+import { FireExtinguisher } from "lucide-react";
 
 const statement = {
   organization: ["create", "share", "update", "delete"],
@@ -56,45 +57,20 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      phoneNumber: {
+      firstname: {
         type: "string",
-        required: false,
+        required: true,
         defaultValue: "",
       },
-      address: {
+      lastname: {
         type: "string",
-        required: false,
+        required: true,
         defaultValue: "",
       },
-      city: {
+      image: {
         type: "string",
-        required: false,
         defaultValue: "",
-      },
-      zipCode: {
-        type: "string",
         required: false,
-        defaultValue: "",
-      },
-      country: {
-        type: "string",
-        required: false,
-        defaultValue: "",
-      },
-      birthday: {
-        type: "date",
-        required: false,
-        defaultValue: new Date().toISOString().split("T")[0],
-      },
-      smsNotification: {
-        type: "boolean",
-        required: false,
-        defaultValue: false,
-      },
-      emailNotification: {
-        type: "boolean",
-        required: false,
-        defaultValue: false,
       },
       isPro: {
         type: "boolean",

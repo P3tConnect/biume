@@ -12,39 +12,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useStepper } from "../../hooks/useStepper";
-import { useStore } from "@/src/hooks";
+// import { useStepper } from "../../hooks/useStepper";
+// import { useStore } from "@/src/hooks";
 import { CreateUserSchema } from "@/src/db";
-import { updateUser } from "@/src/lib/auth-client";
 
 const ClientInformationForm = () => {
-  const stepperStore = useStore(useStepper, (state) => state);
+  // const stepperStore = useStore(useStepper, (state) => state);
 
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
       image: "",
-      birthday: new Date(),
-      phoneNumber: "",
-      address: "",
-      city: "",
-      zipCode: "",
     },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    await updateUser({
-      image: data.image,
-      birthday: data.birthday,
-      phoneNumber: data.phoneNumber,
-      address: data.address,
-      city: data.city,
-      zipCode: data.zipCode,
-      country: data.country,
-    });
-  });
-
-  console.log(form.formState.errors);
+  const onSubmit = form.handleSubmit(async (data) => {});
 
   return (
     <form {...form} onSubmit={onSubmit} className="space-y-4">
@@ -67,53 +49,7 @@ const ClientInformationForm = () => {
         )}
       />
 
-      <div className="flex flex-row gap-4">
-        <FormField
-          control={form.control}
-          name="birthday"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Date de naissance</FormLabel>
-              <FormControl>
-                <Input
-                  name={field.name}
-                  value={field.value?.toISOString().split("T")[0]}
-                  onChange={(e) => {
-                    const value = new Date(e.target.value);
-                    if (value instanceof Date && !isNaN(value.getTime())) {
-                      field.onChange(value);
-                    }
-                  }}
-                  type="date"
-                  placeholder="Date de naissance"
-                  required
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phoneNumber"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Téléphone</FormLabel>
-              <FormControl>
-                <Input
-                  name={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  type="tel"
-                  placeholder="Téléphone"
-                  required
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <div className="flex flex-row gap-4">
+      {/* <div className="flex flex-row gap-4">
         <FormField
           control={form.control}
           name="country"
@@ -193,7 +129,7 @@ const ClientInformationForm = () => {
             </FormItem>
           )}
         />
-      </div>
+      </div> */}
 
       <div className="w-full flex items-end justify-end">
         <Button type="submit" variant="default">

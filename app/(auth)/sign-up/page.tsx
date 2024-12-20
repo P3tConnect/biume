@@ -33,6 +33,8 @@ const RegisterClientPage = () => {
         email: data.email,
         password: data.password,
         image: "",
+        isPro: false,
+        onBoardingComplete: false,
       },
       {
         onRequest: () => {
