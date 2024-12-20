@@ -9,8 +9,8 @@ export const users = pgTable("users", {
  createdAt: timestamp('createdAt').notNull(),
  updatedAt: timestamp('updatedAt').notNull(),
  twoFactorEnabled: boolean('twoFactorEnabled'),
- isPro: boolean('isPro').notNull(),
- onBoardingComplete: boolean('onBoardingComplete').notNull(),
+ isPro: boolean('isPro'),
+ onBoardingComplete: boolean('onBoardingComplete'),
  stripeId: text('stripeId')
 				});
 

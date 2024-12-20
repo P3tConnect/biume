@@ -3,6 +3,7 @@
 import { Button, Input } from "@/components/ui";
 import { loginSchema } from "@/src/lib";
 import { signIn } from "@/src/lib/auth-client";
+import { ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,11 +18,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-        rememberMe: z.boolean(),
-      }),
+      loginSchema
     ),
   });
 
@@ -29,7 +26,7 @@ const LoginPage = () => {
     await signIn.email({
       email: data.email,
       password: data.password,
-      rememberMe: data.rememberMe,
+      rememberMe: false,
     }, {
       onRequest: () => {
         setLoading(true)
@@ -37,10 +34,10 @@ const LoginPage = () => {
       onSuccess: () => {
         router.push("/dashboard")
       },
-      onError: (error: any) => {
+      onError: (error: ErrorContext) => {
         setLoading(false)
         console.log(error, "error")
-        toast.error("Email ou mot de passe incorrect")
+        toast.error(`Error : ${error.error.message}`)
       }
     });
   });
@@ -72,7 +69,7 @@ const LoginPage = () => {
           <Link href="/forgot-password" className="pb-5">
             <p className="text-xs underline">Mot de passe oublié ?</p>
           </Link>
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button disabled={loading} className="w-96 rounded-3xl" type="submit">
             Se connecter
           </Button>
 
@@ -81,6 +78,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/facebook-icon.svg"}

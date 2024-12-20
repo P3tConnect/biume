@@ -32,7 +32,7 @@ const RegisterClientPage = () => {
       name: data.name,
       image: "",
       isPro: false,
-      onBoardingComplete: false,
+      onBoardingComplete: false
     }, {
       onRequest: () => {
         setLoading(true)

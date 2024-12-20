@@ -1,9 +1,16 @@
 "use client";
 
+import Stepper from "@/components/onboarding/components/stepper";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -27,29 +34,23 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
   const { data: session, isPending } = useSession();
+  const [open, setOpen] = useState(false);
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <SidebarMenuButton tooltip="Réglages de l'entreprise" asChild>
-          <a href="/dashboard/123/settings">
-            <Settings />
-            <span>Réglages</span>
-          </a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={session?.user.image ?? "#"}
@@ -108,7 +109,7 @@ const SidebarClientFooterComponent = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2">
+              <DropdownMenuItem className="gap-2" onClick={() => setOpen(true)}>
                 <Sparkles size={14} />
                 Become a pro
               </DropdownMenuItem>
@@ -124,12 +125,12 @@ const SidebarClientFooterComponent = () => {
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem className="gap-2">
-                <Bell size={14} />
-                Notifications
+                <Settings size={14} />
+                Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2" onClick={() => signOut({
+            <DropdownMenuItem className="gap-2" onClick={async () => await signOut({
               fetchOptions: {
                 onSuccess: () => {
                   router.push("/sign-in")
@@ -143,6 +144,8 @@ const SidebarClientFooterComponent = () => {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
+    <Stepper open={open} />
+    </>
   );
 };
 
