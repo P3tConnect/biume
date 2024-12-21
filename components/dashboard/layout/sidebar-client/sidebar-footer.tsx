@@ -42,7 +42,7 @@ const SidebarClientFooterComponent = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <Dialog>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -109,10 +109,12 @@ const SidebarClientFooterComponent = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2" onClick={() => setOpen(true)}>
-                <Sparkles size={14} />
-                Become a pro
-              </DropdownMenuItem>
+              <DialogTrigger asChild>
+                <DropdownMenuItem className="gap-2">
+                  <Sparkles size={14} />
+                  Become a pro
+                </DropdownMenuItem>
+              </DialogTrigger>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
@@ -144,8 +146,8 @@ const SidebarClientFooterComponent = () => {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-    <Stepper open={open} />
-    </>
+    <Stepper />
+    </Dialog>
   );
 };
 

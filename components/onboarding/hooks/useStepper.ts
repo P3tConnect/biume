@@ -3,6 +3,12 @@ import { z } from "zod";
 
 export const { steps, useStepper } = defineStepper(
   {
+    id: "start",
+    title: "Bienvenue",
+    description: "Bienvenue dans l'inscription de votre entreprise !",
+    schema: z.object({})
+  },
+  {
     id: "informations",
     title: "Informations",
     description: "Renseignez les informations de votre entreprise pour que nous puissions créer le compte de votre établissement.",
@@ -30,5 +36,6 @@ export const { steps, useStepper } = defineStepper(
     id: "complete",
     title: "Complete",
     description: "Vous avez terminé l'inscription, vous pouvez maintenant commencer à utiliser votre compte professionnel !",
+    schema: z.object({})
   }
 );

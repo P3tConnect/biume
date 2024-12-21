@@ -1,31 +1,26 @@
 "use client";
 
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Textarea } from '@/components/ui'
-import { useServerActionMutation, useStore } from '@/src/hooks'
-import { UploadButton, UploadDropzone } from '@/src/lib/uploadthing';
+import { UploadDropzone } from '@/src/lib/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ImageIcon, Loader2, PenBox, Trash2, Upload } from 'lucide-react';
-import { useLocale } from 'next-intl'
+import { ImageIcon, Loader2, PenBox, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useStepper } from '../../hooks/useStepper';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { CreateOrganizationSchema } from '@/src/db';
 
 const InformationsForm = () => {
-  const locale = useLocale();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [logo, setLogo] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const stepperStore = useStore(useStepper, (state) => state);
-  const router = useRouter();
+  const stepper = useStepper();
 
   const form = useForm<z.infer<typeof CreateOrganizationSchema>>({
-    resolver: zodResolver(CreateOrganizationSchema),
+    resolver: zodResolver(stepper.current.schema),
     defaultValues: {
       
     },
@@ -107,7 +102,7 @@ const InformationsForm = () => {
               </div>
             ) : (
               <div className='flex flex-col items-center gap-4'>
-                <div className='group relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary/20'>
+                <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
                   <Image 
                     src={logo} 
                     alt='logo' 
@@ -270,7 +265,7 @@ const InformationsForm = () => {
               <FormItem>
                 <FormLabel className='text-sm font-semibold'>Description de votre entreprise</FormLabel>
                 <FormControl>
-                  <Textarea placeholder='Description de votre entreprise' {...field} value={field.value ?? ''} />
+                  <Textarea className='bg-card' placeholder='Description de votre entreprise' {...field} value={field.value ?? ''} />
                 </FormControl>
               </FormItem>
             )}

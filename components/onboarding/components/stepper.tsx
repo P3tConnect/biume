@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  Button,
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -14,26 +16,55 @@ import ProServicesStep from "../pro/services-step";
 import ProOptionsStep from "../pro/options-step";
 import ProDocumentsStep from "../pro/documents-step";
 import ProCompleteStep from "../pro/complete-step";
+import StepIndicator from "./step-indicator";
+import IntroStep from "../pro/intro-step";
 
-const Stepper = ({ open }: {open: boolean}) => {
+const Stepper = () => {
   const stepper = useStepper();
 
   return (
-    <Dialog open={open}>
-      <DialogHeader>
-        <DialogTitle>{stepper.current.title}</DialogTitle>
-        <DialogDescription>{stepper.current.description}</DialogDescription>
+    <DialogContent className="w-[900px]">
+      <DialogHeader className="flex flex-row items-center space-x-4">
+        <StepIndicator currentStep={stepper.current.index + 1} totalSteps={stepper.all.length} />
+        <div className="space-y-1 flex flex-col">
+          <DialogTitle>{stepper.current.title}</DialogTitle>
+          <DialogDescription>{stepper.current.description}</DialogDescription>
+        </div>
       </DialogHeader>
-      <DialogContent>
-        {stepper.switch({
-          informations: () => <ProInformationsStep />,
-          services: () => <ProServicesStep />,
-          options: () => <ProOptionsStep />,
-          documents: () => <ProDocumentsStep />,
-          complete: () => <ProCompleteStep />, 
-        })}
-      </DialogContent>
-    </Dialog>
+      
+      {stepper.switch({
+        start: () => <IntroStep />,
+        informations: () => <ProInformationsStep />,
+        services: () => <ProServicesStep />,
+        options: () => <ProOptionsStep />,
+        documents: () => <ProDocumentsStep />,
+        complete: () => <ProCompleteStep />, 
+      })}
+      <div className="space-y-4">
+        {!stepper.isLast ? (
+          <div className="flex justify-end gap-4">
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={stepper.prev}
+              disabled={stepper.isFirst}
+            >
+              Retour
+            </Button>
+            <Button onClick={stepper.next} className="rounded-xl">
+              Suivant
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-row justify-end gap-2">
+            <Button onClick={stepper.prev} variant="outline" className="rounded-xl">Retour</Button>
+            <DialogClose asChild>
+              <Button className="rounded-xl">Terminer</Button>
+            </DialogClose>
+          </div>
+        )}
+      </div>
+    </DialogContent>
   );
 };
 

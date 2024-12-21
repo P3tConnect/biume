@@ -1,8 +1,7 @@
+import InformationsForm from "../components/pro/informations-form";
 
 const ProInformationsStep = () => {
-  return (
-    <></>
-  );
+  return <InformationsForm />;
 };
 
 export default ProInformationsStep;

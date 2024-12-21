@@ -24,7 +24,7 @@ const StepIndicator = ({currentStep, totalSteps, size = 80, strokeWidth = 6,}: S
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={strokeWidth}
-                className="text-muted-foreground"
+                className="text-gray-300"
             />
             <circle
                 cx={size / 2}
