@@ -43,7 +43,7 @@ const RegisterClientPage = () => {
       onError: (error: ErrorContext) => {
         setLoading(false)
         console.log(error, "error")
-        toast.error("Email ou mot de passe incorrect")
+        toast.error(`Error ${error.error.message}`)
       }
     });
   });

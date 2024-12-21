@@ -26,6 +26,12 @@ export const user = pgTable("users", {
   isPro: boolean("isPro").notNull(),
   onBoardingComplete: boolean("onBoardingComplete").notNull(),
   stripeId: text("stripeId"),
+  address: text("address"),
+  zipCode: text("zipCode"),
+  city: text("city"),
+  country: text("country"),
+  lang: text("lang").default("fr"),
+  phoneNumber: text("phoneNumber"),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({

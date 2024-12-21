@@ -69,7 +69,33 @@ export const auth = betterAuth({
       stripeId: {
         type: "string",
         defaultValue: "",
+        required: false,
       },
+      address: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      zipCode: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      country: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      city: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      phoneNumber: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      }
     },
   },
   databaseHooks: {
