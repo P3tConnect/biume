@@ -9,22 +9,20 @@ import {
 } from "@/components/ui";
 import React from "react";
 import { useStepper } from "../hooks/useStepper";
+import { useStepper as useStepperClient } from "../hooks/useStepperClient";
 import ProInformationsStep from "../pro/informations-step";
 import ProServicesStep from "../pro/services-step";
 import ProOptionsStep from "../pro/options-step";
 import ProDocumentsStep from "../pro/documents-step";
 import ProCompleteStep from "../pro/complete-step";
-import { currentUser } from "@/src/lib";
-import ClientInformationsPage from "@/app/(main)/onboarding/@client/informations/page";
-import ClientNotificationsPage from "@/app/(main)/onboarding/@client/notifications/page";
-import { auth } from "@/src/lib/auth";
-import { headers } from "next/headers";
+import { useSession } from "@/src/lib/auth-client";
+import ClientNotificationStep from "../client/notifications-step";
+import ClientInformationsStep from "../client/informations-step";
 
-const Stepper = async ({ open }: { open: boolean }) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+const Stepper = ({ open }: { open: boolean }) => {
+  const { data: session } = useSession();
   const stepper = useStepper();
+  const stepperClient = useStepperClient();
 
   return (
     <Dialog open={open}>
@@ -33,16 +31,18 @@ const Stepper = async ({ open }: { open: boolean }) => {
         <DialogDescription>{stepper.current.description}</DialogDescription>
       </DialogHeader>
       <DialogContent>
-        {session?.user.isPro ? (
-        {stepper.switch({
-          informations: () => <ProInformationsStep />,
-          services: () => <ProServicesStep />,
-          options: () => <ProOptionsStep />,
-          documents: () => <ProDocumentsStep />,
-          complete: () => <ProCompleteStep />,
-        })}) : (
-          stepperClient.switch ({})
-        )
+        {session?.user.isPro
+          ? stepper.switch({
+              informations: () => <ProInformationsStep />,
+              services: () => <ProServicesStep />,
+              options: () => <ProOptionsStep />,
+              documents: () => <ProDocumentsStep />,
+              complete: () => <ProCompleteStep />,
+            })
+          : stepperClient.switch({
+              informations: () => <ClientInformationsStep />,
+              notifications: () => <ClientNotificationStep />,
+            })}
       </DialogContent>
     </Dialog>
   );
