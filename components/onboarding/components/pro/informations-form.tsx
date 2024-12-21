@@ -253,7 +253,7 @@ const InformationsForm = () => {
               <FormItem>
                 <FormLabel className='text-sm font-semibold'>Nom de votre entreprise</FormLabel>
                 <FormControl>
-                  <Input type='string' placeholder='PawThera Inc.' {...field} />
+                  <Input type='string' placeholder='PawThera Inc.' {...field} value={field.value ?? ''} />
                 </FormControl>
               </FormItem>
             )}

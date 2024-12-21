@@ -1,6 +1,4 @@
-import { auth } from "@/src/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { currentUser } from "@/src/lib";
 import { ReactNode } from "react";
 
 const DashboardLayout = async ({
@@ -10,12 +8,9 @@ const DashboardLayout = async ({
   company: ReactNode;
   client: ReactNode;
 }) => {
-  // redirect("/");
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await currentUser();
 
-  if (session?.user.isPro) {
+  if (session.isPro) {
     return <>{company}</>;
   }
 

@@ -25,6 +25,7 @@ import {
   LogOut,
   Settings,
   Sparkles,
+  User2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -50,16 +51,16 @@ const SidebarFooterComponent = () => {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={session?.user.image ?? "#"}
-                  alt={session?.user.name}
-                  className="object-cover"
-                />
-                <AvatarFallback className="rounded-lg">
-                  <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
-                </AvatarFallback>
-              </Avatar>
+              {session?.user.image != '' ? <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage
+                    src={session?.user.image as string}
+                    alt={session?.user.name}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="rounded-lg">
+                    <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                  </AvatarFallback>
+                </Avatar> : <User2 />}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {session?.user.name}
@@ -77,7 +78,7 @@ const SidebarFooterComponent = () => {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                {session?.user.image != "" || session?.user.image == null ? <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
                     src={session?.user.image as string}
                     alt={session?.user.name}
@@ -86,7 +87,7 @@ const SidebarFooterComponent = () => {
                   <AvatarFallback className="rounded-lg">
                     <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
                   </AvatarFallback>
-                </Avatar>
+                </Avatar> : <User2 />}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   {isPending ? (
                     <>
