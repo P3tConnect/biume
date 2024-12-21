@@ -123,7 +123,8 @@
       "groupLabels": {
         "management": "Gestion",
         "services": "Services",
-        "informations": "Informations"
+        "informations": "Informations",
+        "account": "Mon compte"
       },
       "dashboard": "Tableau de bord",
       "calendar": "Agenda",
@@ -134,7 +135,10 @@
       "patients": "Patients",
       "reports": "Rapports",
       "observations": "Observations",
-      "help": "Aide et Assistance"
+      "help": "Aide et Assistance",
+      "animals": "Mes animaux",
+      "settings": "Paramètres",
+      "reservations": "Mes réservations"
     },
     "navbar": {
       "new": "Nouveau",

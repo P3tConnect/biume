@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader } from "@/components/ui";
 import { Search, SlidersHorizontal } from "lucide-react";
 import React from "react";
-import RemindersList from "../pages/reminders-page/reminders-list";
+import RemindersList from "../pages/pro/reminders-page/reminders-list";
 
 export const RemindersWidget = () => {
   return (

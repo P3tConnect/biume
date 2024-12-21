@@ -14,9 +14,8 @@ import { useRouter } from "next/navigation";
 import { ErrorContext } from "@better-fetch/fetch";
 
 const RegisterClientPage = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  // redirect('/');
+  const router = useRouter();
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -86,7 +85,7 @@ const RegisterClientPage = () => {
 
           <div className="h-5" />
 
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button className="w-96 rounded-3xl" type="submit" disabled={loading}>
             S'inscrire
           </Button>
 

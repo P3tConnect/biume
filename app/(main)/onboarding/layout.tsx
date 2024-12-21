@@ -1,18 +1,21 @@
-import { currentUser } from "@/src/lib";
+import { auth } from "@/src/lib/auth";
+import { headers } from "next/headers";
 import { ReactNode } from "react";
 
-const OnBoardingLayout = ({
+const OnBoardingLayout = async ({
   pro,
   client,
 }: {
   pro: ReactNode;
   client: ReactNode;
 }) => {
-  // const user = currentUser();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  // if (user.isPro === false) {
-  //   return <>{pro}</>;
-  // }
+  if (session?.user.isPro) {
+    return <>{pro}</>;
+  }
 
   return <>{client}</>;
 };

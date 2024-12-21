@@ -1,8 +1,11 @@
+import DashboardClientLayout from '@/components/dashboard/layout/dashboard-client-layout'
 import React from 'react'
 
 const ClientDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>{children}</>
+    <DashboardClientLayout>
+      {children}
+    </DashboardClientLayout>
   )
 }
 

@@ -14,7 +14,6 @@ import { z } from "zod";
 import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
-  // redirect("/");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
@@ -26,20 +25,19 @@ const LoginPage = () => {
       {
         email: data.email,
         password: data.password,
-        rememberMe: data.rememberMe,
+        rememberMe: false,
       },
       {
         onRequest: () => {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success("Inscription réussie");
           router.push("/dashboard");
         },
         onError: (error: ErrorContext) => {
           setLoading(false);
-          toast.error(`error: ${error.error.message}`);
-          console.log(error.response);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
         },
       }
     );
@@ -72,7 +70,7 @@ const LoginPage = () => {
           <Link href="/forgot-password" className="pb-5">
             <p className="text-xs underline">Mot de passe oublié ?</p>
           </Link>
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button disabled={loading} className="w-96 rounded-3xl" type="submit">
             Se connecter
           </Button>
 
@@ -81,6 +79,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/facebook-icon.svg"}
@@ -93,6 +92,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/google-icon.svg"}

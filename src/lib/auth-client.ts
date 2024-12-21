@@ -51,6 +51,31 @@ export const {
           defaultValue: false,
           required: false,
         },
+        address: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        zipCode: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        country: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        city: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        phoneNumber: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        }
       },
     }),
   ],

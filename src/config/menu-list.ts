@@ -130,44 +130,51 @@ export function proMenuList(
   ];
 }
 
-export function clientMenuList(pathname: string, locale: string): Group[] {
+export function clientMenuList(pathname: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/${locale}/dashboard`,
-          label: "Dashboard",
-          active: pathname == `/${locale}/dashboard`,
+          href: `/dashboard`,
+          label: "dashboard.sidebar.dashboard",
+          active: pathname == `/dashboard`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/timetable`,
-          label: "Agenda",
-          active: pathname == `/${locale}/dashboard/timetable`,
+          href: `/dashboard/timetable`,
+          label: "dashboard.sidebar.calendar",
+          active: pathname == `/dashboard/timetable`,
           icon: Calendar,
           submenus: [],
         },
       ],
     },
     {
-      groupLabel: "Mon compte",
+      groupLabel: "dashboard.sidebar.groupLabels.account",
       menus: [
         {
-          href: `/${locale}/dashboard/reservations`,
-          label: "Mes réservations",
-          active: pathname == `/${locale}/dashboard/reservations`,
+          href: `/dashboard/reservations`,
+          label: "dashboard.sidebar.reservations",
+          active: pathname == `/dashboard/reservations`,
           icon: Ticket,
           submenus: [],
         },
         {
-          href: `/${locale}/dashboard/pets`,
-          label: "Mes animaux",
-          active: pathname == `/${locale}/dashboard/pets`,
+          href: `/dashboard/pets`,
+          label: "dashboard.sidebar.animals",
+          active: pathname == `/dashboard/pets`,
           icon: PawPrint,
           submenus: [],
         },
+        {
+          href: '/dashboard/settings',
+          label: "dashboard.sidebar.settings",
+          active: pathname == '/dashboard/settings',
+          icon: UsersRound,
+          submenus: [],
+        }
       ],
     },
   ];

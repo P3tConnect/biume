@@ -12,12 +12,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { useStepper } from "../../hooks/useStepper";
 // import { useStore } from "@/src/hooks";
 import { CreateUserSchema } from "@/src/db";
 
 const ClientInformationForm = () => {
-  // const stepperStore = useStore(useStepper, (state) => state);
+  // const stepperStore = useStore(useStepperClient, (state) => state);
 
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),

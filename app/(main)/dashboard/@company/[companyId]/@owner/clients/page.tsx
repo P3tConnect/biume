@@ -1,4 +1,4 @@
-import ClientsPageComponent from '@/components/dashboard/pages/clients-page/clients-page'
+import ClientsPageComponent from '@/components/dashboard/pages/pro/clients-page/clients-page'
 import React from 'react'
 
 const DashboardorganizationClientsPage = () => {
