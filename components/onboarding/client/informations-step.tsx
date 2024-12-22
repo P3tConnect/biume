@@ -1,10 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
   DialogHeader,
   Dialog,
   DialogTitle,
@@ -12,22 +9,26 @@ import {
   DialogContent,
 } from "@/components/ui";
 import ClientInformationForm from "@/components/onboarding/components/client/information-form";
+import { cn } from "@/src/lib";
 
 const ClientInformationsStep = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <Dialog>
-      <DialogHeader className="flex flex-col items-start ml-2">
-        <DialogTitle className="text-primary text-3xl">
-          Remplir les champs pour finaliser votre incription
-        </DialogTitle>
-        <DialogDescription>
-          Ajoutez les informations de votre profil.
-        </DialogDescription>
-      </DialogHeader>
-      <DialogContent>
-        <ClientInformationForm />
-      </DialogContent>
-    </Dialog>
+    <div className={cn(!isOpen ? "hidden" : "block")}>
+      <Dialog open={isOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remplissez vos informations</DialogTitle>
+            <DialogDescription>
+              Remplissez vos informations personnelles qui seront liées à votre
+              compte.
+            </DialogDescription>
+          </DialogHeader>
+          <ClientInformationForm />
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
