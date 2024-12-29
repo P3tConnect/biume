@@ -8,6 +8,7 @@ import {
   LucideIcon,
   LucideMessageCircleQuestion,
   PawPrint,
+  Settings,
   Ticket,
   Timer,
   UsersRound,
@@ -32,10 +33,7 @@ type Group = {
   menus: Menu[];
 };
 
-export function proMenuList(
-  pathname: string,
-  companyId: string,
-): Group[] {
+export function proMenuList(pathname: string, companyId: string): Group[] {
   return [
     {
       groupLabel: "",
@@ -127,6 +125,18 @@ export function proMenuList(
         },
       ],
     },
+    {
+      groupLabel: "dashboard.sidebar.groupLabels.other",
+      menus: [
+        {
+          href: `/dashboard/settings`,
+          label: "dashboard.sidebar.settings",
+          active: pathname == `/dashboard/settings`,
+          icon: Settings,
+          submenus: [],
+        },
+      ],
+    },
   ];
 }
 
@@ -169,12 +179,12 @@ export function clientMenuList(pathname: string): Group[] {
           submenus: [],
         },
         {
-          href: '/dashboard/settings',
+          href: "/dashboard/settings",
           label: "dashboard.sidebar.settings",
-          active: pathname == '/dashboard/settings',
+          active: pathname == "/dashboard/settings",
           icon: UsersRound,
           submenus: [],
-        }
+        },
       ],
     },
   ];

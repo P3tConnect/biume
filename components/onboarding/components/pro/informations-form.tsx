@@ -10,23 +10,26 @@ import { z } from 'zod'
 import { useStepper } from '../../hooks/useStepper';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { CreateOrganizationSchema } from '@/src/db';
 
 const InformationsForm = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [logo, setLogo] = useState("");
-  const [coverImage, setCoverImage] = useState("");
   const stepper = useStepper();
 
-  const form = useForm<z.infer<typeof CreateOrganizationSchema>>({
+  const form = useForm<z.infer<typeof stepper.current.schema>>({
     resolver: zodResolver(stepper.current.schema),
     defaultValues: {
-      
+      name: "",
+      description: "",
+      logo: "",
+      coverImage: "",
     },
   });
 
+  const { formState: { errors } } = form;
+
   const onSubmit = form.handleSubmit(async (data) => {
+
   });
 
   return (
@@ -36,7 +39,7 @@ const InformationsForm = () => {
           {/* Logo Upload Section */}
           <div className='flex flex-col items-start gap-4 w-1/4'>
             <p className='text-sm font-semibold'>Logo de votre entreprise</p>
-            {logo === "" ? (
+            {form.getValues("logo") == "" ? (
               <div className='w-full'>
                 <UploadDropzone
                   endpoint="imageUploader"
@@ -80,7 +83,6 @@ const InformationsForm = () => {
                   }}
                   onClientUploadComplete={(res) => {
                     setIsUploading(false);
-                    setLogo(res[0].url);
                     form.setValue('logo', res[0].url);
                     toast.success('Logo téléchargé avec succès!');
                   }}
@@ -92,7 +94,7 @@ const InformationsForm = () => {
                 {isUploading && (
                   <div className="w-32 mt-2">
                     <div className="h-1 w-full bg-primary/20 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-primary transition-all duration-300 rounded-full"
                         style={{ width: `${uploadProgress}%` }}
                       />
@@ -103,9 +105,9 @@ const InformationsForm = () => {
             ) : (
               <div className='flex flex-col items-center gap-4'>
                 <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                  <Image 
-                    src={logo} 
-                    alt='logo' 
+                  <Image
+                    src={form.getValues("logo")}
+                    alt='logo'
                     fill
                     className='object-cover'
                   />
@@ -128,14 +130,13 @@ const InformationsForm = () => {
                         allowedContent: () => ""
                       }}
                       onClientUploadComplete={(res) => {
-                        setLogo(res[0].url);
                         form.setValue('logo', res[0].url);
                         toast.success('Logo mis à jour avec succès!');
                       }}
                     />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className='rounded-xl text-white hover:text-white'
                     >
                       <Trash2 size={16} />
@@ -144,12 +145,13 @@ const InformationsForm = () => {
                 </div>
               </div>
             )}
+
           </div>
 
           {/* Cover Image Upload Section */}
           <div className='flex flex-col items-start gap-4 w-3/4'>
             <p className='text-sm font-semibold'>Image de couverture</p>
-            {coverImage === "" ? (
+            {form.getValues("coverImage") == "" ? (
               <UploadDropzone
                 endpoint="imageUploader"
                 appearance={{
@@ -192,7 +194,6 @@ const InformationsForm = () => {
                 }}
                 onClientUploadComplete={(res) => {
                   setIsUploading(false);
-                  setCoverImage(res[0].url);
                   form.setValue('coverImage', res[0].url);
                   toast.success('Image de couverture téléchargée avec succès!');
                 }}
@@ -203,9 +204,9 @@ const InformationsForm = () => {
               />
             ) : (
               <div className='relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-primary/20'>
-                <Image 
-                  src={coverImage} 
-                  alt='cover' 
+                <Image
+                  src={form.getValues("coverImage")}
+                  alt='cover'
                   fill
                   className='object-cover'
                 />
@@ -227,14 +228,13 @@ const InformationsForm = () => {
                       allowedContent: () => ""
                     }}
                     onClientUploadComplete={(res) => {
-                      setCoverImage(res[0].url);
                       form.setValue('coverImage', res[0].url);
                       toast.success('Image de couverture mise à jour avec succès!');
                     }}
                   />
-                  <Button 
-                    variant="destructive" 
-                    size="icon" 
+                  <Button
+                    variant="destructive"
+                    size="icon"
                     className='rounded-xl'
                   >
                     <Trash2 size={16} />

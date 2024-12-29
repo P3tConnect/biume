@@ -6,10 +6,6 @@ import {
   AvatarFallback,
   AvatarImage,
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
   DropdownMenu,
   DropdownMenuContent,
@@ -23,10 +19,10 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
+import { cn } from "@/src/lib";
 import { signOut, useSession } from "@/src/lib/auth-client";
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
@@ -43,7 +39,7 @@ const SidebarClientFooterComponent = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen}>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -52,22 +48,23 @@ const SidebarClientFooterComponent = () => {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-              {session?.user.image != "" || session?.user.image == null ? <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={session?.user.image as string}
-                    alt={session?.user.name}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="rounded-lg">
-                    <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
-                  </AvatarFallback>
-                </Avatar> : <User2 className="h-8 w-8 rounded-lg" />}
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {session?.user.name}
-                </span>
-                <span className="truncate text-xs">{session?.user.email}</span>
-              </div>
+                <Avatar className={cn("h-8 w-8 rounded-lg", session?.user.image == "" ? "hidden" : "")}>
+                    <AvatarImage
+                      src={session?.user.image as string}
+                      alt={session?.user.name}
+                      className={"object-cover"}
+                    />
+                    <AvatarFallback className="rounded-lg">
+                      <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                    </AvatarFallback>
+                  </Avatar> 
+                  <User2 className={cn("h-8 w-8", session?.user.image == "" ? "" : "hidden")} />
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">
+                    {session?.user.name}
+                  </span>
+                  <span className="truncate text-xs">{session?.user.email}</span>
+                </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -147,7 +144,7 @@ const SidebarClientFooterComponent = () => {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-    <Stepper />
+    <Stepper open={open} />
     </Dialog>
   );
 };

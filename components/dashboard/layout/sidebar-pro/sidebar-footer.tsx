@@ -23,7 +23,6 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
-  Settings,
   Sparkles,
   User2,
 } from "lucide-react";
@@ -37,14 +36,6 @@ const SidebarFooterComponent = () => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton tooltip="Réglages de l'entreprise" asChild>
-          <a href="/dashboard/123/settings">
-            <Settings />
-            <span>Réglages de l&apos;entreprise</span>
-          </a>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -52,15 +43,15 @@ const SidebarFooterComponent = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               {session?.user.image != '' ? <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={session?.user.image as string}
-                    alt={session?.user.name}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="rounded-lg">
-                    <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
-                  </AvatarFallback>
-                </Avatar> : <User2 />}
+                <AvatarImage
+                  src={session?.user.image as string}
+                  alt={session?.user.name}
+                  className="object-cover"
+                />
+                <AvatarFallback className="rounded-lg">
+                  <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                </AvatarFallback>
+              </Avatar> : <User2 />}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {session?.user.name}

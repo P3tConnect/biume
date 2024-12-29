@@ -124,7 +124,8 @@
         "management": "Gestion",
         "services": "Services",
         "informations": "Informations",
-        "account": "Mon compte"
+        "account": "Mon compte",
+        "other": "Autre"
       },
       "dashboard": "Tableau de bord",
       "calendar": "Agenda",

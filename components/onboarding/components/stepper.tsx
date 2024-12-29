@@ -17,8 +17,9 @@ import ProDocumentsStep from "../pro/documents-step";
 import ProCompleteStep from "../pro/complete-step";
 import StepIndicator from "./step-indicator";
 import IntroStep from "../pro/intro-step";
+import { useSession } from "@/src/lib/auth-client";
 
-const Stepper = () => {
+const Stepper = ({ open }: { open: boolean }) => {
   const stepper = useStepper();
 
   return (
@@ -30,14 +31,14 @@ const Stepper = () => {
           <DialogDescription>{stepper.current.description}</DialogDescription>
         </div>
       </DialogHeader>
-      
+
       {stepper.switch({
         start: () => <IntroStep />,
         informations: () => <ProInformationsStep />,
         services: () => <ProServicesStep />,
         options: () => <ProOptionsStep />,
         documents: () => <ProDocumentsStep />,
-        complete: () => <ProCompleteStep />, 
+        complete: () => <ProCompleteStep />,
       })}
       <div className="space-y-4">
         {!stepper.isLast ? (
@@ -56,7 +57,7 @@ const Stepper = () => {
                 Retour
               </Button>
             )}
-            
+
             <Button onClick={stepper.next} className="rounded-xl">
               Suivant
             </Button>
