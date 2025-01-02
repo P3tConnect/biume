@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
 import ClientInformationsStep from "@/components/onboarding/client/informations-step";
+import React from "react";
+import Stepper from "@/components/onboarding/components/stepper";
 import { useSession } from "@/src/lib/auth-client";
 
 const ClientDashboardHomePage = () => {
@@ -11,7 +12,7 @@ const ClientDashboardHomePage = () => {
 
   return (
     <>
-      {showModal && <ClientInformationsStep />}
+      {showModal && <Stepper open={showModal} />}
       <div>ClientDashboardHomePage</div>
     </>
   );

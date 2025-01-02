@@ -1,27 +1,27 @@
 "use client";
 
 import {
-  Button,
-  // Checkbox
-} from "@/components/ui";
-import {
   Form,
-  // FormControl,
-  // FormField,
-  // FormItem,
-  // FormLabel,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
 } from "@/components/ui/form";
+
+import { Checkbox } from "@/components/ui";
 import { CreateUserSchema } from "@/src/db/user";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const ClientNotificationForm = () => {
+  const [checked, setChecked] = useState(false);
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      // smsNotification: false,
-      // emailNotification: false,
+      smsNotification: false,
+      emailNotification: false,
     },
   });
 
@@ -32,17 +32,19 @@ const ClientNotificationForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-6">
-        {/* <FormField
+        <FormField
           control={form.control}
           name="smsNotification"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-3">
-              <FormControl>
-                <Checkbox {...field} checked={field.value} />
-              </FormControl>
-              <FormLabel className="text-sm font-semibold">
-                Choisir de recevoir les notifications par SMS
-              </FormLabel>
+            <FormItem className="flex flex-row justify-start items-start">
+              <div className="flex flex-row items-center gap-3">
+                <FormControl>
+                  <Checkbox {...field} checked={field.value} />
+                </FormControl>
+                <FormLabel className="text-sm font-semibold">
+                  Choisir de recevoir les notifications par SMS
+                </FormLabel>
+              </div>
             </FormItem>
           )}
         />
@@ -51,22 +53,18 @@ const ClientNotificationForm = () => {
           control={form.control}
           name="emailNotification"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-3">
-              <FormControl>
-                <Checkbox {...field} checked={field.value} />
-              </FormControl>
-              <FormLabel className="text-sm font-semibold">
-                Choisir de recevoir les notifications par email
-              </FormLabel>
+            <FormItem className="flex flex-row justify-start items-start">
+              <div className="flex flex-row items-center gap-3">
+                <FormControl>
+                  <Checkbox {...field} checked={field.value} />
+                </FormControl>
+                <FormLabel className="text-sm font-semibold">
+                  Choisir de recevoir les notifications par email
+                </FormLabel>
+              </div>
             </FormItem>
           )}
-        /> */}
-
-        <div className="flex justify-end">
-          <Button type="submit" className="w-full md:w-auto">
-            Finaliser mon inscription
-          </Button>
-        </div>
+        />
       </form>
     </Form>
   );

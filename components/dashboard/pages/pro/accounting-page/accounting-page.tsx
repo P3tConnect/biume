@@ -1,12 +1,12 @@
-import React from 'react'
-import ButtonsSection from './buttons-section'
-import MonthSalesWidget from '../../shortcuts/month-sales-widget'
-import MonthExpensesWidget from '../../shortcuts/month-expenses-widget'
-import ReservationRequestWidget from './reservation-request'
-import GraphSalesWidget from './graph-sales-widget'
-import LastClientMonthWidget from './last-clients-month-widget'
-import SalesProWidget from '../../shortcuts/sales-widget'
-import ExpensesProWidget from '../../shortcuts/expenses-widget'
+import ButtonsSection from "./buttons-section";
+import ExpensesProWidget from "@/components/dashboard/shortcuts/expenses-widget";
+import GraphSalesWidget from "./graph-sales-widget";
+import LastClientMonthWidget from "./last-clients-month-widget";
+import MonthExpensesWidget from "@/components/dashboard/shortcuts/month-expenses-widget";
+import MonthSalesWidget from "@/components/dashboard/shortcuts/month-sales-widget";
+import React from "react";
+import ReservationRequestWidget from "./reservation-request";
+import SalesProWidget from "@/components/dashboard/shortcuts/sales-widget";
 
 const AccountingPageComponent = () => {
   return (
@@ -24,7 +24,7 @@ const AccountingPageComponent = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AccountingPageComponent
+export default AccountingPageComponent;

@@ -15,6 +15,7 @@ interface ENV {
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string | undefined;
   BETTER_AUTH_SECRET: string | undefined;
   BETTER_AUTH_URL: string | undefined;
+  UPLOADTHING_TOKEN: string | undefined;
 }
 
 interface Config {
@@ -30,6 +31,7 @@ interface Config {
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
+  UPLOADTHING_TOKEN: string;
 }
 
 const getConfig = (): ENV => {
@@ -43,6 +45,7 @@ const getConfig = (): ENV => {
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,

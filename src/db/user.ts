@@ -1,20 +1,20 @@
-import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
-import { pets } from "./pets";
-import { usersJobs } from "./usersJobs";
-import { proSession } from "./pro_session";
-import { usersNewsletters } from "./usersNewsletter";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+
+import { account } from "./account";
 import { allergies } from "./allergies";
+import { createInsertSchema } from "drizzle-zod";
 import { deseases } from "./deseases";
 import { intolerences } from "./intolerences";
-import { session } from "./session";
-import { account } from "./account";
+import { invitation } from "./invitation";
 import { member } from "./member";
 import { notification } from "./notifications";
+import { pets } from "./pets";
+import { proSession } from "./pro_session";
 import { projectsInvitees } from "./projectsInvitees";
-import { invitation } from "./invitation";
-import { createInsertSchema } from "drizzle-zod";
-import { phoneNumber } from "better-auth/plugins";
+import { relations } from "drizzle-orm";
+import { session } from "./session";
+import { usersJobs } from "./usersJobs";
+import { usersNewsletters } from "./usersNewsletter";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),

@@ -2,22 +2,23 @@
 
 import {
   Button,
-  Input,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  Input,
 } from "@/components/ui";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { CreateUserSchema } from "@/src/db";
-import { UploadDropzone } from "@/src/lib/uploadthing";
 import { ImageIcon, Loader2, Trash2 } from "lucide-react";
-import { useState } from "react";
+
+import { CreateUserSchema } from "@/src/db";
 import Image from "next/image";
+import { UploadDropzone } from "@/src/lib/uploadthing";
 import { updateUser } from "@/src/actions/user.action";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const ClientInformationForm = () => {
   const [profileImage, setProfileImage] = useState("");
@@ -50,7 +51,7 @@ const ClientInformationForm = () => {
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="flex flex-col items-start gap-4">
           <p className="text-sm font-semibold">Photo de profil</p>
-          {profileImage === "" ? (
+          {form.getValues("image") == "" ? (
             <div className="w-full">
               <UploadDropzone
                 endpoint="imageUploader"
@@ -85,17 +86,21 @@ const ClientInformationForm = () => {
                   allowedContent: () => "PNG, JPG, JEPG • 4MB",
                 }}
                 onUploadBegin={() => {
+                  console.log("Upload begin");
                   setIsUploading(true);
                 }}
                 onUploadProgress={(progress) => {
+                  console.log("Upload progress", progress);
                   setUploadProgress(progress);
                 }}
                 onClientUploadComplete={(res) => {
+                  console.log("Upload complete", res);
                   setIsUploading(false);
                   setProfileImage(res[0].url);
                   form.setValue("image", res[0].url);
                 }}
                 onUploadError={(error) => {
+                  console.log("Upload error", error);
                   setIsUploading(false);
                   console.error(error.message);
                 }}
@@ -230,12 +235,6 @@ const ClientInformationForm = () => {
               </FormItem>
             )}
           />
-        </div>
-
-        <div className="w-full">
-          <Button type="submit" variant="default">
-            Étape suivante
-          </Button>
         </div>
       </form>
     </Form>
