@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/src/lib";
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -13,6 +14,7 @@ const StepIndicator = ({
   totalSteps,
   size = 80,
   strokeWidth = 6,
+  isLast = false,
 }: StepIndicatorProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -41,7 +43,10 @@ const StepIndicator = ({
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
-          className="text-primary transition-all duration-300 ease-in-out"
+          className={cn(
+            "transition-all duration-300 ease-in-out",
+            isLast ? "text-secondary" : "text-primary"
+          )}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </svg>
