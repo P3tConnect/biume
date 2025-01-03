@@ -1,10 +1,11 @@
-import { createAuthClient } from "better-auth/react";
+import { ac, admin, member, owner } from "./auth";
 import {
+  inferAdditionalFields,
   organizationClient,
   twoFactorClient,
-  inferAdditionalFields,
 } from "better-auth/client/plugins";
-import { ac, member, admin, owner } from "./auth";
+
+import { createAuthClient } from "better-auth/react";
 
 export const {
   signIn,
@@ -75,7 +76,17 @@ export const {
           type: "string",
           defaultValue: "",
           required: false,
-        }
+        },
+        smsNotification: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
+        },
+        emailNotification: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
+        },
       },
     }),
   ],

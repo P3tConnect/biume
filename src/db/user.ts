@@ -34,8 +34,8 @@ export const user = pgTable("users", {
   country: text("country"),
   lang: text("lang").default("fr"),
   phoneNumber: text("phoneNumber"),
-  emailNotification: boolean("emailNotification").default(false),
-  smsNotification: boolean("smsNotification").default(false),
+  emailNotification: boolean("emailNotification").notNull().default(false),
+  smsNotification: boolean("smsNotification").notNull().default(false),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({
