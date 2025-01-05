@@ -75,7 +75,7 @@ export const {
           type: "string",
           defaultValue: "",
           required: false,
-        }
+        },
       },
     }),
   ],
