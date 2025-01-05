@@ -1,17 +1,18 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
-import Link from "next/link";
-import Image from "next/image";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+
+import { ErrorContext } from "@better-fetch/fetch";
+import Image from "next/image";
+import Link from "next/link";
 import { registerSchema } from "@/src/lib";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ErrorContext } from "@better-fetch/fetch";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterClientPage = () => {
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const RegisterClientPage = () => {
         },
         onSuccess: () => {
           toast.success("Inscription réussie");
-          router.push("/onboarding");
+          router.push("/dashboard");
         },
         onError: (error: ErrorContext) => {
           setLoading(false);

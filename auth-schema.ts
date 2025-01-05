@@ -1,9 +1,9 @@
 import {
+  boolean,
+  integer,
   pgTable,
   text,
-  integer,
   timestamp,
-  boolean,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -15,8 +15,6 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
   twoFactorEnabled: boolean("two_factor_enabled"),
-  firstname: text("firstname").notNull(),
-  lastname: text("lastname").notNull(),
   isPro: boolean("is_pro"),
   onBoardingComplete: boolean("on_boarding_complete"),
   stripeId: text("stripe_id"),
