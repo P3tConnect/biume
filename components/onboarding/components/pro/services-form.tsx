@@ -5,25 +5,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X } from 'lucide-react'
 import { CreateService, CreateServiceSchema } from '@/src/db'
 import { UploadButton } from '@/src/lib/uploadthing'
 import Image from 'next/image'
+import { onboardingSchema } from '../stepper';
 
-const serviceSchema = z.object({
-  services: z.array(CreateServiceSchema),
-});
+const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
 
-const ServicesForm = () => {
-  const form = useForm<z.infer<typeof serviceSchema>>({
-    resolver: zodResolver(serviceSchema),
-    defaultValues: {
-      services: [],
-    },
-  })
 
   const { control } = form;
 

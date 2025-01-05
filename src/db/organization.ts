@@ -45,15 +45,12 @@ export const organization = pgTable("organizations", {
   createdAt: timestamp("createdAt").notNull(),
   metadata: text("metadata"),
   stripeId: text("stripeId"),
-  onBoardingComplete: boolean("onBoardingComplete").notNull(),
-  openAt: date("openAt").notNull(),
-  closeAt: date("closeAt").notNull(),
-  email: text("email").notNull().unique(),
-  atHome: boolean("atHome").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
+  openAt: date("openAt"),
+  closeAt: date("closeAt"),
+  email: text("email").unique(),
+  atHome: boolean("atHome").notNull().default(false),
   plan: plan("plan").default("NONE"),
-  documentsId: text("documentsId").references(() => organizationDocuments.id, {
-    onDelete: "cascade",
-  }),
   progressionId: text("progressionId").references(() => progression.id, {
     onDelete: "cascade",
   }),
@@ -62,10 +59,10 @@ export const organization = pgTable("organizations", {
   }),
   nac: text("nac"),
   locked: boolean("locked").notNull().default(false),
-  lang: text("lang").default("fr"),
+  lang: text("lang").notNull().default("fr"),
   siren: text("siren"),
   siret: text("siret"),
-  updatedAt: timestamp("updatedAt").notNull(),
+  updatedAt: timestamp("updatedAt"),
 });
 
 export const organizationRelations = relations(
@@ -76,10 +73,7 @@ export const organizationRelations = relations(
       fields: [organization.progressionId],
       references: [progression.id],
     }),
-    documents: one(organizationDocuments, {
-      fields: [organization.documentsId],
-      references: [organizationDocuments.id],
-    }),
+    documents: many(organizationDocuments),
     sessions: many(proSession),
     cancelPolicies: many(cancelPolicies),
     projects: many(project),

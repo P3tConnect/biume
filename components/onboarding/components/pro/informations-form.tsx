@@ -3,7 +3,7 @@
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Textarea } from '@/components/ui'
 import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 import { useStepper } from '../../hooks/useStepper';
 import Image from 'next/image';
@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { organization } from '@/src/lib/auth-client';
 import { useServerActionMutation } from '@/src/hooks';
 import { createOrganization } from '@/src/actions/organization.action';
+import { onboardingSchema } from '../stepper';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -29,7 +30,7 @@ export const informationsSchema = z.object({
   coverImage: z.string().url(),
 });
 
-const InformationsForm = () => {
+const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const stepper = useStepper();

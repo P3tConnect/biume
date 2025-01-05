@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
@@ -20,6 +20,7 @@ import { X } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useUploadThing } from "@/src/lib/uploadthing"
 import { toast } from "sonner"
+import { onboardingSchema } from "../stepper"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_FILE_TYPES = {
@@ -32,7 +33,7 @@ const kybFormSchema = z.object({
     siren: z
         .string()
         .min(9, "Le numéro SIREN doit contenir 9 chiffres")
-        .max(14, "Le numéro SIRET doit contenir 14 chiffres")
+        .max(9, "Le numéro SIREN doit contenir 9 chiffres")
         .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres"),
     siret: z
         .string()
@@ -48,45 +49,10 @@ const kybFormSchema = z.object({
 
 type KybFormValues = z.infer<typeof kybFormSchema>
 
-export function DocumentsForm() {
-    const form = useForm<KybFormValues>({
-        resolver: zodResolver(kybFormSchema),
-        defaultValues: {
-            siren: "",
-            siret: "",
-            documents: [],
-        },
-    })
-
-    const { startUpload, isUploading } = useUploadThing("documentsUploader", {
-        onClientUploadComplete: () => {
-            toast.success("Documents téléchargés avec succès")
-        },
-        onUploadError: (error: { message: string }) => {
-            toast.error("Erreur lors du téléchargement: " + error.message)
-        },
-    })
-
-    async function onSubmit(data: KybFormValues) {
-        try {
-            // Upload des fichiers d'abord
-            const uploadedFiles = await startUpload(data.documents)
-            if (!uploadedFiles) {
-                throw new Error("Échec du téléchargement des fichiers")
-            }
-
-            // Envoi des données du formulaire avec les URLs des fichiers
-
-            toast.success("Formulaire soumis avec succès")
-        } catch (error) {
-            toast.error("Une erreur est survenue")
-            console.error(error)
-        }
-    }
-
+export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form className="space-y-6">
                 <FormField
                     control={form.control}
                     name="documents"
@@ -95,8 +61,8 @@ export function DocumentsForm() {
                             <FormLabel>Documents justificatifs</FormLabel>
                             <FormControl>
                                 <DropzoneInput
-                                    onFilesChanged={(files) => field.onChange(files)}
-                                    value={field.value}
+                                    onFilesChanged={(files) => form.watch("documents", files)}
+                                    value={field.value ?? []}
                                 />
                             </FormControl>
                             <FormDescription>
@@ -140,20 +106,33 @@ export function DocumentsForm() {
 }
 
 interface DropzoneInputProps {
-    onFilesChanged: (files: File[]) => void
-    value: File[]
+    onFilesChanged: (files: string[]) => void
+    value: string[]
 }
 
 function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        accept: ACCEPTED_FILE_TYPES,
-        maxSize: MAX_FILE_SIZE,
-        onDrop: (acceptedFiles) => {
-            onFilesChanged([...value, ...acceptedFiles])
+    const { startUpload, isUploading } = useUploadThing("documentsUploader", {
+        onClientUploadComplete: (res) => {
+            if (!res) return
+            const uploadedUrls = res.map((file) => file.url)
+            onFilesChanged(uploadedUrls)
+            toast.success("Documents téléchargés avec succès")
+        },
+        onUploadError: (error: { message: string }) => {
+            toast.error("Erreur lors du téléchargement: " + error.message)
         },
     })
 
-    const removeFile = (fileToRemove: File) => {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        accept: ACCEPTED_FILE_TYPES,
+        maxSize: MAX_FILE_SIZE,
+        onDrop: async (acceptedFiles) => {
+            if (acceptedFiles.length === 0) return
+            await startUpload(acceptedFiles)
+        },
+    })
+
+    const removeFile = (fileToRemove: string) => {
         onFilesChanged(value.filter(file => file !== fileToRemove))
     }
 
@@ -165,33 +144,37 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
                     "border-2 border-dashed rounded-lg p-6 cursor-pointer",
                     "hover:border-primary/50 transition-colors",
                     isDragActive && "border-primary bg-primary/5",
+                    isUploading && "opacity-50 cursor-not-allowed"
                 )}
             >
-                <input {...getInputProps()} />
+                <input {...getInputProps()} disabled={isUploading} />
                 <div className="text-center">
                     <p className="text-sm text-muted-foreground">
                         {isDragActive
                             ? "Déposez les fichiers ici"
-                            : "Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner"}
+                            : isUploading
+                                ? "Téléchargement en cours..."
+                                : "Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner"}
                     </p>
                 </div>
             </div>
 
             {value.length > 0 && (
                 <ul className="space-y-2">
-                    {value.map((file, index) => (
+                    {value.map((fileUrl, index) => (
                         <li
                             key={index}
                             className="flex items-center justify-between p-2 bg-muted rounded-md"
                         >
                             <span className="text-sm truncate">
-                                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                                Document {index + 1}
                             </span>
                             <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => removeFile(file)}
+                                onClick={() => removeFile(fileUrl)}
+                                disabled={isUploading}
                             >
                                 <X className="h-4 w-4" />
                             </Button>

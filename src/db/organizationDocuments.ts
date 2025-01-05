@@ -8,7 +8,12 @@ export const organizationDocuments = pgTable("organization_documents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-
+  file: text("file").notNull(),
+  organizationId: text("organizationId")
+    .notNull()
+    .references(() => organization.id, {
+      onDelete: "cascade",
+    }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });

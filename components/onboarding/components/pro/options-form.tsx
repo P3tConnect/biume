@@ -5,25 +5,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import React from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { UploadButton } from '@/src/lib/uploadthing';
 import { CreateOptionSchema } from '@/src/db';
+import { onboardingSchema } from '../stepper';
 
-const optionSchema = z.object({
-  options: z.array(CreateOptionSchema)
-});
-
-export function OptionsForm() {
-  const form = useForm<z.infer<typeof optionSchema>>({
-    resolver: zodResolver(optionSchema),
-    defaultValues: {
-      options: [],
-    },
-  });
+export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
 
   const { control } = form;
 

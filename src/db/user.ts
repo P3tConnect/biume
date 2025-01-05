@@ -24,7 +24,7 @@ export const user = pgTable("users", {
   updatedAt: timestamp("updatedAt").notNull(),
   twoFactorEnabled: boolean("twoFactorEnabled"),
   isPro: boolean("isPro").notNull(),
-  onBoardingComplete: boolean("onBoardingComplete").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
   stripeId: text("stripeId"),
   address: text("address"),
   zipCode: text("zipCode"),
@@ -32,6 +32,8 @@ export const user = pgTable("users", {
   country: text("country"),
   lang: text("lang").default("fr"),
   phoneNumber: text("phoneNumber"),
+  smsNotifications: boolean("smsNotifications").default(false),
+  emailNotifications: boolean("emailNotifications").default(false),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({

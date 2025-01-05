@@ -76,6 +76,16 @@ export const {
           defaultValue: "",
           required: false,
         },
+        smsNotifications: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
+        },
+        emailNotifications: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
+        },
       },
     }),
   ],
