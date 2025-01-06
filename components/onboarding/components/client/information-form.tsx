@@ -38,17 +38,12 @@ const ClientInformationForm = () => {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    try {
-      const userData = await updateUser(data);
-      console.log("User created:", userData);
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
+    // TODO: Add the data to the database
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6 w-full">
         <div className="flex flex-col items-start gap-4">
           <p className="text-sm font-semibold">Photo de profil</p>
           {form.getValues("image") == "" ? (
@@ -144,7 +139,7 @@ const ClientInformationForm = () => {
             control={form.control}
             name="country"
             render={({ field }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="w-full">
                 <FormLabel className="text-sm font-semibold">Pays</FormLabel>
                 <FormControl>
                   <Input
@@ -161,7 +156,7 @@ const ClientInformationForm = () => {
             control={form.control}
             name="city"
             render={({ field }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="w-full">
                 <FormLabel className="text-sm font-semibold">Ville</FormLabel>
                 <FormControl>
                   <Input
@@ -181,12 +176,12 @@ const ClientInformationForm = () => {
             control={form.control}
             name="address"
             render={({ field }) => (
-              <FormItem className="w-3/4">
+              <FormItem className="w-full">
                 <FormLabel className="text-sm font-semibold">Adresse</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Numéro de la rue et le nom de la rue"
+                    placeholder="Numéro et nom de la rue"
                     {...field}
                     value={field.value ?? ""}
                   />
@@ -198,7 +193,7 @@ const ClientInformationForm = () => {
             control={form.control}
             name="zipCode"
             render={({ field }) => (
-              <FormItem className="w-1/4">
+              <FormItem className="w-full">
                 <FormLabel className="text-sm font-semibold">
                   Code Postal
                 </FormLabel>
@@ -227,7 +222,7 @@ const ClientInformationForm = () => {
                 <FormControl>
                   <Input
                     type="tel"
-                    placeholder="0607020403"
+                    placeholder="Numéro de téléphone"
                     {...field}
                     value={field.value ?? ""}
                   />

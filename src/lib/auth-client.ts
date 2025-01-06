@@ -77,12 +77,12 @@ export const {
           defaultValue: "",
           required: false,
         },
-        smsNotification: {
+        smsNotifications: {
           type: "boolean",
           defaultValue: false,
           required: false,
         },
-        emailNotification: {
+        emailNotifications: {
           type: "boolean",
           defaultValue: false,
           required: false,

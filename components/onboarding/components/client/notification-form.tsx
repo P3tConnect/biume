@@ -18,13 +18,13 @@ const ClientNotificationForm = () => {
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      smsNotification: false,
-      emailNotification: false,
+      smsNotifications: false,
+      emailNotifications: false,
     },
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log("Form data:", data);
+    // TODO: Add the data to the database
   });
 
   return (
@@ -32,7 +32,7 @@ const ClientNotificationForm = () => {
       <form onSubmit={onSubmit} className="space-y-6">
         <FormField
           control={form.control}
-          name="smsNotification"
+          name="smsNotifications"
           render={({ field }) => (
             <FormItem className="flex flex-row justify-start items-start">
               <div className="flex flex-row items-center gap-3">
@@ -54,7 +54,7 @@ const ClientNotificationForm = () => {
 
         <FormField
           control={form.control}
-          name="emailNotification"
+          name="emailNotifications"
           render={({ field }) => (
             <FormItem className="flex flex-row justify-start items-start">
               <div className="flex flex-row items-center gap-3">

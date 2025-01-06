@@ -12,13 +12,8 @@ import {
 
 import ClientCompleteStep from "../client/client-complete-step";
 import ClientInformationsStep from "../client/informations-step";
+import ClientIntroStep from "../client/client-intro-step";
 import ClientNotificationStep from "../client/notifications-step";
-import IntroStep from "../client/client-intro-step";
-import ProCompleteStep from "../pro/complete-step";
-import ProDocumentsStep from "../pro/documents-step";
-import ProInformationsStep from "../pro/informations-step";
-import ProOptionsStep from "../pro/options-step";
-import ProServicesStep from "../pro/services-step";
 import React from "react";
 import StepIndicator from "./step-indicator";
 import { useSession } from "@/src/lib/auth-client";
@@ -50,13 +45,15 @@ const Stepper = ({ open }: { open: boolean }) => {
         </DialogHeader>
         {session?.user.isPro
           ? stepper.switch({
-              start: () => <IntroStep />,
-              informations: () => <ClientInformationsStep />,
-              notifications: () => <ClientNotificationStep />,
-              complete: () => <ClientCompleteStep />,
+              // start: () => <ProIntroStep />,
+              // informations: () => <ProInformationsStep />,
+              // services: () => <ProServicesStep />,
+              // options: () => <ProOptionsStep />,
+              // documents: () => <ProDocumentsStep />,
+              // complete: () => <ProCompleteStep />,
             })
           : stepper.switch({
-              start: () => <IntroStep />,
+              start: () => <ClientIntroStep />,
               informations: () => <ClientInformationsStep />,
               notifications: () => <ClientNotificationStep />,
               complete: () => <ClientCompleteStep />,

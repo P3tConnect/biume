@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-const IntroStep = () => {
+const ClientIntroStep = () => {
   return (
     <div className="w-full h-full flex flex-row justify-center items-center gap-5">
       <Image
@@ -24,4 +24,4 @@ const IntroStep = () => {
   );
 };
 
-export default IntroStep;
+export default ClientIntroStep;

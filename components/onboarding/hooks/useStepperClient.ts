@@ -26,14 +26,14 @@ export const { steps, useStepper } = defineStepper(
     title: "Notifications",
     description: "Ici vous pouvez choisir les services que vous offrez à vos clients.",
     schema: z.object({
-      smsNotifications: z.boolean().optional(),
-      emailNotifications: z.boolean().optional(),
+      smsNotification: z.boolean().optional(),
+      emailNotification: z.boolean().optional(),
     })
   },
   {
     id: "complete",
     title: "Complete",
-    description: "Vous avez terminé l'inscription, vous pouvez maintenant commencer à utiliser votre compte professionnel !",
+    description: "Vous avez terminé l'inscription, vous pouvez maintenant commencer à utiliser votre compte personnel !",
     schema: z.object({}),
   }
 );
