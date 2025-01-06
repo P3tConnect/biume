@@ -129,9 +129,9 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
       groupLabel: "dashboard.sidebar.groupLabels.other",
       menus: [
         {
-          href: `/dashboard/settings`,
+          href: `/dashboard/${companyId}/settings`,
           label: "dashboard.sidebar.settings",
-          active: pathname == `/dashboard/settings`,
+          active: pathname == `/dashboard/${companyId}/settings`,
           icon: Settings,
           submenus: [],
         },

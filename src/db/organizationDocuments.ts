@@ -8,7 +8,7 @@ export const organizationDocuments = pgTable("organization_documents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  file: text("file").notNull(),
+  file: text("file").notNull().default(""),
   organizationId: text("organizationId")
     .notNull()
     .references(() => organization.id, {
@@ -21,7 +21,10 @@ export const organizationDocuments = pgTable("organization_documents", {
 export const organizationDocumentsRelations = relations(
   organizationDocuments,
   ({ one, many }) => ({
-    organization: one(organization),
+    organization: one(organization, {
+      fields: [organizationDocuments.organizationId],
+      references: [organization.id],
+    }),
     certifications: many(organizationCertifications),
   }),
 );
