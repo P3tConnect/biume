@@ -30,20 +30,10 @@ export const informationsSchema = z.object({
   coverImage: z.string().url(),
 });
 
-const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
+const InformationsForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const stepper = useStepper();
-
-  const form = useForm<z.infer<typeof informationsSchema>>({
-    resolver: zodResolver(informationsSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      logo: "",
-      coverImage: "",
-    },
-  });
 
   const { mutateAsync } = useServerActionMutation(createOrganization, {
     onSuccess: () => {
@@ -84,12 +74,6 @@ const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<type
     },
   });
 
-  const { formState: { errors } } = form;
-
-  const onSubmit = form.handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
-
   const {
     getRootProps: getLogoRootProps,
     getInputProps: getLogoInputProps,
@@ -128,7 +112,7 @@ const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<type
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className='space-y-6'>
+      <form className='space-y-6'>
         <div className='flex flex-row gap-6'>
           {/* Logo Upload Section */}
           <div className='flex flex-col items-start gap-4 w-1/4'>
@@ -169,7 +153,7 @@ const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<type
               <div className='flex flex-col items-center gap-4'>
                 <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
                   <Image
-                    src={form.getValues("logo")}
+                    src={form.getValues("logo") ?? ""}
                     alt='logo'
                     fill
                     className='object-cover'
@@ -221,7 +205,7 @@ const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<type
             ) : (
               <div className='relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-primary/20'>
                 <Image
-                  src={form.getValues("coverImage")}
+                  src={form.getValues("coverImage") ?? ""}
                   alt='cover'
                   fill
                   className='object-cover'

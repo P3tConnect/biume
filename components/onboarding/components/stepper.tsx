@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui";
 import React from "react";
-import { useStepper } from "../hooks/useStepper";
+import { useStepper, utils } from "../hooks/useStepper";
 import ProInformationsStep from "../pro/informations-step";
 import ProServicesStep from "../pro/services-step";
 import ProOptionsStep from "../pro/options-step";
@@ -19,14 +19,16 @@ import StepIndicator from "./step-indicator";
 import IntroStep from "../pro/intro-step";
 import { organization as organizationUtil, useActiveOrganization, useSession } from "@/src/lib/auth-client";
 import { z } from "zod";
-import { CreateOptionSchema, CreateServiceSchema, organizationDocuments, service, options as optionsTable } from "@/src/db";
+import { CreateOptionSchema, CreateServiceSchema, organizationDocuments, service, options as optionsTable, organization as organizationTable, user as userTable } from "@/src/db";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { db } from "@/src/lib";
 import { useRouter } from "next/navigation";
+import { eq } from "drizzle-orm";
 
 const Stepper = () => {
   const stepper = useStepper();
+  const currentStep = utils.getIndex(stepper.current.id);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -45,6 +47,7 @@ const Stepper = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof onboardingSchema>) => {
+    console.log(data, "data")
     if (stepper.current.id == "start") {
       stepper.next();
     }
@@ -58,8 +61,14 @@ const Stepper = () => {
         userId: session?.user.id,
       });
       await organizationUtil.setActive({
-        organizationId: result.data?.id,
+        organizationId: result.data?.id as string,
       });
+      await db
+        .update(organizationTable).set({
+          coverImage: data.coverImage,
+          description: data.description,
+        })
+        .where(eq(organizationTable.id, result.data?.id as string)).execute();
       stepper.next();
     }
 
@@ -73,7 +82,7 @@ const Stepper = () => {
           ...service,
           organizationId: organization.data?.id,
         }))
-      );
+      ).execute();
       stepper.next();
     }
 
@@ -87,7 +96,7 @@ const Stepper = () => {
           ...option,
           organizationId: organization.data?.id,
         }))
-      );
+      ).execute();
       stepper.next();
     }
 
@@ -101,7 +110,11 @@ const Stepper = () => {
           file: file ?? '',
           organizationId: organization.data.id,
         }))
-      );
+      ).execute();
+      await db.update(organizationTable).set({
+        siret: data.siret,
+        siren: data.siren,
+      }).where(eq(organizationTable.id, organization.data.id)).execute();
       stepper.next();
     }
 
@@ -109,13 +122,26 @@ const Stepper = () => {
       const organization = await organizationUtil.getFullOrganization();
       if (!organization) return;
       router.push(`/dashboard/${organization.data?.id}`);
+      stepper.reset();
     }
+  }
+
+  const redirectToDashboard = async () => {
+    const organization = await organizationUtil.getFullOrganization();
+    if (!organization) return;
+    await db.update(organizationTable).set({
+      onBoardingComplete: true,
+    }).where(eq(organizationTable.id, organization.data?.id ?? '')).execute();
+    await db.update(userTable).set({
+      isPro: true,
+    }).where(eq(userTable.id, session?.user.id ?? '')).execute();
+    router.push(`/dashboard/${organization.data?.id}`);
   }
 
   return (
     <DialogContent className="w-[900px]">
       <DialogHeader className="flex flex-row items-center space-x-4">
-        <StepIndicator currentStep={stepper.current.index + 1} totalSteps={stepper.all.length} isLast={stepper.isLast} />
+        <StepIndicator currentStep={currentStep} totalSteps={stepper.all.length} isLast={stepper.isLast} />
         <div className="space-y-1 flex flex-col">
           <DialogTitle>{stepper.current.title}</DialogTitle>
           <DialogDescription>{stepper.current.description}</DialogDescription>
@@ -156,7 +182,7 @@ const Stepper = () => {
           <div className="flex flex-row justify-end gap-2">
             <Button onClick={stepper.prev} variant="outline" className="rounded-xl">Retour</Button>
             <DialogClose asChild>
-              <Button className="rounded-xl">Terminer</Button>
+              <Button className="rounded-xl" onClick={redirectToDashboard}>Terminer</Button>
             </DialogClose>
           </div>
         )}

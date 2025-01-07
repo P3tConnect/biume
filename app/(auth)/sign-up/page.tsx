@@ -38,6 +38,7 @@ const RegisterClientPage = () => {
         setLoading(true)
       },
       onSuccess: () => {
+        toast.success("Inscription réussie ! Vous allez être redirigé ...");
         router.push("/dashboard")
       },
       onError: (error: ErrorContext) => {

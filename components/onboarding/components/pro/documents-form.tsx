@@ -47,8 +47,6 @@ const kybFormSchema = z.object({
             "La taille maximale par fichier est de 5MB")
 })
 
-type KybFormValues = z.infer<typeof kybFormSchema>
-
 export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
     return (
         <Form {...form}>
@@ -61,7 +59,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                             <FormLabel>Documents justificatifs</FormLabel>
                             <FormControl>
                                 <DropzoneInput
-                                    onFilesChanged={(files) => form.watch("documents", files)}
+                                    onFilesChanged={(files) => form.setValue("documents", files)}
                                     value={field.value ?? []}
                                 />
                             </FormControl>

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { onboardingSchema } from "../components/stepper";
 
 const ProInformationsStep = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
-  return <InformationsForm formUtils={form} />;
+  return <InformationsForm form={form} />;
 };
 
 export default ProInformationsStep;
