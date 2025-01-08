@@ -26,27 +26,30 @@ const RegisterClientPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      image: "",
-      isPro: false,
-      onBoardingComplete: false
-    }, {
-      onRequest: () => {
-        setLoading(true)
+    await signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        image: "",
+        isPro: false,
+        onBoardingComplete: false,
       },
-      onSuccess: () => {
-        toast.success("Inscription réussie ! Vous allez être redirigé ...");
-        router.push("/dashboard")
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          toast.success("Inscription réussie ! Vous allez être redirigé ...");
+          router.push("/dashboard");
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
+        },
       },
-      onError: (error: ErrorContext) => {
-        setLoading(false)
-        console.log(error, "error")
-        toast.error(`Error ${error.error.message}`)
-      }
-    });
+    );
   });
 
   return (

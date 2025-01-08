@@ -17,29 +17,30 @@ const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(
-      loginSchema
-    ),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signIn.email({
-      email: data.email,
-      password: data.password,
-      rememberMe: false,
-    }, {
-      onRequest: () => {
-        setLoading(true)
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
       },
-      onSuccess: () => {
-        router.push("/dashboard")
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
+        },
       },
-      onError: (error: ErrorContext) => {
-        setLoading(false)
-        console.log(error, "error")
-        toast.error(`Error : ${error.error.message}`)
-      }
-    });
+    );
   });
 
   return (
