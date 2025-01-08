@@ -1,9 +1,12 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui'
 import React from 'react'
+import OptionsForm from '../components/pro/options-form'
+import { UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
+import { onboardingSchema } from '../components/stepper'
 
-const ProOptionsStep = () => {
+const ProOptionsStep = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
   return (
-    <></>
+    <OptionsForm form={form} />
   )
 }
 

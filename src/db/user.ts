@@ -26,7 +26,7 @@ export const user = pgTable("users", {
   updatedAt: timestamp("updatedAt").notNull(),
   twoFactorEnabled: boolean("twoFactorEnabled"),
   isPro: boolean("isPro").notNull(),
-  onBoardingComplete: boolean("onBoardingComplete").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
   stripeId: text("stripeId"),
   address: text("address"),
   zipCode: text("zipCode"),

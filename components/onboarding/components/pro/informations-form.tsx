@@ -1,37 +1,129 @@
 "use client";
 
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, Input, Textarea } from '@/components/ui'
-import { useServerActionMutation, useStore } from '@/src/hooks'
-import { UploadButton, UploadDropzone } from '@/src/lib/uploadthing';
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ImageIcon, Loader2, PenBox, Trash2, Upload } from 'lucide-react';
-import { useLocale } from 'next-intl'
+import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 import { useStepper } from '../../hooks/useStepper';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { CreateOrganizationSchema } from '@/src/db';
+import { useDropzone } from "react-dropzone"
+import { useUploadThing } from "@/src/lib/uploadthing"
+import { cn } from "@/src/lib/utils"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { organization } from '@/src/lib/auth-client';
+import { useServerActionMutation } from '@/src/hooks';
+import { createOrganization } from '@/src/actions/organization.action';
+import { onboardingSchema } from '../stepper';
 
-const InformationsForm = () => {
-  const locale = useLocale();
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ACCEPTED_IMAGE_TYPES = {
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/png": [".png"]
+}
+
+export const informationsSchema = z.object({
+  name: z.string().min(1, 'Le nom de votre entreprise doit contenir au moins un caractère'),
+  description: z.string().min(1, 'La description de votre entreprise doit contenir au moins un caractère'),
+  logo: z.string().url(),
+  coverImage: z.string().url(),
+});
+
+const InformationsForm = ({ formUtils }: { formUtils: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [logo, setLogo] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const stepperStore = useStore(useStepper, (state) => state);
-  const router = useRouter();
+  const stepper = useStepper();
 
-  const form = useForm<z.infer<typeof CreateOrganizationSchema>>({
-    resolver: zodResolver(CreateOrganizationSchema),
+  const form = useForm<z.infer<typeof informationsSchema>>({
+    resolver: zodResolver(informationsSchema),
     defaultValues: {
-      
+      name: "",
+      description: "",
+      logo: "",
+      coverImage: "",
     },
   });
 
+  const { mutateAsync } = useServerActionMutation(createOrganization, {
+    onSuccess: () => {
+      toast.success('Organization created successfully');
+    },
+    onError: () => {
+      toast.error('Error creating organization');
+    },
+    onMutate: () => {
+      toast.loading('Creating organization...');
+    },
+  });
+
+  const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
+    onClientUploadComplete: (res) => {
+      if (res && res[0]) {
+        form.setValue('logo', res[0].url);
+        toast.success('Logo téléchargé avec succès!');
+      }
+    },
+    onUploadProgress(p) {
+      setUploadProgress(p);
+    },
+    onUploadError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
+    },
+  });
+
+  const { startUpload: startCoverUpload } = useUploadThing("documentsUploader", {
+    onClientUploadComplete: (res) => {
+      if (res && res[0]) {
+        form.setValue('coverImage', res[0].url);
+        toast.success('Image de couverture téléchargée avec succès!');
+      }
+    },
+    onUploadError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
+    },
+  });
+
+  const { formState: { errors } } = form;
+
   const onSubmit = form.handleSubmit(async (data) => {
+    await mutateAsync(data);
+  });
+
+  const {
+    getRootProps: getLogoRootProps,
+    getInputProps: getLogoInputProps,
+    isDragActive: isLogoDragActive
+  } = useDropzone({
+    accept: ACCEPTED_IMAGE_TYPES,
+    maxSize: MAX_FILE_SIZE,
+    multiple: false,
+    onDrop: async (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setIsUploading(true);
+        toast.info('Téléchargement du logo en cours...');
+        await startLogoUpload(acceptedFiles);
+        setIsUploading(false);
+      }
+    },
+  });
+
+  const {
+    getRootProps: getCoverRootProps,
+    getInputProps: getCoverInputProps,
+    isDragActive: isCoverDragActive
+  } = useDropzone({
+    accept: ACCEPTED_IMAGE_TYPES,
+    maxSize: MAX_FILE_SIZE,
+    multiple: false,
+    onDrop: async (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setIsUploading(true);
+        toast.info('Téléchargement de l\'image de couverture en cours...');
+        await startCoverUpload(acceptedFiles);
+        setIsUploading(false);
+      }
+    },
   });
 
   return (
@@ -41,63 +133,31 @@ const InformationsForm = () => {
           {/* Logo Upload Section */}
           <div className='flex flex-col items-start gap-4 w-1/4'>
             <p className='text-sm font-semibold'>Logo de votre entreprise</p>
-            {logo === "" ? (
+            {form.getValues("logo") == "" ? (
               <div className='w-full'>
-                <UploadDropzone
-                  endpoint="imageUploader"
-                  appearance={{
-                    container: "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
-                    label: "text-primary",
-                    allowedContent: "text-xs text-muted-foreground text-center",
-                    uploadIcon: "hidden",
-                    button: "hidden"
-                  }}
-                  content={{
-                    label({ ready }) {
-                      if (ready) return (
-                        <div className="flex flex-col items-center gap-2">
-                          <div className="p-2 rounded-lg bg-primary/10">
-                            <ImageIcon className="h-6 w-6 text-primary" />
-                          </div>
-                          <div className="space-y-1 text-center">
-                            <p className="text-xs font-medium text-primary">Glissez-déposez</p>
-                            <p className="text-xs text-muted-foreground">ou cliquez</p>
-                          </div>
-                        </div>
-                      );
-                      return (
-                        <div className="flex items-center justify-center">
-                          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                        </div>
-                      );
-                    },
-                    allowedContent({ ready }) {
-                      if (!ready) return "";
-                      return "PNG, JPG • 4MB";
-                    }
-                  }}
-                  onUploadBegin={() => {
-                    setIsUploading(true);
-                    toast.info('Téléchargement du logo en cours...');
-                  }}
-                  onUploadProgress={(progress) => {
-                    setUploadProgress(progress);
-                  }}
-                  onClientUploadComplete={(res) => {
-                    setIsUploading(false);
-                    setLogo(res[0].url);
-                    form.setValue('logo', res[0].url);
-                    toast.success('Logo téléchargé avec succès!');
-                  }}
-                  onUploadError={(error) => {
-                    setIsUploading(false);
-                    toast.error(`Erreur: ${error.message}`);
-                  }}
-                />
+                <div
+                  {...getLogoRootProps()}
+                  className={cn(
+                    "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
+                    isLogoDragActive && "border-primary bg-primary/5"
+                  )}
+                >
+                  <input {...getLogoInputProps()} />
+                  <div className="flex flex-col items-center gap-2 p-6">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <ImageIcon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="space-y-1 text-center">
+                      <p className="text-xs font-medium text-primary">Glissez-déposez</p>
+                      <p className="text-xs text-muted-foreground">ou cliquez</p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG • 5MB</p>
+                    </div>
+                  </div>
+                </div>
                 {isUploading && (
                   <div className="w-32 mt-2">
                     <div className="h-1 w-full bg-primary/20 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-primary transition-all duration-300 rounded-full"
                         style={{ width: `${uploadProgress}%` }}
                       />
@@ -107,41 +167,25 @@ const InformationsForm = () => {
               </div>
             ) : (
               <div className='flex flex-col items-center gap-4'>
-                <div className='group relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                  <Image 
-                    src={logo} 
-                    alt='logo' 
+                <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
+                  <Image
+                    src={form.getValues("logo")}
+                    alt='logo'
                     fill
                     className='object-cover'
                   />
                   <div className='absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'>
-                    <UploadDropzone
-                      endpoint="imageUploader"
-                      appearance={{
-                        container: "w-full h-full absolute inset-0 border-none",
-                        label: "w-full h-full flex items-center justify-center",
-                        uploadIcon: "hidden",
-                      }}
-                      content={{
-                        label() {
-                          return (
-                            <Button variant="ghost" size="icon" className='rounded-xl text-white hover:text-white'>
-                              <PenBox size={16} />
-                            </Button>
-                          )
-                        },
-                        allowedContent: () => ""
-                      }}
-                      onClientUploadComplete={(res) => {
-                        setLogo(res[0].url);
-                        form.setValue('logo', res[0].url);
-                        toast.success('Logo mis à jour avec succès!');
-                      }}
-                    />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <div {...getLogoRootProps()} className="w-full h-full absolute inset-0">
+                      <input {...getLogoInputProps()} />
+                      <Button variant="ghost" size="icon" className='rounded-xl text-white hover:text-white'>
+                        <PenBox size={16} />
+                      </Button>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className='rounded-xl text-white hover:text-white'
+                      onClick={() => form.setValue('logo', '')}
                     >
                       <Trash2 size={16} />
                     </Button>
@@ -154,93 +198,46 @@ const InformationsForm = () => {
           {/* Cover Image Upload Section */}
           <div className='flex flex-col items-start gap-4 w-3/4'>
             <p className='text-sm font-semibold'>Image de couverture</p>
-            {coverImage === "" ? (
-              <UploadDropzone
-                endpoint="imageUploader"
-                appearance={{
-                  container: "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
-                  label: "text-primary",
-                  allowedContent: "text-xs text-muted-foreground text-center",
-                  button: "hidden",
-                  uploadIcon: "hidden",
-                }}
-                content={{
-                  label({ ready }) {
-                    if (ready) return (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <ImageIcon className="h-6 w-6 text-primary" />
-                        </div>
-                        <div className="space-y-1 text-center">
-                          <p className="text-xs font-medium text-primary">Glissez-déposez</p>
-                          <p className="text-xs text-muted-foreground">ou cliquez</p>
-                        </div>
-                      </div>
-                    );
-                    return (
-                      <div className="flex items-center justify-center">
-                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                      </div>
-                    );
-                  },
-                  allowedContent({ ready }) {
-                    if (!ready) return "";
-                    return "PNG, JPG • 4MB";
-                  }
-                }}
-                onUploadBegin={() => {
-                  setIsUploading(true);
-                  toast.info('Téléchargement de l\'image de couverture en cours...');
-                }}
-                onUploadProgress={(progress) => {
-                  setUploadProgress(progress);
-                }}
-                onClientUploadComplete={(res) => {
-                  setIsUploading(false);
-                  setCoverImage(res[0].url);
-                  form.setValue('coverImage', res[0].url);
-                  toast.success('Image de couverture téléchargée avec succès!');
-                }}
-                onUploadError={(error) => {
-                  setIsUploading(false);
-                  toast.error(`Erreur: ${error.message}`);
-                }}
-              />
+            {form.getValues("coverImage") == "" ? (
+              <div
+                {...getCoverRootProps()}
+                className={cn(
+                  "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
+                  isCoverDragActive && "border-primary bg-primary/5"
+                )}
+              >
+                <input {...getCoverInputProps()} />
+                <div className="flex flex-col items-center gap-2 p-6">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <ImageIcon className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <p className="text-xs font-medium text-primary">Glissez-déposez</p>
+                    <p className="text-xs text-muted-foreground">ou cliquez</p>
+                    <p className="text-xs text-muted-foreground">PNG, JPG • 5MB</p>
+                  </div>
+                </div>
+              </div>
             ) : (
               <div className='relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-primary/20'>
-                <Image 
-                  src={coverImage} 
-                  alt='cover' 
+                <Image
+                  src={form.getValues("coverImage")}
+                  alt='cover'
                   fill
                   className='object-cover'
                 />
                 <div className='absolute bottom-2 right-2 flex items-center gap-2'>
-                  <UploadDropzone
-                    endpoint="imageUploader"
-                    appearance={{
-                      container: "w-auto h-auto border-none",
-                      label: "flex items-center justify-center"
-                    }}
-                    content={{
-                      label() {
-                        return (
-                          <Button variant="secondary" size="icon" className='rounded-xl'>
-                            <PenBox size={16} />
-                          </Button>
-                        )
-                      },
-                      allowedContent: () => ""
-                    }}
-                    onClientUploadComplete={(res) => {
-                      setCoverImage(res[0].url);
-                      form.setValue('coverImage', res[0].url);
-                      toast.success('Image de couverture mise à jour avec succès!');
-                    }}
-                  />
-                  <Button 
-                    variant="destructive" 
-                    size="icon" 
+                  <div {...getCoverRootProps()} className="w-auto h-auto">
+                    <input {...getCoverInputProps()} />
+                    <Button variant="secondary" size="icon" className='rounded-xl'>
+                      <PenBox size={16} />
+                    </Button>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="icon"
                     className='rounded-xl'
+                    onClick={() => form.setValue('coverImage', '')}
                   >
                     <Trash2 size={16} />
                   </Button>
@@ -258,7 +255,7 @@ const InformationsForm = () => {
               <FormItem>
                 <FormLabel className='text-sm font-semibold'>Nom de votre entreprise</FormLabel>
                 <FormControl>
-                  <Input type='string' placeholder='PawThera Inc.' {...field} />
+                  <Input type='string' placeholder='PawThera Inc.' {...field} value={field.value ?? ''} />
                 </FormControl>
               </FormItem>
             )}
@@ -270,7 +267,7 @@ const InformationsForm = () => {
               <FormItem>
                 <FormLabel className='text-sm font-semibold'>Description de votre entreprise</FormLabel>
                 <FormControl>
-                  <Textarea placeholder='Description de votre entreprise' {...field} value={field.value ?? ''} />
+                  <Textarea className='bg-card' placeholder='Description de votre entreprise' {...field} value={field.value ?? ''} />
                 </FormControl>
               </FormItem>
             )}

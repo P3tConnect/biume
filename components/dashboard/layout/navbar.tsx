@@ -34,7 +34,7 @@ export function Navbar({ menu }: NavbarProps) {
           <NewShortcut />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-2">
-          <SearchButton />
+          {/* <SearchButton /> */}
           <ModeToggle />
           <Notifications />
         </div>

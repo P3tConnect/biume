@@ -1,3 +1,5 @@
+import React from "react";
+
 const ClientCompleteStep = () => {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-2">

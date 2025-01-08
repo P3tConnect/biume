@@ -8,8 +8,12 @@ export const organizationDocuments = pgTable("organization_documents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  siren: text("siren"),
-  siret: text("siret"),
+  file: text("file").notNull().default(""),
+  organizationId: text("organizationId")
+    .notNull()
+    .references(() => organization.id, {
+      onDelete: "cascade",
+    }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
@@ -17,15 +21,21 @@ export const organizationDocuments = pgTable("organization_documents", {
 export const organizationDocumentsRelations = relations(
   organizationDocuments,
   ({ one, many }) => ({
-    organization: one(organization),
+    organization: one(organization, {
+      fields: [organizationDocuments.organizationId],
+      references: [organization.id],
+    }),
     certifications: many(organizationCertifications),
   }),
 );
 
 export type OrganizationDocuments = typeof organizationDocuments.$inferSelect;
-export type CreateOrganizationDocuments = typeof organizationDocuments.$inferInsert;
+export type CreateOrganizationDocuments =
+  typeof organizationDocuments.$inferInsert;
 
-export const OrganizationDocumentsSchema =
-  createInsertSchema(organizationDocuments);
-export const CreateOrganizationDocumentsSchema =
-  createInsertSchema(organizationDocuments);
+export const OrganizationDocumentsSchema = createInsertSchema(
+  organizationDocuments,
+);
+export const CreateOrganizationDocumentsSchema = createInsertSchema(
+  organizationDocuments,
+);

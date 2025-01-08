@@ -9,27 +9,18 @@ import {
 } from "@/components/ui/form";
 
 import { Checkbox } from "@/components/ui";
-import { CreateUserSchema } from "@/src/db/user";
-import { useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { clientOnBoardingSchema } from "../stepper-client";
 
-const ClientNotificationForm = () => {
-  const form = useForm<z.infer<typeof CreateUserSchema>>({
-    resolver: zodResolver(CreateUserSchema),
-    defaultValues: {
-      smsNotifications: false,
-      emailNotifications: false,
-    },
-  });
-
-  const onSubmit = form.handleSubmit((data) => {
-    // TODO: Add the data to the database
-  });
-
+const ClientNotificationForm = ({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>>;
+}) => {
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form className="space-y-6">
         <FormField
           control={form.control}
           name="smsNotifications"

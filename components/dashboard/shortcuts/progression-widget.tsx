@@ -58,7 +58,11 @@ const ProgressionWidget = () => {
               <span className="text-muted-foreground">{category.name}</span>
               <span className="font-medium">{category.progress}%</span>
             </div>
-            <Progress value={category.progress} className="h-2 w-full" />
+            <Progress
+              value={category.progress}
+              className="h-2 w-full"
+              indicatorClassName={cn(category.color, "transition-all")}
+            />
           </div>
         ))}
       </CardContent>

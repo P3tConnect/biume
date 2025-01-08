@@ -129,16 +129,19 @@ export const auth = betterAuth({
 
           await db
             .update(dbUser)
-            .set({ stripeId: customer.id})
+            .set({ stripeId: customer.id })
             .where(eq(dbUser.id, user.id));
-        }
+        },
       },
       update: {
         after: async (user) => {
-          await db.update(dbUser).set({ updatedAt: new Date() }).where(eq(dbUser.id, user.id));
-        }
-      }
-    }
+          await db
+            .update(dbUser)
+            .set({ updatedAt: new Date() })
+            .where(eq(dbUser.id, user.id));
+        },
+      },
+    },
   },
   plugins: [
     nextCookies(),

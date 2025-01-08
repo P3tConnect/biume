@@ -1,30 +1,53 @@
-'use client'
+"use client";
 
-import React from 'react'
-import TeamBudget from './team-budget'
-import { Button, Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
-import TeamList from './team-list'
-import { z } from 'zod'
-import { CompanyMembershipRoleEnum } from '@/src/db'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import React from "react";
+import TeamBudget from "./team-budget";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui";
+import TeamList from "./team-list";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const TeamPageComponent = () => {
-
   const schema = z.object({
     email: z.string().email(),
-    role: CompanyMembershipRoleEnum
+    role: z.string(),
   });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     values: {
-      email: '',
-      role: CompanyMembershipRoleEnum.Values.MEMBER
-    }
+      email: "",
+      role: "",
+    },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => { });
+  const onSubmit = form.handleSubmit(async (data) => {});
 
   return (
     <>
@@ -34,7 +57,7 @@ const TeamPageComponent = () => {
           <CardHeader className="flex flex-row items-start justify-between text-center font-bold text-2xl">
             <CardTitle>Equipe</CardTitle>
             <DialogTrigger asChild>
-              <Button variant="ghost" className='rounded-xl' size="sm">
+              <Button variant="ghost" className="rounded-xl" size="sm">
                 <p>Ajouter</p>
               </Button>
             </DialogTrigger>
@@ -47,10 +70,11 @@ const TeamPageComponent = () => {
           <DialogHeader>
             <DialogTitle>Ajouter un membre à l&apos;équipe</DialogTitle>
             <DialogDescription>
-              Invitez un nouveau membre à rejoindre votre équipe. Ils recevront une invitation par email.
+              Invitez un nouveau membre à rejoindre votre équipe. Ils recevront
+              une invitation par email.
             </DialogDescription>
             <Form {...form}>
-              <form onSubmit={onSubmit} className='space-y-4'>
+              <form onSubmit={onSubmit} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="email"
@@ -70,16 +94,19 @@ const TeamPageComponent = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Role</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.MEMBER}>Membre</SelectItem>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.ADMIN}>Admin</SelectItem>
-                          <SelectItem value={CompanyMembershipRoleEnum.Values.OWNER}>Propriétaire</SelectItem>
+                          <SelectItem value="member">Membre</SelectItem>
+                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="owner">Propriétaire</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -95,7 +122,7 @@ const TeamPageComponent = () => {
         </DialogContent>
       </Dialog>
     </>
-  )
-}
+  );
+};
 
-export default TeamPageComponent
+export default TeamPageComponent;

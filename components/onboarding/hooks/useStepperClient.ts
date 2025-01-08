@@ -1,7 +1,7 @@
 import { defineStepper } from "@stepperize/react";
 import { z } from "zod";
 
-export const { steps, useStepper } = defineStepper(
+export const { steps, useStepper, utils } = defineStepper(
   {
     id: "start",
     title: "Bienvenue",
