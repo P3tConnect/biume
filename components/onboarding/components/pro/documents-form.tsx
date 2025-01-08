@@ -1,7 +1,6 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, UseFormReturn } from "react-hook-form"
+import { UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
@@ -15,7 +14,6 @@ import {
     FormDescription,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useUploadThing } from "@/src/lib/uploadthing"
