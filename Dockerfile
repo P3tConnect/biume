@@ -68,4 +68,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Démarrer l'application
-CMD ["node", "server.js"]
+CMD ["bun", "run", "dev"]
