@@ -3,7 +3,6 @@ import { withUt } from 'uploadthing/tw'
 
 const darkMode = ["class"]
 const content = [
-    './node_modules/@uploadthing/react/dist/**/*',
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
