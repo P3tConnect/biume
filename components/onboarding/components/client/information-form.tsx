@@ -17,7 +17,6 @@ import { UseFormReturn } from 'react-hook-form';
 import { useState } from 'react';
 import { z } from 'zod';
 import { clientOnBoardingSchema } from '../stepper-client';
-import { useServerActionMutation } from '@/src/hooks';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { cn } from '@/src/lib';
