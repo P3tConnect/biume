@@ -19,7 +19,10 @@ interface DailyAppointmentsProps {
   selectedDate?: Date;
 }
 
-export function DailyAppointments({ appointments, selectedDate }: DailyAppointmentsProps) {
+export function DailyAppointments({
+  appointments,
+  selectedDate,
+}: DailyAppointmentsProps) {
   const statusStyles = {
     pending: "bg-yellow-100 text-yellow-800",
     confirmed: "bg-green-100 text-green-800",
@@ -27,13 +30,16 @@ export function DailyAppointments({ appointments, selectedDate }: DailyAppointme
   };
 
   return (
-    <ScrollArea className="h-[600px] pr-4">
+    <ScrollArea className="h-[calc(100vh-16rem)] w-full">
       {appointments.length === 0 ? (
         <div className="text-center text-muted-foreground py-4">
-          Aucun rendez-vous prévu pour {selectedDate ? new Intl.DateTimeFormat('fr-FR').format(selectedDate) : "aujourd'hui"}
+          Aucun rendez-vous prévu pour{" "}
+          {selectedDate
+            ? new Intl.DateTimeFormat("fr-FR").format(selectedDate)
+            : "aujourd'hui"}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 pr-4">
           {appointments.map((appointment) => (
             <div
               key={appointment.id}
@@ -67,4 +73,4 @@ export function DailyAppointments({ appointments, selectedDate }: DailyAppointme
       )}
     </ScrollArea>
   );
-} 
+}

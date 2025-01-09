@@ -16,26 +16,32 @@ export const metadata: Metadata = {
 
 const DashboardHomeProPage = () => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      {/* Top Section - Key Metrics */}
       <MetricsWidget />
-      <div className="grid gap-4 lg:grid-cols-12">
-        <div className="lg:col-span-4">
+
+      {/* Main Content Grid */}
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-12">
+        {/* Left Column - Calendar and Appointments */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
           <TimetableWidget />
-        </div>
-        <div className="lg:col-span-4">
-          <UpcomingAppointments />
-        </div>
-        <div className="lg:col-span-4 flex flex-col gap-4">
           <TeamMembersCard />
-          <AverageDailySalesCard />
         </div>
-        <div className="lg:col-span-4">
-          <ClientWithLastProcedure />
-        </div>
-        <div className="lg:col-span-4">
+
+        {/* Middle Column - Activity and Progress */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <UpcomingAppointments />
           <ProgressionWidget />
         </div>
-        <div className="lg:col-span-4">
+
+        {/* Right Column - Business Insights */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <AverageDailySalesCard />
+          <ClientWithLastProcedure />
+        </div>
+
+        {/* Full Width Section - Observations */}
+        <div className="lg:col-span-12">
           <ObservationsWidget />
         </div>
       </div>

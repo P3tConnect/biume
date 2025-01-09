@@ -27,11 +27,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "@/components/ui";
 import TeamList from "./team-list";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus, Users } from "lucide-react";
 
 const TeamPageComponent = () => {
   const schema = z.object({
@@ -47,81 +52,50 @@ const TeamPageComponent = () => {
     },
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {});
+  const onSubmit = form.handleSubmit(async (data) => {
+    // TODO: Implement team member addition logic
+    console.log(data);
+  });
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Équipe</h1>
+          <p className="text-muted-foreground">
+            Gérez les membres de votre équipe et leurs accès
+          </p>
+        </div>
+      </div>
+
       <TeamBudget />
-      <Dialog>
-        <Card>
-          <CardHeader className="flex flex-row items-start justify-between text-center font-bold text-2xl">
-            <CardTitle>Equipe</CardTitle>
-            <DialogTrigger asChild>
-              <Button variant="ghost" className="rounded-xl" size="sm">
-                <p>Ajouter</p>
-              </Button>
-            </DialogTrigger>
-          </CardHeader>
-          <CardContent>
-            <TeamList />
-          </CardContent>
-        </Card>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ajouter un membre à l&apos;équipe</DialogTitle>
-            <DialogDescription>
-              Invitez un nouveau membre à rejoindre votre équipe. Ils recevront
-              une invitation par email.
-            </DialogDescription>
-            <Form {...form}>
-              <form onSubmit={onSubmit} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="member">Membre</SelectItem>
-                          <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="owner">Propriétaire</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <DialogFooter>
-                  <Button type="submit">Ajouter un membre</Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </>
+
+      <Tabs defaultValue="members" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="members" className="gap-2">
+            <Users className="h-4 w-4" />
+            Membres
+          </TabsTrigger>
+          <TabsTrigger value="pending">Invitations en attente</TabsTrigger>
+        </TabsList>
+        <TabsContent value="members">
+          <Card>
+            <CardContent className="p-6">
+              <TeamList />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="pending">
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-muted-foreground text-center py-8">
+                Aucune invitation en attente
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 

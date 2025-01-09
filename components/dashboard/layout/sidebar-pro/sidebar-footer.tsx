@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import { signOut, useSession } from "@/src/lib/auth-client";
+import { signOut, updateUser, useSession } from "@/src/lib/auth-client";
 import {
   BadgeCheck,
   Bell,
@@ -24,10 +24,11 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
+  User2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import Avvvatars from 'avvvatars-react';
+import Avvvatars from "avvvatars-react";
 
 const SidebarFooterComponent = () => {
   const router = useRouter();
@@ -55,7 +56,11 @@ const SidebarFooterComponent = () => {
                 </Avatar>
               ) : (
                 <div className="flex h-8 w-8 items-center justify-center">
-                  <Avvvatars value={session?.user.email || ''} size={32} style="shape" />
+                  <Avvvatars
+                    value={session?.user.email || ""}
+                    size={32}
+                    style="shape"
+                  />
                 </div>
               )}
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -88,7 +93,11 @@ const SidebarFooterComponent = () => {
                   </Avatar>
                 ) : (
                   <div className="flex h-8 w-8 items-center justify-center">
-                    <Avvvatars value={session?.user.email || ''} size={32} style="shape" />
+                    <Avvvatars
+                      value={session?.user.email || ""}
+                      size={32}
+                      style="shape"
+                    />
                   </div>
                 )}
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -132,14 +141,31 @@ const SidebarFooterComponent = () => {
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuItem
+              className="gap-2"
+              onClick={async () => {
+                await updateUser({
+                  isPro: false,
+                });
+                router.push("/dashboard");
+              }}
+            >
+              <User2 size={14} />
+              My personnal account
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2" onClick={() => signOut({
-              fetchOptions: {
-                onSuccess: () => {
-                  router.push("/sign-in")
-                }
+            <DropdownMenuItem
+              className="gap-2"
+              onClick={() =>
+                signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/sign-in");
+                    },
+                  },
+                })
               }
-            })}>
+            >
               <LogOut size={14} />
               Log out
             </DropdownMenuItem>

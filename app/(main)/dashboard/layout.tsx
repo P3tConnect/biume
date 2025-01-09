@@ -8,9 +8,9 @@ const DashboardLayout = async ({
   company: ReactNode;
   client: ReactNode;
 }) => {
-  const session = await currentUser();
+  const user = await currentUser();
 
-  if (session.isPro) {
+  if (user.isPro) {
     return <>{company}</>;
   }
 

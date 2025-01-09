@@ -26,6 +26,7 @@ export * from "./input-otp";
 export * from "./progress";
 export * from "./scroll-area";
 export * from "./select";
+export * from "./tabs";
 export * from "./slider";
 export * from "./switch";
 export * from "./table";
