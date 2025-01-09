@@ -13,6 +13,10 @@ RUN bun install --frozen-lockfile
 # Copier le reste des fichiers
 COPY . .
 
+# Créer un fichier .env.production à partir des variables d'environnement
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+RUN echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY" >
+
 # Build de l'application Next.js
 RUN bun run build
 
