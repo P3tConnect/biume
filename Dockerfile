@@ -1,70 +1,100 @@
-# Étape 1 : Image de base avec Bun
 FROM oven/bun:1-alpine AS base
 
-# Étape 2 : Construction des sources
 FROM base AS builder
 
 WORKDIR /app
 
-# Copier les fichiers nécessaires pour installer les dépendances
-COPY package.json bun.lockb ./
+COPY package.json /
+COPY package-lock.json /
+COPY bun.lockb* ./
 
-# Installer les dépendances
 RUN bun install --frozen-lockfile
 
-# Copier le reste du code source
-COPY . .
+COPY app ./app
+COPY public ./public
+COPY components ./components
+COPY emails ./emails
+COPY src ./src
+COPY next.config.mjs .
+COPY middleware.ts .
+COPY next-auth.d.ts .
+COPY components.json .
+COPY tailwind.config.js .
+COPY tsconfig.json .
+COPY postcss.config.mjs .
+COPY package.json .
+COPY bun.lockb .
+COPY trigger.config.ts .
+COPY drizzle.config.ts .
 
-# Définir les variables d'environnement nécessaires à la compilation
-ARG RESEND_API_KEY
 ARG DATABASE_URL
-ARG NEXT_PUBLIC_APP_URL
+ARG RESEND_API_KEYARG
 ARG TRIGGER_SECRET_KEY
 ARG TRIGGER_PUBLIC_API_KEY
 ARG NEXT_PUBLIC_POSTHOG_KEY
+ARG UPLOADTHING_TOKEN
 ARG NEXT_PUBLIC_POSTHOG_HOST
 ARG STRIPE_SECRET_KEY
 ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ARG BETTER_AUTH_SECRET
 ARG BETTER_AUTH_URL
 
-ENV RESEND_API_KEY=${RESEND_API_KEY}
 ENV DATABASE_URL=${DATABASE_URL}
-ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV RESEND_API_KEYARG=${RESEND_API_KEYARG}
 ENV TRIGGER_SECRET_KEY=${TRIGGER_SECRET_KEY}
 ENV TRIGGER_PUBLIC_API_KEY=${TRIGGER_PUBLIC_API_KEY}
 ENV NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
+ENV UPLOADTHING_TOKEN=${UPLOADTHING_TOKEN}
 ENV NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST}
 ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
 ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
 ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
 ENV BETTER_AUTH_URL=${BETTER_AUTH_URL}
 
-# Construire l'application Next.js
 RUN bun run build
 
-# Étape 3 : Préparer l'image de production
 FROM base AS runner
+
+RUN apk --no-cache add curl
 
 WORKDIR /app
 
-# Installer les dépendances nécessaires à l'exécution
-RUN apk --no-cache add curl
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Ajouter un utilisateur non-root
-RUN addgroup --system --gid 1001 nodejs && \
-  adduser --system --uid 1001 nextjs
 USER nextjs
 
-# Copier les fichiers nécessaires à l'exécution
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
-# Redéfinir les variables d'environnement pour l'exécution
-ENV PORT=4000
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Exposer le port de l'application
-EXPOSE 4000
+ARG DATABASE_URL
+ARG RESEND_API_KEYARG
+ARG TRIGGER_SECRET_KEY
+ARG TRIGGER_PUBLIC_API_KEY
+ARG NEXT_PUBLIC_POSTHOG_KEY
+ARG UPLOADTHING_TOKEN
+ARG NEXT_PUBLIC_POSTHOG_HOST
+ARG STRIPE_SECRET_KEY
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ARG BETTER_AUTH_SECRET
+ARG BETTER_AUTH_URL
 
-# Commande pour démarrer l'application
-CMD ["bun", "run", "build"]
+ENV DATABASE_URL=${DATABASE_URL}
+ENV RESEND_API_KEYARG=${RESEND_API_KEYARG}
+ENV TRIGGER_SECRET_KEY=${TRIGGER_SECRET_KEY}
+ENV TRIGGER_PUBLIC_API_KEY=${TRIGGER_PUBLIC_API_KEY}
+ENV NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
+ENV UPLOADTHING_TOKEN=${UPLOADTHING_TOKEN}
+ENV NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST}
+ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV BETTER_AUTH_URL=${BETTER_AUTH_URL}
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD HOSTNAME=0.0.0.0 node server.js
