@@ -1,7 +1,17 @@
-import React from "react";
+"use client";
 
-const NotificationsStep = () => {
-  return <div>NotificationsStep</div>;
+import ClientNotificationForm from "../components/client/notification-form";
+import React from "react";
+import { clientOnBoardingSchema } from "../components/stepper-client";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+
+const ClientNotificationStep = ({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>>;
+}) => {
+  return <ClientNotificationForm form={form} />;
 };
 
-export default NotificationsStep;
+export default ClientNotificationStep;

@@ -1,12 +1,8 @@
-import React from 'react'
-import ButtonsSection from './buttons-section'
-import MonthSalesWidget from '../../shortcuts/month-sales-widget'
-import MonthExpensesWidget from '../../shortcuts/month-expenses-widget'
-import ReservationRequestWidget from './reservation-request'
-import GraphSalesWidget from './graph-sales-widget'
-import LastClientMonthWidget from './last-clients-month-widget'
-import SalesProWidget from '../../shortcuts/sales-widget'
-import ExpensesProWidget from '../../shortcuts/expenses-widget'
+import ButtonsSection from "./buttons-section";
+import GraphSalesWidget from "./graph-sales-widget";
+import LastClientMonthWidget from "./last-clients-month-widget";
+import React from "react";
+import ReservationRequestWidget from "./reservation-request";
 
 const AccountingPageComponent = () => {
   return (
@@ -14,8 +10,8 @@ const AccountingPageComponent = () => {
       <ButtonsSection />
       <div className="flex flex-col h-full gap-3 mt-3 sm:flex-row items-center justify-center content-center">
         <div className="flex flex-col h-full w-full gap-3 sm:w-1/3">
-          <SalesProWidget />
-          <ExpensesProWidget />
+          {/* <SalesProWidget />
+          <ExpensesProWidget /> */}
           <ReservationRequestWidget />
         </div>
         <div className="flex flex-col gap-3 w-full h-full">
@@ -24,7 +20,7 @@ const AccountingPageComponent = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AccountingPageComponent
+export default AccountingPageComponent;

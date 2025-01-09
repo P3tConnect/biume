@@ -45,15 +45,12 @@ export const organization = pgTable("organizations", {
   createdAt: timestamp("createdAt").notNull(),
   metadata: text("metadata"),
   stripeId: text("stripeId"),
-  onBoardingComplete: boolean("onBoardingComplete").notNull(),
-  openAt: date("openAt").notNull(),
-  closeAt: date("closeAt").notNull(),
-  email: text("email").notNull().unique(),
-  atHome: boolean("atHome").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
+  openAt: date("openAt"),
+  closeAt: date("closeAt"),
+  email: text("email").unique(),
+  atHome: boolean("atHome").notNull().default(false),
   plan: plan("plan").default("NONE"),
-  documentsId: text("documentsId").references(() => organizationDocuments.id, {
-    onDelete: "cascade",
-  }),
   progressionId: text("progressionId").references(() => progression.id, {
     onDelete: "cascade",
   }),
@@ -62,41 +59,43 @@ export const organization = pgTable("organizations", {
   }),
   nac: text("nac"),
   locked: boolean("locked").notNull().default(false),
-  lang: text("lang").default("fr"),
-  updatedAt: timestamp("updatedAt").notNull(),
+  lang: text("lang").notNull().default("fr"),
+  siren: text("siren"),
+  siret: text("siret"),
+  updatedAt: timestamp("updatedAt"),
 });
 
-export const organizationRelations = relations(organization, ({ one, many }) => ({
-  reportTemplates: many(reportTemplate),
-  progression: one(progression, {
-    fields: [organization.progressionId],
-    references: [progression.id],
+export const organizationRelations = relations(
+  organization,
+  ({ one, many }) => ({
+    reportTemplates: many(reportTemplate),
+    progression: one(progression, {
+      fields: [organization.progressionId],
+      references: [progression.id],
+    }),
+    documents: many(organizationDocuments),
+    sessions: many(proSession),
+    cancelPolicies: many(cancelPolicies),
+    projects: many(project),
+    tasks: many(task),
+    ratings: many(ratings),
+    services: many(service),
+    options: many(options),
+    newslettersWritter: many(newsletter),
+    receipts: many(receipt),
+    products: many(product),
+    topics: many(topic),
+    categories: many(category),
+    address: one(organizationAddress, {
+      fields: [organization.addressId],
+      references: [organizationAddress.id],
+    }),
+    transactions: many(transaction),
+    widgets: many(widgets),
+    bgJobs: many(bgJobs),
+    invitations: many(invitation),
   }),
-  documents: one(organizationDocuments, {
-    fields: [organization.documentsId],
-    references: [organizationDocuments.id],
-  }),
-  sessions: many(proSession),
-  cancelPolicies: many(cancelPolicies),
-  projects: many(project),
-  tasks: many(task),
-  ratings: many(ratings),
-  services: many(service),
-  options: many(options),
-  newslettersWritter: many(newsletter),
-  receipts: many(receipt),
-  products: many(product),
-  topics: many(topic),
-  categories: many(category),
-  address: one(organizationAddress, {
-    fields: [organization.addressId],
-    references: [organizationAddress.id],
-  }),
-  transactions: many(transaction),
-  widgets: many(widgets),
-  bgJobs: many(bgJobs),
-  invitations: many(invitation),
-}));
+);
 
 export type Organization = typeof organization.$inferSelect;
 export type CreateOrganization = typeof organization.$inferInsert;

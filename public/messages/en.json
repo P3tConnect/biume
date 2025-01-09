@@ -124,7 +124,8 @@
         "management": "Management",
         "services": "Services",
         "informations": "Informations",
-        "account": "My account"
+        "account": "My account",
+        "other": "Other"
       },
       "dashboard": "Dashboard",
       "calendar": "TimeTable",

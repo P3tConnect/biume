@@ -1,17 +1,18 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
-import Link from "next/link";
-import Image from "next/image";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+
+import { ErrorContext } from "@better-fetch/fetch";
+import Image from "next/image";
+import Link from "next/link";
 import { registerSchema } from "@/src/lib";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { ErrorContext } from "@better-fetch/fetch";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterClientPage = () => {
   const [loading, setLoading] = useState(false);
@@ -26,26 +27,30 @@ const RegisterClientPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      image: "",
-      isPro: false,
-      onBoardingComplete: false
-    }, {
-      onRequest: () => {
-        setLoading(true)
+    await signUp.email(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        image: "",
+        isPro: false,
+        onBoardingComplete: false,
       },
-      onSuccess: () => {
-        router.push("/dashboard")
-      },
-      onError: (error: ErrorContext) => {
-        setLoading(false)
-        console.log(error, "error")
-        toast.error(`Error ${error.error.message}`)
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          toast.success("Inscription réussie");
+          router.push("/dashboard");
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          toast.error(`error: ${error.error.message}`);
+          console.log(error.response);
+        },
       }
-    });
+    );
   });
 
   return (

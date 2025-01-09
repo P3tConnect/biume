@@ -8,6 +8,6 @@ export default defineConfig({
   out: "./src/drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    url: safeConfig.DATABASE_URL,
+    url: "postgresql://pawthera_db_owner:P8OQM9LHxlUp@ep-misty-firefly-a2bm78th.eu-central-1.aws.neon.tech/pawthera_db?sslmode=require",
   },
 });

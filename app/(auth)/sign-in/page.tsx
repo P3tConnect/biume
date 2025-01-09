@@ -3,43 +3,44 @@
 import { Button, Input } from "@/components/ui";
 import { loginSchema } from "@/src/lib";
 import { signIn } from "@/src/lib/auth-client";
-import { ErrorContext } from "@better-fetch/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(
-      loginSchema
-    ),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signIn.email({
-      email: data.email,
-      password: data.password,
-      rememberMe: false,
-    }, {
-      onRequest: () => {
-        setLoading(true)
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
       },
-      onSuccess: () => {
-        router.push("/dashboard")
-      },
-      onError: (error: ErrorContext) => {
-        setLoading(false)
-        console.log(error, "error")
-        toast.error(`Error : ${error.error.message}`)
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
+        },
       }
-    });
+    );
   });
 
   return (

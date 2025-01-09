@@ -5,17 +5,31 @@ import { UploadThingError } from "uploadthing/server";
 const f = createUploadthing();
 
 export const ourFileRouter = {
-  imageUploader: f({ image: { maxFileSize: "4MB" } })
+  documentsUploader: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+    pdf: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
+      // This code runs on your server before upload
       const session = await auth.api.getSession({
         headers: req.headers,
       });
 
-      if (!session) throw new UploadThingError("Unauthorized");
+      // If you throw, the user will not be able to upload
+      if (!session?.user) throw new UploadThingError("Unauthorized");
 
+      // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
+      // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
       console.log("file url", file.url);

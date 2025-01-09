@@ -1,10 +1,7 @@
-import React from 'react'
-import ObservationWidget from '../../shortcuts/observations-widget'
+import React from "react";
 
 const ObservationsPageComponent = () => {
-  return (
-    <ObservationWidget />
-  )
-}
+  return <></>;
+};
 
-export default ObservationsPageComponent
+export default ObservationsPageComponent;
