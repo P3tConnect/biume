@@ -1,15 +1,15 @@
 FROM oven/bun:alpine AS base
 
-# Step 1 - install dependencies
+# Étape 1 : Installer les dépendances
 FROM base AS deps
 WORKDIR /usr/src/app
-COPY package.json ./ 
-COPY bun.lockb ./
+COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 
-# Step 2 - rebuild the app
+# Étape 2 : Construire l'application
 FROM base AS builder
 
+# Définir les variables d'environnement pour la compilation
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
@@ -30,25 +30,26 @@ ENV BETTER_AUTH_URL=$BETTER_AUTH_URL
 
 WORKDIR /usr/src/app
 COPY --from=deps /usr/src/app .
+COPY . . 
+RUN bun run build
 
-RUN bun next build
-
-# Step 3 - copy all the files and run server
+# Étape 3 : Préparer l'image finale
 FROM base AS runner
 
 WORKDIR /usr/src/app
 
-
+# Ajouter un utilisateur non-root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /usr/src/app/ ./public
-
-COPY --from=builder /usr/src/app/.next/standalone ./
-COPY --from=builder /usr/src/app/.next/static ./.next/static
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/.next ./.next
 
 USER nextjs
 
+# Exposer le port
 ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["bun", "run", "start"]
