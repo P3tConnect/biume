@@ -1,87 +1,54 @@
-FROM oven/bun:1-alpine AS base
+FROM oven/bun:alpine AS base
 
-# Step 1. Rebuild the source code only when needed
-FROM base AS builder
-
-WORKDIR /app
-
-# Install dependencies based on the preferred package manager
-COPY /package.json /
-
-# Omit --production flag for TypeScript devDependencies
+# Step 1 - install dependencies
+FROM base AS deps
+WORKDIR /usr/src/app
+COPY package.json ./ 
+COPY bun.lockb ./
 RUN bun install --frozen-lockfile
 
-# Adjust the files and folders that should be copied to the build container
-COPY app ./app
-COPY public ./public
-COPY components ./components
-COPY emails ./emails
-COPY src ./src
-COPY next.config.mjs .
-COPY middleware.ts .
-COPY components.json .
-COPY tailwind.config.js .
-COPY tsconfig.json .
-COPY postcss.config.mjs .
-COPY package.json .
-COPY trigger.config.ts .
-COPY drizzle.config.ts .
-# Environment variables must be present at build time
+# Step 2 - rebuild the app
+FROM base AS builder
+
 ARG DATABASE_URL
-ARG RESEND_API_KEYARG
+ENV DATABASE_URL=$DATABASE_URL
+
+ARG RESEND_API_KEY
+ENV RESEND_API_KEY=$RESEND_API_KEY
+
 ARG TRIGGER_SECRET_KEY
+ENV TRIGGER_SECRET_KEY=$TRIGGER_SECRET_KEY
+
 ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
 ARG BETTER_AUTH_SECRET
+ENV BETTER_AUTH_SECRET=$BETTER_AUTH_SECRET
+
 ARG BETTER_AUTH_URL
+ENV BETTER_AUTH_URL=$BETTER_AUTH_URL
 
-# env
-ENV DATABASE_URL ${DATABASE_URL}
-ENV RESEND_API_KEYARG ${RESEND_API_KEYARG}
-ENV TRIGGER_SECRET_KEY ${TRIGGER_SECRET_KEY}
-ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-ENV BETTER_AUTH_SECRET ${BETTER_AUTH_SECRET}
-ENV BETTER_AUTH_URL ${BETTER_AUTH_URL}
+WORKDIR /usr/src/app
+COPY --from=deps /usr/src/app .
 
-# Build Next.js based on the preferred package manager
-RUN bun run build
+RUN bun next build
 
-# Step 2. Production image, copy all the files and run next
+# Step 3 - copy all the files and run server
 FROM base AS runner
 
-RUN apk --no-cache add curl
-WORKDIR /app
+WORKDIR /usr/src/app
+
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /usr/src/app/ ./public
+
+COPY --from=builder /usr/src/app/.next/standalone ./
+COPY --from=builder /usr/src/app/.next/static ./.next/static
+
 USER nextjs
 
-COPY --from=builder /app/public ./public
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+ENV HOSTNAME "0.0.0.0"
 
-# Environment variables must be redefined at run time
-ARG DATABASE_URL
-ARG RESEND_API_KEYARG
-ARG TRIGGER_SECRET_KEY
-ARG TRIGGER_PUBLIC_API_KEY
-ARG NEXT_PUBLIC_POSTHOG_KEY
-ARG UPLOADTHING_TOKEN
-ARG NEXT_PUBLIC_POSTHOG_HOST
-ARG STRIPE_SECRET_KEY
-ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-ARG BETTER_AUTH_SECRET
-ARG BETTER_AUTH_URL
-# env
-ENV DATABASE_URL ${DATABASE_URL}
-ENV RESEND_API_KEYARG ${RESEND_API_KEYARG}
-ENV TRIGGER_SECRET_KEY ${TRIGGER_SECRET_KEY}
-ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-ENV BETTER_AUTH_SECRET ${BETTER_AUTH_SECRET}
-ENV BETTER_AUTH_URL ${BETTER_AUTH_URL}
-
-EXPOSE 3000
-
-ENV PORT 3000
-
-CMD HOSTNAME=0.0.0.0 bun run start
+CMD ["node", "server.js"]
