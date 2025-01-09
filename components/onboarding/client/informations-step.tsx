@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import ClientInformationForm from "@/components/onboarding/components/client/information-form";
-import React from "react";
-import { clientOnBoardingSchema } from "../components/stepper-client";
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
+import ClientInformationForm from '@/components/onboarding/components/client/information-form';
+import React from 'react';
+import { clientOnBoardingSchema } from '../components/stepper-client';
+import { z } from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 
 const ClientInformationsStep = ({
   form,
