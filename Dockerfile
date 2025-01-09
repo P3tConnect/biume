@@ -4,9 +4,8 @@ FROM base AS builder
 
 WORKDIR /app
 
-COPY package.json /
-COPY package-lock.json /
-COPY bun.lockb* ./
+COPY package.json ./
+COPY bun.lockb ./
 
 RUN bun install --frozen-lockfile
 
@@ -15,16 +14,16 @@ COPY public ./public
 COPY components ./components
 COPY emails ./emails
 COPY src ./src
-COPY next.config.mjs .
-COPY middleware.ts .
-COPY components.json .
-COPY tailwind.config.js .
-COPY tsconfig.json .
-COPY postcss.config.mjs .
-COPY package.json .
-COPY bun.lockb .
-COPY trigger.config.ts .
-COPY drizzle.config.ts .
+COPY next.config.mjs ./
+COPY middleware.ts ./
+COPY components.json ./
+COPY tailwind.config.js ./
+COPY tsconfig.json ./
+COPY postcss.config.mjs ./
+COPY package.json ./
+COPY bun.lockb ./
+COPY trigger.config.ts ./
+COPY drizzle.config.ts ./
 
 ARG DATABASE_URL
 ARG RESEND_API_KEYARG
