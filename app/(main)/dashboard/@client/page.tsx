@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const ClientDashboardHomePage = () => {
-  return (
-    <div>ClientDashboardHomePage</div>
-  )
-}
+  return <div>ClientDashboardHomePage</div>;
+};
 
-export default ClientDashboardHomePage
+export default ClientDashboardHomePage;
