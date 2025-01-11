@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/src/lib/utils";
+import { Clock, Calendar as CalendarIcon } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -12,6 +13,7 @@ interface Appointment {
   duration: number;
   status: "pending" | "confirmed" | "cancelled";
   avatar?: string;
+  notes?: string;
 }
 
 interface DailyAppointmentsProps {
@@ -23,54 +25,81 @@ export function DailyAppointments({
   appointments,
   selectedDate,
 }: DailyAppointmentsProps) {
-  const statusStyles = {
-    pending: "bg-yellow-100 text-yellow-800",
-    confirmed: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
+  const statusConfig = {
+    pending: {
+      label: "En attente",
+      className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    },
+    confirmed: {
+      label: "Confirmé",
+      className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    },
+    cancelled: {
+      label: "Annulé",
+      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+    },
   };
 
   return (
-    <ScrollArea className="h-[calc(100vh-16rem)] w-full">
-      {appointments.length === 0 ? (
-        <div className="text-center text-muted-foreground py-4">
-          Aucun rendez-vous prévu pour{" "}
-          {selectedDate
-            ? new Intl.DateTimeFormat("fr-FR").format(selectedDate)
-            : "aujourd'hui"}
-        </div>
-      ) : (
-        <div className="space-y-4 pr-4">
-          {appointments.map((appointment) => (
-            <div
-              key={appointment.id}
-              className="flex items-center space-x-4 rounded-lg border p-3 hover:bg-accent/50 transition-colors"
-            >
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={appointment.avatar} />
-                <AvatarFallback>
-                  {appointment.clientName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  {appointment.clientName}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {appointment.time} ({appointment.duration} min)
-                </p>
+    <ScrollArea className="h-[calc(100vh-7rem)]">
+      <div className="px-3 py-2">
+        {appointments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <CalendarIcon className="h-10 w-10 text-muted-foreground/50" />
+            <p className="mt-3 text-sm text-muted-foreground">
+              Aucun rendez-vous prévu pour{" "}
+              {selectedDate
+                ? new Intl.DateTimeFormat("fr-FR").format(selectedDate)
+                : "aujourd'hui"}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {appointments.map((appointment) => (
+              <div
+                key={appointment.id}
+                className="group relative flex flex-col space-y-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-9 w-9 border">
+                      <AvatarImage src={appointment.avatar} />
+                      <AvatarFallback className="bg-primary/10">
+                        {appointment.clientName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium leading-none">
+                        {appointment.clientName}
+                      </p>
+                      <div className="mt-1.5 flex items-center text-xs text-muted-foreground">
+                        <Clock className="mr-1 h-3 w-3" />
+                        <span>
+                          {appointment.time} ({appointment.duration} min)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <Badge className={cn("ml-auto text-xs", statusConfig[appointment.status].className)}>
+                    {statusConfig[appointment.status].label}
+                  </Badge>
+                </div>
+                {appointment.notes && (
+                  <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
+                    {appointment.notes}
+                  </p>
+                )}
+                <div className="absolute right-3 top-3 flex opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Actions buttons could be added here */}
+                </div>
               </div>
-              <Badge className={cn(statusStyles[appointment.status])}>
-                {appointment.status === "pending" && "En attente"}
-                {appointment.status === "confirmed" && "Confirmé"}
-                {appointment.status === "cancelled" && "Annulé"}
-              </Badge>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </ScrollArea>
   );
 }

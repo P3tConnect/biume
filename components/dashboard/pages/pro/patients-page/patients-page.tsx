@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import React from "react";
 import {
@@ -20,14 +22,25 @@ import {
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Dog, Cat, Bird, House, Search, Plus, MoreHorizontal, Filter } from "lucide-react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Define the type for our patient data
 type Patient = {
@@ -170,12 +183,35 @@ const patients: Patient[] = [
   },
 ];
 
+// Nouvelles statistiques
+const stats = [
+  {
+    label: "Total Patients",
+    value: patients.length,
+    icon: Dog,
+  },
+  {
+    label: "Chiens",
+    value: patients.filter(p => p.type === "Dog").length,
+    icon: Dog,
+  },
+  {
+    label: "Chats",
+    value: patients.filter(p => p.type === "Cat").length,
+    icon: Cat,
+  },
+  {
+    label: "Autres",
+    value: patients.filter(p => !["Dog", "Cat"].includes(p.type)).length,
+    icon: Bird,
+  },
+];
+
 const PatientsPageComponent = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [activeTab, setActiveTab] = React.useState("all");
 
   const columns: ColumnDef<Patient>[] = [
     {
@@ -192,7 +228,14 @@ const PatientsPageComponent = () => {
         );
       },
       cell: ({ row }) => (
-        <div className="font-medium">{row.getValue("name")}</div>
+        <div className="flex items-center gap-2">
+          <div className="font-medium">{row.getValue("name")}</div>
+          {row.original.type === "NAC" && (
+            <Badge variant="secondary" className="text-xs">
+              {row.original.nacType}
+            </Badge>
+          )}
+        </div>
       ),
     },
     {
@@ -200,17 +243,23 @@ const PatientsPageComponent = () => {
       header: "Type",
       cell: ({ row }) => {
         const type = row.getValue("type") as string;
-        const nacType = row.original.nacType;
-        return nacType ? `${type} (${nacType})` : type;
+        return (
+          <div className="flex items-center gap-2">
+            {type === "Dog" && <Dog className="w-4 h-4" />}
+            {type === "Cat" && <Cat className="w-4 h-4" />}
+            {type === "Bird" && <Bird className="w-4 h-4" />}
+            {type === "Horse" && <House className="w-4 h-4" />}
+            <span>{type}</span>
+          </div>
+        );
       },
     },
     {
       accessorKey: "weight",
       header: "Poids (kg)",
-    },
-    {
-      accessorKey: "height",
-      header: "Taille (cm)",
+      cell: ({ row }) => (
+        <div className="font-mono">{row.getValue("weight")} kg</div>
+      ),
     },
     {
       accessorKey: "birthDate",
@@ -225,22 +274,41 @@ const PatientsPageComponent = () => {
           </Button>
         );
       },
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("birthDate"));
+        return new Intl.DateTimeFormat("fr-FR").format(date);
+      },
     },
     {
       accessorKey: "ownerName",
       header: "Propriétaire",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            {row.getValue<string>("ownerName").charAt(0)}
+          </div>
+          <div>{row.getValue("ownerName")}</div>
+        </div>
+      ),
     },
     {
-      accessorKey: "createdAt",
-      header: ({ column }) => {
+      id: "actions",
+      cell: ({ row }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Date d'inscription
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem>Voir le dossier</DropdownMenuItem>
+              <DropdownMenuItem>Nouvelle consultation</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -254,17 +322,6 @@ const PatientsPageComponent = () => {
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    filterFns: {
-      nameOrOwner: (row, columnId, filterValue) => {
-        const name = row.getValue("name") as string;
-        const owner = row.getValue("ownerName") as string;
-        const search = filterValue.toLowerCase();
-        return (
-          name.toLowerCase().includes(search) ||
-          owner.toLowerCase().includes(search)
-        );
-      },
-    },
     state: {
       sorting,
       columnFilters,
@@ -273,84 +330,137 @@ const PatientsPageComponent = () => {
   });
 
   return (
-    <Card className="w-full h-full rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold dark:text-gray-200 text-gray-700">
-          Mes Patients
-        </CardTitle>
-        <div className="flex items-center gap-4 py-4">
-          <Input
-            placeholder="Rechercher par nom ou propriétaire..."
-            value={globalFilter}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-          />
-          <Select
-            value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
-            onValueChange={(value) =>
-              table.getColumn("type")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filtrer par type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">Tous</SelectItem>
-              <SelectItem value="Dog">Chien</SelectItem>
-              <SelectItem value="Cat">Chat</SelectItem>
-              <SelectItem value="Bird">Oiseau</SelectItem>
-              <SelectItem value="Horse">Cheval</SelectItem>
-              <SelectItem value="NAC">NAC</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {stats.map((stat, index) => (
+          <Card key={index}>
+            <CardContent className="flex items-center p-6">
+              <div className="flex items-center space-x-4">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <stat.icon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {stat.label}
+                  </p>
+                  <h3 className="text-2xl font-bold">{stat.value}</h3>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="w-full rounded-xl shadow-sm">
+        <CardHeader className="pb-0">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl font-semibold">
+              Mes Patients
+            </CardTitle>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Nouveau patient
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Ajouter un nouveau patient</DialogTitle>
+                  <DialogDescription>
+                    Formulaire d'ajout de patient à implémenter
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+            <div className="flex items-center justify-between">
+              <TabsList>
+                <TabsTrigger value="all">Tous</TabsTrigger>
+                <TabsTrigger value="dogs">Chiens</TabsTrigger>
+                <TabsTrigger value="cats">Chats</TabsTrigger>
+                <TabsTrigger value="others">Autres</TabsTrigger>
+              </TabsList>
+
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Rechercher..."
+                    value={globalFilter}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    className="pl-8 w-[250px]"
+                  />
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Filter className="h-4 w-4" />
+                      Filtres
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
+                    <DropdownMenuItem>Date d'inscription</DropdownMenuItem>
+                    <DropdownMenuItem>Âge</DropdownMenuItem>
+                    <DropdownMenuItem>Type</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            <TabsContent value="all" className="mt-6">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                        </TableHead>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Aucun résultat.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow key={row.id} className="cursor-pointer hover:bg-muted/50">
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        Aucun résultat.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TabsContent>
+          </Tabs>
+        </CardHeader>
+      </Card>
+    </div>
   );
 };
 

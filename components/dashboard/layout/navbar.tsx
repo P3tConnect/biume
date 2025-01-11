@@ -1,7 +1,6 @@
 import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
 import { SidebarToggle } from "./sidebar-toggle";
-import { useSidebarToggleStore } from "@/src/hooks/useSidebarToggle";
 import SearchButton from "./search-button";
 import { Menu } from "@/src/config/menu-list";
 import NewShortcut from "./new-shortcut";
@@ -30,7 +29,6 @@ export function Navbar({ menu }: NavbarProps) {
       <div className="mx-2 flex items-center justify-between gap-2 w-full h-14 lg:mx-4 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-5 lg:flex lg:items-center lg:justify-between">
           <SidebarToggle />
-          <h1 className="font-bold">{t(menu.label)}</h1>
           <NewShortcut />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-2">

@@ -8,6 +8,7 @@ import { UpcomingAppointments } from "@/components/dashboard/shortcuts/upcoming-
 import AverageDailySalesCard from "@/components/dashboard/shortcuts/average-daily-sales";
 import { ProgressionWidget } from "@/components/dashboard/shortcuts/progression-widget";
 import { ObservationsWidget } from "@/components/dashboard/shortcuts/observations-widget";
+import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/dashboard-home-header";
 
 export const metadata: Metadata = {
   title: "Home - Dashboard",
@@ -18,6 +19,7 @@ const DashboardHomeProPage = () => {
   return (
     <div className="flex flex-col gap-4">
       {/* Top Section - Key Metrics */}
+      <DashboardHomeHeader />
       <MetricsWidget />
 
       {/* Main Content Grid */}

@@ -294,9 +294,9 @@ const Calendar: React.FC = () => {
   // };
 
   return (
-    <div className="p-2 rounded-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center px-2 py-3">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white md:text-2xl">
           {currentDate.toLocaleString("default", {
             month: "long",
             year: "numeric",
@@ -307,7 +307,7 @@ const Calendar: React.FC = () => {
             onClick={handlePrevMonth}
             variant="ghost"
             size="icon"
-            className="h-9 w-9 rounded-xl border border-border/40 hover:border-secondary hover:bg-secondary/5 hover:text-secondary transition-colors"
+            className="h-10 w-10 rounded-xl border border-border/40 hover:border-secondary hover:bg-secondary/5 hover:text-secondary transition-colors"
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
@@ -315,53 +315,38 @@ const Calendar: React.FC = () => {
             onClick={handleNextMonth}
             variant="ghost"
             size="icon"
-            className="h-9 w-9 rounded-xl border border-border/40 hover:border-secondary hover:bg-secondary/5 hover:text-secondary transition-colors"
+            className="h-10 w-10 rounded-xl border border-border/40 hover:border-secondary hover:bg-secondary/5 hover:text-secondary transition-colors"
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
       </div>
-      {/* <div className="flex justify-between items-center">
-        <FilterEvents
-          setFilter={setFilter}
-          filteredEvents={filteredEvents}
-          onEventClick={handleFilteredEventClick}
-        />
-        <div className="flex space-x-2">
-          <Button
-            onClick={() => handleExport("json")}
-            variant="outline"
-            size="sm"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export JSON
-          </Button>
-          <Button
-            onClick={() => handleExport("csv")}
-            variant="outline"
-            size="sm"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
-        </div>
-      </div> */}
+
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-7 gap-4">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <div
-              key={day}
-              className={`text-center font-semibold p-2 ${
-                day === "Sun" || day === "Sat"
-                  ? "text-red-500"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-            >
-              {day}
-            </div>
-          ))}
+        <div className="grid grid-cols-7 gap-2 p-4">
+          <div className="col-span-7 grid grid-cols-7 gap-2 mb-2">
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              <div
+                key={day}
+                className={cn(
+                  "text-center font-medium p-1 text-xs md:text-sm",
+                  day === "Sun" || day === "Sat"
+                    ? "text-red-500"
+                    : "text-gray-600 dark:text-gray-300"
+                )}
+              >
+                {day}
+              </div>
+            ))}
+          </div>
           {Array.from({ length: firstDayOfMonth }, (_, i) => (
-            <div key={`empty-${i}`} className="p-2"></div>
+            <div
+              key={`empty-${i}`}
+              className={cn(
+                "relative rounded-xl border-[1.5px] border-border/20 dark:border-gray-700/20",
+                "h-[calc((100vh-18rem)/6)] min-h-[120px]"
+              )}
+            />
           ))}
           {Array.from({ length: daysInMonth }, (_, i) => {
             const day = i + 1;
@@ -391,19 +376,20 @@ const Calendar: React.FC = () => {
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     className={cn(
-                      "relative h-32 overflow-y-auto rounded-xl p-2 transition-all duration-200 ease-in-out",
+                      "relative overflow-y-auto rounded-xl p-1.5 md:p-2 transition-all duration-200 ease-in-out",
+                      "h-[calc((100vh-18rem)/6)] min-h-[120px]",
                       "border-[1.5px] border-border/60 hover:border-border",
                       "dark:border-gray-700 dark:hover:border-gray-600",
                       "[&:has(>div)]:hover:ring-2 [&:has(>div)]:hover:ring-secondary/20",
                       isToday &&
-                        "bg-primary/5 ring-2 ring-primary border-primary/50",
+                      "bg-primary/5 ring-2 ring-primary border-primary/50",
                       isSelected &&
-                        "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
+                      "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
                       isWeekend
                         ? "bg-muted/80 border-muted/80 dark:bg-muted/60 dark:border-muted/60"
                         : "bg-card/50",
                       snapshot.isDraggingOver &&
-                        "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
+                      "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
                       "backdrop-blur-[2px]",
                       "group cursor-pointer shadow-sm",
                     )}
@@ -411,14 +397,14 @@ const Calendar: React.FC = () => {
                   >
                     <div
                       className={cn(
-                        "text-sm font-medium mb-1",
+                        "text-base font-semibold mb-2",
                         "group-hover:text-secondary",
                         isToday && "text-primary",
                         isSelected && "text-secondary",
                         isWeekend &&
-                          !isSelected &&
-                          !isToday &&
-                          "text-foreground/70 dark:text-foreground/50",
+                        !isSelected &&
+                        !isToday &&
+                        "text-foreground/70 dark:text-foreground/50",
                       )}
                     >
                       {day}
@@ -440,7 +426,7 @@ const Calendar: React.FC = () => {
                               "transition-all duration-200",
                               "hover:ring-2 hover:ring-secondary/20",
                               snapshot.isDragging &&
-                                "ring-2 ring-secondary opacity-70 rotate-2 scale-105",
+                              "ring-2 ring-secondary opacity-70 rotate-2 scale-105",
                             )}
                           >
                             {event.title}
@@ -461,8 +447,8 @@ const Calendar: React.FC = () => {
         onClose={() => setIsSideDrawerOpen(false)}
         selectedDate={selectedDate}
         events={selectedDate ? events[selectedDate.toDateString()] || [] : []}
-        onAddEvent={() => {}}
-        onEditEvent={() => {}}
+        onAddEvent={() => { }}
+        onEditEvent={() => { }}
         onDeleteEvent={(event) => handleDeleteEvent(event.id)}
         onSaveEvent={handleSaveEvent}
         existingEvents={

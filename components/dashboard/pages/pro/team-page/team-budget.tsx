@@ -68,7 +68,7 @@ const TeamBudget = () => {
   const maxMembers = 10;
 
   return (
-    <Card className="bg-gradient-to-br from-primary to-primary/90 text-primary-foreground overflow-hidden">
+    <Card className="text-primary-foreground overflow-hidden">
       <CardContent className="p-0">
         <div className="flex flex-col lg:flex-row">
           {/* Left section */}
@@ -111,7 +111,7 @@ const TeamBudget = () => {
           </div>
 
           {/* Right section */}
-          <div className="lg:w-72 bg-black/10 p-6 flex flex-col items-center justify-center space-y-4">
+          <div className="lg:w-72 bg-primary p-6 flex flex-col items-center justify-center space-y-4">
             <CircularProgress value={activeMembers} max={maxMembers} />
             <div className="text-center space-y-1">
               <div className="flex items-center justify-center gap-2">

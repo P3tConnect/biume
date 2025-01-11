@@ -58,6 +58,7 @@ import {
 import CountAnimation from "@/components/magicui/count-animation";
 import { ClientForm } from "./client-form";
 import { ClientDetails } from "./client-details";
+import ClientsHeader from "./clients-header";
 
 // Define the type for our client data
 type Client = {
@@ -508,7 +509,8 @@ const ClientsPageComponent = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      <ClientsHeader />
       <ClientMetrics />
 
       <Card className="rounded-xl">
@@ -529,9 +531,9 @@ const ClientsPageComponent = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   ))}
                 </TableRow>

@@ -12,12 +12,16 @@ import {
   Ticket,
   Timer,
   UsersRound,
+  FileText,
+  Receipt,
+  PieChart,
 } from "lucide-react";
 
 type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  icon: LucideIcon;
 };
 
 export type Menu = {
@@ -60,9 +64,29 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
         {
           href: `/dashboard/${companyId}/accounting`,
           label: "dashboard.sidebar.accounting",
-          active: pathname == `/dashboard/${companyId}/accounting`,
+          active: pathname.startsWith(`/dashboard/${companyId}/accounting`),
           icon: FolderOpen,
-          submenus: [],
+          submenus: [
+            {
+              href: `/dashboard/${companyId}/accounting/quotes`,
+              label: "dashboard.sidebar.quotes",
+              active: pathname === `/dashboard/${companyId}/accounting/quotes`,
+              icon: FileText,
+            },
+            {
+              href: `/dashboard/${companyId}/accounting/invoices`,
+              label: "dashboard.sidebar.invoices",
+              active:
+                pathname === `/dashboard/${companyId}/accounting/invoices`,
+              icon: Receipt,
+            },
+            {
+              href: `/dashboard/${companyId}/accounting/reports`,
+              label: "dashboard.sidebar.financialReports",
+              active: pathname === `/dashboard/${companyId}/accounting/reports`,
+              icon: PieChart,
+            },
+          ],
         },
         {
           href: `/dashboard/${companyId}/team`,
