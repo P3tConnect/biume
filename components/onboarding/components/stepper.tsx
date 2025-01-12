@@ -33,6 +33,43 @@ const Stepper = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const skipOnboarding = async () => {
+    try {
+      // Créer une organisation minimale
+      const result = await organizationUtil.create({
+        name: "Mon entreprise",
+        slug: "mon-entreprise",
+        metadata: {},
+        userId: session?.user.id,
+      });
+
+      // Définir l'organisation comme active
+      await organizationUtil.setActive({
+        organizationId: result.data?.id as string,
+      });
+
+      // Marquer l'onboarding comme terminé
+      await db.update(organizationTable).set({
+        onBoardingComplete: true,
+      }).where(eq(organizationTable.id, result.data?.id as string)).execute();
+
+      // Mettre à jour l'utilisateur comme pro
+      await updateUser({
+        isPro: true,
+      });
+
+      // Rediriger vers le dashboard
+      router.push(`/dashboard/${result.data?.id}`);
+      toast.success("Configuration rapide terminée !");
+    } catch (error) {
+      console.error("Erreur lors du skip:", error);
+      toast.error("Une erreur est survenue", {
+        description: "Veuillez réessayer plus tard",
+        duration: 5000,
+      });
+    }
+  };
+
   const form = useForm<z.infer<typeof onboardingSchema>>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
@@ -185,9 +222,18 @@ const Stepper = () => {
         {!stepper.isLast ? (
           <div className="flex justify-end gap-4">
             {stepper.isFirst ? (
-              <DialogClose asChild>
-                <Button variant="outline" className="rounded-xl">Fermer</Button>
-              </DialogClose>
+              <>
+                <DialogClose asChild>
+                  <Button variant="outline" className="rounded-xl">Fermer</Button>
+                </DialogClose>
+                <Button
+                  variant="ghost"
+                  className="rounded-xl"
+                  onClick={skipOnboarding}
+                >
+                  Passer la configuration
+                </Button>
+              </>
             ) : (
               <Button
                 variant="outline"

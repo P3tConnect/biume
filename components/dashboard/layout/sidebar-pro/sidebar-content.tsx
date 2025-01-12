@@ -14,7 +14,7 @@ import {
 import { proMenuList } from "@/src/config";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
@@ -35,49 +35,55 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
           <SidebarGroupContent>
             <SidebarMenu>
               {menus.map(({ active, href, icon: Icon, label, submenus }) => (
-                <SidebarMenuItem key={label}>
+                <div key={label}>
                   {submenus && submenus.length > 0 ? (
-                    <Collapsible>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip={t(label)} isActive={active}>
-                          <Icon />
-                          <span>{t(label)}</span>
-                          <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {submenus.map((submenu) => (
-                            <SidebarMenuSubItem key={submenu.label}>
-                              <SidebarMenuSubButton
-                                href={submenu.href}
-                                isActive={submenu.active}
-                              >
-                                <submenu.icon className="h-4 w-4 shrink-0 stroke-[1]" />
-                                <span>{t(submenu.label)}</span>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
+                    <Collapsible asChild key={label} className="group/collapsible">
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton tooltip={t(label)} isActive={active}>
+                            <Icon />
+                            <span>{t(label)}</span>
+                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {submenus.map((submenu) => (
+                              <SidebarMenuSubItem key={submenu.label}>
+                                <SidebarMenuSubButton
+                                  href={submenu.href}
+                                  isActive={submenu.active}
+                                  asChild
+                                >
+                                  <a href={submenu.href}>
+                                    <submenu.icon className="h-4 w-4 shrink-0 stroke-[1]" />
+                                    <span>{t(submenu.label)}</span>
+                                  </a>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
                     </Collapsible>
                   ) : (
-                    <SidebarMenuButton
-                      tooltip={t(label)}
-                      asChild
-                      isActive={active}
-                    >
-                      <a href={href}>
-                        <Icon />
-                        <span>{t(label)}</span>
-                      </a>
-                    </SidebarMenuButton>
+                    <SidebarMenuItem key={label}>
+                      <SidebarMenuButton
+                        tooltip={t(label)}
+                        asChild
+                        isActive={active}
+                      >
+                        <a href={href}>
+                          <Icon />
+                          <span>{t(label)}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   )}
-                </SidebarMenuItem>
+                </div>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup >
       ))}
     </>
   );

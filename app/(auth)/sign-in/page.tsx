@@ -31,8 +31,9 @@ const LoginPage = () => {
         onRequest: () => {
           setLoading(true);
         },
-        onSuccess: () => {
-          router.push("/dashboard");
+        onSuccess: (ctx) => {
+          console.log(ctx, "ctx");
+          router.push(`/dashboard/client/${ctx.data.id}`);
         },
         onError: (error: ErrorContext) => {
           setLoading(false);

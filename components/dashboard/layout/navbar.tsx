@@ -2,7 +2,6 @@ import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
 import { SidebarToggle } from "./sidebar-toggle";
 import SearchButton from "./search-button";
-import { Menu } from "@/src/config/menu-list";
 import NewShortcut from "./new-shortcut";
 import Notifications from "./notifications";
 import {
@@ -11,18 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Button,
-  Skeleton,
 } from "@/components/ui";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 
-interface NavbarProps {
-  menu: Menu;
-}
-
-export function Navbar({ menu }: NavbarProps) {
-  const t = useTranslations();
+export function Navbar() {
 
   return (
     <header className="top-0 flex w-full mb-3 bg-card border border-border shadow rounded-2xl">

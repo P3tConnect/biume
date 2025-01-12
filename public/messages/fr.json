@@ -120,6 +120,7 @@
   },
   "dashboard": {
     "sidebar": {
+      "home": "Accueil",
       "groupLabels": {
         "management": "Gestion",
         "services": "Services",
