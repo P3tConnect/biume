@@ -6,6 +6,10 @@ import { ZSAError } from "zsa";
 import { informationsSchema } from "@/components/onboarding/components/pro/informations-form";
 import { z } from "zod";
 import { headers } from "next/headers";
+import { organization } from "../db";
+import { CreateOrganizationSchema } from "../db";
+import { db } from "../lib";
+import { eq } from "drizzle-orm";
 
 const updateOrganizationSchema = z.object({
   id: z.string(),
@@ -35,5 +39,30 @@ export const createOrganization = authedAction
   });
 
 export const updateOrganization = ownerAction
-  .input(updateOrganizationSchema)
-  .handler(async ({ input, ctx }) => {});
+  .input(CreateOrganizationSchema)
+  .handler(async ({ input }) => {
+    const data = await db
+      .update(organization)
+      .set({
+        name: input.name,
+        email: input.email,
+        description: input.description,
+        logo: input.logo,
+        addressId: input.addressId,
+        openAt: input.openAt,
+        closeAt: input.closeAt,
+        atHome: input.atHome,
+        nac: input.nac,
+        siren: input.siren,
+        siret: input.siret,
+      })
+      .where(eq(organization.id, input.id))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ZSAError("ERROR", "Organization not updated");
+    }
+
+    return data;
+  });

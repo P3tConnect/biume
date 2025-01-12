@@ -55,7 +55,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                                   asChild
                                 >
                                   <a href={submenu.href}>
-                                    <submenu.icon className="h-4 w-4 shrink-0 stroke-[1]" />
+                                    <submenu.icon className="h-4 w-4 shrink-0 stroke-[2]" />
                                     <span>{t(submenu.label)}</span>
                                   </a>
                                 </SidebarMenuSubButton>

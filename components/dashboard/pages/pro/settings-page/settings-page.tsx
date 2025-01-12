@@ -8,7 +8,7 @@ import { TeamSection } from "./sections/team-section";
 
 const SettingsPageComponent = () => {
   return (
-    <div className="container mx-auto py-6">
+    <div className="container py-2">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Paramètres de l'organisation</h1>
         <p className="text-muted-foreground">
