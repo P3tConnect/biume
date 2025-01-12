@@ -1,7 +1,6 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, UseFormReturn } from "react-hook-form"
+import { UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
@@ -15,7 +14,6 @@ import {
     FormDescription,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useUploadThing } from "@/src/lib/uploadthing"
@@ -47,8 +45,6 @@ const kybFormSchema = z.object({
             "La taille maximale par fichier est de 5MB")
 })
 
-type KybFormValues = z.infer<typeof kybFormSchema>
-
 export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
     return (
         <Form {...form}>
@@ -61,7 +57,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                             <FormLabel>Documents justificatifs</FormLabel>
                             <FormControl>
                                 <DropzoneInput
-                                    onFilesChanged={(files) => form.watch("documents", files)}
+                                    onFilesChanged={(files) => form.setValue("documents", files)}
                                     value={field.value ?? []}
                                 />
                             </FormControl>

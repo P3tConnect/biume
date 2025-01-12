@@ -1,9 +1,7 @@
 import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
 import { SidebarToggle } from "./sidebar-toggle";
-import { useSidebarToggleStore } from "@/src/hooks/useSidebarToggle";
 import SearchButton from "./search-button";
-import { Menu } from "@/src/config/menu-list";
 import NewShortcut from "./new-shortcut";
 import Notifications from "./notifications";
 import {
@@ -12,25 +10,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Button,
-  Skeleton,
 } from "@/components/ui";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 
-interface NavbarProps {
-  menu: Menu;
-}
-
-export function Navbar({ menu }: NavbarProps) {
-  const t = useTranslations();
+export function Navbar() {
 
   return (
     <header className="top-0 flex w-full mb-3 bg-card border border-border shadow rounded-2xl">
       <div className="mx-2 flex items-center justify-between gap-2 w-full h-14 lg:mx-4 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-5 lg:flex lg:items-center lg:justify-between">
           <SidebarToggle />
-          <h1 className="font-bold">{t(menu.label)}</h1>
           <NewShortcut />
         </div>
         <div className="hidden lg:flex items-center justify-end gap-2">

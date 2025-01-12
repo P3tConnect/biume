@@ -127,9 +127,13 @@
         "account": "My account",
         "other": "Other"
       },
+      "home": "Home",
       "dashboard": "Dashboard",
       "calendar": "TimeTable",
       "accounting": "Accounting",
+      "quotes": "Quotes",
+      "invoices": "Invoices",
+      "financialReports": "Financial Reports",
       "team": "Team",
       "reminders": "Reminders",
       "clients": "Clients",

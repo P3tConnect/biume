@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +14,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useActiveOrganization, useListOrganizations } from "@/src/lib/auth-client";
 import { Building, ChevronsUpDown, Plus } from "lucide-react";
+import Image from "next/image";
+
 
 const SidebarHeaderComponent = () => {
+
+  const { data: activeOrganization } = useActiveOrganization();
+  const { data: organizations } = useListOrganizations();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -22,11 +31,11 @@ const SidebarHeaderComponent = () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg">
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Building className="size-4" />
+                {activeOrganization?.logo ? <Image src={activeOrganization?.logo ?? ""} alt={activeOrganization?.name ?? ""} width={32} height={32} /> : <Building className="size-4" />}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Patenron</span>
-                <span className="truncate text-xs">Patenron</span>
+                <span className="truncate font-semibold">{activeOrganization?.name}</span>
+                <span className="truncate text-xs">{activeOrganization?.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -39,24 +48,18 @@ const SidebarHeaderComponent = () => {
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Companies
             </DropdownMenuLabel>
-            <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Building className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Acme Inc.</span>
-                <span className="truncate text-xs">Acme Inc.</span>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-secondary text-sidebar-secondary-foreground">
-                <Building className="size-4 text-black" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Acme Corp.</span>
-                <span className="truncate text-xs">Acme Corp.</span>
-              </div>
-            </DropdownMenuItem>
+
+            {organizations?.map((orgs, index) => (
+              <DropdownMenuItem key={index} className="flex flex-row gap-2 items-center justify-start w-full">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  {orgs.logo ? <Image src={orgs.logo} alt={orgs.name} className="object-cover rounded-lg" width={32} height={32} /> : <Building className="size-4" />}
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{orgs.name}</span>
+                  <span className="truncate text-xs">{orgs.slug}</span>
+                </div>
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuSeparator className="mx-1" />
             <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
               <div className="flex aspect-square size-6 items-center justify-center rounded-lg bg-gray-300/30 text-sidebar-accent-foreground">
