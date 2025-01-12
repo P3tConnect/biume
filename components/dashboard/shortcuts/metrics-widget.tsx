@@ -1,4 +1,5 @@
 // import CountAnimation from "@/components/magicui/count-animation";
+import CountAnimation from "@/components/magicui/count-animation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import {
   CalendarIcon,
@@ -23,7 +24,7 @@ const MetricsWidget = () => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold">
-              {/* <CountAnimation number={2350} /> */}
+              <CountAnimation number={2350} />
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+20.1%</span> from last month
@@ -39,7 +40,7 @@ const MetricsWidget = () => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold">
-              {/* <CountAnimation number={145} /> */}
+              <CountAnimation number={145} />
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+180.1%</span> from last month
@@ -55,7 +56,7 @@ const MetricsWidget = () => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold">
-              {/* <CountAnimation number={89} /> */}
+              <CountAnimation number={89} />
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-red-600">-19%</span> from last month
@@ -71,7 +72,7 @@ const MetricsWidget = () => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold">
-              {/* $<CountAnimation number={9583} /> */}
+              $<CountAnimation number={9583} />
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+20.1%</span> from last month
