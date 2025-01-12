@@ -40,9 +40,9 @@ const RegisterClientPage = () => {
         onRequest: () => {
           setLoading(true);
         },
-        onSuccess: () => {
+        onSuccess: (ctx) => {
           toast.success("Inscription réussie ! Vous allez être redirigé ...");
-          router.push("/dashboard");
+          router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
         onError: (error: ErrorContext) => {
           setLoading(false);

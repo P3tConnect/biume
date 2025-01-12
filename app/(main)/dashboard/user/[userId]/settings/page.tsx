@@ -1,10 +1,7 @@
-import ClientDashboardSettingsComponent from '@/components/dashboard/pages/client/settings-page/settings-page'
-import React from 'react'
+import React from 'react';
 
 const ClientDashboardSettingsPage = () => {
-  return (
-    <ClientDashboardSettingsComponent />
-  )
-}
+  return <div>ClientDashboardSettingsPage</div>;
+};
 
-export default ClientDashboardSettingsPage
+export default ClientDashboardSettingsPage;

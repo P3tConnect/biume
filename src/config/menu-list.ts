@@ -173,21 +173,23 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
 }
 
 export function clientMenuList(pathname: string): Group[] {
+  const userId = pathname.split('/')[3];
+
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/dashboard`,
+          href: `/dashboard/user/${userId}`,
           label: "dashboard.sidebar.dashboard",
-          active: pathname == `/dashboard`,
+          active: pathname === `/dashboard/user/${userId}`,
           icon: LayoutGrid,
           submenus: [],
         },
         {
-          href: `/dashboard/timetable`,
+          href: `/dashboard/user/${userId}/timetable`,
           label: "dashboard.sidebar.calendar",
-          active: pathname == `/dashboard/timetable`,
+          active: pathname === `/dashboard/user/${userId}/timetable`,
           icon: Calendar,
           submenus: [],
         },
@@ -197,23 +199,23 @@ export function clientMenuList(pathname: string): Group[] {
       groupLabel: "dashboard.sidebar.groupLabels.account",
       menus: [
         {
-          href: `/dashboard/reservations`,
+          href: `/dashboard/user/${userId}/reservations`,
           label: "dashboard.sidebar.reservations",
-          active: pathname == `/dashboard/reservations`,
+          active: pathname === `/dashboard/user/${userId}/reservations`,
           icon: Ticket,
           submenus: [],
         },
         {
-          href: `/dashboard/pets`,
+          href: `/dashboard/user/${userId}/pets`,
           label: "dashboard.sidebar.animals",
-          active: pathname == `/dashboard/pets`,
+          active: pathname === `/dashboard/user/${userId}/pets`,
           icon: PawPrint,
           submenus: [],
         },
         {
-          href: "/dashboard/settings",
+          href: `/dashboard/user/${userId}/settings`,
           label: "dashboard.sidebar.settings",
-          active: pathname == "/dashboard/settings",
+          active: pathname === `/dashboard/user/${userId}/settings`,
           icon: UsersRound,
           submenus: [],
         },

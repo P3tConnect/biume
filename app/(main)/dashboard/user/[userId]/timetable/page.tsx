@@ -1,9 +1,7 @@
-import ClientDashboardTimeTableComponent from "@/components/dashboard/pages/client/timetable-page/timetable-client-page"
+import ClientDashboardTimeTableComponent from '@/components/dashboard/pages/user/timetable-page/timetable-client-page';
 
-const ClientDashboardTimeTablePage = () => {
-  return (
-    <ClientDashboardTimeTableComponent />
-  )
-}
+const ClientDashboardTimeTablePage = ({ userId }: { userId: string }) => {
+  return <ClientDashboardTimeTableComponent userId={userId} />;
+};
 
-export default ClientDashboardTimeTablePage
+export default ClientDashboardTimeTablePage;
