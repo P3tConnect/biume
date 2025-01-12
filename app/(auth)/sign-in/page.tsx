@@ -18,6 +18,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -31,15 +32,16 @@ const LoginPage = () => {
         onRequest: () => {
           setLoading(true);
         },
-        onSuccess: () => {
-          router.push("/dashboard");
+        onSuccess: (ctx) => {
+          console.log(ctx, "ctx");
+          router.push(`/dashboard/client/${ctx.data.id}`);
         },
         onError: (error: ErrorContext) => {
           setLoading(false);
           console.log(error, "error");
           toast.error(`Error : ${error.error.message}`);
         },
-      }
+      },
     );
   });
 

@@ -29,9 +29,9 @@ const RegisterClientPage = () => {
   const onSubmit = handleSubmit(async (data) => {
     await signUp.email(
       {
-        name: data.name,
         email: data.email,
         password: data.password,
+        name: data.name,
         image: "",
         isPro: false,
         onBoardingComplete: false,
@@ -41,15 +41,15 @@ const RegisterClientPage = () => {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success("Inscription réussie");
+          toast.success("Inscription réussie ! Vous allez être redirigé ...");
           router.push("/dashboard");
         },
         onError: (error: ErrorContext) => {
           setLoading(false);
-          toast.error(`error: ${error.error.message}`);
-          console.log(error.response);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
         },
-      }
+      },
     );
   });
 

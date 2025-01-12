@@ -21,6 +21,7 @@ import {
 } from "@/components/ui";
 import { cn } from "@/src/lib";
 import { signOut, useSession } from "@/src/lib/auth-client";
+import Avvvatars from "avvvatars-react";
 import {
   BadgeCheck,
   ChevronsUpDown,
@@ -48,27 +49,26 @@ const SidebarClientFooterComponent = () => {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar
-                  className={cn(
-                    "h-8 w-8 rounded-lg",
-                    session?.user.image == "" ? "hidden" : ""
-                  )}
-                >
-                  <AvatarImage
-                    src={session?.user.image as string}
-                    alt={session?.user.name}
-                    className={"object-cover"}
-                  />
-                  <AvatarFallback className="rounded-lg">
-                    <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
-                  </AvatarFallback>
-                </Avatar>
-                <User2
-                  className={cn(
-                    "h-8 w-8",
-                    session?.user.image == "" ? "" : "hidden"
-                  )}
-                />
+                {session?.user.image ? (
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage
+                      src={session?.user.image}
+                      alt={session?.user.name}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="rounded-lg">
+                      <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <div className="flex h-8 w-8 items-center justify-center">
+                    <Avvvatars
+                      value={session?.user.email || ""}
+                      size={32}
+                      style="shape"
+                    />
+                  </div>
+                )}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
                     {session?.user.name}
@@ -88,10 +88,10 @@ const SidebarClientFooterComponent = () => {
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  {session?.user.image != "" || session?.user.image == null ? (
+                  {session?.user.image ? (
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
-                        src={session?.user.image as string}
+                        src={session?.user.image}
                         alt={session?.user.name}
                         className="object-cover"
                       />
@@ -100,7 +100,13 @@ const SidebarClientFooterComponent = () => {
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <User2 />
+                    <div className="flex h-8 w-8 items-center justify-center">
+                      <Avvvatars
+                        value={session?.user.email || ""}
+                        size={32}
+                        style="shape"
+                      />
+                    </div>
                   )}
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     {isPending ? (
@@ -146,18 +152,13 @@ const SidebarClientFooterComponent = () => {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="gap-2"
-                onClick={async () =>
-                  await signOut({
-                    fetchOptions: {
-                      onSuccess: () => {
-                        router.push("/sign-in");
-                      },
-                    },
-                  })
+              <DropdownMenuItem className="gap-2" onClick={async () => await signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/sign-in")
+                  }
                 }
-              >
+              })}>
                 <LogOut size={14} />
                 Log out
               </DropdownMenuItem>
