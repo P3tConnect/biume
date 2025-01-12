@@ -4,6 +4,10 @@ import React from 'react';
 import { useSession } from '@/src/lib/auth-client';
 import StepperClient from '@/components/onboarding/components/stepper-client';
 import ClientTimetableWidget from '@/components/dashboard/shortcuts/client/client-timetable-widget';
+import ClientPetsWidget from '@/components/dashboard/shortcuts/client/client-pets-widget';
+import ClientHistoryReservationWidget from '@/components/dashboard/shortcuts/client/client-history-reservation-widget';
+import ClientStatsWidget from '@/components/dashboard/shortcuts/client/client-stats-widget';
+import ClientObservationsWidget from '@/components/dashboard/shortcuts/client/client-observations-widget';
 
 const ClientDashboardHomePage = () => {
   const { data: session } = useSession();
@@ -18,16 +22,18 @@ const ClientDashboardHomePage = () => {
           <div className='lg:col-span-4'>
             <ClientTimetableWidget />
           </div>
-          <div className='lg:col-span-4'>{/* <UpcomingAppointments /> */}</div>
-          <div className='lg:col-span-4 flex flex-col gap-4'>
-            {/* <TeamMembersCard />
-            <AverageDailySalesCard /> */}
+          <div className='lg:col-span-4'>
+            <ClientPetsWidget />
           </div>
           <div className='lg:col-span-4'>
-            {/* <ClientWithLastProcedure /> */}
+            <ClientStatsWidget />
           </div>
-          <div className='lg:col-span-4'>{/* <ProgressionWidget /> */}</div>
-          <div className='lg:col-span-4'>{/* <ObservationsWidget /> */}</div>
+          <div className='lg:col-span-6'>
+            <ClientHistoryReservationWidget />
+          </div>
+          <div className='lg:col-span-6'>
+            <ClientObservationsWidget />
+          </div>
         </div>
       </div>
     </>
