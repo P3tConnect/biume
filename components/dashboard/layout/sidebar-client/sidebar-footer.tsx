@@ -73,7 +73,9 @@ const SidebarClientFooterComponent = () => {
                   <span className="truncate font-semibold">
                     {session?.user.name}
                   </span>
-                  <span className="truncate text-xs">{session?.user.email}</span>
+                  <span className="truncate text-xs">
+                    {session?.user.email}
+                  </span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>

@@ -1,3 +1,4 @@
+import { laserwave } from "@react-email/components";
 import { z } from "zod";
 
 export const emailSchema = z.object({

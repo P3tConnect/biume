@@ -1,5 +1,4 @@
 import { createRouteHandler } from "uploadthing/next";
-
 import { ourFileRouter } from "./core";
 import { safeConfig } from "@/src/lib";
 
@@ -9,4 +8,7 @@ export const { GET, POST } = createRouteHandler({
   config: {
     token: safeConfig.UPLOADTHING_TOKEN,
   },
+
+  // Apply an (optional) custom config:
+  // config: { ... },
 });

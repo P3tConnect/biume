@@ -1,9 +1,20 @@
-import React from 'react'
+"use client";
+
+import React from "react";
+import { useSession } from "@/src/lib/auth-client";
+import StepperClient from "@/components/onboarding/components/stepper-client";
 
 const ClientDashboardHomePage = () => {
-  return (
-    <div>ClientDashboardHomePage</div>
-  )
-}
+  const { data: session } = useSession();
 
-export default ClientDashboardHomePage
+  const showModal = session?.user.onBoardingComplete === false;
+
+  return (
+    <>
+      {showModal && <StepperClient open={showModal} />}
+      <div>ClientDashboardHomePage</div>
+    </>
+  );
+};
+
+export default ClientDashboardHomePage;

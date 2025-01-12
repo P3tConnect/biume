@@ -1,21 +1,23 @@
+import {
+  account,
+  invitation,
+  member as memberSchema,
+  organization as organizationSchema,
+  session,
+  twoFactor as twoFactorSchema,
+  verification,
+} from "../db";
+import { organization, phoneNumber, twoFactor } from "better-auth/plugins";
+
+import { FireExtinguisher } from "lucide-react";
 import { betterAuth } from "better-auth";
-import { nextCookies } from "better-auth/next-js";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { organization, twoFactor } from "better-auth/plugins";
+import { createAccessControl } from "better-auth/plugins/access";
 import { db } from "./db";
 import { user as dbUser } from "../db";
-import {
-  organization as organizationSchema,
-  account,
-  verification,
-  twoFactor as twoFactorSchema,
-  session,
-  member as memberSchema,
-  invitation,
-} from "../db";
-import { createAccessControl } from "better-auth/plugins/access";
-import { stripe } from "./stripe";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { eq } from "drizzle-orm";
+import { nextCookies } from "better-auth/next-js";
+import { stripe } from "./stripe";
 
 const statement = {
   organization: ["create", "share", "update", "delete"],
@@ -56,6 +58,11 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
+      image: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
       isPro: {
         type: "boolean",
         defaultValue: false,

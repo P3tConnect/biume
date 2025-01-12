@@ -10,6 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -18,20 +25,25 @@ const chartData = [
   { month: "April", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
+  { month: "June", desktop: 214, mobile: 140 },
 ];
 
 const chartConfig = {
   visitors: {
     label: "Visitors",
+    label: "Visitors",
   },
   desktop: {
     label: "Desktop",
+    color: "hsl(var(--chart-1))",
     color: "hsl(var(--chart-1))",
   },
   mobile: {
     label: "Mobile",
     color: "hsl(var(--chart-2))",
   },
+  color: "hsl(var(--chart-2))",
+},
 } satisfies ChartConfig;
 
 export default function AverageDailySalesCard() {
@@ -82,3 +94,4 @@ export default function AverageDailySalesCard() {
     </Card>
   );
 }
+

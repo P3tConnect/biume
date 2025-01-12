@@ -8,16 +8,26 @@ declare global {
       isPro: boolean;
       isAdmin: boolean;
       phone: string;
+      address: string;
+      city: string;
+      zipCode: number;
     };
   }
 
   interface UserPublicMetadata {
+    firstname: string;
+    lastname: string;
     isPro: boolean;
     isAdmin: boolean;
+    sexe: string;
+    birthday: Date;
   }
 
   interface UserPrivateMetadata {
     stripeId: string;
     phone: string;
+    address: string;
+    city: string;
+    zipCode: number;
   }
 }

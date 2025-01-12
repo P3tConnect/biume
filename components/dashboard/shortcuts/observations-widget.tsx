@@ -20,11 +20,23 @@ import Link from "next/link";
 import { cn } from "@/src/lib/utils";
 import { useState } from "react";
 // import { CaretSort } from "@phosphor-icons/react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ArrowDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Eye } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Observation {
   id: string;
@@ -44,7 +56,7 @@ const MOCK_OBSERVATIONS: Observation[] = [
     clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",
     dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Dans 2 jours
     type: "Suivi cicatrisation",
-    status: "pending"
+    status: "pending",
   },
   {
     id: "2",
@@ -53,7 +65,7 @@ const MOCK_OBSERVATIONS: Observation[] = [
     clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas",
     dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Dans 1 jour
     type: "Contrôle pigmentation",
-    status: "pending"
+    status: "pending",
   },
   {
     id: "3",
@@ -62,7 +74,7 @@ const MOCK_OBSERVATIONS: Observation[] = [
     clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
     dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Dans 4 jours
     type: "Suivi post-traitement",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "4",
@@ -71,8 +83,8 @@ const MOCK_OBSERVATIONS: Observation[] = [
     clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Thomas",
     dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Dans 1 jour
     type: "Évaluation résultats",
-    status: "pending"
-  }
+    status: "pending",
+  },
 ];
 
 const columnHelper = createColumnHelper<Observation>();
@@ -83,7 +95,10 @@ const columns = [
     cell: (info) => (
       <div className="flex items-center gap-2">
         <Avatar className="h-8 w-8">
-          <AvatarImage src={info.row.original.clientAvatar} alt={info.getValue()} />
+          <AvatarImage
+            src={info.row.original.clientAvatar}
+            alt={info.getValue()}
+          />
           <AvatarFallback>
             {info.getValue().slice(0, 2).toUpperCase()}
           </AvatarFallback>
@@ -111,8 +126,10 @@ const columns = [
   columnHelper.accessor("dueDate", {
     header: ({ column }) => {
       return (
-        <div className="flex items-center gap-1 cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <div
+          className="flex items-center gap-1 cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Date d'échéance
           <ArrowDownIcon className="ml-2 h-4 w-4" />
         </div>
@@ -184,9 +201,9 @@ function useMockObservations() {
   return useQuery({
     queryKey: ["observations-to-make"],
     queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       return MOCK_OBSERVATIONS;
-    }
+    },
   });
 }
 
@@ -208,9 +225,7 @@ export function ObservationsWidget() {
   return (
     <Card className="col-span-3">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base">
-          Observations à réaliser
-        </CardTitle>
+        <CardTitle className="text-base">Observations à réaliser</CardTitle>
         <Link
           href="/dashboard/observations"
           className="text-sm text-muted-foreground hover:underline"
@@ -236,9 +251,9 @@ export function ObservationsWidget() {
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     ))}
                   </TableRow>

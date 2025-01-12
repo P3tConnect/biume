@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Button,
@@ -73,14 +73,14 @@ const Stepper = () => {
   const form = useForm<z.infer<typeof onboardingSchema>>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
-      name: "",
-      logo: "",
-      coverImage: "",
-      description: "",
+      name: '',
+      logo: '',
+      coverImage: '',
+      description: '',
       services: [],
       options: [],
       documents: [],
-      siren: "",
+      siren: '',
     },
   });
 
@@ -218,9 +218,9 @@ const Stepper = () => {
         documents: () => <ProDocumentsStep form={form} />,
         complete: () => <ProCompleteStep />,
       })}
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {!stepper.isLast ? (
-          <div className="flex justify-end gap-4">
+          <div className='flex justify-end gap-4'>
             {stepper.isFirst ? (
               <>
                 <DialogClose asChild>
@@ -236,8 +236,8 @@ const Stepper = () => {
               </>
             ) : (
               <Button
-                variant="outline"
-                className="rounded-xl"
+                variant='outline'
+                className='rounded-xl'
                 onClick={stepper.prev}
                 disabled={stepper.isFirst}
               >
@@ -250,8 +250,14 @@ const Stepper = () => {
             </Button>
           </div>
         ) : (
-          <div className="flex flex-row justify-end gap-2">
-            <Button onClick={stepper.prev} variant="outline" className="rounded-xl">Retour</Button>
+          <div className='flex flex-row justify-end gap-2'>
+            <Button
+              onClick={stepper.prev}
+              variant='outline'
+              className='rounded-xl'
+            >
+              Retour
+            </Button>
             <DialogClose asChild>
               <Button className="rounded-xl" onClick={redirectToDashboard}>Terminer</Button>
             </DialogClose>
@@ -271,19 +277,19 @@ export const onboardingSchema = z.object({
   options: z.array(CreateOptionSchema).optional(),
   siren: z
     .string()
-    .min(9, "Le numéro SIREN doit contenir 9 chiffres")
-    .max(9, "Le numéro SIREN doit contenir 9 chiffres")
-    .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
+    .min(9, 'Le numéro SIREN doit contenir 9 chiffres')
+    .max(9, 'Le numéro SIREN doit contenir 9 chiffres')
+    .regex(/^\d+$/, 'Le numéro doit contenir uniquement des chiffres')
     .optional(),
   siret: z
     .string()
-    .min(14, "Le numéro SIRET doit contenir 14 chiffres")
-    .max(14, "Le numéro SIRET doit contenir 14 chiffres")
-    .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
+    .min(14, 'Le numéro SIRET doit contenir 14 chiffres')
+    .max(14, 'Le numéro SIRET doit contenir 14 chiffres')
+    .regex(/^\d+$/, 'Le numéro doit contenir uniquement des chiffres')
     .optional(),
   documents: z
     .array(z.string().url())
-    .min(1, "Veuillez télécharger au moins un document")
+    .min(1, 'Veuillez télécharger au moins un document')
     .optional(),
 });
 

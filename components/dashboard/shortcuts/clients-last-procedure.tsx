@@ -10,7 +10,7 @@ const patients = [
     avatar: "https://randomuser.me/api/portraits/men/40.jpg",
     email: "olivia.martin@email.com",
     lastProcedure: "Appendectomy",
-    date: "2024-05-20"
+    date: "2024-05-20",
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const patients = [
     avatar: "https://randomuser.me/api/portraits/men/71.jpg",
     email: "jackson.lee@email.com",
     lastProcedure: "Knee Arthroscopy",
-    date: "2024-05-18"
+    date: "2024-05-18",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const patients = [
     avatar: "https://randomuser.me/api/portraits/men/50.jpg",
     email: "isabella.nguyen@email.com",
     lastProcedure: "Cataract Surgery",
-    date: "2024-05-15"
+    date: "2024-05-15",
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ const patients = [
     avatar: "https://randomuser.me/api/portraits/men/10.jpg",
     email: "william.chen@email.com",
     lastProcedure: "Colonoscopy",
-    date: "2024-05-12"
+    date: "2024-05-12",
   },
   {
     id: 5,
@@ -42,15 +42,17 @@ const patients = [
     avatar: "https://randomuser.me/api/portraits/men/13.jpg",
     email: "can.jackson@email.com",
     lastProcedure: "Colonoscopy",
-    date: "2024-08-12"
-  }
+    date: "2024-08-12",
+  },
 ];
 
 export function ClientWithLastProcedure() {
   return (
     <Card className="col-span-3 rounded-2xl">
       <CardHeader className="relative">
-        <CardTitle className="text-base">Patients with Last Procedure</CardTitle>
+        <CardTitle className="text-base">
+          Patients with Last Procedure
+        </CardTitle>
         <div className="absolute end-4 top-2">
           <Button variant="link" size="lg">
             <Ellipsis size={26} />

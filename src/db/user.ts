@@ -1,18 +1,20 @@
-import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { pets } from "./pets";
-import { usersJobs } from "./usersJobs";
-import { proSession } from "./pro_session";
-import { usersNewsletters } from "./usersNewsletter";
+
+import { account } from "./account";
 import { allergies } from "./allergies";
+import { createInsertSchema } from "drizzle-zod";
 import { deseases } from "./deseases";
 import { intolerences } from "./intolerences";
-import { session } from "./session";
-import { account } from "./account";
+import { invitation } from "./invitation";
 import { member } from "./member";
 import { notification } from "./notifications";
+import { pets } from "./pets";
+import { proSession } from "./pro_session";
 import { projectsInvitees } from "./projectsInvitees";
-import { invitation } from "./invitation";
+import { relations } from "drizzle-orm";
+import { session } from "./session";
+import { usersJobs } from "./usersJobs";
+import { usersNewsletters } from "./usersNewsletter";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -32,8 +34,8 @@ export const user = pgTable("users", {
   country: text("country"),
   lang: text("lang").default("fr"),
   phoneNumber: text("phoneNumber"),
-  smsNotifications: boolean("smsNotifications").default(false),
-  emailNotifications: boolean("emailNotifications").default(false),
+  emailNotifications: boolean("emailNotifications").notNull().default(false),
+  smsNotifications: boolean("smsNotifications").notNull().default(false),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({
@@ -51,3 +53,5 @@ export const userRelations = relations(user, ({ one, many }) => ({
   projects: many(projectsInvitees),
   invitations: many(invitation),
 }));
+
+export const CreateUserSchema = createInsertSchema(user);

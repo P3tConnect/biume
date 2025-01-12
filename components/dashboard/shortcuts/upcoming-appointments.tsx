@@ -6,14 +6,14 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { ChevronRight, MoreVerticalIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 const appointments = [
@@ -23,7 +23,7 @@ const appointments = [
     date: "2023-06-01",
     time: "10:00 AM",
     doctor: "Dr. Smith",
-    department: "Cardiology"
+    department: "Cardiology",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const appointments = [
     date: "2023-06-02",
     time: "11:30 AM",
     doctor: "Dr. Johnson",
-    department: "Neurology"
+    department: "Neurology",
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ const appointments = [
     date: "2023-06-03",
     time: "2:00 PM",
     doctor: "Dr. Brown",
-    department: "Oncology"
+    department: "Oncology",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ const appointments = [
     date: "2023-06-04",
     time: "3:30 PM",
     doctor: "Dr. Davis",
-    department: "Pediatrics"
+    department: "Pediatrics",
   },
   {
     id: 5,
@@ -55,8 +55,8 @@ const appointments = [
     date: "2023-06-04",
     time: "2:30 PM",
     doctor: "Dr. Karen",
-    department: "Neurology"
-  }
+    department: "Neurology",
+  },
 ];
 
 export function UpcomingAppointments() {
@@ -83,7 +83,9 @@ export function UpcomingAppointments() {
         <TableBody>
           {appointments.map((appointment) => (
             <TableRow key={appointment.id}>
-              <TableCell className="font-medium">{appointment.patient}</TableCell>
+              <TableCell className="font-medium">
+                {appointment.patient}
+              </TableCell>
               <TableCell>{appointment.date}</TableCell>
               <TableCell>{appointment.time}</TableCell>
               <TableCell>{appointment.doctor}</TableCell>
