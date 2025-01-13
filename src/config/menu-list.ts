@@ -172,9 +172,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
   ];
 }
 
-export function clientMenuList(pathname: string): Group[] {
-  const userId = pathname.split('/')[3];
-
+export function clientMenuList(pathname: string, userId: string): Group[] {
   return [
     {
       groupLabel: "",
