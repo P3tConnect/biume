@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "db-generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db-migrate": "drizzle-kit migrate",
     "db-preview": "drizzle-kit studio",
