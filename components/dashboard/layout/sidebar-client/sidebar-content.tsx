@@ -10,6 +10,7 @@ import {
 } from "@/components/ui";
 import { clientMenuList } from "@/src/config";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const SidebarClientContentComponent = () => {
@@ -36,10 +37,10 @@ const SidebarClientContentComponent = () => {
                     asChild
                     isActive={active}
                   >
-                    <a href={href}>
+                    <Link href={href}>
                       <Icon />
                       <span>{t(label)}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

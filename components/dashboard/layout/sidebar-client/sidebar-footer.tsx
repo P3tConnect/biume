@@ -138,27 +138,29 @@ const SidebarClientFooterComponent = () => {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="gap-2">
-                  <BadgeCheck size={14} />
-                  Account
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <CreditCard size={14} />
-                  Billing
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
+                <DropdownMenuItem
+                  className="gap-2"
+                  onClick={() =>
+                    router.push(`/dashboard/user/${session?.user.id}/settings`)
+                  }
+                >
                   <Settings size={14} />
                   Settings
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2" onClick={async () => await signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    router.push("/sign-in")
-                  }
+              <DropdownMenuItem
+                className="gap-2"
+                onClick={async () =>
+                  await signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        router.push("/sign-in");
+                      },
+                    },
+                  })
                 }
-              })}>
+              >
                 <LogOut size={14} />
                 Log out
               </DropdownMenuItem>

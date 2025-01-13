@@ -28,8 +28,8 @@ import { transaction } from "./transaction";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { proSession } from "./pro_session";
 import { invitation } from "./invitation";
+import { appointments } from "./appointments";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -74,7 +74,7 @@ export const organizationRelations = relations(
       references: [progression.id],
     }),
     documents: many(organizationDocuments),
-    sessions: many(proSession),
+    appointments: many(appointments),
     cancelPolicies: many(cancelPolicies),
     projects: many(project),
     tasks: many(task),

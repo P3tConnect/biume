@@ -40,6 +40,7 @@ export const RevenueSourcesPieChart = ({
                 fill="#8884d8"
                 paddingAngle={5}
                 dataKey="value"
+                strokeWidth={0}
               >
                 {data.map((entry, index) => (
                   <Cell
