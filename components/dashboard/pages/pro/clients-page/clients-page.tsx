@@ -55,7 +55,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import CountAnimation from "@/components/magicui/count-animation";
+import { CountAnimation } from "@/components/count-animation";
 import { ClientForm } from "./client-form";
 import { ClientDetails } from "./client-details";
 import ClientsHeader from "./clients-header";
@@ -286,7 +286,7 @@ const ClientMetrics = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            <CountAnimation number={clients.length} />
+            <CountAnimation value={clients.length} />
           </div>
           <p className="text-xs text-muted-foreground">+2.5% from last month</p>
         </CardContent>
@@ -299,7 +299,7 @@ const ClientMetrics = () => {
         <CardContent>
           <div className="text-2xl font-bold">
             <CountAnimation
-              number={clients.filter((c) => c.status === "Active").length}
+              value={clients.filter((c) => c.status === "Active").length}
             />
           </div>
           <p className="text-xs text-muted-foreground">+5.2% from last month</p>
@@ -312,7 +312,7 @@ const ClientMetrics = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            <CountAnimation number={156} />
+            <CountAnimation value={156} />
           </div>
           <p className="text-xs text-muted-foreground">
             +12.3% from last month

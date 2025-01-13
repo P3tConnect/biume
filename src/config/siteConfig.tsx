@@ -1,7 +1,6 @@
 import { safeConfig } from "../lib";
 import { FaTwitter, FaYoutube } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
-import { Icons } from "@/components/landing/icons";
 
 export const BLUR_FADE_DELAY = 0.15;
 
@@ -20,7 +19,6 @@ export const siteConfig = {
       trigger: "Fonctionnalités",
       content: {
         main: {
-          icon: <Icons.logo className="h-6 w-6" />,
           title: "AI-Powered Automation",
           description: "Streamline your workflow with intelligent automation.",
           href: "#",

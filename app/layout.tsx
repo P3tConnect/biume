@@ -13,7 +13,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-
+import { NuqsAdapter } from "nuqs/adapters/next";
 const geist = GeistSans;
 
 export async function generateMetadata({
@@ -115,7 +115,7 @@ export default async function RootLayout({
                 <NextSSRPlugin
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />
-                {children}
+                <NuqsAdapter>{children}</NuqsAdapter>
               </div>
               <TailwindIndicator />
             </SidebarProvider>
