@@ -133,11 +133,11 @@ const ClientInformationForm = ({
           ) : (
             <div className='flex flex-col items-center gap-4'>
               <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                <Image
+                <img
                   src={form.getValues('image') ?? ''}
                   alt='logo'
-                  fill
-                  className='object-cover'
+                  className='mt-30'
+                  style={{ objectFit: 'cover' }}
                 />
                 <div className='absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'>
                   <div
