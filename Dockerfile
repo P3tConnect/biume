@@ -42,8 +42,15 @@ WORKDIR /usr/src/app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copier les fichiers nécessaires
+COPY --from=builder /usr/src/app/package.json ./
+COPY --from=builder /usr/src/app/app ./app
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/.next ./.next
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+
+# Définir les permissions
+RUN chown -R nextjs:nodejs .
 
 USER nextjs
 
