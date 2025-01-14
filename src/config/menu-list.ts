@@ -77,11 +77,11 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               icon: Contact2,
             },
             {
-              href: `/dashboard/organization/${companyId}/accounting/quotes`,
-              label: "dashboard.sidebar.quotes",
+              href: `/dashboard/organization/${companyId}/accounting/estimates`,
+              label: "dashboard.sidebar.estimates",
               active:
                 pathname ===
-                `/dashboard/organization/${companyId}/accounting/quotes`,
+                `/dashboard/organization/${companyId}/accounting/estimates`,
               icon: FileText,
             },
             {

@@ -14,7 +14,7 @@ import { useState } from "react";
 
 type ViewMode = "table" | "kanban";
 
-export function DashboardQuotesComponent() {
+export function DashboardEstimatesComponent() {
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const searchParams = useSearchParams();
   const {

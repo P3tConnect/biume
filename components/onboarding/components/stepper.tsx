@@ -106,7 +106,6 @@ const Stepper = () => {
   } = form;
 
   const onSubmit = async (data: z.infer<typeof onboardingSchema>) => {
-    console.log(data);
     if (stepper.current.id == "start") {
       stepper.next();
     }

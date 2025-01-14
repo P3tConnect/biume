@@ -17,7 +17,7 @@ interface MetricsGridProps {
 export const MetricsGrid = ({ data }: MetricsGridProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="rounded-none border-y-transparent border-s-transparent hover:bg-gradient-to-br hover:from-green-50 hover:to-transparent dark:hover:from-green-950/30 dark:hover:to-transparent transition-all duration-300">
+      <Card className="rounded-2xl hover:bg-gradient-to-br hover:from-green-50 hover:to-transparent dark:hover:from-green-950/30 dark:hover:to-transparent transition-all duration-300">
         <CardHeader className="relative flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base font-medium">
             Chiffre d'affaires
@@ -36,7 +36,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
         </CardContent>
       </Card>
 
-      <Card className="rounded-none border-y-transparent border-s-transparent hover:bg-gradient-to-br hover:from-yellow-50 hover:to-transparent dark:hover:from-yellow-950/30 dark:hover:to-transparent transition-all duration-300">
+      <Card className="rounded-2xl hover:bg-gradient-to-br hover:from-yellow-50 hover:to-transparent dark:hover:from-yellow-950/30 dark:hover:to-transparent transition-all duration-300">
         <CardHeader className="relative flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base font-medium">
             Factures impayées
@@ -55,7 +55,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
         </CardContent>
       </Card>
 
-      <Card className="rounded-none border-y-transparent border-s-transparent hover:bg-gradient-to-br hover:from-red-50 hover:to-transparent dark:hover:from-red-950/30 dark:hover:to-transparent transition-all duration-300">
+      <Card className="rounded-2xl hover:bg-gradient-to-br hover:from-red-50 hover:to-transparent dark:hover:from-red-950/30 dark:hover:to-transparent transition-all duration-300">
         <CardHeader className="relative flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base font-medium">
             Factures en retard
@@ -74,7 +74,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
         </CardContent>
       </Card>
 
-      <Card className="rounded-none border-y-transparent border-s-transparent hover:bg-gradient-to-br hover:from-blue-50 hover:to-transparent dark:hover:from-blue-950/30 dark:hover:to-transparent transition-all duration-300">
+      <Card className="rounded-2xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-transparent dark:hover:from-blue-950/30 dark:hover:to-transparent transition-all duration-300">
         <CardHeader className="relative flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base font-medium">
             Délai de paiement

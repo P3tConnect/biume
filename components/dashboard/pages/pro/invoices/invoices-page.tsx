@@ -5,7 +5,7 @@ import { InvoicesHeader } from "./components/InvoicesHeader";
 import { MetricsGrid } from "./components/MetricsGrid";
 import { InvoicesTable } from "./components/InvoicesTable";
 import { InvoiceDetails } from "./components/InvoiceDetails";
-import { Sheet, SheetContent } from "@/components/ui";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui";
 
 // Types
 export interface Invoice {
@@ -76,6 +76,9 @@ const InvoicesPageComponent = () => {
         open={!!selectedInvoice}
         onOpenChange={() => setSelectedInvoice(null)}
       >
+        <SheetHeader>
+          <SheetTitle>Détails de la facture</SheetTitle>
+        </SheetHeader>
         <SheetContent className="w-full sm:max-w-3xl">
           {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
         </SheetContent>
