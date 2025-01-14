@@ -33,6 +33,7 @@ export * from "./receiptCategory.action";
 export * from "./receiptProduct.action";
 export * from "./report.action";
 export * from "./service.action";
+export * from "./stripe.action";
 export * from "./task.action";
 export * from "./topic.action";
 export * from "./transactions.action";
