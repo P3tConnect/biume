@@ -15,6 +15,7 @@ import {
   FileText,
   Receipt,
   PieChart,
+  DollarSignIcon,
 } from "lucide-react";
 
 type Submenu = {
@@ -93,6 +94,14 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               icon: Receipt,
             },
             {
+              href: `/dashboard/organization/${companyId}/accounting/expenses`,
+              label: "dashboard.sidebar.expenses",
+              active:
+                pathname ===
+                `/dashboard/organization/${companyId}/accounting/expenses`,
+              icon: DollarSignIcon,
+            },
+            {
               href: `/dashboard/organization/${companyId}/accounting/reports`,
               label: "dashboard.sidebar.financialReports",
               active:
@@ -102,18 +111,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
             },
           ],
         },
-        {
-          href: `/dashboard/organization/${companyId}/reminders`,
-          label: "dashboard.sidebar.reminders",
-          active: pathname == `/dashboard/organization/${companyId}/reminders`,
-          icon: Timer,
-          submenus: [],
-        },
-      ],
-    },
-    {
-      groupLabel: "dashboard.sidebar.groupLabels.services",
-      menus: [
         {
           href: `/dashboard/organization/${companyId}/clients`,
           label: "dashboard.sidebar.clients",
@@ -128,6 +125,11 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           icon: PawPrint,
           submenus: [],
         },
+      ],
+    },
+    {
+      groupLabel: "dashboard.sidebar.groupLabels.services",
+      menus: [
         {
           href: `/dashboard/organization/${companyId}/reports`,
           label: "dashboard.sidebar.reports",
@@ -141,6 +143,13 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active:
             pathname == `/dashboard/organization/${companyId}/observations`,
           icon: Eye,
+          submenus: [],
+        },
+        {
+          href: `/dashboard/organization/${companyId}/reminders`,
+          label: "dashboard.sidebar.reminders",
+          active: pathname == `/dashboard/organization/${companyId}/reminders`,
+          icon: Timer,
           submenus: [],
         },
       ],

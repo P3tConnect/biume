@@ -22,7 +22,17 @@ import {
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Dog, Cat, Bird, House, Search, Plus, MoreHorizontal, Filter } from "lucide-react";
+import {
+  ArrowUpDown,
+  Dog,
+  Cat,
+  Bird,
+  House,
+  Search,
+  Plus,
+  MoreHorizontal,
+  Filter,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,9 +51,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import PatientDetailsDrawer from "./patient-details-drawer";
 
 // Define the type for our patient data
-type Patient = {
+export type Patient = {
   id: string;
   name: string;
   type: "Dog" | "Cat" | "Bird" | "Horse" | "NAC";
@@ -192,17 +203,17 @@ const stats = [
   },
   {
     label: "Chiens",
-    value: patients.filter(p => p.type === "Dog").length,
+    value: patients.filter((p) => p.type === "Dog").length,
     icon: Dog,
   },
   {
     label: "Chats",
-    value: patients.filter(p => p.type === "Cat").length,
+    value: patients.filter((p) => p.type === "Cat").length,
     icon: Cat,
   },
   {
     label: "Autres",
-    value: patients.filter(p => !["Dog", "Cat"].includes(p.type)).length,
+    value: patients.filter((p) => !["Dog", "Cat"].includes(p.type)).length,
     icon: Bird,
   },
 ];
@@ -210,8 +221,13 @@ const stats = [
 const PatientsPageComponent = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  );
   const [activeTab, setActiveTab] = React.useState("all");
+  const [selectedPatient, setSelectedPatient] = React.useState<Patient | null>(
+    null,
+  );
 
   const columns: ColumnDef<Patient>[] = [
     {
@@ -306,7 +322,9 @@ const PatientsPageComponent = () => {
               <DropdownMenuItem>Voir le dossier</DropdownMenuItem>
               <DropdownMenuItem>Nouvelle consultation</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">
+                Supprimer
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -376,7 +394,12 @@ const PatientsPageComponent = () => {
             </Dialog>
           </div>
 
-          <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+          <Tabs
+            defaultValue="all"
+            className="w-full"
+            value={activeTab}
+            onValueChange={setActiveTab}
+          >
             <div className="flex items-center justify-between">
               <TabsList>
                 <TabsTrigger value="all">Tous</TabsTrigger>
@@ -422,9 +445,9 @@ const PatientsPageComponent = () => {
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
                         </TableHead>
                       ))}
                     </TableRow>
@@ -433,7 +456,13 @@ const PatientsPageComponent = () => {
                 <TableBody>
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <TableRow key={row.id} className="cursor-pointer hover:bg-muted/50">
+                      <TableRow
+                        key={row.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() =>
+                          setSelectedPatient(row.original as Patient)
+                        }
+                      >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
                             {flexRender(
@@ -460,6 +489,20 @@ const PatientsPageComponent = () => {
           </Tabs>
         </CardHeader>
       </Card>
+
+      <PatientDetailsDrawer
+        patient={selectedPatient}
+        isOpen={!!selectedPatient}
+        onClose={() => setSelectedPatient(null)}
+        onEdit={(patient) => {
+          // TODO: Implement edit functionality
+          console.log("Edit patient:", patient);
+        }}
+        onDelete={(patient) => {
+          // TODO: Implement delete functionality
+          console.log("Delete patient:", patient);
+        }}
+      />
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
 } from "@/components/dashboard/pages/pro/timetable-page/appointment-form";
 import Calendar from "@/components/dashboard/pages/pro/timetable-page/calendar";
 import { cn } from "@/src/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Données temporaires pour la démonstration
 const mockAppointments = [
@@ -44,7 +45,8 @@ const mockAppointments = [
 const DashboardOrganizationTimetablePage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingAppointment, setEditingAppointment] = useState<AppointmentFormData | null>(null);
+  const [editingAppointment, setEditingAppointment] =
+    useState<AppointmentFormData | null>(null);
   const [view, setView] = useState<"calendar" | "list">("calendar");
 
   const handleAddAppointment = (data: AppointmentFormData) => {
@@ -89,7 +91,7 @@ const DashboardOrganizationTimetablePage = () => {
                     onClick={() => setView("calendar")}
                     className={cn(
                       "h-8 rounded-md transition-colors",
-                      view === "calendar" && "bg-background shadow-sm"
+                      view === "calendar" && "bg-background shadow-sm",
                     )}
                   >
                     <CalendarIcon className="h-4 w-4 mr-2" />
@@ -101,7 +103,7 @@ const DashboardOrganizationTimetablePage = () => {
                     onClick={() => setView("list")}
                     className={cn(
                       "h-8 rounded-md transition-colors",
-                      view === "list" && "bg-background shadow-sm"
+                      view === "list" && "bg-background shadow-sm",
                     )}
                   >
                     <List className="h-4 w-4 mr-2" />
@@ -127,25 +129,88 @@ const DashboardOrganizationTimetablePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4 h-full">
             <Card className="rounded-xl overflow-hidden">
               <div className="h-full">
-                <Suspense fallback={<div className="p-8 text-center">Chargement du calendrier...</div>}>
+                <Suspense
+                  fallback={
+                    <div className="p-8 text-center">
+                      Chargement du calendrier...
+                    </div>
+                  }
+                >
                   <Calendar />
                 </Suspense>
               </div>
             </Card>
 
-            <Card className="rounded-xl overflow-hidden">
-              <div className="p-3 border-b">
-                <h2 className="font-medium">
-                  Rendez-vous du {selectedDate.toLocaleDateString("fr-FR")}
-                </h2>
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <DailyAppointments
-                  appointments={dailyAppointments}
-                  selectedDate={selectedDate}
-                />
-              </div>
-            </Card>
+            <div className="flex flex-col gap-4 h-full">
+              <Card className="rounded-xl overflow-hidden h-1/2">
+                <div className="p-3 border-b">
+                  <h2 className="font-medium">
+                    Rendez-vous du {selectedDate.toLocaleDateString("fr-FR")}
+                  </h2>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <DailyAppointments
+                    appointments={dailyAppointments}
+                    selectedDate={selectedDate}
+                  />
+                </div>
+              </Card>
+
+              <Card className="rounded-xl overflow-hidden h-1/2">
+                <div className="p-3 border-b">
+                  <h2 className="font-medium">Prochains rendez-vous</h2>
+                </div>
+                <div className="flex-1 overflow-y-auto p-3">
+                  <div className="space-y-2">
+                    {mockAppointments
+                      .filter((apt) => new Date(apt.date) > new Date())
+                      .sort(
+                        (a, b) =>
+                          new Date(a.date).getTime() -
+                          new Date(b.date).getTime(),
+                      )
+                      .slice(0, 3)
+                      .map((appointment) => (
+                        <div
+                          key={appointment.id}
+                          className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                        >
+                          <div className="space-y-1">
+                            <p className="font-medium">
+                              {appointment.clientName}
+                            </p>
+                            <div className="flex items-center text-sm text-muted-foreground">
+                              <Clock className="mr-1 h-3 w-3" />
+                              <span>
+                                {new Date(appointment.date).toLocaleDateString(
+                                  "fr-FR",
+                                )}{" "}
+                                à {appointment.time}
+                              </span>
+                            </div>
+                          </div>
+                          <Badge
+                            className={cn(
+                              "ml-auto text-xs",
+                              appointment.status === "confirmed"
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                : appointment.status === "pending"
+                                  ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                  : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+                            )}
+                          >
+                            {appointment.status === "confirmed"
+                              ? "Confirmé"
+                              : appointment.status === "pending"
+                                ? "En attente"
+                                : "Annulé"}
+                          </Badge>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         ) : (
           <Card className="rounded-xl h-full">

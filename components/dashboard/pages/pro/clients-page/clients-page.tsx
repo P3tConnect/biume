@@ -531,9 +531,9 @@ const ClientsPageComponent = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -572,14 +572,13 @@ const ClientsPageComponent = () => {
         </CardContent>
       </Card>
 
-      <Sheet
-        open={!!selectedClient}
-        onOpenChange={() => setSelectedClient(null)}
-      >
-        <SheetContent className="w-full sm:max-w-3xl">
-          {selectedClient && <ClientDetails client={selectedClient} />}
-        </SheetContent>
-      </Sheet>
+      {selectedClient && (
+        <ClientDetails
+          client={selectedClient}
+          isOpen={!!selectedClient}
+          onOpenChange={(open) => !open && setSelectedClient(null)}
+        />
+      )}
     </div>
   );
 };

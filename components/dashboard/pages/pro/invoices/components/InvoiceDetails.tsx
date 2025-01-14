@@ -45,27 +45,29 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
           <Mail className="size-4" />
           Envoyer par email
         </Button>
-        <Button variant="outline" className="gap-2">
-          <Printer className="size-4" />
-          Imprimer
-        </Button>
       </div>
 
       <Separator />
 
-      <ScrollArea className="h-[500px]">
+      <ScrollArea className="h-screen gap-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Informations générales</CardTitle>
+              <CardTitle className="text-base">
+                Informations générales
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Numéro de facture</p>
+                <p className="text-sm text-muted-foreground">
+                  Numéro de facture
+                </p>
                 <p className="font-medium">{invoice.number}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Date de création</p>
+                <p className="text-sm text-muted-foreground">
+                  Date de création
+                </p>
                 <p className="font-medium">
                   {format(new Date(invoice.createdAt), "d MMMM yyyy", {
                     locale: fr,
@@ -103,13 +105,15 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Montant total</p>
-                <p className="text-2xl font-bold text-primary">{invoice.amount}€</p>
+                <p className="text-2xl font-bold text-primary">
+                  {invoice.amount}€
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <Card>
+        <Card className="mt-6">
           <CardHeader>
             <CardTitle className="text-base">Détails des prestations</CardTitle>
           </CardHeader>
@@ -169,4 +173,4 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
       </ScrollArea>
     </div>
   );
-}; 
+};
