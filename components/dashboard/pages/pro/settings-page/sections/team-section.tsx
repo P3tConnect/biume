@@ -54,9 +54,10 @@ import { Badge } from "@/components/ui/badge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useActiveOrganization, organization } from "@/src/lib/auth-client";
 
 // Types temporaires pour l'exemple
-type Role = "admin" | "member";
+type Role = "admin" | "member" | "owner";
 
 interface TeamMember {
   id: string;
@@ -69,7 +70,7 @@ interface TeamMember {
 
 const inviteFormSchema = z.object({
   email: z.string().email("Email invalide"),
-  role: z.enum(["admin", "member"], {
+  role: z.enum(["admin", "member", "owner"], {
     required_error: "Veuillez sélectionner un rôle",
   }),
 });
@@ -100,6 +101,7 @@ const mockMembers: TeamMember[] = [
 
 export const TeamSection = () => {
   const [open, setOpen] = React.useState(false);
+  const { data: activeOrganization } = useActiveOrganization();
   const form = useForm<z.infer<typeof inviteFormSchema>>({
     resolver: zodResolver(inviteFormSchema),
     defaultValues: {
@@ -109,8 +111,16 @@ export const TeamSection = () => {
 
   async function onSubmit(values: z.infer<typeof inviteFormSchema>) {
     try {
-      // TODO: Implémenter l'invitation
-      console.log(values);
+      if (!activeOrganization) {
+        throw new Error("Aucune organisation active");
+      }
+
+      await organization.inviteMember({
+        email: values.email,
+        role: values.role,
+        organizationId: activeOrganization.id,
+      });
+
       setOpen(false);
       form.reset();
     } catch (error) {
@@ -178,6 +188,7 @@ export const TeamSection = () => {
                         <SelectContent>
                           <SelectItem value="member">Membre</SelectItem>
                           <SelectItem value="admin">Administrateur</SelectItem>
+                          <SelectItem value="owner">Propriétaire</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

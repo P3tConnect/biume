@@ -1,3 +1,4 @@
+import OrganizationInvitation from "@/emails/OrganizationInvitation";
 import {
   account,
   invitation,
@@ -18,6 +19,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { eq } from "drizzle-orm";
 import { nextCookies } from "better-auth/next-js";
 import { stripe } from "./stripe";
+import { resend } from "./resend";
 
 const statement = {
   organization: ["create", "share", "update", "delete"],
@@ -152,6 +154,21 @@ export const auth = betterAuth({
         member,
         admin,
         owner,
+      },
+      sendInvitationEmail: async (data, request) => {
+        console.log(data, request);
+        const { email, inviter, role, organization } = data;
+
+        await resend.emails.send({
+          from: "PawThera <onboarding@pawthera.com>",
+          to: email,
+          subject: "Invitation à rejoindre l'organisation",
+          react: OrganizationInvitation({
+            inviterName: inviter.user.name,
+            organizationName: organization.name,
+            inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${data.id}`,
+          }),
+        });
       },
     }),
   ],
