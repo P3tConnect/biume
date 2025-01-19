@@ -349,6 +349,40 @@ const PatientsPageComponent = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <Card className="overflow-hidden rounded-2xl">
+        <CardHeader className="border-b border-gray-100 dark:border-gray-800">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                Patients
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Gérez vos patients et leurs dossiers médicaux
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
+                    <Plus className="size-4 mr-2" />
+                    Nouveau patient
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Ajouter un nouveau patient</DialogTitle>
+                    <DialogDescription>
+                      Formulaire d'ajout de patient à implémenter
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
@@ -376,24 +410,7 @@ const PatientsPageComponent = () => {
             <CardTitle className="text-xl font-semibold">
               Mes Patients
             </CardTitle>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Nouveau patient
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Ajouter un nouveau patient</DialogTitle>
-                  <DialogDescription>
-                    Formulaire d'ajout de patient à implémenter
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
           </div>
-
           <Tabs
             defaultValue="all"
             className="w-full"
@@ -445,9 +462,9 @@ const PatientsPageComponent = () => {
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                         </TableHead>
                       ))}
                     </TableRow>
@@ -487,8 +504,8 @@ const PatientsPageComponent = () => {
               </Table>
             </TabsContent>
           </Tabs>
-        </CardHeader>
-      </Card>
+        </CardHeader >
+      </Card >
 
       <PatientDetailsDrawer
         patient={selectedPatient}
@@ -503,7 +520,7 @@ const PatientsPageComponent = () => {
           console.log("Delete patient:", patient);
         }}
       />
-    </div>
+    </div >
   );
 };
 

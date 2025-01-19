@@ -1,6 +1,30 @@
 "use client";
 
 import React from "react";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  FileText,
+  Plus,
+  Download,
+  FileSpreadsheet,
+  Filter,
+  Printer,
+  Share2,
+} from "lucide-react";
 import { MetricsGrid } from "./components/MetricsGrid";
 import { RevenueAnalytics } from "./components/RevenueAnalytics";
 import { RevenueSourcesPieChart } from "./components/RevenueSourcesPieChart";
@@ -78,13 +102,80 @@ const mockData = {
   ],
 };
 
+const FinancialReportsHeader = () => {
+  return (
+    <Card className="overflow-hidden rounded-2xl">
+      <CardHeader className="border-b border-gray-100 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              Rapports Financiers
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Analysez et gérez vos rapports financiers
+            </p>
+          </div>
+          <div className="flex flex-col md:flex-row items-end md:items-center gap-3">
+            <Select defaultValue="current">
+              <SelectTrigger className="w-[180px] rounded-xl">
+                <SelectValue placeholder="Sélectionner la période" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="current">Année en cours</SelectItem>
+                <SelectItem value="last">Année précédente</SelectItem>
+                <SelectItem value="custom">Période personnalisée</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-xl hover:bg-secondary/30 hover:border-secondary/70 transition-all duration-300 dark:border-gray-700"
+            >
+              <Filter className="size-4" />
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="rounded-xl hover:bg-secondary/30 hover:border-secondary/70 transition-all duration-300 dark:border-gray-700"
+                >
+                  <Download className="size-4 mr-2" />
+                  Exporter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <FileSpreadsheet className="size-4 mr-2" />
+                  Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Share2 className="size-4 mr-2" />
+                  Partager
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Printer className="size-4 mr-2" />
+                  Imprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
+              <Plus className="size-4 mr-2" />
+              Nouveau rapport
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+    </Card>
+  );
+};
+
 const FinancialReportsPage = () => {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Rapports Financiers</h1>
-        <ReportActions />
-      </div>
+    <div className="space-y-4">
+      <FinancialReportsHeader />
 
       <MetricsGrid data={mockData.metrics} />
 
@@ -98,10 +189,12 @@ const FinancialReportsPage = () => {
         <ExpenseBreakdown data={mockData.expenseCategories} />
       </div>
 
-      <MonthlyReports data={mockData.monthlyReports.map(report => ({
-        ...report,
-        status: report.status as "generated" | "pending",
-      }))} />
+      <MonthlyReports
+        data={mockData.monthlyReports.map(report => ({
+          ...report,
+          status: report.status as "generated" | "pending",
+        }))}
+      />
     </div>
   );
 };

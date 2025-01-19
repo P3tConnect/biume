@@ -6,12 +6,12 @@ import { CTASection } from "./sections/user/cta-section";
 
 export function UserLanding() {
   return (
-    <div className="flex flex-col w-screen h-screen">
+    <div className="flex flex-col w-screen">
       <HeroSection />
       <FeaturesSection />
       <PetsGallerySection />
       <TestimonialsSection />
       <CTASection />
-    </div>
+    </div >
   );
-} 
+}

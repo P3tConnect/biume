@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -40,6 +40,9 @@ import {
   TagIcon,
   ArrowRight,
   PlusIcon,
+  Receipt,
+  FileText,
+  Plus,
 } from "lucide-react";
 
 // Mock data - Replace with real data from your backend
@@ -136,25 +139,46 @@ const ExpenseFilters = () => (
   </div>
 );
 
+const ExpenseHeader = () => {
+  return (
+    <Card className="overflow-hidden rounded-2xl">
+      <CardHeader className="border-b border-gray-100 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              Dépenses
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Gérez et suivez vos dépenses professionnelles
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              className="rounded-xl hover:bg-secondary/30 hover:border-secondary/70 transition-all duration-300 dark:border-gray-700"
+            >
+              <Receipt className="size-4 mr-2" />
+              Liste des dépenses
+            </Button>
+            <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
+              <Plus className="size-4 mr-2" />
+              Nouvelle dépense
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+    </Card>
+  );
+};
+
 const ExpensesPage = () => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">Dépenses</h1>
-          <p className="text-muted-foreground">
-            Gérez et suivez vos dépenses professionnelles
-          </p>
-        </div>
-        <Button>
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Ajouter une dépense
-        </Button>
-      </div>
+    <div className="space-y-4">
+      <ExpenseHeader />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <MetricsCard
           title="Dépenses totales"
           value="4 250€"

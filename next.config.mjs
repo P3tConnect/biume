@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: 'https',
       },
       {
+        hostname: 'images.unsplash.com',
+        protocol: "https",
+      },
+      {
         hostname: 'sea1.ingest.uploadthing.com',
         protocol: 'https',
       },
