@@ -9,13 +9,14 @@ import {
   LucideMessageCircleQuestion,
   PawPrint,
   Settings,
-  Ticket,
   Timer,
-  UsersRound,
   FileText,
   Receipt,
   PieChart,
+  Home,
+  Dog,
 } from "lucide-react";
+import { useSession } from "@/src/lib/auth-client";
 
 type Submenu = {
   href: string;
@@ -172,50 +173,38 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
   ];
 }
 
-export function clientMenuList(pathname: string, userId: string): Group[] {
+export function clientMenuList(pathname: string) {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
   return [
     {
       groupLabel: "",
       menus: [
         {
+          label: "Dashboard",
           href: `/dashboard/user/${userId}`,
-          label: "dashboard.sidebar.dashboard",
-          active: pathname === `/dashboard/user/${userId}`,
-          icon: LayoutGrid,
-          submenus: [],
+          icon: Home,
         },
         {
-          href: `/dashboard/user/${userId}/timetable`,
-          label: "dashboard.sidebar.calendar",
-          active: pathname === `/dashboard/user/${userId}/timetable`,
-          icon: Calendar,
-          submenus: [],
-        },
-      ],
-    },
-    {
-      groupLabel: "dashboard.sidebar.groupLabels.account",
-      menus: [
-        {
-          href: `/dashboard/user/${userId}/reservations`,
-          label: "dashboard.sidebar.reservations",
-          active: pathname === `/dashboard/user/${userId}/reservations`,
-          icon: Ticket,
-          submenus: [],
-        },
-        {
+          label: "Mes animaux",
           href: `/dashboard/user/${userId}/pets`,
-          label: "dashboard.sidebar.animals",
-          active: pathname === `/dashboard/user/${userId}/pets`,
-          icon: PawPrint,
-          submenus: [],
+          icon: Dog,
         },
         {
-          href: `/dashboard/user/${userId}/settings`,
-          label: "dashboard.sidebar.settings",
-          active: pathname === `/dashboard/user/${userId}/settings`,
-          icon: UsersRound,
-          submenus: [],
+          label: "Agenda",
+          href: `/dashboard/user/${userId}/timetable`,
+          icon: Calendar,
+        },
+        {
+          label: "Mes réservations",
+          href: `/dashboard/user/${userId}/reservations`,
+          icon: Calendar,
+        },
+        {
+          label: "Mes rapports",
+          href: `/dashboard/user/${userId}/rapports`,
+          icon: FileText,
         },
       ],
     },

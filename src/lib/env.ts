@@ -50,7 +50,6 @@ const getConfig = (): ENV => {
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
   };
 };
 

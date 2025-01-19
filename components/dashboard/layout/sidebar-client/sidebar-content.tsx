@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   SidebarGroup,
@@ -7,14 +7,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui";
-import { clientMenuList } from "@/src/config";
-import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+} from '@/components/ui';
+import { clientMenuList } from '@/src/config';
+import { usePathname } from 'next/navigation';
 
 const SidebarClientContentComponent = () => {
   const pathname = usePathname();
-  const t = useTranslations();
 
   const menuList = clientMenuList(pathname);
 
@@ -22,23 +20,19 @@ const SidebarClientContentComponent = () => {
     <>
       {menuList.map(({ groupLabel, menus }, index) => (
         <SidebarGroup key={index}>
-          {groupLabel != "" ? (
+          {groupLabel != '' ? (
             <SidebarGroupLabel asChild>
-              <p>{t(groupLabel)}</p>
+              <p>{groupLabel}</p>
             </SidebarGroupLabel>
           ) : null}
           <SidebarGroupContent>
             <SidebarMenu>
               {menus.map(({ active, href, icon: Icon, label }) => (
                 <SidebarMenuItem key={label}>
-                  <SidebarMenuButton
-                    tooltip={t(label)}
-                    asChild
-                    isActive={active}
-                  >
+                  <SidebarMenuButton tooltip={label} asChild isActive={active}>
                     <a href={href}>
-                      <Icon />
-                      <span>{t(label)}</span>
+                      <Icon className='size-4' />
+                      <span>{label}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
