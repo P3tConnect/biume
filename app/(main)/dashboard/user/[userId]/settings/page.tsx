@@ -13,6 +13,7 @@ const ClientDashboardSettingsPage = ({
 
 export const clientSettingsSchema = z.object({
   image: z.string().optional(),
+  name: z.string(),
   address: z
     .string()
     .min(
@@ -29,6 +30,7 @@ export const clientSettingsSchema = z.object({
     .min(10, 'Votre numéro doit comprendre que 10 chiffres'),
   emailNotifications: z.boolean().default(false).optional(),
   smsNotifications: z.boolean().default(false).optional(),
+  twoFactorEnabled: z.boolean().default(false).optional(),
 });
 
 export default ClientDashboardSettingsPage;
