@@ -43,6 +43,7 @@ export const organization = pgTable("organizations", {
   coverImage: text("coverImage"),
   description: text("description"),
   createdAt: timestamp("createdAt").notNull(),
+  verified: boolean("verified").notNull().default(false),
   metadata: text("metadata"),
   stripeId: text("stripeId"),
   onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),

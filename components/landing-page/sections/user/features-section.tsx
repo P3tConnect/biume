@@ -3,10 +3,8 @@ import {
   Clock,
   Star,
   MessageSquare,
-  Shield,
   CreditCard,
-  Stethoscope,
-  Heart
+  Stethoscope
 } from "lucide-react";
 import Image from "next/image";
 
