@@ -70,6 +70,7 @@ const SidebarHeaderComponent = () => {
                       alt={activeOrganization?.name ?? ""}
                       width={32}
                       height={32}
+                      className="object-cover rounded-full"
                     />
                   ) : (
                     <Building className="size-4" />

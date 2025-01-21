@@ -10,6 +10,7 @@ import {
   Button,
   Separator,
   ScrollArea,
+  SheetTitle,
 } from "@/components/ui";
 import { Invoice } from "../invoices-page";
 import { format } from "date-fns";
@@ -30,7 +31,9 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Détails de la facture</h2>
+        <SheetTitle asChild>
+          <h2 className="text-2xl font-bold">Détails de la facture</h2>
+        </SheetTitle>
         <p className="text-sm text-muted-foreground">
           {invoice.number} - {invoice.clientName}
         </p>
@@ -49,8 +52,8 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
 
       <Separator />
 
-      <ScrollArea className="h-screen gap-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <ScrollArea className="flex-1 h-[calc(100vh-12rem)] pr-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
           <Card>
             <CardHeader>
               <CardTitle className="text-base">
@@ -113,7 +116,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
           </Card>
         </div>
 
-        <Card className="mt-6">
+        <Card>
           <CardHeader>
             <CardTitle className="text-base">Détails des prestations</CardTitle>
           </CardHeader>
