@@ -27,24 +27,6 @@ const ACCEPTED_FILE_TYPES = {
     "image/png": [".png"]
 }
 
-const kybFormSchema = z.object({
-    siren: z
-        .string()
-        .min(9, "Le numéro SIREN doit contenir 9 chiffres")
-        .max(9, "Le numéro SIREN doit contenir 9 chiffres")
-        .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres"),
-    siret: z
-        .string()
-        .min(14, "Le numéro SIRET doit contenir 14 chiffres")
-        .max(14, "Le numéro SIRET doit contenir 14 chiffres")
-        .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres"),
-    documents: z
-        .array(z.instanceof(File))
-        .min(1, "Veuillez télécharger au moins un document")
-        .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE),
-            "La taille maximale par fichier est de 5MB")
-})
-
 export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
     return (
         <Form {...form}>
@@ -55,12 +37,10 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Documents justificatifs</FormLabel>
-                            <FormControl>
-                                <DropzoneInput
-                                    onFilesChanged={(files) => form.setValue("documents", files)}
-                                    value={field.value ?? []}
-                                />
-                            </FormControl>
+                            <DropzoneInput
+                                onFilesChanged={(files) => form.setValue("documents", files)}
+                                value={field.value ?? []}
+                            />
                             <FormDescription>
                                 Ajoutez votre extrait Kbis ou tout autre document prouvant l&apos;identité de votre entreprise (PDF, JPEG, PNG - 5MB max)
                             </FormDescription>
@@ -76,7 +56,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                         <FormItem>
                             <FormLabel>Numéro SIREN/SIRET</FormLabel>
                             <FormControl>
-                                <Input placeholder="123456789" {...field} />
+                                <Input placeholder="123456789" {...field} value={field.value ?? ""} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -90,7 +70,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                         <FormItem>
                             <FormLabel>Numéro SIREN/SIRET</FormLabel>
                             <FormControl>
-                                <Input placeholder="123456789" {...field} />
+                                <Input placeholder="123456789" {...field} value={field.value ?? ""} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

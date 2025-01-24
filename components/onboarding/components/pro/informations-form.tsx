@@ -142,7 +142,7 @@ const InformationsForm = ({
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
             <p className="text-sm font-semibold">Logo de votre entreprise</p>
-            {form.getValues("logo") == "" ? (
+            {!form.getValues("logo") ? (
               <div className="w-full">
                 <div
                   {...getLogoRootProps()}

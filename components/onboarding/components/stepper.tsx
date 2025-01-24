@@ -20,7 +20,6 @@ import IntroStep from "../pro/intro-step";
 import {
   organization as organizationUtil,
   updateUser,
-  useActiveOrganization,
   useSession,
 } from "@/src/lib/auth-client";
 import { z } from "zod";
@@ -31,7 +30,7 @@ import {
   service,
   options as optionsTable,
   organization as organizationTable,
-  user as userTable,
+  progression as progressionTable,
 } from "@/src/db";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,16 +55,28 @@ const Stepper = () => {
         userId: session?.user.id,
       });
 
+      // Créer une progression
+      const [progression] = await db
+        .insert(progressionTable)
+        .values({
+          docs: false,
+          cancelPolicies: false,
+          reminders: false,
+          services: false,
+        })
+        .returning();
+
       // Définir l'organisation comme active
       await organizationUtil.setActive({
         organizationId: result.data?.id as string,
       });
 
-      // Marquer l'onboarding comme terminé
+      // Marquer l'onboarding comme terminé et ajouter la progression
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
+          progressionId: progression.id,
         })
         .where(eq(organizationTable.id, result.data?.id as string))
         .execute();
@@ -118,6 +129,18 @@ const Stepper = () => {
         metadata: {},
         userId: session?.user.id,
       });
+
+      // Créer une progression
+      const [progression] = await db
+        .insert(progressionTable)
+        .values({
+          docs: false,
+          cancelPolicies: false,
+          reminders: false,
+          services: false,
+        })
+        .returning();
+
       await organizationUtil.setActive({
         organizationId: result.data?.id as string,
       });
@@ -126,10 +149,14 @@ const Stepper = () => {
         .set({
           coverImage: data.coverImage,
           description: data.description,
+          progressionId: progression.id,
         })
         .where(eq(organizationTable.id, result.data?.id as string))
         .execute();
-      stepper.next();
+
+      if (!errors.name || !errors.logo || !errors.coverImage || !errors.description) {
+        stepper.next();
+      }
     }
 
     if (stepper.current.id == "services") {
@@ -146,7 +173,25 @@ const Stepper = () => {
           })),
         )
         .execute();
-      stepper.next();
+
+      // Mettre à jour la progression
+      const [org] = await db
+        .select()
+        .from(organizationTable)
+        .where(eq(organizationTable.id, organization.data?.id as string))
+        .execute();
+
+      await db
+        .update(progressionTable)
+        .set({
+          services: true,
+        })
+        .where(eq(progressionTable.id, org.progressionId as string))
+        .execute();
+
+      if (!errors.services) {
+        stepper.next();
+      }
     }
 
     if (stepper.current.id == "options") {
@@ -188,6 +233,22 @@ const Stepper = () => {
         })
         .where(eq(organizationTable.id, organization.data.id))
         .execute();
+
+      // Mettre à jour la progression
+      const [org] = await db
+        .select()
+        .from(organizationTable)
+        .where(eq(organizationTable.id, organization.data?.id as string))
+        .execute();
+
+      await db
+        .update(progressionTable)
+        .set({
+          docs: true,
+        })
+        .where(eq(progressionTable.id, org.progressionId as string))
+        .execute();
+
       stepper.next();
     }
 
@@ -234,8 +295,7 @@ const Stepper = () => {
   };
 
   return (
-    <DialogContent className="w-[900px]">
-      <Toaster richColors position="top-center" />
+    <DialogContent className="w-[1000px]">
       <DialogHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
@@ -248,14 +308,17 @@ const Stepper = () => {
         </div>
       </DialogHeader>
 
-      {stepper.switch({
-        start: () => <IntroStep />,
-        informations: () => <ProInformationsStep form={form} />,
-        services: () => <ProServicesStep form={form} />,
-        options: () => <ProOptionsStep form={form} />,
-        documents: () => <ProDocumentsStep form={form} />,
-        complete: () => <ProCompleteStep />,
-      })}
+      <div className="h-[600px] overflow-y-auto p-4">
+        {stepper.switch({
+          start: () => <IntroStep />,
+          informations: () => <ProInformationsStep form={form} />,
+          services: () => <ProServicesStep form={form} />,
+          options: () => <ProOptionsStep form={form} />,
+          documents: () => <ProDocumentsStep form={form} />,
+          complete: () => <ProCompleteStep />,
+        })}
+      </div>
+
       <div className="space-y-4">
         {!stepper.isLast ? (
           <div className="flex justify-end gap-4">

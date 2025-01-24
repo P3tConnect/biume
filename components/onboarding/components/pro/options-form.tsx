@@ -54,7 +54,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
                   <FormItem>
                     <FormLabel>Nom de l&apos;option</FormLabel>
                     <FormControl>
-                      <Input placeholder="ex: Toilettage supplémentaire" {...field} />
+                      <Input placeholder="ex: Toilettage supplémentaire" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -71,6 +71,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
                       <Input
                         type="number"
                         placeholder="0"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                       />
@@ -90,6 +91,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
                       <Textarea
                         placeholder="Décrivez votre option..."
                         className="resize-none"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value)}
                       />

@@ -22,21 +22,21 @@ import { stripe } from "./stripe";
 import { resend } from "./resend";
 
 const statement = {
-  organization: ["create", "share", "update", "delete"],
+  project: ["create", "share", "update", "delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
 
 export const member = ac.newRole({
-  organization: ["create"],
+  project: ["create"],
 });
 
 export const admin = ac.newRole({
-  organization: ["create", "update"],
+  project: ["create", "update"],
 });
 
 export const owner = ac.newRole({
-  organization: ["create", "update", "delete"],
+  project: ["create", "update", "delete"],
 });
 
 export const auth = betterAuth({

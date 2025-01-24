@@ -58,6 +58,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         placeholder="ex: Promenade de chien"
                         type='text'
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value)}
                       />
@@ -77,6 +78,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         type="number"
                         placeholder="0"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                       />
@@ -96,6 +98,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         type="number"
                         placeholder="30"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                       />
@@ -115,6 +118,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Textarea
                         placeholder="Décrivez votre service..."
                         className="resize-none"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value)}
                       />
@@ -132,28 +136,35 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <div className="space-y-4">
-                      {field.value && (
+                    <div className="flex flex-col items-center space-y-4">
+                      {field.value ? (
                         <div className="relative w-40 h-40">
                           <Image
                             src={field.value}
-                            alt="Service preview"
+                            alt="Aperçu du service"
                             fill
                             className="object-cover rounded-lg"
                           />
+                          <button
+                            className="absolute top-0 right-0 m-2 p-2 bg-red-500 text-white rounded-full"
+                            onClick={() => field.onChange('')}
+                          >
+                            <X size={16} />
+                          </button>
                         </div>
+                      ) : (
+                        <UploadButton
+                          endpoint="documentsUploader"
+                          onClientUploadComplete={(res) => {
+                            if (res?.[0]) {
+                              field.onChange(res[0].url)
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            console.error(error);
+                          }}
+                        />
                       )}
-                      <UploadButton
-                        endpoint="documentsUploader"
-                        onClientUploadComplete={(res) => {
-                          if (res?.[0]) {
-                            field.onChange(res[0].url)
-                          }
-                        }}
-                        onUploadError={(error: Error) => {
-                          console.error(error);
-                        }}
-                      />
                     </div>
                   </FormControl>
                   <FormMessage />
