@@ -12,7 +12,7 @@ import {
 } from "@/components/ui";
 import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useStepper } from "../../hooks/useStepper";
 import Image from "next/image";
@@ -21,10 +21,9 @@ import { useDropzone } from "react-dropzone";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { cn } from "@/src/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { organization } from "@/src/lib/auth-client";
 import { useServerActionMutation } from "@/src/hooks";
 import { createOrganization } from "@/src/actions/organization.action";
-import { onboardingSchema } from "../stepper";
+import { proInformationsSchema } from "../../types/onboarding-schemas";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -32,41 +31,40 @@ const ACCEPTED_IMAGE_TYPES = {
   "image/png": [".png"],
 };
 
-export const informationsSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Le nom de votre entreprise doit contenir au moins un caractère"),
-  description: z
-    .string()
-    .min(
-      1,
-      "La description de votre entreprise doit contenir au moins un caractère",
-    ),
-  logo: z.string().url(),
-  coverImage: z.string().url(),
-});
-
-const InformationsForm = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof onboardingSchema>>;
-}) => {
+const InformationsForm = () => {
   const [uploadCoverProgress, setUploadCoverProgress] = useState(0);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [logoUploadProgress, setLogoUploadProgress] = useState(0);
   const [logoIsUploading, setLogoIsUploading] = useState(false);
   const stepper = useStepper();
 
+  const form = useForm<z.infer<typeof proInformationsSchema>>({
+    resolver: zodResolver(proInformationsSchema),
+    defaultValues: {
+      name: "",
+      logo: "",
+      coverImage: "",
+      description: "",
+    },
+  });
+
+  const { handleSubmit, control, reset } = form;
+
   const { mutateAsync } = useServerActionMutation(createOrganization, {
     onSuccess: () => {
-      toast.success("Organization created successfully");
+      reset();
+      stepper.next();
     },
     onError: () => {
-      toast.error("Error creating organization");
+      toast.error("Erreur lors de la création de l'organisation");
     },
     onMutate: () => {
-      toast.loading("Creating organization...");
+      toast.loading("Création de l'organisation...");
     },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
@@ -74,6 +72,7 @@ const InformationsForm = ({
       if (res && res[0]) {
         form.setValue("logo", res[0].url);
         toast.success("Logo téléchargé avec succès!");
+        setLogoIsUploading(false);
       }
     },
     onUploadProgress(p) {
@@ -81,6 +80,7 @@ const InformationsForm = ({
     },
     onUploadError: (error) => {
       toast.error(`Erreur: ${error.message}`);
+      setLogoIsUploading(false);
     },
   });
 
@@ -91,10 +91,15 @@ const InformationsForm = ({
         if (res && res[0]) {
           form.setValue("coverImage", res[0].url);
           toast.success("Image de couverture téléchargée avec succès!");
+          setIsUploadingCover(false);
         }
+      },
+      onUploadProgress(p) {
+        setUploadCoverProgress(p);
       },
       onUploadError: (error) => {
         toast.error(`Erreur: ${error.message}`);
+        setIsUploadingCover(false);
       },
     },
   );
@@ -142,33 +147,39 @@ const InformationsForm = ({
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
             <p className="text-sm font-semibold">Logo de votre entreprise</p>
-            {!form.getValues("logo") ? (
+            {form.getValues("logo") == "" ? (
               <div className="w-full">
                 <div
                   {...getLogoRootProps()}
                   className={cn(
                     "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
                     isLogoDragActive && "border-primary bg-primary/5",
+                    form.formState.errors.logo && "border-destructive",
                   )}
                 >
                   <input {...getLogoInputProps()} />
                   <div className="flex flex-col items-center gap-2 p-6">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <ImageIcon className="h-6 w-6 text-primary" />
+                    <div className={cn("p-2 rounded-lg bg-primary/10", form.formState.errors.logo && "bg-destructive/10")}>
+                      <ImageIcon className={cn("h-6 w-6 text-primary", form.formState.errors.logo && "text-destructive")} />
                     </div>
                     <div className="space-y-1 text-center">
-                      <p className="text-xs font-medium text-primary">
+                      <p className={cn("text-xs font-medium text-primary", form.formState.errors.logo && "text-destructive")}>
                         Glissez-déposez
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.logo && "text-destructive")}>
                         ou cliquez
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.logo && "text-destructive")}>
                         PNG, JPG • 5MB
                       </p>
                     </div>
                   </div>
                 </div>
+                {form.formState.errors.logo && (
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.logo.message}
+                  </p>
+                )}
                 {logoIsUploading && (
                   <div className="w-32 mt-2">
                     <div className="h-1 w-full bg-primary/20 rounded-full overflow-hidden">
@@ -224,28 +235,46 @@ const InformationsForm = ({
           <div className="flex flex-col items-start gap-4 w-3/4">
             <p className="text-sm font-semibold">Image de couverture</p>
             {form.getValues("coverImage") == "" ? (
-              <div
-                {...getCoverRootProps()}
-                className={cn(
-                  "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
-                  isCoverDragActive && "border-primary bg-primary/5",
-                )}
-              >
-                <input {...getCoverInputProps()} />
-                <div className="flex flex-col items-center gap-2 p-6">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <ImageIcon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="space-y-1 text-center">
-                    <p className="text-xs font-medium text-primary">
-                      Glissez-déposez
-                    </p>
-                    <p className="text-xs text-muted-foreground">ou cliquez</p>
-                    <p className="text-xs text-muted-foreground">
-                      PNG, JPG • 5MB
-                    </p>
+              <div className="w-full">
+                <div
+                  {...getCoverRootProps()}
+                  className={cn(
+                    "w-full h-full border-2 border-dashed border-primary/20 rounded-2xl transition-all bg-background/50 hover:bg-primary/5",
+                    isCoverDragActive && "border-primary bg-primary/5",
+                    form.formState.errors.coverImage && "border-destructive",
+                  )}
+                >
+                  <input {...getCoverInputProps()} />
+                  <div className="flex flex-col items-center gap-2 p-6">
+                    <div className={cn("p-2 rounded-lg bg-primary/10", form.formState.errors.coverImage && "bg-destructive/10")}>
+                      <ImageIcon className={cn("h-6 w-6 text-primary", form.formState.errors.coverImage && "text-destructive")} />
+                    </div>
+                    <div className="space-y-1 text-center">
+                      <p className={cn("text-xs font-medium text-primary", form.formState.errors.coverImage && "text-destructive")}>
+                        Glissez-déposez
+                      </p>
+                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.coverImage && "text-destructive")}>ou cliquez</p>
+                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.coverImage && "text-destructive")}>
+                        PNG, JPG • 5MB
+                      </p>
+                    </div>
                   </div>
                 </div>
+                {form.formState.errors.coverImage && (
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.coverImage.message}
+                  </p>
+                )}
+                {isUploadingCover && (
+                  <div className="w-32 mt-2">
+                    <div className="h-1 w-full bg-primary/20 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-300 rounded-full"
+                        style={{ width: `${uploadCoverProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-primary/20">
@@ -282,7 +311,7 @@ const InformationsForm = ({
 
         <div className="space-y-4">
           <FormField
-            control={form.control}
+            control={control}
             name="name"
             render={({ field }) => (
               <FormItem>
@@ -295,13 +324,14 @@ const InformationsForm = ({
                     placeholder="PawThera Inc."
                     {...field}
                     value={field.value ?? ""}
+                    className={cn(form.formState.errors.name && "border-2 border-destructive")}
                   />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
-            control={form.control}
+            control={control}
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -310,7 +340,7 @@ const InformationsForm = ({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    className="bg-card"
+                    className={cn("bg-card", form.formState.errors.description && "border-2 border-destructive")}
                     placeholder="Description de votre entreprise"
                     {...field}
                     value={field.value ?? ""}
@@ -319,6 +349,12 @@ const InformationsForm = ({
               </FormItem>
             )}
           />
+        </div>
+        <div className="flex justify-end gap-4">
+          <Button variant="outline" className="rounded-xl" onClick={stepper.prev}>
+            Précédent
+          </Button>
+          <Button className="rounded-xl" type="submit" variant="default">Suivant</Button>
         </div>
       </form>
     </Form>

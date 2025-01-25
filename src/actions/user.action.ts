@@ -1,11 +1,11 @@
 "use server";
 
-import { clientAction, db } from "../lib";
+import { authedAction, db } from "../lib";
 import { CreateUserSchema, user } from "../db";
 import { ZSAError } from "zsa";
 import { eq } from "drizzle-orm";
 
-export const updateUser = clientAction
+export const updateUser = authedAction
   .input(CreateUserSchema)
   .handler(async ({ input }) => {
     const data = await db

@@ -32,6 +32,12 @@ export const { steps, useStepper, utils } = defineStepper(
       "Les documents nous permettent de vous identifier et de vous authentifier en tant que professionnel, vous pourrez les modifier à tout moment dans les réglages du compte de votre entreprise.",
   },
   {
+    id: "subscription",
+    title: "Abonnement",
+    description:
+      "Choisissez le plan qui vous convient pour commencer à utiliser votre compte professionnel !",
+  },
+  {
     id: "complete",
     title: "Complete",
     description:

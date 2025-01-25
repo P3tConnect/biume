@@ -1,13 +1,13 @@
 "use server";
 import { z } from "zod";
 import { CreateDeseaseSchema, deseases } from "../db";
-import { db, clientAction } from "../lib";
+import { db, authedAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getDeseases = clientAction.handler(async () => {});
+export const getDeseases = authedAction.handler(async () => {});
 
-export const creteDesease = clientAction
+export const creteDesease = authedAction
   .input(CreateDeseaseSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(deseases).values(input).returning().execute();
@@ -19,7 +19,7 @@ export const creteDesease = clientAction
     return data;
   });
 
-export const updateDesease = clientAction
+export const updateDesease = authedAction
   .input(CreateDeseaseSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -36,7 +36,7 @@ export const updateDesease = clientAction
     return data;
   });
 
-export const deleteDesease = clientAction
+export const deleteDesease = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

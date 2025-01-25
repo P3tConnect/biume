@@ -1,12 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db } from "../lib";
 import { CreateReportSchema, report } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getReports = clientAction.handler(async () => {});
+export const getReports = authedAction.handler(async () => {});
 
 export const createReport = ownerAction
   .input(CreateReportSchema)

@@ -5,27 +5,49 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
-import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X } from 'lucide-react'
-import { CreateService, CreateServiceSchema } from '@/src/db'
 import { UploadButton } from '@/src/lib/uploadthing'
 import Image from 'next/image'
-import { onboardingSchema } from '../stepper';
+import { proServicesSchema } from '../../types/onboarding-schemas';
+import { useServerActionMutation } from '@/src/hooks';
+import { createServicesStepAction } from '@/src/actions';
+import { useStepper } from '../../hooks/useStepper';
+import { toast } from 'sonner';
 
-const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
+const ServicesForm = () => {
+  const stepper = useStepper();
+  const form = useForm<z.infer<typeof proServicesSchema>>({
+    resolver: zodResolver(proServicesSchema),
+    defaultValues: {
+      services: [],
+    },
+  });
 
-
-  const { control } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'services',
   })
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data, "data for handleSubmit");
+  const { mutateAsync } = useServerActionMutation(createServicesStepAction, {
+    onSuccess: () => {
+      reset();
+      stepper.next();
+    },
+    onMutate: () => {
+      toast.loading("Création des services...");
+    },
+    onError: () => {
+      toast.error("Erreur lors de la création des services");
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   return (

@@ -4,27 +4,47 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import React from 'react';
-import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { X } from 'lucide-react';
-import Image from 'next/image';
-import { UploadButton } from '@/src/lib/uploadthing';
-import { CreateOptionSchema } from '@/src/db';
-import { onboardingSchema } from '../stepper';
+import { proOptionsSchema } from '../../types/onboarding-schemas';
+import { useStepper } from '../../hooks/useStepperClient';
+import { useServerActionMutation } from '@/src/hooks';
+import { createOptionsStepAction } from '@/src/actions';
+import { toast } from 'sonner';
 
-export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
+export function OptionsForm() {
+  const stepper = useStepper();
+  const form = useForm<z.infer<typeof proOptionsSchema>>({
+    resolver: zodResolver(proOptionsSchema),
+    defaultValues: {
+      options: [],
+    },
+  });
 
-  const { control } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'options',
   });
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data, "data for handleSubmit");
+  const { mutateAsync } = useServerActionMutation(createOptionsStepAction, {
+    onSuccess: () => {
+      reset();
+      stepper.next();
+    },
+    onMutate: () => {
+      toast.loading("Création des options...");
+    },
+    onError: () => {
+      toast.error("Erreur lors de la création des options");
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   return (
@@ -48,7 +68,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                control={form.control}
+                control={control}
                 name={`options.${index}.title`}
                 render={({ field }) => (
                   <FormItem>
@@ -62,7 +82,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
               />
 
               <FormField
-                control={form.control}
+                control={control}
                 name={`options.${index}.price`}
                 render={({ field }) => (
                   <FormItem>
@@ -82,7 +102,7 @@ export function OptionsForm({ form }: { form: UseFormReturn<z.infer<typeof onboa
               />
 
               <FormField
-                control={form.control}
+                control={control}
                 name={`options.${index}.description`}
                 render={({ field }) => (
                   <FormItem>

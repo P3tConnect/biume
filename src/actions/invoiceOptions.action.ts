@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
-import { ownerAction, clientAction } from "../lib";
+import { ownerAction, authedAction } from "../lib";
 
-export const getInvoiceOptions = clientAction.handler(async () => {});
+export const getInvoiceOptions = authedAction.handler(async () => {});
 
 export const createInvoiceOptions = ownerAction
   .input(CreateInvoiceOptionsSchema)

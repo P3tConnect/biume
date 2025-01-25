@@ -3,12 +3,12 @@
 import { CreateAllergySchema, allergies } from "../db";
 
 import { ZSAError } from "zsa";
-import { clientAction } from "../lib/action";
+import { authedAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-export const getAllergies = clientAction.handler(async () => {
+export const getAllergies = authedAction.handler(async () => {
   const data = await db.query.allergies.findMany();
 
   if (!data) {
@@ -18,7 +18,7 @@ export const getAllergies = clientAction.handler(async () => {
   return data;
 });
 
-export const createAllergy = clientAction
+export const createAllergy = authedAction
   .input(CreateAllergySchema)
   .handler(async ({ input }) => {
     const data = await db.insert(allergies).values(input).returning().execute();
@@ -30,7 +30,7 @@ export const createAllergy = clientAction
     return data;
   });
 
-export const updateAllergy = clientAction
+export const updateAllergy = authedAction
   .input(CreateAllergySchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -47,7 +47,7 @@ export const updateAllergy = clientAction
     return data;
   });
 
-export const deleteAllergy = clientAction
+export const deleteAllergy = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

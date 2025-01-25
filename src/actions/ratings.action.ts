@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db } from "../lib";
 import { CreateRatingSchema, ratings } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getRatings = clientAction.handler(async () => {});
+export const getRatings = authedAction.handler(async () => {});
 
-export const createRating = clientAction
+export const createRating = authedAction
   .input(CreateRatingSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(ratings).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createRating = clientAction
     return data;
   });
 
-export const updateRating = clientAction
+export const updateRating = authedAction
   .input(CreateRatingSchema)
   .handler(async ({ input }) => {
     const data = await db

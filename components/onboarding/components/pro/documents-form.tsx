@@ -1,6 +1,6 @@
 "use client"
 
-import { UseFormReturn } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,8 @@ import { X } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useUploadThing } from "@/src/lib/uploadthing"
 import { toast } from "sonner"
-import { onboardingSchema } from "../stepper"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { proDocumentsSchema } from "../../types/onboarding-schemas"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_FILE_TYPES = {
@@ -27,18 +28,27 @@ const ACCEPTED_FILE_TYPES = {
     "image/png": [".png"]
 }
 
-export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) {
+export function DocumentsForm() {
+    const form = useForm<z.infer<typeof proDocumentsSchema>>({
+        resolver: zodResolver(proDocumentsSchema),
+        defaultValues: {
+            documents: [],
+        },
+    });
+
+    const { control, handleSubmit, setValue } = form;
+
     return (
         <Form {...form}>
             <form className="space-y-6">
                 <FormField
-                    control={form.control}
+                    control={control}
                     name="documents"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Documents justificatifs</FormLabel>
                             <DropzoneInput
-                                onFilesChanged={(files) => form.setValue("documents", files)}
+                                onFilesChanged={(files) => setValue("documents", files)}
                                 value={field.value ?? []}
                             />
                             <FormDescription>
@@ -50,7 +60,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                 />
 
                 <FormField
-                    control={form.control}
+                    control={control}
                     name="siren"
                     render={({ field }) => (
                         <FormItem>
@@ -64,7 +74,7 @@ export function DocumentsForm({ form }: { form: UseFormReturn<z.infer<typeof onb
                 />
 
                 <FormField
-                    control={form.control}
+                    control={control}
                     name="siret"
                     render={({ field }) => (
                         <FormItem>

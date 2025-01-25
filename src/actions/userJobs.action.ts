@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { CreateJobSchema } from "../db";
-import { ownerAction, clientAction } from "../lib/action";
+import { ownerAction, authedAction } from "../lib/action";
 
-export const getJobs = clientAction.handler(async () => {});
+export const getJobs = authedAction.handler(async () => {});
 
 export const createJob = ownerAction
   .input(CreateJobSchema)
