@@ -1,5 +1,5 @@
-import { CountAnimation } from "@/components/count-animation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { CountAnimation } from "@/components/count-animation";
 import {
   CalendarIcon,
   CreditCardIcon,

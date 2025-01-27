@@ -28,7 +28,6 @@ export function Navbar() {
           <SearchButton />
           <ModeToggle />
           <Notifications />
-          <UserNav />
         </div>
 
         {/* Right Section - Mobile & Tablet */}
