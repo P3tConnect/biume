@@ -1,55 +1,73 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db } from "../lib";
-import { organizationDocuments, CreateOrganizationDocumentsSchema } from "../db";
+import { ownerAction, db, authedAction } from "../lib";
+import {
+  organizationDocuments,
+  CreateOrganizationDocumentsSchema,
+} from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
+import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
+import { auth } from "../lib/auth";
+import { organization as organizationTable } from "../db";
+import { progression as progressionTable } from "../db";
 
-export const getCompanyDocuments = ownerAction.handler(async () => {});
+export const createDocumentsStepAction = authedAction
+  .input(proDocumentsSchema)
+  .handler(async ({ input, request }) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: request?.headers!,
+    });
 
-export const createCompanyDocuments = ownerAction
-  .input(CreateOrganizationDocumentsSchema)
-  .handler(async ({ input }) => {
-    const data = await db
+    if (!organization) return;
+    const documents = input.documents;
+    if (!documents || !organization.id) return;
+    const documentsResult = await db
       .insert(organizationDocuments)
-      .values(input)
+      .values(
+        documents.map((file) => ({
+          file: file ?? "",
+          organizationId: organization.id,
+        })),
+      )
       .returning()
       .execute();
 
-    if (!data) {
-      throw new ZSAError("ERROR", "CompanyDocuments not created");
+    if (!documentsResult) {
+      throw new ZSAError("ERROR", "Documents not created");
     }
 
-    return data;
-  });
-
-export const updateCompanyDocuments = ownerAction
-  .input(CreateOrganizationDocumentsSchema)
-  .handler(async ({ input }) => {
-    const data = await db
-      .update(organizationDocuments)
-      .set(input)
-      .where(eq(organizationDocuments.id, input.id as string))
+    const organizationResult = await db
+      .update(organizationTable)
+      .set({
+        siret: input.siret,
+        siren: input.siren,
+      })
+      .where(eq(organizationTable.id, organization.id))
       .returning()
       .execute();
 
-    if (!data) {
-      throw new ZSAError("ERROR", "CompanyDocuments not updated");
+    if (!organizationResult) {
+      throw new ZSAError("ERROR", "Organization not updated");
     }
 
-    return data;
-  });
-
-export const deleteCompanyDocuments = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
-    const data = await db
-      .delete(organizationDocuments)
-      .where(eq(organizationDocuments.id, input))
+    const [org] = await db
+      .select()
+      .from(organizationTable)
+      .where(eq(organizationTable.id, organization.id))
       .execute();
 
-    if (!data) {
-      throw new ZSAError("ERROR", "CompanyDocuments not deleted");
+    const progressionResult = await db
+      .update(progressionTable)
+      .set({
+        docs: true,
+      })
+      .where(eq(progressionTable.id, org.progressionId as string))
+      .returning()
+      .execute();
+
+    if (!progressionResult) {
+      throw new ZSAError("ERROR", "Progression not updated");
     }
   });

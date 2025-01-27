@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, db } from "../lib";
+import { authedAction, db } from "../lib";
 import { CreatePetSchema, pets } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getPets = clientAction.handler(async () => {});
+export const getPets = authedAction.handler(async () => {});
 
-export const createPet = clientAction
+export const createPet = authedAction
   .input(CreatePetSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(pets).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createPet = clientAction
     return data;
   });
 
-export const updatePet = clientAction
+export const updatePet = authedAction
   .input(CreatePetSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updatePet = clientAction
     return data;
   });
 
-export const deletePet = clientAction
+export const deletePet = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

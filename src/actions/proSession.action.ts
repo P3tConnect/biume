@@ -2,11 +2,11 @@
 
 import { z } from "zod";
 import { CreateAppointmentSchema, appointments } from "../db";
-import { clientAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getAppointments = clientAction.handler(async () => {});
+export const getAppointments = authedAction.handler(async () => {});
 
 export const getAppointmentById = ownerAction
   .input(z.string())

@@ -1,14 +1,14 @@
 "use server";
 import { z } from "zod";
 import { category, CreateCategorySchema } from "../db";
-import { clientAction, ownerAction } from "../lib/action";
+import { authedAction, ownerAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getCategories = clientAction.handler(async () => {});
+export const getCategories = authedAction.handler(async () => {});
 
-export const getCategoryById = clientAction
+export const getCategoryById = authedAction
   .input(z.string())
   .handler(async ({ input }) => {});
 

@@ -2,11 +2,27 @@
 
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
+import { organization } from "../db/organization";
 import { ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getProgression = ownerAction.handler(async () => {});
+export const getProgression = ownerAction.handler(async ({ ctx }) => {
+  const org = ctx.org;
+
+  const data = await db
+    .select()
+    .from(progression)
+    .innerJoin(organization, eq(organization.progressionId, progression.id))
+    .where(eq(organization.id, org.id))
+    .execute();
+
+  if (!data || data.length === 0) {
+    throw new ZSAError("ERROR", "Progression not found");
+  }
+
+  return data[0].progression;
+});
 
 export const createProgression = ownerAction
   .input(CreateProgressionSchema)

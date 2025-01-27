@@ -5,27 +5,49 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
-import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { X } from 'lucide-react'
-import { CreateService, CreateServiceSchema } from '@/src/db'
 import { UploadButton } from '@/src/lib/uploadthing'
 import Image from 'next/image'
-import { onboardingSchema } from '../stepper';
+import { proServicesSchema } from '../../types/onboarding-schemas';
+import { useServerActionMutation } from '@/src/hooks';
+import { createServicesStepAction } from '@/src/actions';
+import { useStepper } from '../../hooks/useStepper';
+import { toast } from 'sonner';
 
-const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
+const ServicesForm = () => {
+  const stepper = useStepper();
+  const form = useForm<z.infer<typeof proServicesSchema>>({
+    resolver: zodResolver(proServicesSchema),
+    defaultValues: {
+      services: [],
+    },
+  });
 
-
-  const { control } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'services',
   })
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data, "data for handleSubmit");
+  const { mutateAsync } = useServerActionMutation(createServicesStepAction, {
+    onSuccess: () => {
+      reset();
+      stepper.next();
+    },
+    onMutate: () => {
+      toast.loading("Création des services...");
+    },
+    onError: () => {
+      toast.error("Erreur lors de la création des services");
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   return (
@@ -58,6 +80,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         placeholder="ex: Promenade de chien"
                         type='text'
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value)}
                       />
@@ -77,6 +100,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         type="number"
                         placeholder="0"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                       />
@@ -96,6 +120,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Input
                         type="number"
                         placeholder="30"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                       />
@@ -115,6 +140,7 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                       <Textarea
                         placeholder="Décrivez votre service..."
                         className="resize-none"
+                        {...field}
                         value={field.value ?? ''}
                         onChange={e => field.onChange(e.target.value)}
                       />
@@ -132,28 +158,35 @@ const ServicesForm = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingS
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
-                    <div className="space-y-4">
-                      {field.value && (
+                    <div className="flex flex-col items-center space-y-4">
+                      {field.value ? (
                         <div className="relative w-40 h-40">
                           <Image
                             src={field.value}
-                            alt="Service preview"
+                            alt="Aperçu du service"
                             fill
                             className="object-cover rounded-lg"
                           />
+                          <button
+                            className="absolute top-0 right-0 m-2 p-2 bg-red-500 text-white rounded-full"
+                            onClick={() => field.onChange('')}
+                          >
+                            <X size={16} />
+                          </button>
                         </div>
+                      ) : (
+                        <UploadButton
+                          endpoint="documentsUploader"
+                          onClientUploadComplete={(res) => {
+                            if (res?.[0]) {
+                              field.onChange(res[0].url)
+                            }
+                          }}
+                          onUploadError={(error: Error) => {
+                            console.error(error);
+                          }}
+                        />
                       )}
-                      <UploadButton
-                        endpoint="documentsUploader"
-                        onClientUploadComplete={(res) => {
-                          if (res?.[0]) {
-                            field.onChange(res[0].url)
-                          }
-                        }}
-                        onUploadError={(error: Error) => {
-                          console.error(error);
-                        }}
-                      />
                     </div>
                   </FormControl>
                   <FormMessage />

@@ -1,9 +1,9 @@
 "use server";
 import { z } from "zod";
 import { CreateUsersJobsSchema } from "../db";
-import { ownerAction, clientAction } from "../lib/action";
+import { ownerAction, authedAction } from "../lib/action";
 
-export const getUsersJobs = clientAction.handler(async () => {});
+export const getUsersJobs = authedAction.handler(async () => {});
 
 export const createUsersJob = ownerAction
   .input(CreateUsersJobsSchema)

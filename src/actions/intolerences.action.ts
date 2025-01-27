@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { CreateIntolerenceSchema, intolerences } from "../db";
-import { clientAction, db } from "../lib";
+import { authedAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getIntolerences = clientAction.handler(async () => {});
+export const getIntolerences = authedAction.handler(async () => {});
 
-export const createIntolerence = clientAction
+export const createIntolerence = authedAction
   .input(CreateIntolerenceSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -24,7 +24,7 @@ export const createIntolerence = clientAction
     return data;
   });
 
-export const updateIntolerence = clientAction
+export const updateIntolerence = authedAction
   .input(CreateIntolerenceSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -41,7 +41,7 @@ export const updateIntolerence = clientAction
     return data;
   });
 
-export const deleteIntolerence = clientAction
+export const deleteIntolerence = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

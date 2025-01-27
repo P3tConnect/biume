@@ -5,11 +5,13 @@ import {
   organizationDisponibilities,
   CreateOrganizationDisponibilitiesSchema,
 } from "../db";
-import { clientAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getOrganizationDisponibilities = clientAction.handler(async () => {});
+export const getOrganizationDisponibilities = authedAction.handler(
+  async () => {},
+);
 
 export const createOrganizationDisponibilities = ownerAction
   .input(CreateOrganizationDisponibilitiesSchema)

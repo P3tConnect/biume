@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, clientAction } from "../lib/action";
+import { ownerAction, authedAction } from "../lib/action";
 import { cancelPolicies, CreateCancelPolicySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getCancelPolicies = clientAction.handler(async () => {
+export const getCancelPolicies = authedAction.handler(async () => {
   const data = await db.query.cancelPolicies.findMany().execute();
 
   if (!data) {
@@ -17,7 +17,7 @@ export const getCancelPolicies = clientAction.handler(async () => {
   return data;
 });
 
-export const getCancelPoliciesByCompany = clientAction.handler(
+export const getCancelPoliciesByCompany = authedAction.handler(
   async ({ input }) => {},
 );
 

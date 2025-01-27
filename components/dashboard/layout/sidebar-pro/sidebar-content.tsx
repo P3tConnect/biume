@@ -46,7 +46,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                       asChild
                       key={label}
                       className="group/collapsible"
-                      defaultOpen={pathname.includes("accounting")}
+                      defaultOpen={true}
                     >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>

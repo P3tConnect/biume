@@ -87,7 +87,7 @@ interface MetricsCardProps {
 }
 
 const MetricsCard = ({ title, value, icon: Icon, trend }: MetricsCardProps) => (
-  <Card className="p-6">
+  <Card className="p-6 rounded-2xl">
     <div className="flex items-center justify-between">
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">{title}</p>
@@ -171,6 +171,20 @@ const ExpenseHeader = () => {
   );
 };
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-lg border bg-card p-3 shadow-sm">
+        <p className="text-sm font-medium text-muted-foreground mb-1">{label}</p>
+        <p className="text-lg font-bold text-foreground">
+          {payload[0].value}€
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const ExpensesPage = () => {
   const [date, setDate] = useState(new Date());
 
@@ -205,22 +219,21 @@ const ExpensesPage = () => {
         />
       </div>
 
-      <Card className="p-6">
+      <Card className="p-6 rounded-2xl">
         <h2 className="text-xl font-semibold mb-4">Tendances des dépenses</h2>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={mockExpenseData}>
-              <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip />
-              <Bar dataKey="amount" fill="#3b82f6" />
+              <Tooltip content={<CustomTooltip />} cursor={false} />
+              <Bar dataKey="amount" fill="#3b82f6" radius={[10, 10, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </Card>
 
-      <Card className="p-6">
+      <Card className="p-6 rounded-2xl">
         <h2 className="text-xl font-semibold mb-4">Transactions récentes</h2>
         <ExpenseFilters />
         <Table>

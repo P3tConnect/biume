@@ -2,12 +2,12 @@
 
 import { z } from "zod";
 import { CreateNewsletterSchema, newsletter } from "../db";
-import { clientAction, ownerAction } from "../lib/action";
+import { authedAction, ownerAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getNewsletters = clientAction.handler(async () => {});
+export const getNewsletters = authedAction.handler(async () => {});
 
 // export const createNewsletter = ownerAction
 //   .input(CreateNewsletterSchema)

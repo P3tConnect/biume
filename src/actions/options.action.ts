@@ -1,30 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
-import { CreateOptionSchema, options } from "../db";
+import { ownerAction, db, authedAction } from "../lib";
+import { CreateOptionSchema, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
+import { auth } from "../lib/auth";
+import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
 
-export const getOptions = clientAction.handler(async () => {});
+export const getOptions = authedAction.handler(async () => {});
 
 export const createOption = ownerAction
   .input(CreateOptionSchema)
   .handler(async ({ input }) => {
-    const data = await db.insert(options).values(input).returning().execute();
+    const data = await db
+      .insert(optionsTable)
+      .values(input)
+      .returning()
+      .execute();
     if (!data) {
       throw new ZSAError("ERROR", "Option not created");
     }
     return data;
   });
 
+export const createOptionsStepAction = authedAction
+  .input(proOptionsSchema)
+  .handler(async ({ input, request }) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: request?.headers!,
+    });
+    if (!organization) return;
+    const options = input.options;
+    await db
+      .insert(optionsTable)
+      .values(
+        options.map((option) => ({
+          ...option,
+          organizationId: organization.id,
+        })),
+      )
+      .execute();
+  });
+
 export const updateOption = ownerAction
   .input(CreateOptionSchema)
   .handler(async ({ input }) => {
     const data = await db
-      .update(options)
+      .update(optionsTable)
       .set(input)
-      .where(eq(options.id, input.id as string))
+      .where(eq(optionsTable.id, input.id as string))
       .returning()
       .execute();
 
@@ -39,8 +64,8 @@ export const deleteOption = ownerAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db
-      .delete(options)
-      .where(eq(options.id, input))
+      .delete(optionsTable)
+      .where(eq(optionsTable.id, input))
       .returning()
       .execute();
 

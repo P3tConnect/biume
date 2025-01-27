@@ -2,12 +2,12 @@
 
 import { z } from "zod";
 import { CreateObservationSchema, observation } from "../db";
-import { ownerAction, clientAction } from "../lib/action";
+import { ownerAction, authedAction } from "../lib/action";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getObservations = clientAction.handler(async () => {});
+export const getObservations = authedAction.handler(async () => {});
 
 export const createObservation = ownerAction
   .input(CreateObservationSchema)
