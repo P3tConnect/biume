@@ -7,12 +7,12 @@ export const action = createServerAction();
 
 const authedProcedure = createServerActionProcedure().handler(
   async ({ request }) => {
-    const session = await currentUser();
-
-    console.log(session, "session");
-
     try {
-      const user = session;
+      const session = await auth.api.getSession({
+        headers: request?.headers!,
+      });
+
+      const user = session?.user;
 
       if (!user) {
         throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
