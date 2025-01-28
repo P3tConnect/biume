@@ -1,12 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db } from "../lib";
+import { ownerAction, db, safeConfig } from "../lib";
 import { stripe } from "../lib/stripe";
 import { ZSAError } from "zsa";
-import { organization } from "../db";
+import { organization, PlanEnum } from "../db";
 import { eq } from "drizzle-orm";
 import { authedAction } from "../lib";
+import { redirect } from "next/navigation";
 
 export const createBalancePayout = ownerAction
   .input(
@@ -178,4 +179,38 @@ export const createPaymentSession = authedAction
           "Erreur lors de la création de la session de paiement",
       );
     }
+  });
+
+export const updateOrganizationPlan = authedAction
+  .input(z.object({ organizationId: z.string(), plan: z.string() }))
+  .handler(async ({ input }) => {
+    const org = await db.query.organization.findFirst({
+      where: eq(organization.id, input.organizationId),
+    });
+
+    if (!org) {
+      throw new ZSAError("NOT_FOUND", "Organisation non trouvée");
+    }
+
+    const stripeCustomer = org.stripeId;
+
+    const session = await stripe.checkout.sessions.create({
+      customer: stripeCustomer!,
+      mode: "subscription",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: input.plan,
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}?canceled=true`,
+    });
+
+    if (!session.url) {
+      throw new ZSAError("ERROR", "Erreur lors de la création de la session");
+    }
+
+    redirect(session.url);
   });

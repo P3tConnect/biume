@@ -37,10 +37,4 @@ export const { steps, useStepper, utils } = defineStepper(
     description:
       "Choisissez le plan qui vous convient pour commencer à utiliser votre compte professionnel !",
   },
-  {
-    id: "complete",
-    title: "Complete",
-    description:
-      "Vous avez terminé l'inscription, vous pouvez maintenant commencer à utiliser votre compte professionnel !",
-  },
 );

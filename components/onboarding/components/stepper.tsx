@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  Button,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -14,7 +12,6 @@ import ProInformationsStep from "../pro/informations-step";
 import ProServicesStep from "../pro/services-step";
 import ProOptionsStep from "../pro/options-step";
 import ProDocumentsStep from "../pro/documents-step";
-import ProCompleteStep from "../pro/complete-step";
 import StepIndicator from "./step-indicator";
 import IntroStep from "../pro/intro-step";
 import {
@@ -22,40 +19,36 @@ import {
   updateUser,
   useSession,
 } from "@/src/lib/auth-client";
-import { z } from "zod";
 import {
-  CreateOptionSchema,
-  CreateServiceSchema,
-  organizationDocuments,
-  service,
-  options as optionsTable,
   organization as organizationTable,
   progression as progressionTable,
 } from "@/src/db";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { db, stripe } from "@/src/lib";
-import { useRouter } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { toast, Toaster } from "sonner";
-import { onboardingSchema } from "../types/onboarding-schemas";
-import { proInformationsSchema, proServicesSchema, proDocumentsSchema, proOptionsSchema } from "../types/onboarding-schemas";
+import { toast } from "sonner";
+import { SubscriptionStep } from "../pro/subscription-step";
+import { generateMigrationName } from "@/src/lib/business-names";
 
 const Stepper = () => {
   const stepper = useStepper();
   const currentStep = utils.getIndex(stepper.current.id);
   const { data: session } = useSession();
-  const router = useRouter();
 
   const skipOnboarding = async () => {
     try {
       // Créer une organisation minimale
+
+      const name = generateMigrationName();
+
       const result = await organizationUtil.create({
-        name: "Mon entreprise",
-        slug: "mon-entreprise",
+        name: name,
+        slug: name.toLowerCase().replace(/ /g, "-"),
+        logo: "",
         metadata: {},
         userId: session?.user.id,
       });
+
+      console.log(result.error, "result");
 
       // Créer une progression
       const [progression] = await db
@@ -74,11 +67,18 @@ const Stepper = () => {
       });
 
       // Marquer l'onboarding comme terminé et ajouter la progression
+      const stripeCustomer = await stripe.customers.create({
+        name: result.data?.name!,
+        metadata: {
+          organizationId: result.data?.id!,
+        }
+      });
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
+          stripeId: stripeCustomer.id,
         })
         .where(eq(organizationTable.id, result.data?.id as string))
         .execute();
@@ -89,7 +89,7 @@ const Stepper = () => {
       });
 
       // Rediriger vers le dashboard
-      router.push(`/dashboard/organization/${result.data?.id}`);
+      stepper.goTo("subscription");
       toast.success("Configuration rapide terminée !");
     } catch (error) {
       console.error("Erreur lors du skip:", error);
@@ -109,8 +109,8 @@ const Stepper = () => {
           isLast={stepper.isLast}
         />
         <div className="space-y-1 flex flex-col">
-          <DialogTitle>{stepper.current.title}</DialogTitle>
-          <DialogDescription>{stepper.current.description}</DialogDescription>
+          <DialogTitle className="text-xl font-bold">{stepper.current.title}</DialogTitle>
+          <DialogDescription className="text-muted-foreground text-md">{stepper.current.description}</DialogDescription>
         </div>
       </DialogHeader>
 
@@ -121,7 +121,7 @@ const Stepper = () => {
           services: () => <ProServicesStep />,
           options: () => <ProOptionsStep />,
           documents: () => <ProDocumentsStep />,
-          complete: () => <ProCompleteStep />,
+          subscription: () => <SubscriptionStep />,
         })}
       </div>
     </DialogContent>

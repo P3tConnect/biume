@@ -1,17 +1,18 @@
 import { ZSAError, createServerAction, createServerActionProcedure } from "zsa";
 
 import { auth } from "./auth";
+import { currentUser } from "./current-user";
 
 export const action = createServerAction();
 
 const authedProcedure = createServerActionProcedure().handler(
   async ({ request }) => {
-    try {
-      const session = await auth.api.getSession({
-        headers: request?.headers!,
-      });
+    const session = await currentUser();
 
-      const user = session?.user;
+    console.log(session, "session");
+
+    try {
+      const user = session;
 
       if (!user) {
         throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
