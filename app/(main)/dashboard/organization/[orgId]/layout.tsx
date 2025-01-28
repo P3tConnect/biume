@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
-import { currentUser } from "@/src/lib";
 
 const DashboardOrganizationLayout = async ({
   member,
@@ -9,10 +8,9 @@ const DashboardOrganizationLayout = async ({
 }: {
   member: ReactNode;
   owner: ReactNode;
-  params: Promise<{ orgId: string; locale: string }>;
+  params: Promise<{ orgId: string }>;
 }) => {
   const { orgId } = await params;
-  const user = await currentUser();
 
   return (
     <DashboardLayoutComponents companyId={orgId}>

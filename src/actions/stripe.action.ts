@@ -204,8 +204,8 @@ export const updateOrganizationPlan = authedAction
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}/subscription/success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}/subscription/failure`,
     });
 
     if (!session.url) {

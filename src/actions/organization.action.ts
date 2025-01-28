@@ -55,6 +55,8 @@ export const createOrganization = authedAction
         coverImage: data.coverImage,
         description: data.description,
         progressionId: progression.id,
+        companyType: data.companyType,
+        atHome: data.atHome,
       })
       .where(eq(organization.id, result?.id as string))
       .execute();

@@ -9,6 +9,12 @@ import {
   FormLabel,
   Input,
   Textarea,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Switch,
 } from "@/components/ui";
 import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -45,6 +51,8 @@ const InformationsForm = () => {
       logo: "",
       coverImage: "",
       description: "",
+      companyType: "NONE",
+      atHome: false,
     },
   });
 
@@ -350,6 +358,56 @@ const InformationsForm = () => {
             )}
           />
         </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <FormField
+            control={control}
+            name="companyType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type d'entreprise</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez votre type d'entreprise" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="AUTO-ENTREPRENEUR">Auto-entrepreneur</SelectItem>
+                    <SelectItem value="SARL">SARL</SelectItem>
+                    <SelectItem value="SAS">SAS</SelectItem>
+                    <SelectItem value="EIRL">EIRL</SelectItem>
+                    <SelectItem value="SASU">SASU</SelectItem>
+                    <SelectItem value="EURL">EURL</SelectItem>
+                    <SelectItem value="OTHER">Autre</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="atHome"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Prestations à domicile</FormLabel>
+                  <div className="text-sm text-muted-foreground">
+                    Proposez-vous des prestations à domicile ?
+                  </div>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="flex justify-end gap-4">
           <Button variant="outline" className="rounded-xl" onClick={stepper.prev}>
             Précédent

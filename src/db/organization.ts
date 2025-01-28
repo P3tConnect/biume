@@ -33,7 +33,19 @@ import { appointments } from "./appointments";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
+export const companyType = pgEnum("companyType", [
+  "NONE",
+  "AUTO-ENTREPRENEUR",
+  "SARL",
+  "SAS",
+  "EIRL",
+  "SASU",
+  "EURL",
+  "OTHER",
+]);
+
 export const PlanEnum = z.enum(plan.enumValues);
+export const CompanyTypeEnum = z.enum(companyType.enumValues);
 
 export const organization = pgTable("organizations", {
   id: text("id").primaryKey(),
@@ -50,6 +62,7 @@ export const organization = pgTable("organizations", {
   openAt: date("openAt"),
   closeAt: date("closeAt"),
   email: text("email").unique(),
+  companyType: companyType("companyType").default("NONE"),
   atHome: boolean("atHome").notNull().default(false),
   plan: plan("plan").default("NONE"),
   progressionId: text("progressionId").references(() => progression.id, {

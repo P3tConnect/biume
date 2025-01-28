@@ -1,5 +1,5 @@
 import { CreateOptionSchema } from "@/src/db/options";
-import { CreateServiceSchema } from "@/src/db";
+import { CompanyTypeEnum, CreateServiceSchema } from "@/src/db";
 import { z } from "zod";
 
 export const proInformationsSchema = z.object({
@@ -7,6 +7,8 @@ export const proInformationsSchema = z.object({
   logo: z.string().min(1, { message: "Logo is required" }),
   coverImage: z.string().min(1, { message: "Cover image is required" }),
   description: z.string().min(1, { message: "Description is required" }),
+  companyType: CompanyTypeEnum,
+  atHome: z.boolean(),
 });
 
 export const proServicesSchema = z.object({
