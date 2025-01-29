@@ -66,7 +66,7 @@ const ClientSettingsForm = () => {
       image: session?.user?.image ?? '',
       name: session?.user?.name ?? '',
       address: session?.user?.address ?? '',
-      email: '',
+      email: session?.user?.email ?? '',
       country: session?.user?.country ?? '',
       city: session?.user?.city ?? '',
       zipCode: session?.user?.zipCode ?? '',
