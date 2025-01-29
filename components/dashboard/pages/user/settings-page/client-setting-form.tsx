@@ -1,6 +1,5 @@
 'use client';
 
-import { clientSettingsSchema } from '@/app/(main)/dashboard/user/[userId]/settings/page';
 import {
   Form,
   FormControl,
@@ -15,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Separator,
   Switch,
   Tabs,
   TabsContent,
@@ -24,66 +22,83 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Separator,
 } from '@/components/ui';
 import { Bell, Shield, User } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
-import { useState } from 'react';
-import { toast } from 'sonner';
 import { updateUser } from '@/src/actions/user.action';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
+import { useServerActionMutation } from '@/src/hooks';
+import { toast } from 'sonner';
 
-const ClientSettingsForm = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof clientSettingsSchema>>;
-}) => {
+export const clientSettingsSchema = z.object({
+  image: z.string().optional(),
+  name: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z
+    .string()
+    .min(
+      1,
+      'Votre adresse doit contenie le numéro de votre rue ainsi que le nom de la rue'
+    ),
+  country: z.string().min(1, 'Le pays doit être valide'),
+  city: z.string().min(1, 'Votre ville doit être valide'),
+  zipCode: z
+    .string()
+    .min(5, 'Votre code postal doit être valide, soit 5 chiffres'),
+  phoneNumber: z
+    .string()
+    .min(10, 'Votre numéro doit comprendre que 10 chiffres'),
+  emailNotifications: z.boolean().default(false).optional(),
+  smsNotifications: z.boolean().default(false).optional(),
+  twoFactorEnabled: z.boolean().default(false).optional(),
+});
+
+const ClientSettingsForm = () => {
   const { data: session } = useSession();
-  const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (data: z.infer<typeof clientSettingsSchema>) => {
-    if (!session?.user) {
-      toast.error('Session non trouvée');
-      return;
-    }
+  const form = useForm<z.infer<typeof clientSettingsSchema>>({
+    resolver: zodResolver(clientSettingsSchema),
+    defaultValues: {
+      image: session?.user?.image ?? '',
+      name: session?.user?.name ?? '',
+      address: session?.user?.address ?? '',
+      email: '',
+      country: session?.user?.country ?? '',
+      city: session?.user?.city ?? '',
+      zipCode: session?.user?.zipCode ?? '',
+      phoneNumber: session?.user?.phoneNumber ?? '',
+      emailNotifications: session?.user?.emailNotifications ?? false,
+      smsNotifications: session?.user?.smsNotifications ?? false,
+      twoFactorEnabled: session?.user?.twoFactorEnabled ?? false,
+    },
+  });
 
-    try {
-      setLoading(true);
+  const { control, handleSubmit } = form;
 
-      await updateUser({
-        id: session.user.id,
-        name: session.user.name,
-        email: session.user.email,
-        emailVerified: session.user.emailVerified || false,
-        createdAt: session.user.createdAt,
-        updatedAt: new Date(),
-        isPro: session.user.isPro || false,
-        onBoardingComplete: session.user.onBoardingComplete || false,
-        stripeId: session.user.stripeId,
-        // lang: session.user.lang || 'fr',
-        image: data.image || undefined,
-        address: data.address || '',
-        city: data.city || '',
-        country: data.country || '',
-        zipCode: data.zipCode || '',
-        phoneNumber: data.phoneNumber || '',
-        smsNotifications: data.smsNotifications || false,
-        emailNotifications: data.emailNotifications || false,
-        twoFactorEnabled: data.twoFactorEnabled || false,
-      });
+  const { mutateAsync } = useServerActionMutation(updateUser, {
+    onSuccess: () => {
+      toast.success('Vos informations ont été mises à jour');
+    },
+    onMutate: () => {
+      toast.loading('Mise à jour des informations...');
+    },
+    onError: ({ message }) => {
+      toast.error(message);
+    },
+  });
 
-      toast.success('Profil mis à jour avec succès !');
-    } catch (error) {
-      console.error(error);
-      toast.error('Erreur lors de la mise à jour du profil');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+    await mutateAsync(data);
+  });
 
   return (
     <Form {...form}>
-      <form className='container mx-auto p-6'>
+      <form onSubmit={onSubmit} className='container mx-auto p-6'>
         <h1 className='text-3xl font-bold mb-8'>Paramètres</h1>
         <Tabs defaultValue='profile' className='w-full'>
           <TabsList className='grid w-full grid-cols-3 mb-8'>
@@ -129,13 +144,17 @@ const ClientSettingsForm = ({
 
                 <div className='grid grid-cols-2 gap-6'>
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='name'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nom complet</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder='John Doe' />
+                          <Input
+                            {...field}
+                            placeholder='John Doe'
+                            value={field.value}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -143,42 +162,57 @@ const ClientSettingsForm = ({
                   />
 
                   <div className='space-y-2'>
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                      value={session?.user?.email || ''}
-                      disabled
-                      placeholder='john@example.com'
+                    <FormField
+                      control={control}
+                      name='email'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type='email'
+                              placeholder='john@example.com'
+                              value={field.value}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='phoneNumber'
                     render={({ field }) => (
-                      <FormItem className='w-full'>
-                        <FormLabel className='text-sm font-semibold'>
-                          Numéro de téléphone
-                        </FormLabel>
+                      <FormItem>
+                        <FormLabel>Numéro de téléphone</FormLabel>
                         <FormControl>
                           <Input
-                            type='tel'
-                            placeholder='Numéro de téléphone'
                             {...field}
+                            type='tel'
+                            placeholder='0612345678'
                             value={field.value ?? ''}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='address'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Adresse</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder='123 rue de la Paix' />
+                          <Input
+                            {...field}
+                            placeholder='123 rue de la Paix'
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -186,13 +220,17 @@ const ClientSettingsForm = ({
                   />
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='city'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Ville</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder='Paris' />
+                          <Input
+                            {...field}
+                            placeholder='Paris'
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -200,13 +238,17 @@ const ClientSettingsForm = ({
                   />
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='zipCode'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Code postal</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder='75000' />
+                          <Input
+                            {...field}
+                            placeholder='75000'
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -214,13 +256,17 @@ const ClientSettingsForm = ({
                   />
 
                   <FormField
-                    control={form.control}
+                    control={control}
                     name='country'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder='France' />
+                          <Input
+                            {...field}
+                            placeholder='France'
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -241,10 +287,10 @@ const ClientSettingsForm = ({
               </CardHeader>
               <CardContent className='space-y-6'>
                 <FormField
-                  control={form.control}
+                  control={control}
                   name='emailNotifications'
                   render={({ field }) => (
-                    <div className='flex items-center justify-between'>
+                    <FormItem className='flex items-center justify-between rounded-lg border p-4'>
                       <div className='space-y-0.5'>
                         <FormLabel>Notifications par email</FormLabel>
                         <CardDescription>
@@ -254,19 +300,19 @@ const ClientSettingsForm = ({
                       </div>
                       <FormControl>
                         <Switch
-                          checked={field.value}
+                          checked={field.value ?? false}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                    </div>
+                    </FormItem>
                   )}
                 />
-                <Separator />
+
                 <FormField
-                  control={form.control}
+                  control={control}
                   name='smsNotifications'
                   render={({ field }) => (
-                    <div className='flex items-center justify-between'>
+                    <FormItem className='flex items-center justify-between rounded-lg border p-4'>
                       <div className='space-y-0.5'>
                         <FormLabel>Notifications par SMS</FormLabel>
                         <CardDescription>
@@ -276,11 +322,11 @@ const ClientSettingsForm = ({
                       </div>
                       <FormControl>
                         <Switch
-                          checked={field.value}
+                          checked={field.value ?? false}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                    </div>
+                    </FormItem>
                   )}
                 />
               </CardContent>
@@ -298,10 +344,10 @@ const ClientSettingsForm = ({
               </CardHeader>
               <CardContent className='space-y-6'>
                 <FormField
-                  control={form.control}
+                  control={control}
                   name='twoFactorEnabled'
                   render={({ field }) => (
-                    <div className='flex items-center justify-between'>
+                    <FormItem className='flex items-center justify-between rounded-lg border p-4'>
                       <div className='space-y-0.5'>
                         <FormLabel>Authentification à deux facteurs</FormLabel>
                         <CardDescription>
@@ -311,11 +357,11 @@ const ClientSettingsForm = ({
                       </div>
                       <FormControl>
                         <Switch
-                          checked={field.value}
+                          checked={field.value ?? false}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                    </div>
+                    </FormItem>
                   )}
                 />
               </CardContent>
@@ -324,8 +370,8 @@ const ClientSettingsForm = ({
         </Tabs>
 
         <div className='mt-8 flex justify-end'>
-          <Button type='submit' disabled={loading} className='px-8'>
-            {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
+          <Button type='submit' className='px-8'>
+            Enregistrer les modifications
           </Button>
         </div>
       </form>

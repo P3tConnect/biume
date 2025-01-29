@@ -1,26 +1,31 @@
-import { ZSAError, createServerAction, createServerActionProcedure } from "zsa";
+import { ZSAError, createServerAction, createServerActionProcedure } from 'zsa';
 
-import { currentUser } from "./current-user";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { currentUser } from './current-user';
+import { db } from './db';
+import { eq } from 'drizzle-orm';
+import { auth } from './auth';
 
 export const action = createServerAction();
 
-const authedProcedure = createServerActionProcedure().handler(async () => {
-  try {
-    const user = await currentUser();
+const authedProcedure = createServerActionProcedure().handler(
+  async ({ request }) => {
+    try {
+      const session = await auth.api.getSession({
+        headers: request?.headers!,
+      });
 
-    if (!user) {
-      throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
+      if (!session?.user) {
+        throw new ZSAError('NOT_AUTHORIZED', 'You must be logged in !');
+      }
+
+      return {
+        user: session?.user,
+      };
+    } catch (err) {
+      throw new ZSAError('NOT_AUTHORIZED', 'You must be logged in !');
     }
-
-    return {
-      user,
-    };
-  } catch (err) {
-    throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
   }
-});
+);
 
 export const authedAction = authedProcedure.createServerAction();
 
@@ -28,14 +33,14 @@ const clientProcedure = createServerActionProcedure(authedProcedure).handler(
   async ({ ctx }) => {
     if (ctx.user) {
       throw new ZSAError(
-        "NOT_AUTHORIZED",
-        "You need to be registered to perform this action"
+        'NOT_AUTHORIZED',
+        'You need to be registered to perform this action'
       );
     }
 
     throw new ZSAError(
-      "NOT_AUTHORIZED",
-      "You need to be registered to perform this action"
+      'NOT_AUTHORIZED',
+      'You need to be registered to perform this action'
     );
   }
 );
@@ -48,8 +53,8 @@ const memberProcedure = createServerActionProcedure(authedProcedure).handler(
     }
 
     throw new ZSAError(
-      "NOT_AUTHORIZED",
-      "You need to be in a company to perform this action"
+      'NOT_AUTHORIZED',
+      'You need to be in a company to perform this action'
     );
   }
 );
@@ -63,8 +68,8 @@ export const ownerProcedure = createServerActionProcedure(
   }
 
   throw new ZSAError(
-    "NOT_AUTHORIZED",
-    "You need to be registered to perform this action"
+    'NOT_AUTHORIZED',
+    'You need to be registered to perform this action'
   );
 });
 

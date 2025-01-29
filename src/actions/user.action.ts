@@ -1,23 +1,19 @@
-"use server";
+'use server';
 
-import { clientAction, db } from "../lib";
-import { CreateUserSchema, user } from "../db";
-import { ZSAError } from "zsa";
-import { eq } from "drizzle-orm";
+import { clientAction, db } from '../lib';
+import { ZSAError } from 'zsa';
+import { auth } from '../lib/auth';
+import { clientSettingsSchema } from '@/components/dashboard/pages/user/settings-page/client-setting-form';
 
 export const updateUser = clientAction
-  .input(CreateUserSchema)
+  .input(clientSettingsSchema)
   .handler(async ({ input }) => {
-    const data = await db
-      .update(user)
-      .set(input)
-      .where(eq(user.id, input.id as string))
-      .returning()
-      .execute();
+    const data = input;
+    const result = await auth.api.updateUser({
+      body: data,
+    });
 
-    if (!data) {
-      throw new ZSAError("ERROR", "User not updated");
+    if (result.status === false) {
+      throw new ZSAError('ERROR', 'User not updated');
     }
-
-    return data;
   });
