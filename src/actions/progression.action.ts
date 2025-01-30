@@ -3,12 +3,11 @@
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
 import { organization } from "../db/organization";
-import { ownerAction, db } from "../lib";
+import { ownerAction, db, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getProgression = ownerAction.handler(async ({ ctx }) => {
-  const org = ctx.org;
+export const getProgression = ownerAction.action(async ({ ctx }) => {
+  const org = ctx.organization;
 
   const data = await db
     .select()
@@ -18,55 +17,55 @@ export const getProgression = ownerAction.handler(async ({ ctx }) => {
     .execute();
 
   if (!data || data.length === 0) {
-    throw new ZSAError("ERROR", "Progression not found");
+    throw new ActionError("Progression not found");
   }
 
   return data[0].progression;
 });
 
 export const createProgression = ownerAction
-  .input(CreateProgressionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateProgressionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(progression)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not created");
+      throw new ActionError("Progression not created");
     }
 
     return data;
   });
 
 export const updateProgression = ownerAction
-  .input(CreateProgressionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateProgressionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(progression)
-      .set(input)
-      .where(eq(progression.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(progression.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not updated");
+      throw new ActionError("Progression not updated");
     }
 
     return data;
   });
 
 export const deleteProgression = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(progression)
-      .where(eq(progression.id, input))
+      .where(eq(progression.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not deleted");
+      throw new ActionError("Progression not deleted");
     }
   });

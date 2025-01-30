@@ -4,12 +4,16 @@ import { db, ownerAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getWidgets = ownerAction.handler(async () => {});
+export const getWidgets = ownerAction.action(async () => {});
 
 export const createWidget = ownerAction
-  .input(CreateWidgetsSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(widgets).values(input).returning().execute();
+  .schema(CreateWidgetsSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(widgets)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
       throw new ZSAError("ERROR", "Widget not created");
@@ -19,12 +23,12 @@ export const createWidget = ownerAction
   });
 
 export const updateWidget = ownerAction
-  .input(CreateWidgetsSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateWidgetsSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(widgets)
-      .set(input)
-      .where(eq(widgets.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(widgets.id, parsedInput.id as string))
       .returning()
       .execute();
 
@@ -36,11 +40,11 @@ export const updateWidget = ownerAction
   });
 
 export const deleteWidget = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(widgets)
-      .where(eq(widgets.id, input))
+      .where(eq(widgets.id, parsedInput))
       .returning()
       .execute();
 

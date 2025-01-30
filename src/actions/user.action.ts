@@ -5,16 +5,19 @@ import { CreateUserSchema, user } from '../db';
 import { ZSAError } from 'zsa';
 import { eq } from 'drizzle-orm';
 
-export const updateUser = clientAction.input(clientSettingsSchema);
 export const updateUser = authedAction
-  .input(CreateUserSchema)
-  .handler(async ({ input }) => {
-    const data = input;
-    const result = await auth.api.updateUser({
-      body: data,
-    });
+  .schema(CreateUserSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .update(user)
+      .set(parsedInput)
+      .where(eq(user.id, parsedInput.id as string))
+      .returning()
+      .execute();
 
-    if (result.status === false) {
+    if (!data) {
       throw new ZSAError('ERROR', 'User not updated');
     }
+
+    return data;
   });

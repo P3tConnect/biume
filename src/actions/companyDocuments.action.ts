@@ -1,27 +1,24 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, authedAction } from "../lib";
-import {
-  organizationDocuments,
-  CreateOrganizationDocumentsSchema,
-} from "../db";
+import { ownerAction, db, authedAction, ActionError } from "../lib";
+import { organizationDocuments } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
 import { organization as organizationTable } from "../db";
 import { progression as progressionTable } from "../db";
+import { headers } from "next/headers";
 
 export const createDocumentsStepAction = authedAction
-  .input(proDocumentsSchema)
-  .handler(async ({ input, request }) => {
+  .schema(proDocumentsSchema)
+  .action(async ({ parsedInput }) => {
     const organization = await auth.api.getFullOrganization({
-      headers: request?.headers!,
+      headers: await headers(),
     });
 
     if (!organization) return;
-    const documents = input.documents;
+    const documents = parsedInput.documents;
     if (!documents || !organization.id) return;
     const documentsResult = await db
       .insert(organizationDocuments)
@@ -35,21 +32,21 @@ export const createDocumentsStepAction = authedAction
       .execute();
 
     if (!documentsResult) {
-      throw new ZSAError("ERROR", "Documents not created");
+      throw new ActionError("Documents not created");
     }
 
     const organizationResult = await db
       .update(organizationTable)
       .set({
-        siret: input.siret,
-        siren: input.siren,
+        siret: parsedInput.siret,
+        siren: parsedInput.siren,
       })
       .where(eq(organizationTable.id, organization.id))
       .returning()
       .execute();
 
     if (!organizationResult) {
-      throw new ZSAError("ERROR", "Organization not updated");
+      throw new ActionError("Organization not updated");
     }
 
     const [org] = await db
@@ -68,6 +65,6 @@ export const createDocumentsStepAction = authedAction
       .execute();
 
     if (!progressionResult) {
-      throw new ZSAError("ERROR", "Progression not updated");
+      throw new ActionError("Progression not updated");
     }
   });

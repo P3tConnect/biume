@@ -1,19 +1,19 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction } from "../lib/action";
+import { ownerAction } from "../lib";
 import { CreateReceiptProductSchema } from "../db";
 
-export const getReceiptProduct = ownerAction.handler(async () => {});
+export const getReceiptProduct = ownerAction.action(async () => {});
 
 export const createReceiptProduct = ownerAction
-  .input(CreateReceiptProductSchema)
-  .handler(async () => {});
+  .schema(CreateReceiptProductSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const updateReceiptProduct = ownerAction
-  .input(CreateReceiptProductSchema)
-  .handler(async () => {});
+  .schema(CreateReceiptProductSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const deleteReceiptProduct = ownerAction
-  .input(z.string())
-  .handler(async () => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

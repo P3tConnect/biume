@@ -1,55 +1,58 @@
 "use server";
 import { z } from "zod";
 import { category, CreateCategorySchema } from "../db";
-import { authedAction, ownerAction } from "../lib/action";
+import { authedAction, ownerAction, ActionError } from "../lib";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getCategories = authedAction.handler(async () => {});
+export const getCategories = authedAction.action(async () => {});
 
 export const getCategoryById = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});
 
 export const createCategory = ownerAction
-  .input(CreateCategorySchema)
-  .handler(async ({ input, ctx }) => {
-    const data = await db.insert(category).values(input).returning().execute();
+  .schema(CreateCategorySchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(category)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Category not created");
+      throw new ActionError("Category not created");
     }
 
     return data;
   });
 
 export const updateCategory = ownerAction
-  .input(CreateCategorySchema)
-  .handler(async ({ input }) => {
+  .schema(CreateCategorySchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(category)
-      .set(input)
-      .where(eq(category.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(category.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Category not updated");
+      throw new ActionError("Category not updated");
     }
 
     return data;
   });
 
 export const deleteCategory = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(category)
-      .where(eq(category.id, input))
+      .where(eq(category.id, parsedInput))
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Category not deleted");
+      throw new ActionError("Category not deleted");
     }
   });

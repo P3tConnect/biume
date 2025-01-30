@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { organization } from "@/src/lib/auth-client";
-import { ChevronRight, Ellipsis } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 
 const patients = [
   {
@@ -48,11 +47,6 @@ const patients = [
 ];
 
 export async function ClientWithLastProcedure() {
-
-  const { data: member, error } = await organization.getActiveMember();
-
-  console.log(member, error);
-
   return (
     <Card className="col-span-3 rounded-2xl">
       <CardHeader className="relative">

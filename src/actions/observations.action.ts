@@ -2,56 +2,55 @@
 
 import { z } from "zod";
 import { CreateObservationSchema, observation } from "../db";
-import { ownerAction, authedAction } from "../lib/action";
+import { ownerAction, authedAction, ActionError } from "../lib";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getObservations = authedAction.handler(async () => {});
+export const getObservations = authedAction.action(async () => {});
 
 export const createObservation = ownerAction
-  .input(CreateObservationSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateObservationSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(observation)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Observation not created");
+      throw new ActionError("Observation not created");
     }
 
     return data;
   });
 
 export const updateObservation = ownerAction
-  .input(CreateObservationSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateObservationSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(observation)
-      .set(input)
-      .where(eq(observation.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(observation.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Observation not updated");
+      throw new ActionError("Observation not updated");
     }
 
     return data;
   });
 
 export const deleteObservation = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(observation)
-      .where(eq(observation.id, input))
+      .where(eq(observation.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Observation not deleted");
+      throw new ActionError("Observation not deleted");
     }
   });

@@ -1,27 +1,27 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, authedAction } from "../lib";
+import { ownerAction, db, authedAction, ActionError } from "../lib";
 import { CreateServiceSchema, service } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
+import { headers } from "next/headers";
 
-export const getServices = authedAction.handler(async () => {});
+export const getServices = authedAction.action(async () => {});
 
 export const createService = ownerAction
-  .input(proServicesSchema)
-  .handler(async ({ input }) => {});
+  .schema(proServicesSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const createServicesStepAction = authedAction
-  .input(proServicesSchema)
-  .handler(async ({ request, input }) => {
+  .schema(proServicesSchema)
+  .action(async ({ parsedInput }) => {
     const organization = await auth.api.getFullOrganization({
-      headers: request?.headers!,
+      headers: await headers(),
     });
     if (!organization) return;
-    const services = input.services;
+    const services = parsedInput.services;
 
     const result = await db
       .insert(service)
@@ -35,37 +35,37 @@ export const createServicesStepAction = authedAction
       .execute();
 
     if (!result) {
-      throw new ZSAError("ERROR", "Services not created");
+      throw new ActionError("Services not created");
     }
   });
 
 export const updateService = ownerAction
-  .input(CreateServiceSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateServiceSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(service)
-      .set(input)
-      .where(eq(service.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(service.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Service not updated");
+      throw new ActionError("Service not updated");
     }
 
     return data;
   });
 
 export const deleteService = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(service)
-      .where(eq(service.id, input))
+      .where(eq(service.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Service not deleted");
+      throw new ActionError("Service not deleted");
     }
   });

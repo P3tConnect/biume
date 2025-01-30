@@ -1,58 +1,61 @@
 "use server";
 import { z } from "zod";
 import { address, CreateAddressSchema } from "../db";
-import { db, authedAction } from "../lib";
+import { db, authedAction, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getAddresses = authedAction.handler(async () => {});
+export const getAddresses = authedAction.action(async () => {});
 
 export const createAddresses = authedAction
-  .input(CreateAddressSchema)
-  .handler(async ({ input }) => {
-    try {
-      const data = await db.insert(address).values(input).returning().execute();
-
-      if (!data) {
-        throw new ZSAError("ERROR", "Address not created");
-      }
-
-      return data;
-    } catch (err) {
-      throw new ZSAError("ERROR", err);
-    }
-  });
-
-export const updateAddress = authedAction
-  .input(CreateAddressSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateAddressSchema)
+  .action(async ({ parsedInput }) => {
     try {
       const data = await db
-        .update(address)
-        .set(input)
-        .where(eq(address.id, input.id as string))
+        .insert(address)
+        .values(parsedInput)
         .returning()
         .execute();
 
       if (!data) {
-        throw new ZSAError("ERROR", "Address not updated");
+        throw new ActionError("Address not created");
       }
 
       return data;
     } catch (err) {
-      throw new ZSAError("ERROR", err);
+      throw new ActionError(err as string);
+    }
+  });
+
+export const updateAddress = authedAction
+  .schema(CreateAddressSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const data = await db
+        .update(address)
+        .set(parsedInput)
+        .where(eq(address.id, parsedInput.id as string))
+        .returning()
+        .execute();
+
+      if (!data) {
+        throw new ActionError("Address not updated");
+      }
+
+      return data;
+    } catch (err) {
+      throw new ActionError(err as string);
     }
   });
 
 export const deleteAddress = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(address)
-      .where(eq(address.id, input))
+      .where(eq(address.id, parsedInput))
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Address not deleted");
+      throw new ActionError("Address not deleted");
     }
   });

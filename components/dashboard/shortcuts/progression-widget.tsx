@@ -21,7 +21,6 @@ import { cn } from "@/src/lib/utils";
 import { motion } from "framer-motion";
 import { type Progression } from "@/src/db";
 import { getProgression } from "@/src/actions/progression.action";
-import { useServerActionQuery } from "@/src/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { db } from "@/src/lib";

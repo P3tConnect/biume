@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Avvvatars from "avvvatars-react";
 import { ArrowRight, Heart, MessageCircle, Star, Calendar } from "lucide-react";
 import Image from "next/image";
 
@@ -13,14 +14,11 @@ export function CTASection() {
             <div className="absolute -top-8 left-1/2 -translate-x-1/2">
               <div className="flex -space-x-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-16 h-16 rounded-full border-4 border-background overflow-hidden shadow-lg">
-                    <Image
-                      src={`/pets/pet-${i}.jpg`}
-                      alt={`Animal ${i}`}
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-cover"
-                    />
+                  <div
+                    key={i}
+                    className="w-16 h-16 rounded-full border-4 border-background overflow-hidden shadow-lg"
+                  >
+                    <Avvvatars value="Dog" style="shape" size={56} />
                   </div>
                 ))}
               </div>
@@ -29,15 +27,18 @@ export function CTASection() {
             <div className="mt-8 text-center max-w-3xl mx-auto">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
                 <Heart className="w-4 h-4" />
-                <span className="text-sm font-medium">Pour l'amour de nos compagnons</span>
+                <span className="text-sm font-medium">
+                  Pour l'amour de nos compagnons
+                </span>
               </div>
 
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Rejoignez notre communauté d'amoureux des animaux
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Commencez dès aujourd'hui à prendre soin de vos compagnons comme ils le méritent.
-                Plus de 15 000 propriétaires nous font déjà confiance.
+                Commencez dès aujourd'hui à prendre soin de vos compagnons comme
+                ils le méritent. Plus de 15 000 propriétaires nous font déjà
+                confiance.
               </p>
 
               {/* Statistiques */}
@@ -47,21 +48,27 @@ export function CTASection() {
                     <Calendar className="w-6 h-6 text-primary" />
                   </div>
                   <div className="text-2xl font-bold text-primary">24/7</div>
-                  <div className="text-sm text-muted-foreground">Disponibilité</div>
+                  <div className="text-sm text-muted-foreground">
+                    Disponibilité
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-xl">
                     <Star className="w-6 h-6 text-primary" />
                   </div>
                   <div className="text-2xl font-bold text-primary">4.8/5</div>
-                  <div className="text-sm text-muted-foreground">Note moyenne</div>
+                  <div className="text-sm text-muted-foreground">
+                    Note moyenne
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-xl">
                     <Heart className="w-6 h-6 text-primary" />
                   </div>
                   <div className="text-2xl font-bold text-primary">15k+</div>
-                  <div className="text-sm text-muted-foreground">Propriétaires</div>
+                  <div className="text-sm text-muted-foreground">
+                    Propriétaires
+                  </div>
                 </div>
               </div>
 
@@ -92,7 +99,10 @@ export function CTASection() {
                 </div>
               </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-card border rounded-2xl p-4 shadow-xl animate-float hidden md:block" style={{ animationDelay: "0.2s" }}>
+            <div
+              className="absolute -bottom-6 -left-6 bg-card border rounded-2xl p-4 shadow-xl animate-float hidden md:block"
+              style={{ animationDelay: "0.2s" }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
                   <Heart className="w-6 h-6 text-secondary" />
@@ -110,4 +120,4 @@ export function CTASection() {
       </div>
     </section>
   );
-} 
+}

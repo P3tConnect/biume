@@ -1,52 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { authedAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db, ActionError } from "../lib";
 import { CreateReportSchema, report } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getReports = authedAction.handler(async () => {});
+export const getReports = authedAction.action(async () => {});
 
 export const createReport = ownerAction
-  .input(CreateReportSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(report).values(input).returning().execute();
+  .schema(CreateReportSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(report)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Report not created");
+      throw new ActionError("Report not created");
     }
 
     return data;
   });
 
 export const updateReport = ownerAction
-  .input(CreateReportSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateReportSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(report)
-      .set(input)
-      .where(eq(report.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(report.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Report not updated");
+      throw new ActionError("Report not updated");
     }
 
     return data;
   });
 
 export const deleteReport = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(report)
-      .where(eq(report.id, input))
+      .where(eq(report.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Report not deleted");
+      throw new ActionError("Report not deleted");
     }
   });

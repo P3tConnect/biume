@@ -6,12 +6,12 @@ import { CreateTopicSchema, topic } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getTopics = authedAction.handler(async () => {});
+export const getTopics = authedAction.action(async () => {});
 
 export const createTopic = authedAction
-  .input(CreateTopicSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(topic).values(input).returning().execute();
+  .schema(CreateTopicSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db.insert(topic).values(parsedInput).returning().execute();
 
     if (!data) {
       throw new ZSAError("ERROR", "Topic not created");
@@ -21,12 +21,12 @@ export const createTopic = authedAction
   });
 
 export const updateTopic = authedAction
-  .input(CreateTopicSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateTopicSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(topic)
-      .set(input)
-      .where(eq(topic.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(topic.id, parsedInput.id as string))
       .returning()
       .execute();
 
@@ -38,11 +38,11 @@ export const updateTopic = authedAction
   });
 
 export const deleteTopic = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(topic)
-      .where(eq(topic.id, input))
+      .where(eq(topic.id, parsedInput))
       .returning()
       .execute();
 

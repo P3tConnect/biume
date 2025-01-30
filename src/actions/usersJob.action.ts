@@ -1,18 +1,18 @@
 "use server";
 import { z } from "zod";
 import { CreateUsersJobsSchema } from "../db";
-import { ownerAction, authedAction } from "../lib/action";
+import { ownerAction, authedAction } from "../lib";
 
-export const getUsersJobs = authedAction.handler(async () => {});
+export const getUsersJobs = authedAction.action(async () => {});
 
 export const createUsersJob = ownerAction
-  .input(CreateUsersJobsSchema)
-  .handler(async () => {});
+  .schema(CreateUsersJobsSchema)
+  .action(async () => {});
 
 export const updateUsersJob = ownerAction
-  .input(CreateUsersJobsSchema)
-  .handler(async () => {});
+  .schema(CreateUsersJobsSchema)
+  .action(async () => {});
 
 export const deleteUsersJob = ownerAction
-  .input(z.string())
-  .handler(async () => {});
+  .schema(z.string())
+  .action(async () => {});

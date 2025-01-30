@@ -2,55 +2,54 @@
 
 import { z } from "zod";
 import { CreateIntolerenceSchema, intolerences } from "../db";
-import { authedAction, db } from "../lib";
+import { authedAction, db, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getIntolerences = authedAction.handler(async () => {});
+export const getIntolerences = authedAction.action(async () => {});
 
 export const createIntolerence = authedAction
-  .input(CreateIntolerenceSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateIntolerenceSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(intolerences)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Intolerence not created");
+      throw new ActionError("Intolerence not created");
     }
 
     return data;
   });
 
 export const updateIntolerence = authedAction
-  .input(CreateIntolerenceSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateIntolerenceSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(intolerences)
-      .set(input)
-      .where(eq(intolerences.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(intolerences.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Intolerence not updated");
+      throw new ActionError("Intolerence not updated");
     }
 
     return data;
   });
 
 export const deleteIntolerence = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(intolerences)
-      .where(eq(intolerences.id, input))
+      .where(eq(intolerences.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Intolerence not deleted");
+      throw new ActionError("Intolerence not deleted");
     }
   });

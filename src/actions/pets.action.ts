@@ -1,52 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { authedAction, db } from "../lib";
+import { authedAction, db, ActionError } from "../lib";
 import { CreatePetSchema, pets } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getPets = authedAction.handler(async () => {});
+export const getPets = authedAction.action(async () => {});
 
 export const createPet = authedAction
-  .input(CreatePetSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(pets).values(input).returning().execute();
+  .schema(CreatePetSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(pets)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Pet not created");
+      throw new ActionError("Pet not created");
     }
 
     return data;
   });
 
 export const updatePet = authedAction
-  .input(CreatePetSchema)
-  .handler(async ({ input }) => {
+  .schema(CreatePetSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(pets)
-      .set(input)
-      .where(eq(pets.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(pets.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Pet not updated");
+      throw new ActionError("Pet not updated");
     }
 
     return data;
   });
 
 export const deletePet = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(pets)
-      .where(eq(pets.id, input))
+      .where(eq(pets.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Pet not deleted");
+      throw new ActionError("Pet not deleted");
     }
   });

@@ -47,17 +47,17 @@ export function ProLanding() {
                   size="lg"
                   className="custom-button h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg"
                 >
-                  Commencer maintenant
+                  Je m'inscris à la liste d'attente
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <Button
+                {/* <Button
                   variant="outline"
                   size="lg"
                   className="custom-button h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg"
                 >
                   Voir la démo
                   <Sparkles className="w-5 h-5 ml-2" />
-                </Button>
+                </Button> */}
               </div>
               <div className="grid grid-cols-2 sm:flex sm:items-center gap-4 sm:gap-8">
                 <div className="text-center">
@@ -98,13 +98,13 @@ export function ProLanding() {
                   height={600}
                   className="rounded-2xl shadow-lg"
                 />
-                <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl p-4 shadow-xl animate-float">
+                <div className="absolute -bottom-6 -right-6 bg-card border border-border rounded-2xl p-4 shadow-xl animate-float">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
                       <Clock className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-black">
+                      <div className="text-sm font-medium">
                         Prochain rendez-vous
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -114,7 +114,7 @@ export function ProLanding() {
                   </div>
                 </div>
                 <div
-                  className="absolute -top-6 -left-6 bg-white rounded-2xl p-4 shadow-xl animate-float"
+                  className="absolute -top-6 -left-6 bg-card border border-border rounded-2xl p-4 shadow-xl animate-float"
                   style={{ animationDelay: "0.2s" }}
                 >
                   <div className="flex items-center gap-3">
@@ -122,9 +122,7 @@ export function ProLanding() {
                       <Heart className="w-6 h-6 text-secondary" />
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-black">
-                        Santé optimale
-                      </div>
+                      <div className="text-sm font-medium">Santé optimale</div>
                       <div className="text-xs text-muted-foreground">
                         Vaccins à jour
                       </div>

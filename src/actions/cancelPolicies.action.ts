@@ -1,68 +1,65 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, authedAction } from "../lib/action";
+import { ownerAction, authedAction, ActionError } from "../lib";
 import { cancelPolicies, CreateCancelPolicySchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getCancelPolicies = authedAction.handler(async () => {
+export const getCancelPolicies = authedAction.action(async () => {
   const data = await db.query.cancelPolicies.findMany().execute();
 
   if (!data) {
-    throw new ZSAError("NOT_FOUND", "CancelPolicies not found");
+    throw new ActionError("CancelPolicies not found");
   }
 
   return data;
 });
 
-export const getCancelPoliciesByCompany = authedAction.handler(
-  async ({ input }) => {},
-);
+export const getCancelPoliciesByCompany = authedAction.action(async () => {});
 
 export const createCancelPolicies = ownerAction
-  .input(CreateCancelPolicySchema)
-  .handler(async ({ input }) => {
+  .schema(CreateCancelPolicySchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(cancelPolicies)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CancelPolicies not created");
+      throw new ActionError("CancelPolicies not created");
     }
 
     return data;
   });
 
 export const updateCancelPolicies = ownerAction
-  .input(CreateCancelPolicySchema)
-  .handler(async ({ input }) => {
+  .schema(CreateCancelPolicySchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(cancelPolicies)
-      .set(input)
-      .where(eq(cancelPolicies.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(cancelPolicies.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CancelPolicies not updated");
+      throw new ActionError("CancelPolicies not updated");
     }
 
     return data;
   });
 
 export const deleteCancelPolicies = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(cancelPolicies)
-      .where(eq(cancelPolicies.id, input))
+      .where(eq(cancelPolicies.id, parsedInput))
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CancelPolicies not deleted");
+      throw new ActionError("CancelPolicies not deleted");
     }
   });
