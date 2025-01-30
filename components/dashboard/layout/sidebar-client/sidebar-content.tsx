@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui';
 import { clientMenuList } from '@/src/config';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const SidebarClientContentComponent = () => {
@@ -29,11 +30,15 @@ const SidebarClientContentComponent = () => {
             <SidebarMenu>
               {menus.map(({ active, href, icon: Icon, label }) => (
                 <SidebarMenuItem key={label}>
-                  <SidebarMenuButton tooltip={label} asChild isActive={active}>
-                    <a href={href}>
-                      <Icon className='size-4' />
-                      <span>{label}</span>
-                    </a>
+                  <SidebarMenuButton
+                    tooltip={t(label)}
+                    asChild
+                    isActive={active}
+                  >
+                    <Link href={href}>
+                      <Icon />
+                      <span>{t(label)}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

@@ -1,23 +1,42 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
+import { ownerAction, db, authedAction } from "../lib";
 import { CreateServiceSchema, service } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
+import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
+import { auth } from "../lib/auth";
 
-export const getServices = clientAction.handler(async () => {});
+export const getServices = authedAction.handler(async () => {});
 
 export const createService = ownerAction
-  .input(CreateServiceSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(service).values(input).returning().execute();
+  .input(proServicesSchema)
+  .handler(async ({ input }) => {});
 
-    if (!data) {
-      throw new ZSAError("ERROR", "Service not created");
+export const createServicesStepAction = authedAction
+  .input(proServicesSchema)
+  .handler(async ({ request, input }) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: request?.headers!,
+    });
+    if (!organization) return;
+    const services = input.services;
+
+    const result = await db
+      .insert(service)
+      .values(
+        services.map((service) => ({
+          ...service,
+          organizationId: organization.id,
+        })),
+      )
+      .returning()
+      .execute();
+
+    if (!result) {
+      throw new ZSAError("ERROR", "Services not created");
     }
-
-    return data;
   });
 
 export const updateService = ownerAction

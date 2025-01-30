@@ -23,6 +23,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Settings,
   Sparkles,
   User2,
 } from "lucide-react";
@@ -129,29 +130,19 @@ const SidebarFooterComponent = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-2">
-                <BadgeCheck size={14} />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
-                <CreditCard size={14} />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
-                <Bell size={14} />
-                Notifications
+                <Settings size={14} />
+                Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2"
               onClick={async () => {
-                await updateUser({
-                  isPro: false,
-                });
-                router.push("/dashboard");
+                router.push(`/dashboard/user/${session?.user.id}`);
               }}
             >
               <User2 size={14} />
-              My personnal account
+              Back to personnal
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

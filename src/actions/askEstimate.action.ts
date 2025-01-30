@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction } from "../lib/action";
+import { authedAction } from "../lib/action";
 import { askEstimate, CreateAskEstimateSchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getAskEstimates = clientAction.handler(async () => {
+export const getAskEstimates = authedAction.handler(async () => {
   const data = await db.query.askEstimate.findMany().execute();
 
   if (!data) {
@@ -17,7 +17,7 @@ export const getAskEstimates = clientAction.handler(async () => {
   return data;
 });
 
-export const createAskEstimate = clientAction
+export const createAskEstimate = authedAction
   .input(CreateAskEstimateSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -33,7 +33,7 @@ export const createAskEstimate = clientAction
     return data;
   });
 
-export const updateAskEstimate = clientAction
+export const updateAskEstimate = authedAction
   .input(CreateAskEstimateSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -50,7 +50,7 @@ export const updateAskEstimate = clientAction
     return data;
   });
 
-export const deleteAskEstimate = clientAction
+export const deleteAskEstimate = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

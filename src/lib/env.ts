@@ -16,6 +16,12 @@ interface ENV {
   BETTER_AUTH_SECRET: string | undefined;
   BETTER_AUTH_URL: string | undefined;
   UPLOADTHING_TOKEN: string | undefined;
+  STRIPE_BASIC_PLAN_ID: string | undefined;
+  STRIPE_PRO_PLAN_ID: string | undefined;
+  STRIPE_ULTIMATE_PLAN_ID: string | undefined;
+  STRIPE_WEBHOOK_BASIC_SECRET: string | undefined;
+  STRIPE_WEBHOOK_PRO_SECRET: string | undefined;
+  STRIPE_WEBHOOK_ULTIMATE_SECRET: string | undefined;
 }
 
 interface Config {
@@ -32,6 +38,12 @@ interface Config {
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
   UPLOADTHING_TOKEN: string;
+  STRIPE_BASIC_PLAN_ID: string;
+  STRIPE_PRO_PLAN_ID: string;
+  STRIPE_ULTIMATE_PLAN_ID: string;
+  STRIPE_WEBHOOK_BASIC_SECRET: string;
+  STRIPE_WEBHOOK_PRO_SECRET: string;
+  STRIPE_WEBHOOK_ULTIMATE_SECRET: string;
 }
 
 const getConfig = (): ENV => {
@@ -46,6 +58,12 @@ const getConfig = (): ENV => {
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    STRIPE_BASIC_PLAN_ID: process.env.STRIPE_BASIC_PLAN_ID,
+    STRIPE_PRO_PLAN_ID: process.env.STRIPE_PRO_PLAN_ID,
+    STRIPE_ULTIMATE_PLAN_ID: process.env.STRIPE_ULTIMATE_PLAN_ID,
+    STRIPE_WEBHOOK_BASIC_SECRET: process.env.STRIPE_WEBHOOK_BASIC_SECRET,
+    STRIPE_WEBHOOK_PRO_SECRET: process.env.STRIPE_WEBHOOK_PRO_SECRET,
+    STRIPE_WEBHOOK_ULTIMATE_SECRET: process.env.STRIPE_WEBHOOK_ULTIMATE_SECRET,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,

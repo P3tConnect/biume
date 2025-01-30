@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { CreateTransactionSchema, transaction } from "../db";
-import { db, clientAction } from "../lib";
+import { db, authedAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getTransactions = clientAction.handler(async () => {});
+export const getTransactions = authedAction.handler(async () => {});
 
-export const createTransactions = clientAction
+export const createTransactions = authedAction
   .input(CreateTransactionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -24,7 +24,7 @@ export const createTransactions = clientAction
     return data;
   });
 
-export const updateTransactions = clientAction
+export const updateTransactions = authedAction
   .input(CreateTransactionSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -41,7 +41,7 @@ export const updateTransactions = clientAction
     return data;
   });
 
-export const deleteTransaction = clientAction
+export const deleteTransaction = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

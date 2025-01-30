@@ -1,8 +1,23 @@
-import { Button, Card, CardContent, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+"use client";
+
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui";
 import { FileText, Plus, Table } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import ReportDetailsDrawer, { type Report } from "./report-details-drawer";
 
 const ReportsPageComponent = () => {
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+
   return (
     <div className="flex flex-col gap-6">
       {/* Header Card */}
@@ -75,6 +90,28 @@ const ReportsPageComponent = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <ReportDetailsDrawer
+        report={selectedReport}
+        isOpen={!!selectedReport}
+        onClose={() => setSelectedReport(null)}
+        onEdit={(report) => {
+          // TODO: Implement edit functionality
+          console.log("Edit report:", report);
+        }}
+        onDelete={(report) => {
+          // TODO: Implement delete functionality
+          console.log("Delete report:", report);
+        }}
+        onDownload={(report) => {
+          // TODO: Implement download functionality
+          console.log("Download report:", report);
+        }}
+        onShare={(report) => {
+          // TODO: Implement share functionality
+          console.log("Share report:", report);
+        }}
+      />
     </div>
   );
 };

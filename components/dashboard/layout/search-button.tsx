@@ -14,6 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { CommandLoading } from "cmdk";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,9 @@ const SearchButton = () => {
         <TooltipContent side="bottom">Search</TooltipContent>
       </Tooltip>
       <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
+        <VisuallyHidden>
+          <DialogTitle>Recherche</DialogTitle>
+        </VisuallyHidden>
         <CommandInput />
         <CommandList className="p-1">
           <CommandEmpty>No results found</CommandEmpty>

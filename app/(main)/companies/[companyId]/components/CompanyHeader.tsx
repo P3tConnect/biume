@@ -1,0 +1,112 @@
+import { Button } from "@/components/ui";
+import { Heart, MapPin, Share2, Star, ChevronLeft } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+interface CompanyHeaderProps {
+  company: {
+    name: string;
+    address: string;
+    rating: number;
+    reviews: number;
+    images: string[];
+  };
+}
+
+export function CompanyHeader({ company }: CompanyHeaderProps) {
+  return (
+    <div className="space-y-6">
+      {/* Navigation */}
+      <div className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+        <div className="container mx-auto py-4">
+          <div className="flex items-center">
+            <Link href="/companies" className="flex items-center text-muted-foreground hover:text-foreground transition-colors">
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Retour aux résultats
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Title Section */}
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-semibold mb-2">{company.name}</h1>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-primary text-primary" />
+              <span className="font-medium">{company.rating}</span>
+              <span className="text-muted-foreground">·</span>
+              <button className="font-medium underline-offset-4 hover:underline">
+                {company.reviews} avis
+              </button>
+            </div>
+            <span className="text-muted-foreground">·</span>
+            <div className="flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              <button className="font-medium underline-offset-4 hover:underline">
+                {company.address}
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Share2 className="h-4 w-4" />
+              Partager
+            </Button>
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Heart className="h-4 w-4" />
+              Enregistrer
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Image Gallery */}
+      <div className="container mx-auto">
+        <div className="aspect-[2/1] rounded-xl overflow-hidden grid grid-cols-4 grid-rows-2 gap-2">
+          <div className="col-span-2 row-span-2 relative">
+            <Image
+              src={company.images[0]}
+              alt={`${company.name} - Image principale`}
+              fill
+              className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </div>
+          <div className="relative">
+            <Image
+              src={company.images[1]}
+              alt={`${company.name} - Image 2`}
+              fill
+              className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </div>
+          <div className="relative">
+            <Image
+              src={company.images[2]}
+              alt={`${company.name} - Image 3`}
+              fill
+              className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </div>
+          <div className="relative">
+            <Image
+              src={company.images[1]}
+              alt={`${company.name} - Image 4`}
+              fill
+              className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </div>
+          <div className="relative">
+            <Image
+              src={company.images[2]}
+              alt={`${company.name} - Image 5`}
+              fill
+              className="object-cover hover:opacity-90 transition-opacity cursor-pointer rounded-tr-xl"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+} 

@@ -1,8 +1,5 @@
 import { ZSAError, createServerAction, createServerActionProcedure } from 'zsa';
 
-import { currentUser } from './current-user';
-import { db } from './db';
-import { eq } from 'drizzle-orm';
 import { auth } from './auth';
 
 export const action = createServerAction();
@@ -14,12 +11,14 @@ const authedProcedure = createServerActionProcedure().handler(
         headers: request?.headers!,
       });
 
-      if (!session?.user) {
+      const user = session?.user;
+
+      if (!user) {
         throw new ZSAError('NOT_AUTHORIZED', 'You must be logged in !');
       }
 
       return {
-        user: session?.user,
+        user,
       };
     } catch (err) {
       throw new ZSAError('NOT_AUTHORIZED', 'You must be logged in !');
@@ -29,47 +28,106 @@ const authedProcedure = createServerActionProcedure().handler(
 
 export const authedAction = authedProcedure.createServerAction();
 
-const clientProcedure = createServerActionProcedure(authedProcedure).handler(
-  async ({ ctx }) => {
-    if (ctx.user) {
+const organizationProcedure = createServerActionProcedure(
+  authedProcedure
+).handler(async ({ ctx, request }) => {
+  try {
+    const organization = await auth.api.getFullOrganization({
+      headers: request?.headers!,
+    });
+
+    if (!organization) {
       throw new ZSAError(
         'NOT_AUTHORIZED',
-        'You need to be registered to perform this action'
+        'You need to be in a company to perform this action'
       );
     }
 
+    return {
+      user: ctx.user,
+      organization,
+    };
+  } catch (err) {
     throw new ZSAError(
-      'NOT_AUTHORIZED',
-      'You need to be registered to perform this action'
+      'INTERNAL_SERVER_ERROR',
+      'Error when trying to retreive organization'
     );
   }
-);
+});
 
-export const clientAction = clientProcedure.createServerAction();
+export const organizationAction = organizationProcedure.createServerAction();
 
-const memberProcedure = createServerActionProcedure(authedProcedure).handler(
-  async ({ ctx }) => {
-    if (ctx.user) {
+const memberProcedure = createServerActionProcedure(
+  organizationProcedure
+).handler(async ({ ctx, request }) => {
+  try {
+    const membership = await auth.api.getActiveMember();
+  } catch (error) {}
+  if (ctx.user && request?.headers) {
+    const org = await auth.api.getFullOrganization({
+      headers: request.headers,
+    });
+
+    if (!org) {
+      throw new ZSAError('NOT_FOUND', 'Organization not found');
     }
 
-    throw new ZSAError(
-      'NOT_AUTHORIZED',
-      'You need to be in a company to perform this action'
-    );
+    const membership = await auth.api.getActiveMember();
+
+    if (membership?.role != 'member') {
+      throw new ZSAError(
+        'NOT_AUTHORIZED',
+        'You need to be a member of a company to perform this action'
+      );
+    }
+
+    return {
+      user: ctx.user,
+      org,
+    };
   }
-);
+
+  throw new ZSAError(
+    'NOT_AUTHORIZED',
+    'You need to be in a company to perform this action'
+  );
+});
 
 export const memberAction = memberProcedure.createServerAction();
 
 export const ownerProcedure = createServerActionProcedure(
   authedProcedure
-).handler(async ({ ctx }) => {
+).handler(async ({ ctx, request }) => {
   if (ctx.user) {
+    const org = await auth.api.getFullOrganization({
+      headers: request?.headers!,
+    });
+
+    if (!org) {
+      throw new ZSAError(
+        'NOT_AUTHORIZED',
+        'You need to be in a company to perform this action'
+      );
+    }
+
+    const membership = await auth.api.getActiveMember();
+
+    if (membership?.role != 'owner') {
+      throw new ZSAError(
+        'NOT_AUTHORIZED',
+        'You need to be an owner of a company to perform this action'
+      );
+    }
+
+    return {
+      user: ctx.user,
+      org,
+    };
   }
 
   throw new ZSAError(
     'NOT_AUTHORIZED',
-    'You need to be registered to perform this action'
+    'You need to be in a company to perform this action'
   );
 });
 

@@ -1,11 +1,11 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { proSession } from "./pro_session";
+import { appointments } from "./appointments";
 import { options } from "./options";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const sessionOptions = pgTable("session_options", {
-  sessionId: text("sessionId").references(() => proSession.id, {
+  appointmentId: text("appointmentId").references(() => appointments.id, {
     onDelete: "cascade",
   }),
   optionId: text("optionId").references(() => options.id, {
@@ -14,9 +14,9 @@ export const sessionOptions = pgTable("session_options", {
 });
 
 export const sessionOptionsRelations = relations(sessionOptions, ({ one }) => ({
-  session: one(proSession, {
-    fields: [sessionOptions.sessionId],
-    references: [proSession.id],
+  appointment: one(appointments, {
+    fields: [sessionOptions.appointmentId],
+    references: [appointments.id],
   }),
   option: one(options, {
     fields: [sessionOptions.optionId],

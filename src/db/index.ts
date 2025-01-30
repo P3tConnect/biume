@@ -22,7 +22,7 @@ export * from "./pets";
 export * from "./petsAllergies";
 export * from "./petsDeseases";
 export * from "./petsIntolerences";
-export * from "./pro_session";
+export * from "./appointments";
 export * from "./products";
 export * from "./progression";
 export * from "./project";

@@ -1,7 +1,7 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import { proSession } from "./pro_session";
+import { appointments } from "./appointments";
 import { organization } from "./organization";
 
 export const service = pgTable("service", {
@@ -25,7 +25,7 @@ export const servicesRelations = relations(service, ({ one, many }) => ({
     fields: [service.organizationId],
     references: [organization.id],
   }),
-  sessions: many(proSession),
+  appointments: many(appointments),
 }));
 
 export type Service = typeof service.$inferSelect;

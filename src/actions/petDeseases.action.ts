@@ -1,18 +1,18 @@
 "use server";
 import { z } from "zod";
 import { CreatePetsDeseaseSchema } from "../db";
-import { clientAction } from "../lib";
+import { authedAction } from "../lib";
 
-export const getPetDeseases = clientAction.handler(async () => {});
+export const getPetDeseases = authedAction.handler(async () => {});
 
-export const createPetDesease = clientAction
+export const createPetDesease = authedAction
   .input(CreatePetsDeseaseSchema)
   .handler(async () => {});
 
-export const updatePetDesease = clientAction
+export const updatePetDesease = authedAction
   .input(CreatePetsDeseaseSchema)
   .handler(async () => {});
 
-export const deletePetDesease = clientAction
+export const deletePetDesease = authedAction
   .input(z.string())
   .handler(async () => {});

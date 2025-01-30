@@ -9,7 +9,7 @@ import { invitation } from "./invitation";
 import { member } from "./member";
 import { notification } from "./notifications";
 import { pets } from "./pets";
-import { proSession } from "./pro_session";
+import { appointments } from "./appointments";
 import { projectsInvitees } from "./projectsInvitees";
 import { relations } from "drizzle-orm";
 import { session } from "./session";
@@ -41,7 +41,7 @@ export const user = pgTable("users", {
 export const userRelations = relations(user, ({ one, many }) => ({
   pets: many(pets),
   jobs: many(usersJobs),
-  proSessions: many(proSession),
+  appointments: many(appointments),
   newsletter: many(usersNewsletters),
   allergies: many(allergies),
   deseases: many(deseases),

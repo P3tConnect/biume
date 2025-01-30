@@ -1,12 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db } from "../lib";
 import { CreateInvoiceSchema, invoice } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getInvoices = clientAction.handler(async () => {});
+export const getInvoices = authedAction.handler(async () => {});
 
 export const createInvoice = ownerAction
   .input(CreateInvoiceSchema)

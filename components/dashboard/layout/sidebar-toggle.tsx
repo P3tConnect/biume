@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Menu } from "lucide-react";
 
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,21 @@ export function SidebarToggle() {
   const { state, toggleSidebar } = useSidebar();
 
   return (
-    <div
-      className={cn("hidden lg:flex transition-all duration-300 top-[15px]")}
-    >
+    <div className="flex">
+      {/* Mobile & Tablet */}
       <Button
         onClick={toggleSidebar}
-        className="rounded-md w-8 h-8 bg-card"
+        className="lg:hidden rounded-md w-8 h-8 bg-card"
+        variant="outline"
+        size="icon"
+      >
+        <Menu className="h-4 w-4" />
+      </Button>
+
+      {/* Desktop */}
+      <Button
+        onClick={toggleSidebar}
+        className="hidden lg:flex rounded-md w-8 h-8 bg-card"
         variant="outline"
         size="icon"
       >

@@ -1,14 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, db } from "../lib";
+import { authedAction, db } from "../lib";
 import { CreateTopicSchema, topic } from "../db";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getTopics = clientAction.handler(async () => {});
+export const getTopics = authedAction.handler(async () => {});
 
-export const createTopic = clientAction
+export const createTopic = authedAction
   .input(CreateTopicSchema)
   .handler(async ({ input }) => {
     const data = await db.insert(topic).values(input).returning().execute();
@@ -20,7 +20,7 @@ export const createTopic = clientAction
     return data;
   });
 
-export const updateTopic = clientAction
+export const updateTopic = authedAction
   .input(CreateTopicSchema)
   .handler(async ({ input }) => {
     const data = await db
@@ -37,7 +37,7 @@ export const updateTopic = clientAction
     return data;
   });
 
-export const deleteTopic = clientAction
+export const deleteTopic = authedAction
   .input(z.string())
   .handler(async ({ input }) => {
     const data = await db

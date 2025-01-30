@@ -1,12 +1,13 @@
 'use server';
 
-import { clientAction, db } from '../lib';
+import { authedAction, db } from '../lib';
+import { CreateUserSchema, user } from '../db';
 import { ZSAError } from 'zsa';
-import { auth } from '../lib/auth';
-import { clientSettingsSchema } from '@/components/dashboard/pages/user/settings-page/client-setting-form';
+import { eq } from 'drizzle-orm';
 
-export const updateUser = clientAction
-  .input(clientSettingsSchema)
+export const updateUser = clientAction.input(clientSettingsSchema);
+export const updateUser = authedAction
+  .input(CreateUserSchema)
   .handler(async ({ input }) => {
     const data = input;
     const result = await auth.api.updateUser({
