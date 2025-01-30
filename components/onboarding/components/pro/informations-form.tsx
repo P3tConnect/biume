@@ -27,9 +27,9 @@ import { useDropzone } from "react-dropzone";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { cn } from "@/src/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useServerActionMutation } from "@/src/hooks";
 import { createOrganization } from "@/src/actions/organization.action";
 import { proInformationsSchema } from "../../types/onboarding-schemas";
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -44,41 +44,37 @@ const InformationsForm = () => {
   const [logoIsUploading, setLogoIsUploading] = useState(false);
   const stepper = useStepper();
 
-  const form = useForm<z.infer<typeof proInformationsSchema>>({
-    resolver: zodResolver(proInformationsSchema),
-    defaultValues: {
-      name: "",
-      logo: "",
-      coverImage: "",
-      description: "",
-      companyType: "NONE",
-      atHome: false,
+  const { form, handleSubmitWithAction, resetFormAndAction } = useHookFormAction(createOrganization, zodResolver(proInformationsSchema), {
+    formProps: {
+      defaultValues: {
+        name: "",
+        atHome: false,
+        companyType: "NONE",
+        coverImage: "",
+        description: "",
+        logo: "",
+      }
     },
+    actionProps: {
+      onSuccess: () => {
+        resetFormAndAction();
+        stepper.next();
+      },
+      onExecute: () => {
+        toast.loading("Création de l'organisation...");
+      },
+      onError: ({ error }) => {
+        toast.error(error.serverError);
+      }
+    }
   });
 
-  const { handleSubmit, control, reset } = form;
-
-  const { mutateAsync } = useServerActionMutation(createOrganization, {
-    onSuccess: () => {
-      reset();
-      stepper.next();
-    },
-    onError: ({ message }) => {
-      toast.error(message);
-    },
-    onMutate: () => {
-      toast.loading("Création de l'organisation...");
-    },
-  });
-
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const { control, setValue } = form;
 
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
       if (res && res[0]) {
-        form.setValue("logo", res[0].url);
+        setValue("logo", res[0].url);
         toast.success("Logo téléchargé avec succès!");
         setLogoIsUploading(false);
       }
@@ -97,7 +93,7 @@ const InformationsForm = () => {
     {
       onClientUploadComplete: (res) => {
         if (res && res[0]) {
-          form.setValue("coverImage", res[0].url);
+          setValue("coverImage", res[0].url);
           toast.success("Image de couverture téléchargée avec succès!");
           setIsUploadingCover(false);
         }
@@ -150,7 +146,7 @@ const InformationsForm = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={onSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmitWithAction}>
         <div className="flex flex-row gap-6">
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">

@@ -61,10 +61,6 @@ export const ProgressionWidget = ({
   className,
   onItemClick,
 }: ProgressionWidgetProps) => {
-  // const { data: progression, isLoading, error } = useServerActionQuery(getProgression, {
-  //   input: undefined,
-  //   queryKey: ["progression"],
-  // });
 
   const progression: Progression = {
     id: 'erijjfnczuufijvc',

@@ -10,46 +10,42 @@ import * as z from 'zod';
 import { X } from 'lucide-react';
 import { proOptionsSchema } from '../../types/onboarding-schemas';
 import { useStepper } from '../../hooks/useStepperClient';
-import { useServerActionMutation } from '@/src/hooks';
 import { createOptionsStepAction } from '@/src/actions';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { toast } from 'sonner';
 
 export function OptionsForm() {
   const stepper = useStepper();
-  const form = useForm<z.infer<typeof proOptionsSchema>>({
-    resolver: zodResolver(proOptionsSchema),
-    defaultValues: {
-      options: [],
+  const { form, resetFormAndAction, handleSubmitWithAction } = useHookFormAction(createOptionsStepAction, zodResolver(proOptionsSchema), {
+    formProps: {
+      defaultValues: {
+        options: [],
+      }
     },
-  });
+    actionProps: {
+      onSuccess: () => {
+        resetFormAndAction();
+        stepper.next();
+      },
+      onError: ({ error }) => {
+        toast.error(error.serverError);
+      },
+      onExecute: () => {
+        toast.loading("Création des options...");
+      }
+    },
+  })
 
-  const { control, handleSubmit, reset } = form;
+  const { control } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'options',
   });
 
-  const { mutateAsync } = useServerActionMutation(createOptionsStepAction, {
-    onSuccess: () => {
-      reset();
-      stepper.next();
-    },
-    onMutate: () => {
-      toast.loading("Création des options...");
-    },
-    onError: () => {
-      toast.error("Erreur lors de la création des options");
-    },
-  });
-
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
-
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-8">
+      <form onSubmit={handleSubmitWithAction} className="space-y-8">
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 p-4 border rounded-lg">
             <div className="flex justify-between items-center">

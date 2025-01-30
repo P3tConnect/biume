@@ -31,16 +31,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateReminderSchema, type Reminder } from "@/src/db/reminder";
 import {
-  // createReminder,
   deleteReminder,
-  // getReminders,
   updateReminder,
 } from "@/src/actions/reminders.action";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { ZSAError } from "zsa";
 
 type ReminderFormValues = {
   title: string;
@@ -65,87 +62,10 @@ const RemindersPageComponent = () => {
     },
   });
 
-  // const { execute: executeCreate, status: createStatus } = useAction(
-  //   createReminder,
-  //   {
-  //     onSuccess: () => {
-  //       toast.success("Rappel créé avec succès");
-  //       form.reset();
-  //       fetchReminders();
-  //     },
-  //     onError: (error: ZSAError) => {
-  //       toast.error(error.message);
-  //     },
-  //   },
-  // );
-
-  // const { execute: executeUpdate, status: updateStatus } = useAction(
-  //   updateReminder,
-  //   {
-  //     onSuccess: () => {
-  //       toast.success("Rappel mis à jour avec succès");
-  //       form.reset();
-  //       setIsEditMode(false);
-  //       setSelectedReminder(null);
-  //       fetchReminders();
-  //     },
-  //     onError: (error: ZSAError) => {
-  //       toast.error(error.message);
-  //     },
-  //   },
-  // );
-
-  // const { execute: executeDelete } = useAction(deleteReminder, {
-  //   onSuccess: () => {
-  //     toast.success("Rappel supprimé avec succès");
-  //     fetchReminders();
-  //   },
-  //   onError: (error: ZSAError) => {
-  //     toast.error(error.message);
-  //   },
-  // });
-
-  // const fetchReminders = async () => {
-  //   try {
-  //     const data = await getReminders();
-  //     // setReminders(data);
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       toast.error(error.message);
-  //     } else {
-  //       toast.error("Erreur lors de la récupération des rappels");
-  //     }
-  //   }
-  // };
-
-  // React.useEffect(() => {
-  //   fetchReminders();
-  // }, []);
-
-  // const onSubmit = async (values: ReminderFormValues) => {
-  //   if (isEditMode && selectedReminder) {
-  //     await executeUpdate({ ...values, id: selectedReminder.id });
-  //   } else {
-  //     await executeCreate(values);
-  //   }
-  // };
-
   const handleEdit = (reminder: Reminder) => {
     setSelectedReminder(reminder);
     setIsEditMode(true);
-    // form.reset({
-    //   title: reminder.title,
-    //   description: reminder.description || "",
-    //   type: reminder.type,
-    //   dueDate: reminder.dueDate,
-    // });
   };
-
-  // const handleDelete = async (id: string) => {
-  //   if (window.confirm("Êtes-vous sûr de vouloir supprimer ce rappel ?")) {
-  //     await executeDelete(id);
-  //   }
-  // };
 
   return (
     <Card className="w-full h-full rounded-2xl">
@@ -245,9 +165,9 @@ const RemindersPageComponent = () => {
                 />
                 <Button
                   type="submit"
-                  // disabled={
-                  //   createStatus === "executing" || updateStatus === "executing"
-                  // }
+                // disabled={
+                //   createStatus === "executing" || updateStatus === "executing"
+                // }
                 >
                   {isEditMode ? "Mettre à jour" : "Créer"}
                 </Button>
@@ -277,13 +197,12 @@ const RemindersPageComponent = () => {
                   </span>
                   <span className="capitalize">{reminder.type}</span>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      reminder.status === "completed"
+                    className={`px-2 py-1 rounded-full text-xs ${reminder.status === "completed"
                         ? "bg-green-100 text-green-800"
                         : reminder.status === "cancelled"
                           ? "bg-red-100 text-red-800"
                           : "bg-yellow-100 text-yellow-800"
-                    }`}
+                      }`}
                   >
                     {reminder.status}
                   </span>
@@ -300,7 +219,7 @@ const RemindersPageComponent = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  // onClick={() => handleDelete(reminder.id)}
+                // onClick={() => handleDelete(reminder.id)}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </Button>

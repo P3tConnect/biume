@@ -12,47 +12,50 @@ import { X } from 'lucide-react'
 import { UploadButton } from '@/src/lib/uploadthing'
 import Image from 'next/image'
 import { proServicesSchema } from '../../types/onboarding-schemas';
-import { useServerActionMutation } from '@/src/hooks';
 import { createServicesStepAction } from '@/src/actions';
 import { useStepper } from '../../hooks/useStepper';
 import { toast } from 'sonner';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 
 const ServicesForm = () => {
   const stepper = useStepper();
-  const form = useForm<z.infer<typeof proServicesSchema>>({
-    resolver: zodResolver(proServicesSchema),
-    defaultValues: {
-      services: [],
-    },
-  });
+  // const form = useForm<z.infer<typeof proServicesSchema>>({
+  //   resolver: zodResolver(proServicesSchema),
+  //   defaultValues: {
+  //     services: [],
+  //   },
+  // });
 
-  const { control, handleSubmit, reset } = form;
+  const { form, resetFormAndAction, handleSubmitWithAction } = useHookFormAction(createServicesStepAction, zodResolver(proServicesSchema), {
+    formProps: {
+      defaultValues: {
+        services: [],
+      }
+    },
+    actionProps: {
+      onSuccess: () => {
+        resetFormAndAction();
+        stepper.next();
+      },
+      onExecute: () => {
+        toast.loading("Création des services...");
+      },
+      onError: ({ error }) => {
+        toast.error(error.serverError);
+      }
+    }
+  })
+
+  const { control } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'services',
   })
 
-  const { mutateAsync } = useServerActionMutation(createServicesStepAction, {
-    onSuccess: () => {
-      reset();
-      stepper.next();
-    },
-    onMutate: () => {
-      toast.loading("Création des services...");
-    },
-    onError: () => {
-      toast.error("Erreur lors de la création des services");
-    },
-  });
-
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
-
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-8">
+      <form onSubmit={handleSubmitWithAction} className="space-y-8">
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 p-4 border rounded-lg">
             <div className="flex justify-between items-center">
@@ -71,7 +74,7 @@ const ServicesForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                control={form.control}
+                control={control}
                 name={`services.${index}.name`}
                 render={({ field }) => (
                   <FormItem>
@@ -91,7 +94,7 @@ const ServicesForm = () => {
               />
 
               <FormField
-                control={form.control}
+                control={control}
                 name={`services.${index}.price`}
                 render={({ field }) => (
                   <FormItem>
@@ -111,7 +114,7 @@ const ServicesForm = () => {
               />
 
               <FormField
-                control={form.control}
+                control={control}
                 name={`services.${index}.duration`}
                 render={({ field }) => (
                   <FormItem>
@@ -131,7 +134,7 @@ const ServicesForm = () => {
               />
 
               <FormField
-                control={form.control}
+                control={control}
                 name={`services.${index}.description`}
                 render={({ field }) => (
                   <FormItem>
@@ -152,7 +155,7 @@ const ServicesForm = () => {
             </div>
 
             <FormField
-              control={form.control}
+              control={control}
               name={`services.${index}.image`}
               render={({ field }) => (
                 <FormItem>

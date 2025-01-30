@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/src/lib/utils";
-import { useServerActionMutation } from "@/src/hooks";
 import { updateOrganizationPlan } from "@/src/actions";
 import { useActiveOrganization } from "@/src/lib/auth-client";
 import { safeConfig } from "@/src/lib";
-
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 const plans = [
   {
     name: "Basic",
@@ -69,8 +70,6 @@ export function SubscriptionStep() {
   const { data: activeOrg } = useActiveOrganization();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const { mutateAsync: updatePlan } = useServerActionMutation(updateOrganizationPlan);
-
   return (
     <div className="container mx-auto">
       <div className="mb-8 text-center">
@@ -118,9 +117,9 @@ export function SubscriptionStep() {
               <Button
                 className="w-full"
                 variant={plan.name === "Pro" ? "default" : "outline"}
-                onClick={async () => await updatePlan({
+                onClick={async () => await updateOrganizationPlan({
                   organizationId: activeOrg?.id!,
-                  plan: plan.priceId,
+                  plan: plan.priceId
                 })}
               >
                 Sélectionner {plan.name}

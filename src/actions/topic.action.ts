@@ -1,20 +1,23 @@
 "use server";
 
 import { z } from "zod";
-import { authedAction, db } from "../lib";
+import { authedAction, db, ActionError } from "../lib";
 import { CreateTopicSchema, topic } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
 export const getTopics = authedAction.action(async () => {});
 
 export const createTopic = authedAction
   .schema(CreateTopicSchema)
   .action(async ({ parsedInput }) => {
-    const data = await db.insert(topic).values(parsedInput).returning().execute();
+    const data = await db
+      .insert(topic)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Topic not created");
+      throw new ActionError("Topic not created");
     }
 
     return data;
@@ -31,7 +34,7 @@ export const updateTopic = authedAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Topic not updated");
+      throw new ActionError("Topic not updated");
     }
 
     return data;
@@ -47,6 +50,6 @@ export const deleteTopic = authedAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Topic not deleted");
+      throw new ActionError("Topic not deleted");
     }
   });

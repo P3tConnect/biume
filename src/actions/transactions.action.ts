@@ -2,9 +2,8 @@
 
 import { z } from "zod";
 import { CreateTransactionSchema, transaction } from "../db";
-import { db, authedAction } from "../lib";
+import { db, authedAction, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
 export const getTransactions = authedAction.action(async () => {});
 
@@ -18,7 +17,7 @@ export const createTransactions = authedAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not created");
+      throw new ActionError("Transaction not created");
     }
 
     return data;
@@ -35,7 +34,7 @@ export const updateTransactions = authedAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not updated");
+      throw new ActionError("Transaction not updated");
     }
 
     return data;
@@ -51,6 +50,6 @@ export const deleteTransaction = authedAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not deleted");
+      throw new ActionError("Transaction not deleted");
     }
   });
