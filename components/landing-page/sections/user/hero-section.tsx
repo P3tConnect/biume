@@ -22,10 +22,13 @@ export function HeroSection() {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Trouvez le meilleur professionnel
-              <span className="block mt-2 text-gradient">pour votre animal</span>
+              <span className="block mt-2 text-gradient">
+                pour votre animal
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Prenez rendez-vous en ligne 24h/24 et 7j/7 avec les meilleurs professionnels près de chez vous
+              Prenez rendez-vous en ligne 24h/24 et 7j/7 avec les meilleurs
+              professionnels près de chez vous
             </p>
           </div>
 
@@ -36,7 +39,7 @@ export function HeroSection() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Quel type de soin ?"
+                  placeholder="Quel professionnel ?"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border bg-background"
                 />
               </div>
@@ -59,7 +62,9 @@ export function HeroSection() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
             <div>
               <div className="text-3xl font-bold text-primary mb-2">2000+</div>
-              <div className="text-sm text-muted-foreground">Professionnels</div>
+              <div className="text-sm text-muted-foreground">
+                Professionnels
+              </div>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary mb-2">15k+</div>
@@ -90,7 +95,10 @@ export function HeroSection() {
                 </div>
               </div>
             </div>
-            <div className="absolute -top-4 right-12 bg-card border rounded-2xl p-4 shadow-xl animate-float" style={{ animationDelay: "0.2s" }}>
+            <div
+              className="absolute -top-4 right-12 bg-card border rounded-2xl p-4 shadow-xl animate-float"
+              style={{ animationDelay: "0.2s" }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-secondary" />
