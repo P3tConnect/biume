@@ -1,37 +1,37 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, authedAction } from "../lib";
+import { ownerAction, db, authedAction, ActionError } from "../lib";
 import { CreateOptionSchema, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 import { auth } from "../lib/auth";
 import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
+import { headers } from "next/headers";
 
-export const getOptions = authedAction.handler(async () => {});
+export const getOptions = authedAction.action(async () => {});
 
 export const createOption = ownerAction
-  .input(CreateOptionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateOptionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(optionsTable)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
     if (!data) {
-      throw new ZSAError("ERROR", "Option not created");
+      throw new ActionError("Option not created");
     }
     return data;
   });
 
 export const createOptionsStepAction = authedAction
-  .input(proOptionsSchema)
-  .handler(async ({ input, request }) => {
+  .schema(proOptionsSchema)
+  .action(async ({ parsedInput }) => {
     const organization = await auth.api.getFullOrganization({
-      headers: request?.headers!,
+      headers: await headers(),
     });
     if (!organization) return;
-    const options = input.options;
+    const options = parsedInput.options;
     await db
       .insert(optionsTable)
       .values(
@@ -44,32 +44,32 @@ export const createOptionsStepAction = authedAction
   });
 
 export const updateOption = ownerAction
-  .input(CreateOptionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateOptionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(optionsTable)
-      .set(input)
-      .where(eq(optionsTable.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(optionsTable.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Option not updated");
+      throw new ActionError("Option not updated");
     }
 
     return data;
   });
 
 export const deleteOption = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(optionsTable)
-      .where(eq(optionsTable.id, input))
+      .where(eq(optionsTable.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Option not deleted");
+      throw new ActionError("Option not deleted");
     }
   });

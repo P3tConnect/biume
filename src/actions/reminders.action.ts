@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { db, ownerAction } from "../lib";
+import { db, ownerAction, ActionError } from "../lib";
 import { CreateReminderSchema, reminder } from "../db/reminder";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 import { SQL } from "drizzle-orm";
 
 // export const getReminders = ownerAction.handler(async ({ ctx }) => {
@@ -46,33 +45,33 @@ import { SQL } from "drizzle-orm";
 //   });
 
 export const updateReminder = ownerAction
-  .input(CreateReminderSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateReminderSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(reminder)
-      .set(input)
-      .where(eq(reminder.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(reminder.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Reminder not updated");
+      throw new ActionError("Reminder not updated");
     }
 
     return data;
   });
 
 export const deleteReminder = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(reminder)
-      .where(eq(reminder.id, input))
+      .where(eq(reminder.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Reminder not deleted");
+      throw new ActionError("Reminder not deleted");
     }
 
     return data;

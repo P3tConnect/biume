@@ -5,56 +5,55 @@ import {
   organizationDisponibilities,
   CreateOrganizationDisponibilitiesSchema,
 } from "../db";
-import { authedAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getOrganizationDisponibilities = authedAction.handler(
+export const getOrganizationDisponibilities = authedAction.action(
   async () => {},
 );
 
 export const createOrganizationDisponibilities = ownerAction
-  .input(CreateOrganizationDisponibilitiesSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateOrganizationDisponibilitiesSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(organizationDisponibilities)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CompanyDisponibilities not created");
+      throw new ActionError("CompanyDisponibilities not created");
     }
 
     return data;
   });
 
 export const updateOrganizationDisponibilities = ownerAction
-  .input(CreateOrganizationDisponibilitiesSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateOrganizationDisponibilitiesSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(organizationDisponibilities)
-      .set(input)
-      .where(eq(organizationDisponibilities.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(organizationDisponibilities.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CompanyDisponibilities not updated");
+      throw new ActionError("CompanyDisponibilities not updated");
     }
 
     return data;
   });
 
 export const deleteOrganizationDisponibilities = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(organizationDisponibilities)
-      .where(eq(organizationDisponibilities.id, input))
+      .where(eq(organizationDisponibilities.id, parsedInput))
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "CompanyDisponibilities not deleted");
+      throw new ActionError("CompanyDisponibilities not deleted");
     }
   });

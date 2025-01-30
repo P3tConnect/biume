@@ -6,12 +6,12 @@ import { ZSAError } from "zsa";
 import { eq } from "drizzle-orm";
 
 export const updateUser = authedAction
-  .input(CreateUserSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateUserSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(user)
-      .set(input)
-      .where(eq(user.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(user.id, parsedInput.id as string))
       .returning()
       .execute();
 

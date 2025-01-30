@@ -1,8 +1,7 @@
 "use server";
 
-import { authedAction, ownerAction } from "../lib/action";
+import { authedAction, ownerAction, ActionError } from "../lib";
 import { auth } from "../lib/auth";
-import { ZSAError } from "zsa";
 import { z } from "zod";
 import { headers } from "next/headers";
 import { organization } from "../db";
@@ -12,17 +11,12 @@ import { eq } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { progression as progressionTable } from "../db";
 
-const updateOrganizationSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  metadata: z.record(z.any()),
-  logo: z.string().optional(),
-});
-
 export const createOrganization = authedAction
-  .input(proInformationsSchema)
-  .handler(async ({ input, ctx }) => {
-    const data = input;
+  .schema(proInformationsSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const data = parsedInput;
+
+    console.log(ctx.user, "user");
 
     const result = await auth.api.createOrganization({
       body: {
@@ -35,7 +29,7 @@ export const createOrganization = authedAction
     });
 
     if (!result) {
-      throw new ZSAError("INTERNAL_SERVER_ERROR", "Organization not created");
+      throw new ActionError("Organization not created");
     }
 
     // Créer une progression
@@ -69,29 +63,29 @@ export const createOrganization = authedAction
   });
 
 export const updateOrganization = ownerAction
-  .input(CreateOrganizationSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateOrganizationSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(organization)
       .set({
-        name: input.name,
-        email: input.email,
-        description: input.description,
-        logo: input.logo,
-        addressId: input.addressId,
-        openAt: input.openAt,
-        closeAt: input.closeAt,
-        atHome: input.atHome,
-        nac: input.nac,
-        siren: input.siren,
-        siret: input.siret,
+        name: parsedInput.name,
+        email: parsedInput.email,
+        description: parsedInput.description,
+        logo: parsedInput.logo,
+        addressId: parsedInput.addressId,
+        openAt: parsedInput.openAt,
+        closeAt: parsedInput.closeAt,
+        atHome: parsedInput.atHome,
+        nac: parsedInput.nac,
+        siren: parsedInput.siren,
+        siret: parsedInput.siret,
       })
-      .where(eq(organization.id, input.id))
+      .where(eq(organization.id, parsedInput.id))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Organization not updated");
+      throw new ActionError("Organization not updated");
     }
 
     return data;

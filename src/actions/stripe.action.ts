@@ -1,60 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, safeConfig } from "../lib";
+import { ownerAction, db, safeConfig, ActionError } from "../lib";
 import { stripe } from "../lib/stripe";
-import { ZSAError } from "zsa";
 import { organization, PlanEnum } from "../db";
 import { eq } from "drizzle-orm";
 import { authedAction } from "../lib";
 import { redirect } from "next/navigation";
 
 export const createBalancePayout = ownerAction
-  .input(
+  .schema(
     z.object({
       amount: z.number().optional(), // Montant optionnel, si non spécifié, tout le solde disponible sera transféré
       organizationId: z.string(),
     }),
   )
-  .handler(async ({ input, ctx }) => {
+  .action(async ({ parsedInput }) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, input.organizationId))
+        .where(eq(organization.id, parsedInput.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
-        throw new ZSAError(
-          "NOT_FOUND",
+        throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
 
       // Récupérer le solde disponible si aucun montant n'est spécifié
-      if (!input.amount) {
+      if (!parsedInput.amount) {
         const balance = await stripe.balance.retrieve({
           stripeAccount: org[0].stripeId,
         });
 
-        input.amount = balance.available.reduce(
+        parsedInput.amount = balance.available.reduce(
           (sum, { amount }) => sum + amount,
           0,
         );
       }
 
-      if (input.amount <= 0) {
-        throw new ZSAError(
-          "PRECONDITION_FAILED",
-          "Le montant du virement doit être supérieur à 0",
-        );
+      if (parsedInput.amount <= 0) {
+        throw new ActionError("Le montant du virement doit être supérieur à 0");
       }
 
       // Créer le virement
       const payout = await stripe.payouts.create(
         {
-          amount: input.amount,
+          amount: parsedInput.amount,
           currency: "eur",
         },
         {
@@ -63,34 +58,28 @@ export const createBalancePayout = ownerAction
       );
 
       return payout;
-    } catch (error: any) {
-      if (error instanceof ZSAError) throw error;
-
-      throw new ZSAError(
-        "ERROR",
-        error?.message || "Erreur lors de la création du virement",
-      );
+    } catch (error) {
+      throw new ActionError("Erreur lors de la création du virement");
     }
   });
 
 export const getStripeBalance = ownerAction
-  .input(
+  .schema(
     z.object({
       organizationId: z.string(),
     }),
   )
-  .handler(async ({ input, ctx }) => {
+  .action(async ({ parsedInput }) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, input.organizationId))
+        .where(eq(organization.id, parsedInput.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
-        throw new ZSAError(
-          "NOT_FOUND",
+        throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
@@ -101,18 +90,13 @@ export const getStripeBalance = ownerAction
       });
 
       return balance;
-    } catch (error: any) {
-      if (error instanceof ZSAError) throw error;
-
-      throw new ZSAError(
-        "ERROR",
-        error?.message || "Erreur lors de la récupération du solde",
-      );
+    } catch (error) {
+      throw new ActionError("Erreur lors de la récupération du solde");
     }
   });
 
 export const createPaymentSession = authedAction
-  .input(
+  .schema(
     z.object({
       organizationId: z.string(),
       amount: z.number(),
@@ -123,18 +107,17 @@ export const createPaymentSession = authedAction
       customerEmail: z.string().email(),
     }),
   )
-  .handler(async ({ input, ctx }) => {
+  .action(async ({ parsedInput, ctx }) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, input.organizationId))
+        .where(eq(organization.id, parsedInput.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
-        throw new ZSAError(
-          "NOT_FOUND",
+        throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
@@ -148,19 +131,19 @@ export const createPaymentSession = authedAction
               price_data: {
                 currency: "eur",
                 product_data: {
-                  name: input.description,
+                  name: parsedInput.description,
                 },
-                unit_amount: input.amount, // Le montant doit être en centimes
+                unit_amount: parsedInput.amount, // Le montant doit être en centimes
               },
               quantity: 1,
             },
           ],
           mode: "payment",
-          success_url: input.successUrl,
-          cancel_url: input.cancelUrl,
-          customer_email: input.customerEmail,
+          success_url: parsedInput.successUrl,
+          cancel_url: parsedInput.cancelUrl,
+          customer_email: parsedInput.customerEmail,
           metadata: {
-            ...input.metadata,
+            ...parsedInput.metadata,
             userId: ctx.user.id, // L'utilisateur est toujours défini avec authedAction
           },
         },
@@ -170,26 +153,22 @@ export const createPaymentSession = authedAction
       );
 
       return session;
-    } catch (error: any) {
-      if (error instanceof ZSAError) throw error;
-
-      throw new ZSAError(
-        "ERROR",
-        error?.message ||
-          "Erreur lors de la création de la session de paiement",
+    } catch (error) {
+      throw new ActionError(
+        "Erreur lors de la création de la session de paiement",
       );
     }
   });
 
 export const updateOrganizationPlan = authedAction
-  .input(z.object({ organizationId: z.string(), plan: z.string() }))
-  .handler(async ({ input }) => {
+  .schema(z.object({ organizationId: z.string(), plan: z.string() }))
+  .action(async ({ parsedInput }) => {
     const org = await db.query.organization.findFirst({
-      where: eq(organization.id, input.organizationId),
+      where: eq(organization.id, parsedInput.organizationId),
     });
 
     if (!org) {
-      throw new ZSAError("NOT_FOUND", "Organisation non trouvée");
+      throw new ActionError("Organisation non trouvée");
     }
 
     const stripeCustomer = org.stripeId;
@@ -200,7 +179,7 @@ export const updateOrganizationPlan = authedAction
       payment_method_types: ["card"],
       line_items: [
         {
-          price: input.plan,
+          price: parsedInput.plan,
           quantity: 1,
         },
       ],
@@ -209,7 +188,7 @@ export const updateOrganizationPlan = authedAction
     });
 
     if (!session.url) {
-      throw new ZSAError("ERROR", "Erreur lors de la création de la session");
+      throw new ActionError("Erreur lors de la création de la session");
     }
 
     redirect(session.url);

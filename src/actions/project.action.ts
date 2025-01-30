@@ -2,52 +2,55 @@
 
 import { z } from "zod";
 import { CreateProjectSchema, project } from "../db";
-import { ownerAction } from "../lib/action";
+import { ActionError, ownerAction } from "../lib";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getProjects = ownerAction.handler(async () => {});
+export const getProjects = ownerAction.action(async () => {});
 
 export const createProject = ownerAction
-  .input(CreateProjectSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(project).values(input).returning().execute();
+  .schema(CreateProjectSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(project)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Project not created");
+      throw new ActionError("Project not created");
     }
 
     return data;
   });
 
 export const updateProject = ownerAction
-  .input(CreateProjectSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateProjectSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(project)
-      .set(input)
-      .where(eq(project.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(project.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Project not updated");
+      throw new ActionError("Project not updated");
     }
 
     return data;
   });
 
 export const deleteProject = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(project)
-      .where(eq(project.id, input))
+      .where(eq(project.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Project not deleted");
+      throw new ActionError("Project not deleted");
     }
   });

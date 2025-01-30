@@ -6,14 +6,14 @@ import { db, authedAction } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getTransactions = authedAction.handler(async () => {});
+export const getTransactions = authedAction.action(async () => {});
 
 export const createTransactions = authedAction
-  .input(CreateTransactionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateTransactionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(transaction)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
@@ -25,12 +25,12 @@ export const createTransactions = authedAction
   });
 
 export const updateTransactions = authedAction
-  .input(CreateTransactionSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateTransactionSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(transaction)
-      .set(input)
-      .where(eq(transaction.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(transaction.id, parsedInput.id as string))
       .returning()
       .execute();
 
@@ -42,11 +42,11 @@ export const updateTransactions = authedAction
   });
 
 export const deleteTransaction = authedAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(transaction)
-      .where(eq(transaction.id, input))
+      .where(eq(transaction.id, parsedInput))
       .returning()
       .execute();
 

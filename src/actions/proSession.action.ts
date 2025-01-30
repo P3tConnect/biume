@@ -2,63 +2,62 @@
 
 import { z } from "zod";
 import { CreateAppointmentSchema, appointments } from "../db";
-import { authedAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getAppointments = authedAction.handler(async () => {});
+export const getAppointments = authedAction.action(async () => {});
 
 export const getAppointmentById = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});
 
 export const getAppointmentByCompany = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});
 
 export const createAppointment = ownerAction
-  .input(CreateAppointmentSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateAppointmentSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .insert(appointments)
-      .values(input)
+      .values(parsedInput)
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Appointment not created");
+      throw new ActionError("Appointment not created");
     }
 
     return data;
   });
 
 export const updateAppointment = ownerAction
-  .input(CreateAppointmentSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateAppointmentSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(appointments)
-      .set(input)
-      .where(eq(appointments.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(appointments.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Appointment not updated");
+      throw new ActionError("Appointment not updated");
     }
 
     return data;
   });
 
 export const deleteAppointment = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(appointments)
-      .where(eq(appointments.id, input))
+      .where(eq(appointments.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Appointment not deleted");
+      throw new ActionError("Appointment not deleted");
     }
   });

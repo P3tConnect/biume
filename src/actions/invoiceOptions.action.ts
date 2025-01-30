@@ -4,16 +4,16 @@ import { z } from "zod";
 import { CreateInvoiceOptionsSchema } from "../db";
 import { ownerAction, authedAction } from "../lib";
 
-export const getInvoiceOptions = authedAction.handler(async () => {});
+export const getInvoiceOptions = authedAction.action(async () => {});
 
 export const createInvoiceOptions = ownerAction
-  .input(CreateInvoiceOptionsSchema)
-  .handler(async ({}) => {});
+  .schema(CreateInvoiceOptionsSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const updateInvoiceOptions = ownerAction
-  .input(CreateInvoiceOptionsSchema)
-  .handler(async ({}) => {});
+  .schema(CreateInvoiceOptionsSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const deleteInvoiceOptions = ownerAction
-  .input(z.string())
-  .handler(async ({}) => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

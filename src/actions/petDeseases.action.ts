@@ -3,16 +3,16 @@ import { z } from "zod";
 import { CreatePetsDeseaseSchema } from "../db";
 import { authedAction } from "../lib";
 
-export const getPetDeseases = authedAction.handler(async () => {});
+export const getPetDeseases = authedAction.action(async () => {});
 
 export const createPetDesease = authedAction
-  .input(CreatePetsDeseaseSchema)
-  .handler(async () => {});
+  .schema(CreatePetsDeseaseSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const updatePetDesease = authedAction
-  .input(CreatePetsDeseaseSchema)
-  .handler(async () => {});
+  .schema(CreatePetsDeseaseSchema)
+  .action(async ({ parsedInput }) => {});
 
 export const deletePetDesease = authedAction
-  .input(z.string())
-  .handler(async () => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

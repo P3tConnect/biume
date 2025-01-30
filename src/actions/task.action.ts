@@ -1,18 +1,22 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction } from "../lib/action";
+import { ownerAction } from "../lib";
 import { CreateTaskSchema, task } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { ZSAError } from "zsa";
 
-export const getTasks = ownerAction.handler(async () => {});
+export const getTasks = ownerAction.action(async () => {});
 
 export const createTask = ownerAction
-  .input(CreateTaskSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(task).values(input).returning().execute();
+  .schema(CreateTaskSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(task)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
       throw new ZSAError("ERROR", "Task not created");
@@ -22,12 +26,12 @@ export const createTask = ownerAction
   });
 
 export const updateTask = ownerAction
-  .input(CreateTaskSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateTaskSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(task)
-      .set(input)
-      .where(eq(task.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(task.id, parsedInput.id as string))
       .returning()
       .execute();
 
@@ -39,11 +43,11 @@ export const updateTask = ownerAction
   });
 
 export const deleteTask = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(task)
-      .where(eq(task.id, input))
+      .where(eq(task.id, parsedInput))
       .returning()
       .execute();
 

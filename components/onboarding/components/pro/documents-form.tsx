@@ -1,6 +1,6 @@
 "use client"
 
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 import { z } from "zod"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
@@ -20,7 +20,11 @@ import { useUploadThing } from "@/src/lib/uploadthing"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { proDocumentsSchema } from "../../types/onboarding-schemas"
-
+import { createOrganization } from "@/src/actions/organization.action"
+import { useServerActionMutation } from "@/src/hooks"
+import { useStepper } from "../../hooks/useStepper"
+import { createDocumentsStepAction } from "@/src/actions"
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks"
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_FILE_TYPES = {
     "application/pdf": [".pdf"],
@@ -29,18 +33,35 @@ const ACCEPTED_FILE_TYPES = {
 }
 
 export function DocumentsForm() {
-    const form = useForm<z.infer<typeof proDocumentsSchema>>({
-        resolver: zodResolver(proDocumentsSchema),
-        defaultValues: {
-            documents: [],
+    const stepper = useStepper();
+    const { form, handleSubmitWithAction, resetFormAndAction } = useHookFormAction(createDocumentsStepAction, zodResolver(proDocumentsSchema), {
+        formProps: {
+            defaultValues: {
+                documents: [],
+                siren: "",
+                siret: "",
+            }
+        },
+        actionProps: {
+            onSuccess: () => {
+                resetFormAndAction();
+                stepper.next();
+            },
+            onExecute: () => {
+                toast.loading("Création des documents...");
+            },
+            onError: ({ error }) => {
+                toast.error(error.serverError);
+            },
         },
     });
 
-    const { control, handleSubmit, setValue } = form;
+    const { control, setValue } = form;
+
 
     return (
         <Form {...form}>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmitWithAction}>
                 <FormField
                     control={control}
                     name="documents"

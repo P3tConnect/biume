@@ -1,50 +1,53 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db } from "../lib";
+import { ownerAction, db, ActionError } from "../lib";
 import { CreateReceiptSchema, receipt } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getReceipts = ownerAction.handler(async () => {});
+export const getReceipts = ownerAction.action(async () => {});
 
 export const createReceipt = ownerAction
-  .input(CreateReceiptSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(receipt).values(input).returning().execute();
+  .schema(CreateReceiptSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(receipt)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Receipt not created");
+      throw new ActionError("Receipt not created");
     }
 
     return data;
   });
 
 export const updateReceipt = ownerAction
-  .input(CreateReceiptSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateReceiptSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(receipt)
-      .set(input)
-      .where(eq(receipt.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(receipt.id, parsedInput.id as string))
       .returning()
       .execute();
     if (!data) {
-      throw new ZSAError("ERROR", "Receipt not updated");
+      throw new ActionError("Receipt not updated");
     }
     return data;
   });
 
 export const deleteReceipt = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(receipt)
-      .where(eq(receipt.id, input))
+      .where(eq(receipt.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Receipt not deleted");
+      throw new ActionError("Receipt not deleted");
     }
   });

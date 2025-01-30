@@ -3,16 +3,16 @@ import { z } from "zod";
 import { CreateReceiptCategorySchema } from "../db";
 import { ownerAction } from "../lib";
 
-export const getReceiptCategories = ownerAction.handler(async () => {});
+export const getReceiptCategories = ownerAction.action(async () => {});
 
 export const createReceiptCategories = ownerAction
-  .input(CreateReceiptCategorySchema)
-  .handler(async () => {});
+  .schema(CreateReceiptCategorySchema)
+  .action(async ({ parsedInput }) => {});
 
 export const updateReceiptCategory = ownerAction
-  .input(CreateReceiptCategorySchema)
-  .handler(async () => {});
+  .schema(CreateReceiptCategorySchema)
+  .action(async ({ parsedInput }) => {});
 
 export const deleteReceiptCategory = ownerAction
-  .input(z.string())
-  .handler(async () => {});
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {});

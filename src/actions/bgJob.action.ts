@@ -1,46 +1,52 @@
 import { z } from "zod";
 import { bgJobs, CreateBgJobsSchema } from "../db/bgJobs";
-import { db, ownerAction } from "../lib";
+import { db, ownerAction, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getBgJobs = ownerAction.handler(async () => {});
+export const getBgJobs = ownerAction.action(async () => {});
 
 export const createBgJob = ownerAction
-  .input(CreateBgJobsSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(bgJobs).values(input).returning().execute();
+  .schema(CreateBgJobsSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(bgJobs)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "BgJob not created");
+      throw new ActionError("BgJob not created");
     }
 
     return data;
   });
 
 export const updateBgJob = ownerAction
-  .input(CreateBgJobsSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateBgJobsSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(bgJobs)
-      .set(input)
-      .where(eq(bgJobs.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(bgJobs.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "BgJob not updated");
+      throw new ActionError("BgJob not updated");
     }
 
     return data;
   });
 
 export const deleteBgJob = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
-    const data = await db.delete(bgJobs).where(eq(bgJobs.id, input)).execute();
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .delete(bgJobs)
+      .where(eq(bgJobs.id, parsedInput))
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "BgJob not deleted");
+      throw new ActionError("BgJob not deleted");
     }
   });

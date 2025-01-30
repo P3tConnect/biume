@@ -63,8 +63,8 @@ const InformationsForm = () => {
       reset();
       stepper.next();
     },
-    onError: () => {
-      toast.error("Erreur lors de la création de l'organisation");
+    onError: ({ message }) => {
+      toast.error(message);
     },
     onMutate: () => {
       toast.loading("Création de l'organisation...");
@@ -150,7 +150,7 @@ const InformationsForm = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={onSubmit}>
         <div className="flex flex-row gap-6">
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">

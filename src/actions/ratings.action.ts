@@ -1,52 +1,55 @@
 "use server";
 
 import { z } from "zod";
-import { authedAction, ownerAction, db } from "../lib";
+import { authedAction, ownerAction, db, ActionError } from "../lib";
 import { CreateRatingSchema, ratings } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getRatings = authedAction.handler(async () => {});
+export const getRatings = authedAction.action(async () => {});
 
 export const createRating = authedAction
-  .input(CreateRatingSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(ratings).values(input).returning().execute();
+  .schema(CreateRatingSchema)
+  .action(async ({ parsedInput }) => {
+    const data = await db
+      .insert(ratings)
+      .values(parsedInput)
+      .returning()
+      .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Rating not created");
+      throw new ActionError("Rating not created");
     }
 
     return data;
   });
 
 export const updateRating = authedAction
-  .input(CreateRatingSchema)
-  .handler(async ({ input }) => {
+  .schema(CreateRatingSchema)
+  .action(async ({ parsedInput }) => {
     const data = await db
       .update(ratings)
-      .set(input)
-      .where(eq(ratings.id, input.id as string))
+      .set(parsedInput)
+      .where(eq(ratings.id, parsedInput.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Rating not updated");
+      throw new ActionError("Rating not updated");
     }
 
     return data;
   });
 
 export const deleteRating = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+  .schema(z.string())
+  .action(async ({ parsedInput }) => {
     const data = await db
       .delete(ratings)
-      .where(eq(ratings.id, input))
+      .where(eq(ratings.id, parsedInput))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Rating not deleted");
+      throw new ActionError("Rating not deleted");
     }
   });
