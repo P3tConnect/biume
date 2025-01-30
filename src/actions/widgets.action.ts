@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { CreateWidgetsSchema, widgets } from "../db";
-import { db, ownerAction } from "../lib";
+import { db, ownerAction, ActionError } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
 export const getWidgets = ownerAction.action(async () => {});
 
@@ -16,7 +15,7 @@ export const createWidget = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Widget not created");
+      throw new ActionError("Widget not created");
     }
 
     return data;
@@ -33,7 +32,7 @@ export const updateWidget = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Widget not updated");
+      throw new ActionError("Widget not updated");
     }
 
     return data;
@@ -49,6 +48,6 @@ export const deleteWidget = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Widget not deleted");
+      throw new ActionError("Widget not deleted");
     }
   });

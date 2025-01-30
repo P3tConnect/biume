@@ -5,7 +5,7 @@ import { ownerAction } from "../lib";
 import { CreateTaskSchema, task } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
+import { ActionError } from "../lib";
 
 export const getTasks = ownerAction.action(async () => {});
 
@@ -19,7 +19,7 @@ export const createTask = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Task not created");
+      throw new ActionError("Task not created");
     }
 
     return data;
@@ -36,7 +36,7 @@ export const updateTask = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Task not updated");
+      throw new ActionError("Task not updated");
     }
 
     return data;
@@ -52,6 +52,6 @@ export const deleteTask = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Task not deleted");
+      throw new ActionError("Task not deleted");
     }
   });

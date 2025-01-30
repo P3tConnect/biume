@@ -17,9 +17,9 @@ import { UseFormReturn } from 'react-hook-form';
 import { useState } from 'react';
 import { z } from 'zod';
 import { clientOnBoardingSchema } from '../stepper-client';
-import { toast } from 'sonner';
 import Image from 'next/image';
 import { cn } from '@/src/lib';
+import { toast } from 'sonner';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
