@@ -1,5 +1,4 @@
 export * from "./action";
-export * from "./current-user";
 export * from "./db";
 export * from "./env";
 export * from "./logger";

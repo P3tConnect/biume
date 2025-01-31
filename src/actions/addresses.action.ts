@@ -1,12 +1,12 @@
 "use server";
 import { z } from "zod";
 import { address, CreateAddressSchema } from "../db";
-import { db, authedAction, ActionError } from "../lib";
+import { db, ActionError, action } from "../lib";
 import { eq } from "drizzle-orm";
 
-export const getAddresses = authedAction.action(async () => {});
+export const getAddresses = action.action(async () => {});
 
-export const createAddresses = authedAction
+export const createAddresses = action
   .schema(CreateAddressSchema)
   .action(async ({ parsedInput }) => {
     try {
@@ -26,7 +26,7 @@ export const createAddresses = authedAction
     }
   });
 
-export const updateAddress = authedAction
+export const updateAddress = action
   .schema(CreateAddressSchema)
   .action(async ({ parsedInput }) => {
     try {
@@ -47,7 +47,7 @@ export const updateAddress = authedAction
     }
   });
 
-export const deleteAddress = authedAction
+export const deleteAddress = action
   .schema(z.string())
   .action(async ({ parsedInput }) => {
     const data = await db

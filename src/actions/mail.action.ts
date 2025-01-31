@@ -3,7 +3,7 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
 import { resend } from "../lib/resend";
 import { redirect } from "next/navigation";
-import { action, ActionError } from "../lib/action-utils";
+import { action, ActionError } from "../lib";
 import { emailSchema } from "../lib/schemas";
 
 export const newSubWaitList = action

@@ -1,5 +1,4 @@
-import { createMiddleware, createSafeActionClient } from "next-safe-action";
-import { authedMiddleware, ownerMiddleware } from "./action";
+import { createSafeActionClient } from "next-safe-action";
 
 export class ActionError extends Error {
   constructor(message: string) {
@@ -17,8 +16,6 @@ const handleReturnedServerError = (error: Error) => {
 
 export const action = createSafeActionClient({
   handleServerError: handleReturnedServerError,
-}).use(authedMiddleware);
-
-export const authedAction = action.use(authedMiddleware);
-
-export const ownerAction = authedAction.use(ownerMiddleware);
+}).use(async ({ next }) => {
+  return next();
+});
