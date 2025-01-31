@@ -1,9 +1,12 @@
 "use server";
 
-import { authedAction, ownerAction, ActionError } from "../lib";
+import {
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from "../lib";
 import { auth } from "../lib/auth";
-import { z } from "zod";
-import { headers } from "next/headers";
 import { organization } from "../db";
 import { CreateOrganizationSchema } from "../db";
 import { db } from "../lib";
@@ -11,10 +14,10 @@ import { eq } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { progression as progressionTable } from "../db";
 
-export const createOrganization = authedAction
-  .schema(proInformationsSchema)
-  .action(async ({ ctx, parsedInput }) => {
-    const data = parsedInput;
+export const createOrganization = createServerAction(
+  proInformationsSchema,
+  async (input, ctx) => {
+    const data = input;
 
     console.log(ctx.user, "user");
 
@@ -24,7 +27,7 @@ export const createOrganization = authedAction
         slug: data.name?.toLowerCase().replace(/\s+/g, "-") as string,
         logo: data.logo,
         metadata: {},
-        userId: ctx?.user.id,
+        userId: ctx.user?.id,
       },
     });
 
@@ -60,27 +63,29 @@ export const createOrganization = authedAction
         organizationId: result?.id,
       },
     });
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const updateOrganization = ownerAction
-  .schema(CreateOrganizationSchema)
-  .action(async ({ parsedInput }) => {
+export const updateOrganization = createServerAction(
+  CreateOrganizationSchema,
+  async (input, ctx) => {
     const data = await db
       .update(organization)
       .set({
-        name: parsedInput.name,
-        email: parsedInput.email,
-        description: parsedInput.description,
-        logo: parsedInput.logo,
-        addressId: parsedInput.addressId,
-        openAt: parsedInput.openAt,
-        closeAt: parsedInput.closeAt,
-        atHome: parsedInput.atHome,
-        nac: parsedInput.nac,
-        siren: parsedInput.siren,
-        siret: parsedInput.siret,
+        name: input.name,
+        email: input.email,
+        description: input.description,
+        logo: input.logo,
+        addressId: input.addressId,
+        openAt: input.openAt,
+        closeAt: input.closeAt,
+        atHome: input.atHome,
+        nac: input.nac,
+        siren: input.siren,
+        siret: input.siret,
       })
-      .where(eq(organization.id, parsedInput.id))
+      .where(eq(organization.id, input.id))
       .returning()
       .execute();
 
@@ -89,4 +94,6 @@ export const updateOrganization = ownerAction
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);

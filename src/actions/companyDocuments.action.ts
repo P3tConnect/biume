@@ -1,52 +1,51 @@
-"use server";
+'use server';
 
-import { z } from "zod";
-import { ownerAction, db, authedAction, ActionError } from "../lib";
-import { organizationDocuments } from "../db";
-import { eq } from "drizzle-orm";
-import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
-import { auth } from "../lib/auth";
-import { organization as organizationTable } from "../db";
-import { progression as progressionTable } from "../db";
-import { headers } from "next/headers";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireAuth,
+  requireOwner,
+} from '../lib';
+import { organization, organizationDocuments } from '../db';
+import { eq } from 'drizzle-orm';
+import { proDocumentsSchema } from '@/components/onboarding/types/onboarding-schemas';
+import { organization as organizationTable } from '../db';
+import { progression as progressionTable } from '../db';
 
-export const createDocumentsStepAction = authedAction
-  .schema(proDocumentsSchema)
-  .action(async ({ parsedInput }) => {
-    const organization = await auth.api.getFullOrganization({
-      headers: await headers(),
-    });
-
-    if (!organization) return;
-    const documents = parsedInput.documents;
-    if (!documents || !organization.id) return;
+export const createDocumentsStepAction = createServerAction(
+  proDocumentsSchema,
+  async (input, ctx) => {
+    if (!ctx.organization) return;
+    const documents = input.documents;
+    if (!documents || !ctx.organization.id) return;
     const documentsResult = await db
       .insert(organizationDocuments)
       .values(
         documents.map((file) => ({
-          file: file ?? "",
-          organizationId: organization.id,
-        })),
+          file: file ?? '',
+          organizationId: ctx.organization?.id ?? '',
+        }))
       )
       .returning()
       .execute();
 
     if (!documentsResult) {
-      throw new ActionError("Documents not created");
+      throw new ActionError('Documents not created');
     }
 
     const organizationResult = await db
       .update(organizationTable)
       .set({
-        siret: parsedInput.siret,
-        siren: parsedInput.siren,
+        siret: input.siret,
+        siren: input.siren,
       })
       .where(eq(organizationTable.id, organization.id))
       .returning()
       .execute();
 
     if (!organizationResult) {
-      throw new ActionError("Organization not updated");
+      throw new ActionError('Organization not updated');
     }
 
     const [org] = await db
@@ -65,6 +64,8 @@ export const createDocumentsStepAction = authedAction
       .execute();
 
     if (!progressionResult) {
-      throw new ActionError("Progression not updated");
+      throw new ActionError('Progression not updated');
     }
-  });
+  },
+  [requireAuth, requireOwner]
+);

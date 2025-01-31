@@ -1,27 +1,30 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, safeConfig, ActionError } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from "../lib";
 import { stripe } from "../lib/stripe";
 import { organization, PlanEnum } from "../db";
 import { eq } from "drizzle-orm";
-import { authedAction } from "../lib";
 import { redirect } from "next/navigation";
 
-export const createBalancePayout = ownerAction
-  .schema(
-    z.object({
-      amount: z.number().optional(), // Montant optionnel, si non spécifié, tout le solde disponible sera transféré
-      organizationId: z.string(),
-    }),
-  )
-  .action(async ({ parsedInput }) => {
+export const createBalancePayout = createServerAction(
+  z.object({
+    amount: z.number().optional(), // Montant optionnel, si non spécifié, tout le solde disponible sera transféré
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, parsedInput.organizationId))
+        .where(eq(organization.id, input.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
@@ -31,25 +34,25 @@ export const createBalancePayout = ownerAction
       }
 
       // Récupérer le solde disponible si aucun montant n'est spécifié
-      if (!parsedInput.amount) {
+      if (!input.amount) {
         const balance = await stripe.balance.retrieve({
           stripeAccount: org[0].stripeId,
         });
 
-        parsedInput.amount = balance.available.reduce(
+        input.amount = balance.available.reduce(
           (sum, { amount }) => sum + amount,
           0,
         );
       }
 
-      if (parsedInput.amount <= 0) {
+      if (input.amount <= 0) {
         throw new ActionError("Le montant du virement doit être supérieur à 0");
       }
 
       // Créer le virement
       const payout = await stripe.payouts.create(
         {
-          amount: parsedInput.amount,
+          amount: input.amount,
           currency: "eur",
         },
         {
@@ -61,21 +64,20 @@ export const createBalancePayout = ownerAction
     } catch (error) {
       throw new ActionError("Erreur lors de la création du virement");
     }
-  });
+  },
+);
 
-export const getStripeBalance = ownerAction
-  .schema(
-    z.object({
-      organizationId: z.string(),
-    }),
-  )
-  .action(async ({ parsedInput }) => {
+export const getStripeBalance = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, parsedInput.organizationId))
+        .where(eq(organization.id, input.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
@@ -93,27 +95,26 @@ export const getStripeBalance = ownerAction
     } catch (error) {
       throw new ActionError("Erreur lors de la récupération du solde");
     }
-  });
+  },
+);
 
-export const createPaymentSession = authedAction
-  .schema(
-    z.object({
-      organizationId: z.string(),
-      amount: z.number(),
-      description: z.string(),
-      successUrl: z.string(),
-      cancelUrl: z.string(),
-      metadata: z.record(z.any()).optional(),
-      customerEmail: z.string().email(),
-    }),
-  )
-  .action(async ({ parsedInput, ctx }) => {
+export const createPaymentSession = createServerAction(
+  z.object({
+    organizationId: z.string(),
+    amount: z.number(),
+    description: z.string(),
+    successUrl: z.string(),
+    cancelUrl: z.string(),
+    metadata: z.record(z.any()).optional(),
+    customerEmail: z.string().email(),
+  }),
+  async (input, ctx) => {
     try {
       // Récupérer l'organisation
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, parsedInput.organizationId))
+        .where(eq(organization.id, input.organizationId))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
@@ -123,34 +124,29 @@ export const createPaymentSession = authedAction
       }
 
       // Créer la session de paiement
-      const session = await stripe.checkout.sessions.create(
-        {
-          payment_method_types: ["card"],
-          line_items: [
-            {
-              price_data: {
-                currency: "eur",
-                product_data: {
-                  name: parsedInput.description,
-                },
-                unit_amount: parsedInput.amount, // Le montant doit être en centimes
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "eur",
+              product_data: {
+                name: input.description,
               },
-              quantity: 1,
+              unit_amount: input.amount, // Le montant doit être en centimes
             },
-          ],
-          mode: "payment",
-          success_url: parsedInput.successUrl,
-          cancel_url: parsedInput.cancelUrl,
-          customer_email: parsedInput.customerEmail,
-          metadata: {
-            ...parsedInput.metadata,
-            userId: ctx.user.id, // L'utilisateur est toujours défini avec authedAction
+            quantity: 1,
           },
+        ],
+        mode: "payment",
+        success_url: input.successUrl,
+        cancel_url: input.cancelUrl,
+        customer_email: input.customerEmail,
+        metadata: {
+          ...input.metadata,
+          userId: ctx.user?.id ?? null, // L'utilisateur est toujours défini avec authedAction
         },
-        {
-          stripeAccount: org[0].stripeId,
-        },
-      );
+      });
 
       return session;
     } catch (error) {
@@ -158,13 +154,14 @@ export const createPaymentSession = authedAction
         "Erreur lors de la création de la session de paiement",
       );
     }
-  });
+  },
+);
 
-export const updateOrganizationPlan = authedAction
-  .schema(z.object({ organizationId: z.string(), plan: z.string() }))
-  .action(async ({ parsedInput }) => {
+export const updateOrganizationPlan = createServerAction(
+  z.object({ organizationId: z.string(), plan: z.string() }),
+  async (input, ctx) => {
     const org = await db.query.organization.findFirst({
-      where: eq(organization.id, parsedInput.organizationId),
+      where: eq(organization.id, input.organizationId),
     });
 
     if (!org) {
@@ -179,7 +176,7 @@ export const updateOrganizationPlan = authedAction
       payment_method_types: ["card"],
       line_items: [
         {
-          price: parsedInput.plan,
+          price: input.plan,
           quantity: 1,
         },
       ],
@@ -192,4 +189,6 @@ export const updateOrganizationPlan = authedAction
     }
 
     redirect(session.url);
-  });
+  },
+  [requireAuth, requireOwner],
+);

@@ -28,34 +28,12 @@ import { Bell, Shield, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
-import { updateUser } from '@/src/actions/user.action';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { useServerActionMutation } from '@/src/hooks';
+import { updateUserInformations } from '@/src/actions/user.action';
 import { toast } from 'sonner';
-
-export const clientSettingsSchema = z.object({
-  image: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().email().optional(),
-  address: z
-    .string()
-    .min(
-      1,
-      'Votre adresse doit contenie le numéro de votre rue ainsi que le nom de la rue'
-    ),
-  country: z.string().min(1, 'Le pays doit être valide'),
-  city: z.string().min(1, 'Votre ville doit être valide'),
-  zipCode: z
-    .string()
-    .min(5, 'Votre code postal doit être valide, soit 5 chiffres'),
-  phoneNumber: z
-    .string()
-    .min(10, 'Votre numéro doit comprendre que 10 chiffres'),
-  emailNotifications: z.boolean().default(false).optional(),
-  smsNotifications: z.boolean().default(false).optional(),
-  twoFactorEnabled: z.boolean().default(false).optional(),
-});
+import { clientSettingsSchema } from './types/settings-schema';
+import { useActionMutation } from '@/src/hooks/action-hooks';
 
 const ClientSettingsForm = () => {
   const { data: session } = useSession();
@@ -77,9 +55,9 @@ const ClientSettingsForm = () => {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset, getValues } = form;
 
-  const { mutateAsync } = useServerActionMutation(updateUser, {
+  const { mutateAsync } = useActionMutation(updateUserInformations, {
     onSuccess: () => {
       toast.success('Vos informations ont été mises à jour');
     },
@@ -92,8 +70,9 @@ const ClientSettingsForm = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     await mutateAsync(data);
+    reset();
+    getValues();
   });
 
   return (

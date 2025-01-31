@@ -1,27 +1,43 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, authedAction, ActionError } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from "../lib";
 import { CreateServiceSchema, service } from "../db";
 import { eq } from "drizzle-orm";
 import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
 
-export const getServices = authedAction.action(async () => {});
+export const getServices = createServerAction(
+  z.object({}),
+  async (input, ctx) => {},
+  [requireAuth],
+);
 
-export const createService = ownerAction
-  .schema(proServicesSchema)
-  .action(async ({ parsedInput }) => {});
+export const createService = createServerAction(
+  proServicesSchema,
+  async (input, ctx) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: await headers(),
+    });
+  },
+  [requireAuth],
+);
 
-export const createServicesStepAction = authedAction
-  .schema(proServicesSchema)
-  .action(async ({ parsedInput }) => {
+export const createServicesStepAction = createServerAction(
+  proServicesSchema,
+  async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
     });
     if (!organization) return;
-    const services = parsedInput.services;
+    const services = input.services;
 
     const result = await db
       .insert(service)
@@ -37,15 +53,17 @@ export const createServicesStepAction = authedAction
     if (!result) {
       throw new ActionError("Services not created");
     }
-  });
+  },
+  [requireAuth],
+);
 
-export const updateService = ownerAction
-  .schema(CreateServiceSchema)
-  .action(async ({ parsedInput }) => {
+export const updateService = createServerAction(
+  CreateServiceSchema,
+  async (input, ctx) => {
     const data = await db
       .update(service)
-      .set(parsedInput)
-      .where(eq(service.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(service.id, input.id as string))
       .returning()
       .execute();
 
@@ -54,18 +72,22 @@ export const updateService = ownerAction
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
 
-export const deleteService = ownerAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteService = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(service)
-      .where(eq(service.id, parsedInput))
+      .where(eq(service.id, input))
       .returning()
       .execute();
 
     if (!data) {
       throw new ActionError("Service not deleted");
     }
-  });
+  },
+  [requireAuth],
+);

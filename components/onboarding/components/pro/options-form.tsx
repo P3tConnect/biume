@@ -1,51 +1,48 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { X } from 'lucide-react';
-import { proOptionsSchema } from '../../types/onboarding-schemas';
-import { useStepper } from '../../hooks/useStepperClient';
-import { createOptionsStepAction } from '@/src/actions';
-import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useFieldArray, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { X } from "lucide-react";
+import { proOptionsSchema } from "../../types/onboarding-schemas";
+import { useStepper } from "../../hooks/useStepperClient";
+import { createOptionsStepAction } from "@/src/actions";
 
 export function OptionsForm() {
   const stepper = useStepper();
-  const { form, resetFormAndAction, handleSubmitWithAction } = useHookFormAction(createOptionsStepAction, zodResolver(proOptionsSchema), {
-    formProps: {
-      defaultValues: {
-        options: [],
-      }
+  const form = useForm<z.infer<typeof proOptionsSchema>>({
+    resolver: zodResolver(proOptionsSchema),
+    defaultValues: {
+      options: [],
     },
-    actionProps: {
-      onSuccess: () => {
-        resetFormAndAction();
-        stepper.next();
-      },
-      onError: ({ error }) => {
-        toast.error(error.serverError);
-      },
-      onExecute: () => {
-        toast.loading("Création des options...");
-      }
-    },
-  })
+  });
 
-  const { control } = form;
+  const { control, handleSubmit } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'options',
+    name: "options",
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await createOptionsStepAction(data);
+    stepper.next();
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmitWithAction} className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 p-4 border rounded-lg">
             <div className="flex justify-between items-center">
@@ -70,7 +67,11 @@ export function OptionsForm() {
                   <FormItem>
                     <FormLabel>Nom de l&apos;option</FormLabel>
                     <FormControl>
-                      <Input placeholder="ex: Toilettage supplémentaire" {...field} value={field.value ?? ""} />
+                      <Input
+                        placeholder="ex: Toilettage supplémentaire"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -88,8 +89,12 @@ export function OptionsForm() {
                         type="number"
                         placeholder="0"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null,
+                          )
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -108,8 +113,8 @@ export function OptionsForm() {
                         placeholder="Décrivez votre option..."
                         className="resize-none"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value)}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -124,12 +129,14 @@ export function OptionsForm() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => append({
-              title: '',
-              description: '',
-              price: 0,
-              organizationId: ""
-            })}
+            onClick={() =>
+              append({
+                title: "",
+                description: "",
+                price: 0,
+                organizationId: "",
+              })
+            }
           >
             Ajouter une option
           </Button>

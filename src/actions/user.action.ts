@@ -1,16 +1,24 @@
 'use server';
 
-import { authedAction, db, ActionError } from '../lib';
-import { CreateUserSchema, user } from '../db';
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from '../lib';
+import { CreateUserSchema, session, user } from '../db';
 import { eq } from 'drizzle-orm';
+import { clientSettingsSchema } from '@/components/dashboard/pages/user/settings-page/types/settings-schema';
 
-export const updateUser = authedAction
-  .schema(CreateUserSchema)
-  .action(async ({ parsedInput }) => {
+export const updateUserInformations = createServerAction(
+  clientSettingsSchema,
+  async (input, ctx) => {
+    if (!ctx.user) return;
     const data = await db
       .update(user)
-      .set(parsedInput)
-      .where(eq(user.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(user.id, ctx.user.id as string))
       .returning()
       .execute();
 
@@ -19,4 +27,6 @@ export const updateUser = authedAction
     }
 
     return data;
-  });
+  },
+  [requireAuth]
+);

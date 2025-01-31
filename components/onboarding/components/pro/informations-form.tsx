@@ -44,32 +44,24 @@ const InformationsForm = () => {
   const [logoIsUploading, setLogoIsUploading] = useState(false);
   const stepper = useStepper();
 
-  const { form, handleSubmitWithAction, resetFormAndAction } = useHookFormAction(createOrganization, zodResolver(proInformationsSchema), {
-    formProps: {
-      defaultValues: {
-        name: "",
-        atHome: false,
-        companyType: "NONE",
-        coverImage: "",
-        description: "",
-        logo: "",
-      }
+  const form = useForm<z.infer<typeof proInformationsSchema>>({
+    resolver: zodResolver(proInformationsSchema),
+    defaultValues: {
+      name: "",
+      atHome: false,
+      companyType: "NONE",
+      coverImage: "",
+      description: "",
+      logo: "",
     },
-    actionProps: {
-      onSuccess: () => {
-        resetFormAndAction();
-        stepper.next();
-      },
-      onExecute: () => {
-        toast.loading("Création de l'organisation...");
-      },
-      onError: ({ error }) => {
-        toast.error(error.serverError);
-      }
-    }
   });
 
-  const { control, setValue } = form;
+  const { control, setValue, handleSubmit } = form;
+
+  const onSubmit = handleSubmit(async (data) => {
+    await createOrganization(data);
+    stepper.next();
+  });
 
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
@@ -146,7 +138,7 @@ const InformationsForm = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={handleSubmitWithAction}>
+      <form className="space-y-6" onSubmit={onSubmit}>
         <div className="flex flex-row gap-6">
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
@@ -163,17 +155,42 @@ const InformationsForm = () => {
                 >
                   <input {...getLogoInputProps()} />
                   <div className="flex flex-col items-center gap-2 p-6">
-                    <div className={cn("p-2 rounded-lg bg-primary/10", form.formState.errors.logo && "bg-destructive/10")}>
-                      <ImageIcon className={cn("h-6 w-6 text-primary", form.formState.errors.logo && "text-destructive")} />
+                    <div
+                      className={cn(
+                        "p-2 rounded-lg bg-primary/10",
+                        form.formState.errors.logo && "bg-destructive/10",
+                      )}
+                    >
+                      <ImageIcon
+                        className={cn(
+                          "h-6 w-6 text-primary",
+                          form.formState.errors.logo && "text-destructive",
+                        )}
+                      />
                     </div>
                     <div className="space-y-1 text-center">
-                      <p className={cn("text-xs font-medium text-primary", form.formState.errors.logo && "text-destructive")}>
+                      <p
+                        className={cn(
+                          "text-xs font-medium text-primary",
+                          form.formState.errors.logo && "text-destructive",
+                        )}
+                      >
                         Glissez-déposez
                       </p>
-                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.logo && "text-destructive")}>
+                      <p
+                        className={cn(
+                          "text-xs text-muted-foreground",
+                          form.formState.errors.logo && "text-destructive",
+                        )}
+                      >
                         ou cliquez
                       </p>
-                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.logo && "text-destructive")}>
+                      <p
+                        className={cn(
+                          "text-xs text-muted-foreground",
+                          form.formState.errors.logo && "text-destructive",
+                        )}
+                      >
                         PNG, JPG • 5MB
                       </p>
                     </div>
@@ -250,15 +267,46 @@ const InformationsForm = () => {
                 >
                   <input {...getCoverInputProps()} />
                   <div className="flex flex-col items-center gap-2 p-6">
-                    <div className={cn("p-2 rounded-lg bg-primary/10", form.formState.errors.coverImage && "bg-destructive/10")}>
-                      <ImageIcon className={cn("h-6 w-6 text-primary", form.formState.errors.coverImage && "text-destructive")} />
+                    <div
+                      className={cn(
+                        "p-2 rounded-lg bg-primary/10",
+                        form.formState.errors.coverImage && "bg-destructive/10",
+                      )}
+                    >
+                      <ImageIcon
+                        className={cn(
+                          "h-6 w-6 text-primary",
+                          form.formState.errors.coverImage &&
+                            "text-destructive",
+                        )}
+                      />
                     </div>
                     <div className="space-y-1 text-center">
-                      <p className={cn("text-xs font-medium text-primary", form.formState.errors.coverImage && "text-destructive")}>
+                      <p
+                        className={cn(
+                          "text-xs font-medium text-primary",
+                          form.formState.errors.coverImage &&
+                            "text-destructive",
+                        )}
+                      >
                         Glissez-déposez
                       </p>
-                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.coverImage && "text-destructive")}>ou cliquez</p>
-                      <p className={cn("text-xs text-muted-foreground", form.formState.errors.coverImage && "text-destructive")}>
+                      <p
+                        className={cn(
+                          "text-xs text-muted-foreground",
+                          form.formState.errors.coverImage &&
+                            "text-destructive",
+                        )}
+                      >
+                        ou cliquez
+                      </p>
+                      <p
+                        className={cn(
+                          "text-xs text-muted-foreground",
+                          form.formState.errors.coverImage &&
+                            "text-destructive",
+                        )}
+                      >
                         PNG, JPG • 5MB
                       </p>
                     </div>
@@ -328,7 +376,10 @@ const InformationsForm = () => {
                     placeholder="PawThera Inc."
                     {...field}
                     value={field.value ?? ""}
-                    className={cn(form.formState.errors.name && "border-2 border-destructive")}
+                    className={cn(
+                      form.formState.errors.name &&
+                        "border-2 border-destructive",
+                    )}
                   />
                 </FormControl>
               </FormItem>
@@ -344,7 +395,11 @@ const InformationsForm = () => {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    className={cn("bg-card", form.formState.errors.description && "border-2 border-destructive")}
+                    className={cn(
+                      "bg-card",
+                      form.formState.errors.description &&
+                        "border-2 border-destructive",
+                    )}
                     placeholder="Description de votre entreprise"
                     {...field}
                     value={field.value ?? ""}
@@ -362,14 +417,19 @@ const InformationsForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Type d'entreprise</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionnez votre type d'entreprise" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="AUTO-ENTREPRENEUR">Auto-entrepreneur</SelectItem>
+                    <SelectItem value="AUTO-ENTREPRENEUR">
+                      Auto-entrepreneur
+                    </SelectItem>
                     <SelectItem value="SARL">SARL</SelectItem>
                     <SelectItem value="SAS">SAS</SelectItem>
                     <SelectItem value="EIRL">EIRL</SelectItem>
@@ -388,7 +448,9 @@ const InformationsForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Prestations à domicile</FormLabel>
+                  <FormLabel className="text-base">
+                    Prestations à domicile
+                  </FormLabel>
                   <div className="text-sm text-muted-foreground">
                     Proposez-vous des prestations à domicile ?
                   </div>
@@ -405,10 +467,16 @@ const InformationsForm = () => {
         </div>
 
         <div className="flex justify-end gap-4">
-          <Button variant="outline" className="rounded-xl" onClick={stepper.prev}>
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={stepper.prev}
+          >
             Précédent
           </Button>
-          <Button className="rounded-xl" type="submit" variant="default">Suivant</Button>
+          <Button className="rounded-xl" type="submit" variant="default">
+            Suivant
+          </Button>
         </div>
       </form>
     </Form>

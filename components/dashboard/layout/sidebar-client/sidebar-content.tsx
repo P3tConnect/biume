@@ -30,14 +30,10 @@ const SidebarClientContentComponent = () => {
             <SidebarMenu>
               {menus.map(({ active, href, icon: Icon, label }) => (
                 <SidebarMenuItem key={label}>
-                  <SidebarMenuButton
-                    tooltip={t(label)}
-                    asChild
-                    isActive={active}
-                  >
+                  <SidebarMenuButton tooltip={label} asChild isActive={active}>
                     <Link href={href}>
                       <Icon />
-                      <span>{t(label)}</span>
+                      <span>{label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

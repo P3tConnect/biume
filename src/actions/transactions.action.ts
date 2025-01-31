@@ -2,17 +2,29 @@
 
 import { z } from "zod";
 import { CreateTransactionSchema, transaction } from "../db";
-import { db, authedAction, ActionError } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireAuth,
+  requireOwner,
+} from "../lib";
 import { eq } from "drizzle-orm";
 
-export const getTransactions = authedAction.action(async () => {});
+export const getTransactions = createServerAction(
+  z.string(),
+  async (input, ctx) => {
+    return [];
+  },
+  [requireAuth, requireOwner],
+);
 
-export const createTransactions = authedAction
-  .schema(CreateTransactionSchema)
-  .action(async ({ parsedInput }) => {
+export const createTransactions = createServerAction(
+  CreateTransactionSchema,
+  async (input, ctx) => {
     const data = await db
       .insert(transaction)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
@@ -21,15 +33,17 @@ export const createTransactions = authedAction
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const updateTransactions = authedAction
-  .schema(CreateTransactionSchema)
-  .action(async ({ parsedInput }) => {
+export const updateTransactions = createServerAction(
+  CreateTransactionSchema,
+  async (input, ctx) => {
     const data = await db
       .update(transaction)
-      .set(parsedInput)
-      .where(eq(transaction.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(transaction.id, input.id as string))
       .returning()
       .execute();
 
@@ -38,18 +52,24 @@ export const updateTransactions = authedAction
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const deleteTransaction = authedAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteTransaction = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(transaction)
-      .where(eq(transaction.id, parsedInput))
+      .where(eq(transaction.id, input))
       .returning()
       .execute();
 
     if (!data) {
       throw new ActionError("Transaction not deleted");
     }
-  });
+
+    return data;
+  },
+  [requireAuth, requireOwner],
+);
