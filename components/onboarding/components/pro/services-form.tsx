@@ -1,61 +1,53 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import React from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { X } from 'lucide-react'
-import { UploadButton } from '@/src/lib/uploadthing'
-import Image from 'next/image'
-import { proServicesSchema } from '../../types/onboarding-schemas';
-import { createServicesStepAction } from '@/src/actions';
-import { useStepper } from '../../hooks/useStepper';
-import { toast } from 'sonner';
-import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import React from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { X } from "lucide-react";
+import { UploadButton } from "@/src/lib/uploadthing";
+import Image from "next/image";
+import { proServicesSchema } from "../../types/onboarding-schemas";
+import { createServicesStepAction } from "@/src/actions";
+import { useStepper } from "../../hooks/useStepper";
+import { toast } from "sonner";
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 
 const ServicesForm = () => {
   const stepper = useStepper();
-  // const form = useForm<z.infer<typeof proServicesSchema>>({
-  //   resolver: zodResolver(proServicesSchema),
-  //   defaultValues: {
-  //     services: [],
-  //   },
-  // });
-
-  const { form, resetFormAndAction, handleSubmitWithAction } = useHookFormAction(createServicesStepAction, zodResolver(proServicesSchema), {
-    formProps: {
-      defaultValues: {
-        services: [],
-      }
+  const form = useForm<z.infer<typeof proServicesSchema>>({
+    resolver: zodResolver(proServicesSchema),
+    defaultValues: {
+      services: [],
     },
-    actionProps: {
-      onSuccess: () => {
-        resetFormAndAction();
-        stepper.next();
-      },
-      onExecute: () => {
-        toast.loading("Création des services...");
-      },
-      onError: ({ error }) => {
-        toast.error(error.serverError);
-      }
-    }
-  })
+  });
 
-  const { control } = form;
+  const { control, handleSubmit } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'services',
-  })
+    name: "services",
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await createServicesStepAction(data);
+    stepper.next();
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmitWithAction} className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 p-4 border rounded-lg">
             <div className="flex justify-between items-center">
@@ -82,10 +74,10 @@ const ServicesForm = () => {
                     <FormControl>
                       <Input
                         placeholder="ex: Promenade de chien"
-                        type='text'
+                        type="text"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value)}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -104,8 +96,12 @@ const ServicesForm = () => {
                         type="number"
                         placeholder="0"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null,
+                          )
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -124,8 +120,12 @@ const ServicesForm = () => {
                         type="number"
                         placeholder="30"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null,
+                          )
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -144,8 +144,8 @@ const ServicesForm = () => {
                         placeholder="Décrivez votre service..."
                         className="resize-none"
                         {...field}
-                        value={field.value ?? ''}
-                        onChange={e => field.onChange(e.target.value)}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -172,7 +172,7 @@ const ServicesForm = () => {
                           />
                           <button
                             className="absolute top-0 right-0 m-2 p-2 bg-red-500 text-white rounded-full"
-                            onClick={() => field.onChange('')}
+                            onClick={() => field.onChange("")}
                           >
                             <X size={16} />
                           </button>
@@ -182,7 +182,7 @@ const ServicesForm = () => {
                           endpoint="documentsUploader"
                           onClientUploadComplete={(res) => {
                             if (res?.[0]) {
-                              field.onChange(res[0].url)
+                              field.onChange(res[0].url);
                             }
                           }}
                           onUploadError={(error: Error) => {
@@ -203,20 +203,22 @@ const ServicesForm = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => append({
-              name: '',
-              description: '',
-              duration: 30,
-              price: 0,
-              image: ''
-            })}
+            onClick={() =>
+              append({
+                name: "",
+                description: "",
+                duration: 30,
+                price: 0,
+                image: "",
+              })
+            }
           >
             Ajouter un service
           </Button>
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default ServicesForm
+export default ServicesForm;

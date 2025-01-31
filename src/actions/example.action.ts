@@ -1,57 +1,46 @@
+"use server";
+
 import { z } from "zod";
-import { createSafeAction } from "@/src/lib/safe-action/create-safe-action";
-import {
-  requireAuth,
-  requireOwner,
-  createValidator,
-} from "@/src/lib/safe-action/middlewares";
-import { Context } from "@/src/lib/safe-action/types";
+import { createServerAction, requireAuth, requireOwner } from "@/src/lib";
 
-// Schéma de validation
-const schema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
+// Schema
+const createUserSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
 });
 
-// Type d'entrée basé sur le schéma
-type InputType = z.infer<typeof schema>;
-
-// Type de sortie
-type OutputType = {
-  id: string;
-  name: string;
-  email: string;
-  organizationId: string;
-};
-
-// Validation personnalisée
-const validateEmailDomain = async (ctx: Context) => {
-  return ["example.com"];
-};
-
-// Handler de l'action
-const handler = async (data: InputType, ctx: Context): Promise<OutputType> => {
-  if (!ctx.user?.organizationId) {
-    throw new Error("Organisation requise");
-  }
-
-  const allowedDomains = ctx.meta?.validation as string[];
-  const emailDomain = data.email.split("@")[1];
-
-  if (!allowedDomains.includes(emailDomain)) {
-    throw new Error("Domaine email non autorisé");
-  }
-
-  // Simulation d'une opération de base de données
-  return {
-    id: "1",
-    name: data.name,
-    email: data.email,
-    organizationId: ctx.user.organizationId,
+// Custom middleware
+async function validateEmailDomain(ctx: { meta?: Record<string, unknown> }) {
+  ctx.meta = {
+    ...ctx.meta,
+    allowedDomains: ["example.com"],
   };
-};
+}
 
-// Création de l'action sécurisée
-export const createUser = createSafeAction(schema, handler, {
-  middleware: [requireAuth, requireOwner, createValidator(validateEmailDomain)],
-});
+// Create the action with schema validation and middleware
+export const createUser = createServerAction(
+  createUserSchema,
+  async (input, ctx) => {
+    if (!ctx?.organization?.id) {
+      throw new Error("Organization required");
+    }
+
+    const allowedDomains = ctx.meta?.allowedDomains as string[];
+    const emailDomain = input.email.split("@")[1];
+
+    if (!allowedDomains.includes(emailDomain)) {
+      throw new Error("Email domain not allowed");
+    }
+
+    // Simulation of a database operation
+    const id = Math.random().toString(36).substring(7);
+
+    return {
+      id,
+      name: input.name,
+      email: input.email,
+      organizationId: ctx.organization.id,
+    };
+  },
+  [requireAuth, requireOwner],
+);

@@ -3,32 +3,32 @@
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
 import { organization } from "../db/organization";
-import { ownerAction, db, ActionError } from "../lib";
+import { ActionError, createServerAction, db, requireAuth } from "../lib";
 import { eq } from "drizzle-orm";
 
-export const getProgression = ownerAction.action(async ({ ctx }) => {
-  const org = ctx.organization;
+export const getProgression = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const org = ctx.organization;
 
-  const data = await db
-    .select()
-    .from(progression)
-    .innerJoin(organization, eq(organization.progressionId, progression.id))
-    .where(eq(organization.id, org.id))
-    .execute();
+    const [progressionResult] = await db
+      .select()
+      .from(progression)
+      .innerJoin(organization, eq(organization.progressionId, progression.id))
+      .where(eq(organization.id, org?.id ?? ""))
+      .execute();
 
-  if (!data || data.length === 0) {
-    throw new ActionError("Progression not found");
-  }
+    return progressionResult;
+  },
+  [requireAuth],
+);
 
-  return data[0].progression;
-});
-
-export const createProgression = ownerAction
-  .schema(CreateProgressionSchema)
-  .action(async ({ parsedInput }) => {
+export const createProgression = createServerAction(
+  CreateProgressionSchema,
+  async (input, ctx) => {
     const data = await db
       .insert(progression)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
 
@@ -37,15 +37,17 @@ export const createProgression = ownerAction
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
 
-export const updateProgression = ownerAction
-  .schema(CreateProgressionSchema)
-  .action(async ({ parsedInput }) => {
+export const updateProgression = createServerAction(
+  CreateProgressionSchema,
+  async (input, ctx) => {
     const data = await db
       .update(progression)
-      .set(parsedInput)
-      .where(eq(progression.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(progression.id, input.id as string))
       .returning()
       .execute();
 
@@ -54,18 +56,22 @@ export const updateProgression = ownerAction
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
 
-export const deleteProgression = ownerAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteProgression = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(progression)
-      .where(eq(progression.id, parsedInput))
+      .where(eq(progression.id, input))
       .returning()
       .execute();
 
     if (!data) {
       throw new ActionError("Progression not deleted");
     }
-  });
+  },
+  [requireAuth],
+);

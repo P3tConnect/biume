@@ -1,37 +1,51 @@
 "use server";
 
 import { z } from "zod";
-import { ownerAction, db, authedAction, ActionError } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from "../lib";
 import { CreateOptionSchema, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
 import { auth } from "../lib/auth";
 import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { headers } from "next/headers";
 
-export const getOptions = authedAction.action(async () => {});
+export const getOptions = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    return [];
+  },
+  [requireAuth, requireOwner],
+);
 
-export const createOption = ownerAction
-  .schema(CreateOptionSchema)
-  .action(async ({ parsedInput }) => {
+export const createOption = createServerAction(
+  CreateOptionSchema,
+  async (input, ctx) => {
     const data = await db
       .insert(optionsTable)
-      .values(parsedInput)
+      .values(input)
       .returning()
       .execute();
     if (!data) {
       throw new ActionError("Option not created");
     }
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const createOptionsStepAction = authedAction
-  .schema(proOptionsSchema)
-  .action(async ({ parsedInput }) => {
+export const createOptionsStepAction = createServerAction(
+  proOptionsSchema,
+  async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
     });
     if (!organization) return;
-    const options = parsedInput.options;
+    const options = input.options;
     await db
       .insert(optionsTable)
       .values(
@@ -41,15 +55,17 @@ export const createOptionsStepAction = authedAction
         })),
       )
       .execute();
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const updateOption = ownerAction
-  .schema(CreateOptionSchema)
-  .action(async ({ parsedInput }) => {
+export const updateOption = createServerAction(
+  CreateOptionSchema,
+  async (input, ctx) => {
     const data = await db
       .update(optionsTable)
-      .set(parsedInput)
-      .where(eq(optionsTable.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(optionsTable.id, input.id as string))
       .returning()
       .execute();
 
@@ -58,18 +74,22 @@ export const updateOption = ownerAction
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const deleteOption = ownerAction
-  .schema(z.string())
-  .action(async ({ parsedInput }) => {
+export const deleteOption = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(optionsTable)
-      .where(eq(optionsTable.id, parsedInput))
+      .where(eq(optionsTable.id, input))
       .returning()
       .execute();
 
     if (!data) {
       throw new ActionError("Option not deleted");
     }
-  });
+  },
+  [requireAuth, requireOwner],
+);

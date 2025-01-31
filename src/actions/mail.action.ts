@@ -3,17 +3,17 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
 import { resend } from "../lib/resend";
 import { redirect } from "next/navigation";
-import { action, ActionError } from "../lib";
+import { ActionError, createServerAction } from "../lib";
 import { emailSchema } from "../lib/schemas";
 
-export const newSubWaitList = action
-  .schema(emailSchema)
-  .action(async ({ parsedInput }) => {
+export const newSubWaitList = createServerAction(
+  emailSchema,
+  async (input, ctx) => {
     const mail = await resend.emails.send({
       from: "PawThera<contact@pawthera.com>",
       subject: "New person in the WaitList",
       to: ["mathieu.chambaud@pawthera.com", "graig.kolodziejczyk@pawthera.com"],
-      react: NewPersonWaitList({ subEmail: parsedInput.email }),
+      react: NewPersonWaitList({ subEmail: input.email }),
     });
 
     if (mail.error) {
@@ -22,4 +22,6 @@ export const newSubWaitList = action
     } else {
       redirect("/waitlist");
     }
-  });
+  },
+  [],
+);

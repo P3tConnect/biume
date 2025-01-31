@@ -1,16 +1,22 @@
 "use server";
 
-import { authedAction, db, ActionError } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+} from "../lib";
 import { CreateUserSchema, user } from "../db";
 import { eq } from "drizzle-orm";
 
-export const updateUser = authedAction
-  .schema(CreateUserSchema)
-  .action(async ({ parsedInput }) => {
+export const updateUser = createServerAction(
+  CreateUserSchema,
+  async (input, ctx) => {
     const data = await db
       .update(user)
-      .set(parsedInput)
-      .where(eq(user.id, parsedInput.id as string))
+      .set(input)
+      .where(eq(user.id, input.id as string))
       .returning()
       .execute();
 
@@ -19,4 +25,6 @@ export const updateUser = authedAction
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
