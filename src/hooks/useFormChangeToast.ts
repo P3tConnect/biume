@@ -26,15 +26,24 @@ export function useFormChangeToast<T extends FieldValues>({
   delay = 500,
 }: UseFormChangeToastProps<T>) {
   useEffect(() => {
+    let isSubmitting = false;
+
     const subscription = form.watch(() => {
-      if (form.formState.isDirty) {
+      if (form.formState.isDirty && !isSubmitting) {
         const timeoutId = setTimeout(() => {
           toast.message(message, {
             id: FORM_CHANGES_TOAST_ID,
             description,
             action: {
               label: actionLabel,
-              onClick: onSubmit,
+              onClick: async () => {
+                isSubmitting = true;
+                try {
+                  await onSubmit();
+                } finally {
+                  isSubmitting = false;
+                }
+              },
             },
             duration: Infinity,
             position,
@@ -51,7 +60,6 @@ export function useFormChangeToast<T extends FieldValues>({
 
         return () => {
           clearTimeout(timeoutId);
-          toast.dismiss(FORM_CHANGES_TOAST_ID);
         };
       } else {
         toast.dismiss(FORM_CHANGES_TOAST_ID);

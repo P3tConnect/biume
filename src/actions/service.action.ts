@@ -7,6 +7,7 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
+  requireOrganization,
 } from "../lib";
 import { CreateServiceSchema, service } from "../db";
 import { eq } from "drizzle-orm";
@@ -53,8 +54,10 @@ export const createServicesStepAction = createServerAction(
     if (!result) {
       throw new ActionError("Services not created");
     }
+
+    return result;
   },
-  [requireAuth],
+  [requireAuth, requireOrganization],
 );
 
 export const updateService = createServerAction(

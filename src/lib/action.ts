@@ -57,6 +57,18 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 }
 
+export async function requireOrganization(ctx: ServerActionContext) {
+  const organization = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
+
+  if (!organization) {
+    throw new Error("Organization required");
+  }
+
+  Object.assign(ctx, { organization });
+}
+
 export async function requireMember(ctx: ServerActionContext) {
   const organization = await auth.api.getFullOrganization({
     headers: await headers(),

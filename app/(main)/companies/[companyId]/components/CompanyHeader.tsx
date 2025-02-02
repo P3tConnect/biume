@@ -9,11 +9,21 @@ interface CompanyHeaderProps {
     address: string;
     rating: number;
     reviews: number;
-    images: string[];
+    images?: string[];
   };
 }
 
 export function CompanyHeader({ company }: CompanyHeaderProps) {
+  const defaultImages = [
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
+    "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388",
+    "https://images.unsplash.com/photo-1472851294608-062f824d29cc",
+    "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6",
+    "https://images.unsplash.com/photo-1486299267070-83823f5448dd"
+  ];
+
+  const displayImages = defaultImages;
+
   return (
     <div className="space-y-6">
       {/* Navigation */}
@@ -67,7 +77,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
         <div className="aspect-[2/1] rounded-xl overflow-hidden grid grid-cols-4 grid-rows-2 gap-2">
           <div className="col-span-2 row-span-2 relative">
             <Image
-              src={company.images[0]}
+              src={displayImages[0]}
               alt={`${company.name} - Image principale`}
               fill
               className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
@@ -75,7 +85,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           </div>
           <div className="relative">
             <Image
-              src={company.images[1]}
+              src={displayImages[1]}
               alt={`${company.name} - Image 2`}
               fill
               className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
@@ -83,7 +93,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           </div>
           <div className="relative">
             <Image
-              src={company.images[2]}
+              src={displayImages[2]}
               alt={`${company.name} - Image 3`}
               fill
               className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
@@ -91,7 +101,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           </div>
           <div className="relative">
             <Image
-              src={company.images[1]}
+              src={displayImages[3]}
               alt={`${company.name} - Image 4`}
               fill
               className="object-cover hover:opacity-90 transition-opacity cursor-pointer"
@@ -99,7 +109,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           </div>
           <div className="relative">
             <Image
-              src={company.images[2]}
+              src={displayImages[4]}
               alt={`${company.name} - Image 5`}
               fill
               className="object-cover hover:opacity-90 transition-opacity cursor-pointer rounded-tr-xl"

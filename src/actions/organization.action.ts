@@ -5,16 +5,48 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
+  requireOrganization,
 } from "../lib";
 import { auth } from "../lib/auth";
-import { organization } from "../db";
+import { organization as organizationTable } from "../db";
 import { CreateOrganizationSchema } from "../db";
 import { db } from "../lib";
 import { eq } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { progression as progressionTable } from "../db";
 import { headers } from "next/headers";
+import { z } from "zod";
+import { organizationFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+export const getAllOrganizations = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const organizations = await db.select().from(organizationTable);
 
+    return organizations;
+  },
+  [],
+);
+
+export const getCurrentOrganization = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+    const organization = await db.query.organization.findFirst({
+      where: eq(organizationTable.id, ctx.organization.id),
+    });
+
+    if (!organization) {
+      throw new ActionError("Organisation non trouvée");
+    }
+
+    return organization;
+  },
+  [requireAuth, requireOrganization],
+);
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
@@ -56,7 +88,7 @@ export const createOrganization = createServerAction(
       console.log(progression, "progression after create progression");
 
       const [organizationResult] = await db
-        .update(organization)
+        .update(organizationTable)
         .set({
           coverImage: data.coverImage,
           description: data.description,
@@ -64,7 +96,7 @@ export const createOrganization = createServerAction(
           companyType: data.companyType,
           atHome: data.atHome,
         })
-        .where(eq(organization.id, result?.id as string))
+        .where(eq(organizationTable.id, result?.id as string))
         .returning()
         .execute();
 
@@ -92,16 +124,15 @@ export const createOrganization = createServerAction(
 );
 
 export const updateOrganization = createServerAction(
-  CreateOrganizationSchema,
+  organizationFormSchema,
   async (input, ctx) => {
     const data = await db
-      .update(organization)
+      .update(organizationTable)
       .set({
         name: input.name,
         email: input.email,
         description: input.description,
         logo: input.logo,
-        addressId: input.addressId,
         openAt: input.openAt,
         closeAt: input.closeAt,
         atHome: input.atHome,
@@ -109,7 +140,7 @@ export const updateOrganization = createServerAction(
         siren: input.siren,
         siret: input.siret,
       })
-      .where(eq(organization.id, input.id))
+      .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()
       .execute();
 

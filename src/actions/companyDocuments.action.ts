@@ -66,6 +66,11 @@ export const createDocumentsStepAction = createServerAction(
     if (!progressionResult) {
       throw new ActionError("Progression not updated");
     }
+
+    return {
+      organization: organizationResult,
+      progression: progressionResult,
+    };
   },
   [requireAuth, requireOwner],
 );

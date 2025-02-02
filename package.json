@@ -91,7 +91,7 @@
     "react": "^19.0.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-confetti": "^6.2.2",
-    "react-day-picker": "^9.5.1",
+    "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
     "react-email": "^3.0.6",

@@ -28,6 +28,8 @@ import { useUploadThing } from "@/src/lib/uploadthing";
 import { cn } from "@/src/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { proInformationsSchema } from "../../types/onboarding-schemas";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { createOrganization } from "@/src/actions/organization.action";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -56,6 +58,17 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
 
   const { control, setValue, handleSubmit, reset } = form;
 
+  const { mutateAsync } = useActionMutation(createOrganization, {
+    onSuccess: () => {
+      toast.success("Entreprise créée avec succès!");
+      nextStep();
+      reset();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
       if (res && res[0]) {
@@ -71,6 +84,10 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
       toast.error(`Erreur: ${error.message}`);
       setLogoIsUploading(false);
     },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   const { startUpload: startCoverUpload } = useUploadThing(
@@ -131,7 +148,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
 
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6">
         <div className="flex flex-row gap-6">
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
