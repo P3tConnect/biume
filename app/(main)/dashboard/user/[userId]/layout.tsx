@@ -1,5 +1,4 @@
 import DashboardClientLayout from '@/components/dashboard/layout/dashboard-client-layout';
-import { currentUser } from '@/src/lib';
 import { ReactNode } from 'react';
 
 const ClientDashboardLayout = async ({

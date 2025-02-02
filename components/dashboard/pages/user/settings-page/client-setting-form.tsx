@@ -24,45 +24,94 @@ import {
   AvatarImage,
   Separator,
 } from '@/components/ui';
-import { Bell, Shield, User } from 'lucide-react';
+import { Bell, Shield, User, ImageIcon, PenBox, Trash2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import { updateUserInformations } from '@/src/actions/user.action';
+import React, { useState } from 'react';
+import {
+  getUserInformations,
+  updateUserInformations,
+} from '@/src/actions/user.action';
 import { toast } from 'sonner';
 import { clientSettingsSchema } from './types/settings-schema';
-import { useActionMutation } from '@/src/hooks/action-hooks';
+import { useActionMutation, useActionQuery } from '@/src/hooks/action-hooks';
+import { delay } from 'framer-motion';
+import { useFormChangeToast } from '@/src/hooks/useFormChangeToast';
+import { useDropzone } from 'react-dropzone';
+import { useUploadThing } from '@/src/lib/uploadthing';
+import { cn } from '@/src/lib';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+};
 
 const ClientSettingsForm = () => {
-  const { data: session } = useSession();
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
-  const form = useForm<z.infer<typeof clientSettingsSchema>>({
-    resolver: zodResolver(clientSettingsSchema),
-    defaultValues: {
-      image: session?.user?.image ?? '',
-      name: session?.user?.name ?? '',
-      address: session?.user?.address ?? '',
-      email: session?.user?.email ?? '',
-      country: session?.user?.country ?? '',
-      city: session?.user?.city ?? '',
-      zipCode: session?.user?.zipCode ?? '',
-      phoneNumber: session?.user?.phoneNumber ?? '',
-      emailNotifications: session?.user?.emailNotifications ?? false,
-      smsNotifications: session?.user?.smsNotifications ?? false,
-      twoFactorEnabled: session?.user?.twoFactorEnabled ?? false,
+  const { data: userInformations, refetch } = useActionQuery(
+    getUserInformations,
+    {}
+  );
+
+  const { startUpload } = useUploadThing('documentsUploader', {
+    onClientUploadComplete: async (res) => {
+      if (res && res[0]) {
+        await mutateAsync({
+          ...form.getValues(),
+          image: res[0].url,
+        });
+        toast.success('Image téléchargée avec succès!');
+      }
+    },
+    onUploadProgress: (p) => {
+      setUploadProgress(p);
+    },
+    onUploadError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
     },
   });
 
-  const { control, handleSubmit, reset, getValues } = form;
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: ACCEPTED_IMAGE_TYPES,
+    maxSize: MAX_FILE_SIZE,
+    multiple: false,
+    onDrop: async (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setIsUploading(true);
+        toast.info("Téléchargement de l'image en cours...");
+        await startUpload(acceptedFiles);
+        setIsUploading(false);
+      }
+    },
+  });
+
+  const form = useForm<z.infer<typeof clientSettingsSchema>>({
+    resolver: zodResolver(clientSettingsSchema),
+    values: {
+      image: userInformations?.image ?? '',
+      name: userInformations?.name ?? '',
+      address: userInformations?.address ?? '',
+      email: userInformations?.email ?? '',
+      country: userInformations?.country ?? '',
+      city: userInformations?.city ?? '',
+      zipCode: userInformations?.zipCode ?? '',
+      phoneNumber: userInformations?.phoneNumber ?? '',
+      emailNotifications: userInformations?.emailNotifications ?? false,
+      smsNotifications: userInformations?.smsNotifications ?? false,
+      twoFactorEnabled: userInformations?.twoFactorEnabled ?? false,
+    },
+  });
+
+  const { control, handleSubmit } = form;
 
   const { mutateAsync } = useActionMutation(updateUserInformations, {
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Vos informations ont été mises à jour');
-    },
-    onMutate: () => {
-      toast.loading('Mise à jour des informations...');
     },
     onError: ({ message }) => {
       toast.error(message);
@@ -71,16 +120,21 @@ const ClientSettingsForm = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     await mutateAsync(data);
-    reset();
-    getValues();
+  });
+
+  const {} = useFormChangeToast({
+    form,
+    onSubmit,
+    message: 'Informations modifiées',
+    description: 'Vos informations sont en attente de mise à jour',
+    position: 'bottom-center',
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className='container mx-auto p-6'>
-        <h1 className='text-3xl font-bold mb-8'>Paramètres</h1>
-        <Tabs defaultValue='profile' className='w-full'>
-          <TabsList className='grid w-full grid-cols-3 mb-8'>
+      <form onSubmit={onSubmit} className='mx-auto'>
+        <Tabs defaultValue='profile' className='space-y-4'>
+          <TabsList>
             <TabsTrigger value='profile' className='flex items-center gap-2'>
               <User className='size-4' />
               Profil
@@ -108,19 +162,72 @@ const ClientSettingsForm = () => {
               </CardHeader>
               <CardContent className='space-y-6'>
                 <div className='flex flex-col items-center gap-4'>
-                  <Avatar className='size-24'>
-                    {session?.user?.image ? (
-                      <AvatarImage src={session.user.image} />
-                    ) : (
-                      <AvatarFallback>
-                        <User className='size-12' />
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
+                  {!userInformations?.image ? (
+                    <div className='w-32'>
+                      <div
+                        {...getRootProps()}
+                        className={cn(
+                          'w-full h-32 border-2 border-dashed border-primary/20 rounded-full transition-all bg-background/50 hover:bg-primary/5 flex items-center justify-center',
+                          isDragActive && 'border-primary bg-primary/5'
+                        )}
+                      >
+                        <input {...getInputProps()} />
+                        <div className='flex flex-col items-center gap-2'>
+                          <div className='p-2 rounded-lg bg-primary/10'>
+                            <ImageIcon className='h-6 w-6 text-primary' />
+                          </div>
+                        </div>
+                      </div>
+                      {isUploading && (
+                        <div className='w-full mt-2'>
+                          <div className='h-1 w-full bg-primary/20 rounded-full overflow-hidden'>
+                            <div
+                              className='h-full bg-primary transition-all duration-300 rounded-full'
+                              style={{ width: `${uploadProgress}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className='group relative w-32 h-32 rounded-full overflow-hidden border-2 border-primary/20'>
+                      <Avatar className='w-full h-full'>
+                        <AvatarImage
+                          src={userInformations.image}
+                          className='object-cover'
+                        />
+                        <AvatarFallback>
+                          <User className='size-12' />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className='absolute inset-0 flex items-center justify-center gap-4 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <Button
+                            variant='ghost'
+                            size='icon'
+                            className='rounded-xl text-white hover:text-white hover:bg-white/20'
+                          >
+                            <PenBox size={16} />
+                          </Button>
+                        </div>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          className='rounded-xl text-white hover:text-white hover:bg-white/20'
+                          onClick={() => {
+                            mutateAsync({
+                              ...form.getValues(),
+                              image: '',
+                            });
+                          }}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-                <Separator />
-
                 <div className='grid grid-cols-2 gap-6'>
                   <FormField
                     control={control}
@@ -172,7 +279,7 @@ const ClientSettingsForm = () => {
                             {...field}
                             type='tel'
                             placeholder='0612345678'
-                            value={field.value ?? ''}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
@@ -190,7 +297,7 @@ const ClientSettingsForm = () => {
                           <Input
                             {...field}
                             placeholder='123 rue de la Paix'
-                            value={field.value ?? ''}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
@@ -208,7 +315,7 @@ const ClientSettingsForm = () => {
                           <Input
                             {...field}
                             placeholder='Paris'
-                            value={field.value ?? ''}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
@@ -226,7 +333,7 @@ const ClientSettingsForm = () => {
                           <Input
                             {...field}
                             placeholder='75000'
-                            value={field.value ?? ''}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
@@ -244,7 +351,7 @@ const ClientSettingsForm = () => {
                           <Input
                             {...field}
                             placeholder='France'
-                            value={field.value ?? ''}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
@@ -347,12 +454,6 @@ const ClientSettingsForm = () => {
             </Card>
           </TabsContent>
         </Tabs>
-
-        <div className='mt-8 flex justify-end'>
-          <Button type='submit' className='px-8'>
-            Enregistrer les modifications
-          </Button>
-        </div>
       </form>
     </Form>
   );

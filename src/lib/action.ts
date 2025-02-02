@@ -64,7 +64,6 @@ export async function requireMember(ctx: ServerActionContext) {
 
   if (!organization) {
     throw new ActionError('User is not a member of any organization!');
-    throw new Error('Organization required');
   }
 
   if (!ctx.user) {
