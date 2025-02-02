@@ -30,8 +30,8 @@ import { SubscriptionStep } from "../pro/subscription-step";
 import { generateMigrationName } from "@/src/lib/business-names";
 
 const Stepper = () => {
-  const stepper = useStepper();
-  const currentStep = utils.getIndex(stepper.current.id);
+  const { next, prev, current, goTo, all, isLast, switch: switchStep } = useStepper();
+  const currentStep = utils.getIndex(current.id);
   const { data: session } = useSession();
 
   const skipOnboarding = async () => {
@@ -47,9 +47,6 @@ const Stepper = () => {
         metadata: {},
         userId: session?.user.id,
       });
-
-      console.log(result.error, "result");
-
       // Créer une progression
       const [progression] = await db
         .insert(progressionTable)
@@ -89,7 +86,7 @@ const Stepper = () => {
       });
 
       // Rediriger vers le dashboard
-      stepper.goTo("subscription");
+      goTo("subscription");
       toast.success("Configuration rapide terminée !");
     } catch (error) {
       console.error("Erreur lors du skip:", error);
@@ -105,22 +102,22 @@ const Stepper = () => {
       <DialogHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
-          totalSteps={stepper.all.length}
-          isLast={stepper.isLast}
+          totalSteps={all.length}
+          isLast={isLast}
         />
         <div className="space-y-1 flex flex-col">
-          <DialogTitle className="text-xl font-bold">{stepper.current.title}</DialogTitle>
-          <DialogDescription className="text-muted-foreground text-md">{stepper.current.description}</DialogDescription>
+          <DialogTitle className="text-xl font-bold">{current.title}</DialogTitle>
+          <DialogDescription className="text-muted-foreground text-md">{current.description}</DialogDescription>
         </div>
       </DialogHeader>
 
       <div className="h-[500px] overflow-y-auto p-4">
-        {stepper.switch({
-          start: () => <IntroStep skipOnboarding={skipOnboarding} nextStep={stepper.next} />,
-          informations: () => <ProInformationsStep />,
-          services: () => <ProServicesStep />,
-          options: () => <ProOptionsStep />,
-          documents: () => <ProDocumentsStep />,
+        {switchStep({
+          start: () => <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />,
+          informations: () => <ProInformationsStep nextStep={next} previousStep={prev} />,
+          services: () => <ProServicesStep nextStep={next} previousStep={prev} />,
+          options: () => <ProOptionsStep nextStep={next} previousStep={prev} />,
+          documents: () => <ProDocumentsStep nextStep={next} previousStep={prev} />,
           subscription: () => <SubscriptionStep />,
         })}
       </div>

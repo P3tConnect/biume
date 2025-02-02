@@ -27,9 +27,7 @@ import { useDropzone } from "react-dropzone";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { cn } from "@/src/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createOrganization } from "@/src/actions/organization.action";
 import { proInformationsSchema } from "../../types/onboarding-schemas";
-import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -37,12 +35,12 @@ const ACCEPTED_IMAGE_TYPES = {
   "image/png": [".png"],
 };
 
-const InformationsForm = () => {
+const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
   const [uploadCoverProgress, setUploadCoverProgress] = useState(0);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [logoUploadProgress, setLogoUploadProgress] = useState(0);
   const [logoIsUploading, setLogoIsUploading] = useState(false);
-  const stepper = useStepper();
+  // const { next, prev } = useStepper();
 
   const form = useForm<z.infer<typeof proInformationsSchema>>({
     resolver: zodResolver(proInformationsSchema),
@@ -56,12 +54,7 @@ const InformationsForm = () => {
     },
   });
 
-  const { control, setValue, handleSubmit } = form;
-
-  const onSubmit = handleSubmit(async (data) => {
-    await createOrganization(data);
-    stepper.next();
-  });
+  const { control, setValue, handleSubmit, reset } = form;
 
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
@@ -138,7 +131,7 @@ const InformationsForm = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={onSubmit}>
+      <form className="space-y-6">
         <div className="flex flex-row gap-6">
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
@@ -277,7 +270,7 @@ const InformationsForm = () => {
                         className={cn(
                           "h-6 w-6 text-primary",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       />
                     </div>
@@ -286,7 +279,7 @@ const InformationsForm = () => {
                         className={cn(
                           "text-xs font-medium text-primary",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       >
                         Glissez-déposez
@@ -295,7 +288,7 @@ const InformationsForm = () => {
                         className={cn(
                           "text-xs text-muted-foreground",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       >
                         ou cliquez
@@ -304,7 +297,7 @@ const InformationsForm = () => {
                         className={cn(
                           "text-xs text-muted-foreground",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       >
                         PNG, JPG • 5MB
@@ -378,7 +371,7 @@ const InformationsForm = () => {
                     value={field.value ?? ""}
                     className={cn(
                       form.formState.errors.name &&
-                        "border-2 border-destructive",
+                      "border-2 border-destructive",
                     )}
                   />
                 </FormControl>
@@ -398,7 +391,7 @@ const InformationsForm = () => {
                     className={cn(
                       "bg-card",
                       form.formState.errors.description &&
-                        "border-2 border-destructive",
+                      "border-2 border-destructive",
                     )}
                     placeholder="Description de votre entreprise"
                     {...field}
@@ -470,7 +463,7 @@ const InformationsForm = () => {
           <Button
             variant="outline"
             className="rounded-xl"
-            onClick={stepper.prev}
+            onClick={previousStep}
           >
             Précédent
           </Button>

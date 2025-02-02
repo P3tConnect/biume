@@ -18,9 +18,10 @@ import { X } from "lucide-react";
 import { proOptionsSchema } from "../../types/onboarding-schemas";
 import { useStepper } from "../../hooks/useStepperClient";
 import { createOptionsStepAction } from "@/src/actions";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { toast } from "sonner";
 
-export function OptionsForm() {
-  const stepper = useStepper();
+export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) {
   const form = useForm<z.infer<typeof proOptionsSchema>>({
     resolver: zodResolver(proOptionsSchema),
     defaultValues: {
@@ -28,16 +29,25 @@ export function OptionsForm() {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
   });
 
+  const { mutateAsync } = useActionMutation(createOptionsStepAction, {
+    onSuccess: () => {
+      reset();
+      nextStep();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = handleSubmit(async (data) => {
-    await createOptionsStepAction(data);
-    stepper.next();
+    await mutateAsync(data);
   });
 
   return (
@@ -139,6 +149,18 @@ export function OptionsForm() {
             }
           >
             Ajouter une option
+          </Button>
+        </div>
+        <div className="flex justify-end gap-4">
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            Précédent
+          </Button>
+          <Button className="rounded-xl" type="submit" variant="default">
+            Suivant
           </Button>
         </div>
       </form>

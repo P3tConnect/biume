@@ -46,7 +46,7 @@ export function FeaturesSection() {
     <section className="py-12 sm:py-16 md:py-24 bg-accent/5">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-white/90">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-foreground/80">
             Tout ce dont vous avez besoin pour la santé de votre animal
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground px-4">
@@ -77,7 +77,7 @@ export function FeaturesSection() {
         <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-4 sm:space-y-6">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left bg-clip-text text-transparent bg-white/90">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left bg-clip-text text-transparent bg-foreground/80">
                 La plateforme de référence pour la santé animale
               </h3>
               <div className="grid grid-cols-2 gap-3 sm:gap-6">

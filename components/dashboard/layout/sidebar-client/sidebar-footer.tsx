@@ -19,17 +19,13 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import { cn } from "@/src/lib";
 import { signOut, useSession } from "@/src/lib/auth-client";
 import Avvvatars from "avvvatars-react";
 import {
-  BadgeCheck,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
   Settings,
   Sparkles,
-  User2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";

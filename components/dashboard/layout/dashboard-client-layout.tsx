@@ -1,20 +1,42 @@
-import { ScrollArea } from '@/components/ui'
 import React from 'react'
-import SidebarClientComponent from './sidebar-client/sidebar';
-import { Navbar } from './navbar';
+import { ScrollArea } from '@/components/ui'
+import { DashboardSidebar } from './sidebar/dashboard-sidebar'
+import { DashboardHeader } from './header/dashboard-header'
+import { DashboardFooter } from './footer/dashboard-footer'
+import { Breadcrumbs } from './navigation/breadcrumbs'
 
-const DashboardClientLayout = ({ children }: { children: React.ReactNode }) => {
+interface DashboardClientLayoutProps {
+    children: React.ReactNode
+}
+
+const DashboardClientLayout: React.FC<DashboardClientLayoutProps> = ({ children }) => {
     return (
-        <div className='h-[100vh] w-[100vw] flex justify-center items-center'>
-            <SidebarClientComponent />
-            <main className='h-full w-full px-1 py-2 ease-in-out duration-300 flex flex-col'>
-                <Navbar />
-                <ScrollArea
-                    className='pr-4 overflow-y-auto'
-                >
-                    {children}
-                </ScrollArea>
-            </main>
+        <div className="relative h-screen w-screen bg-background">
+            <div className="flex h-screen overflow-hidden">
+                {/* Sidebar avec gestion de collapse */}
+                <DashboardSidebar />
+
+                {/* Contenu principal */}
+                <div className="flex-1 flex flex-col overflow-hidden">
+                    <DashboardHeader />
+
+                    <main className="flex-1 overflow-y-auto">
+                        <div className="container mx-auto px-6 py-4">
+                            {/* Navigation */}
+                            <Breadcrumbs />
+
+                            {/* Contenu principal */}
+                            <div className="mt-4">
+                                <ScrollArea className="rounded-lg">
+                                    {children}
+                                </ScrollArea>
+                            </div>
+                        </div>
+                    </main>
+
+                    <DashboardFooter />
+                </div>
+            </div>
         </div>
     )
 }

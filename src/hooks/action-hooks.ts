@@ -27,10 +27,10 @@ export function useActionMutation<TInput, TOutput>(
   return useMutation<TOutput, Error, TInput>({
     mutationFn: async (input: TInput) => {
       const result = await action(input);
-      if (result.error) {
-        throw new Error(result.error);
+      if (result.error || !result.data) {
+        throw new Error(result.error || "Une erreur est survenue");
       }
-      return result.data!;
+      return result.data;
     },
     ...options,
   });

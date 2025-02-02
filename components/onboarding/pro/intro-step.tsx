@@ -41,11 +41,11 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
         </div>
       </div>
       <div className="flex justify-end gap-4">
-        <DialogClose asChild>
-          <Button variant="outline" className="rounded-xl">
-            Fermer
-          </Button>
-        </DialogClose>
+        {/* <DialogClose asChild> */}
+        <Button variant="outline" className="rounded-xl">
+          Fermer
+        </Button>
+        {/* </DialogClose> */}
         <Button
           variant="ghost"
           className="rounded-xl"
@@ -55,7 +55,7 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
         </Button>
         <Button className="rounded-xl" onClick={nextStep}>Commencer</Button>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  DialogFooter,
   Form,
   FormControl,
   FormField,
@@ -23,9 +24,9 @@ import { createServicesStepAction } from "@/src/actions";
 import { useStepper } from "../../hooks/useStepper";
 import { toast } from "sonner";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
+import { useActionMutation } from "@/src/hooks/action-hooks";
 
-const ServicesForm = () => {
-  const stepper = useStepper();
+const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
   const form = useForm<z.infer<typeof proServicesSchema>>({
     resolver: zodResolver(proServicesSchema),
     defaultValues: {
@@ -33,16 +34,25 @@ const ServicesForm = () => {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "services",
   });
 
+  const { mutateAsync } = useActionMutation(createServicesStepAction, {
+    onSuccess: () => {
+      reset();
+      nextStep();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = handleSubmit(async (data) => {
-    await createServicesStepAction(data);
-    stepper.next();
+    await mutateAsync(data);
   });
 
   return (
@@ -214,6 +224,18 @@ const ServicesForm = () => {
             }
           >
             Ajouter un service
+          </Button>
+        </div>
+        <div className="flex justify-end gap-4">
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            Précédent
+          </Button>
+          <Button className="rounded-xl" type="submit" variant="default">
+            Suivant
           </Button>
         </div>
       </form>

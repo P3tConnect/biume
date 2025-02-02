@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { proDocumentsSchema } from "../../types/onboarding-schemas";
 import { useStepper } from "../../hooks/useStepper";
 import { createDocumentsStepAction } from "@/src/actions";
+import { useActionMutation } from "@/src/hooks/action-hooks";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = {
   "application/pdf": [".pdf"],
@@ -29,8 +30,7 @@ const ACCEPTED_FILE_TYPES = {
   "image/png": [".png"],
 };
 
-export function DocumentsForm() {
-  const stepper = useStepper();
+export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) {
   const form = useForm<z.infer<typeof proDocumentsSchema>>({
     resolver: zodResolver(proDocumentsSchema),
     defaultValues: {
@@ -40,11 +40,20 @@ export function DocumentsForm() {
     },
   });
 
-  const { control, setValue, handleSubmit } = form;
+  const { control, setValue, handleSubmit, reset } = form;
+
+  const { mutateAsync } = useActionMutation(createDocumentsStepAction, {
+    onSuccess: () => {
+      reset();
+      nextStep();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
-    await createDocumentsStepAction(data);
-    stepper.next();
+    await mutateAsync(data);
   });
 
   return (
@@ -104,8 +113,20 @@ export function DocumentsForm() {
             </FormItem>
           )}
         />
+        <div className="flex justify-end gap-4">
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            Précédent
+          </Button>
+          <Button className="rounded-xl" type="submit" variant="default">
+            Suivant
+          </Button>
+        </div>
       </form>
-    </Form>
+    </Form >
   );
 }
 

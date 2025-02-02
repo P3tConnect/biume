@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function OrganizationSubscriptionSuccess() {
+  const searchParams = useSearchParams();
+  const orgId = searchParams.get("org");
+
+  if (!orgId) {
+    return <div>No organization ID</div>;
+  }
+
   return (
     <div className="h-screen w-screen bg-gradient-to-b from-background to-emerald-50/30 flex items-center justify-center p-6">
       <Card className="w-full max-w-lg shadow-lg">
@@ -34,7 +42,7 @@ export default function OrganizationSubscriptionSuccess() {
             </div>
 
             <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
-              <Link href={`/dashboard/organization`} className="w-full sm:w-auto">
+              <Link href={`/dashboard/organization/${orgId}`} className="w-full sm:w-auto">
                 <Button size="lg" className="w-full">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Retourner au tableau de bord
