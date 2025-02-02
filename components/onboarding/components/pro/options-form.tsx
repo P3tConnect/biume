@@ -206,7 +206,7 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
               Précédent
             </Button>
             <Button
-              type="submit"
+              onClick={nextStep}
               className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
             >
               Suivant

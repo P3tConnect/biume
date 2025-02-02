@@ -429,7 +429,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                 <FormLabel>Type d'entreprise</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value ?? "NONE"}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -484,7 +484,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
           >
             Précédent
           </Button>
-          <Button className="rounded-xl" type="submit" variant="default">
+          <Button className="rounded-xl" onClick={nextStep} variant="default">
             Suivant
           </Button>
         </div>

@@ -109,7 +109,7 @@ const SidebarHeaderComponent = () => {
                       <Image
                         src={orgs.logo}
                         alt={orgs.name}
-                        className="object-cover rounded-lg"
+                        className="object-cover rounded-full"
                         width={32}
                         height={32}
                       />

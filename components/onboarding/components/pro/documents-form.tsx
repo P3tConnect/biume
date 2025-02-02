@@ -121,7 +121,7 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
           >
             Précédent
           </Button>
-          <Button className="rounded-xl" type="submit" variant="default">
+          <Button className="rounded-xl" onClick={nextStep} variant="default">
             Suivant
           </Button>
         </div>

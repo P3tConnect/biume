@@ -126,92 +126,19 @@ const DashboardOrganizationTimetablePage = () => {
       {/* Content */}
       <div className="flex-1 overflow-hidden pb-4">
         {view === "calendar" ? (
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4 h-full">
-            <Card className="rounded-xl overflow-hidden">
-              <div className="h-full">
-                <Suspense
-                  fallback={
-                    <div className="p-8 text-center">
-                      Chargement du calendrier...
-                    </div>
-                  }
-                >
-                  <Calendar />
-                </Suspense>
-              </div>
-            </Card>
-
-            <div className="flex flex-col gap-4 h-full">
-              <Card className="rounded-xl overflow-hidden h-1/2">
-                <div className="p-3 border-b">
-                  <h2 className="font-medium">
-                    Rendez-vous du {selectedDate.toLocaleDateString("fr-FR")}
-                  </h2>
-                </div>
-                <div className="flex-1 overflow-hidden">
-                  <DailyAppointments
-                    appointments={dailyAppointments}
-                    selectedDate={selectedDate}
-                  />
-                </div>
-              </Card>
-
-              <Card className="rounded-xl overflow-hidden h-1/2">
-                <div className="p-3 border-b">
-                  <h2 className="font-medium">Prochains rendez-vous</h2>
-                </div>
-                <div className="flex-1 overflow-y-auto p-3">
-                  <div className="space-y-2">
-                    {mockAppointments
-                      .filter((apt) => new Date(apt.date) > new Date())
-                      .sort(
-                        (a, b) =>
-                          new Date(a.date).getTime() -
-                          new Date(b.date).getTime(),
-                      )
-                      .slice(0, 3)
-                      .map((appointment) => (
-                        <div
-                          key={appointment.id}
-                          className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                        >
-                          <div className="space-y-1">
-                            <p className="font-medium">
-                              {appointment.clientName}
-                            </p>
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Clock className="mr-1 h-3 w-3" />
-                              <span>
-                                {new Date(appointment.date).toLocaleDateString(
-                                  "fr-FR",
-                                )}{" "}
-                                à {appointment.time}
-                              </span>
-                            </div>
-                          </div>
-                          <Badge
-                            className={cn(
-                              "ml-auto text-xs",
-                              appointment.status === "confirmed"
-                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                                : appointment.status === "pending"
-                                  ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                                  : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                            )}
-                          >
-                            {appointment.status === "confirmed"
-                              ? "Confirmé"
-                              : appointment.status === "pending"
-                                ? "En attente"
-                                : "Annulé"}
-                          </Badge>
-                        </div>
-                      ))}
+          <Card className="rounded-xl overflow-hidden h-full">
+            <div className="h-full">
+              <Suspense
+                fallback={
+                  <div className="p-8 text-center">
+                    Chargement du calendrier...
                   </div>
-                </div>
-              </Card>
+                }
+              >
+                <Calendar />
+              </Suspense>
             </div>
-          </div>
+          </Card>
         ) : (
           <Card className="rounded-xl h-full">
             <div className="p-4">

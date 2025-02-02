@@ -111,7 +111,7 @@ const Stepper = () => {
         </div>
       </DialogHeader>
 
-      <div className="h-[500px] overflow-y-auto p-4">
+      <div className="h-[500px] overflow-y-auto">
         {switchStep({
           start: () => <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />,
           informations: () => <ProInformationsStep nextStep={next} previousStep={prev} />,

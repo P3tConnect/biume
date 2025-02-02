@@ -6,7 +6,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { X, Plus, Clock, Euro, ImageIcon } from "lucide-react";
+import { z } from "zod";
+import { X, Plus, Clock, Euro } from "lucide-react";
 import { UploadButton } from "@/src/lib/uploadthing";
 import Image from "next/image";
 import { proServicesSchema } from "../../types/onboarding-schemas";

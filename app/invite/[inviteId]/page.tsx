@@ -1,7 +1,6 @@
 import { auth } from "@/src/lib/auth";
-import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { notFound, redirect } from "next/navigation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from "@/components/ui";
 import { headers } from "next/headers";
 
 interface InvitePageProps {
@@ -19,7 +18,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
   });
 
   if (!invitation) {
-    redirect("/404");
+    notFound();
   }
 
   return (
