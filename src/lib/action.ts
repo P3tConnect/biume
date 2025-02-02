@@ -2,32 +2,32 @@
 
 import { headers } from 'next/headers';
 import { auth } from './auth';
-import { z } from 'zod';
 import { ActionError, ServerActionContext } from './action-utils';
 
 // Predefined middlewares
 export async function requireAuth(ctx: ServerActionContext) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-  const user = session?.user;
-  if (!user) {
-    throw new ActionError('User not found!');
-    throw new Error('Not authenticated');
+    const user = session?.user;
+
+    if (!user) {
+      throw new ActionError('Not authenticated');
+    }
+
+    Object.assign(ctx, {
+      user,
+      organization: null,
+      meta: {},
+    });
+  } catch (error) {
+    throw new ActionError('Not authenticated');
   }
-
-  ctx = {
-    ...ctx,
-    user: user,
-  };
 }
 
 export async function requireOwner(ctx: ServerActionContext) {
-  if (!ctx.user) {
-    throw new Error('Not authenticated');
-  }
-
   const organization = await auth.api.getFullOrganization({
     headers: await headers(),
   });
@@ -50,10 +50,11 @@ export async function requireOwner(ctx: ServerActionContext) {
     throw new Error('User is not an owner of the organization!');
   }
 
-  ctx = {
-    ...ctx,
+  Object.assign(ctx, {
+    user: ctx.user,
     organization,
-  };
+    meta: {},
+  });
 }
 
 export async function requireMember(ctx: ServerActionContext) {
@@ -84,11 +85,11 @@ export async function requireMember(ctx: ServerActionContext) {
     throw new Error('User is not a member of the organization!');
   }
 
-  ctx = {
-    ...ctx,
+  Object.assign(ctx, {
     user: ctx.user,
     organization: ctx.organization,
-  };
+    meta: {},
+  });
 }
 
 // Example usage:

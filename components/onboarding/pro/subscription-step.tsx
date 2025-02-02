@@ -19,6 +19,8 @@ import { safeConfig } from "@/src/lib";
 import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useRouter } from "next/navigation";
 const plans = [
   {
     name: "Basic",
@@ -41,13 +43,13 @@ const plans = [
     description: "Pour les petites équipes",
     price: "24.99",
     features: [
-      "Abonnement Basic +",
-      "Notifications",
-      "Rappels automatiques",
-      "Délais de rétraction",
-      "Echelons de remboursement personnalisés",
-      "Preview PawThera AI",
-      "Jusqu'à 5 employés",
+      <span>Abonnement Basic +</span>,
+      <span>Notifications</span>,
+      <span>Rappels automatiques</span>,
+      <span>Délais de rétraction</span>,
+      <span>Echelons de remboursement</span>,
+      <span>Preview Biume <span className="text-xl font-bold inline bg-gradient-to-r from-[#FF3366] to-[#338EF7] bg-clip-text text-transparent">AI</span></span>,
+      <span>Jusqu'à 5 employés</span>,
     ],
     priceId: safeConfig.STRIPE_PRO_PLAN_ID,
   },
@@ -57,7 +59,7 @@ const plans = [
     price: "34.99",
     features: [
       "Abonnement Pro +",
-      "Fonctionnalités IA",
+      <span>Biume <span className="text-xl font-bold inline bg-gradient-to-r from-[#FF3366] to-[#338EF7] bg-clip-text text-transparent">AI</span></span>,
       "Rapports de performance",
       "Communication centralisée",
       "Jusqu'à 10 employés",
@@ -68,7 +70,17 @@ const plans = [
 
 export function SubscriptionStep() {
   const { data: activeOrg } = useActiveOrganization();
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  const { mutateAsync, isPending } = useActionMutation(updateOrganizationPlan, {
+    onSuccess: (data) => {
+      router.push(data);
+    },
+    onError: () => {
+      toast.error("Une erreur est survenue");
+    },
+  });
 
   return (
     <div className="container mx-auto">
@@ -105,10 +117,10 @@ export function SubscriptionStep() {
                 <span className="text-muted-foreground">/mois</span>
               </div>
               <ul className="space-y-2">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2">
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-primary" />
-                    <span>{feature}</span>
+                    {feature}
                   </li>
                 ))}
               </ul>
@@ -117,7 +129,7 @@ export function SubscriptionStep() {
               <Button
                 className="w-full"
                 variant={plan.name === "Pro" ? "default" : "outline"}
-                onClick={async () => await updateOrganizationPlan({
+                onClick={async () => await mutateAsync({
                   organizationId: activeOrg?.id!,
                   plan: plan.priceId
                 })}

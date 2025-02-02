@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui";
 import {
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,

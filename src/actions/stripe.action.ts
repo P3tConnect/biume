@@ -180,15 +180,15 @@ export const updateOrganizationPlan = createServerAction(
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}/subscription/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${org.id}/subscription/failure`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/subscription/success?org=${org.id}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/subscription/failure?org=${org.id}`,
     });
 
     if (!session.url) {
       throw new ActionError("Erreur lors de la création de la session");
     }
 
-    redirect(session.url);
+    return session.url;
   },
   [requireAuth, requireOwner],
 );

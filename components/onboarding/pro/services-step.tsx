@@ -1,7 +1,7 @@
 import ServicesForm from "../components/pro/services-form";
 
-const ProServicesStep = () => {
-  return <ServicesForm />;
+const ProServicesStep = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
+  return <ServicesForm nextStep={nextStep} previousStep={previousStep} />;
 };
 
 export default ProServicesStep
