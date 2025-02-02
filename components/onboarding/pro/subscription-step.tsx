@@ -73,7 +73,7 @@ export function SubscriptionStep() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const { mutateAsync, isPending } = useActionMutation(updateOrganizationPlan, {
+  const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
     onSuccess: (data) => {
       router.push(data);
     },

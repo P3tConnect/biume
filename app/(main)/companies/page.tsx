@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +9,7 @@ import {
   Star,
   Filter,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,8 +19,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { OrganizationsGrid } from "./components/organizations-grid";
+import { getAllOrganizations } from "@/src/actions/organization.action";
+import { use } from "react";
 
 export default function CompaniesListPage() {
+
+  const data = getAllOrganizations({});
+
   return (
     <div className="min-h-screen w-screen bg-background">
       {/* Hero Section with Search */}
@@ -100,83 +108,12 @@ export default function CompaniesListPage() {
 
       {/* Main Content */}
       <div className="w-full px-8 py-8 bg-background">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div
-              key={index}
-              className="flex flex-col bg-card rounded-lg border border-border card-highlight hover-card-effect"
-            >
-              {/* Image */}
-              <div className="w-full h-[200px] relative bg-accent">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent group-hover:scale-105 transition-transform duration-200" />
-                <Badge className="absolute top-3 left-3 bg-secondary hover:bg-secondary/90 transition-colors">
-                  Disponible aujourd'hui
-                </Badge>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 p-4">
-                <div className="flex justify-between items-start gap-4">
-                  <div>
-                    <h3 className="font-semibold text-lg text-card-foreground">
-                      Cabinet Vétérinaire {index + 1}
-                    </h3>
-                    <p className="text-muted-foreground text-sm flex items-center gap-1 mb-2">
-                      <MapPin className="h-3 w-3" /> Paris {index + 1}e
-                      arrondissement
-                    </p>
-                    <div className="flex items-center gap-1 mb-4">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-card-foreground">
-                        4.8
-                      </span>
-                      <span className="text-muted-foreground text-sm">
-                        (124)
-                      </span>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="whitespace-nowrap">
-                    À partir de 35€
-                  </Badge>
-                </div>
-
-                {/* Availabilities */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>Prochaines disponibilités</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="whitespace-nowrap custom-button"
-                    >
-                      <Clock className="h-3 w-3 mr-1" />
-                      14:30
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="whitespace-nowrap custom-button"
-                    >
-                      <Clock className="h-3 w-3 mr-1" />
-                      15:15
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="whitespace-nowrap custom-button"
-                    >
-                      <Clock className="h-3 w-3 mr-1" />
-                      16:00
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <Suspense fallback={<div className="flex justify-center items-center h-full"><Loader2 className="animate-spin" />
         </div>
+        }
+        >
+          <OrganizationsGrid organizations={data} />
+        </Suspense>
       </div>
     </div>
   );

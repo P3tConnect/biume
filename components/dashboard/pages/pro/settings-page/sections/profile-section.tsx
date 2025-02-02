@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -29,16 +29,17 @@ import Image from "next/image";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { updateOrganization } from "@/src/actions/organization.action";
+import { getCurrentOrganization, updateOrganization } from "@/src/actions/organization.action";
 import { CreateOrganizationSchema } from "@/src/db/organization";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/src/lib/utils";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
+import { useActionQuery } from "@/src/hooks/action-hooks";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const organizationFormSchema = z.object({
+export const organizationFormSchema = z.object({
   name: z.string().min(2, "Le nom de l'organisation doit contenir au moins 2 caractères"),
   email: z.string().email("Veuillez entrer une adresse email valide"),
   website: z.string().url().optional(),
@@ -71,35 +72,31 @@ const organizationFormSchema = z.object({
   openAt: z.string(),
   closeAt: z.string(),
   atHome: z.boolean(),
-  nac: z.object({
-    enabled: z.boolean(),
-    animals: z.array(z.string()).optional(),
-  }),
+  nac: z.string(),
   siren: z.string().length(9, "Le numéro SIREN doit contenir 9 chiffres"),
   siret: z.string().length(14, "Le numéro SIRET doit contenir 14 chiffres"),
 });
 
 export const ProfileSection = () => {
-  const { data: org } = useActiveOrganization();
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+  const { data: org } = useActionQuery(getCurrentOrganization, {});
+  const [previewUrl, setPreviewUrl] = useState<string | null>(org?.logo || null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(org?.coverImage || null);
   const [isUploading, setIsUploading] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof organizationFormSchema>>({
     resolver: zodResolver(organizationFormSchema),
-    defaultValues: {
+    values: {
       name: org?.name || "",
-      email: org?.metadata?.email || "",
-      website: org?.metadata?.website || "",
-      address: org?.metadata?.address || "",
-      description: org?.metadata?.description || "",
-      openAt: org?.metadata?.openAt || "09:00",
-      closeAt: org?.metadata?.closeAt || "18:00",
-      atHome: org?.metadata?.atHome || false,
-      nac: org?.metadata?.nac || { enabled: false, animals: [] },
-      siren: org?.metadata?.siren || "",
-      siret: org?.metadata?.siret || "",
+      email: org?.email || "",
+      website: "",
+      address: org?.addressId || "",
+      description: org?.description || "",
+      openAt: org?.openAt || "09:00",
+      closeAt: org?.closeAt || "18:00",
+      atHome: org?.atHome || false,
+      nac: org?.nac || "",
+      siren: org?.siren || "",
+      siret: org?.siret || "",
     },
   });
 
@@ -107,7 +104,7 @@ export const ProfileSection = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await updateOrganization(data as any);
+      await updateOrganization(data);
       toast.success("Modifications enregistrées avec succès !");
     } catch (error) {
       toast.error("Erreur lors de l'enregistrement des modifications");
@@ -175,9 +172,9 @@ export const ProfileSection = () => {
   return (
     <div className="relative pb-20">
       <div className="relative w-full h-[200px] rounded-xl overflow-visible bg-gradient-to-r from-blue-50 to-blue-100">
-        {(coverPreviewUrl || org?.metadata?.coverImage) ? (
+        {(coverPreviewUrl || org?.coverImage) ? (
           <Image
-            src={coverPreviewUrl || org?.metadata?.coverImage || ""}
+            src={coverPreviewUrl || org?.coverImage || ""}
             alt="Cover"
             fill
             className="object-cover"
@@ -441,23 +438,20 @@ export const ProfileSection = () => {
 
                   <FormField
                     control={form.control}
-                    name="nac.enabled"
+                    name="nac"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
+                      <FormItem>
+                        <FormLabel>Nouveaux Animaux de Compagnie (NAC)</FormLabel>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                          <Input
+                            placeholder="Listez les NAC acceptés"
+                            {...field}
                           />
                         </FormControl>
-                        <div className="space-y-1">
-                          <FormLabel className="text-sm font-medium leading-none">
-                            Nouveaux Animaux de Compagnie (NAC)
-                          </FormLabel>
-                          <FormDescription className="text-xs">
-                            Activez cette option si vous acceptez les NAC
-                          </FormDescription>
-                        </div>
+                        <FormDescription className="text-xs">
+                          Listez les types de NAC que vous acceptez (ex: rongeurs, reptiles, oiseaux)
+                        </FormDescription>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />

@@ -8,12 +8,29 @@ import {
   AvatarFallback,
   AvatarImage,
   Separator,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Textarea,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  Switch,
+  Label,
+  Badge,
 } from "@/components/ui";
-import { Star } from "lucide-react";
+import { Star, Home, Dog, Cat, Bird, ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
+import { motion } from "framer-motion";
+import Avvvatars from "avvvatars-react";
 
 interface Service {
   id: string;
@@ -56,6 +73,32 @@ export function BookingCard({
   setSelectedDate,
   setSelectedTime,
 }: BookingCardProps) {
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [selectedPet, setSelectedPet] = useState<string>("");
+  const [isHomeVisit, setIsHomeVisit] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+
+  // Simulation de la liste des animaux de l'utilisateur
+  const userPets = [
+    { id: "1", name: "Max", type: "Dog", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1" },
+    { id: "2", name: "Luna", type: "Cat", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba" },
+    { id: "3", name: "Rio", type: "Bird", image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3" },
+  ];
+
+  const getPetIcon = (type: string) => {
+    switch (type) {
+      case "Dog":
+        return <Dog className="h-5 w-5" />;
+      case "Cat":
+        return <Cat className="h-5 w-5" />;
+      case "Bird":
+        return <Bird className="h-5 w-5" />;
+      default:
+        return null;
+    }
+  };
+
   const selectedServiceData = selectedService
     ? services.find((s) => s.id === selectedService)
     : null;
@@ -63,6 +106,252 @@ export function BookingCard({
   const selectedProData = selectedPro
     ? professionals.find((p) => p.id === selectedPro)
     : null;
+
+  const handleBooking = () => {
+    // TODO: Implémenter la logique de réservation
+    console.log({
+      service: selectedServiceData,
+      professional: selectedProData,
+      date: selectedDate,
+      time: selectedTime,
+      additionalInfo,
+      pet: userPets.find(p => p.id === selectedPet),
+      isHomeVisit,
+    });
+    setIsConfirmModalOpen(false);
+  };
+
+  const steps = [
+    {
+      title: "Animal",
+      description: "Choisissez l'animal pour la consultation",
+      content: (
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {userPets.map((pet) => (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                key={pet.id}
+                onClick={() => setSelectedPet(pet.id)}
+                className={cn(
+                  "relative cursor-pointer rounded-xl border-2 p-4 transition-all",
+                  selectedPet === pet.id
+                    ? "border-primary bg-primary/5"
+                    : "hover:border-primary/50"
+                )}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative h-16 w-16 overflow-hidden rounded-lg">
+                    <img
+                      src={pet.image}
+                      alt={pet.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">{pet.name}</h4>
+                    <div className="flex items-center gap-1 text-muted-foreground">
+                      {getPetIcon(pet.type)}
+                      <span>{pet.type}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ),
+    },
+    {
+      title: "Type de consultation",
+      description: "Choisissez le type de consultation",
+      content: (
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsHomeVisit(false)}
+              className={cn(
+                "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
+                !isHomeVisit
+                  ? "border-primary bg-primary/5"
+                  : "hover:border-primary/50"
+              )}
+            >
+              <div className="flex flex-col items-center text-center gap-4">
+                <div className="rounded-full bg-primary/10 p-4">
+                  <Star className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Au cabinet</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Consultation classique au cabinet vétérinaire
+                  </p>
+                </div>
+                <Badge variant="secondary">Prix standard</Badge>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsHomeVisit(true)}
+              className={cn(
+                "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
+                isHomeVisit
+                  ? "border-primary bg-primary/5"
+                  : "hover:border-primary/50"
+              )}
+            >
+              <div className="flex flex-col items-center text-center gap-4">
+                <div className="rounded-full bg-primary/10 p-4">
+                  <Home className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-medium">À domicile</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Le vétérinaire se déplace chez vous
+                  </p>
+                </div>
+                <Badge variant="secondary">+10€</Badge>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      ),
+    },
+    {
+      title: "Récapitulatif",
+      description: "Vérifiez les détails de votre réservation",
+      content: (
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="space-y-6"
+        >
+          <div className="rounded-xl border bg-muted/50 p-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="relative h-20 w-20 overflow-hidden rounded-lg">
+                <img
+                  src={userPets.find(p => p.id === selectedPet)?.image}
+                  alt="Animal"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div>
+                <h4 className="font-medium">
+                  {userPets.find(p => p.id === selectedPet)?.name}
+                </h4>
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  {getPetIcon(userPets.find(p => p.id === selectedPet)?.type || "")}
+                  <span>{userPets.find(p => p.id === selectedPet)?.type}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Service</span>
+                <span className="font-medium">{selectedServiceData?.name}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Professionnel</span>
+                <div className="flex items-center gap-2">
+                  {selectedProData?.image ? (
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={selectedProData.image} />
+                      <AvatarFallback>
+                        {selectedProData.name.split(" ").map((n) => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="h-6 w-6 rounded-full overflow-hidden">
+                      <Avvvatars
+                        value={selectedProData?.name || ""}
+                        style="shape"
+                        size={24}
+                      />
+                    </div>
+                  )}
+                  <span className="font-medium">{selectedProData?.name}</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Date et heure</span>
+                <span className="font-medium">
+                  {selectedDate && selectedTime
+                    ? `${format(selectedDate, "d MMMM yyyy", { locale: fr })} à ${selectedTime}`
+                    : "Non spécifié"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Type de consultation</span>
+                <div className="flex items-center gap-2">
+                  {isHomeVisit ? (
+                    <>
+                      <Home className="h-4 w-4" />
+                      <span className="font-medium">À domicile</span>
+                    </>
+                  ) : (
+                    <>
+                      <Star className="h-4 w-4" />
+                      <span className="font-medium">Au cabinet</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <Separator />
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Prix total</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-semibold">
+                    {isHomeVisit
+                      ? `${parseInt(selectedServiceData?.price || "0") + 10}€`
+                      : selectedServiceData?.price}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Informations complémentaires</Label>
+            <Textarea
+              placeholder="Ajoutez des informations utiles pour le professionnel..."
+              value={additionalInfo}
+              onChange={(e) => setAdditionalInfo(e.target.value)}
+              className="min-h-[100px] resize-none"
+            />
+          </div>
+        </motion.div>
+      ),
+    },
+  ];
+
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "";
+    return format(date, "d MMMM", { locale: fr });
+  };
+
+  const formatFullDate = (date: Date | undefined) => {
+    if (!date) return "";
+    return format(date, "d MMMM yyyy", { locale: fr });
+  };
 
   return (
     <Card className="border-2">
@@ -201,14 +490,88 @@ export function BookingCard({
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button disabled={!selectedTime} className="w-full" size="lg">
-          {selectedTime
-            ? `Réserver pour ${format(selectedDate!, "d MMMM", {
-              locale: fr,
-            })} à ${selectedTime}`
+        <Button
+          disabled={!selectedTime}
+          className="w-full"
+          size="lg"
+          onClick={() => setIsConfirmModalOpen(true)}
+        >
+          {selectedTime && selectedDate
+            ? `Réserver pour ${formatDate(selectedDate)} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
+
+      <Dialog open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <div className="flex items-center gap-4 mb-4">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="flex items-center"
+                >
+                  <div
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
+                      currentStep > index + 1
+                        ? "border-primary bg-primary text-white"
+                        : currentStep === index + 1
+                          ? "border-primary text-primary"
+                          : "border-muted-foreground text-muted-foreground"
+                    )}
+                  >
+                    {index + 1}
+                  </div>
+                  {index < steps.length - 1 && (
+                    <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
+                  )}
+                </div>
+              ))}
+            </div>
+            <DialogTitle>{steps[currentStep - 1].title}</DialogTitle>
+            <DialogDescription>
+              {steps[currentStep - 1].description}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            {steps[currentStep - 1].content}
+          </div>
+
+          <DialogFooter>
+            <div className="flex w-full justify-between">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (currentStep === 1) {
+                    setIsConfirmModalOpen(false);
+                  } else {
+                    setCurrentStep(currentStep - 1);
+                  }
+                }}
+              >
+                {currentStep === 1 ? "Annuler" : "Retour"}
+              </Button>
+              <Button
+                onClick={() => {
+                  if (currentStep === steps.length) {
+                    handleBooking();
+                  } else {
+                    setCurrentStep(currentStep + 1);
+                  }
+                }}
+                disabled={
+                  (currentStep === 1 && !selectedPet) ||
+                  (currentStep === steps.length && !selectedPet)
+                }
+              >
+                {currentStep === steps.length ? "Confirmer" : "Suivant"}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 } 

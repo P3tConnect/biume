@@ -46,7 +46,7 @@ export const createOptionsStepAction = createServerAction(
     });
     if (!organization) return;
     const options = input.options;
-    await db
+    const optionsResult = await db
       .insert(optionsTable)
       .values(
         options.map((option) => ({
@@ -54,7 +54,13 @@ export const createOptionsStepAction = createServerAction(
           organizationId: organization.id,
         })),
       )
+      .returning()
       .execute();
+
+    if (!optionsResult) {
+      throw new ActionError("Options not created");
+    }
+    return optionsResult;
   },
   [requireAuth, requireOwner],
 );

@@ -6,6 +6,8 @@ import { CompanyHeader } from "./components/CompanyHeader";
 import { CompanyInfo } from "./components/CompanyInfo";
 import { CompanyTeam } from "./components/CompanyTeam";
 import { CompanyReviews } from "./components/CompanyReviews";
+import { CompanyServices } from "./components/CompanyServices";
+import { CompanyOptions } from "./components/CompanyOptions";
 import { BookingCard } from "./components/BookingCard";
 import { Separator } from "@/components/ui";
 
@@ -63,6 +65,33 @@ const mockServices = [
     name: "Chirurgie de stérilisation",
     duration: "1h30",
     price: "200€",
+  },
+];
+
+const mockOptions = [
+  {
+    id: "1",
+    name: "Parking gratuit",
+    description: "Stationnement facile",
+    icon: "🚗",
+  },
+  {
+    id: "2",
+    name: "Urgences 24/7",
+    description: "Service d'urgence disponible",
+    icon: "🏥",
+  },
+  {
+    id: "3",
+    name: "Téléconsultation",
+    description: "Consultations en ligne",
+    icon: "📱",
+  },
+  {
+    id: "4",
+    name: "Paiement facilité",
+    description: "CB, espèces, paiement en plusieurs fois",
+    icon: "💳",
   },
 ];
 
@@ -158,26 +187,14 @@ export default function CompanyDetailsPage({
             {/* Services Section */}
             <div>
               <h2 className="text-2xl font-semibold mb-6">Nos services</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mockServices.map((service) => (
-                  <div
-                    key={service.id}
-                    className="p-4 rounded-xl border hover:border-primary/50 cursor-pointer transition-all"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-xl">💉</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">{service.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {service.duration} · {service.price}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <CompanyServices services={mockServices} />
+              <Separator className="my-8" />
+            </div>
+
+            {/* Options Section */}
+            <div>
+              <h2 className="text-2xl font-semibold mb-6">Options</h2>
+              <CompanyOptions options={mockOptions} />
               <Separator className="my-8" />
             </div>
 
