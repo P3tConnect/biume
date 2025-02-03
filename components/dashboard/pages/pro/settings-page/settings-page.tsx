@@ -1,15 +1,18 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2, CreditCard, Bell, Users } from "lucide-react";
+import { Building2, CreditCard, Bell, Users, FileText, Briefcase, Settings } from "lucide-react";
 import { ProfileSection } from "./sections/profile-section";
 import { BillingSection } from "./sections/billing-section";
 import { NotificationsSection } from "./sections/notifications-section";
 import { TeamSection } from "./sections/team-section";
+import { DocumentsSection } from "./sections/documents-section";
+import { ServicesSection } from "./sections/services-section";
+import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const SettingsPageComponent = () => {
   return (
-    <div className="">
+    <div>
       <Card className="overflow-hidden rounded-2xl mb-4">
         <CardHeader className="border-b border-gray-100 dark:border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -32,6 +35,18 @@ const SettingsPageComponent = () => {
               <Building2 className="h-4 w-4" />
               Profil
             </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center gap-2">
+              <Briefcase className="h-4 w-4" />
+              Services
+            </TabsTrigger>
+            <TabsTrigger value="options" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Options
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Documents
+            </TabsTrigger>
             <TabsTrigger value="billing" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
               Facturation
@@ -48,6 +63,18 @@ const SettingsPageComponent = () => {
 
           <TabsContent value="profile">
             <ProfileSection />
+          </TabsContent>
+
+          <TabsContent value="services">
+            <ServicesSection />
+          </TabsContent>
+
+          <TabsContent value="options">
+            <OptionsSection />
+          </TabsContent>
+
+          <TabsContent value="documents">
+            <DocumentsSection />
           </TabsContent>
 
           <TabsContent value="billing">

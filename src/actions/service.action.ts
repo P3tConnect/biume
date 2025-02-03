@@ -17,8 +17,37 @@ import { headers } from "next/headers";
 
 export const getServices = createServerAction(
   z.object({}),
-  async (input, ctx) => {},
+  async (input, ctx) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: await headers(),
+    });
+    if (!organization) return [];
+
+    const services = await db
+      .select()
+      .from(service)
+      .where(eq(service.organizationId, organization.id))
+      .execute();
+
+    return services;
+  },
   [requireAuth],
+);
+
+export const getServicesFromOrganization = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const services = await db.query.service.findMany({
+      where: eq(service.organizationId, ctx.organization?.id as string),
+    });
+
+    if (!services) {
+      throw new ActionError("Services not found");
+    }
+
+    return services;
+  },
+  [requireAuth, requireOrganization],
 );
 
 export const createService = createServerAction(

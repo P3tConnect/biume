@@ -22,6 +22,22 @@ export const getOptions = createServerAction(
   [requireAuth, requireOwner],
 );
 
+export const getOptionsFromOrganization = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const options = await db
+      .select()
+      .from(optionsTable)
+      .where(eq(optionsTable.organizationId, ctx.organization?.id || ""));
+
+    if (!options) {
+      throw new ActionError("Options not found");
+    }
+
+    return options;
+  },
+  [requireAuth, requireOwner],
+);
 export const createOption = createServerAction(
   CreateOptionSchema,
   async (input, ctx) => {

@@ -12,6 +12,7 @@ import { eq } from "drizzle-orm";
 import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { organization as organizationTable } from "../db";
 import { progression as progressionTable } from "../db";
+import { z } from "zod";
 
 export const createDocumentsStepAction = createServerAction(
   proDocumentsSchema,
@@ -71,6 +72,25 @@ export const createDocumentsStepAction = createServerAction(
       organization: organizationResult,
       progression: progressionResult,
     };
+  },
+  [requireAuth, requireOwner],
+);
+
+export const getCompanyDocuments = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const documents = await db
+      .select()
+      .from(organizationDocuments)
+      .where(
+        eq(organizationDocuments.organizationId, ctx.organization?.id || ""),
+      );
+
+    if (!documents) {
+      throw new ActionError("Documents not found");
+    }
+
+    return documents;
   },
   [requireAuth, requireOwner],
 );
