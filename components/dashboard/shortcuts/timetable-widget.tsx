@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from "react";
-import { format, addDays, subDays } from "date-fns";
-import { fr } from "date-fns/locale";
+import { useCallback, useMemo, useState } from 'react';
+import { format, addDays, subDays } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import {
   Avatar,
   AvatarFallback,
@@ -10,21 +10,16 @@ import {
   Calendar,
   Card,
   CardContent,
-<<<<<<< HEAD
-} from '@/components/ui';
-import { cn } from '@/src/lib';
-import { useState } from 'react';
-=======
   CardHeader,
   CardTitle,
   ScrollArea,
-} from "@/components/ui";
-import { cn } from "@/src/lib";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronRightIcon } from "lucide-react";
+} from '@/components/ui';
+import { cn } from '@/src/lib';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { CalendarIcon, ChevronRightIcon } from 'lucide-react';
 
-type AppointmentStatus = "CONFIRMED" | "PENDING" | "CANCELLED";
+type AppointmentStatus = 'CONFIRMED' | 'PENDING' | 'CANCELLED';
 
 interface Appointment {
   id: string;
@@ -43,96 +38,109 @@ interface Appointment {
 
 const appointmentStatusConfig = {
   CONFIRMED: {
-    label: "Confirmé",
-    className: "bg-green-100 text-green-800",
+    label: 'Confirmé',
+    className: 'bg-green-100 text-green-800',
   },
   PENDING: {
-    label: "En attente",
-    className: "bg-orange-100 text-orange-800",
+    label: 'En attente',
+    className: 'bg-orange-100 text-orange-800',
   },
   CANCELLED: {
-    label: "Annulé",
-    className: "bg-red-100 text-red-800",
+    label: 'Annulé',
+    className: 'bg-red-100 text-red-800',
   },
 } as const;
 
 // Données factices pour les rendez-vous
 const MOCK_APPOINTMENTS: Record<string, Appointment[]> = {
-  [format(new Date(), "yyyy-MM-dd")]: [
+  [format(new Date(), 'yyyy-MM-dd')]: [
     {
-      id: "1",
+      id: '1',
       startTime: format(new Date().setHours(9, 0), "yyyy-MM-dd'T'HH:mm:ss"),
       endTime: format(new Date().setHours(10, 0), "yyyy-MM-dd'T'HH:mm:ss"),
-      status: "CONFIRMED",
+      status: 'CONFIRMED',
       client: {
-        firstName: "Sophie",
-        lastName: "Martin",
-        avatarUrl: "https://randomuser.me/api/portraits/women/44.jpg",
+        firstName: 'Sophie',
+        lastName: 'Martin',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
       },
       service: {
-        name: "Toilettage complet",
+        name: 'Toilettage complet',
       },
     },
     {
-      id: "2",
+      id: '2',
       startTime: format(new Date().setHours(14, 30), "yyyy-MM-dd'T'HH:mm:ss"),
       endTime: format(new Date().setHours(15, 30), "yyyy-MM-dd'T'HH:mm:ss"),
-      status: "PENDING",
+      status: 'PENDING',
       client: {
-        firstName: "Thomas",
-        lastName: "Dubois",
+        firstName: 'Thomas',
+        lastName: 'Dubois',
         avatarUrl: null,
       },
       service: {
-        name: "Consultation vétérinaire",
+        name: 'Consultation vétérinaire',
       },
     },
   ],
-  [format(addDays(new Date(), 1), "yyyy-MM-dd")]: [
+  [format(addDays(new Date(), 1), 'yyyy-MM-dd')]: [
     {
-      id: "3",
-      startTime: format(addDays(new Date(), 1).setHours(11, 0), "yyyy-MM-dd'T'HH:mm:ss"),
-      endTime: format(addDays(new Date(), 1).setHours(12, 0), "yyyy-MM-dd'T'HH:mm:ss"),
-      status: "CONFIRMED",
+      id: '3',
+      startTime: format(
+        addDays(new Date(), 1).setHours(11, 0),
+        "yyyy-MM-dd'T'HH:mm:ss"
+      ),
+      endTime: format(
+        addDays(new Date(), 1).setHours(12, 0),
+        "yyyy-MM-dd'T'HH:mm:ss"
+      ),
+      status: 'CONFIRMED',
       client: {
-        firstName: "Marie",
-        lastName: "Petit",
-        avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg",
+        firstName: 'Marie',
+        lastName: 'Petit',
+        avatarUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
       },
       service: {
-        name: "Coupe des griffes",
+        name: 'Coupe des griffes',
       },
     },
   ],
-  [format(subDays(new Date(), 1), "yyyy-MM-dd")]: [
+  [format(subDays(new Date(), 1), 'yyyy-MM-dd')]: [
     {
-      id: "4",
-      startTime: format(subDays(new Date(), 1).setHours(16, 0), "yyyy-MM-dd'T'HH:mm:ss"),
-      endTime: format(subDays(new Date(), 1).setHours(17, 0), "yyyy-MM-dd'T'HH:mm:ss"),
-      status: "CANCELLED",
+      id: '4',
+      startTime: format(
+        subDays(new Date(), 1).setHours(16, 0),
+        "yyyy-MM-dd'T'HH:mm:ss"
+      ),
+      endTime: format(
+        subDays(new Date(), 1).setHours(17, 0),
+        "yyyy-MM-dd'T'HH:mm:ss"
+      ),
+      status: 'CANCELLED',
       client: {
-        firstName: "Lucas",
-        lastName: "Bernard",
-        avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+        firstName: 'Lucas',
+        lastName: 'Bernard',
+        avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
       },
       service: {
-        name: "Bain thérapeutique",
+        name: 'Bain thérapeutique',
       },
     },
   ],
 };
->>>>>>> 9bd6fd37893a04e1a95615e9269f46b92750065e
 
 const TimetableWidget = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   // Récupération des rendez-vous pour la date sélectionnée
-  const appointments = MOCK_APPOINTMENTS[format(selectedDate, "yyyy-MM-dd")] ?? [];
+  const appointments =
+    MOCK_APPOINTMENTS[format(selectedDate, 'yyyy-MM-dd')] ?? [];
 
   // Mémorisation des rendez-vous triés par heure
   const sortedAppointments = useMemo(() => {
-    return [...appointments].sort((a, b) =>
-      new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    return [...appointments].sort(
+      (a, b) =>
+        new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
     );
   }, [appointments]);
 
@@ -144,15 +152,25 @@ const TimetableWidget = () => {
   }, []);
 
   return (
-<<<<<<< HEAD
     <Card className='h-full rounded-2xl border border-border'>
-      <CardContent className='pt-4'>
+      <CardHeader className='pb-2'>
+        <div className='flex items-center justify-between'>
+          <CardTitle className='text-lg font-semibold'>
+            Planning des rendez-vous
+          </CardTitle>
+          <Button variant='ghost' size='sm' className='gap-2'>
+            <span>Voir tout</span>
+            <ChevronRightIcon className='h-4 w-4' />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className='pt-0'>
         <Calendar
           mode='single'
-          selected={currentDate}
-          onSelect={setCurrentDate}
+          selected={selectedDate}
+          onSelect={handleDateSelect}
           today={new Date()}
-          defaultMonth={new Date()}
+          locale={fr}
           className='flex h-full w-full'
           classNames={{
             months:
@@ -161,144 +179,80 @@ const TimetableWidget = () => {
             table: 'w-full h-full border-collapse space-y-1',
             head_row: 'h-12',
             row: 'w-full mt-2',
-            cell: 'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-transparent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-          }}
-        />
-      </CardContent>
-      <div className='divide-y border-t'>
-        <div>
-          <Card className='border-none'>
-            <CardContent className='flex items-center p-4 rounded-2xl'>
-              <Avatar className='size-10'>
-                <AvatarImage src='https://randomuser.me/api/portraits/men/38.jpg' />
-                <AvatarFallback>AC</AvatarFallback>
-              </Avatar>
-              <div className='ms-4 space-y-2'>
-                <p className='font-medium leading-none'>
-                  General Health Check up
-                </p>
-                <p className='text-sm text-muted-foreground'>
-                  Dr. Dianne Philips at 10:00-11:00 AM
-                </p>
-              </div>
-              <div className='ml-auto rounded-lg bg-green-100 px-3 py-1 text-end text-xs font-medium text-green-800'>
-                Active
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <div>
-          <Card className='border-none'>
-            <CardContent className='flex items-center p-4 rounded-2xl'>
-              <Avatar className='size-10'>
-                <AvatarImage src='https://randomuser.me/api/portraits/men/39.jpg' />
-                <AvatarFallback>DE</AvatarFallback>
-              </Avatar>
-              <div className='ms-4 space-y-2'>
-                <p className='font-medium leading-none'>Temporary Headache</p>
-                <p className='text-sm text-muted-foreground'>
-                  Dr. Jenny Smith at 05:00-06:00 PM
-                </p>
-              </div>
-              <div className='ml-auto rounded-lg bg-orange-100 px-3 py-1 text-end text-xs font-medium text-orange-800'>
-                Pending
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-=======
-    <Card className="h-full rounded-2xl border border-border">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">
-            Planning des rendez-vous
-          </CardTitle>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <span>Voir tout</span>
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={handleDateSelect}
-          today={new Date()}
-          locale={fr}
-          className="flex h-full w-full"
-          classNames={{
-            months: "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-            month: "space-y-4 w-full flex flex-col",
-            table: "w-full h-full border-collapse space-y-1",
-            head_row: "h-12",
-            row: "w-full mt-2",
             cell: cn(
-              "h-9 w-9 text-center text-sm p-0 relative",
-              "[&:has([aria-selected])]:bg-primary/5",
-              "first:[&:has([aria-selected])]:rounded-l-md",
-              "last:[&:has([aria-selected])]:rounded-r-md",
-              "focus-within:relative focus-within:z-20",
-              "[&:has(.appointment-day)]:bg-primary/5",
-              "[&:has(.appointment-day)]:font-medium"
+              'h-9 w-9 text-center text-sm p-0 relative',
+              '[&:has([aria-selected])]:bg-primary/5',
+              'first:[&:has([aria-selected])]:rounded-l-md',
+              'last:[&:has([aria-selected])]:rounded-r-md',
+              'focus-within:relative focus-within:z-20',
+              '[&:has(.appointment-day)]:bg-primary/5',
+              '[&:has(.appointment-day)]:font-medium'
             ),
             day: cn(
-              "h-9 w-9 p-0 font-normal",
-              "aria-selected:opacity-100",
-              "hover:bg-primary/10 hover:rounded-md transition-colors",
-              "focus:bg-primary/10 focus:rounded-md focus:ring-0",
-              "disabled:opacity-50 disabled:pointer-events-none"
+              'h-9 w-9 p-0 font-normal',
+              'aria-selected:opacity-100',
+              'hover:bg-primary/10 hover:rounded-md transition-colors',
+              'focus:bg-primary/10 focus:rounded-md focus:ring-0',
+              'disabled:opacity-50 disabled:pointer-events-none'
             ),
-            day_selected: "bg-primary text-primary-foreground rounded-md",
-            day_today: "bg-accent text-accent-foreground rounded-md",
+            day_selected: 'bg-primary text-primary-foreground rounded-md',
+            day_today: 'bg-accent text-accent-foreground rounded-md',
           }}
         />
       </CardContent>
 
-      <div className="divide-y border-t">
-        <ScrollArea className="h-[300px]">
+      <div className='divide-y border-t'>
+        <ScrollArea className='h-[300px]'>
           {sortedAppointments.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
-              <CalendarIcon className="h-12 w-12 mb-4 opacity-50" />
-              <p className="text-sm">Aucun rendez-vous prévu pour cette date</p>
+            <div className='flex flex-col items-center justify-center p-8 text-center text-muted-foreground'>
+              <CalendarIcon className='h-12 w-12 mb-4 opacity-50' />
+              <p className='text-sm'>Aucun rendez-vous prévu pour cette date</p>
             </div>
           ) : (
             sortedAppointments.map((appointment) => (
-              <Card key={appointment.id} className="border-none">
-                <CardContent className="flex items-center p-4 rounded-2xl">
-                  <Avatar className="size-10">
-                    <AvatarImage src={appointment.client.avatarUrl ?? undefined} />
+              <Card key={appointment.id} className='border-none'>
+                <CardContent className='flex items-center p-4 rounded-2xl'>
+                  <Avatar className='size-10'>
+                    <AvatarImage
+                      src={appointment.client.avatarUrl ?? undefined}
+                    />
                     <AvatarFallback>
                       {appointment.client.firstName[0]}
                       {appointment.client.lastName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="ms-4 space-y-2 flex-1">
-                    <p className="font-medium leading-none">
+                  <div className='ms-4 space-y-2 flex-1'>
+                    <p className='font-medium leading-none'>
                       {appointment.service.name}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {appointment.client.firstName} {appointment.client.lastName} à{" "}
-                      {format(new Date(appointment.startTime), "HH:mm")}
-                      {"-"}
-                      {format(new Date(appointment.endTime), "HH:mm")}
+                    <p className='text-sm text-muted-foreground'>
+                      {appointment.client.firstName}{' '}
+                      {appointment.client.lastName} à{' '}
+                      {format(new Date(appointment.startTime), 'HH:mm')}
+                      {'-'}
+                      {format(new Date(appointment.endTime), 'HH:mm')}
                     </p>
                   </div>
                   <Badge
-                    variant="secondary"
+                    variant='secondary'
                     className={cn(
-                      "ml-auto px-3 py-1",
-                      appointmentStatusConfig[appointment.status as AppointmentStatus].className
+                      'ml-auto px-3 py-1',
+                      appointmentStatusConfig[
+                        appointment.status as AppointmentStatus
+                      ].className
                     )}
                   >
-                    {appointmentStatusConfig[appointment.status as AppointmentStatus].label}
+                    {
+                      appointmentStatusConfig[
+                        appointment.status as AppointmentStatus
+                      ].label
+                    }
                   </Badge>
                 </CardContent>
               </Card>
             ))
           )}
         </ScrollArea>
->>>>>>> 9bd6fd37893a04e1a95615e9269f46b92750065e
       </div>
     </Card>
   );
