@@ -328,11 +328,7 @@ const Calendar: React.FC = () => {
     const dayEvents = events[dateString] || [];
 
     return dayEvents.map((event, index) => (
-      <Draggable
-        key={event.id}
-        draggableId={event.id}
-        index={index}
-      >
+      <Draggable key={event.id} draggableId={event.id} index={index}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -344,7 +340,7 @@ const Calendar: React.FC = () => {
               "transition-all duration-200",
               "hover:ring-2 hover:ring-secondary/20",
               snapshot.isDragging &&
-              "ring-2 ring-secondary opacity-70 rotate-2 scale-105",
+                "ring-2 ring-secondary opacity-70 rotate-2 scale-105",
             )}
           >
             {event.title}
@@ -386,14 +382,18 @@ const Calendar: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className={cn(
-        "flex justify-between items-center px-2 py-3",
-        isMobile ? "flex-col gap-3" : "flex-row"
-      )}>
-        <h2 className={cn(
-          "font-bold text-gray-800 dark:text-white",
-          isMobile ? "text-lg" : "text-xl md:text-2xl"
-        )}>
+      <div
+        className={cn(
+          "flex justify-between items-center px-2 py-3",
+          isMobile ? "flex-col gap-3" : "flex-row",
+        )}
+      >
+        <h2
+          className={cn(
+            "font-bold text-gray-800 dark:text-white",
+            isMobile ? "text-lg" : "text-xl md:text-2xl",
+          )}
+        >
           {currentDate.toLocaleString("default", {
             month: "long",
             year: "numeric",
@@ -421,10 +421,12 @@ const Calendar: React.FC = () => {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex-1 overflow-auto p-4">
-          <div className={cn(
-            "grid grid-cols-7 gap-2 mb-2",
-            sidebarState === "expanded" ? "text-xs" : "text-sm"
-          )}>
+          <div
+            className={cn(
+              "grid grid-cols-7 gap-2 mb-2",
+              sidebarState === "expanded" ? "text-xs" : "text-sm",
+            )}
+          >
             {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
               <div
                 key={day}
@@ -432,7 +434,7 @@ const Calendar: React.FC = () => {
                   "text-center font-medium p-1",
                   day === "Dim" || day === "Sam"
                     ? "text-red-500"
-                    : "text-gray-600 dark:text-gray-300"
+                    : "text-gray-600 dark:text-gray-300",
                 )}
               >
                 {day}
@@ -446,11 +448,15 @@ const Calendar: React.FC = () => {
                 {week.map((day, dayIndex) => (
                   <Droppable
                     key={`${weekIndex}-${dayIndex}`}
-                    droppableId={day === 0 ? `empty-${weekIndex}-${dayIndex}` : new Date(
-                      currentDate.getFullYear(),
-                      currentDate.getMonth(),
-                      day,
-                    ).toDateString()}
+                    droppableId={
+                      day === 0
+                        ? `empty-${weekIndex}-${dayIndex}`
+                        : new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth(),
+                            day,
+                          ).toDateString()
+                    }
                     isDropDisabled={day === 0}
                     isCombineEnabled
                     ignoreContainerClipping
@@ -461,32 +467,38 @@ const Calendar: React.FC = () => {
                         {...provided.droppableProps}
                         className={cn(
                           "relative overflow-y-auto p-1.5 md:p-2 transition-all duration-200 ease-in-out",
-                          "min-h-[100px] md:min-h-[120px]",
+                          "min-h-[160px] md:min-h-[180px]",
                           day === 0
                             ? "invisible"
                             : cn(
-                              "rounded-xl border-[1.5px] border-border/60 hover:border-border",
-                              "dark:border-gray-700 dark:hover:border-gray-600",
-                              "[&:has(>div)]:hover:ring-2 [&:has(>div)]:hover:ring-secondary/20",
-                              isToday(day) && "bg-primary/5 ring-2 ring-primary border-primary/50",
-                              isSelected(day) && "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
-                              isWeekend(dayIndex) && "bg-muted/80 border-muted/80 dark:bg-muted/60 dark:border-muted/60",
-                              snapshot.isDraggingOver && "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
-                              "backdrop-blur-[2px]",
-                              "group cursor-pointer shadow-sm"
-                            )
+                                "rounded-xl border-[1.5px] border-border/60 hover:border-border",
+                                "dark:border-gray-700 dark:hover:border-gray-600",
+                                "[&:has(>div)]:hover:ring-2 [&:has(>div)]:hover:ring-secondary/20",
+                                isToday(day) &&
+                                  "bg-primary/5 ring-2 ring-primary border-primary/50",
+                                isSelected(day) &&
+                                  "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
+                                isWeekend(dayIndex) &&
+                                  "bg-muted/80 border-muted/80 dark:bg-muted/60 dark:border-muted/60",
+                                snapshot.isDraggingOver &&
+                                  "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
+                                "backdrop-blur-[2px]",
+                                "group cursor-pointer shadow-sm",
+                              ),
                         )}
                         onClick={() => day !== 0 && handleDayClick(day)}
                       >
                         {day !== 0 && (
                           <>
-                            <div className={cn(
-                              "text-base font-semibold",
-                              "group-hover:text-secondary",
-                              isToday(day) && "text-primary",
-                              isSelected(day) && "text-secondary",
-                              isWeekend(dayIndex) && "text-foreground/70"
-                            )}>
+                            <div
+                              className={cn(
+                                "text-base font-semibold",
+                                "group-hover:text-secondary",
+                                isToday(day) && "text-primary",
+                                isSelected(day) && "text-secondary",
+                                isWeekend(dayIndex) && "text-foreground/70",
+                              )}
+                            >
                               {day}
                             </div>
                             {renderEvents(day)}
@@ -507,8 +519,8 @@ const Calendar: React.FC = () => {
         onClose={() => setIsSideDrawerOpen(false)}
         selectedDate={selectedDate}
         events={selectedDate ? events[selectedDate.toDateString()] || [] : []}
-        onAddEvent={() => { }}
-        onEditEvent={() => { }}
+        onAddEvent={() => {}}
+        onEditEvent={() => {}}
         onDeleteEvent={(event) => handleDeleteEvent(event.id)}
         onSaveEvent={handleSaveEvent}
         existingEvents={

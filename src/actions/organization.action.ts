@@ -8,15 +8,18 @@ import {
   requireOrganization,
 } from "../lib";
 import { auth } from "../lib/auth";
-import { organization as organizationTable } from "../db";
-import { CreateOrganizationSchema } from "../db";
+import { Appointment, organization as organizationTable } from "../db";
 import { db } from "../lib";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
-import { progression as progressionTable } from "../db";
+import {
+  progression as progressionTable,
+  appointments as appointmentsTable,
+} from "../db";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { organizationFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+
 export const getAllOrganizations = createServerAction(
   z.object({}),
   async (input, ctx) => {
@@ -47,6 +50,7 @@ export const getCurrentOrganization = createServerAction(
   },
   [requireAuth, requireOrganization],
 );
+
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
@@ -151,4 +155,36 @@ export const updateOrganization = createServerAction(
     return data;
   },
   [requireAuth, requireOwner],
+);
+
+export const getUsersWithAppointments = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const usersWithAppointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.proId, ctx.organization.id),
+      with: {
+        client: true,
+      },
+      orderBy: desc(appointmentsTable.createdAt),
+    });
+
+    // Get unique users from appointments
+    const uniqueUsers = [
+      ...usersWithAppointments
+        .map((appointment) => appointment.client)
+        .filter(
+          (user, index, self) =>
+            index === self.findIndex((u) => u?.id === user?.id),
+        ),
+    ];
+
+    return uniqueUsers;
+  },
+  [requireAuth, requireOrganization],
 );
