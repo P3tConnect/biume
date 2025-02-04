@@ -58,7 +58,7 @@ export function Navbar() {
             <Input
               type="search"
               placeholder={`Rechercher un client, un rendez-vous, un rapport... (${shortcutKey}+K)`}
-              className="w-full pl-10 bg-background cursor-pointer"
+              className="w-full pl-10 bg-background cursor-pointer rounded-2xl"
               onClick={() => setOpen(true)}
               readOnly
             />
@@ -85,7 +85,6 @@ export function Navbar() {
         <div className="hidden lg:flex items-center gap-4">
           <ModeToggle />
           <Notifications />
-          <UserNav />
         </div>
 
         {/* Right Section - Mobile & Tablet */}
