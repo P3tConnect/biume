@@ -1,19 +1,12 @@
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Heart,
-  Sparkles,
-  Dog,
-  Cat,
-  Rabbit,
-  Star,
-  Calendar,
-  Search,
-  MapPin,
-} from "lucide-react";
-import Image from "next/image";
+"use client";
+
+import { Star, Calendar } from "lucide-react";
+import SearchInput from "./search-input";
+import { Suspense } from "react";
 
 export function HeroSection() {
+
+
   return (
     <section className="relative flex items-center bg-gradient-to-b from-accent/5 to-background overflow-visible pb-32 pt-32">
       <div className="container relative mx-auto px-4">
@@ -33,30 +26,9 @@ export function HeroSection() {
           </div>
 
           {/* Search Box */}
-          <div className="bg-background rounded-2xl shadow-xl border p-4 md:p-6 max-w-4xl mx-auto mb-12">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Quel professionnel ?"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border bg-background"
-                />
-              </div>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Où ?"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border bg-background"
-                />
-              </div>
-              <Button className="w-full h-12 text-base">
-                Rechercher
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </div>
-          </div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <SearchInput />
+          </Suspense>
 
           {/* Trust Indicators */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">

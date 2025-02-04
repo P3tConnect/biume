@@ -18,11 +18,10 @@ export function FeaturesSection() {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-foreground/80">
-            Tout ce dont vous avez besoin pour la santé de votre animal
+            Une suite complète pour le bien-être de vos animaux
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground px-4">
-            Une plateforme simple et intuitive pour gérer les soins de votre
-            compagnon
+            Des outils intelligents pour une gestion optimale de la santé de vos compagnons
           </p>
         </div>
 
@@ -77,46 +76,46 @@ export function FeaturesSection() {
                     <div className="p-4 rounded-xl bg-background/50 border">
                       <h4 className="font-medium mb-2">Avantages</h4>
                       <ul className="text-sm text-muted-foreground space-y-2">
-                        {feature.title === "Réservation instantanée" && (
+                        {feature.title === "Suivi de santé intelligent" && (
                           <>
-                            <li>• Disponible 24h/24</li>
-                            <li>• Confirmation immédiate</li>
-                            <li>• Choix flexibles</li>
-                          </>
-                        )}
-                        {feature.title === "Disponibilités en temps réel" && (
-                          <>
-                            <li>• Mise à jour instantanée</li>
-                            <li>• Vue calendrier claire</li>
-                            <li>• Filtres avancés</li>
-                          </>
-                        )}
-                        {feature.title === "Avis vérifiés" && (
-                          <>
-                            <li>• Avis authentiques</li>
-                            <li>• Notes détaillées</li>
-                            <li>• Retours d'expérience</li>
-                          </>
-                        )}
-                        {feature.title === "Rappels automatiques" && (
-                          <>
-                            <li>• SMS & Emails</li>
-                            <li>• Personnalisables</li>
-                            <li>• Instructions incluses</li>
-                          </>
-                        )}
-                        {feature.title === "Paiement sécurisé" && (
-                          <>
-                            <li>• Multiples options</li>
-                            <li>• Transactions cryptées</li>
-                            <li>• Reçus automatiques</li>
-                          </>
-                        )}
-                        {feature.title === "Suivi santé" && (
-                          <>
+                            <li>• Alertes automatiques</li>
+                            <li>• Suivi personnalisé</li>
                             <li>• Historique complet</li>
-                            <li>• Documents numériques</li>
+                          </>
+                        )}
+                        {feature.title === "Gestion des rendez-vous" && (
+                          <>
+                            <li>• Planning optimisé</li>
+                            <li>• Synchronisation temps réel</li>
+                            <li>• Gestion des urgences</li>
+                          </>
+                        )}
+                        {feature.title === "Dossier médical complet" && (
+                          <>
+                            <li>• Stockage sécurisé</li>
+                            <li>• Accès instantané</li>
+                            <li>• Organisation optimale</li>
+                          </>
+                        )}
+                        {feature.title === "Collaboration simplifiée" && (
+                          <>
                             <li>• Partage facile</li>
+                            <li>• Communication fluide</li>
+                            <li>• Coordination efficace</li>
+                          </>
+                        )}
+                        {feature.title === "Notifications intelligentes" && (
+                          <>
+                            <li>• Alertes personnalisées</li>
+                            <li>• Rappels automatiques</li>
+                            <li>• Suivi post-soins</li>
+                          </>
+                        )}
+                        {feature.title === "Récompenses et conseils" && (
+                          <>
+                            <li>• Programme fidélité</li>
+                            <li>• IA prédictive</li>
+                            <li>• Recommandations ciblées</li>
                           </>
                         )}
                       </ul>
@@ -124,46 +123,46 @@ export function FeaturesSection() {
                     <div className="p-4 rounded-xl bg-background/50 border">
                       <h4 className="font-medium mb-2">Comment ça marche</h4>
                       <ul className="text-sm text-muted-foreground space-y-2">
-                        {feature.title === "Réservation instantanée" && (
+                        {feature.title === "Suivi de santé intelligent" && (
                           <>
-                            <li>1. Choisissez un créneau</li>
-                            <li>2. Remplissez vos infos</li>
-                            <li>3. Confirmez la réservation</li>
+                            <li>1. Configuration du profil</li>
+                            <li>2. Définition des alertes</li>
+                            <li>3. Suivi automatique</li>
                           </>
                         )}
-                        {feature.title === "Disponibilités en temps réel" && (
+                        {feature.title === "Gestion des rendez-vous" && (
                           <>
-                            <li>1. Sélectionnez une date</li>
-                            <li>2. Consultez les créneaux</li>
-                            <li>3. Réservez directement</li>
+                            <li>1. Paramétrage du calendrier</li>
+                            <li>2. Gestion des disponibilités</li>
+                            <li>3. Confirmation automatique</li>
                           </>
                         )}
-                        {feature.title === "Avis vérifiés" && (
+                        {feature.title === "Dossier médical complet" && (
                           <>
-                            <li>1. Consultez les avis</li>
-                            <li>2. Filtrez par critères</li>
-                            <li>3. Prenez votre décision</li>
+                            <li>1. Création du dossier</li>
+                            <li>2. Import des documents</li>
+                            <li>3. Organisation automatique</li>
                           </>
                         )}
-                        {feature.title === "Rappels automatiques" && (
+                        {feature.title === "Collaboration simplifiée" && (
                           <>
-                            <li>1. Activez les notifications</li>
-                            <li>2. Choisissez le format</li>
-                            <li>3. Recevez les rappels</li>
+                            <li>1. Invitation des collaborateurs</li>
+                            <li>2. Définition des accès</li>
+                            <li>3. Partage des informations</li>
                           </>
                         )}
-                        {feature.title === "Paiement sécurisé" && (
+                        {feature.title === "Notifications intelligentes" && (
                           <>
-                            <li>1. Choisissez le mode</li>
-                            <li>2. Validez le paiement</li>
-                            <li>3. Recevez la confirmation</li>
+                            <li>1. Choix des notifications</li>
+                            <li>2. Configuration des délais</li>
+                            <li>3. Activation du système</li>
                           </>
                         )}
-                        {feature.title === "Suivi santé" && (
+                        {feature.title === "Récompenses et conseils" && (
                           <>
-                            <li>1. Accédez au carnet</li>
-                            <li>2. Consultez l'historique</li>
-                            <li>3. Gérez les documents</li>
+                            <li>1. Activation du programme</li>
+                            <li>2. Cumul des points</li>
+                            <li>3. Utilisation des avantages</li>
                           </>
                         )}
                       </ul>

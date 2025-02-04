@@ -2,6 +2,7 @@
 
 import { notFound } from "next/navigation";
 import { use, useState } from "react";
+import { motion } from "framer-motion";
 import { CompanyHeader } from "./components/CompanyHeader";
 import { CompanyInfo } from "./components/CompanyInfo";
 import { CompanyTeam } from "./components/CompanyTeam";
@@ -112,6 +113,11 @@ const mockReviews = [
   },
 ];
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 export default function CompanyDetailsPage({
   params,
 }: CompanyDetailsPageProps) {
@@ -151,7 +157,7 @@ export default function CompanyDetailsPage({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen w-screen bg-background">
       <CompanyHeader company={company} />
 
       <div className="container mx-auto py-8">
@@ -159,7 +165,12 @@ export default function CompanyDetailsPage({
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-7 space-y-8">
             {/* About Section */}
-            <div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.5 }}
+            >
               <div className="flex items-center justify-between pb-6">
                 <div>
                   <h2 className="text-2xl font-semibold">À propos</h2>
@@ -175,39 +186,64 @@ export default function CompanyDetailsPage({
                 {company.description}
               </p>
               <Separator className="my-8" />
-            </div>
+            </motion.div>
 
             {/* Team Section */}
-            <div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <h2 className="text-2xl font-semibold mb-6">L'équipe</h2>
               <CompanyTeam professionals={mockProfessionals} />
               <Separator className="my-8" />
-            </div>
+            </motion.div>
 
             {/* Services Section */}
-            <div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               <h2 className="text-2xl font-semibold mb-6">Nos services</h2>
               <CompanyServices services={mockServices} />
               <Separator className="my-8" />
-            </div>
+            </motion.div>
 
             {/* Options Section */}
-            <div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               <h2 className="text-2xl font-semibold mb-6">Options</h2>
               <CompanyOptions options={mockOptions} />
               <Separator className="my-8" />
-            </div>
+            </motion.div>
 
             {/* Reviews Section */}
-            <div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
               <h2 className="text-2xl font-semibold mb-6">Avis clients</h2>
               <CompanyReviews reviews={mockReviews} />
-            </div>
+            </motion.div>
           </div>
 
           {/* Booking Card */}
           <div className="col-span-12 lg:col-span-5">
-            <div className="sticky top-24">
+            <motion.div
+              className="sticky top-24"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <BookingCard
                 services={mockServices}
                 professionals={mockProfessionals}
@@ -220,7 +256,7 @@ export default function CompanyDetailsPage({
                 setSelectedDate={setSelectedDate}
                 setSelectedTime={setSelectedTime}
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

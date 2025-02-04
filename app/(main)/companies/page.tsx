@@ -21,14 +21,13 @@ import {
 } from "@/components/ui/select";
 import { OrganizationsGrid } from "./components/organizations-grid";
 import { getAllOrganizations } from "@/src/actions/organization.action";
-import { use } from "react";
 
 export default function CompaniesListPage() {
 
   const data = getAllOrganizations({});
 
   return (
-    <div className="min-h-screen w-screen bg-background">
+    <div className="h-screen w-screen bg-background">
       {/* Hero Section with Search */}
       <div className="relative w-full border-b border-border overflow-hidden bg-background">
         <div className="absolute inset-0 bg-[linear-gradient(110deg,var(--primary)_0%,transparent_40%)]" />
@@ -39,11 +38,10 @@ export default function CompaniesListPage() {
         </div>
         <div className="relative w-full px-8 py-16">
           <h1 className="text-4xl font-bold text-foreground mb-3 text-center">
-            Trouvez et réservez votre vétérinaire
+            Trouvez et réservez avec le professionnel qui vous correspond
           </h1>
           <p className="text-lg text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-            Prenez rendez-vous en quelques clics avec les meilleurs vétérinaires
-            près de chez vous
+            Prenez rendez-vous en quelques clics avec les meilleurs professionnels du secteur
           </p>
 
           <div className="max-w-3xl mx-auto bg-card/95 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 flex flex-col sm:flex-row gap-3">
@@ -108,9 +106,12 @@ export default function CompaniesListPage() {
 
       {/* Main Content */}
       <div className="w-full px-8 py-8 bg-background">
-        <Suspense fallback={<div className="flex justify-center items-center h-full"><Loader2 className="animate-spin" />
-        </div>
-        }
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-full">
+              <Loader2 className="animate-spin" />
+            </div>
+          }
         >
           <OrganizationsGrid organizations={data} />
         </Suspense>
