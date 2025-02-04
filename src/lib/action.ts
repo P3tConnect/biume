@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { headers } from "next/headers";
-import { auth } from "./auth";
-import { ActionError, ServerActionContext } from "./action-utils";
+import { headers } from 'next/headers';
+import { auth } from './auth';
+import { ActionError, ServerActionContext } from './action-utils';
 
 // Predefined middlewares
 export async function requireAuth(ctx: ServerActionContext) {
@@ -14,7 +14,7 @@ export async function requireAuth(ctx: ServerActionContext) {
     const user = session?.user;
 
     if (!user) {
-      throw new ActionError("Not authenticated");
+      throw new ActionError('Not authenticated');
     }
 
     Object.assign(ctx, {
@@ -23,7 +23,7 @@ export async function requireAuth(ctx: ServerActionContext) {
       meta: {},
     });
   } catch (error) {
-    throw new ActionError("Not authenticated");
+    throw new ActionError('Not authenticated');
   }
 }
 
@@ -33,7 +33,7 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 
   if (!organization) {
-    throw new Error("Organization required");
+    throw new Error('Organization required');
   }
 
   const membership = await auth.api.getActiveMember({
@@ -43,11 +43,11 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 
   if (!membership) {
-    throw new Error("User is not a member of any organization!");
+    throw new Error('User is not a member of any organization!');
   }
 
-  if (membership?.role !== "owner") {
-    throw new Error("User is not an owner of the organization!");
+  if (membership?.role !== 'owner') {
+    throw new Error('User is not an owner of the organization!');
   }
 
   Object.assign(ctx, {
@@ -75,11 +75,11 @@ export async function requireMember(ctx: ServerActionContext) {
   });
 
   if (!organization) {
-    throw new Error("Organization required");
+    throw new ActionError('User is not a member of any organization!');
   }
 
   if (!ctx.user) {
-    throw new Error("Not authenticated");
+    throw new Error('Not authenticated');
   }
 
   const membership = await auth.api.getActiveMember({
@@ -89,11 +89,11 @@ export async function requireMember(ctx: ServerActionContext) {
   });
 
   if (!membership) {
-    throw new Error("User is not a member of the organization!");
+    throw new Error('User is not a member of the organization!');
   }
 
-  if (membership?.role !== "member") {
-    throw new Error("User is not a member of the organization!");
+  if (membership?.role !== 'member') {
+    throw new Error('User is not a member of the organization!');
   }
 
   Object.assign(ctx, {

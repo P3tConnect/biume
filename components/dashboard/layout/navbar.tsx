@@ -3,6 +3,7 @@
 import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
 import { SidebarToggle } from "./sidebar-toggle";
+import SearchButton from "./search-button";
 import NewShortcut from "./new-shortcut";
 import Notifications from "./notifications";
 import {
@@ -13,15 +14,16 @@ import {
   Button,
   Input,
   CommandDialog,
+  DialogTitle,
   CommandInput,
   CommandList,
   CommandEmpty,
   CommandGroup,
   CommandItem,
-  DialogTitle,
 } from "@/components/ui";
 import { DotsVerticalIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function Navbar() {
@@ -83,15 +85,14 @@ export function Navbar() {
 
         {/* Right Section - Desktop */}
         <div className="hidden lg:flex items-center gap-4">
+          <SearchButton />
           <ModeToggle />
           <Notifications />
         </div>
 
         {/* Right Section - Mobile & Tablet */}
         <div className="flex lg:hidden items-center gap-2">
-          <Button variant="outline" size="icon" className="lg:hidden">
-            <MagnifyingGlassIcon className="w-4 h-4" />
-          </Button>
+          <SearchButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

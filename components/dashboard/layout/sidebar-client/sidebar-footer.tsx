@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Stepper from "@/components/onboarding/components/stepper";
+import Stepper from '@/components/onboarding/components/stepper';
 import {
   Avatar,
   AvatarFallback,
@@ -18,17 +18,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   Skeleton,
-} from "@/components/ui";
-import { signOut, useSession } from "@/src/lib/auth-client";
-import Avvvatars from "avvvatars-react";
+} from '@/components/ui';
+import { cn } from '@/src/lib';
+import { signOut, useSession } from '@/src/lib/auth-client';
+import Avvvatars from 'avvvatars-react';
 import {
+  BadgeCheck,
   ChevronsUpDown,
+  CreditCard,
   LogOut,
   Settings,
   Sparkles,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+  User2,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
@@ -42,80 +47,80 @@ const SidebarClientFooterComponent = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                size='lg'
+                className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
                 {session?.user.image ? (
-                  <Avatar className="h-8 w-8 rounded-lg">
+                  <Avatar className='h-8 w-8 rounded-lg'>
                     <AvatarImage
                       src={session?.user.image}
                       alt={session?.user.name}
-                      className="object-cover"
+                      className='object-cover'
                     />
-                    <AvatarFallback className="rounded-lg">
-                      <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                    <AvatarFallback className='rounded-lg'>
+                      <Skeleton className='h-8 w-8 rounded-lg bg-gray-200' />
                     </AvatarFallback>
                   </Avatar>
                 ) : (
-                  <div className="flex h-8 w-8 items-center justify-center">
+                  <div className='flex h-8 w-8 items-center justify-center'>
                     <Avvvatars
-                      value={session?.user.email || ""}
+                      value={session?.user.email || ''}
                       size={32}
-                      style="shape"
+                      style='shape'
                     />
                   </div>
                 )}
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
+                <div className='grid flex-1 text-left text-sm leading-tight'>
+                  <span className='truncate font-semibold'>
                     {session?.user.name}
                   </span>
-                  <span className="truncate text-xs">
+                  <span className='truncate text-xs'>
                     {session?.user.email}
                   </span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
+                <ChevronsUpDown className='ml-auto size-4' />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-              side={"right"}
-              align="end"
+              className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
+              side={'right'}
+              align='end'
               sideOffset={4}
             >
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <DropdownMenuLabel className='p-0 font-normal'>
+                <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
                   {session?.user.image ? (
-                    <Avatar className="h-8 w-8 rounded-lg">
+                    <Avatar className='h-8 w-8 rounded-lg'>
                       <AvatarImage
                         src={session?.user.image}
                         alt={session?.user.name}
-                        className="object-cover"
+                        className='object-cover'
                       />
-                      <AvatarFallback className="rounded-lg">
-                        <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
+                      <AvatarFallback className='rounded-lg'>
+                        <Skeleton className='h-8 w-8 rounded-lg bg-gray-200' />
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center">
+                    <div className='flex h-8 w-8 items-center justify-center'>
                       <Avvvatars
-                        value={session?.user.email || ""}
+                        value={session?.user.email || ''}
                         size={32}
-                        style="shape"
+                        style='shape'
                       />
                     </div>
                   )}
-                  <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className='grid flex-1 text-left text-sm leading-tight'>
                     {isPending ? (
                       <>
-                        <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
-                        <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
+                        <Skeleton className='h-4 w-full rounded-md bg-gray-200' />
+                        <Skeleton className='h-4 w-full rounded-md bg-gray-200' />
                       </>
                     ) : (
                       <>
-                        <span className="truncate font-semibold">
+                        <span className='truncate font-semibold'>
                           {session?.user.name}
                         </span>
-                        <span className="truncate text-xs">
+                        <span className='truncate text-xs'>
                           {session?.user.email}
                         </span>
                       </>
@@ -126,7 +131,7 @@ const SidebarClientFooterComponent = () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DialogTrigger asChild>
-                  <DropdownMenuItem className="gap-2">
+                  <DropdownMenuItem className='gap-2'>
                     <Sparkles size={14} />
                     Become a pro
                   </DropdownMenuItem>
@@ -134,24 +139,29 @@ const SidebarClientFooterComponent = () => {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  className="gap-2"
-                  onClick={() =>
-                    router.push(`/dashboard/user/${session?.user.id}/settings`)
-                  }
-                >
-                  <Settings size={14} />
-                  Settings
+                <DropdownMenuItem className='gap-2'>
+                  <BadgeCheck size={14} />
+                  Account
                 </DropdownMenuItem>
+                <DropdownMenuItem className='gap-2'>
+                  <CreditCard size={14} />
+                  Billing
+                </DropdownMenuItem>
+                <Link href={`/dashboard/user/${session?.user.id}/settings`}>
+                  <DropdownMenuItem className='gap-2'>
+                    <Settings size={14} />
+                    Settings
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="gap-2"
+                className='gap-2'
                 onClick={async () =>
                   await signOut({
                     fetchOptions: {
                       onSuccess: () => {
-                        router.push("/sign-in");
+                        router.push('/sign-in');
                       },
                     },
                   })

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -24,49 +23,66 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useActiveOrganization, organization } from "@/src/lib/auth-client";
 import Image from "next/image";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { getCurrentOrganization, updateOrganization } from "@/src/actions/organization.action";
-import { CreateOrganizationSchema } from "@/src/db/organization";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/src/lib/utils";
+import {
+  getCurrentOrganization,
+  updateOrganization,
+} from "@/src/actions/organization.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { useActionQuery } from "@/src/hooks/action-hooks";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export const organizationFormSchema = z.object({
-  name: z.string().min(2, "Le nom de l'organisation doit contenir au moins 2 caractères"),
+  name: z
+    .string()
+    .min(2, "Le nom de l'organisation doit contenir au moins 2 caractères"),
   email: z.string().email("Veuillez entrer une adresse email valide"),
   website: z.string().url().optional(),
   address: z.string().min(5, "Veuillez entrer une adresse valide"),
-  description: z.string().min(10, "La description doit contenir au moins 10 caractères"),
+  description: z
+    .string()
+    .min(10, "La description doit contenir au moins 10 caractères"),
   logo: z
     .any()
-    .refine((file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE), {
-      message: "Le fichier doit faire moins de 5MB",
-    })
     .refine(
-      (file) => !file || (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)),
+      (file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE),
+      {
+        message: "Le fichier doit faire moins de 5MB",
+      },
+    )
+    .refine(
+      (file) =>
+        !file ||
+        (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)),
       {
         message: "Format accepté : .jpg, .jpeg, .png et .webp",
-      }
+      },
     )
     .optional(),
   coverImage: z
     .any()
-    .refine((file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE), {
-      message: "Le fichier doit faire moins de 5MB",
-    })
     .refine(
-      (file) => !file || (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)),
+      (file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE),
+      {
+        message: "Le fichier doit faire moins de 5MB",
+      },
+    )
+    .refine(
+      (file) =>
+        !file ||
+        (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)),
       {
         message: "Format accepté : .jpg, .jpeg, .png et .webp",
-      }
+      },
     )
     .optional(),
   openAt: z.string(),
@@ -79,8 +95,12 @@ export const organizationFormSchema = z.object({
 
 export const ProfileSection = () => {
   const { data: org } = useActionQuery(getCurrentOrganization, {});
-  const [previewUrl, setPreviewUrl] = useState<string | null>(org?.logo || null);
-  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(org?.coverImage || null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    org?.logo || null,
+  );
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(
+    org?.coverImage || null,
+  );
   const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<z.infer<typeof organizationFormSchema>>({
@@ -149,7 +169,9 @@ export const ProfileSection = () => {
     }
   };
 
-  const handleCoverImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverImageChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       try {
@@ -172,12 +194,12 @@ export const ProfileSection = () => {
   return (
     <div className="relative pb-20">
       <div className="relative w-full h-[200px] rounded-xl overflow-visible bg-gradient-to-r from-blue-50 to-blue-100">
-        {(coverPreviewUrl || org?.coverImage) ? (
+        {coverPreviewUrl || org?.coverImage ? (
           <Image
             src={coverPreviewUrl || org?.coverImage || ""}
             alt="Cover"
             fill
-            className="object-cover"
+            className="object-cover rounded-xl"
           />
         ) : null}
 
@@ -186,18 +208,22 @@ export const ProfileSection = () => {
             type="file"
             accept={ACCEPTED_IMAGE_TYPES.join(",")}
             onChange={handleCoverImageChange}
-            className="hidden"
+            className="hidden rounded-xl"
           />
           <div className="text-white text-center">
-            <p className="text-sm">Cliquez pour modifier l'image de couverture</p>
-            <p className="text-xs text-white/70">Format recommandé : 1920x400px</p>
+            <p className="text-sm">
+              Cliquez pour modifier l'image de couverture
+            </p>
+            <p className="text-xs text-white/70">
+              Format recommandé : 1920x400px
+            </p>
           </div>
         </label>
 
         <div className="absolute -bottom-16 left-8">
           <div className="relative w-32 h-32">
             <div className="w-full h-full rounded-full shadow-lg">
-              {(previewUrl || org?.logo) ? (
+              {previewUrl || org?.logo ? (
                 <Image
                   src={previewUrl || org?.logo || ""}
                   alt="Logo"
@@ -205,7 +231,7 @@ export const ProfileSection = () => {
                   className="object-cover rounded-full"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100 rounded-full">
                   <p className="text-sm text-muted-foreground text-center px-4">
                     Ajoutez votre logo
                   </p>
@@ -217,7 +243,7 @@ export const ProfileSection = () => {
                 type="file"
                 accept={ACCEPTED_IMAGE_TYPES.join(",")}
                 onChange={handleImageChange}
-                className="hidden"
+                className="hidden rounded-full"
               />
               <p className="text-white text-xs">Modifier le logo</p>
             </label>
@@ -245,7 +271,10 @@ export const ProfileSection = () => {
                         <FormItem>
                           <FormLabel>Nom de l'organisation</FormLabel>
                           <FormControl>
-                            <Input placeholder="Entrez le nom de l'organisation" {...field} />
+                            <Input
+                              placeholder="Entrez le nom de l'organisation"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -259,7 +288,10 @@ export const ProfileSection = () => {
                         <FormItem>
                           <FormLabel>Adresse email</FormLabel>
                           <FormControl>
-                            <Input placeholder="Entrez l'adresse email" {...field} />
+                            <Input
+                              placeholder="Entrez l'adresse email"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -293,7 +325,10 @@ export const ProfileSection = () => {
                         <FormItem>
                           <FormLabel>Site web</FormLabel>
                           <FormControl>
-                            <Input placeholder="https://example.com" {...field} />
+                            <Input
+                              placeholder="https://example.com"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -408,9 +443,7 @@ export const ProfileSection = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Services proposés</CardTitle>
-                  <CardDescription>
-                    Personnalisez vos services
-                  </CardDescription>
+                  <CardDescription>Personnalisez vos services</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -429,7 +462,8 @@ export const ProfileSection = () => {
                             Consultations à domicile
                           </FormLabel>
                           <FormDescription className="text-xs">
-                            Activez cette option si vous proposez des consultations à domicile
+                            Activez cette option si vous proposez des
+                            consultations à domicile
                           </FormDescription>
                         </div>
                       </FormItem>
@@ -441,7 +475,9 @@ export const ProfileSection = () => {
                     name="nac"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nouveaux Animaux de Compagnie (NAC)</FormLabel>
+                        <FormLabel>
+                          Nouveaux Animaux de Compagnie (NAC)
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Listez les NAC acceptés"
@@ -449,7 +485,8 @@ export const ProfileSection = () => {
                           />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Listez les types de NAC que vous acceptez (ex: rongeurs, reptiles, oiseaux)
+                          Listez les types de NAC que vous acceptez (ex:
+                          rongeurs, reptiles, oiseaux)
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -463,4 +500,4 @@ export const ProfileSection = () => {
       </Form>
     </div>
   );
-}; 
+};

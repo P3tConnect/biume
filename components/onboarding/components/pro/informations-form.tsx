@@ -20,7 +20,6 @@ import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useStepper } from "../../hooks/useStepper";
 import Image from "next/image";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
@@ -37,7 +36,13 @@ const ACCEPTED_IMAGE_TYPES = {
   "image/png": [".png"],
 };
 
-const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
+const InformationsForm = ({
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const [uploadCoverProgress, setUploadCoverProgress] = useState(0);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [logoUploadProgress, setLogoUploadProgress] = useState(0);
@@ -153,7 +158,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
           {/* Logo Upload Section */}
           <div className="flex flex-col items-start gap-4 w-1/4">
             <p className="text-sm font-semibold">Logo de votre entreprise</p>
-            {form.getValues("logo") == "" ? (
+            {form.getValues("logo") === "" && !logoIsUploading ? (
               <div className="w-full">
                 <div
                   {...getLogoRootProps()}
@@ -211,8 +216,11 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                     {form.formState.errors.logo.message}
                   </p>
                 )}
-                {logoIsUploading && (
-                  <div className="w-32 mt-2">
+              </div>
+            ) : logoIsUploading ? (
+              <div className="w-full flex flex-col items-center gap-4">
+                <div className="w-32 h-32 rounded-2xl border-2 border-primary/20 flex items-center justify-center">
+                  <div className="w-16 h-16 relative">
                     <div className="h-1 w-full bg-primary/20 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-primary transition-all duration-300 rounded-full"
@@ -220,11 +228,14 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                       />
                     </div>
                   </div>
-                )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Téléchargement en cours...
+                </p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-4">
-                <div className="group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20">
+                <div className="group relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary/20">
                   <Image
                     src={form.getValues("logo") ?? ""}
                     alt="logo"
@@ -287,7 +298,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                         className={cn(
                           "h-6 w-6 text-primary",
                           form.formState.errors.coverImage &&
-                          "text-destructive",
+                            "text-destructive",
                         )}
                       />
                     </div>
@@ -296,7 +307,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                         className={cn(
                           "text-xs font-medium text-primary",
                           form.formState.errors.coverImage &&
-                          "text-destructive",
+                            "text-destructive",
                         )}
                       >
                         Glissez-déposez
@@ -305,7 +316,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                         className={cn(
                           "text-xs text-muted-foreground",
                           form.formState.errors.coverImage &&
-                          "text-destructive",
+                            "text-destructive",
                         )}
                       >
                         ou cliquez
@@ -314,7 +325,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                         className={cn(
                           "text-xs text-muted-foreground",
                           form.formState.errors.coverImage &&
-                          "text-destructive",
+                            "text-destructive",
                         )}
                       >
                         PNG, JPG • 5MB
@@ -388,7 +399,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                     value={field.value ?? ""}
                     className={cn(
                       form.formState.errors.name &&
-                      "border-2 border-destructive",
+                        "border-2 border-destructive",
                     )}
                   />
                 </FormControl>
@@ -408,7 +419,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void, pr
                     className={cn(
                       "bg-card",
                       form.formState.errors.description &&
-                      "border-2 border-destructive",
+                        "border-2 border-destructive",
                     )}
                     placeholder="Description de votre entreprise"
                     {...field}
