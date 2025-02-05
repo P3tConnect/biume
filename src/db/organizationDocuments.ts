@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { organizationCertifications } from "./organizationCertifications";
@@ -29,7 +29,12 @@ export const organizationDocumentsRelations = relations(
   }),
 );
 
-export type OrganizationDocuments = typeof organizationDocuments.$inferSelect;
+export type OrganizationDocuments = InferSelectModel<
+  typeof organizationDocuments
+> & {
+  organization: InferSelectModel<typeof organization>;
+  certifications: InferSelectModel<typeof organizationCertifications>[];
+};
 export type CreateOrganizationDocuments =
   typeof organizationDocuments.$inferInsert;
 

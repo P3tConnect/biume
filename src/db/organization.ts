@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { organizationDocuments } from "./organizationDocuments";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { reportTemplate } from "./report_template";
 import { progression } from "./progression";
 import { cancelPolicies } from "./cancelPolicies";
@@ -30,6 +30,7 @@ import { bgJobs } from "./bgJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { invitation } from "./invitation";
 import { appointments } from "./appointments";
+import { user } from "./user";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -111,7 +112,17 @@ export const organizationRelations = relations(
   }),
 );
 
-export type Organization = typeof organization.$inferSelect;
+export type Organization = InferSelectModel<typeof organization> & {
+  address: InferSelectModel<typeof organizationAddress>;
+  ratings: InferSelectModel<typeof ratings>;
+  services: InferSelectModel<typeof service>[];
+  options: InferSelectModel<typeof options>[];
+  categories: InferSelectModel<typeof category>[];
+  topics: InferSelectModel<typeof topic>[];
+  products: InferSelectModel<typeof product>[];
+  newslettersWritter: InferSelectModel<typeof newsletter>[];
+  receipts: InferSelectModel<typeof receipt>[];
+};
 export type CreateOrganization = typeof organization.$inferInsert;
 
 export const OrganizationSchema = createSelectSchema(organization);

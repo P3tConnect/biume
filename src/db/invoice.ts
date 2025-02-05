@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { invoiceOptions } from "./invoiceOptions";
 import { createInsertSchema } from "drizzle-zod";
 import { askEstimate } from "./ask_estimate";
@@ -27,7 +27,10 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
   }),
 }));
 
-export type Invoice = typeof invoice.$inferSelect;
+export type Invoice = InferSelectModel<typeof invoice> & {
+  options: InferSelectModel<typeof invoiceOptions>[];
+  appointment: InferSelectModel<typeof appointments>;
+};
 export type CreateInvoice = typeof invoice.$inferInsert;
 
 export const CreateInvoiceSchema = createInsertSchema(invoice);

@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   boolean,
   date,
@@ -46,7 +46,9 @@ export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
   askEstimateOptions: many(askEstimateOptions),
 }));
 
-export type AskEstimate = typeof askEstimate.$inferSelect;
+export type AskEstimate = InferSelectModel<typeof askEstimate> & {
+  askEstimateOptions: InferSelectModel<typeof askEstimateOptions>[];
+};
 export type CreateAskEstimate = typeof askEstimate.$inferInsert;
 export const AskEstimateStatusEnum = z.enum(askEstimateStatus.enumValues);
 

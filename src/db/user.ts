@@ -11,7 +11,7 @@ import { notification } from "./notifications";
 import { pets } from "./pets";
 import { appointments } from "./appointments";
 import { projectsInvitees } from "./projectsInvitees";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { session } from "./session";
 import { usersJobs } from "./usersJobs";
 import { usersNewsletters } from "./usersNewsletter";
@@ -53,5 +53,18 @@ export const userRelations = relations(user, ({ one, many }) => ({
   projects: many(projectsInvitees),
   invitations: many(invitation),
 }));
+
+export type User = InferSelectModel<typeof user> & {
+  pets: InferSelectModel<typeof pets>[];
+  jobs: InferSelectModel<typeof usersJobs>[];
+  appointments: InferSelectModel<typeof appointments>[];
+  newsletter: InferSelectModel<typeof usersNewsletters>[];
+  allergies: InferSelectModel<typeof allergies>[];
+  deseases: InferSelectModel<typeof deseases>[];
+  intolerences: InferSelectModel<typeof intolerences>[];
+  sessions: InferSelectModel<typeof session>[];
+  accounts: InferSelectModel<typeof account>[];
+  memberships: InferSelectModel<typeof member>[];
+};
 
 export const CreateUserSchema = createInsertSchema(user);

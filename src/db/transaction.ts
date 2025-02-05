@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { organization } from "./organization";
 
@@ -24,7 +24,9 @@ export const transactionRelations = relations(transaction, ({ one }) => ({
   }),
 }));
 
-export type Transaction = typeof transaction.$inferSelect;
+export type Transaction = InferSelectModel<typeof transaction> & {
+  from: InferSelectModel<typeof organization>;
+};
 export type CreateTransaction = typeof transaction.$inferInsert;
 
 export const CreateTransactionSchema = createInsertSchema(transaction);

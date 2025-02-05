@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
 
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -32,7 +32,9 @@ export const widgetsRelations = relations(widgets, ({ one, many }) => ({
   }),
 }));
 
-export type Widget = typeof widgets.$inferSelect;
+export type Widget = InferSelectModel<typeof widgets> & {
+  company: InferSelectModel<typeof organization>;
+};
 
 export type CreateWidget = typeof widgets.$inferInsert;
 export const WidgetsType = z.enum(widgetsType.enumValues);

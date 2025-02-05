@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { appointments } from "./appointments";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const observation = pgTable("observations", {
@@ -17,7 +17,9 @@ export const observationRelations = relations(observation, ({ one, many }) => ({
   appointment: one(appointments),
 }));
 
-export type Observation = typeof observation.$inferSelect;
+export type Observation = InferSelectModel<typeof observation> & {
+  appointment: InferSelectModel<typeof appointments>;
+};
 export type CreateObservation = typeof observation.$inferInsert;
 
 export const CreateObservationSchema = createInsertSchema(observation);

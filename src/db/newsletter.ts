@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { usersNewsletters } from "./usersNewsletter";
 import { createInsertSchema } from "drizzle-zod";
 import { organization } from "./organization";
@@ -26,7 +26,9 @@ export const newsletterRelations = relations(newsletter, ({ one, many }) => ({
   }),
 }));
 
-export type Newsletter = typeof newsletter.$inferSelect;
+export type Newsletter = InferSelectModel<typeof newsletter> & {
+  redactor: InferSelectModel<typeof organization>;
+};
 export type CreateNewsletter = typeof newsletter.$inferInsert;
 
 export const CreateNewsletterSchema = createInsertSchema(newsletter);

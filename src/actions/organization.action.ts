@@ -30,6 +30,38 @@ export const getAllOrganizations = createServerAction(
   [],
 );
 
+export const getCompanyById = createServerAction(
+  z.object({
+    companyId: z.string(),
+  }),
+  async (input, ctx) => {
+    const company = await db.query.organization.findFirst({
+      where: eq(organizationTable.id, input.companyId),
+      with: {
+        options: true,
+        services: true,
+        ratings: {
+          with: {
+            writer: true,
+          },
+        },
+      },
+    });
+
+    if (!company) {
+      throw new ActionError("Company not found");
+    }
+
+    return {
+      company,
+      ratings: company.ratings[0],
+      options: company.options,
+      services: company.services,
+    };
+  },
+  [],
+);
+
 export const getCurrentOrganization = createServerAction(
   z.object({}),
   async (input, ctx) => {

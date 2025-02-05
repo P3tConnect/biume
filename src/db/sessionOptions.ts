@@ -1,7 +1,7 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { appointments } from "./appointments";
 import { options } from "./options";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const sessionOptions = pgTable("session_options", {
@@ -24,7 +24,10 @@ export const sessionOptionsRelations = relations(sessionOptions, ({ one }) => ({
   }),
 }));
 
-export type SessionOption = typeof sessionOptions.$inferSelect;
+export type SessionOption = InferSelectModel<typeof sessionOptions> & {
+  appointment: InferSelectModel<typeof appointments>;
+  option: InferSelectModel<typeof options>;
+};
 export type CreateSessionOption = typeof sessionOptions.$inferInsert;
 
 export const CreateSessionOptionSchema = createInsertSchema(sessionOptions);

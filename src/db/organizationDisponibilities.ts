@@ -1,6 +1,5 @@
 import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { sessionType } from "./appointments";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { organization } from "./organization";
 
@@ -30,8 +29,11 @@ export const organizationDisponibilitiesRelations = relations(
   }),
 );
 
-export type OrganizationDisponibilities =
-  typeof organizationDisponibilities.$inferSelect;
+export type OrganizationDisponibilities = InferSelectModel<
+  typeof organizationDisponibilities
+> & {
+  organization: InferSelectModel<typeof organization>;
+};
 export type CreateOrganizationDisponibilities =
   typeof organizationDisponibilities.$inferInsert;
 

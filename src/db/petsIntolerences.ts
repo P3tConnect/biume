@@ -1,6 +1,6 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { pets } from "./pets";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { intolerences } from "./intolerences";
 import { createInsertSchema } from "drizzle-zod";
 
@@ -25,7 +25,10 @@ export const petsIntolerencesRelations = relations(
   }),
 );
 
-export type PetsIntolerence = typeof petsIntolerences.$inferSelect;
+export type PetsIntolerence = InferSelectModel<typeof petsIntolerences> & {
+  pet: InferSelectModel<typeof pets>;
+  intolerence: InferSelectModel<typeof intolerences>;
+};
 export type CreatePetsIntolerence = typeof petsIntolerences.$inferInsert;
 
 export const CreatePetsIntolerenceSchema = createInsertSchema(petsIntolerences);

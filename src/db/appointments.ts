@@ -6,7 +6,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { invoice } from "./invoice";
 import { sessionOptions } from "./sessionOptions";
 import { pets } from "./pets";
@@ -97,12 +97,17 @@ export const appointmentsRelations = relations(
   }),
 );
 
-export type Appointment = typeof appointments.$inferSelect;
+export type Appointment = InferSelectModel<typeof appointments> & {
+  pro: InferSelectModel<typeof organization>;
+  invoice: InferSelectModel<typeof invoice>;
+  service: InferSelectModel<typeof service>;
+  options: InferSelectModel<typeof sessionOptions>[];
+  pet: InferSelectModel<typeof pets>;
+  report: InferSelectModel<typeof report>;
+  observation: InferSelectModel<typeof observation>;
+  client: InferSelectModel<typeof user>;
+};
 export type CreateAppointment = typeof appointments.$inferInsert;
-export const AppointmentTypeEnum = z.enum(appointmentType.enumValues);
-export const AppointmentStatusTypeEnum = z.enum(
-  appointmentStatusType.enumValues,
-);
 
 export const AppointmentSchema = createSelectSchema(appointments);
 export const CreateAppointmentSchema = createInsertSchema(appointments);
