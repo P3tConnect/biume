@@ -13,8 +13,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PetType {
+  DOG
+  CAT
+  BIRD
+  HORSE
+  NAC
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id                 String   @id @default(uuid())
+  name               String
+  email              String   @unique
+  emailVerified      Boolean? @default(false)
+  password           String
+  refreshToken       String?
+  image              String?
+  phoneNumber        String?
+  address            String?
+  city               String?
+  zipCode            String?
+  country            String?
+  twoFactorEnabled   Boolean?
+  isPro              Boolean  @default(false)
+  onBoardingComplete Boolean  @default(false)
+  smsNotifications   Boolean  @default(false)
+  emailNotifications Boolean  @default(false)
+  stripeId           String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  Pet                Pet[]
+
+  @@map("user")
+}
+
+model Pet {
+  id          String   @id @default(uuid())
+  name        String
+  type        PetType  @default(DOG)
+  weight      Int?
+  height      Int?
+  description String?
+  ownerId     String
+  nacType     String?
+  birthDate   DateTime
+  furColor    String?
+  eyeColor    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  owner       User     @relation(fields: [ownerId], references: [id])
 }
