@@ -7,6 +7,8 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { user } from '../db';
+import { Router } from 'lucide-react';
+import { revalidatePath } from 'next/cache';
 
 export const getUserInformations = createServerAction(
   z.object({}),
@@ -35,7 +37,7 @@ export const updateUserInformations = createServerAction(
         country: input.country,
         city: input.city,
         zipCode: input.zipCode,
-        phone: input.phoneNumber,
+        phoneNumber: input.phoneNumber,
         smsNotifications: input.smsNotifications,
         emailNotifications: input.emailNotifications,
         twoFactorEnabled: input.twoFactorEnabled,

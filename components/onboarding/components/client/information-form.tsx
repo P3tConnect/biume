@@ -253,7 +253,7 @@ const ClientInformationForm = ({
                 </FormLabel>
                 <FormControl>
                   <Input
-                    type='tel'
+                    type='text'
                     placeholder='Numéro de téléphone'
                     {...field}
                     value={field.value ?? ''}

@@ -11,6 +11,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  Button,
 } from '@/components/ui';
 import { Bell, Shield, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -22,11 +23,11 @@ import {
 } from '@/src/actions/user.action';
 import { clientSettingsSchema } from './types/settings-schema';
 import { useActionMutation, useActionQuery } from '@/src/hooks/action-hooks';
-import { useFormChangeToast } from '@/src/hooks/useFormChangeToast';
 import { ProfileForm } from './forms/profile-form';
 import { NotificationsForm } from './forms/notifications-form';
 import { SecurityForm } from './forms/security-form';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const ClientSettingsForm = () => {
   const { data: userInformations, refetch } = useActionQuery(
@@ -66,33 +67,32 @@ const ClientSettingsForm = () => {
 
   const onSubmit = form.handleSubmit(async (data) => {
     await mutateAsync(data);
-  });
-
-  const {} = useFormChangeToast({
-    form,
-    onSubmit,
-    message: 'Informations modifiées',
-    description: 'Vos informations sont en attente de mise à jour',
-    position: 'bottom-center',
+    await refetch();
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className='mx-auto'>
+      <form onSubmit={onSubmit} className='mx-auto space-y-4'>
         <Tabs defaultValue='profile' className='space-y-4'>
           <TabsList>
-            <TabsTrigger value='profile' className='flex items-center gap-2'>
+            <TabsTrigger
+              value='profile'
+              className='bg-primary flex items-center gap-2'
+            >
               <User className='size-4' />
               Profil
             </TabsTrigger>
             <TabsTrigger
               value='notifications'
-              className='flex items-center gap-2'
+              className='bg-primary flex items-center gap-2'
             >
               <Bell className='size-4' />
               Notifications
             </TabsTrigger>
-            <TabsTrigger value='security' className='flex items-center gap-2'>
+            <TabsTrigger
+              value='security'
+              className='bg-primary flex items-center gap-2'
+            >
               <Shield className='size-4' />
               Sécurité
             </TabsTrigger>
@@ -147,6 +147,12 @@ const ClientSettingsForm = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        <div className='flex justify-end'>
+          <Button type='submit' className='w-full sm:w-auto'>
+            Enregistrer les modifications
+          </Button>
+        </div>
       </form>
     </Form>
   );

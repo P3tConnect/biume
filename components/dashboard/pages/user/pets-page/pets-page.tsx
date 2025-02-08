@@ -13,7 +13,7 @@ const mockPets = [
     breed: 'Maine Coon',
     birthDate: '2020-05-15',
     weight: 6.5,
-    gender: 'female' as const,
+    sexe: 'female' as const,
     image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba',
   },
   {
@@ -23,7 +23,7 @@ const mockPets = [
     breed: 'Golden Retriever',
     birthDate: '2019-03-20',
     weight: 32,
-    gender: 'male' as const,
+    sexe: 'male' as const,
     image: 'https://images.unsplash.com/photo-1552053831-71594a27632d',
   },
   {
@@ -33,7 +33,7 @@ const mockPets = [
     breed: 'Berger Allemand',
     birthDate: '2021-08-10',
     weight: 28,
-    gender: 'male' as const,
+    sexe: 'male' as const,
     image: 'https://images.unsplash.com/photo-1589941013453-ec89f33b5e95',
   },
   {
@@ -43,7 +43,7 @@ const mockPets = [
     breed: 'Siamois',
     birthDate: '2022-01-05',
     weight: 4,
-    gender: 'male' as const,
+    sexe: 'male' as const,
     image: 'https://images.unsplash.com/photo-1513245543132-31f507417b26',
   },
   {
@@ -53,7 +53,7 @@ const mockPets = [
     breed: 'British Shorthair',
     birthDate: '2021-11-30',
     weight: 5,
-    gender: 'female' as const,
+    sexe: 'female' as const,
     image: 'https://images.unsplash.com/photo-1533743983669-94fa5c4338ec',
   },
   {
@@ -63,7 +63,7 @@ const mockPets = [
     breed: 'Labrador',
     birthDate: '2020-09-15',
     weight: 30,
-    gender: 'male' as const,
+    sexe: 'male' as const,
     image: 'https://images.unsplash.com/photo-1605897472359-85e4b94d685d',
   },
 ];

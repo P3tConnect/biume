@@ -1,21 +1,15 @@
 'use client';
 
-import { Card, CardContent, Button, Skeleton, Badge } from '@/components/ui';
-import { cn } from '@/src/lib';
+import { Card, Button, Badge } from '@/components/ui';
+// import { cn } from '@/src/lib';
 import { PawPrint, Pencil, Trash2, Calendar, Weight } from 'lucide-react';
 import { useState } from 'react';
+import { EditPetDialog } from './edit-pet-dialog';
+// import Image from 'next/image';
+import { Pet } from '@/src/db/pets'; // Assurez-vous que ce type existe
 
 interface PetCardProps {
-  pet: {
-    id: string;
-    name: string;
-    image?: string | null;
-    type: string;
-    breed?: string | null;
-    birthDate?: string | null;
-    weight?: number | null;
-    gender?: 'male' | 'female' | null;
-  };
+  pet: Pet;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
@@ -55,24 +49,26 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
       <Card className='group overflow-hidden'>
         <div className='relative h-[280px]'>
           <div className='absolute inset-0'>
-            {pet.image ? (
+            {/* {pet.image ? (
               <>
                 {isImageLoading && <Skeleton className='h-full w-full' />}
-                <img
+                <Image
                   src={pet.image}
                   alt={pet.name}
+                  fill
                   className={cn(
                     'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105',
                     isImageLoading && 'invisible'
                   )}
                   onLoad={() => setIsImageLoading(false)}
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 />
               </>
             ) : (
               <div className='flex h-full items-center justify-center bg-muted'>
                 <PawPrint className='h-24 w-24 text-muted-foreground/20' />
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Overlay avec dégradé */}
@@ -80,16 +76,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
 
           {/* Boutons d'action */}
           <div className='absolute right-4 top-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-            {onEdit && (
-              <Button
-                size='icon'
-                variant='secondary'
-                className='h-8 w-8 rounded-full'
-                onClick={handleEdit}
-              >
-                <Pencil className='h-4 w-4' />
-              </Button>
-            )}
+            {onEdit && <EditPetDialog pet={pet} />}
             {onDelete && (
               <Button
                 size='icon'
@@ -109,31 +96,28 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
                 <Badge variant='secondary' className='bg-white/10 text-white'>
                   {pet.type}
                 </Badge>
-                {pet.gender && (
+                {/* {pet.sexe && (
                   <div
                     className={cn(
                       'flex h-6 w-6 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-base font-semibold',
-                      pet.gender === 'female'
-                        ? 'text-pink-400'
-                        : 'text-blue-400'
+                      pet.sexe === 'female' ? 'text-pink-400' : 'text-blue-400'
                     )}
                   >
-                    {pet.gender === 'female' ? '♀' : '♂'}
+                    {pet.sexe === 'female' ? '♀' : '♂'}
                   </div>
-                )}
+                )} */}
               </div>
               <h3 className='text-2xl font-bold text-white'>{pet.name}</h3>
-              {pet.breed && (
+              {/* {pet.breed && (
                 <p className='text-sm text-white/80'>{pet.breed}</p>
-              )}
+              )} */}
             </div>
 
-            {/* Stats */}
             <div className='grid grid-cols-2 gap-3'>
               {pet.birthDate && (
                 <div className='flex items-center gap-2 rounded-md bg-white/10 px-2.5 py-1.5 text-sm text-white backdrop-blur-sm'>
                   <Calendar className='h-4 w-4' />
-                  <span>{getAge(pet.birthDate)} ans</span>
+                  <span>{getAge(pet.birthDate.toString())} ans</span>
                 </div>
               )}
               {pet.weight && (
