@@ -9,6 +9,11 @@ node_modules/
 .turbo
 **/.turbo
 
+# build tools
+.rollup.cache/
+**/.rollup.cache
+**/rollup-*
+
 # build outputs
 dist/
 **/dist
