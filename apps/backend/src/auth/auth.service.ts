@@ -3,6 +3,7 @@ import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import LoginUserEntity from '../user/entities/login-user.entity';
 import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 import SignupUserEntity from '../user/entities/signup-user.entity';
 
 @Injectable()
@@ -10,6 +11,8 @@ export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUser(createUserEntity: SignupUserEntity): Promise<User> {
+    const salt = crypto.randomBytes(16);
+
     const createdUser = await this.prisma.user.create({
       data: {
         name: createUserEntity.name,
@@ -17,8 +20,8 @@ export class AuthService {
         password: await argon2.hash(createUserEntity.password, {
           hashLength: 32,
           timeCost: 3,
-          salt: Buffer.from('c2Nrhd3P8cLC03B8', 'hex'),
-          memoryCost: 1 << 16,
+          salt: salt,
+          memoryCost: 65536,
           parallelism: 4,
           type: argon2.argon2id,
           version: 0x13,
