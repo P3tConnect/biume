@@ -1,0 +1,9 @@
+
+
+> @monorepo/backend@0.0.1 prebuild /Users/mathieuchambaud/Documents/Perso-Projects/monorepo-biume/apps/backend
+> rimraf dist tsconfig.tsbuildinfo
+
+
+> @monorepo/backend@0.0.1 build /Users/mathieuchambaud/Documents/Perso-Projects/monorepo-biume/apps/backend
+> tsc --build
+
