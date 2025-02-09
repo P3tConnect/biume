@@ -3,6 +3,7 @@ export default class UserEntity {
   email: string;
   password: string;
   emailVerified: Boolean;
+  refreshToken: string;
   image: string;
   phoneNumber: string;
   address: string;

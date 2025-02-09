@@ -11,12 +11,16 @@ export async function action({ request, context }: ActionFunctionArgs) {
   const name = formData.get('name');
   const email = formData.get('email');
   const password = formData.get('password');
+  const sessionToken = crypto.randomUUID();
 
-  const user = await authService.createUser({
-    email: email as string,
-    password: password as string,
-    name: name as string,
-  });
+  const user = await authService.signUp(
+    {
+      email: email as string,
+      password: password as string,
+      name: name as string,
+    },
+    sessionToken
+  );
 
   if (user) {
     return redirect('/');

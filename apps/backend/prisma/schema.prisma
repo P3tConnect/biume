@@ -22,10 +22,10 @@ enum PetType {
 }
 
 model User {
-  id                 String   @id @default(uuid())
+  id                 String    @id @default(uuid())
   name               String
-  email              String   @unique
-  emailVerified      Boolean? @default(false)
+  email              String    @unique
+  emailVerified      Boolean?  @default(false)
   password           String
   refreshToken       String?
   image              String?
@@ -35,16 +35,29 @@ model User {
   zipCode            String?
   country            String?
   twoFactorEnabled   Boolean?
-  isPro              Boolean  @default(false)
-  onBoardingComplete Boolean  @default(false)
-  smsNotifications   Boolean  @default(false)
-  emailNotifications Boolean  @default(false)
+  isPro              Boolean   @default(false)
+  onBoardingComplete Boolean   @default(false)
+  smsNotifications   Boolean   @default(false)
+  emailNotifications Boolean   @default(false)
   stripeId           String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
   Pet                Pet[]
+  Session            Session[]
 
   @@map("user")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  sessionToken String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("session")
 }
 
 model Pet {

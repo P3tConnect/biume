@@ -23,8 +23,11 @@ export class AuthController {
   }
 
   @Post('/signup')
-  signup(@Body() dto: UserEntity): Promise<Tokens> {
-    return this.authService.signUp(dto);
+  signup(
+    @Body() dto: UserEntity,
+    @Body('sessionToken') sessionToken: string,
+  ): Promise<Tokens> {
+    return this.authService.signUp(dto, sessionToken);
   }
 
   @UseGuards(AccessTokenAuthGuard)

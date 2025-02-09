@@ -32,19 +32,32 @@ export class AuthService {
     return tokens;
   }
 
-  async signUp(dto: UserEntity): Promise<Tokens> {
+  async signUp(dto: UserEntity, sessionToken: string): Promise<Tokens> {
     const hash = await this.hashData(dto.password);
+    const sessionHash = await this.hashData(sessionToken);
 
-    const newUser = await this.prisma.user.create({
-      data: {
-        name: dto.name,
-        email: dto.email,
-        password: hash,
-      },
+    const result = await this.prisma.$transaction(async (prisma) => {
+      const newUser = await prisma.user.create({
+        data: {
+          name: dto.name,
+          email: dto.email,
+          password: hash,
+        },
+      });
+
+      await prisma.session.create({
+        data: {
+          userId: newUser.id,
+          sessionToken: sessionHash,
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        },
+      });
+
+      return newUser;
     });
 
-    const tokens = await this.getTokens(newUser.id, newUser.email);
-    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
+    const tokens = await this.getTokens(result.id, result.email);
+    await this.updateRefreshToken(result.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -69,16 +82,27 @@ export class AuthService {
   }
 
   async signOut(userId: string) {
-    await this.prisma.user.updateMany({
-      where: {
-        id: userId,
-        refreshToken: {
-          not: null,
+    const result = await this.prisma.$transaction(async (prisma) => {
+      await this.prisma.user.updateMany({
+        where: {
+          id: userId,
+          refreshToken: {
+            not: null,
+          },
         },
-      },
-      data: {
-        refreshToken: null,
-      },
+        data: {
+          refreshToken: null,
+        },
+      });
+
+      await this.prisma.session.deleteMany({
+        where: {
+          userId: userId,
+          sessionToken: {
+            not: null,
+          },
+        },
+      });
     });
   }
 
