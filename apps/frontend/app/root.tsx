@@ -4,11 +4,23 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData
 } from "@remix-run/react";
 
 import "./global.css";
+import { SidebarProvider } from "./components/ui/sidebar";
+import { TooltipProvider } from "./components/ui/tooltip";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { getSidebarState } from "./server/cookies.server";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const sidebarState = getSidebarState(request);
+  return json({ sidebarState });
+}
 
 export default function App() {
+  const { sidebarState } = useLoaderData<typeof loader>();
+
   return (
     <html lang="fr" className="h-full">
       <head>
@@ -18,7 +30,11 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <TooltipProvider>
+          <SidebarProvider defaultOpen={sidebarState!}>
+            <Outlet />
+          </SidebarProvider>
+        </TooltipProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

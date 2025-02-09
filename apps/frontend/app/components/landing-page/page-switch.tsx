@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate, useLocation } from "@remix-run/react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { PawPrint, Stethoscope } from "lucide-react";
 
 export function PageSwitch() {

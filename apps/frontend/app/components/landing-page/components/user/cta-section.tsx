@@ -1,5 +1,4 @@
-import { Button } from "../../../ui/button";
-import Avvvatars from "avvvatars-react";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, MessageCircle, Star, Calendar } from "lucide-react";
 
 export function CTASection() {

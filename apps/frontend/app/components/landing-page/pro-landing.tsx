@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { HeroSection } from "./components/pro/hero-section";
-import { FeaturesSection } from "./components/pro/features-section";
-import { TestimonialsSection } from "./components/pro/testimonials-section";
-import { PricingSection } from "./components/pro/pricing-section";
-import { CTASection } from "./components/pro/cta-section";
+import { HeroSection } from "@/components/landing-page/components/pro/hero-section";
+import { FeaturesSection } from "@/components/landing-page/components/pro/features-section";
+import { TestimonialsSection } from "@/components/landing-page/components/pro/testimonials-section";
+import { PricingSection } from "@/components/landing-page/components/pro/pricing-section";
+import { CTASection } from "@/components/landing-page/components/pro/cta-section";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },

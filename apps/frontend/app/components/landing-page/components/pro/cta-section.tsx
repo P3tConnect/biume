@@ -1,6 +1,6 @@
-import { Button } from "../../../ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { Input } from "../../../ui/input";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 

@@ -7,7 +7,7 @@
     "**/.server/**/*.tsx",
     "**/.client/**/*.ts",
     "**/.client/**/*.tsx"
-  ],
+, "app/routes/dashboard/._index.tsx"  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@remix-run/node", "vite/client"],
@@ -24,10 +24,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@monorepo/backend": ["../backend/src"],
-      "~/*": ["./app/*"]
+      "@/*": [
+        "./app/*"
+      ]
     },
-
     // Vite takes care of building everything, not tsc.
     "noEmit": true
   }

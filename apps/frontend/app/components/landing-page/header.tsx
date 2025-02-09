@@ -1,5 +1,5 @@
 
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   PawPrint,
   Stethoscope,
@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useSearchParams, NavLink } from "@remix-run/react";
 import { useState } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const [searchParams, setSearchParams] = useSearchParams();

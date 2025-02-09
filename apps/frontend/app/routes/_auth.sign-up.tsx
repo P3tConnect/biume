@@ -1,8 +1,10 @@
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Form, NavLink } from '@remix-run/react';
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import registerImage from '../assets/images/login-image.jpg';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, NavLink } from "@remix-run/react";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import registerImage from "@/assets/images/login-image.jpg";
+import googleIcon from "@/assets/svg/google-icon.svg";
+import facebookIcon from "@/assets/svg/facebook-icon.svg";
 
 export async function action({ request, context }: ActionFunctionArgs) {
   const { authService } = context;
@@ -25,9 +27,9 @@ export async function action({ request, context }: ActionFunctionArgs) {
   return null;
 }
 
-const LoginPage = () => {
+const SignUpPage = () => {
   return (
-    <div className='w-screen flex items-center justify-between max-h-screen m-5'>
+    <div className='w-screen flex items-center justify-between max-h-screen p-5'>
       <div className='flex flex-col items-center justify-center w-1/2 space-y-4'>
         <h1 className='text-4xl font-bold text-primary'>Connexion</h1>
         <p className='text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14'>
@@ -36,7 +38,7 @@ const LoginPage = () => {
         </p>
         <Form
           method='post'
-          className='flex flex-col items-center justify-center w-1/2 space-y-4'
+          className='flex flex-col items-center justify-center w-3/4 space-y-4'
         >
           <Input
             className='w-full rounded-3xl'
@@ -70,33 +72,33 @@ const LoginPage = () => {
             variant='outline'
           >
             <img
-              src={'/assets/svg/facebook-icon.svg'}
+              src={facebookIcon}
               width={20}
               height={20}
               alt='facebook icon'
             />
-            <p className='text-muted-foreground'>Se connecter avec Facebook</p>
+            <p className='text-muted-foreground'>S'inscrire avec Facebook</p>
           </Button>
           <Button
             className='w-full h-10 rounded-3xl flex items-center justify-center gap-2'
             variant='outline'
           >
             <img
-              src={'/assets/svg/google-icon.svg'}
+              src={googleIcon}
               width={20}
               height={20}
               alt='google icon'
             />
-            <p className='text-muted-foreground'>Se connecter avec Google</p>
+            <p className='text-muted-foreground'>S'inscrire avec Google</p>
           </Button>
 
           <p className='text-sm font-normal pt-5'>
-            Vous n'avez pas encore de compte ?{' '}
+            Vous avez déjà un compte ?{' '}
             <NavLink
-              to='/sign-up'
+              to='/sign-in'
               className='dark:text-blue-300 text-blue-600 hover:cursor-pointer'
             >
-              Inscrivez vous !
+              Connectez vous !
             </NavLink>
           </p>
         </Form>
@@ -114,4 +116,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;

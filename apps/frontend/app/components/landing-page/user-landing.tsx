@@ -1,8 +1,8 @@
-import { HeroSection } from "./components/user/hero-section";
-import { FeaturesSection } from "./components/user/features-section";
-import { TestimonialsSection } from "./components/user/testimonials-section";
-import { PetsGallerySection } from "./components/user/pets-gallery-section";
-import { CTASection } from "./components/user/cta-section";
+import { HeroSection } from "@/components/landing-page/components/user/hero-section";
+import { FeaturesSection } from "@/components/landing-page/components/user/features-section";
+import { TestimonialsSection } from "@/components/landing-page/components/user/testimonials-section";
+import { PetsGallerySection } from "@/components/landing-page/components/user/pets-gallery-section";
+import { CTASection } from "@/components/landing-page/components/user/cta-section";
 
 export function UserLanding() {
   return (

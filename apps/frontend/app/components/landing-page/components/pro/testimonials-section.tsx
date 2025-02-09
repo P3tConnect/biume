@@ -1,5 +1,4 @@
 import { Star } from "lucide-react";
-import Avvvatars from "avvvatars-react";
 import { testimonials } from "./data";
 
 export function TestimonialsSection() {
