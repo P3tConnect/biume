@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { receiptProduct } from "./receiptProducts";
 import { createInsertSchema } from "drizzle-zod";
@@ -27,7 +27,11 @@ export const receiptRelations = relations(receipt, ({ one, many }) => ({
   categories: many(receiptCategory),
 }));
 
-export type Receipt = typeof receipt.$inferSelect;
+export type Receipt = InferSelectModel<typeof receipt> & {
+  products: InferSelectModel<typeof receiptProduct>[];
+  organization: InferSelectModel<typeof organization>;
+  categories: InferSelectModel<typeof receiptCategory>[];
+};
 export type CreateReceipt = typeof receipt.$inferInsert;
 
 export const CreateReceiptSchema = createInsertSchema(receipt);

@@ -15,13 +15,26 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Eye, FilePenLine, Plus, Search, Table as TableIcon } from "lucide-react";
+import {
+  Eye,
+  FilePenLine,
+  Plus,
+  Search,
+  Table as TableIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { CreateObservationDialog } from "./create-observation-dialog";
+import ObservationDetailsDrawer from "./observation-details-drawer";
 
 interface Observation {
   id: string;
@@ -97,14 +110,21 @@ function useMockObservations(filter: "all" | "pending" | "completed" = "all") {
 
 export default function ObservationsPageComponent() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">(
+    "all",
+  );
   const { data: observations, isLoading } = useMockObservations(activeTab);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedObservation, setSelectedObservation] =
+    useState<Observation | null>(null);
 
-  const filteredObservations = observations?.filter((obs) =>
-    obs.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    obs.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    obs.session?.patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredObservations = observations?.filter(
+    (obs) =>
+      obs.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      obs.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      obs.session?.patient.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -147,11 +167,23 @@ export default function ObservationsPageComponent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <CardTitle>Liste des observations</CardTitle>
-              <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="ml-6">
+              <Tabs
+                value={activeTab}
+                onValueChange={(value) =>
+                  setActiveTab(value as typeof activeTab)
+                }
+                className="ml-6"
+              >
                 <TabsList className="grid w-full grid-cols-3 h-9">
-                  <TabsTrigger value="all" className="text-xs">Toutes</TabsTrigger>
-                  <TabsTrigger value="pending" className="text-xs">En cours</TabsTrigger>
-                  <TabsTrigger value="completed" className="text-xs">Terminées</TabsTrigger>
+                  <TabsTrigger value="all" className="text-xs">
+                    Toutes
+                  </TabsTrigger>
+                  <TabsTrigger value="pending" className="text-xs">
+                    En cours
+                  </TabsTrigger>
+                  <TabsTrigger value="completed" className="text-xs">
+                    Terminées
+                  </TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -214,56 +246,37 @@ export default function ObservationsPageComponent() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {format(new Date(observation.createdAt), "d MMMM yyyy", {
-                          locale: fr,
-                        })}
+                        {format(
+                          new Date(observation.createdAt),
+                          "d MMMM yyyy",
+                          {
+                            locale: fr,
+                          },
+                        )}
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant={observation.updatedAt ? "secondary" : "default"}
-                          className={observation.updatedAt
-                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                            : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"}
+                          variant={
+                            observation.updatedAt ? "secondary" : "default"
+                          }
+                          className={
+                            observation.updatedAt
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                              : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                          }
                         >
                           {observation.updatedAt ? "Terminée" : "En cours"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="hover:bg-secondary/30">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>{observation.title}</DialogTitle>
-                            </DialogHeader>
-                            <div className="mt-4 space-y-4">
-                              <div>
-                                <h4 className="font-medium mb-2">Patient</h4>
-                                <p>{observation.session?.patient.name} ({observation.session?.patient.species})</p>
-                              </div>
-                              <div>
-                                <h4 className="font-medium mb-2">Contenu</h4>
-                                <p className="text-muted-foreground">{observation.content}</p>
-                              </div>
-                              <div>
-                                <h4 className="font-medium mb-2">Dates</h4>
-                                <div className="space-y-1">
-                                  <p className="text-sm">
-                                    Créée le: {format(new Date(observation.createdAt), "d MMMM yyyy", { locale: fr })}
-                                  </p>
-                                  {observation.updatedAt && (
-                                    <p className="text-sm">
-                                      Mise à jour le: {format(new Date(observation.updatedAt), "d MMMM yyyy", { locale: fr })}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="hover:bg-secondary/30"
+                          onClick={() => setSelectedObservation(observation)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -278,6 +291,21 @@ export default function ObservationsPageComponent() {
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <CreateObservationDialog onClose={() => setIsCreateDialogOpen(false)} />
       </Dialog>
+
+      {/* Observation Details Drawer */}
+      <ObservationDetailsDrawer
+        observation={selectedObservation}
+        isOpen={!!selectedObservation}
+        onClose={() => setSelectedObservation(null)}
+        onEdit={(observation) => {
+          // TODO: Implement edit functionality
+          console.log("Edit observation:", observation);
+        }}
+        onDelete={(observation) => {
+          // TODO: Implement delete functionality
+          console.log("Delete observation:", observation);
+        }}
+      />
     </div>
   );
 }

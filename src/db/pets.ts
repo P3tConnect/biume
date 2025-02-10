@@ -1,6 +1,6 @@
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { proSession } from "./pro_session";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { appointments } from "./appointments";
 import { createInsertSchema } from "drizzle-zod";
 import { petsDeseases } from "./petsDeseases";
 import { z } from "zod";
@@ -37,7 +37,7 @@ export const pets = pgTable("pets", {
 });
 
 export const petsRelations = relations(pets, ({ one, many }) => ({
-  sessions: many(proSession),
+  appointments: many(appointments),
   deseases: many(petsDeseases),
   allergies: many(petsAllergies),
   intolerences: many(petsIntolerences),
@@ -47,7 +47,12 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
   }),
 }));
 
-export type Pet = typeof pets.$inferSelect;
+export type Pet = InferSelectModel<typeof pets> & {
+  owner: InferSelectModel<typeof user>;
+  deseases: InferSelectModel<typeof petsDeseases>[];
+  allergies: InferSelectModel<typeof petsAllergies>[];
+  intolerences: InferSelectModel<typeof petsIntolerences>[];
+};
 export type CreatePet = typeof pets.$inferInsert;
 export const PetTypeEnum = z.enum(petType.enumValues);
 

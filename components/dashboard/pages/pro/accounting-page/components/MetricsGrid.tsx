@@ -3,7 +3,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, PieChart, FileText } from "lucide-react";
-import CountAnimation from "@/components/magicui/count-animation";
+import { CountAnimation } from "@/components/count-animation";
 
 interface MetricsGridProps {
   data: {
@@ -29,7 +29,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold text-green-700 dark:text-green-400">
-              <CountAnimation number={data.revenue} />€
+              <CountAnimation value={data.revenue} />€
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+12.5%</span> vs dernier mois
@@ -48,7 +48,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold text-red-700 dark:text-red-400">
-              <CountAnimation number={data.expenses} />€
+              <CountAnimation value={data.expenses} />€
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-red-600">-8.3%</span> vs dernier mois
@@ -67,7 +67,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold text-blue-700 dark:text-blue-400">
-              <CountAnimation number={data.profit} />€
+              <CountAnimation value={data.profit} />€
             </div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+15.2%</span> vs dernier mois
@@ -86,7 +86,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="text-3xl font-bold text-orange-700 dark:text-orange-400">
-              <CountAnimation number={data.unpaidInvoices} />€
+              <CountAnimation value={data.unpaidInvoices} />€
             </div>
             <p className="text-xs text-muted-foreground">
               4 factures en attente

@@ -15,6 +15,7 @@ import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
   const router = useRouter();
+  ("");
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),

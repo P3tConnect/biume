@@ -15,7 +15,12 @@ import { proMenuList } from "@/src/config";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import Link from "next/link";
 
 const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
   const pathname = usePathname();
@@ -37,13 +42,22 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
               {menus.map(({ active, href, icon: Icon, label, submenus }) => (
                 <div key={label}>
                   {submenus && submenus.length > 0 ? (
-                    <Collapsible asChild key={label} className="group/collapsible">
+                    <Collapsible
+                      asChild
+                      key={label}
+                      className="group/collapsible"
+                      defaultOpen={true}
+                    >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
-                          <SidebarMenuButton tooltip={t(label)} isActive={active}>
+                          <SidebarMenuButton
+                            tooltip={t(label)}
+                            isActive={active}
+                          >
                             <Icon />
                             <span>{t(label)}</span>
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />                          </SidebarMenuButton>
+                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          </SidebarMenuButton>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
@@ -54,10 +68,10 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                                   isActive={submenu.active}
                                   asChild
                                 >
-                                  <a href={submenu.href}>
-                                    <submenu.icon className="h-4 w-4 shrink-0 stroke-[1]" />
+                                  <Link href={submenu.href}>
+                                    <submenu.icon className="h-4 w-4 shrink-0 stroke-[2]" />
                                     <span>{t(submenu.label)}</span>
-                                  </a>
+                                  </Link>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -72,10 +86,10 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                         asChild
                         isActive={active}
                       >
-                        <a href={href}>
+                        <Link href={href}>
                           <Icon />
                           <span>{t(label)}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )}
@@ -83,7 +97,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup >
+        </SidebarGroup>
       ))}
     </>
   );

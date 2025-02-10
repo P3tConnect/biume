@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { askEstimate } from "./ask_estimate";
 import { options } from "./options";
@@ -27,7 +27,10 @@ export const askEstimateOptionsRelations = relations(
   }),
 );
 
-export type AskEstimateOption = typeof askEstimateOptions.$inferSelect;
+export type AskEstimateOption = InferSelectModel<typeof askEstimateOptions> & {
+  askEstimate: InferSelectModel<typeof askEstimate>;
+  option: InferSelectModel<typeof options>;
+};
 export type CreateAskEstimateOption = typeof askEstimateOptions.$inferInsert;
 
 export const CreateAskEstimateOptionSchema =

@@ -1,23 +1,50 @@
 "use server";
 
-import { clientAction, db } from "../lib";
-import { CreateUserSchema, user } from "../db";
-import { ZSAError } from "zsa";
-import { eq } from "drizzle-orm";
+import { ActionError, createServerAction, db, requireAuth } from "../lib";
+import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema";
+import { auth } from "../lib/auth";
+import { headers } from "next/headers";
+import { z } from "zod";
 
-export const updateUser = clientAction
-  .input(CreateUserSchema)
-  .handler(async ({ input }) => {
-    const data = await db
-      .update(user)
-      .set(input)
-      .where(eq(user.id, input.id as string))
-      .returning()
-      .execute();
+export const getUserInformations = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const data = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!data) {
-      throw new ZSAError("ERROR", "User not updated");
+      throw new ActionError("User not found");
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
+export const updateUserInformations = createServerAction(
+  clientSettingsSchema,
+  async (input, ctx) => {
+    const user = await auth.api.updateUser({
+      headers: await headers(),
+      body: {
+        name: input.name,
+        image: input.image,
+        address: input.address,
+        country: input.country,
+        city: input.city,
+        zipCode: input.zipCode,
+        phone: input.phoneNumber,
+        smsNotifications: input.smsNotifications,
+        emailNotifications: input.emailNotifications,
+        twoFactorEnabled: input.twoFactorEnabled,
+      },
+    });
+
+    if (!user) {
+      throw new ActionError("User not updated");
+    }
+
+    return user;
+  },
+  [requireAuth],
+);

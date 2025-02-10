@@ -1,7 +1,7 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { receipt } from "./receipts";
 import { category } from "./category";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 export const receiptCategory = pgTable("receipt_category", {
@@ -27,7 +27,10 @@ export const receiptCategoryRelations = relations(
   }),
 );
 
-export type ReceiptCategory = typeof receiptCategory.$inferSelect;
+export type ReceiptCategory = InferSelectModel<typeof receiptCategory> & {
+  receipt: InferSelectModel<typeof receipt>;
+  category: InferSelectModel<typeof category>;
+};
 export type CreateReceiptCategory = typeof receiptCategory.$inferInsert;
 
 export const CreateReceiptCategorySchema = createInsertSchema(receiptCategory);

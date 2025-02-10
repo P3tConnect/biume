@@ -19,6 +19,8 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
+import { getUserInformations } from "@/src/actions/user.action";
+import { useActionQuery } from "@/src/hooks/action-hooks";
 import { cn } from "@/src/lib";
 import { signOut, useSession } from "@/src/lib/auth-client";
 import Avvvatars from "avvvatars-react";
@@ -31,12 +33,17 @@ import {
   Sparkles,
   User2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = useActionQuery(
+    getUserInformations,
+    {},
+    "user-informations",
+  );
   const [open, setOpen] = useState(false);
 
   return (
@@ -146,19 +153,26 @@ const SidebarClientFooterComponent = () => {
                   <CreditCard size={14} />
                   Billing
                 </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <Settings size={14} />
-                  Settings
-                </DropdownMenuItem>
+                <Link href={`/dashboard/user/${session?.user.id}/settings`}>
+                  <DropdownMenuItem className="gap-2">
+                    <Settings size={14} />
+                    Settings
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2" onClick={async () => await signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    router.push("/sign-in")
-                  }
+              <DropdownMenuItem
+                className="gap-2"
+                onClick={async () =>
+                  await signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        router.push("/sign-in");
+                      },
+                    },
+                  })
                 }
-              })}>
+              >
                 <LogOut size={14} />
                 Log out
               </DropdownMenuItem>

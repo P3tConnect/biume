@@ -11,6 +11,7 @@ import {
 } from "@/components/dashboard/pages/pro/timetable-page/appointment-form";
 import Calendar from "@/components/dashboard/pages/pro/timetable-page/calendar";
 import { cn } from "@/src/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Données temporaires pour la démonstration
 const mockAppointments = [
@@ -44,7 +45,8 @@ const mockAppointments = [
 const DashboardOrganizationTimetablePage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingAppointment, setEditingAppointment] = useState<AppointmentFormData | null>(null);
+  const [editingAppointment, setEditingAppointment] =
+    useState<AppointmentFormData | null>(null);
   const [view, setView] = useState<"calendar" | "list">("calendar");
 
   const handleAddAppointment = (data: AppointmentFormData) => {
@@ -89,7 +91,7 @@ const DashboardOrganizationTimetablePage = () => {
                     onClick={() => setView("calendar")}
                     className={cn(
                       "h-8 rounded-md transition-colors",
-                      view === "calendar" && "bg-background shadow-sm"
+                      view === "calendar" && "bg-background shadow-sm",
                     )}
                   >
                     <CalendarIcon className="h-4 w-4 mr-2" />
@@ -101,7 +103,7 @@ const DashboardOrganizationTimetablePage = () => {
                     onClick={() => setView("list")}
                     className={cn(
                       "h-8 rounded-md transition-colors",
-                      view === "list" && "bg-background shadow-sm"
+                      view === "list" && "bg-background shadow-sm",
                     )}
                   >
                     <List className="h-4 w-4 mr-2" />
@@ -124,29 +126,19 @@ const DashboardOrganizationTimetablePage = () => {
       {/* Content */}
       <div className="flex-1 overflow-hidden pb-4">
         {view === "calendar" ? (
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4 h-full">
-            <Card className="rounded-xl overflow-hidden">
-              <div className="h-full">
-                <Suspense fallback={<div className="p-8 text-center">Chargement du calendrier...</div>}>
-                  <Calendar />
-                </Suspense>
-              </div>
-            </Card>
-
-            <Card className="rounded-xl overflow-hidden">
-              <div className="p-3 border-b">
-                <h2 className="font-medium">
-                  Rendez-vous du {selectedDate.toLocaleDateString("fr-FR")}
-                </h2>
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <DailyAppointments
-                  appointments={dailyAppointments}
-                  selectedDate={selectedDate}
-                />
-              </div>
-            </Card>
-          </div>
+          <Card className="rounded-xl overflow-hidden h-full">
+            <div className="h-full">
+              <Suspense
+                fallback={
+                  <div className="p-8 text-center">
+                    Chargement du calendrier...
+                  </div>
+                }
+              >
+                <Calendar />
+              </Suspense>
+            </div>
+          </Card>
         ) : (
           <Card className="rounded-xl h-full">
             <div className="p-4">

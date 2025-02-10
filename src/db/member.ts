@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { organization } from "./organization";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { user } from "./user";
 
 export const member = pgTable("members", {
@@ -8,7 +8,9 @@ export const member = pgTable("members", {
   organizationId: text("organizationId")
     .notNull()
     .references(() => organization.id),
-  userId: text("userId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id),
   role: text("role").notNull(),
   createdAt: timestamp("createdAt").notNull(),
 });
@@ -23,3 +25,8 @@ export const memberRelations = relations(member, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export type Member = InferSelectModel<typeof member> & {
+  organization: InferSelectModel<typeof organization>;
+  user: InferSelectModel<typeof user>;
+};

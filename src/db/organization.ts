@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { organizationDocuments } from "./organizationDocuments";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { reportTemplate } from "./report_template";
 import { progression } from "./progression";
 import { cancelPolicies } from "./cancelPolicies";
@@ -28,12 +28,25 @@ import { transaction } from "./transaction";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { proSession } from "./pro_session";
 import { invitation } from "./invitation";
+import { appointments } from "./appointments";
+import { user } from "./user";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
+export const companyType = pgEnum("companyType", [
+  "NONE",
+  "AUTO-ENTREPRENEUR",
+  "SARL",
+  "SAS",
+  "EIRL",
+  "SASU",
+  "EURL",
+  "OTHER",
+]);
+
 export const PlanEnum = z.enum(plan.enumValues);
+export const CompanyTypeEnum = z.enum(companyType.enumValues);
 
 export const organization = pgTable("organizations", {
   id: text("id").primaryKey(),
@@ -43,12 +56,14 @@ export const organization = pgTable("organizations", {
   coverImage: text("coverImage"),
   description: text("description"),
   createdAt: timestamp("createdAt").notNull(),
+  verified: boolean("verified").notNull().default(false),
   metadata: text("metadata"),
   stripeId: text("stripeId"),
   onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
   openAt: date("openAt"),
   closeAt: date("closeAt"),
   email: text("email").unique(),
+  companyType: companyType("companyType").default("NONE"),
   atHome: boolean("atHome").notNull().default(false),
   plan: plan("plan").default("NONE"),
   progressionId: text("progressionId").references(() => progression.id, {
@@ -74,7 +89,7 @@ export const organizationRelations = relations(
       references: [progression.id],
     }),
     documents: many(organizationDocuments),
-    sessions: many(proSession),
+    appointments: many(appointments),
     cancelPolicies: many(cancelPolicies),
     projects: many(project),
     tasks: many(task),
@@ -97,7 +112,17 @@ export const organizationRelations = relations(
   }),
 );
 
-export type Organization = typeof organization.$inferSelect;
+export type Organization = InferSelectModel<typeof organization> & {
+  address: typeof organizationAddress.$inferSelect;
+  ratings: (typeof ratings.$inferSelect)[];
+  services: (typeof service.$inferSelect)[];
+  options: (typeof options.$inferSelect)[];
+  categories: (typeof category.$inferSelect)[];
+  topics: (typeof topic.$inferSelect)[];
+  products: (typeof product.$inferSelect)[];
+  newslettersWritter: (typeof newsletter.$inferSelect)[];
+  receipts: (typeof receipt.$inferSelect)[];
+};
 export type CreateOrganization = typeof organization.$inferInsert;
 
 export const OrganizationSchema = createSelectSchema(organization);

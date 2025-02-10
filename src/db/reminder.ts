@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { organization } from "./organization";
@@ -48,7 +48,10 @@ export const reminderRelations = relations(reminder, ({ one }) => ({
   }),
 }));
 
-export type Reminder = typeof reminder.$inferSelect;
+export type Reminder = InferSelectModel<typeof reminder> & {
+  organization: InferSelectModel<typeof organization>;
+  user: InferSelectModel<typeof user>;
+};
 export type CreateReminder = typeof reminder.$inferInsert;
 
 export const ReminderSchema = createSelectSchema(reminder);

@@ -17,10 +17,9 @@ import { UseFormReturn } from 'react-hook-form';
 import { useState } from 'react';
 import { z } from 'zod';
 import { clientOnBoardingSchema } from '../stepper-client';
-import { useServerActionMutation } from '@/src/hooks';
-import { toast } from 'sonner';
 import Image from 'next/image';
 import { cn } from '@/src/lib';
+import { toast } from 'sonner';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -134,10 +133,9 @@ const ClientInformationForm = ({
           ) : (
             <div className='flex flex-col items-center gap-4'>
               <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                <Image
+                <img
                   src={form.getValues('image') ?? ''}
                   alt='logo'
-                  fill
                   className='object-cover'
                 />
                 <div className='absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'>

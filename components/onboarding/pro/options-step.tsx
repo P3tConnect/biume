@@ -1,13 +1,7 @@
-import React from 'react'
-import OptionsForm from '../components/pro/options-form'
-import { UseFormReturn } from 'react-hook-form'
-import { z } from 'zod'
-import { onboardingSchema } from '../components/stepper'
+import OptionsForm from "../components/pro/options-form";
 
-const ProOptionsStep = ({ form }: { form: UseFormReturn<z.infer<typeof onboardingSchema>> }) => {
-  return (
-    <OptionsForm form={form} />
-  )
-}
+const ProOptionsStep = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
+  return <OptionsForm nextStep={nextStep} previousStep={previousStep} />;
+};
 
 export default ProOptionsStep

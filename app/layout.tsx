@@ -13,7 +13,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-
+import { NuqsAdapter } from "nuqs/adapters/next";
 const geist = GeistSans;
 
 export async function generateMetadata({
@@ -25,37 +25,37 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale: locale, namespace: "metadata" });
   return {
-    title: "PawThera",
+    title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
       icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
-      title: "PawThera",
+      title: "Biume",
     },
     openGraph: {
       type: "website",
       locale: locale,
-      url: "https://pawthera.com",
+      url: "https://biume.com",
       description: t("description"),
-      siteName: "PawThera",
+      siteName: "Biume",
       images: [
         {
           url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
           width: 1200,
           height: 630,
-          alt: "PawThera",
+          alt: "Biume",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "PawThera",
+      title: "Biume",
       description: t("description"),
       images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
     },
-    applicationName: "PawThera",
+    applicationName: "Biume",
     authors: [
       {
         name: "Mathieu Chambaud",
@@ -115,7 +115,7 @@ export default async function RootLayout({
                 <NextSSRPlugin
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />
-                {children}
+                <NuqsAdapter>{children}</NuqsAdapter>
               </div>
               <TailwindIndicator />
             </SidebarProvider>

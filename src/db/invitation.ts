@@ -1,16 +1,20 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { organization } from "./organization";
 import { user } from "./user";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 
 export const invitation = pgTable("invitations", {
   id: text("id").primaryKey(),
-	organizationId: text('organizationId').notNull().references(()=> organization.id),
-  email: text('email').notNull(),
-  role: text('role'),
-  status: text('status').notNull(),
-  expiresAt: timestamp('expiresAt').notNull(),
-  inviterId: text('inviterId').notNull().references(()=> user.id)
+  organizationId: text("organizationId")
+    .notNull()
+    .references(() => organization.id),
+  email: text("email").notNull(),
+  role: text("role"),
+  status: text("status").notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  inviterId: text("inviterId")
+    .notNull()
+    .references(() => user.id),
 });
 
 export const invitationRelations = relations(invitation, ({ one }) => ({
@@ -23,3 +27,8 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export type Invitation = InferSelectModel<typeof invitation> & {
+  organization: InferSelectModel<typeof organization>;
+  inviter: InferSelectModel<typeof user>;
+};
