@@ -24,7 +24,13 @@ import { useActionMutation } from "@/src/hooks/action-hooks";
 import { DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/src/lib/utils";
 
-const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) => {
+const ServicesForm = ({
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const form = useForm<z.infer<typeof proServicesSchema>>({
     resolver: zodResolver(proServicesSchema),
     defaultValues: {
@@ -85,7 +91,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                 className={cn(
                   "group relative rounded-2xl border bg-card transition-all duration-300",
                   "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-                  "dark:bg-gray-950/50 dark:backdrop-blur-xl"
+                  "dark:bg-gray-950/50 dark:backdrop-blur-xl",
                 )}
               >
                 <FormField
@@ -184,12 +190,16 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                                 value={field.value ?? ""}
                                 onChange={(e) =>
                                   field.onChange(
-                                    e.target.value ? parseFloat(e.target.value) : null
+                                    e.target.value
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   )
                                 }
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">min</span>
+                            <span className="text-sm text-gray-500 mr-1">
+                              min
+                            </span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -212,12 +222,16 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                                 value={field.value ?? ""}
                                 onChange={(e) =>
                                   field.onChange(
-                                    e.target.value ? parseFloat(e.target.value) : null
+                                    e.target.value
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   )
                                 }
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">€</span>
+                            <span className="text-sm text-gray-500 mr-1">
+                              €
+                            </span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -256,7 +270,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                   "flex flex-col items-center justify-center gap-4 p-8",
                   "rounded-2xl border-2 border-dashed",
                   "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200"
+                  "transition-colors duration-200",
                 )}
               >
                 <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -278,7 +292,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
               Précédent
             </Button>
             <Button
-              type="submit"
+              onClick={nextStep}
               className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
             >
               Suivant

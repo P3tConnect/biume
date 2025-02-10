@@ -94,7 +94,11 @@ export const organizationFormSchema = z.object({
 });
 
 export const ProfileSection = () => {
-  const { data: org } = useActionQuery(getCurrentOrganization, {});
+  const { data: org } = useActionQuery(
+    getCurrentOrganization,
+    {},
+    "organization-informations",
+  );
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     org?.logo || null,
   );

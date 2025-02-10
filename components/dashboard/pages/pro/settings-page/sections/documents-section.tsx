@@ -40,12 +40,16 @@ const documentsSchema = z.object({
 });
 
 export const DocumentsSection = () => {
-  const { data, refetch, isLoading } = useActionQuery(getCompanyDocuments, {});
+  const { data, refetch, isLoading } = useActionQuery(
+    getCompanyDocuments,
+    {},
+    "company-documents",
+  );
 
   const form = useForm<z.infer<typeof documentsSchema>>({
     resolver: zodResolver(documentsSchema),
     defaultValues: {
-      documents: data?.map(document => document.file) || [],
+      documents: data?.map((document) => document.file) || [],
       siren: "",
       siret: "",
     },
@@ -131,4 +135,4 @@ export const DocumentsSection = () => {
       </Form>
     </Card>
   );
-}; 
+};

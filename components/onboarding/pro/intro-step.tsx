@@ -5,16 +5,22 @@ import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui";
 import { motion } from "framer-motion";
 
-const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, nextStep: () => void }) => {
+const IntroStep = ({
+  skipOnboarding,
+  nextStep,
+}: {
+  skipOnboarding: () => void;
+  nextStep: () => void;
+}) => {
   return (
-    <div className="w-full h-full relative bg-background">
-      <div className="relative w-full h-full flex flex-col items-center justify-center px-8">
+    <div className="w-full relative bg-background">
+      <div className="relative w-full flex flex-col items-center justify-between h-[600px] px-6 py-4">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-center space-y-4 max-w-2xl"
+          className="text-center space-y-3 max-w-2xl"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -67,14 +73,14 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="w-full mt-6 flex gap-6"
+          className="w-full flex-1 flex gap-4 items-center my-4"
         >
           <div className="flex-1">
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.25, duration: 0.3 }}
-              className="relative aspect-[16/10] rounded-xl overflow-hidden shadow-xl"
+              className="relative aspect-[16/10] rounded-lg overflow-hidden shadow-lg"
             >
               <Image
                 src="/assets/images/login-image.jpg"
@@ -88,7 +94,7 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
           </div>
 
           <div className="flex-1 flex flex-col justify-center">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {[
                 "Gestion des rendez-vous",
                 "Facturation simplifiée",
@@ -100,7 +106,7 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + index * 0.05, duration: 0.2 }}
-                  className="group flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border hover:bg-muted/70 transition-colors"
+                  className="group flex items-center gap-1.5 p-1.5 rounded-lg bg-muted/50 border border-border hover:bg-muted/70 transition-colors"
                 >
                   <div className="flex-shrink-0 h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Check size={12} className="text-primary" />
@@ -117,7 +123,7 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.3 }}
-          className="flex items-center gap-3 mt-6"
+          className="flex items-center gap-3"
         >
           <Button
             variant="outline"
@@ -132,7 +138,10 @@ const IntroStep = ({ skipOnboarding, nextStep }: { skipOnboarding: () => void, n
             onClick={nextStep}
           >
             Commencer
-            <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={14}
+              className="ml-2 group-hover:translate-x-1 transition-transform"
+            />
           </Button>
           <Button
             variant="ghost"

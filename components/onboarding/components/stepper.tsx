@@ -30,7 +30,15 @@ import { SubscriptionStep } from "../pro/subscription-step";
 import { generateMigrationName } from "@/src/lib/business-names";
 
 const Stepper = () => {
-  const { next, prev, current, goTo, all, isLast, switch: switchStep } = useStepper();
+  const {
+    next,
+    prev,
+    current,
+    goTo,
+    all,
+    isLast,
+    switch: switchStep,
+  } = useStepper();
   const currentStep = utils.getIndex(current.id);
   const { data: session } = useSession();
 
@@ -68,7 +76,7 @@ const Stepper = () => {
         name: result.data?.name!,
         metadata: {
           organizationId: result.data?.id!,
-        }
+        },
       });
       await db
         .update(organizationTable)
@@ -98,7 +106,7 @@ const Stepper = () => {
   };
 
   return (
-    <DialogContent className="w-[1000px]">
+    <DialogContent className="w-[1200px]">
       <DialogHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
@@ -106,25 +114,35 @@ const Stepper = () => {
           isLast={isLast}
         />
         <div className="space-y-1 flex flex-col">
-          <DialogTitle className="text-xl font-bold">{current.title}</DialogTitle>
-          <DialogDescription className="text-muted-foreground text-md">{current.description}</DialogDescription>
+          <DialogTitle className="text-xl font-bold">
+            {current.title}
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground text-md">
+            {current.description}
+          </DialogDescription>
         </div>
       </DialogHeader>
 
-      <div className="h-[500px] overflow-y-auto">
+      <div className="h-[700px] overflow-y-auto">
         {switchStep({
-          start: () => <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />,
-          informations: () => <ProInformationsStep nextStep={next} previousStep={prev} />,
-          services: () => <ProServicesStep nextStep={next} previousStep={prev} />,
+          start: () => (
+            <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />
+          ),
+          informations: () => (
+            <ProInformationsStep nextStep={next} previousStep={prev} />
+          ),
+          services: () => (
+            <ProServicesStep nextStep={next} previousStep={prev} />
+          ),
           options: () => <ProOptionsStep nextStep={next} previousStep={prev} />,
-          documents: () => <ProDocumentsStep nextStep={next} previousStep={prev} />,
+          documents: () => (
+            <ProDocumentsStep nextStep={next} previousStep={prev} />
+          ),
           subscription: () => <SubscriptionStep />,
         })}
       </div>
     </DialogContent>
   );
 };
-
-
 
 export default Stepper;

@@ -26,21 +26,26 @@ const optionsSchema = z.object({
       title: z.string().min(1, "Le titre est requis"),
       description: z.string().min(1, "La description est requise"),
       price: z.number().min(0, "Le prix est requis"),
-    })
+    }),
   ),
 });
 
 export const OptionsSection = () => {
-  const { data, refetch, isLoading } = useActionQuery(getOptionsFromOrganization, {});
+  const { data, refetch, isLoading } = useActionQuery(
+    getOptionsFromOrganization,
+    {},
+    "options",
+  );
 
   const form = useForm<z.infer<typeof optionsSchema>>({
     resolver: zodResolver(optionsSchema),
     defaultValues: {
-      options: data?.map(option => ({
-        title: option.title,
-        description: option.description || "",
-        price: option.price,
-      })) || [],
+      options:
+        data?.map((option) => ({
+          title: option.title,
+          description: option.description || "",
+          price: option.price,
+        })) || [],
     },
   });
 
@@ -88,7 +93,7 @@ export const OptionsSection = () => {
                     "group relative rounded-2xl border bg-card p-6 space-y-6",
                     "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
                     "dark:bg-gray-950/50 dark:backdrop-blur-xl",
-                    "transition-all duration-300"
+                    "transition-all duration-300",
                   )}
                 >
                   <div className="space-y-4">
@@ -181,7 +186,7 @@ export const OptionsSection = () => {
                     "flex flex-col items-center justify-center gap-4 p-8",
                     "rounded-2xl border-2 border-dashed",
                     "text-gray-500 hover:text-primary hover:border-primary",
-                    "transition-colors duration-200"
+                    "transition-colors duration-200",
                   )}
                 >
                   <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -200,4 +205,4 @@ export const OptionsSection = () => {
       </Form>
     </Card>
   );
-}; 
+};

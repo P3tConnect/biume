@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useEffect } from "react";
+import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,9 +19,12 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/src/lib/utils";
-import { DropzoneInput, DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input";
+import {
+  DropzoneInput,
+  DEFAULT_ACCEPTED_IMAGE_TYPES,
+} from "@/components/ui/dropzone-input";
 import { useActionMutation, useActionQuery } from "@/src/hooks/action-hooks";
-import { getServices, getServicesFromOrganization, updateService } from "@/src/actions";
+import { getServicesFromOrganization, updateService } from "@/src/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 
@@ -35,12 +38,16 @@ const servicesSchema = z.object({
       price: z.number().min(0, "Le prix est requis"),
       image: z.string().optional(),
       organizationId: z.string().optional(),
-    })
+    }),
   ),
 });
 
 export const ServicesSection = () => {
-  const { data, refetch, isLoading } = useActionQuery(getServicesFromOrganization, {});
+  const { data, refetch, isLoading } = useActionQuery(
+    getServicesFromOrganization,
+    {},
+    "services",
+  );
 
   const form = useForm<z.infer<typeof servicesSchema>>({
     resolver: zodResolver(servicesSchema),
@@ -48,14 +55,15 @@ export const ServicesSection = () => {
       services: [],
     },
     values: {
-      services: data?.map(service => ({
-        id: service.id,
-        name: service.name || "",
-        description: service.description || "",
-        duration: service.duration || 30,
-        price: service.price || 0,
-      })) || [],
-    }
+      services:
+        data?.map((service) => ({
+          id: service.id,
+          name: service.name || "",
+          description: service.description || "",
+          duration: service.duration || 30,
+          price: service.price || 0,
+        })) || [],
+    },
   });
 
   const { control, handleSubmit, reset } = form;
@@ -70,14 +78,16 @@ export const ServicesSection = () => {
       toast.success("Services mis à jour avec succès!");
       refetch();
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    // Mettre à jour chaque service individuellement
-    await Promise.all(data.services.map(service => mutateAsync(service)));
+    await Promise.all(data.services.map((service) => mutateAsync(service)));
   });
 
-  const { hasChanges, isSubmitting } = useFormChangeToast({
+  const {} = useFormChangeToast({
     form,
     onSubmit,
     description: "Modification des services",
@@ -86,10 +96,12 @@ export const ServicesSection = () => {
   });
 
   const ServiceSkeleton = () => (
-    <div className={cn(
-      "group relative rounded-2xl border bg-card",
-      "dark:bg-gray-950/50 dark:backdrop-blur-xl"
-    )}>
+    <div
+      className={cn(
+        "group relative rounded-2xl border bg-card",
+        "dark:bg-gray-950/50 dark:backdrop-blur-xl",
+      )}
+    >
       <div className="relative w-full h-48 rounded-t-2xl overflow-hidden bg-gray-100 dark:bg-gray-900">
         <Skeleton className="h-full w-full" />
       </div>
@@ -170,7 +182,7 @@ export const ServicesSection = () => {
                   "w-full flex flex-col items-center justify-center gap-4 p-8",
                   "rounded-2xl border-2 border-dashed",
                   "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200"
+                  "transition-colors duration-200",
                 )}
               >
                 <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -186,7 +198,7 @@ export const ServicesSection = () => {
                     className={cn(
                       "group relative rounded-2xl border bg-card transition-all duration-300",
                       "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-                      "dark:bg-gray-950/50 dark:backdrop-blur-xl"
+                      "dark:bg-gray-950/50 dark:backdrop-blur-xl",
                     )}
                   >
                     <FormField
@@ -344,4 +356,4 @@ export const ServicesSection = () => {
       </Form>
     </Card>
   );
-}; 
+};
