@@ -12,11 +12,30 @@ import {
 import { DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import { DotsVerticalIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+// Client-side only component
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return <>{children}</>;
+}
 
 export function NavbarPro() {
   const [open, setOpen] = useState(false);
@@ -77,7 +96,9 @@ export function NavbarPro() {
 
         {/* Right Section - Desktop */}
         <div className="hidden lg:flex items-center gap-4">
-          <ModeToggle />
+          <ClientOnly>
+            <ModeToggle />
+          </ClientOnly>
           <Notifications />
         </div>
 
@@ -99,7 +120,9 @@ export function NavbarPro() {
               className="w-56 bg-white dark:bg-black"
             >
               <DropdownMenuItem className="flex items-center gap-2">
-                <ModeToggle />
+                <ClientOnly>
+                  <ModeToggle />
+                </ClientOnly>
                 <span>Mode</span>
               </DropdownMenuItem>
               <DropdownMenuItem className="flex items-center gap-2">

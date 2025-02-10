@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { pricingPlans } from "./data";
+import { cn } from "@/lib/utils";
 
 export function PricingSection() {
   return (
@@ -22,10 +23,11 @@ export function PricingSection() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div
-                className={`relative p-8 rounded-2xl border transition-colors duration-300 ${plan.popular
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background hover:border-primary/50"
-                  }`}
+                className={`relative p-8 rounded-2xl border transition-colors duration-300 ${
+                  plan.popular
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-background hover:border-primary/50"
+                }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-foreground text-primary px-4 py-1 rounded-full text-sm font-semibold">
@@ -36,7 +38,12 @@ export function PricingSection() {
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold">{plan.price}€</span>
-                    <span className="text-sm text-muted-foreground">
+                    <span
+                      className={cn(
+                        "text-sm text-muted-foreground",
+                        plan.popular && "text-primary-foreground",
+                      )}
+                    >
                       /mois
                     </span>
                   </div>
@@ -45,20 +52,22 @@ export function PricingSection() {
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <CheckCircle2
-                        className={`w-5 h-5 ${plan.popular
-                          ? "text-primary-foreground"
-                          : "text-primary"
-                          }`}
+                        className={`w-5 h-5 ${
+                          plan.popular
+                            ? "text-primary-foreground"
+                            : "text-primary"
+                        }`}
                       />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Button
-                  className={`w-full h-12 ${plan.popular
-                    ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                    }`}
+                  className={`w-full h-12 ${
+                    plan.popular
+                      ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
+                  }`}
                 >
                   Choisir {plan.name}
                 </Button>
@@ -69,4 +78,4 @@ export function PricingSection() {
       </div>
     </section>
   );
-} 
+}
