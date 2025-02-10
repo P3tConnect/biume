@@ -37,8 +37,6 @@ const ClientSettingsForm = () => {
   );
   const queryClient = useQueryClient();
 
-  console.log(userInformations, "userInformations");
-
   const handleRefetch = async () => {
     await refetch();
   };
