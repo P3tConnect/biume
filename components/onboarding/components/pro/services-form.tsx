@@ -282,23 +282,29 @@ const ServicesForm = ({
           </div>
         </div>
 
-        <DialogFooter>
-          <div className="flex justify-end gap-4 w-full">
+        <div className="flex justify-between items-center pt-8 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
+          </Button>
+          <div className="flex gap-3">
             <Button
-              variant="outline"
-              className="rounded-xl"
-              onClick={previousStep}
-            >
-              Précédent
-            </Button>
-            <Button
+              type="button"
+              variant="ghost"
               onClick={nextStep}
-              className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
+              className="text-muted-foreground"
             >
-              Suivant
+              Passer cette étape
+            </Button>
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
             </Button>
           </div>
-        </DialogFooter>
+        </div>
       </form>
     </Form>
   );

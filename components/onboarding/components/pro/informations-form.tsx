@@ -15,10 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "@/components/ui";
 import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -265,7 +261,7 @@ const InformationsForm = ({
                         className={cn(
                           "h-4 w-4 text-muted-foreground",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       />
                       <p className="text-xs text-muted-foreground">
@@ -381,7 +377,7 @@ const InformationsForm = ({
                         className={cn(
                           "flex-1 min-h-[32px] resize-none text-base",
                           form.formState.errors.description &&
-                            "border-destructive",
+                          "border-destructive",
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}
@@ -420,13 +416,28 @@ const InformationsForm = ({
         </div>
 
         {/* Footer with buttons */}
-        <div className="flex justify-end gap-3 py-3 px-6 border-t">
-          <Button variant="outline" onClick={previousStep} className="h-9">
-            Précédent
+        <div className="flex justify-between items-center pt-8 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
           </Button>
-          <Button type="submit" variant="default" className="h-9">
-            Suivant
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={nextStep}
+              className="text-muted-foreground"
+            >
+              Passer cette étape
+            </Button>
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
