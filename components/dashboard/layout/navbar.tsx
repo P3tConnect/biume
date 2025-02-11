@@ -4,7 +4,6 @@ import { ModeToggle } from "./mode-toggle";
 import { UserNav } from "./user-nav";
 import { SidebarToggle } from "./sidebar-toggle";
 import SearchButton from "./search-button";
-import NewShortcut from "./new-shortcut";
 import Notifications from "./notifications";
 import {
   DropdownMenu,
@@ -50,21 +49,23 @@ export function Navbar() {
         {/* Left Section */}
         <div className="flex items-center gap-2 lg:gap-5">
           <SidebarToggle />
-          <NewShortcut />
-        </div>
-
-        {/* Center Section - Search Bar */}
-        <div className="hidden lg:flex flex-1 max-w-2xl mx-4">
-          <div className="relative w-full">
+          <div className="relative w-48 hidden lg:block">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
               type="search"
-              placeholder={`Rechercher un client, un rendez-vous, un rapport... (${shortcutKey}+K)`}
+              placeholder={`Rechercher... (${shortcutKey}+K)`}
               className="w-full pl-10 bg-background cursor-pointer rounded-2xl"
               onClick={() => setOpen(true)}
               readOnly
             />
           </div>
+        </div>
+
+        {/* Right Section - Desktop */}
+        <div className="hidden lg:flex items-center gap-4">
+          <ModeToggle />
+          <Notifications />
+          <UserNav />
         </div>
 
         {/* Command Dialog */}
@@ -82,13 +83,6 @@ export function Navbar() {
             </CommandGroup>
           </CommandList>
         </CommandDialog>
-
-        {/* Right Section - Desktop */}
-        <div className="hidden lg:flex items-center gap-4">
-          <SearchButton />
-          <ModeToggle />
-          <Notifications />
-        </div>
 
         {/* Right Section - Mobile & Tablet */}
         <div className="flex lg:hidden items-center gap-2">

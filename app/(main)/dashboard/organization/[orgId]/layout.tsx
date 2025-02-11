@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
 import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
+import { auth } from "@/src/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const DashboardOrganizationLayout = async ({
   member,
@@ -11,6 +14,19 @@ const DashboardOrganizationLayout = async ({
   params: Promise<{ orgId: string }>;
 }) => {
   const { orgId } = await params;
+
+  // Vérifier si l'utilisateur a une organisation active
+  const organization = await auth.api.listOrganizations({
+    headers: await headers(),
+  });
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  // Si l'utilisateur n'a pas d'organisation, le rediriger vers son dashboard
+  if (organization.length === 0) {
+    redirect(`/dashboard/user/${session?.user.id}`);
+  }
 
   return (
     <DashboardLayoutComponents companyId={orgId}>
