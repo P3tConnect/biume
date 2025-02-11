@@ -248,7 +248,7 @@ const CalendarWidget = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto px-1">
         <div className="grid grid-cols-7 gap-2 mb-2">
           {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
             <div
