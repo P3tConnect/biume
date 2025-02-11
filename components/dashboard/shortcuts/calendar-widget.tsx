@@ -12,6 +12,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type Appointment = {
   id: string;
@@ -46,6 +52,7 @@ const appointmentLabels = {
 const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Exemple de données (à remplacer par vos vraies données)
   const appointments: DayAppointments = {
@@ -142,6 +149,18 @@ const CalendarWidget = () => {
     return dayIndex === 0 || dayIndex === 6;
   };
 
+  const handleDayClick = (day: number) => {
+    if (day !== 0) {
+      const newSelectedDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day,
+      );
+      setSelectedDate(newSelectedDate);
+      setIsDrawerOpen(true);
+    }
+  };
+
   const renderAppointments = (day: number) => {
     const date = new Date(
       currentDate.getFullYear(),
@@ -219,106 +238,216 @@ const CalendarWidget = () => {
     return weeks;
   };
 
-  return (
-    <div className="h-full flex flex-col">
-      <div className="flex justify-between items-center pb-4">
-        <h2 className="text-lg font-semibold">
-          {currentDate.toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
-        </h2>
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={handlePrevMonth}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            onClick={handleNextMonth}
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+  const renderSelectedDateAppointments = () => {
+    if (!selectedDate) return null;
+    const dateString = selectedDate.toDateString();
+    const dayAppointments = appointments[dateString] || [];
 
-      <div className="flex-1 overflow-auto px-1">
-        <div className="grid grid-cols-7 gap-2 mb-2">
-          {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
-            <div
-              key={day}
-              className={cn(
-                "text-center text-sm font-medium p-1",
-                day === "Dim" || day === "Sam"
-                  ? "text-red-500"
-                  : "text-gray-600 dark:text-gray-300",
-              )}
-            >
-              {day}
+    return (
+      <div className="space-y-6">
+        {dayAppointments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <p className="text-muted-foreground mb-2">
+              Aucun rendez-vous pour cette journée
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Cliquez sur un autre jour pour voir les rendez-vous
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                {dayAppointments.length} rendez-vous
+              </p>
+              <Button variant="outline" size="sm">
+                + Nouveau rendez-vous
+              </Button>
             </div>
-          ))}
-        </div>
-
-        <div className="space-y-2">
-          {getWeeksInMonth().map((week, weekIndex) => (
-            <div key={weekIndex} className="grid grid-cols-7 gap-2">
-              {week.map((day, dayIndex) => (
+            <div className="space-y-3">
+              {dayAppointments.map((appointment) => (
                 <div
-                  key={`${weekIndex}-${dayIndex}`}
-                  className={cn(
-                    "relative overflow-y-auto p-1.5 transition-all duration-200",
-                    "min-h-[110px]",
-                    day === 0
-                      ? "invisible"
-                      : cn(
-                          "rounded-xl border border-border hover:border-border/80",
-                          "dark:border-gray-700 dark:hover:border-gray-600",
-                          isToday(day) && "bg-primary/5 ring-2 ring-primary",
-                          isSelected(day) &&
-                            "bg-secondary/5 ring-2 ring-secondary",
-                          isWeekend(dayIndex) && "bg-muted/50",
-                          "cursor-pointer",
-                        ),
-                  )}
-                  onClick={() => {
-                    if (day !== 0) {
-                      setSelectedDate(
-                        new Date(
-                          currentDate.getFullYear(),
-                          currentDate.getMonth(),
-                          day,
-                        ),
-                      );
-                    }
-                  }}
+                  key={appointment.id}
+                  className="p-4 rounded-lg border border-border space-y-3 hover:border-border/80 transition-colors"
                 >
-                  {day !== 0 && (
-                    <>
-                      <div
-                        className={cn(
-                          "text-sm font-medium mb-1.5",
-                          isToday(day) && "text-primary",
-                          isSelected(day) && "text-secondary",
-                        )}
-                      >
-                        {day}
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium">{appointment.petName}</h3>
+                        <Badge
+                          variant={
+                            appointment.status === "confirmed"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className="capitalize"
+                        >
+                          {appointment.status === "confirmed"
+                            ? "Confirmé"
+                            : "En attente"}
+                        </Badge>
                       </div>
-                      {renderAppointments(day)}
-                    </>
-                  )}
+                      <p className="text-sm text-muted-foreground">
+                        {appointment.ownerName}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full -mt-1"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm">
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-xs",
+                        appointmentColors[appointment.type].replace(
+                          "bg-",
+                          "border-",
+                        ),
+                      )}
+                    >
+                      {appointmentLabels[appointment.type]}
+                    </Badge>
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <span>{appointment.time}</span>
+                      <span>•</span>
+                      <span>{appointment.duration}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="w-full">
+                      Modifier
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Annuler
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
-          ))}
+          </>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <div className="h-full flex flex-col">
+        <div className="flex justify-between items-center pb-4">
+          <h2 className="text-lg font-semibold">
+            {currentDate.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            })}
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handlePrevMonth}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-xl hover:bg-secondary/5"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={handleNextMonth}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-xl hover:bg-secondary/5"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-auto px-1">
+          <div className="grid grid-cols-7 gap-2 mb-2">
+            {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
+              <div
+                key={day}
+                className={cn(
+                  "text-center text-sm font-medium p-1",
+                  day === "Dim" || day === "Sam"
+                    ? "text-red-500"
+                    : "text-gray-600 dark:text-gray-300",
+                )}
+              >
+                {day}
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            {getWeeksInMonth().map((week, weekIndex) => (
+              <div key={weekIndex} className="grid grid-cols-7 gap-2">
+                {week.map((day, dayIndex) => (
+                  <div
+                    key={`${weekIndex}-${dayIndex}`}
+                    className={cn(
+                      "relative overflow-y-auto p-1.5 transition-all duration-200",
+                      "min-h-[110px]",
+                      day === 0
+                        ? "invisible"
+                        : cn(
+                            "rounded-xl border border-border hover:border-border/80",
+                            "dark:border-gray-700 dark:hover:border-gray-600",
+                            isToday(day) && "bg-primary/5 ring-2 ring-primary",
+                            isSelected(day) &&
+                              "bg-secondary/5 ring-2 ring-secondary",
+                            isWeekend(dayIndex) && "bg-muted/50",
+                            "cursor-pointer",
+                          ),
+                    )}
+                    onClick={() => handleDayClick(day)}
+                  >
+                    {day !== 0 && (
+                      <>
+                        <div
+                          className={cn(
+                            "text-sm font-medium mb-1.5",
+                            isToday(day) && "text-primary",
+                            isSelected(day) && "text-secondary",
+                          )}
+                        >
+                          {day}
+                        </div>
+                        {renderAppointments(day)}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <SheetContent className="sm:max-w-md w-full">
+          <SheetHeader className="space-y-1 mb-6">
+            <SheetTitle className="text-lg">
+              {selectedDate?.toLocaleDateString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </SheetTitle>
+            <p className="text-sm text-muted-foreground">
+              Gérez les rendez-vous de cette journée
+            </p>
+          </SheetHeader>
+          <div className="mt-2">{renderSelectedDateAppointments()}</div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 

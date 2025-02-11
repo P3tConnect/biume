@@ -131,16 +131,9 @@ const SidebarFooterComponent = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2">
-                <Settings size={14} />
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2"
-              onClick={async () => {
+              onClick={() => {
                 router.push(`/dashboard/user/${session?.user.id}`);
               }}
             >

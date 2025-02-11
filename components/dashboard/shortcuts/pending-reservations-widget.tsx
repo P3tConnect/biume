@@ -10,11 +10,11 @@ import {
   PawPrintIcon,
   UserIcon,
   PhoneIcon,
-  XIcon,
   ChevronRightIcon,
   ActivityIcon,
   TrendingUpIcon,
   ShieldIcon,
+  AlertCircleIcon,
 } from "lucide-react";
 import {
   Dialog,
@@ -36,15 +36,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  ResponsiveContainer,
-} from "recharts";
 
 type Reservation = {
   id: string;
@@ -59,15 +50,13 @@ type Reservation = {
   duration: string;
   status: "pending" | "confirmed" | "cancelled";
   notes?: string;
+  conflicts?: Reservation[];
 };
-
-type MetricType = "vaccine" | "deworming" | "chip";
 
 const PendingReservationsWidget = () => {
   const [selectedReservation, setSelectedReservation] =
     useState<Reservation | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedMetric, setSelectedMetric] = useState<MetricType | null>(null);
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
   // Exemple de données (à remplacer par vos vraies données)
@@ -143,18 +132,6 @@ const PendingReservationsWidget = () => {
     ],
   };
 
-  const metricTitles = {
-    vaccine: "Historique des vaccinations",
-    deworming: "Historique des vermifuges",
-    chip: "Historique des puces électroniques",
-  };
-
-  const metricColors = {
-    vaccine: "#22c55e", // green-500
-    deworming: "#eab308", // yellow-500
-    chip: "#3b82f6", // blue-500
-  };
-
   return (
     <>
       <Card className="rounded-2xl">
@@ -171,84 +148,66 @@ const PendingReservationsWidget = () => {
           {reservations.map((reservation) => (
             <div
               key={reservation.id}
-              className="flex flex-col gap-2 p-3 bg-muted/50 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+              className={`flex items-center gap-3 p-3 bg-background shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-lg hover:shadow-[0_3px_12px_-3px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-all duration-200 cursor-pointer ${
+                reservation.conflicts
+                  ? "ring-2 ring-red-200 dark:ring-red-900/30"
+                  : ""
+              }`}
               onClick={() => {
                 setSelectedReservation(reservation);
                 setIsDrawerOpen(true);
               }}
             >
-              <div className="flex items-start gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage
-                    src={`/pets/${reservation.id}.jpg`}
-                    alt={reservation.petName}
-                  />
-                  <AvatarFallback>
-                    <PawPrintIcon className="h-5 w-5" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                          {reservation.petName}
-                        </span>
-                        <Badge variant="secondary" className="text-xs">
-                          {reservation.petType}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {reservation.petBreed}
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="shrink-0">
-                      En attente
+              <Avatar className="h-10 w-10 shrink-0">
+                <AvatarImage
+                  src={`/pets/${reservation.id}.jpg`}
+                  alt={reservation.petName}
+                />
+                <AvatarFallback>
+                  <PawPrintIcon className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <div className="truncate">
+                    <span className="font-medium">{reservation.petName}</span>
+                    <span className="text-muted-foreground"> · </span>
+                    <span className="text-sm text-muted-foreground">
+                      {reservation.service}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {reservation.conflicts && (
+                      <Badge variant="destructive" className="text-[10px]">
+                        Conflit
+                      </Badge>
+                    )}
+                    <Badge variant="secondary" className="text-xs shrink-0">
+                      {reservation.duration}
                     </Badge>
                   </div>
-
-                  <div className="mt-1 flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1">
-                      <UserIcon className="h-3 w-3 text-muted-foreground" />
-                      <span>{reservation.ownerName}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <PhoneIcon className="h-3 w-3 text-muted-foreground" />
-                      <span>{reservation.ownerPhone}</span>
-                    </div>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                  <div className="flex items-center gap-1">
+                    <CalendarIcon className="h-3 w-3" />
+                    <span>
+                      {reservation.date} à {reservation.time}
+                    </span>
                   </div>
+                  {reservation.notes && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className="flex items-center gap-1 hover:text-foreground transition-colors">
+                          <AlertCircleIcon className="h-3 w-3" />
+                          <span>Notes</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{reservation.notes}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </div>
-              </div>
-
-              <div className="flex flex-col gap-1 bg-background/50 rounded-md p-2">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium text-sm">
-                    {reservation.service}
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {reservation.duration}
-                  </Badge>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <CalendarIcon className="h-3 w-3" />
-                  <span>
-                    {reservation.date} à {reservation.time}
-                  </span>
-                </div>
-
-                {reservation.notes && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger className="text-xs text-muted-foreground hover:text-foreground transition-colors text-left">
-                        Notes: {reservation.notes}
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{reservation.notes}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
               </div>
             </div>
           ))}
@@ -256,23 +215,52 @@ const PendingReservationsWidget = () => {
       </Card>
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <SheetContent
-          side="right"
-          className="w-[440px] sm:w-[540px] overflow-y-auto"
-        >
-          <SheetHeader className="space-y-2">
-            <SheetTitle>Détails de la réservation</SheetTitle>
+        <SheetContent side="right" className="w-[600px] overflow-y-auto">
+          <SheetHeader className="space-y-2 pb-4 border-b">
+            <SheetTitle className="flex items-center justify-between">
+              <span>Détails de la réservation</span>
+              <Badge variant="outline" className="uppercase">
+                En attente
+              </Badge>
+            </SheetTitle>
           </SheetHeader>
 
           {selectedReservation && (
             <div className="space-y-6 mt-6">
+              {/* Service Information */}
+              <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <div className="font-medium text-lg">
+                      {selectedReservation.service}
+                    </div>
+                    <div className="text-sm text-muted-foreground flex items-center gap-2">
+                      <ClockIcon className="h-4 w-4" />
+                      <span>{selectedReservation.duration}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium">
+                      {selectedReservation.date}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {selectedReservation.time}
+                    </div>
+                  </div>
+                </div>
+                {selectedReservation.notes && (
+                  <div className="bg-background/80 p-3 rounded-md mt-2">
+                    <p className="text-sm text-muted-foreground">
+                      {selectedReservation.notes}
+                    </p>
+                  </div>
+                )}
+              </div>
+
               {/* Pet Information */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">
-                  Information de l'animal
-                </h3>
-                <div className="bg-muted/50 rounded-lg overflow-hidden">
-                  <div className="flex items-start gap-4 p-4">
+              <div className="bg-muted/50 rounded-lg overflow-hidden">
+                <div className="p-4">
+                  <div className="flex items-start gap-4">
                     <Avatar className="h-16 w-16 border-2 border-muted-foreground/10">
                       <AvatarImage
                         src={`/pets/${selectedReservation.id}.jpg`}
@@ -282,161 +270,140 @@ const PendingReservationsWidget = () => {
                         <PawPrintIcon className="h-6 w-6 text-primary" />
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-lg">
+                            <span className="font-medium text-lg">
                               {selectedReservation.petName}
                             </span>
                             <Badge variant="secondary">
                               {selectedReservation.petType}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <div className="text-sm text-muted-foreground">
                             {selectedReservation.petBreed}
-                          </p>
+                          </div>
                         </div>
-                        <Badge variant="outline" className="ml-2">
-                          Actif
-                        </Badge>
+                      </div>
+                      <div className="mt-2 flex items-center gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500" />
+                          <span className="text-muted-foreground">2 ans</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500" />
+                          <span className="text-muted-foreground">12 kg</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 divide-x divide-border border-t">
-                    <Button
-                      variant="ghost"
-                      className="flex items-center gap-2 p-3 h-auto hover:bg-muted/50"
-                      onClick={() => setSelectedMetric("vaccine")}
-                    >
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                      <span className="text-sm text-muted-foreground">
-                        Vacciné
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center gap-2 p-3 h-auto hover:bg-muted/50"
-                      onClick={() => setSelectedMetric("deworming")}
-                    >
-                      <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                      <span className="text-sm text-muted-foreground">
-                        Vermifugé
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="flex items-center gap-2 p-3 h-auto hover:bg-muted/50"
-                      onClick={() => setSelectedMetric("chip")}
-                    >
-                      <div className="w-2 h-2 rounded-full bg-blue-500" />
-                      <span className="text-sm text-muted-foreground">
-                        Pucé
-                      </span>
-                    </Button>
+                </div>
+                <div className="border-t bg-background/50 p-3">
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <TrendingUpIcon className="h-4 w-4 text-primary" />
+                      <span>Suivi régulier</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <ShieldIcon className="h-4 w-4 text-primary" />
+                      <span>Vacciné</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <ActivityIcon className="h-4 w-4 text-primary" />
+                      <span>Bon état</span>
+                    </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  <div className="bg-muted/50 p-3 rounded-lg">
-                    <div className="text-sm text-muted-foreground">Âge</div>
-                    <div className="font-medium">2 ans</div>
-                  </div>
-                  <div className="bg-muted/50 p-3 rounded-lg">
-                    <div className="text-sm text-muted-foreground">Poids</div>
-                    <div className="font-medium">12 kg</div>
+                <div className="border-t">
+                  <div className="p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-sm font-medium">
+                        Dernières consultations
+                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        5 visites
+                      </Badge>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
+                          <span>15 Mars 2024</span>
+                        </div>
+                        <div className="text-muted-foreground">
+                          Vaccins annuels
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
+                          <span>1 Fév 2024</span>
+                        </div>
+                        <div className="text-muted-foreground">
+                          Consultation de routine
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
+                          <span>15 Déc 2023</span>
+                        </div>
+                        <div className="text-muted-foreground">Vermifuge</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Owner Information */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">
-                  Information du propriétaire
-                </h3>
-                <Button
-                  variant="ghost"
-                  className="w-full p-0 h-auto hover:bg-muted group rounded-lg overflow-hidden"
-                  onClick={() => setIsOwnerModalOpen(true)}
-                >
-                  <div className="flex flex-col w-full">
-                    <div className="flex items-start gap-4 p-4">
-                      <Avatar className="h-16 w-16 border-2 border-muted-foreground/10">
-                        <AvatarImage
-                          src={`/avatars/${selectedReservation.id}.jpg`}
-                          alt={selectedReservation.ownerName}
-                        />
-                        <AvatarFallback className="bg-primary/5">
-                          <UserIcon className="h-6 w-6 text-primary" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 text-left space-y-1 py-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-semibold text-lg">
-                              {selectedReservation.ownerName}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              Client régulier
-                            </div>
+              <Button
+                variant="ghost"
+                className="w-full p-0 h-auto hover:bg-muted group rounded-lg overflow-hidden"
+                onClick={() => setIsOwnerModalOpen(true)}
+              >
+                <div className="flex flex-col w-full">
+                  <div className="flex items-start gap-4 p-4">
+                    <Avatar className="h-16 w-16 border-2 border-muted-foreground/10">
+                      <AvatarImage
+                        src={`/avatars/${selectedReservation.id}.jpg`}
+                        alt={selectedReservation.ownerName}
+                      />
+                      <AvatarFallback className="bg-primary/5">
+                        <UserIcon className="h-6 w-6 text-primary" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left space-y-1 py-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-lg">
+                            {selectedReservation.ownerName}
                           </div>
-                          <ChevronRightIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <div className="text-sm text-muted-foreground">
+                            Client régulier
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 divide-x divide-border border-t">
-                      <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                        <PhoneIcon className="h-4 w-4" />
-                        <span>{selectedReservation.ownerPhone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                        <PawPrintIcon className="h-4 w-4" />
-                        <span>3 animaux</span>
+                        <ChevronRightIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                     </div>
                   </div>
-                </Button>
-              </div>
-
-              {/* Appointment Details */}
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">
-                  Détails du rendez-vous
-                </h3>
-                <div className="space-y-4">
-                  <div className="bg-muted p-4 rounded-lg">
-                    <div className="font-medium mb-2">
-                      {selectedReservation.service}
+                  <div className="grid grid-cols-2 divide-x divide-border border-t">
+                    <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                      <PhoneIcon className="h-4 w-4" />
+                      <span>{selectedReservation.ownerPhone}</span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <CalendarIcon className="h-4 w-4" />
-                        <span>{selectedReservation.date}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <ClockIcon className="h-4 w-4" />
-                        <span>{selectedReservation.time}</span>
-                      </div>
-                      <Badge variant="secondary">
-                        {selectedReservation.duration}
-                      </Badge>
+                    <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                      <PawPrintIcon className="h-4 w-4" />
+                      <span>3 animaux</span>
                     </div>
                   </div>
-
-                  {selectedReservation.notes && (
-                    <div className="bg-muted p-4 rounded-lg">
-                      <h4 className="font-medium mb-2">Notes</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {selectedReservation.notes}
-                      </p>
-                    </div>
-                  )}
                 </div>
-              </div>
+              </Button>
             </div>
           )}
 
           <SheetFooter className="absolute bottom-0 left-0 right-0 p-6 bg-background border-t">
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-3 w-full">
               <Button
                 variant="outline"
                 className="flex-1"
@@ -444,7 +411,12 @@ const PendingReservationsWidget = () => {
               >
                 Fermer
               </Button>
-              <Button className="flex-1">Confirmer la réservation</Button>
+              <Button
+                className="flex-1 bg-primary"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                Confirmer la réservation
+              </Button>
             </div>
           </SheetFooter>
         </SheetContent>
@@ -536,70 +508,6 @@ const PendingReservationsWidget = () => {
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Metrics Modal */}
-      <Dialog
-        open={selectedMetric !== null}
-        onOpenChange={() => setSelectedMetric(null)}
-      >
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              {selectedMetric === "vaccine" && (
-                <ShieldIcon className="w-5 h-5 text-green-500" />
-              )}
-              {selectedMetric === "deworming" && (
-                <ActivityIcon className="w-5 h-5 text-yellow-500" />
-              )}
-              {selectedMetric === "chip" && (
-                <TrendingUpIcon className="w-5 h-5 text-blue-500" />
-              )}
-              {selectedMetric && metricTitles[selectedMetric]}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="h-[300px] w-full">
-              {selectedMetric && (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={metricData[selectedMetric]}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <RechartsTooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke={metricColors[selectedMetric]}
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Dernière intervention
-                </span>
-                <span className="font-medium">15 Mars 2024</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Prochaine intervention
-                </span>
-                <span className="font-medium">15 Juin 2024</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Fréquence moyenne</span>
-                <span className="font-medium">3 mois</span>
-              </div>
-            </div>
-          </div>
         </DialogContent>
       </Dialog>
     </>
