@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { proDocumentsSchema } from "../../types/onboarding-schemas";
 import { createDocumentsStepAction } from "@/src/actions";
 import { useActionMutation } from "@/src/hooks/action-hooks";
-import { DialogFooter } from "@/components/ui";
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = {
   "application/pdf": [".pdf"],
