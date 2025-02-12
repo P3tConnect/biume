@@ -27,7 +27,6 @@ import { ProfileForm } from './forms/profile-form';
 import { NotificationsForm } from './forms/notifications-form';
 import { SecurityForm } from './forms/security-form';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 const ClientSettingsForm = () => {
   const { data: userInformations, refetch } = useActionQuery(

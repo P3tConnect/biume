@@ -7,8 +7,6 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { user } from '../db';
-import { Router } from 'lucide-react';
-import { revalidatePath } from 'next/cache';
 
 export const getUserInformations = createServerAction(
   z.object({}),
@@ -25,6 +23,7 @@ export const getUserInformations = createServerAction(
   },
   [requireAuth]
 );
+
 export const updateUserInformations = createServerAction(
   clientSettingsSchema,
   async (input, ctx) => {

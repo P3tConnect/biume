@@ -1,39 +1,44 @@
-import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { appointments } from "./appointments";
-import { createInsertSchema } from "drizzle-zod";
-import { petsDeseases } from "./petsDeseases";
-import { z } from "zod";
-import { petsAllergies } from "./petsAllergies";
-import { petsIntolerences } from "./petsIntolerences";
-import { user } from "./user";
+import { integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { appointments } from './appointments';
+import { createInsertSchema } from 'drizzle-zod';
+import { petsDeseases } from './petsDeseases';
+import { z } from 'zod';
+import { petsAllergies } from './petsAllergies';
+import { petsIntolerences } from './petsIntolerences';
+import { user } from './user';
 
-export const petType = pgEnum("petType", [
-  "Dog",
-  "Cat",
-  "Bird",
-  "Horse",
-  "NAC",
+export const petType = pgEnum('petType', [
+  'Dog',
+  'Cat',
+  'Bird',
+  'Horse',
+  'NAC',
 ]);
 
-export const pets = pgTable("pets", {
-  id: text("id")
+export const petGender = pgEnum('petGender', ['Male', 'Female']);
+
+export const pets = pgTable('pets', {
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  type: petType("type").default("Dog").notNull(),
-  weight: integer("weight"),
-  height: integer("height"),
-  description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, {
-    onDelete: "cascade",
+  name: text('name').notNull(),
+  type: petType('type').default('Dog').notNull(),
+  gender: petGender('gender').notNull().default('Male'),
+  breed: text('breed'),
+  nacType: text('nacType'),
+  image: text('image'),
+  birthDate: timestamp('birthDate', { mode: 'date' }).notNull(),
+  furColor: text('furColor'),
+  eyeColor: text('eyeColor'),
+  description: text('description'),
+  weight: integer('weight'),
+  height: integer('height'),
+  ownerId: text('ownerId').references(() => user.id, {
+    onDelete: 'cascade',
   }),
-  nacType: text("nacType"),
-  birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
-  furColor: text("furColor"),
-  eyeColor: text("eyeColor"),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
-  updatedAt: timestamp("updatedAt"),
+  createdAt: timestamp('createdAt', { mode: 'date' }).notNull(),
+  updatedAt: timestamp('updatedAt'),
 });
 
 export const petsRelations = relations(pets, ({ one, many }) => ({
