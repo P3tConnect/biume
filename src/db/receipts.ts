@@ -1,9 +1,9 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
-import { receiptProduct } from "./receiptProducts";
+import { ReceiptProduct, receiptProduct } from "./receiptProducts";
 import { createInsertSchema } from "drizzle-zod";
-import { receiptCategory } from "./receiptCategory";
-import { organization } from "./organization";
+import { ReceiptCategory, receiptCategory } from "./receiptCategory";
+import { Organization, organization } from "./organization";
 
 export const receipt = pgTable("receipt", {
   id: text("id")
@@ -28,9 +28,9 @@ export const receiptRelations = relations(receipt, ({ one, many }) => ({
 }));
 
 export type Receipt = InferSelectModel<typeof receipt> & {
-  products: InferSelectModel<typeof receiptProduct>[];
-  organization: InferSelectModel<typeof organization>;
-  categories: InferSelectModel<typeof receiptCategory>[];
+  products: ReceiptProduct[];
+  organization: Organization;
+  categories: ReceiptCategory[];
 };
 export type CreateReceipt = typeof receipt.$inferInsert;
 

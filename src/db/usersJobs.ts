@@ -1,8 +1,8 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { job } from "./job";
+import { Job, job } from "./job";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import { user } from "./user";
+import { User, user } from "./user";
 
 export const usersJobs = pgTable("users_jobs", {
   userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
@@ -21,8 +21,8 @@ export const usersJobsRelations = relations(usersJobs, ({ one }) => ({
 }));
 
 export type UsersJobs = InferSelectModel<typeof usersJobs> & {
-  job: InferSelectModel<typeof job>;
-  user: InferSelectModel<typeof user>;
+  job: Job;
+  user: User;
 };
 export type CreateUsersJobs = typeof usersJobs.$inferInsert;
 

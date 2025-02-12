@@ -2,7 +2,8 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { petsIntolerences } from "./petsIntolerences";
-import { user } from "./user";
+import { User, user } from "./user";
+import { Pet } from "./pets";
 
 export const intolerences = pgTable("intolerences", {
   id: text("id")
@@ -31,8 +32,8 @@ export const intolerencesRelations = relations(
 );
 
 export type Intolerence = InferSelectModel<typeof intolerences> & {
-  owner: InferSelectModel<typeof user>;
-  pets: InferSelectModel<typeof petsIntolerences>[];
+  owner: User;
+  pets: Pet[];
 };
 export type CreateIntolerence = typeof intolerences.$inferInsert;
 

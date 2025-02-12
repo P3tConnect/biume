@@ -2,7 +2,7 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { receiptCategory } from "./receiptCategory";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const category = pgTable("category", {
   id: text("id")
@@ -26,7 +26,7 @@ export const categoryRelations = relations(category, ({ one, many }) => ({
 }));
 
 export type Category = InferSelectModel<typeof category> & {
-  owner: InferSelectModel<typeof organization>;
+  owner: Organization;
 };
 export type CreateCategory = typeof category.$inferInsert;
 

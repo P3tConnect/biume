@@ -1,7 +1,7 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { askEstimate } from "./ask_estimate";
-import { options } from "./options";
+import { AskEstimate, askEstimate } from "./ask_estimate";
+import { Option, options } from "./options";
 import { createInsertSchema } from "drizzle-zod";
 
 export const askEstimateOptions = pgTable("ask_estimate_options", {
@@ -28,8 +28,8 @@ export const askEstimateOptionsRelations = relations(
 );
 
 export type AskEstimateOption = InferSelectModel<typeof askEstimateOptions> & {
-  askEstimate: InferSelectModel<typeof askEstimate>;
-  option: InferSelectModel<typeof options>;
+  askEstimate: AskEstimate;
+  option: Option;
 };
 export type CreateAskEstimateOption = typeof askEstimateOptions.$inferInsert;
 

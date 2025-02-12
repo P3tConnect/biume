@@ -2,7 +2,7 @@ import { date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const bgJobsStatus = pgEnum("jobStatus", [
   "pending",
@@ -42,7 +42,7 @@ export const jobsRelations = relations(bgJobs, ({ one }) => ({
 }));
 
 export type BgJobs = InferSelectModel<typeof bgJobs> & {
-  organization: InferSelectModel<typeof organization>;
+  organization: Organization;
 };
 export type BgJobsInsert = typeof bgJobs.$inferInsert;
 

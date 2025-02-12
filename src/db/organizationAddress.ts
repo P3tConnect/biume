@@ -23,11 +23,16 @@ export const organizationAddressRelations = relations(
   }),
 );
 
-export type CompanyAddress = InferSelectModel<typeof organizationAddress> & {
+export type OrganizationAddress = InferSelectModel<
+  typeof organizationAddress
+> & {
   organization: InferSelectModel<typeof organization>;
 };
-export type CreateCompanyAddress = typeof organizationAddress.$inferInsert;
+export type CreateOrganizationAddress =
+  typeof organizationAddress.$inferInsert;
 
-export const CompanyAddressSchema = createSelectSchema(organizationAddress);
-export const CreateCompanyAddressSchema =
+export const OrganizationAddressSchema = createSelectSchema(
+  organizationAddress,
+);
+export const CreateOrganizationAddressSchema =
   createInsertSchema(organizationAddress);

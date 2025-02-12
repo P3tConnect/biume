@@ -2,7 +2,7 @@ import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { receiptProduct } from "./receiptProducts";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const product = pgTable("product", {
   id: text("id")
@@ -28,7 +28,7 @@ export const productRelations = relations(product, ({ one, many }) => ({
 }));
 
 export type Product = InferSelectModel<typeof product> & {
-  organization: InferSelectModel<typeof organization>;
+  organization: Organization;
 };
 export type CreateProduct = typeof product.$inferInsert;
 

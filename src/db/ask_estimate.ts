@@ -7,7 +7,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { askEstimateOptions } from "./askEstimateOptions";
+import { AskEstimateOption, askEstimateOptions } from "./askEstimateOptions";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { organization } from "./organization";
@@ -47,7 +47,7 @@ export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
 }));
 
 export type AskEstimate = InferSelectModel<typeof askEstimate> & {
-  askEstimateOptions: InferSelectModel<typeof askEstimateOptions>[];
+  askEstimateOptions: AskEstimateOption[];
 };
 export type CreateAskEstimate = typeof askEstimate.$inferInsert;
 export const AskEstimateStatusEnum = z.enum(askEstimateStatus.enumValues);

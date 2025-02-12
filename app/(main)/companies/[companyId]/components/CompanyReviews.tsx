@@ -12,18 +12,8 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Rating } from "@/src/db";
 
-interface SimpleReview {
-  id: string;
-  writer: {
-    name: string;
-  };
-  rate: number;
-  comment: string;
-  createdAt: Date;
-}
-
 interface CompanyReviewsProps {
-  reviews: SimpleReview[];
+  reviews: Rating[];
 }
 
 export function CompanyReviews({ reviews }: CompanyReviewsProps) {

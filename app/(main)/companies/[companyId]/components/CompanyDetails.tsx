@@ -260,7 +260,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
             >
               <h2 className="text-2xl font-semibold mb-6">Avis clients</h2>
               {companyResult.data?.ratings && (
-                <CompanyReviews reviews={mockReviews} />
+                <CompanyReviews reviews={companyResult.data.ratings} />
               )}
             </motion.div>
           </div>

@@ -2,7 +2,7 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { usersNewsletters } from "./usersNewsletter";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const newsletter = pgTable("newsletter", {
   id: text("id")
@@ -27,7 +27,7 @@ export const newsletterRelations = relations(newsletter, ({ one, many }) => ({
 }));
 
 export type Newsletter = InferSelectModel<typeof newsletter> & {
-  redactor: InferSelectModel<typeof organization>;
+  redactor: Organization;
 };
 export type CreateNewsletter = typeof newsletter.$inferInsert;
 

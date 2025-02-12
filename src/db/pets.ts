@@ -6,7 +6,10 @@ import { petsDeseases } from "./petsDeseases";
 import { z } from "zod";
 import { petsAllergies } from "./petsAllergies";
 import { petsIntolerences } from "./petsIntolerences";
-import { user } from "./user";
+import { User, user } from "./user";
+import { Allergy } from "./allergies";
+import { Intolerence } from "./intolerences";
+import { Desease } from "./deseases";
 
 export const petType = pgEnum("petType", [
   "Dog",
@@ -48,10 +51,10 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
 }));
 
 export type Pet = InferSelectModel<typeof pets> & {
-  owner: InferSelectModel<typeof user>;
-  deseases: InferSelectModel<typeof petsDeseases>[];
-  allergies: InferSelectModel<typeof petsAllergies>[];
-  intolerences: InferSelectModel<typeof petsIntolerences>[];
+  owner: User;
+  deseases: Desease[];
+  allergies: Allergy[];
+  intolerences: Intolerence[];
 };
 export type CreatePet = typeof pets.$inferInsert;
 export const PetTypeEnum = z.enum(petType.enumValues);

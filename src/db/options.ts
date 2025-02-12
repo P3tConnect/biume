@@ -1,10 +1,10 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
-import { askEstimateOptions } from "./askEstimateOptions";
-import { invoiceOptions } from "./invoiceOptions";
-import { sessionOptions } from "./sessionOptions";
+import { AskEstimateOption, askEstimateOptions } from "./askEstimateOptions";
+import { InvoiceOption, invoiceOptions } from "./invoiceOptions";
+import { SessionOption, sessionOptions } from "./sessionOptions";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const options = pgTable("options", {
   id: text("id")
@@ -33,10 +33,10 @@ export const optionsRelations = relations(options, ({ one, many }) => ({
 }));
 
 export type Option = InferSelectModel<typeof options> & {
-  organization: InferSelectModel<typeof organization>;
-  askEstimates: InferSelectModel<typeof askEstimateOptions>[];
-  invoices: InferSelectModel<typeof invoiceOptions>[];
-  sessions: InferSelectModel<typeof sessionOptions>[];
+  organization: Organization;
+  askEstimates: AskEstimateOption[];
+  invoices: InvoiceOption[];
+  sessions: SessionOption[];
 };
 export type CreateOption = typeof options.$inferInsert;
 
