@@ -16,6 +16,7 @@ import { session } from "./session";
 import { usersJobs, UsersJobs } from "./usersJobs";
 import { usersNewsletters, UserNewsletter } from "./usersNewsletter";
 import { Account } from "better-auth";
+import { Address, address } from "./addresses";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -53,6 +54,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
   notifications: many(notification),
   projects: many(projectsInvitees),
   invitations: many(invitation),
+  addresses: many(address),
 }));
 
 export type User = InferSelectModel<typeof user> & {
@@ -65,6 +67,7 @@ export type User = InferSelectModel<typeof user> & {
   appointments: Appointment[];
   accounts: Account[];
   memberships: Member[];
+  addresses: Address[];
 };
 
 export const CreateUserSchema = createInsertSchema(user);

@@ -1,14 +1,7 @@
 import { Option } from "@/src/db";
 
-interface SimpleOption {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-}
-
 interface CompanyOptionsProps {
-  options: SimpleOption[];
+  options: Option[];
 }
 
 export function CompanyOptions({ options }: CompanyOptionsProps) {

@@ -7,12 +7,12 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { AskEstimateOption, askEstimateOptions } from "./askEstimateOptions";
+import { AskAppointmentOption, askAppointmentOptions } from "./askAppointmentOptions";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { organization } from "./organization";
 
-export const askEstimateStatus = pgEnum("askEstimateStatus", [
+export const askAppointmentStatus = pgEnum("askAppointmentStatus", [
   "USER PENDING",
   "USER ACCEPTED",
   "REJECTED BY USER",
@@ -25,11 +25,11 @@ export const askEstimateStatus = pgEnum("askEstimateStatus", [
   "CANCELED BY COMPANY",
 ]);
 
-export const askEstimate = pgTable("ask_estimate", {
+export const askAppointment = pgTable("ask_appointment", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  status: askEstimateStatus("status").default("USER PENDING"),
+  status: askAppointmentStatus("status").default("USER PENDING"),
   beginAt: date("beginAt").notNull(),
   endAt: date("endAt").notNull(),
   creator: text("creator").notNull(),
@@ -42,14 +42,16 @@ export const askEstimate = pgTable("ask_estimate", {
   updateAt: timestamp("updatedAt", { mode: "date" }),
 });
 
-export const askEstimateRelations = relations(askEstimate, ({ one, many }) => ({
-  askEstimateOptions: many(askEstimateOptions),
+export const askAppointmentRelations = relations(askAppointment, ({ one, many }) => ({
+  askAppointmentOptions: many(askAppointmentOptions),
 }));
 
-export type AskEstimate = InferSelectModel<typeof askEstimate> & {
-  askEstimateOptions: AskEstimateOption[];
+export type AskAppointment = InferSelectModel<typeof askAppointment> & {
+  askAppointmentOptions: AskAppointmentOption[];
 };
-export type CreateAskEstimate = typeof askEstimate.$inferInsert;
-export const AskEstimateStatusEnum = z.enum(askEstimateStatus.enumValues);
+export type CreateAskAppointment = typeof askAppointment.$inferInsert;
+export const AskAppointmentStatusEnum = z.enum(
+  askAppointmentStatus.enumValues
+);
 
-export const CreateAskEstimateSchema = createInsertSchema(askEstimate);
+export const CreateAskAppointmentSchema = createInsertSchema(askAppointment);

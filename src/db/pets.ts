@@ -19,6 +19,11 @@ export const petType = pgEnum("petType", [
   "NAC",
 ]);
 
+export const petGender = pgEnum("petGender", [
+  "Male",
+  "Female",
+]);
+
 export const pets = pgTable("pets", {
   id: text("id")
     .primaryKey()
@@ -31,6 +36,9 @@ export const pets = pgTable("pets", {
   ownerId: text("ownerId").references(() => user.id, {
     onDelete: "cascade",
   }),
+  breed: text("breed"),
+  image: text("image"),
+  gender: petGender("gender").notNull().default("Male"),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),

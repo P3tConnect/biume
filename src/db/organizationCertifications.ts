@@ -33,12 +33,12 @@ export const companyCertificationsRelations = relations(
   }),
 );
 
-export type CompanyCertifications = InferSelectModel<
+export type OrganizationCertifications = InferSelectModel<
   typeof organizationCertifications
 > & {
   organizationDocuments: OrganizationDocuments;
 };
-export type CreateCompanyCertifications =
+export type CreateOrganizationCertifications =
   typeof organizationCertifications.$inferInsert;
 
 export const SelectOrganizationCertificationsSchema = createSelectSchema(

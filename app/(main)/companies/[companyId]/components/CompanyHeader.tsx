@@ -45,7 +45,11 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-primary text-primary" />
-              <span className="font-medium">4.8/5</span>
+              <span className="font-medium">
+                {company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+                  company.ratings.length}
+                sur 5
+              </span>
               <span className="text-muted-foreground">·</span>
               <button className="font-medium underline-offset-4 hover:underline">
                 {company.ratings.reduce((acc, curr) => acc + curr.rate, 0) / company.ratings.length} sur 5

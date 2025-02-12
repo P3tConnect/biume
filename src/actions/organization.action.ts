@@ -9,7 +9,6 @@ import {
 } from "../lib";
 import { auth } from "../lib/auth";
 import {
-  Appointment,
   Organization,
   organization as organizationTable,
 } from "../db";
@@ -44,9 +43,28 @@ export const getCompanyById = createServerAction(
       with: {
         options: true,
         services: true,
+        members: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              }
+            },
+          }
+        },
         ratings: {
           with: {
-            writer: true,
+            writer: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              }
+            },
           },
         },
       },

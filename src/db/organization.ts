@@ -31,6 +31,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { invitation } from "./invitation";
 import { appointments } from "./appointments";
 import { Option } from "./options";
+import { Member, member } from "./member";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -109,11 +110,13 @@ export const organizationRelations = relations(
     widgets: many(widgets),
     bgJobs: many(bgJobs),
     invitations: many(invitation),
+    members: many(member),
   }),
 );
 
 export type Organization = InferSelectModel<typeof organization> & {
   address: OrganizationAddress;
+  members: Member[];
   ratings: Rating[];
   services: Service[];
   options: Option[];
