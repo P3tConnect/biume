@@ -3,6 +3,7 @@ import {
   inferAdditionalFields,
   organizationClient,
   twoFactorClient,
+  usernameClient,
 } from "better-auth/client/plugins";
 
 import { createAuthClient } from "better-auth/react";
@@ -27,6 +28,7 @@ export const {
 } = createAuthClient({
   baseURL: "http://localhost:3000",
   plugins: [
+    usernameClient(),
     organizationClient({
       ac: ac,
       roles: {
