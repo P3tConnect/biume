@@ -1,35 +1,23 @@
 import { Injectable } from '@nestjs/common';
-
-export interface RemixItem {
-  id: number;
-  title: string;
-}
+import { AuthService } from '../auth/auth.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RemixService {
-  private data: RemixItem[] = [
-    { id: 1, title: 'Premier élément' },
-    { id: 2, title: 'Deuxième élément' },
-  ];
-
-  async findAll(): Promise<RemixItem[]> {
-    return this.data;
-  }
-
-  async findOne(id: number): Promise<RemixItem | undefined> {
-    return this.data.find(item => item.id === id);
-  }
-
-  async create(data: { title: string }): Promise<RemixItem> {
-    const newItem: RemixItem = {
-      id: this.data.length + 1,
-      title: data.title,
-    };
-    this.data.push(newItem);
-    return newItem;
-  }
-
-  getHello(): string {
-    return 'Graig is a good boy!';
-  }
+  constructor(
+    public readonly prisma: PrismaService,
+    public readonly auth: AuthService,
+  ) {}
+  public readonly getUser = async ({ userId }: { userId: string }) => {
+    return await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+  };
 }
