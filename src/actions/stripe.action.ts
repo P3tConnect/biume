@@ -168,10 +168,14 @@ export const updateOrganizationPlan = createServerAction(
       throw new ActionError("Organisation non trouvée");
     }
 
+    if (!org.stripeId) {
+      throw new ActionError("Compte Stripe non configuré");
+    }
+
     const stripeCustomer = org.stripeId;
 
     const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomer!,
+      customer: stripeCustomer ?? "",
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [

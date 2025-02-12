@@ -6,6 +6,7 @@ import {
   requireOwner,
   requireAuth,
   requireOrganization,
+  stripe,
 } from "../lib";
 import { auth } from "../lib/auth";
 import {
@@ -119,13 +120,9 @@ export const createOrganization = createServerAction(
         },
       });
 
-      console.log(result, "result after create organization");
-
       if (!result) {
         throw new ActionError("Organization not created");
       }
-
-      console.log(result, "result before create progression");
 
       // Créer une progression
       const [progression] = await db
@@ -138,7 +135,13 @@ export const createOrganization = createServerAction(
         })
         .returning();
 
-      console.log(progression, "progression after create progression");
+      const stripeCustomer = await stripe.customers.create({
+        name: data.name as string,
+        email: ctx.user?.email as string,
+        metadata: {
+          organizationId: result?.id,
+        },
+      });
 
       const [organizationResult] = await db
         .update(organizationTable)
@@ -148,24 +151,18 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
+          stripeId: stripeCustomer.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
         .execute();
 
-      console.log(
-        organizationResult,
-        "organizationResult after update organization",
-      );
-
-      const activeOrganization = await auth.api.setActiveOrganization({
+      await auth.api.setActiveOrganization({
         headers: await headers(),
         body: {
           organizationId: result?.id,
         },
       });
-
-      console.log(activeOrganization, "activeOrganization");
 
       // Retourner les données de l'organisation créée
       return organizationResult;

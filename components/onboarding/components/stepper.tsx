@@ -106,7 +106,15 @@ const Stepper = () => {
   };
 
   return (
-    <DialogContent className="w-[1200px]">
+    <DialogContent
+      className="w-[1200px]"
+      onPointerDownOutside={(e) => {
+        e.preventDefault();
+      }}
+      onEscapeKeyDown={(e) => {
+        e.preventDefault();
+      }}
+    >
       <DialogHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
