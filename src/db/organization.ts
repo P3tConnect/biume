@@ -18,7 +18,10 @@ import { Rating, ratings } from "./ratings";
 import { Service, service } from "./service";
 import { options } from "./options";
 import { address } from "./addresses";
-import { OrganizationAddress, organizationAddress } from "./organizationAddress";
+import {
+  OrganizationAddress,
+  organizationAddress,
+} from "./organizationAddress";
 import { Category, category } from "./category";
 import { Topic, topic } from "./topic";
 import { Product, product } from "./products";
@@ -33,6 +36,7 @@ import { appointments } from "./appointments";
 import { Option } from "./options";
 import { Member, member } from "./member";
 import { ClientNote, clientNote } from "./clientNote";
+import { OrganizationImage, organizationImages } from "./organizationImages";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -113,6 +117,7 @@ export const organizationRelations = relations(
     invitations: many(invitation),
     members: many(member),
     clientNotes: many(clientNote),
+    images: many(organizationImages),
   }),
 );
 
@@ -128,6 +133,7 @@ export type Organization = InferSelectModel<typeof organization> & {
   newslettersWritter: Newsletter[];
   receipts: Receipt[];
   clientNotes: ClientNote[];
+  images: OrganizationImage[];
 };
 export type CreateOrganization = typeof organization.$inferInsert;
 

@@ -393,11 +393,11 @@ export function BookingCard({
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{service.name}</span>
                     <span className="text-muted-foreground">
-                      {service.price}
+                      {service.price} €
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {service.duration}
+                    {service.duration} min
                   </p>
                 </button>
               ))}
