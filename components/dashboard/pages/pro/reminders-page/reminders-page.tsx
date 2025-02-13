@@ -161,9 +161,9 @@ const RemindersPageComponent = () => {
                 />
                 <Button
                   type="submit"
-                  // disabled={
-                  //   createStatus === "executing" || updateStatus === "executing"
-                  // }
+                // disabled={
+                //   createStatus === "executing" || updateStatus === "executing"
+                // }
                 >
                   {isEditMode ? "Mettre à jour" : "Créer"}
                 </Button>
@@ -193,13 +193,12 @@ const RemindersPageComponent = () => {
                   </span>
                   <span className="capitalize">{reminder.type}</span>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      reminder.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : reminder.status === "cancelled"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                    }`}
+                    className={`px-2 py-1 rounded-full text-xs ${reminder.status === "completed"
+                      ? "bg-green-100 text-green-800"
+                      : reminder.status === "cancelled"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                      }`}
                   >
                     {reminder.status}
                   </span>
@@ -216,7 +215,7 @@ const RemindersPageComponent = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  // onClick={() => handleDelete(reminder.id)}
+                // onClick={() => handleDelete(reminder.id)}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </Button>

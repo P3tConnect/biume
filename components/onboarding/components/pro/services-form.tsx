@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  DialogFooter,
   Form,
   FormControl,
   FormField,
@@ -304,6 +305,24 @@ const ServicesForm = ({
             </Button>
           </div>
         </div>
+
+        <DialogFooter>
+          <div className="flex justify-end gap-4 w-full">
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={previousStep}
+            >
+              Précédent
+            </Button>
+            <Button
+              type="submit"
+              className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
+            >
+              Suivant
+            </Button>
+          </div>
+        </DialogFooter>
       </form>
     </Form>
   );

@@ -153,7 +153,22 @@ const IntroStep = ({
           </Button>
         </motion.div>
       </div>
-    </div>
+      <div className="flex justify-end gap-4">
+        {/* <DialogClose asChild> */}
+        <Button variant="outline" className="rounded-xl">
+          Fermer
+        </Button>
+        {/* </DialogClose> */}
+        <Button
+          variant="ghost"
+          className="rounded-xl"
+          onClick={skipOnboarding}
+        >
+          Passer la configuration
+        </Button>
+        <Button className="rounded-xl" onClick={nextStep}>Commencer</Button>
+      </div>
+    </div >
   );
 };
 

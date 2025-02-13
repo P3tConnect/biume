@@ -5,7 +5,6 @@ interface CompanyServicesProps {
 }
 
 export function CompanyServices({ services }: CompanyServicesProps) {
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {services.map((service) => (

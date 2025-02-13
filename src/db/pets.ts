@@ -11,12 +11,12 @@ import { Allergy } from "./allergies";
 import { Intolerence } from "./intolerences";
 import { Desease } from "./deseases";
 
-export const petType = pgEnum("petType", [
-  "Dog",
-  "Cat",
-  "Bird",
-  "Horse",
-  "NAC",
+export const petType = pgEnum('petType', [
+  'Dog',
+  'Cat',
+  'Bird',
+  'Horse',
+  'NAC',
 ]);
 
 export const petGender = pgEnum("petGender", [
@@ -28,13 +28,13 @@ export const pets = pgTable("pets", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  type: petType("type").default("Dog").notNull(),
-  weight: integer("weight"),
-  height: integer("height"),
-  description: text("description"),
-  ownerId: text("ownerId").references(() => user.id, {
-    onDelete: "cascade",
+  name: text('name').notNull(),
+  type: petType('type').default('Dog').notNull(),
+  weight: integer('weight'),
+  height: integer('height'),
+  description: text('description'),
+  ownerId: text('ownerId').references(() => user.id, {
+    onDelete: 'cascade',
   }),
   breed: text("breed"),
   image: text("image"),

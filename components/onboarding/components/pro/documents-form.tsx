@@ -138,30 +138,30 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Footer with buttons */}
-        <div className="flex justify-between items-center pt-8 border-t">
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-xl"
-            onClick={previousStep}
-          >
-            ← Précédent
-          </Button>
-          <div className="flex gap-3">
+          {/* Footer with buttons */}
+          <div className="flex justify-between items-center pt-8 border-t">
             <Button
               type="button"
-              variant="ghost"
-              onClick={nextStep}
-              className="text-muted-foreground"
+              variant="outline"
+              className="rounded-xl"
+              onClick={previousStep}
             >
-              Passer cette étape
+              ← Précédent
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
-              Suivant →
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={nextStep}
+                className="text-muted-foreground"
+              >
+                Passer cette étape
+              </Button>
+              <Button type="submit" className="rounded-xl px-6">
+                Suivant →
+              </Button>
+            </div>
           </div>
         </div>
       </form>

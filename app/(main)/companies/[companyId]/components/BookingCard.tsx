@@ -384,11 +384,10 @@ export function BookingCard({
                 <button
                   key={service.id}
                   onClick={() => setSelectedService(service.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${
-                    selectedService === service.id
+                  className={`w-full text-left p-4 rounded-xl border transition-all ${selectedService === service.id
                       ? "border-2 border-primary"
                       : "hover:border-primary/50"
-                  }`}
+                    }`}
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{service.name}</span>
@@ -417,11 +416,10 @@ export function BookingCard({
                   <button
                     key={pro.id}
                     onClick={() => setSelectedPro(pro.id)}
-                    className={`w-full text-left p-4 rounded-xl border transition-all ${
-                      selectedPro === pro.id
+                    className={`w-full text-left p-4 rounded-xl border transition-all ${selectedPro === pro.id
                         ? "border-2 border-primary"
                         : "hover:border-primary/50"
-                    }`}
+                      }`}
                   >
                     <div className="flex gap-4">
                       <Avatar className="h-12 w-12">

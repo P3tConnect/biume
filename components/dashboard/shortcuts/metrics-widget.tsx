@@ -128,7 +128,7 @@ const MetricsWidget = () => {
                 <p className="text-2xl font-bold">
                   {Math.round(
                     data.reduce((acc, curr) => acc + curr.value, 0) /
-                      data.length,
+                    data.length,
                   )}
                 </p>
               </Card>

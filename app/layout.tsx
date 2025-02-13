@@ -23,11 +23,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
 
-  const t = await getTranslations({ locale: locale, namespace: "metadata" });
+  const t = await getTranslations({ locale: locale, namespace: 'metadata' });
   return {
     title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
-    description: t("description"),
+    description: t('description'),
     icons: {
       icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
     },
@@ -35,7 +35,7 @@ export async function generateMetadata({
       title: "Biume",
     },
     openGraph: {
-      type: "website",
+      type: 'website',
       locale: locale,
       url: "https://biume.com",
       description: t("description"),
@@ -58,12 +58,12 @@ export async function generateMetadata({
     applicationName: "Biume",
     authors: [
       {
-        name: "Mathieu Chambaud",
-        url: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/",
+        name: 'Mathieu Chambaud',
+        url: 'https://www.linkedin.com/in/mathieu-chambaud-9b4106170/',
       },
       {
-        name: "Graig Kolodziejczyk",
-        url: "https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/",
+        name: 'Graig Kolodziejczyk',
+        url: 'https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/',
       },
     ],
     robots: {
@@ -71,23 +71,23 @@ export async function generateMetadata({
       index: true,
     },
     keywords: [
-      t("keywords.keyword1"),
-      t("keywords.keyword2"),
-      t("keywords.keyword3"),
-      t("keywords.keyword4"),
-      t("keywords.keyword5"),
-      t("keywords.keyword6"),
-      t("keywords.keyword7"),
-      t("keywords.keyword8"),
-      t("keywords.keyword9"),
-      t("keywords.keyword10"),
-      t("keywords.keyword11"),
-      t("keywords.keyword12"),
-      t("keywords.keyword13"),
-      t("keywords.keyword14"),
-      t("keywords.keyword15"),
-      t("keywords.keyword16"),
-      t("keywords.keyword17"),
+      t('keywords.keyword1'),
+      t('keywords.keyword2'),
+      t('keywords.keyword3'),
+      t('keywords.keyword4'),
+      t('keywords.keyword5'),
+      t('keywords.keyword6'),
+      t('keywords.keyword7'),
+      t('keywords.keyword8'),
+      t('keywords.keyword9'),
+      t('keywords.keyword10'),
+      t('keywords.keyword11'),
+      t('keywords.keyword12'),
+      t('keywords.keyword13'),
+      t('keywords.keyword14'),
+      t('keywords.keyword15'),
+      t('keywords.keyword16'),
+      t('keywords.keyword17'),
     ],
   };
 }
@@ -101,17 +101,17 @@ export default async function RootLayout({
 
   const messages = await getMessages({ locale: locale });
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+  const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
 
   return (
     <html suppressHydrationWarning lang={locale}>
       <body
-        className={cn("min-h-screen font-sans antialiased", geist.className)}
+        className={cn('min-h-screen font-sans antialiased', geist.className)}
       >
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <SidebarProvider defaultOpen={defaultOpen}>
-              <div vaul-drawer-wrapper="">
+              <div vaul-drawer-wrapper=''>
                 <NextSSRPlugin
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />

@@ -32,10 +32,10 @@ export function CompanyTeam({ professionals }: CompanyTeamProps) {
               <AvatarFallback className="bg-primary/10 text-primary">
                 {pro.user.name
                   ? pro.user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()
                   : "??"}
               </AvatarFallback>
             </Avatar>

@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import { ActionError, createServerAction, db, requireAuth } from "../lib";
 import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema";
