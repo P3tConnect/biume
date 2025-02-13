@@ -235,7 +235,7 @@ export const getBillingInfo = createServerAction(
         ),
         currentPrice: `${(currentSubscription?.items.data[0]?.price.unit_amount || 0) / 100}€`,
         paymentMethod: defaultPaymentMethod
-          ? `${defaultPaymentMethod.card?.brand} se terminant par ${defaultPaymentMethod.card?.last4}`
+          ? `${defaultPaymentMethod.card?.brand.toLocaleUpperCase()} se terminant par ${defaultPaymentMethod.card?.last4}`
           : "Aucun moyen de paiement",
         subscriptionStatus: currentSubscription?.status || "inactive",
       };
