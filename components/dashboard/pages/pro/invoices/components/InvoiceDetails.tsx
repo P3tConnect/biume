@@ -78,7 +78,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Date d'échéance</p>
+                <p className="text-sm text-muted-foreground">Date d&apos;échéance</p>
                 <p className="font-medium">
                   {format(new Date(invoice.dueDate), "d MMMM yyyy", {
                     locale: fr,

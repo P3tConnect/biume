@@ -30,7 +30,6 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateReminderSchema, type Reminder } from "@/src/db/reminder";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, PencilIcon, TrashIcon } from "lucide-react";
@@ -151,7 +150,7 @@ const RemindersPageComponent = () => {
                   name="dueDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date d'échéance</FormLabel>
+                      <FormLabel>Date d&apos;échéance</FormLabel>
                       <FormControl>
                         <Input type="datetime-local" {...field} />
                       </FormControl>

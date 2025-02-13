@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   CreditCard,
-  Bell,
   Users,
   FileText,
   Briefcase,
@@ -11,7 +10,6 @@ import {
 } from "lucide-react";
 import { ProfileSection } from "./sections/profile-section";
 import { BillingSection } from "./sections/billing-section";
-import { NotificationsSection } from "./sections/notifications-section";
 import { TeamSection } from "./sections/team-section";
 import { DocumentsSection } from "./sections/documents-section";
 import { ServicesSection } from "./sections/services-section";
@@ -28,7 +26,7 @@ const SettingsPageComponent = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                Paramètres de l'organisation
+                Paramètres de l&apos;organisation
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Gérez les paramètres et les préférences de votre organisation

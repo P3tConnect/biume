@@ -35,10 +35,10 @@ export function CTASection() {
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-3xl blur-2xl"></div>
           <div className="relative bg-background border rounded-3xl p-6 sm:p-12 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">
-              Rejoignez notre liste d'attente
+              Rejoignez notre liste d&apos;attente
             </h2>
             <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Soyez parmi les premiers professionnels à rejoindre notre plateforme et bénéficiez d'avantages exclusifs
+              Soyez parmi les premiers professionnels à rejoindre notre plateforme et bénéficiez d&apos;avantages exclusifs
             </p>
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
               <div className="flex flex-col sm:flex-row items-center gap-4">

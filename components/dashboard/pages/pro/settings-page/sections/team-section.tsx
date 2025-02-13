@@ -132,7 +132,7 @@ export const TeamSection = () => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>Gestion de l'équipe</CardTitle>
+          <CardTitle>Gestion de l&apos;équipe</CardTitle>
           <CardDescription>
             Gérez les membres de votre équipe et leurs rôles
           </CardDescription>
@@ -206,7 +206,7 @@ export const TeamSection = () => {
                   >
                     Annuler
                   </Button>
-                  <Button type="submit">Envoyer l'invitation</Button>
+                  <Button type="submit">Envoyer l&apos;invitation</Button>
                 </CredenzaFooter>
               </form>
             </Form>
@@ -277,7 +277,7 @@ export const TeamSection = () => {
                         {member.status === "pending" && (
                           <DropdownMenuItem className="gap-2">
                             <Mail className="h-4 w-4" />
-                            Renvoyer l'invitation
+                            Renvoyer l&apos;invitation
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem className="gap-2">

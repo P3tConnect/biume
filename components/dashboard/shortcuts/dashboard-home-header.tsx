@@ -14,7 +14,7 @@ export const DashboardHomeHeader = () => {
               Tableau de bord
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Gérez votre activité en un coup d'œil
+              Gérez votre activité en un coup d&apos;œil
             </p>
           </div>
           <NewShortcut />

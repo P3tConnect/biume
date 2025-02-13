@@ -29,7 +29,7 @@ export function HeroSection() {
                 size="lg"
                 className="custom-button h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg"
               >
-                Je m'inscris à la liste d'attente
+                Je m&apos;inscris à la liste d&apos;attente
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>

@@ -153,7 +153,7 @@ const ObservationsWidget = () => {
       <Sheet open={!!selectedObservation} onOpenChange={() => setSelectedObservation(null)}>
         <SheetContent className="w-full sm:max-w-lg">
           <SheetHeader>
-            <SheetTitle>Détails de l'observation</SheetTitle>
+            <SheetTitle>Détails de l&apos;observation</SheetTitle>
           </SheetHeader>
           {selectedObservation && (
             <div className="mt-6 space-y-6">
@@ -182,10 +182,10 @@ const ObservationsWidget = () => {
 
               <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
                 <div>
-                  <h4 className="text-sm font-medium mb-3">Informations sur l'animal</h4>
+                  <h4 className="text-sm font-medium mb-3">Informations sur l&apos;animal</h4>
                   <div className="space-y-2">
                     <div>
-                      <span className="text-sm text-muted-foreground">Type d'observation:</span>
+                      <span className="text-sm text-muted-foreground">Type d&apos;observation:</span>
                       <p className="font-medium">{selectedObservation.type}</p>
                     </div>
                     <div>
@@ -244,7 +244,7 @@ const ObservationsWidget = () => {
 
               <SheetFooter>
                 <Button className="w-full">
-                  Commencer l'observation
+                  Commencer l&apos;observation
                   <ChevronRightIcon className="w-4 h-4 ml-2" />
                 </Button>
               </SheetFooter>

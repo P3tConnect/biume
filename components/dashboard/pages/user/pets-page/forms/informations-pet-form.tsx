@@ -29,6 +29,7 @@ import { CreatePetSchema } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
+import Image from 'next/image';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -66,7 +67,7 @@ const InformationsPetForm = () => {
       form.reset();
     },
     onError: (error) => {
-      toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
+      toast.error(`Erreur lors de la création de l&apos;animal: ${error.message}`);
     },
   });
 
@@ -181,7 +182,9 @@ const InformationsPetForm = () => {
                       ) : (
                         <div className='w-full'>
                           <div className='group relative w-full h-52 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                            <img
+                            <Image
+                              width={200}
+                              height={200}
                               src={form.getValues('image') ?? ''}
                               alt='logo'
                               className='w-full h-full object-cover'
@@ -263,7 +266,7 @@ const InformationsPetForm = () => {
                 name='type'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type d'animal</FormLabel>
+                    <FormLabel>Type d&apos;animal</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -291,7 +294,7 @@ const InformationsPetForm = () => {
                 name='nacType'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type d'animal</FormLabel>
+                    <FormLabel>Type d&apos;animal</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value ?? 'NAC'}

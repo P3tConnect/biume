@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Plus, Dog, Cat, Bird } from 'lucide-react';
 import { PetCard } from './components/pet-card';
+import { Pet } from '@/src/db';
 
 // Données de démonstration
 const mockPets = [
@@ -93,7 +94,7 @@ const PetsPage = () => {
         {mockPets.map((pet) => (
           <PetCard
             key={pet.id}
-            pet={pet}
+            pet={pet as unknown as Pet}
             onEdit={(id) => console.log('Edit', id)}
             onDelete={(id) => console.log('Delete', id)}
           />
@@ -108,7 +109,7 @@ const PetsPage = () => {
           <div className='max-w-md space-y-1'>
             <h3 className='text-lg font-semibold'>Aucun animal</h3>
             <p className='text-sm text-muted-foreground'>
-              Vous n'avez pas encore ajouté d'animal. Commencez par en ajouter
+              Vous n&apos;avez pas encore ajouté d&apos;animal. Commencez par en ajouter
               un !
             </p>
           </div>

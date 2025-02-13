@@ -183,10 +183,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
   ];
 }
 
-export function clientMenuList(pathname: string) {
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
-
+export function clientMenuList(pathname: string, userId: string) {
   return [
     {
       groupLabel: '',

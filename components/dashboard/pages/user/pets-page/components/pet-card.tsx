@@ -1,21 +1,13 @@
 'use client';
 
-import { Card, CardContent, Button, Skeleton, Badge } from '@/components/ui';
+import { Card, Button, Skeleton, Badge } from '@/components/ui';
 import { cn } from '@/src/lib';
 import { PawPrint, Pencil, Trash2, Calendar, Weight } from 'lucide-react';
 import { useState } from 'react';
-
+import Image from 'next/image';
+import { Pet } from '@/src/db';
 interface PetCardProps {
-  pet: {
-    id: string;
-    name: string;
-    image?: string | null;
-    type: string;
-    breed?: string | null;
-    birthDate?: string | null;
-    weight?: number | null;
-    gender?: 'male' | 'female' | null;
-  };
+  pet: Pet;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
@@ -58,7 +50,9 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
             {pet.image ? (
               <>
                 {isImageLoading && <Skeleton className='h-full w-full' />}
-                <img
+                <Image
+                  width={100}
+                  height={100}
                   src={pet.image}
                   alt={pet.name}
                   className={cn(
@@ -116,12 +110,12 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
                   <div
                     className={cn(
                       'flex h-6 w-6 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-base font-semibold',
-                      pet.gender === 'female'
+                      pet.gender === 'Female'
                         ? 'text-pink-400'
                         : 'text-blue-400'
                     )}
                   >
-                    {pet.gender === 'female' ? '♀' : '♂'}
+                    {pet.gender === 'Female' ? '♀' : '♂'}
                   </div>
                 )}
               </div>
@@ -139,7 +133,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
                 pet.birthDate && (
                   <div className='flex items-center gap-2 rounded-md bg-white/10 px-2.5 py-1.5 text-sm text-white backdrop-blur-sm'>
                     <Calendar className='h-4 w-4' />
-                    <span> {getAge(pet.birthDate)} ans</span>
+                    <span> {getAge(pet.birthDate.toISOString())} ans</span>
                   </div>
                 )}
               {

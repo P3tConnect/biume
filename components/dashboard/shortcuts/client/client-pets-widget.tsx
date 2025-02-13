@@ -11,6 +11,7 @@ import {
 } from '@/components/ui';
 import { cn } from '@/src/lib';
 import { PawPrint, Plus, Pencil, Calendar, Weight } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const pets = [
@@ -100,7 +101,9 @@ const PetCard = ({ pet }: { pet: (typeof pets)[0] }) => {
       <div className='relative h-[280px]'>
         <div className='absolute inset-0'>
           {pet.image ? (
-            <img
+            <Image
+              width={100}
+              height={100}
               src={pet.image}
               alt={pet.name}
               className={cn(

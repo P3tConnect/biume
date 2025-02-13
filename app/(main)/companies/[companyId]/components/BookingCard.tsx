@@ -26,6 +26,7 @@ import { cn } from "@/src/lib/utils";
 import { motion } from "framer-motion";
 import Avvvatars from "avvvatars-react";
 import { Service, Member } from "@/src/db";
+import Image from "next/image";
 
 interface BookingCardProps {
   services: Service[];
@@ -142,7 +143,9 @@ export function BookingCard({
               >
                 <div className="flex items-center gap-4">
                   <div className="relative h-16 w-16 overflow-hidden rounded-lg">
-                    <img
+                    <Image
+                      width={64}
+                      height={64}
                       src={pet.image}
                       alt={pet.name}
                       className="h-full w-full object-cover"
@@ -239,8 +242,10 @@ export function BookingCard({
           <div className="rounded-xl border bg-muted/50 p-6 space-y-4">
             <div className="flex items-center gap-4">
               <div className="relative h-20 w-20 overflow-hidden rounded-lg">
-                <img
-                  src={userPets.find((p) => p.id === selectedPet)?.image}
+                <Image
+                  width={64}
+                  height={64}
+                  src={userPets.find((p) => p.id === selectedPet)?.image!}
                   alt="Animal"
                   className="h-full w-full object-cover"
                 />
@@ -385,8 +390,8 @@ export function BookingCard({
                   key={service.id}
                   onClick={() => setSelectedService(service.id)}
                   className={`w-full text-left p-4 rounded-xl border transition-all ${selectedService === service.id
-                      ? "border-2 border-primary"
-                      : "hover:border-primary/50"
+                    ? "border-2 border-primary"
+                    : "hover:border-primary/50"
                     }`}
                 >
                   <div className="flex justify-between items-center">
@@ -417,8 +422,8 @@ export function BookingCard({
                     key={pro.id}
                     onClick={() => setSelectedPro(pro.id)}
                     className={`w-full text-left p-4 rounded-xl border transition-all ${selectedPro === pro.id
-                        ? "border-2 border-primary"
-                        : "hover:border-primary/50"
+                      ? "border-2 border-primary"
+                      : "hover:border-primary/50"
                       }`}
                   >
                     <div className="flex gap-4">

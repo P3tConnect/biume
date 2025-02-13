@@ -176,7 +176,7 @@ const MetricsWidget = () => {
                 <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
                   <CalendarIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <span className="font-medium">Aujourd'hui</span>
+                <span className="font-medium">Aujourd&apos;hui</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <TrendingUpIcon className="w-3 h-3" />

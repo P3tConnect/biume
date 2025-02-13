@@ -133,7 +133,9 @@ const ClientInformationForm = ({
           ) : (
             <div className='flex flex-col items-center gap-4'>
               <div className='group relative w-32 h-30 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                <img
+                <Image
+                  width={100}
+                  height={100}
                   src={form.getValues('image') ?? ''}
                   alt='logo'
                   className='object-cover'

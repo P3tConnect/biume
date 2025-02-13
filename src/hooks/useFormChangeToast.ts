@@ -71,6 +71,7 @@ export function useFormChangeToast<T extends FieldValues>({
       toast.dismiss(FORM_CHANGES_TOAST_ID);
     };
   }, [
+    form,
     form.watch,
     form.formState.isDirty,
     message,

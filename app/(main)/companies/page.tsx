@@ -18,8 +18,6 @@ import {
 } from "@/components/ui/select";
 import { OrganizationsGrid } from "./components/organizations-grid";
 import { getAllOrganizations } from "@/src/actions/organization.action";
-import { Organization } from "@/src/db";
-import { ActionResult } from "@/src/lib";
 
 export default function CompaniesListPage() {
 
@@ -79,7 +77,7 @@ export default function CompaniesListPage() {
                   variant="secondary"
                   className="cursor-pointer hover:bg-secondary/90 transition-colors"
                 >
-                  Disponible aujourd'hui
+                  Disponible aujourd&apos;hui
                 </Badge>
                 <Badge
                   variant="secondary"

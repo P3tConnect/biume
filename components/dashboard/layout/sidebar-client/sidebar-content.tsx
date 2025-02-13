@@ -9,13 +9,15 @@ import {
   SidebarMenuItem,
 } from '@/components/ui';
 import { clientMenuList } from '@/src/config';
+import { useSession } from '@/src/lib/auth-client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const SidebarClientContentComponent = () => {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
-  const menuList = clientMenuList(pathname);
+  const menuList = clientMenuList(pathname, session?.user?.id ?? '');
 
   return (
     <>

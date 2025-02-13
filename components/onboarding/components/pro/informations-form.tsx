@@ -334,7 +334,7 @@ const InformationsForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      Type d'entreprise
+                      Type d&apos;entreprise
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -446,14 +446,14 @@ const InformationsForm = ({
             name="companyType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type d'entreprise</FormLabel>
+                <FormLabel>Type d&apos;entreprise</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez votre type d'entreprise" />
+                      <SelectValue placeholder="Sélectionnez votre type d&apos;entreprise" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

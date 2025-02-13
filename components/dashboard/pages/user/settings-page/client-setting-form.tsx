@@ -141,7 +141,7 @@ const ClientSettingsForm = () => {
               <CardHeader>
                 <CardTitle>Sécurité</CardTitle>
                 <CardDescription>
-                  Gérez vos paramètres de sécurité et l'authentification à deux
+                  Gérez vos paramètres de sécurité et l&apos;authentification à deux
                   facteurs.
                 </CardDescription>
               </CardHeader>

@@ -86,7 +86,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
     <Credenza open={open} onOpenChange={onOpenChange}>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Modifier l'option</CredenzaTitle>
+          <CredenzaTitle>Modifier l&apos;option</CredenzaTitle>
         </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">

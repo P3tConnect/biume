@@ -93,7 +93,7 @@ export function FeaturesSection() {
                           <>
                             <li>• Avis authentiques</li>
                             <li>• Notes détaillées</li>
-                            <li>• Retours d'expérience</li>
+                            <li>• Retours d&apos;expérience</li>
                           </>
                         )}
                         {feature.title === "Rappels automatiques" && (
@@ -160,7 +160,7 @@ export function FeaturesSection() {
                         {feature.title === "Suivi santé" && (
                           <>
                             <li>1. Accédez au carnet</li>
-                            <li>2. Consultez l'historique</li>
+                            <li>2. Consultez l&apos;historique</li>
                             <li>3. Gérez les documents</li>
                           </>
                         )}

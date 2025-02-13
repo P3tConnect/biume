@@ -10,10 +10,9 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Edit2, Trash2, Calendar, Clock, User, PawPrint } from "lucide-react";
+import { Edit2, Trash2, Calendar, Clock, PawPrint } from "lucide-react";
 
 interface Observation {
   id: string;
@@ -159,7 +158,7 @@ const ObservationDetailsDrawer = ({
               {/* Observation Content */}
               <Card className="p-6">
                 <h3 className="font-semibold text-lg mb-4">
-                  Contenu de l'observation
+                  Contenu de l&apos;observation
                 </h3>
                 <p className="text-muted-foreground whitespace-pre-wrap">
                   {observation.content}

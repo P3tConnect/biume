@@ -10,6 +10,7 @@ import {
 } from '@/components/ui';
 import { cn } from '@/src/lib';
 import { Calendar, Clock, Pencil, Trash2, Home } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface ReservationCardProps {
@@ -67,7 +68,9 @@ const ReservationCard = ({
           {reservation.image ? (
             <>
               {isImageLoading && <Skeleton className='h-full w-full' />}
-              <img
+              <Image
+                width={100}
+                height={100}
                 src={reservation.image}
                 alt={`Photo de ${reservation.petName}`}
                 className={cn(
@@ -127,7 +130,9 @@ const ReservationCard = ({
               <div className='flex items-start flex-col gap-2'>
                 <div className='flex flex-row items-center gap-2'>
                   <Avatar className='h-8 w-8 border-2 border-white'>
-                    <img
+                    <Image
+                      width={100}
+                      height={100}
                       src={reservation.sitterImage || ''}
                       alt={reservation.sitterName}
                       className='object-cover'

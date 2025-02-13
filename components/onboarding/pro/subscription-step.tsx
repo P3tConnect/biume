@@ -41,18 +41,18 @@ const plans = [
     description: "Pour les petites équipes",
     price: "24.99",
     features: [
-      <span>Abonnement Basic +</span>,
-      <span>Notifications</span>,
-      <span>Rappels automatiques</span>,
-      <span>Délais de rétraction</span>,
-      <span>Echelons de remboursement</span>,
-      <span>
+      <span key="basic-plus">Abonnement Basic +</span>,
+      <span key="notifications">Notifications</span>,
+      <span key="reminders">Rappels automatiques</span>,
+      <span key="refund-period">Délais de rétraction</span>,
+      <span key="refund-policy">Echelons de remboursement</span>,
+      <span key="preview-biume">
         Preview Biume{" "}
         <span className="text-xl font-bold inline bg-gradient-to-r from-[#FF3366] to-[#338EF7] bg-clip-text text-transparent">
           AI
         </span>
       </span>,
-      <span>Jusqu'à 5 employés</span>,
+      <span key="employees">Jusqu&apos;à 5 employés</span>,
     ],
     priceId: safeConfig.STRIPE_PRO_PLAN_ID,
   },
@@ -62,7 +62,7 @@ const plans = [
     price: "34.99",
     features: [
       "Abonnement Pro +",
-      <span>
+      <span key="biume">
         Biume{" "}
         <span className="text-xl font-bold inline bg-gradient-to-r from-[#FF3366] to-[#338EF7] bg-clip-text text-transparent">
           AI
@@ -99,9 +99,9 @@ export function SubscriptionStep() {
         </p>
       </div>
       <div className="grid gap-8 md:grid-cols-3">
-        {plans.map((plan) => (
+        {plans.map((plan, index) => (
           <Card
-            key={plan.name}
+            key={index}
             className={cn(
               "relative cursor-pointer transition-all hover:shadow-lg rounded-2xl flex flex-col h-full",
               selectedPlan === plan.name && "border-primary shadow-lg",

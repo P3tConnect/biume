@@ -216,7 +216,7 @@ export const ProfileSection = () => {
           />
           <div className="text-white text-center">
             <p className="text-sm">
-              Cliquez pour modifier l'image de couverture
+              Cliquez pour modifier l&apos;image de couverture
             </p>
             <p className="text-xs text-white/70">
               Format recommandé : 1920x400px
@@ -273,10 +273,10 @@ export const ProfileSection = () => {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nom de l'organisation</FormLabel>
+                          <FormLabel>Nom de l&apos;organisation</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Entrez le nom de l'organisation"
+                              placeholder="Entrez le nom de l&apos;organisation"
                               {...field}
                             />
                           </FormControl>
@@ -360,7 +360,7 @@ export const ProfileSection = () => {
                 <CardHeader>
                   <CardTitle>Informations légales</CardTitle>
                   <CardDescription>
-                    Numéros d'identification de votre organisation
+                    Numéros d&apos;identification de votre organisation
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -408,9 +408,9 @@ export const ProfileSection = () => {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Horaires d'ouverture</CardTitle>
+                  <CardTitle>Horaires d&apos;ouverture</CardTitle>
                   <CardDescription>
-                    Définissez vos heures d'ouverture
+                    Définissez vos heures d&apos;ouverture
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -419,7 +419,7 @@ export const ProfileSection = () => {
                     name="openAt"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Heure d'ouverture</FormLabel>
+                        <FormLabel>Heure d&apos;ouverture</FormLabel>
                         <FormControl>
                           <Input type="time" {...field} />
                         </FormControl>

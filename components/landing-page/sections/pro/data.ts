@@ -92,7 +92,7 @@ export const testimonials = [
   },
   {
     content:
-      "Un outil indispensable pour mon élevage. La gestion des vaccins et des rendez-vous n'a jamais été aussi simple !",
+      "Un outil indispensable pour mon élevage. La gestion des vaccins et des rendez-vous n&apos;a jamais été aussi simple !",
     name: "Sophie Laurent",
     role: "Éleveuse canine",
     avatar: "/avatars/avatar-3.jpg",

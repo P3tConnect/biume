@@ -37,7 +37,7 @@ export function TestimonialsSection() {
                     </div>
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    "{testimonial.content}"
+                    &quot;{testimonial.content}&quot;
                   </p>
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (

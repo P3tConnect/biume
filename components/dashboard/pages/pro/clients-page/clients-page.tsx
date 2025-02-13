@@ -25,7 +25,6 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowUpDown,
   Plus,
-  Filter,
   MoreHorizontal,
   UserPlus,
   Users,
@@ -441,7 +440,7 @@ const ClientsPageComponent = () => {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Date d'inscription
+            Date d&apos;inscription
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -531,9 +530,9 @@ const ClientsPageComponent = () => {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   ))}
                 </TableRow>

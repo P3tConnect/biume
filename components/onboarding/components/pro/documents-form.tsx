@@ -69,11 +69,11 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
                   <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <FormDescription>
-                      Pour vérifier l'identité de votre entreprise, veuillez fournir :
+                      Pour vérifier l&apos;identité de votre entreprise, veuillez fournir :
                     </FormDescription>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Un extrait Kbis récent (moins de 3 mois)</li>
-                      <li>Ou tout autre document officiel d'identification</li>
+                      <li>Ou tout autre document officiel d&apos;identification</li>
                     </ul>
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
 
           <div className="grid gap-8 pt-6">
             <div className="flex flex-col space-y-6">
-              <h3 className="text-lg font-semibold">Informations d'identification</h3>
+              <h3 className="text-lg font-semibold">Informations d&apos;identification</h3>
               <div className="grid gap-6 sm:grid-cols-2">
                 <FormField
                   control={control}

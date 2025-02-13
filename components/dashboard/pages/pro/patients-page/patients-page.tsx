@@ -376,7 +376,7 @@ const PatientsPageComponent = () => {
                   <CredenzaHeader>
                     <CredenzaTitle>Ajouter un nouveau patient</CredenzaTitle>
                     <CredenzaDescription>
-                      Formulaire d'ajout de patient à implémenter
+                      Formulaire d&apos;ajout de patient à implémenter
                     </CredenzaDescription>
                   </CredenzaHeader>
                 </CredenzaContent>
@@ -447,7 +447,7 @@ const PatientsPageComponent = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
-                    <DropdownMenuItem>Date d'inscription</DropdownMenuItem>
+                    <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
                     <DropdownMenuItem>Âge</DropdownMenuItem>
                     <DropdownMenuItem>Type</DropdownMenuItem>
                   </DropdownMenuContent>

@@ -102,7 +102,7 @@ const ClientDashboardReservationsComponent = () => {
           <div className='max-w-md space-y-1'>
             <h3 className='text-lg font-semibold'>Aucune réservation</h3>
             <p className='text-sm text-muted-foreground'>
-              Vous n'avez pas encore de réservation. Commencez par en créer une
+              Vous n&apos;avez pas encore de réservation. Commencez par en créer une
               !
             </p>
           </div>

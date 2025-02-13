@@ -141,7 +141,7 @@ export const BillingSection = () => {
               Voir et télécharger les factures passées
             </p>
             <Button variant="outline" className="mt-4">
-              Voir l'historique de facturation
+              Voir l&apos;historique de facturation
             </Button>
           </div>
         </CardContent>

@@ -6,13 +6,13 @@ const ClientCompleteStep = () => {
       <p className="text-8xl">🥳</p>
       <div className="flex flex-col text-center">
         <h1 className="text-2xl font-bold">
-          Bravo ! Vous avez terminé le processus d'inscription
+          Bravo ! Vous avez terminé le processus d&apos;inscription
         </h1>
         <p className="text-muted-foreground text-sm">
           Vous pouvez maintenant utiliser votre compte personnel.
         </p>
         <p className="text-muted-foreground text-sm">
-          N'hésitez pas à nous contacter si vous avez des questions
+          N&apos;hésitez pas à nous contacter si vous avez des questions
         </p>
       </div>
     </div>

@@ -102,7 +102,7 @@ export function OptionsForm({
                       <FormItem>
                         <FormControl>
                           <Input
-                            placeholder="Nom de l'option"
+                            placeholder="Nom de l&apos;option"
                             className="text-lg font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
                             {...field}
                             value={field.value ?? ""}
@@ -120,7 +120,7 @@ export function OptionsForm({
                       <FormItem>
                         <FormControl>
                           <Textarea
-                            placeholder="Description de l'option..."
+                            placeholder="Description de l&apos;option..."
                             className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary"
                             {...field}
                             value={field.value ?? ""}

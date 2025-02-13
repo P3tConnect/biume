@@ -13,7 +13,7 @@ const PetsGrid = ({ pets }: { pets: Promise<ActionResult<Pet[]>> }) => {
       {petsResult.data?.length === 0 ? (
         <div className='flex flex-col items-center justify-center h-full'>
           <p className='text-sm text-center text-muted-foreground'>
-            Vous n'avez pas d'animaux
+            Vous n&apos;avez pas d&apos;animaux
           </p>
         </div>
       ) : (

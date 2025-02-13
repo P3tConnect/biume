@@ -12,46 +12,67 @@ import {
 import Calendar from '@/components/dashboard/pages/pro/timetable-page/calendar';
 import { cn } from '@/src/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { DropResult } from 'react-beautiful-dnd';
 
 // Données temporaires pour la démonstration
 const mockAppointments = [
   {
     id: '1',
-    clientName: 'Jean Dupont',
-    date: new Date(),
-    time: '09:00',
-    duration: 30,
-    status: 'confirmed' as const,
-    notes: 'Premier rendez-vous',
+    title: 'Rendez-vous avec Jean Dupont',
+    description: 'Premier rendez-vous',
+    startTime: '09:00',
+    endTime: '09:30',
+    category: 'work' as const,
   },
   {
     id: '2',
-    clientName: 'Marie Martin',
-    date: new Date(),
-    time: '10:30',
-    duration: 45,
-    status: 'pending' as const,
+    title: 'Rendez-vous avec Marie Martin',
+    description: 'Consultation de routine',
+    startTime: '10:30',
+    endTime: '11:15',
+    category: 'work' as const,
   },
   {
     id: '3',
-    clientName: 'Pierre Durand',
-    date: new Date(new Date().setDate(new Date().getDate() + 2)),
-    time: '14:00',
-    duration: 60,
-    status: 'confirmed' as const,
+    title: 'Rendez-vous avec Pierre Durand',
+    description: 'Suivi mensuel',
+    startTime: '14:00',
+    endTime: '15:00',
+    category: 'work' as const,
   },
 ];
 
 const DashboardUserTimetablePage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingAppointment, setEditingAppointment] =
-    useState<AppointmentFormData | null>(null);
+  const [editingAppointment, setEditingAppointment] = useState<AppointmentFormData | null>(null);
   const [view, setView] = useState<'calendar' | 'list'>('calendar');
+
+  // Transformer les rendez-vous en format DayEvents
+  const transformAppointmentsToEvents = () => {
+    const events: { [date: string]: typeof mockAppointments } = {};
+    mockAppointments.forEach((apt) => {
+      const date = new Date();
+      if (apt.id === '3') {
+        date.setDate(date.getDate() + 2);
+      }
+      const dateString = date.toDateString();
+      if (!events[dateString]) {
+        events[dateString] = [];
+      }
+      events[dateString].push(apt);
+    });
+    return events;
+  };
 
   const handleAddAppointment = (data: AppointmentFormData) => {
     // TODO: Implémenter l'ajout d'un rendez-vous
     console.log('Nouveau rendez-vous:', data);
+  };
+
+  const handleEventDrop = (result: DropResult) => {
+    // TODO: Implémenter le déplacement d'un rendez-vous
+    console.log('Déplacement du rendez-vous:', result);
   };
 
   const handleEditAppointment = (appointment: AppointmentFormData) => {
@@ -64,9 +85,13 @@ const DashboardUserTimetablePage = () => {
     console.log('Supprimer le rendez-vous:', appointment);
   };
 
-  const dailyAppointments = mockAppointments.filter(
-    (apt) => apt.date.toDateString() === selectedDate.toDateString()
-  );
+  const dailyAppointments = mockAppointments.filter((apt) => {
+    const date = new Date();
+    if (apt.id === '3') {
+      date.setDate(date.getDate() + 2);
+    }
+    return date.toDateString() === selectedDate.toDateString();
+  });
 
   return (
     <div className='h-full w-full flex flex-col'>
@@ -136,81 +161,15 @@ const DashboardUserTimetablePage = () => {
                     </div>
                   }
                 >
-                  <Calendar />
+                  <Calendar
+                    selectedDate={selectedDate}
+                    onDayClick={setSelectedDate}
+                    onEventDrop={handleEventDrop}
+                    events={transformAppointmentsToEvents()}
+                  />
                 </Suspense>
               </div>
             </Card>
-
-            <div className='flex flex-col gap-4 h-full'>
-              <Card className='rounded-xl overflow-hidden h-1/2'>
-                <div className='p-3 border-b'>
-                  <h2 className='font-medium'>
-                    Rendez-vous du {selectedDate.toLocaleDateString('fr-FR')}
-                  </h2>
-                </div>
-                <div className='flex-1 overflow-hidden'>
-                  <DailyAppointments
-                    appointments={dailyAppointments}
-                    selectedDate={selectedDate}
-                  />
-                </div>
-              </Card>
-
-              <Card className='rounded-xl overflow-hidden h-1/2'>
-                <div className='p-3 border-b'>
-                  <h2 className='font-medium'>Prochains rendez-vous</h2>
-                </div>
-                <div className='flex-1 overflow-y-auto p-3'>
-                  <div className='space-y-2'>
-                    {mockAppointments
-                      .filter((apt) => new Date(apt.date) > new Date())
-                      .sort(
-                        (a, b) =>
-                          new Date(a.date).getTime() -
-                          new Date(b.date).getTime()
-                      )
-                      .slice(0, 3)
-                      .map((appointment) => (
-                        <div
-                          key={appointment.id}
-                          className='flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors'
-                        >
-                          <div className='space-y-1'>
-                            <p className='font-medium'>
-                              {appointment.clientName}
-                            </p>
-                            <div className='flex items-center text-sm text-muted-foreground'>
-                              <Clock className='mr-1 h-3 w-3' />
-                              <span>
-                                {new Date(appointment.date).toLocaleDateString(
-                                  'fr-FR'
-                                )}{' '}
-                                à {appointment.time}
-                              </span>
-                            </div>
-                          </div>
-                          <Badge
-                            className={cn(
-                              'ml-auto text-xs',
-                              appointment.status === 'confirmed'
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                : appointment.status === 'pending'
-                                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                                  : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                            )}
-                          >
-                            {appointment.status === 'confirmed'
-                              ? 'Confirmé'
-                              : appointment.status === 'pending'
-                                ? 'En attente'
-                                : 'Annulé'}
-                          </Badge>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              </Card>
-            </div>
           </div>
         ) : (
           <Card className='rounded-xl h-full'>

@@ -175,7 +175,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
               variants={fadeInUp}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <h2 className="text-2xl font-semibold mb-6">L'équipe</h2>
+              <h2 className="text-2xl font-semibold mb-6">L&apos;équipe</h2>
               {companyResult.data?.members && (
                 <CompanyTeam professionals={companyResult.data.members} />
               )}

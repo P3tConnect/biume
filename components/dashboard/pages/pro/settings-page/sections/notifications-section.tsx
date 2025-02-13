@@ -31,7 +31,7 @@ export const NotificationsSection = () => {
                 <Label htmlFor="new-booking" className="flex flex-col space-y-1">
                   <span>Nouvelle réservation</span>
                   <span className="font-normal text-sm text-muted-foreground">
-                    Recevez un email lorsqu'un client effectue une nouvelle réservation
+                    Recevez un email lorsqu&apos;un client effectue une nouvelle réservation
                   </span>
                 </Label>
                 <Switch id="new-booking" />
@@ -51,7 +51,7 @@ export const NotificationsSection = () => {
                 <Label htmlFor="booking-canceled" className="flex flex-col space-y-1">
                   <span>Annulation de réservation</span>
                   <span className="font-normal text-sm text-muted-foreground">
-                    Soyez notifié lorsqu'un client annule sa réservation
+                    Soyez notifié lorsqu&apos;un client annule sa réservation
                   </span>
                 </Label>
                 <Switch id="booking-canceled" />
@@ -77,7 +77,7 @@ export const NotificationsSection = () => {
                 <Label htmlFor="push-review" className="flex flex-col space-y-1">
                   <span>Nouveaux avis</span>
                   <span className="font-normal text-sm text-muted-foreground">
-                    Soyez notifié lorsqu'un client laisse un avis
+                    Soyez notifié lorsqu&apos;un client laisse un avis
                   </span>
                 </Label>
                 <Switch id="push-review" />

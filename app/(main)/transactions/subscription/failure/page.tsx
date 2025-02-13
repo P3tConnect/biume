@@ -29,7 +29,7 @@ export default function OrganizationSubscriptionFailure() {
 
                 <p className="text-muted-foreground max-w-md mx-auto text-base">
                   Une erreur est survenue lors du traitement de votre paiement.
-                  Aucun montant n'a été débité. Veuillez réessayer ou contacter notre support si le problème persiste.
+                  Aucun montant n&apos;a été débité. Veuillez réessayer ou contacter notre support si le problème persiste.
                 </p>
               </div>
             </div>
@@ -55,7 +55,7 @@ export default function OrganizationSubscriptionFailure() {
                 href="/support"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                Besoin d'aide ? Contactez notre support
+                Besoin d&apos;aide ? Contactez notre support
               </Link>
             </div>
           </div>

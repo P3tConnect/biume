@@ -11,7 +11,7 @@ const ClientDashboardSettingsPage = () => {
           <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
             <div>
               <CardTitle className='text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent'>
-                Paramètres de l'utilisateur
+                Paramètres de l&apos;utilisateur
               </CardTitle>
               <p className='text-sm text-muted-foreground'>
                 Gérez les paramètres et les préférences de votre profil
