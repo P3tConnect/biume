@@ -1,12 +1,15 @@
 import { integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import { appointments } from './appointments';
 import { createInsertSchema } from 'drizzle-zod';
 import { petsDeseases } from './petsDeseases';
-import { z } from 'zod';
 import { petsAllergies } from './petsAllergies';
 import { petsIntolerences } from './petsIntolerences';
-import { user } from './user';
+import { User, user } from './user';
+import { Allergy } from './allergies';
+import { Intolerence } from './intolerences';
+import { Desease } from './deseases';
+import { z } from 'zod';
 
 export const petType = pgEnum('petType', [
   'Dog',
@@ -24,19 +27,19 @@ export const pets = pgTable('pets', {
     .$defaultFn(() => crypto.randomUUID()),
   name: text('name').notNull(),
   type: petType('type').default('Dog').notNull(),
-  gender: petGender('gender').notNull().default('Male'),
-  breed: text('breed'),
-  nacType: text('nacType'),
-  image: text('image'),
-  birthDate: timestamp('birthDate', { mode: 'date' }).notNull(),
-  furColor: text('furColor'),
-  eyeColor: text('eyeColor'),
-  description: text('description'),
   weight: integer('weight'),
   height: integer('height'),
+  description: text('description'),
   ownerId: text('ownerId').references(() => user.id, {
     onDelete: 'cascade',
   }),
+  breed: text('breed'),
+  image: text('image'),
+  gender: petGender('gender').notNull().default('Male'),
+  nacType: text('nacType'),
+  birthDate: timestamp('birthDate', { mode: 'date' }).notNull(),
+  furColor: text('furColor'),
+  eyeColor: text('eyeColor'),
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull(),
   updatedAt: timestamp('updatedAt'),
 });
@@ -52,7 +55,12 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
   }),
 }));
 
-export type Pet = typeof pets.$inferSelect;
+export type Pet = InferSelectModel<typeof pets> & {
+  owner: User;
+  deseases: Desease[];
+  allergies: Allergy[];
+  intolerences: Intolerence[];
+};
 export type CreatePet = typeof pets.$inferInsert;
 export const PetTypeEnum = z.enum(petType.enumValues);
 
