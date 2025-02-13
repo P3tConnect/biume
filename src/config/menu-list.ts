@@ -159,10 +159,10 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
       groupLabel: "dashboard.sidebar.groupLabels.other",
       menus: [
         {
-          href: `/dashboard/organization/${companyId}/settings/profile`,
+          href: `/dashboard/organization/${companyId}/settings`,
           label: "dashboard.sidebar.settings",
           active:
-            pathname == `/dashboard/organization/${companyId}/settings/profile`,
+            pathname == `/dashboard/organization/${companyId}/settings`,
           icon: Settings,
           submenus: [],
         },
