@@ -17,13 +17,12 @@ import {
   updateOrganizationPlan,
 } from "@/src/actions/stripe.action";
 import { Skeleton } from "@/components/ui/skeleton";
-import { logger } from "@/src/lib";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Check } from "lucide-react";
 import { cn } from "@/src/lib";
 import { toast } from "sonner";
 import { safeConfig } from "@/src/lib";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
 
 const plans = [
   {
@@ -148,11 +147,11 @@ export const BillingSection = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Credenza open={isOpen} onOpenChange={setIsOpen}>
         <VisuallyHidden>
-          <DialogTitle>Changer de plan</DialogTitle>
+          <CredenzaTitle>Changer de plan</CredenzaTitle>
         </VisuallyHidden>
-        <DialogContent className="max-w-4xl">
+        <CredenzaContent className="max-w-4xl">
           <div className="grid gap-8 md:grid-cols-3">
             {plans.map((plan) => (
               <Card
@@ -169,10 +168,10 @@ export const BillingSection = () => {
                     Populaire
                   </div>
                 )}
-                <CardHeader>
-                  <CardTitle>{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
-                </CardHeader>
+                <CredenzaHeader>
+                  <CredenzaTitle>{plan.name}</CredenzaTitle>
+                  <CredenzaDescription>{plan.description}</CredenzaDescription>
+                </CredenzaHeader>
                 <CardContent className="flex-1">
                   <div className="mb-4">
                     <span className="text-3xl font-bold">{plan.price}€</span>
@@ -199,8 +198,8 @@ export const BillingSection = () => {
               </Card>
             ))}
           </div>
-        </DialogContent>
-      </Dialog>
+        </CredenzaContent>
+      </Credenza>
     </>
   );
 };

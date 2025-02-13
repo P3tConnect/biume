@@ -1,15 +1,7 @@
 import { FormControl, FormMessage } from "@/components/ui/form";
 
 import { Form, FormItem } from "@/components/ui/form";
-
-import {
-  DialogContent,
-  DialogTitle,
-  DialogHeader,
-} from "@/components/ui/dialog";
 import { FormField } from "@/components/ui/form";
-
-import { Dialog } from "@/components/ui/dialog";
 import { Service } from "@/src/db";
 import { useActionMutation } from "@/src/hooks/action-hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateService } from "@/src/actions";
 import Image from "next/image";
+import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
+import { CredenzaContent } from "@/components/ui";
 
 const servicesSchema = z.object({
   id: z.string().optional(),
@@ -74,11 +68,11 @@ export const ServiceForm = ({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modifier le service</DialogTitle>
-        </DialogHeader>
+    <Credenza open={open} onOpenChange={onOpenChange}>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Modifier le service</CredenzaTitle>
+        </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
             <div className="space-y-4">
@@ -217,7 +211,7 @@ export const ServiceForm = ({
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 };

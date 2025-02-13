@@ -18,12 +18,7 @@ import { toast } from "sonner";
 import { useActionMutation } from "@/src/hooks/action-hooks";
 import { updateOption, deleteOption } from "@/src/actions";
 import { Option } from "@/src/db";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui";
 
 const optionSchema = z.object({
   id: z.string().optional(),
@@ -88,11 +83,11 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Modifier l'option</DialogTitle>
-        </DialogHeader>
+    <Credenza open={open} onOpenChange={onOpenChange}>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Modifier l'option</CredenzaTitle>
+        </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
             <div className="space-y-4">
@@ -163,7 +158,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 };

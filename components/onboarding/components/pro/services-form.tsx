@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  DialogFooter,
+  CredenzaFooter,
   Form,
   FormControl,
   FormField,
@@ -306,7 +306,7 @@ const ServicesForm = ({
           </div>
         </div>
 
-        <DialogFooter>
+        <CredenzaFooter>
           <div className="flex justify-end gap-4 w-full">
             <Button
               variant="outline"
@@ -322,7 +322,7 @@ const ServicesForm = ({
               Suivant
             </Button>
           </div>
-        </DialogFooter>
+        </CredenzaFooter>
       </form>
     </Form>
   );

@@ -19,7 +19,7 @@ import {
 } from '@/components/ui';
 import { useDropzone } from 'react-dropzone';
 import { useUploadThing } from '@/src/lib/uploadthing';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -29,7 +29,6 @@ import { CreatePetSchema } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
-import { unescape } from 'querystring';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
