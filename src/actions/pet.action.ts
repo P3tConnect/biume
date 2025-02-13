@@ -17,19 +17,9 @@ export const createPet = createServerAction(
         .insert(pets)
         .values([
           {
-            name: input.name,
-            image: input.image ?? '',
-            breed: input.breed ?? '',
-            gender: input.gender,
-            type: input.type,
-            nacType: input.nacType ?? '',
-            weight: input.weight ?? 0,
-            height: input.height ?? 0,
-            eyeColor: input.eyeColor ?? '',
-            furColor: input.furColor ?? '',
-            description: input.description ?? '',
-            birthDate: input.birthDate,
+            ...input,
             ownerId: ctx.user.id,
+            birthDate: new Date(input.birthDate),
             createdAt: new Date(),
             updatedAt: new Date(),
           },
