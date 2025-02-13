@@ -8,7 +8,7 @@ import {
   requireOwner,
   requireAuth,
 } from "../lib";
-import { CreateOptionSchema, options as optionsTable } from "../db";
+import { CreateOptionSchema, Option, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
 import { auth } from "../lib/auth";
 import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
@@ -34,7 +34,7 @@ export const getOptionsFromOrganization = createServerAction(
       throw new ActionError("Options not found");
     }
 
-    return options;
+    return options as unknown as Option[];
   },
   [requireAuth, requireOwner],
 );

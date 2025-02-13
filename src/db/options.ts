@@ -1,6 +1,9 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
-import { AskAppointmentOption, askAppointmentOptions } from "./askAppointmentOptions";
+import {
+  AskAppointmentOption,
+  askAppointmentOptions,
+} from "./askAppointmentOptions";
 import { InvoiceOption, invoiceOptions } from "./invoiceOptions";
 import { SessionOption, sessionOptions } from "./sessionOptions";
 import { createInsertSchema } from "drizzle-zod";

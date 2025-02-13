@@ -28,7 +28,17 @@ const DashboardOrganizationLayout = async ({
     redirect(`/dashboard/user/${session?.user.id}`);
   }
 
-  return (
+  const activeMember = await auth.api.getActiveMember({
+    headers: await headers(),
+    organizationId: orgId,
+    userId: session?.user.id,
+  });
+
+  return activeMember?.role == "member" ? (
+    <DashboardLayoutComponents companyId={orgId}>
+      {member}
+    </DashboardLayoutComponents>
+  ) : (
     <DashboardLayoutComponents companyId={orgId}>
       {owner}
     </DashboardLayoutComponents>

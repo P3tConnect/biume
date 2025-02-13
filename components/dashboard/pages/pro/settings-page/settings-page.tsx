@@ -1,6 +1,14 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2, CreditCard, Bell, Users, FileText, Briefcase, Settings } from "lucide-react";
+import {
+  Building2,
+  CreditCard,
+  Bell,
+  Users,
+  FileText,
+  Briefcase,
+  Settings,
+} from "lucide-react";
 import { ProfileSection } from "./sections/profile-section";
 import { BillingSection } from "./sections/billing-section";
 import { NotificationsSection } from "./sections/notifications-section";
@@ -9,6 +17,8 @@ import { DocumentsSection } from "./sections/documents-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { getOptionsFromOrganization } from "@/src/actions";
+import { getServicesFromOrganization } from "@/src/actions";
 
 const SettingsPageComponent = () => {
   return (
@@ -28,7 +38,7 @@ const SettingsPageComponent = () => {
         </CardHeader>
       </Card>
 
-      <div className="container px-1">
+      <div className="px-1">
         <Tabs defaultValue="profile" className="space-y-4">
           <TabsList>
             <TabsTrigger value="profile" className="flex items-center gap-2">
@@ -51,10 +61,6 @@ const SettingsPageComponent = () => {
               <CreditCard className="h-4 w-4" />
               Facturation
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
-              <Bell className="h-4 w-4" />
-              Notifications
-            </TabsTrigger>
             <TabsTrigger value="team" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Équipe
@@ -66,11 +72,11 @@ const SettingsPageComponent = () => {
           </TabsContent>
 
           <TabsContent value="services">
-            <ServicesSection />
+            <ServicesSection services={getServicesFromOrganization({})} />
           </TabsContent>
 
           <TabsContent value="options">
-            <OptionsSection />
+            <OptionsSection options={getOptionsFromOrganization({})} />
           </TabsContent>
 
           <TabsContent value="documents">
@@ -79,10 +85,6 @@ const SettingsPageComponent = () => {
 
           <TabsContent value="billing">
             <BillingSection />
-          </TabsContent>
-
-          <TabsContent value="notifications">
-            <NotificationsSection />
           </TabsContent>
 
           <TabsContent value="team">

@@ -7,6 +7,7 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
+  getPlanName,
 } from "../lib";
 import { stripe } from "../lib/stripe";
 import { organization, PlanEnum } from "../db";
@@ -195,4 +196,57 @@ export const updateOrganizationPlan = createServerAction(
     return session.url;
   },
   [requireAuth, requireOwner],
+);
+
+export const getBillingInfo = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      const org = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.id, input.organizationId))
+        .execute();
+
+      if (!org[0] || !org[0].stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const customer = await stripe.customers.retrieve(org[0].stripeId);
+      const subscriptions = await stripe.subscriptions.list({
+        customer: org[0].stripeId,
+        limit: 1,
+      });
+      const paymentMethods = await stripe.paymentMethods.list({
+        customer: org[0].stripeId,
+        type: "card",
+      });
+
+      const currentSubscription = subscriptions.data[0];
+      const defaultPaymentMethod = paymentMethods.data[0];
+
+      return {
+        currentPlan: await getPlanName(
+          currentSubscription?.items.data[0].plan.product as string,
+        ),
+        currentPrice: `${(currentSubscription?.items.data[0]?.price.unit_amount || 0) / 100}€`,
+        paymentMethod: defaultPaymentMethod
+          ? `${defaultPaymentMethod.card?.brand} se terminant par ${defaultPaymentMethod.card?.last4}`
+          : "Aucun moyen de paiement",
+        subscriptionStatus: currentSubscription?.status || "inactive",
+      };
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des informations de facturation:",
+        error,
+      );
+      throw new ActionError(
+        "Impossible de récupérer les informations de facturation",
+      );
+    }
+  },
 );

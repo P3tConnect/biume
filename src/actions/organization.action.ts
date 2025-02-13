@@ -5,14 +5,11 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
-  requireOrganization,
+  requireFullOrganization,
   stripe,
 } from "../lib";
 import { auth } from "../lib/auth";
-import {
-  Organization,
-  organization as organizationTable,
-} from "../db";
+import { Organization, organization as organizationTable } from "../db";
 import { db } from "../lib";
 import { eq, desc } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
@@ -52,9 +49,9 @@ export const getCompanyById = createServerAction(
                 name: true,
                 email: true,
                 image: true,
-              }
+              },
             },
-          }
+          },
         },
         ratings: {
           with: {
@@ -64,7 +61,7 @@ export const getCompanyById = createServerAction(
                 name: true,
                 email: true,
                 image: true,
-              }
+              },
             },
           },
         },
@@ -98,7 +95,7 @@ export const getCurrentOrganization = createServerAction(
 
     return organization;
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createOrganization = createServerAction(
@@ -232,5 +229,5 @@ export const getUsersWithAppointments = createServerAction(
 
     return uniqueUsers;
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireFullOrganization],
 );
