@@ -7,9 +7,9 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
-  requireOrganization,
+  requireFullOrganization,
 } from "../lib";
-import { CreateServiceSchema, service } from "../db";
+import { CreateServiceSchema, Service, service } from "../db";
 import { eq } from "drizzle-orm";
 import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
@@ -45,9 +45,9 @@ export const getServicesFromOrganization = createServerAction(
       throw new ActionError("Services not found");
     }
 
-    return services;
+    return services as unknown as Service[];
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createService = createServerAction(
@@ -86,7 +86,7 @@ export const createServicesStepAction = createServerAction(
 
     return result;
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const updateService = createServerAction(

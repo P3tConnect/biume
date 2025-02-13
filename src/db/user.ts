@@ -1,20 +1,23 @@
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { account } from "./account";
-import { allergies } from "./allergies";
+import { allergies, Allergy } from "./allergies";
 import { createInsertSchema } from "drizzle-zod";
-import { deseases } from "./deseases";
-import { intolerences } from "./intolerences";
+import { Desease, deseases } from "./deseases";
+import { Intolerence, intolerences } from "./intolerences";
 import { invitation } from "./invitation";
-import { member } from "./member";
+import { Member, member } from "./member";
 import { notification } from "./notifications";
-import { pets } from "./pets";
-import { appointments } from "./appointments";
+import { Pet, pets } from "./pets";
+import { Appointment, appointments } from "./appointments";
 import { projectsInvitees } from "./projectsInvitees";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { session } from "./session";
-import { usersJobs } from "./usersJobs";
-import { usersNewsletters } from "./usersNewsletter";
+import { usersJobs, UsersJobs } from "./usersJobs";
+import { usersNewsletters, UserNewsletter } from "./usersNewsletter";
+import { Account } from "better-auth";
+import { Address, address } from "./addresses";
+import { ClientNote, clientNote } from "./clientNote";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -52,19 +55,22 @@ export const userRelations = relations(user, ({ one, many }) => ({
   notifications: many(notification),
   projects: many(projectsInvitees),
   invitations: many(invitation),
+  addresses: many(address),
+  clientNotes: many(clientNote),
 }));
 
 export type User = InferSelectModel<typeof user> & {
-  pets: InferSelectModel<typeof pets>[];
-  jobs: InferSelectModel<typeof usersJobs>[];
-  appointments: InferSelectModel<typeof appointments>[];
-  newsletter: InferSelectModel<typeof usersNewsletters>[];
-  allergies: InferSelectModel<typeof allergies>[];
-  deseases: InferSelectModel<typeof deseases>[];
-  intolerences: InferSelectModel<typeof intolerences>[];
-  sessions: InferSelectModel<typeof session>[];
-  accounts: InferSelectModel<typeof account>[];
-  memberships: InferSelectModel<typeof member>[];
+  pets: Pet[];
+  jobs: UsersJobs[];
+  newsletter: UserNewsletter[];
+  allergies: Allergy[];
+  deseases: Desease[];
+  intolerences: Intolerence[];
+  appointments: Appointment[];
+  accounts: Account[];
+  memberships: Member[];
+  addresses: Address[];
+  clientNotes: ClientNote[];
 };
 
 export const CreateUserSchema = createInsertSchema(user);

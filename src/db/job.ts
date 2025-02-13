@@ -2,6 +2,7 @@ import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
 import { usersJobs } from "./usersJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { User } from "./user";
 
 export const job = pgTable("job", {
   id: text("id")
@@ -16,7 +17,7 @@ export const jobRelations = relations(job, ({ many }) => ({
 }));
 
 export type Job = InferSelectModel<typeof job> & {
-  users: InferSelectModel<typeof usersJobs>[];
+  users: User[];
 };
 export type CreateJob = typeof job.$inferInsert;
 

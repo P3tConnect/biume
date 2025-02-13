@@ -1,7 +1,7 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { boolean, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { user } from "./user";
+import { User, user } from "./user";
 
 export const notificationType = pgEnum("notificationType", [
   "rate",
@@ -33,7 +33,7 @@ export const notificationRelations = relations(notification, ({ one }) => ({
 }));
 
 export type Notification = InferSelectModel<typeof notification> & {
-  user: InferSelectModel<typeof user>;
+  user: User;
 };
 export type CreateNotification = typeof notification.$inferInsert;
 

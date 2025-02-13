@@ -114,27 +114,6 @@ const mockOptions: SimpleOption[] = [
   },
 ];
 
-const mockReviews: SimpleReview[] = [
-  {
-    id: "1",
-    writer: {
-      name: "Marie D.",
-    },
-    rate: 5,
-    comment: "Excellent accueil et professionnalisme remarquable. Je recommande vivement !",
-    createdAt: new Date("2024-02-15"),
-  },
-  {
-    id: "2",
-    writer: {
-      name: "Pierre L.",
-    },
-    rate: 4,
-    comment: "Très bonne prise en charge de mon chat. Personnel attentionné.",
-    createdAt: new Date("2024-02-10"),
-  },
-];
-
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -152,28 +131,6 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const [selectedPro, setSelectedPro] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-
-  // const company = {
-  //   id: companyId,
-  //   name: "Clinique Vétérinaire du Parc",
-  //   description:
-  //     "Votre clinique vétérinaire de confiance, offrant des soins de qualité pour vos animaux de compagnie depuis 2010. Notre équipe expérimentée est à votre service pour tous types de soins, des consultations de routine aux interventions chirurgicales.",
-  //   email: "contact@vetduparc.fr",
-  //   phone: "+33 1 23 45 67 89",
-  //   address: "123 Avenue du Parc, 75001 Paris",
-  //   openingHours: {
-  //     monday: "09:00 - 19:00",
-  //     tuesday: "09:00 - 19:00",
-  //     wednesday: "09:00 - 19:00",
-  //     thursday: "09:00 - 19:00",
-  //     friday: "09:00 - 19:00",
-  //     saturday: "10:00 - 17:00",
-  //     sunday: "Fermé",
-  //   },
-  //   rating: 4.8,
-  //   reviews: 220,
-  //   images: ["/clinique-1.jpg", "/clinique-2.jpg", "/clinique-3.jpg"],
-  // };
 
   return (
     <div className="h-screen w-screen bg-background">
@@ -219,7 +176,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <h2 className="text-2xl font-semibold mb-6">L'équipe</h2>
-              <CompanyTeam professionals={mockProfessionals} />
+              {companyResult.data?.members && (
+                <CompanyTeam professionals={companyResult.data.members} />
+              )}
               <Separator className="my-8" />
             </motion.div>
 
@@ -246,7 +205,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
             >
               <h2 className="text-2xl font-semibold mb-6">Options</h2>
               {companyResult.data?.options && (
-                <CompanyOptions options={mockOptions} />
+                <CompanyOptions options={companyResult.data.options} />
               )}
               <Separator className="my-8" />
             </motion.div>
@@ -260,7 +219,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
             >
               <h2 className="text-2xl font-semibold mb-6">Avis clients</h2>
               {companyResult.data?.ratings && (
-                <CompanyReviews reviews={mockReviews} />
+                <CompanyReviews reviews={companyResult.data.ratings} />
               )}
             </motion.div>
           </div>
@@ -274,8 +233,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
               transition={{ duration: 0.5 }}
             >
               <BookingCard
-                services={mockServices}
-                professionals={mockProfessionals}
+                services={companyResult.data?.services || []}
+                professionals={companyResult.data?.members || []}
                 selectedService={selectedService}
                 selectedPro={selectedPro}
                 selectedDate={selectedDate}

@@ -3,7 +3,7 @@ import { integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
 
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const widgetsType = pgEnum("widgetsType", ["Square", "Rectangle"]);
 
@@ -33,7 +33,7 @@ export const widgetsRelations = relations(widgets, ({ one, many }) => ({
 }));
 
 export type Widget = InferSelectModel<typeof widgets> & {
-  company: InferSelectModel<typeof organization>;
+  company: Organization;
 };
 
 export type CreateWidget = typeof widgets.$inferInsert;

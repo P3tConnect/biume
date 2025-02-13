@@ -20,9 +20,9 @@ import { useUploadThing } from "@/src/lib/uploadthing";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { proDocumentsSchema } from "../../types/onboarding-schemas";
-import { useStepper } from "../../hooks/useStepper";
 import { createDocumentsStepAction } from "@/src/actions";
 import { useActionMutation } from "@/src/hooks/action-hooks";
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = {
   "application/pdf": [".pdf"],
@@ -58,75 +58,114 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
 
   return (
     <Form {...form}>
-      <form className="space-y-6" onSubmit={onSubmit}>
-        <FormField
-          control={control}
-          name="documents"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Documents justificatifs</FormLabel>
-              <DropzoneInput
-                onFilesChanged={(files) => setValue("documents", files)}
-                value={field.value ?? []}
-              />
-              <FormDescription>
-                Ajoutez votre extrait Kbis ou tout autre document prouvant
-                l&apos;identité de votre entreprise (PDF, JPEG, PNG - 5MB max)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="siren"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Numéro SIREN/SIRET</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="123456789"
-                  {...field}
-                  value={field.value ?? ""}
+      <form className="space-y-12 mx-auto px-2" onSubmit={onSubmit}>
+        <div className="space-y-8">
+          <FormField
+            control={control}
+            name="documents"
+            render={({ field }) => (
+              <FormItem className="space-y-6">
+                <div className="space-y-2">
+                  <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
+                  <div className="space-y-3 text-sm text-muted-foreground">
+                    <FormDescription>
+                      Pour vérifier l'identité de votre entreprise, veuillez fournir :
+                    </FormDescription>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Un extrait Kbis récent (moins de 3 mois)</li>
+                      <li>Ou tout autre document officiel d'identification</li>
+                    </ul>
+                  </div>
+                </div>
+                <DropzoneInput
+                  onFilesChanged={(files) => setValue("documents", files)}
+                  value={field.value ?? []}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={control}
-          name="siret"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Numéro SIREN/SIRET</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="123456789"
-                  {...field}
-                  value={field.value ?? ""}
+          <div className="grid gap-8 pt-6">
+            <div className="flex flex-col space-y-6">
+              <h3 className="text-lg font-semibold">Informations d'identification</h3>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <FormField
+                  control={control}
+                  name="siren"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro SIREN</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="9 chiffres"
+                          {...field}
+                          value={field.value ?? ""}
+                          maxLength={9}
+                          className="font-mono"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Identifiant unique à 9 chiffres
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end gap-4">
-          <Button
-            variant="outline"
-            className="rounded-xl"
-            onClick={previousStep}
-          >
-            Précédent
-          </Button>
-          <Button className="rounded-xl" onClick={nextStep} variant="default">
-            Suivant
-          </Button>
+
+                <FormField
+                  control={control}
+                  name="siret"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Numéro SIRET</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="14 chiffres"
+                          {...field}
+                          value={field.value ?? ""}
+                          maxLength={14}
+                          className="font-mono"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        SIREN + 5 chiffres pour votre établissement
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer with buttons */}
+          <div className="flex justify-between items-center pt-8 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={previousStep}
+            >
+              ← Précédent
+            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={nextStep}
+                className="text-muted-foreground"
+              >
+                Passer cette étape
+              </Button>
+              <Button type="submit" className="rounded-xl px-6">
+                Suivant →
+              </Button>
+            </div>
+          </div>
         </div>
       </form>
-    </Form >
+    </Form>
   );
 }
 
@@ -166,38 +205,76 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
       <div
         {...getRootProps()}
         className={cn(
-          "border-2 border-dashed rounded-lg p-6 cursor-pointer",
-          "hover:border-primary/50 transition-colors",
-          isDragActive && "border-primary bg-primary/5",
-          isUploading && "opacity-50 cursor-not-allowed",
+          "border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all duration-200",
+          "hover:border-primary hover:bg-primary/5",
+          isDragActive ? "border-primary bg-primary/10 scale-[1.02]" : "border-muted-foreground/25",
+          isUploading && "opacity-50 cursor-not-allowed"
         )}
       >
         <input {...getInputProps()} disabled={isUploading} />
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            {isDragActive
-              ? "Déposez les fichiers ici"
-              : isUploading
-                ? "Téléchargement en cours..."
-                : "Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner"}
-          </p>
+        <div className="text-center space-y-4">
+          <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <svg
+              className="w-6 h-6 text-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-medium">
+              {isDragActive
+                ? "Déposez vos fichiers ici"
+                : isUploading
+                  ? "Téléchargement en cours..."
+                  : "Glissez-déposez vos fichiers ici"}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              PDF, JPEG ou PNG (max. 5MB)
+            </p>
+          </div>
         </div>
       </div>
 
       {value.length > 0 && (
-        <ul className="space-y-2">
+        <ul className="grid gap-2">
           {value.map((fileUrl, index) => (
             <li
               key={index}
-              className="flex items-center justify-between p-2 bg-muted rounded-md"
+              className="flex items-center justify-between p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
             >
-              <span className="text-sm truncate">Document {index + 1}</span>
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-primary"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium">Document {index + 1}</span>
+              </div>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => removeFile(fileUrl)}
                 disabled={isUploading}
+                className="hover:bg-destructive/10 hover:text-destructive"
               >
                 <X className="h-4 w-4" />
               </Button>

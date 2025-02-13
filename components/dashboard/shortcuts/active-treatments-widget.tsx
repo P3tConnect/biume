@@ -3,13 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PawPrintIcon, PillIcon, CalendarIcon, TimerIcon } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { PawPrintIcon, PillIcon } from "lucide-react";
 
 const ActiveTreatmentsWidget = () => {
   const treatments = [
@@ -72,7 +66,7 @@ const ActiveTreatmentsWidget = () => {
   };
 
   return (
-    <Card className="rounded-2xl">
+    <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -83,86 +77,53 @@ const ActiveTreatmentsWidget = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="divide-y divide-border">
           {treatments.map((treatment) => (
             <div
               key={treatment.id}
-              className="flex flex-col gap-3 p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+              className="py-4 first:pt-0 last:pb-0"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={treatment.imageUrl}
-                      alt={treatment.petName}
-                    />
-                    <AvatarFallback className="bg-primary">
-                      <PawPrintIcon className="w-4 h-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={treatment.imageUrl} alt={treatment.petName} />
+                  <AvatarFallback className="bg-primary">
+                    <PawPrintIcon className="w-4 h-4" />
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{treatment.petName}</span>
-                      <Badge
-                        variant="outline"
-                        className={getStatusColor(treatment.status)}
-                      >
-                        {treatment.status}
-                      </Badge>
+                      <span className="font-medium truncate">{treatment.petName}</span>
+                      <span className="text-sm text-muted-foreground">•</span>
+                      <span className="text-sm text-muted-foreground truncate">{treatment.treatment}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <span>{treatment.petType}</span>
-                      <span>•</span>
-                      <span>{treatment.breed}</span>
+                    <Badge
+                      variant="outline"
+                      className={`${getStatusColor(treatment.status)} shrink-0`}
+                    >
+                      {treatment.status}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <Progress value={treatment.progress} className="h-1.5 flex-1" />
+                    <span className="text-xs font-medium text-muted-foreground w-8 text-right">
+                      {treatment.progress}%
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      {treatment.remainingDoses
+                        ? `${treatment.remainingDoses} doses restantes`
+                        : treatment.notes}
+                    </div>
+                    <div className="text-sm font-medium">
+                      {treatment.nextDose}
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{treatment.treatment}</span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Badge variant="outline" className="text-xs">
-                            {treatment.notes}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Instructions de traitement</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <span className="text-sm text-muted-foreground">
-                    {treatment.progress}%
-                  </span>
-                </div>
-                <Progress value={treatment.progress} className="h-2" />
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    <CalendarIcon className="w-3 h-3" />
-                    <span>Début: {treatment.startDate}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <TimerIcon className="w-3 h-3" />
-                    <span>Durée: {treatment.duration}</span>
-                  </div>
-                </div>
-                {treatment.remainingDoses && (
-                  <Badge variant="secondary" className="text-xs">
-                    {treatment.remainingDoses} doses restantes
-                  </Badge>
-                )}
-              </div>
-
-              <div className="text-xs text-muted-foreground pt-1 border-t border-border">
-                {treatment.nextDose}
               </div>
             </div>
           ))}

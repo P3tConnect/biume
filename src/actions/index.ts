@@ -6,3 +6,4 @@ export * from './stripe.action';
 export * from './transactions.action';
 export * from './companyDocuments.action';
 export * from './user.action';
+export * from './pet.action';

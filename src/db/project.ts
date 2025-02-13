@@ -2,7 +2,7 @@ import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { projectsInvitees } from "./projectsInvitees";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const project = pgTable("project", {
   id: text("id")
@@ -32,7 +32,7 @@ export const projectRelations = relations(project, ({ one, many }) => ({
 }));
 
 export type Project = InferSelectModel<typeof project> & {
-  owner: InferSelectModel<typeof organization>;
+  owner: Organization;
 };
 export type CreateProject = typeof project.$inferInsert;
 

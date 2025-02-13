@@ -15,10 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "@/components/ui";
 import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -265,7 +261,7 @@ const InformationsForm = ({
                         className={cn(
                           "h-4 w-4 text-muted-foreground",
                           form.formState.errors.coverImage &&
-                            "text-destructive",
+                          "text-destructive",
                         )}
                       />
                       <p className="text-xs text-muted-foreground">
@@ -381,7 +377,7 @@ const InformationsForm = ({
                         className={cn(
                           "flex-1 min-h-[32px] resize-none text-base",
                           form.formState.errors.description &&
-                            "border-destructive",
+                          "border-destructive",
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}
@@ -420,11 +416,95 @@ const InformationsForm = ({
         </div>
 
         {/* Footer with buttons */}
-        <div className="flex justify-end gap-3 py-3 px-6 border-t">
-          <Button variant="outline" onClick={previousStep} className="h-9">
+        <div className="flex justify-between items-center pt-8 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
+          </Button>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={nextStep}
+              className="text-muted-foreground"
+            >
+              Passer cette étape
+            </Button>
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <FormField
+            control={control}
+            name="companyType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type d'entreprise</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez votre type d'entreprise" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="AUTO-ENTREPRENEUR">
+                      Auto-entrepreneur
+                    </SelectItem>
+                    <SelectItem value="SARL">SARL</SelectItem>
+                    <SelectItem value="SAS">SAS</SelectItem>
+                    <SelectItem value="EIRL">EIRL</SelectItem>
+                    <SelectItem value="SASU">SASU</SelectItem>
+                    <SelectItem value="EURL">EURL</SelectItem>
+                    <SelectItem value="OTHER">Autre</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="atHome"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">
+                    Prestations à domicile
+                  </FormLabel>
+                  <div className="text-sm text-muted-foreground">
+                    Proposez-vous des prestations à domicile ?
+                  </div>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex justify-end gap-4">
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
             Précédent
           </Button>
-          <Button type="submit" variant="default" className="h-9">
+          <Button className="rounded-xl" type="submit" variant="default">
             Suivant
           </Button>
         </div>

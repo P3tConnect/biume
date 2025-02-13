@@ -1,8 +1,8 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { reportTopic } from "./reportTopics";
+import { ReportTopic, reportTopic } from "./reportTopics";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const topic = pgTable("topic", {
   id: text("id")
@@ -26,8 +26,8 @@ export const topicRelations = relations(topic, ({ one, many }) => ({
 }));
 
 export type Topic = InferSelectModel<typeof topic> & {
-  reports: InferSelectModel<typeof reportTopic>[];
-  organization: InferSelectModel<typeof organization>;
+  reports: ReportTopic[];
+  organization: Organization;
 };
 export type CreateTopic = typeof topic.$inferInsert;
 

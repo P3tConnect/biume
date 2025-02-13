@@ -8,9 +8,7 @@ import {
   twoFactor as twoFactorSchema,
   verification,
 } from "../db";
-import { organization, phoneNumber, twoFactor } from "better-auth/plugins";
-
-import { FireExtinguisher } from "lucide-react";
+import { organization, twoFactor, username } from "better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { createAccessControl } from "better-auth/plugins/access";
 import { db } from "./db";
@@ -147,6 +145,7 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    username(),
     twoFactor(),
     organization({
       ac: ac,

@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui";
 import React from "react";
 import { useStepper, utils } from "../hooks/useStepper";
 import ProInformationsStep from "../pro/informations-step";
@@ -28,6 +22,12 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { SubscriptionStep } from "../pro/subscription-step";
 import { generateMigrationName } from "@/src/lib/business-names";
+import {
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaDescription,
+  CredenzaTitle,
+} from "@/components/ui";
 
 const Stepper = () => {
   const {
@@ -106,22 +106,22 @@ const Stepper = () => {
   };
 
   return (
-    <DialogContent className="w-[1200px]">
-      <DialogHeader className="flex flex-row items-center space-x-4">
+    <CredenzaContent className="w-[1200px]">
+      <CredenzaHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
           totalSteps={all.length}
           isLast={isLast}
         />
         <div className="space-y-1 flex flex-col">
-          <DialogTitle className="text-xl font-bold">
+          <CredenzaTitle className="text-xl font-bold">
             {current.title}
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-md">
+          </CredenzaTitle>
+          <CredenzaDescription className="text-muted-foreground text-md">
             {current.description}
-          </DialogDescription>
+          </CredenzaDescription>
         </div>
-      </DialogHeader>
+      </CredenzaHeader>
 
       <div className="h-[700px] overflow-y-auto">
         {switchStep({
@@ -141,7 +141,7 @@ const Stepper = () => {
           subscription: () => <SubscriptionStep />,
         })}
       </div>
-    </DialogContent>
+    </CredenzaContent>
   );
 };
 

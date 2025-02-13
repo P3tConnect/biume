@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  CredenzaFooter,
   Form,
   FormControl,
   FormField,
@@ -21,7 +22,6 @@ import { proServicesSchema } from "../../types/onboarding-schemas";
 import { createServicesStepAction } from "@/src/actions";
 import { toast } from "sonner";
 import { useActionMutation } from "@/src/hooks/action-hooks";
-import { DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/src/lib/utils";
 
 const ServicesForm = ({
@@ -282,7 +282,31 @@ const ServicesForm = ({
           </div>
         </div>
 
-        <DialogFooter>
+        <div className="flex justify-between items-center pt-8 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
+          </Button>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={nextStep}
+              className="text-muted-foreground"
+            >
+              Passer cette étape
+            </Button>
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
+            </Button>
+          </div>
+        </div>
+
+        <CredenzaFooter>
           <div className="flex justify-end gap-4 w-full">
             <Button
               variant="outline"
@@ -292,13 +316,13 @@ const ServicesForm = ({
               Précédent
             </Button>
             <Button
-              onClick={nextStep}
+              type="submit"
               className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
             >
               Suivant
             </Button>
           </div>
-        </DialogFooter>
+        </CredenzaFooter>
       </form>
     </Form>
   );

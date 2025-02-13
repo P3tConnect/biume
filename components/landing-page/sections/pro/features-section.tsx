@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { features } from "./data";
+import { CredenzaTrigger } from "@/components/ui";
+import {
+  Credenza,
+  CredenzaDescription,
+  CredenzaTitle,
+  CredenzaHeader,
+  CredenzaContent,
+} from "@/components/ui";
 
 export function FeaturesSection() {
   return (
@@ -21,14 +20,15 @@ export function FeaturesSection() {
             Une suite complète pour le bien-être de vos animaux
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground px-4">
-            Des outils intelligents pour une gestion optimale de la santé de vos compagnons
+            Des outils intelligents pour une gestion optimale de la santé de vos
+            compagnons
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
           {features.map((feature, index) => (
-            <Dialog key={index}>
-              <DialogTrigger asChild>
+            <Credenza key={index}>
+              <CredenzaTrigger asChild>
                 <div className="group relative bg-gradient-to-br from-background to-accent/5 p-8 rounded-2xl border hover:border-primary/50 transition-all duration-300 cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative">
@@ -39,11 +39,13 @@ export function FeaturesSection() {
                       {feature.title}
                       <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <p className="text-muted-foreground">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden grid md:grid-cols-[2fr,3fr]">
+              </CredenzaTrigger>
+              <CredenzaContent className="sm:max-w-[900px] p-0 overflow-hidden grid md:grid-cols-[2fr,3fr]">
                 <div className="relative md:h-full h-[200px]">
                   <Image
                     src={feature.image}
@@ -60,17 +62,17 @@ export function FeaturesSection() {
                   </div>
                 </div>
                 <div className="p-6 bg-gradient-to-br from-background to-accent/5">
-                  <DialogHeader className="space-y-4">
-                    <DialogTitle className="hidden md:flex items-center gap-3 text-2xl">
+                  <CredenzaHeader className="space-y-4">
+                    <CredenzaTitle className="hidden md:flex items-center gap-3 text-2xl">
                       <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
                         <feature.icon className="w-6 h-6 text-primary" />
                       </div>
                       {feature.title}
-                    </DialogTitle>
-                    <DialogDescription className="!mt-6 text-base leading-relaxed">
+                    </CredenzaTitle>
+                    <CredenzaDescription className="!mt-6 text-base leading-relaxed">
                       {feature.details}
-                    </DialogDescription>
-                  </DialogHeader>
+                    </CredenzaDescription>
+                  </CredenzaHeader>
 
                   <div className="mt-8 grid grid-cols-2 gap-4">
                     <div className="p-4 rounded-xl bg-background/50 border">
@@ -178,11 +180,11 @@ export function FeaturesSection() {
                     </Button>
                   </div>
                 </div>
-              </DialogContent>
-            </Dialog>
+              </CredenzaContent>
+            </Credenza>
           ))}
         </div>
       </div>
     </section>
   );
-} 
+}

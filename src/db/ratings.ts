@@ -7,8 +7,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
-import { user } from "./user";
+import { Organization, organization } from "./organization";
+import { User, user } from "./user";
 
 export const ratings = pgTable("ratings", {
   id: text("id")
@@ -39,8 +39,8 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
 }));
 
 export type Rating = InferSelectModel<typeof ratings> & {
-  writer: InferSelectModel<typeof user>;
-  for: InferSelectModel<typeof organization>;
+  writer: User;
+  for: Organization;
 };
 export type CreateRating = typeof ratings.$inferInsert;
 

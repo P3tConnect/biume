@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -26,15 +26,9 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { CreateObservationDialog } from "./create-observation-dialog";
 import ObservationDetailsDrawer from "./observation-details-drawer";
+import { Credenza } from "@/components/ui";
 
 interface Observation {
   id: string;
@@ -288,9 +282,9 @@ export default function ObservationsPageComponent() {
       </Card>
 
       {/* Create Observation Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+      <Credenza open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <CreateObservationDialog onClose={() => setIsCreateDialogOpen(false)} />
-      </Dialog>
+      </Credenza>
 
       {/* Observation Details Drawer */}
       <ObservationDetailsDrawer

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
+  Credenza,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaFooter,
   Button,
   Input,
   Textarea,
@@ -193,13 +193,13 @@ const EventModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
+    <Credenza open={isOpen} onOpenChange={onClose}>
+      <CredenzaContent className="sm:max-w-[425px]">
+        <CredenzaHeader>
+          <CredenzaTitle>
             {editingEvent ? "Edit Event" : "Add New Event"}
-          </DialogTitle>
-        </DialogHeader>
+          </CredenzaTitle>
+        </CredenzaHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title" className="flex items-center gap-2">
@@ -302,7 +302,7 @@ const EventModal = ({
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <DialogFooter className="sm:justify-between">
+          <CredenzaFooter className="sm:justify-between">
             {editingEvent && (
               <Button
                 type="button"
@@ -320,10 +320,10 @@ const EventModal = ({
                 {editingEvent ? "Update" : "Add"} Event
               </Button>
             </div>
-          </DialogFooter>
+          </CredenzaFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 };
 

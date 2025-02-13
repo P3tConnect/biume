@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  CredenzaFooter,
   Form,
   FormControl,
   FormField,
@@ -15,14 +16,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { X, Plus, Euro } from "lucide-react";
 import { proOptionsSchema } from "../../types/onboarding-schemas";
-import { useStepper } from "../../hooks/useStepperClient";
 import { createOptionsStepAction } from "@/src/actions";
 import { useActionMutation } from "@/src/hooks/action-hooks";
 import { toast } from "sonner";
-import { DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/src/lib/utils";
 
-export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) {
+export function OptionsForm({
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) {
   const form = useForm<z.infer<typeof proOptionsSchema>>({
     resolver: zodResolver(proOptionsSchema),
     defaultValues: {
@@ -86,7 +91,7 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
                   "group relative rounded-2xl border bg-card p-6 space-y-6",
                   "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
                   "dark:bg-gray-950/50 dark:backdrop-blur-xl",
-                  "transition-all duration-300"
+                  "transition-all duration-300",
                 )}
               >
                 <div className="space-y-4">
@@ -143,7 +148,9 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
                             value={field.value ?? ""}
                             onChange={(e) =>
                               field.onChange(
-                                e.target.value ? parseFloat(e.target.value) : null,
+                                e.target.value
+                                  ? parseFloat(e.target.value)
+                                  : null,
                               )
                             }
                           />
@@ -184,7 +191,7 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
                   "flex flex-col items-center justify-center gap-4 p-8",
                   "rounded-2xl border-2 border-dashed",
                   "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200"
+                  "transition-colors duration-200",
                 )}
               >
                 <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -196,7 +203,31 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
           </div>
         </div>
 
-        <DialogFooter>
+        <div className="flex justify-between items-center pt-8 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
+          </Button>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={nextStep}
+              className="text-muted-foreground"
+            >
+              Passer cette étape
+            </Button>
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
+            </Button>
+          </div>
+        </div>
+
+        <CredenzaFooter>
           <div className="flex justify-end gap-4 w-full">
             <Button
               variant="outline"
@@ -206,13 +237,13 @@ export function OptionsForm({ nextStep, previousStep }: { nextStep: () => void, 
               Précédent
             </Button>
             <Button
-              onClick={nextStep}
+              type="submit"
               className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
             >
               Suivant
             </Button>
           </div>
-        </DialogFooter>
+        </CredenzaFooter>
       </form>
     </Form>
   );

@@ -72,7 +72,7 @@ const ClientSettingsForm = () => {
     await mutateAsync(data);
   });
 
-  const {} = useFormChangeToast({
+  const { } = useFormChangeToast({
     form,
     onSubmit,
     message: "Informations modifiées",

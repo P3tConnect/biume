@@ -1,7 +1,7 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const organizationAddress = pgTable("organization_address", {
   id: text("id")
@@ -23,11 +23,16 @@ export const organizationAddressRelations = relations(
   }),
 );
 
-export type CompanyAddress = InferSelectModel<typeof organizationAddress> & {
-  organization: InferSelectModel<typeof organization>;
+export type OrganizationAddress = InferSelectModel<
+  typeof organizationAddress
+> & {
+  organization: Organization;
 };
-export type CreateCompanyAddress = typeof organizationAddress.$inferInsert;
+export type CreateOrganizationAddress =
+  typeof organizationAddress.$inferInsert;
 
-export const CompanyAddressSchema = createSelectSchema(organizationAddress);
-export const CreateCompanyAddressSchema =
+export const OrganizationAddressSchema = createSelectSchema(
+  organizationAddress,
+);
+export const CreateOrganizationAddressSchema =
   createInsertSchema(organizationAddress);

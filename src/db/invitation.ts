@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { organization } from "./organization";
-import { user } from "./user";
+import { Organization, organization } from "./organization";
+import { User, user } from "./user";
 import { InferSelectModel, relations } from "drizzle-orm";
 
 export const invitation = pgTable("invitations", {
@@ -29,6 +29,6 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
 }));
 
 export type Invitation = InferSelectModel<typeof invitation> & {
-  organization: InferSelectModel<typeof organization>;
-  inviter: InferSelectModel<typeof user>;
+  organization: Organization;
+  inviter: User;
 };

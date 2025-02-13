@@ -7,12 +7,8 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  CredenzaTrigger,
+  Credenza,
   Form,
   FormControl,
   FormField,
@@ -26,14 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaContent,
 } from "@/components/ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateReminderSchema, type Reminder } from "@/src/db/reminder";
-import {
-  deleteReminder,
-  updateReminder,
-} from "@/src/actions/reminders.action";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -73,21 +69,21 @@ const RemindersPageComponent = () => {
         <CardTitle className="text-lg font-semibold text-gray-700 dark:text-gray-200">
           Mes Rappels
         </CardTitle>
-        <Dialog>
-          <DialogTrigger asChild>
+        <Credenza>
+          <CredenzaTrigger asChild>
             <Button>Nouveau Rappel</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
+          </CredenzaTrigger>
+          <CredenzaContent>
+            <CredenzaHeader>
+              <CredenzaTitle>
                 {isEditMode ? "Modifier le rappel" : "Créer un rappel"}
-              </DialogTitle>
-              <DialogDescription>
+              </CredenzaTitle>
+              <CredenzaDescription>
                 {isEditMode
                   ? "Modifiez les informations du rappel ci-dessous"
                   : "Remplissez les informations du rappel ci-dessous"}
-              </DialogDescription>
-            </DialogHeader>
+              </CredenzaDescription>
+            </CredenzaHeader>
             <Form {...form}>
               <form
                 // onSubmit={form.handleSubmit(onSubmit)}
@@ -173,8 +169,8 @@ const RemindersPageComponent = () => {
                 </Button>
               </form>
             </Form>
-          </DialogContent>
-        </Dialog>
+          </CredenzaContent>
+        </Credenza>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -198,10 +194,10 @@ const RemindersPageComponent = () => {
                   <span className="capitalize">{reminder.type}</span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${reminder.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : reminder.status === "cancelled"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
+                      ? "bg-green-100 text-green-800"
+                      : reminder.status === "cancelled"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
                       }`}
                   >
                     {reminder.status}

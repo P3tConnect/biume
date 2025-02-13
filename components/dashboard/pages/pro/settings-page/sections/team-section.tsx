@@ -24,15 +24,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Form,
   FormControl,
   FormField,
@@ -55,6 +46,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useActiveOrganization, organization } from "@/src/lib/auth-client";
+import {
+  Credenza,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/ui";
 
 // Types temporaires pour l'exemple
 type Role = "admin" | "member" | "owner";
@@ -137,22 +137,25 @@ export const TeamSection = () => {
             Gérez les membres de votre équipe et leurs rôles
           </CardDescription>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
+        <Credenza open={open} onOpenChange={setOpen}>
+          <CredenzaTrigger asChild>
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Inviter un membre
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Inviter un nouveau membre</DialogTitle>
-              <DialogDescription>
+          </CredenzaTrigger>
+          <CredenzaContent>
+            <CredenzaHeader>
+              <CredenzaTitle>Inviter un nouveau membre</CredenzaTitle>
+              <CredenzaDescription>
                 Envoyez une invitation par email pour rejoindre votre équipe.
-              </DialogDescription>
-            </DialogHeader>
+              </CredenzaDescription>
+            </CredenzaHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -195,7 +198,7 @@ export const TeamSection = () => {
                     </FormItem>
                   )}
                 />
-                <DialogFooter>
+                <CredenzaFooter>
                   <Button
                     type="button"
                     variant="outline"
@@ -204,11 +207,11 @@ export const TeamSection = () => {
                     Annuler
                   </Button>
                   <Button type="submit">Envoyer l'invitation</Button>
-                </DialogFooter>
+                </CredenzaFooter>
               </form>
             </Form>
-          </DialogContent>
-        </Dialog>
+          </CredenzaContent>
+        </Credenza>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -245,7 +248,9 @@ export const TeamSection = () => {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={member.role === "admin" ? "default" : "secondary"}
+                      variant={
+                        member.role === "admin" ? "default" : "secondary"
+                      }
                       className="flex w-fit items-center gap-1"
                     >
                       <Shield className="h-3 w-3" />
@@ -254,7 +259,9 @@ export const TeamSection = () => {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={member.status === "active" ? "default" : "secondary"}
+                      variant={
+                        member.status === "active" ? "default" : "secondary"
+                      }
                     >
                       {member.status === "active" ? "Actif" : "En attente"}
                     </Badge>
@@ -292,4 +299,4 @@ export const TeamSection = () => {
       </CardContent>
     </Card>
   );
-}; 
+};
