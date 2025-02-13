@@ -71,7 +71,7 @@ export const appointmentsRelations = relations(
       fields: [appointments.proId],
       references: [organization.id],
     }),
-    invoice: one(invoice),
+    invoices: many(invoice),
     service: one(service, {
       fields: [appointments.serviceId],
       references: [service.id],

@@ -8,7 +8,7 @@ import PendingReportsWidget from "@/components/dashboard/shortcuts/pending-repor
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget";
 import PendingReservationsWidget from "@/components/dashboard/shortcuts/pending-reservations-widget";
 import ActiveRemindersWidget from "@/components/dashboard/shortcuts/active-reminders-widget";
-import ActiveTreatmentsWidget from "@/components/dashboard/shortcuts/active-treatments-widget";
+import TopClientsWidget from "@/components/dashboard/shortcuts/top-clients-widget";
 
 export const metadata: Metadata = {
   title: "Home - Dashboard",
@@ -39,8 +39,8 @@ const DashboardHomeProPage = () => {
             <PendingReportsWidget />
           </div>
 
-          {/* Treatments Section */}
-          <ActiveTreatmentsWidget />
+          {/* Top Clients Section */}
+          <TopClientsWidget />
         </div>
 
         {/* Right Column - Notifications and Actions */}

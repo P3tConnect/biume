@@ -32,6 +32,7 @@ import { invitation } from "./invitation";
 import { appointments } from "./appointments";
 import { Option } from "./options";
 import { Member, member } from "./member";
+import { ClientNote, clientNote } from "./clientNote";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -111,6 +112,7 @@ export const organizationRelations = relations(
     bgJobs: many(bgJobs),
     invitations: many(invitation),
     members: many(member),
+    clientNotes: many(clientNote),
   }),
 );
 
@@ -125,6 +127,7 @@ export type Organization = InferSelectModel<typeof organization> & {
   products: Product[];
   newslettersWritter: Newsletter[];
   receipts: Receipt[];
+  clientNotes: ClientNote[];
 };
 export type CreateOrganization = typeof organization.$inferInsert;
 
