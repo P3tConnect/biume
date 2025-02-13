@@ -8,15 +8,15 @@ import {
   AvatarFallback,
   AvatarImage,
   Separator,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
   Textarea,
   Label,
   Badge,
+  Credenza,
+  CredenzaHeader,
+  CredenzaContent,
+  CredenzaTitle,
+  CredenzaDescription,
+  CredenzaFooter,
 } from "@/components/ui";
 import { Star, Home, Dog, Cat, Bird, ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
@@ -60,9 +60,24 @@ export function BookingCard({
 
   // Simulation de la liste des animaux de l'utilisateur
   const userPets = [
-    { id: "1", name: "Max", type: "Dog", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1" },
-    { id: "2", name: "Luna", type: "Cat", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba" },
-    { id: "3", name: "Rio", type: "Bird", image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3" },
+    {
+      id: "1",
+      name: "Max",
+      type: "Dog",
+      image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1",
+    },
+    {
+      id: "2",
+      name: "Luna",
+      type: "Cat",
+      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba",
+    },
+    {
+      id: "3",
+      name: "Rio",
+      type: "Bird",
+      image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3",
+    },
   ];
 
   const getPetIcon = (type: string) => {
@@ -94,7 +109,7 @@ export function BookingCard({
       date: selectedDate,
       time: selectedTime,
       additionalInfo,
-      pet: userPets.find(p => p.id === selectedPet),
+      pet: userPets.find((p) => p.id === selectedPet),
       isHomeVisit,
     });
     setIsConfirmModalOpen(false);
@@ -122,7 +137,7 @@ export function BookingCard({
                   "relative cursor-pointer rounded-xl border-2 p-4 transition-all",
                   selectedPet === pet.id
                     ? "border-primary bg-primary/5"
-                    : "hover:border-primary/50"
+                    : "hover:border-primary/50",
                 )}
               >
                 <div className="flex items-center gap-4">
@@ -166,7 +181,7 @@ export function BookingCard({
                 "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
                 !isHomeVisit
                   ? "border-primary bg-primary/5"
-                  : "hover:border-primary/50"
+                  : "hover:border-primary/50",
               )}
             >
               <div className="flex flex-col items-center text-center gap-4">
@@ -191,7 +206,7 @@ export function BookingCard({
                 "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
                 isHomeVisit
                   ? "border-primary bg-primary/5"
-                  : "hover:border-primary/50"
+                  : "hover:border-primary/50",
               )}
             >
               <div className="flex flex-col items-center text-center gap-4">
@@ -225,18 +240,22 @@ export function BookingCard({
             <div className="flex items-center gap-4">
               <div className="relative h-20 w-20 overflow-hidden rounded-lg">
                 <img
-                  src={userPets.find(p => p.id === selectedPet)?.image}
+                  src={userPets.find((p) => p.id === selectedPet)?.image}
                   alt="Animal"
                   className="h-full w-full object-cover"
                 />
               </div>
               <div>
                 <h4 className="font-medium">
-                  {userPets.find(p => p.id === selectedPet)?.name}
+                  {userPets.find((p) => p.id === selectedPet)?.name}
                 </h4>
                 <div className="flex items-center gap-1 text-muted-foreground">
-                  {getPetIcon(userPets.find(p => p.id === selectedPet)?.type || "")}
-                  <span>{userPets.find(p => p.id === selectedPet)?.type}</span>
+                  {getPetIcon(
+                    userPets.find((p) => p.id === selectedPet)?.type || "",
+                  )}
+                  <span>
+                    {userPets.find((p) => p.id === selectedPet)?.type}
+                  </span>
                 </div>
               </div>
             </div>
@@ -255,7 +274,10 @@ export function BookingCard({
                     <Avatar className="h-6 w-6">
                       <AvatarImage src={selectedProData.user.image} />
                       <AvatarFallback>
-                        {selectedProData.user.name.split(" ").map((n) => n[0]).join("")}
+                        {selectedProData.user.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                   ) : (
@@ -267,7 +289,9 @@ export function BookingCard({
                       />
                     </div>
                   )}
-                  <span className="font-medium">{selectedProData?.user.name}</span>
+                  <span className="font-medium">
+                    {selectedProData?.user.name}
+                  </span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -279,7 +303,9 @@ export function BookingCard({
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Type de consultation</span>
+                <span className="text-muted-foreground">
+                  Type de consultation
+                </span>
                 <div className="flex items-center gap-2">
                   {isHomeVisit ? (
                     <>
@@ -358,14 +384,17 @@ export function BookingCard({
                 <button
                   key={service.id}
                   onClick={() => setSelectedService(service.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${selectedService === service.id
-                    ? "border-2 border-primary"
-                    : "hover:border-primary/50"
-                    }`}
+                  className={`w-full text-left p-4 rounded-xl border transition-all ${
+                    selectedService === service.id
+                      ? "border-2 border-primary"
+                      : "hover:border-primary/50"
+                  }`}
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{service.name}</span>
-                    <span className="text-muted-foreground">{service.price}</span>
+                    <span className="text-muted-foreground">
+                      {service.price}
+                    </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
                     {service.duration}
@@ -388,16 +417,23 @@ export function BookingCard({
                   <button
                     key={pro.id}
                     onClick={() => setSelectedPro(pro.id)}
-                    className={`w-full text-left p-4 rounded-xl border transition-all ${selectedPro === pro.id
-                      ? "border-2 border-primary"
-                      : "hover:border-primary/50"
-                      }`}
+                    className={`w-full text-left p-4 rounded-xl border transition-all ${
+                      selectedPro === pro.id
+                        ? "border-2 border-primary"
+                        : "hover:border-primary/50"
+                    }`}
                   >
                     <div className="flex gap-4">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage src={pro.user.image || ""} alt={pro.user.name || ""} />
+                        <AvatarImage
+                          src={pro.user.image || ""}
+                          alt={pro.user.name || ""}
+                        />
                         <AvatarFallback>
-                          {pro.user.name?.split(" ").map((n) => n[0]).join("") || ""}
+                          {pro.user.name
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .join("") || ""}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -436,7 +472,7 @@ export function BookingCard({
                   locale={fr}
                   className={cn(
                     "w-full [&_table]:w-full [&_table_td]:p-0 [&_table_td_button]:w-full [&_table_td_button]:h-9",
-                    "[&_table]:border-separate [&_table]:border-spacing-1"
+                    "[&_table]:border-separate [&_table]:border-spacing-1",
                   )}
                 />
               </div>
@@ -460,7 +496,7 @@ export function BookingCard({
                     >
                       {time}
                     </Button>
-                  )
+                  ),
                 )}
               </div>
             </div>
@@ -481,15 +517,12 @@ export function BookingCard({
         </Button>
       </CardFooter>
 
-      <Dialog open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
+      <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
+        <CredenzaContent className="sm:max-w-[600px]">
+          <CredenzaHeader>
             <div className="flex items-center gap-4 mb-4">
               {steps.map((step, index) => (
-                <div
-                  key={index}
-                  className="flex items-center"
-                >
+                <div key={index} className="flex items-center">
                   <div
                     className={cn(
                       "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
@@ -497,7 +530,7 @@ export function BookingCard({
                         ? "border-primary bg-primary text-white"
                         : currentStep === index + 1
                           ? "border-primary text-primary"
-                          : "border-muted-foreground text-muted-foreground"
+                          : "border-muted-foreground text-muted-foreground",
                     )}
                   >
                     {index + 1}
@@ -508,17 +541,15 @@ export function BookingCard({
                 </div>
               ))}
             </div>
-            <DialogTitle>{steps[currentStep - 1].title}</DialogTitle>
-            <DialogDescription>
+            <CredenzaTitle>{steps[currentStep - 1].title}</CredenzaTitle>
+            <CredenzaDescription>
               {steps[currentStep - 1].description}
-            </DialogDescription>
-          </DialogHeader>
+            </CredenzaDescription>
+          </CredenzaHeader>
 
-          <div className="py-4">
-            {steps[currentStep - 1].content}
-          </div>
+          <div className="py-4">{steps[currentStep - 1].content}</div>
 
-          <DialogFooter>
+          <CredenzaFooter>
             <div className="flex w-full justify-between">
               <Button
                 variant="outline"
@@ -548,9 +579,9 @@ export function BookingCard({
                 {currentStep === steps.length ? "Confirmer" : "Suivant"}
               </Button>
             </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </CredenzaFooter>
+        </CredenzaContent>
+      </Credenza>
     </Card>
   );
-} 
+}

@@ -5,8 +5,8 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Dialog,
-  DialogTrigger,
+  Credenza,
+  CredenzaTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -21,8 +21,7 @@ import {
 } from "@/components/ui";
 import { getUserInformations } from "@/src/actions/user.action";
 import { useActionQuery } from "@/src/hooks/action-hooks";
-import { cn } from "@/src/lib";
-import { signOut, useSession } from "@/src/lib/auth-client";
+import { signOut } from "@/src/lib/auth-client";
 import Avvvatars from "avvvatars-react";
 import {
   BadgeCheck,
@@ -31,7 +30,6 @@ import {
   LogOut,
   Settings,
   Sparkles,
-  User2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,7 +45,7 @@ const SidebarClientFooterComponent = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Dialog onOpenChange={setOpen}>
+    <Credenza onOpenChange={setOpen}>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -136,12 +134,12 @@ const SidebarClientFooterComponent = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DialogTrigger asChild>
+                <CredenzaTrigger asChild>
                   <DropdownMenuItem className="gap-2">
                     <Sparkles size={14} />
                     Become a pro
                   </DropdownMenuItem>
-                </DialogTrigger>
+                </CredenzaTrigger>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -181,7 +179,7 @@ const SidebarClientFooterComponent = () => {
         </SidebarMenuItem>
       </SidebarMenu>
       <Stepper />
-    </Dialog>
+    </Credenza>
   );
 };
 

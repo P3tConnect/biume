@@ -12,12 +12,6 @@ import {
   ClockIcon,
 } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   LineChart,
   Line,
   XAxis,
@@ -25,6 +19,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import {
+  CredenzaContent,
+  CredenzaTitle,
+  CredenzaHeader,
+} from "@/components/ui";
+import { Credenza } from "@/components/ui";
 
 // Données simulées pour les graphiques
 const appointmentsData = [
@@ -92,13 +92,13 @@ const MetricsWidget = () => {
     const isPositive = currentValue >= previousValue;
 
     return (
-      <Dialog
+      <Credenza
         open={openDialog === title}
         onOpenChange={() => setOpenDialog(null)}
       >
-        <DialogContent className="sm:max-w-[600px] p-10">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
+        <CredenzaContent className="sm:max-w-[600px] p-10">
+          <CredenzaHeader>
+            <CredenzaTitle className="flex items-center justify-between">
               <span>{title}</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Évolution</span>
@@ -111,8 +111,8 @@ const MetricsWidget = () => {
                   <span>{percentageChange}%</span>
                 </div>
               </div>
-            </DialogTitle>
-          </DialogHeader>
+            </CredenzaTitle>
+          </CredenzaHeader>
           <div className="space-y-8 pr-8 pb-6">
             <div className="grid grid-cols-3 gap-4">
               <Card className="p-4">
@@ -157,8 +157,8 @@ const MetricsWidget = () => {
               </ResponsiveContainer>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </CredenzaContent>
+      </Credenza>
     );
   };
 

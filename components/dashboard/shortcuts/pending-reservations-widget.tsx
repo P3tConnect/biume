@@ -17,12 +17,6 @@ import {
   AlertCircleIcon,
 } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -36,6 +30,12 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import {
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  Credenza,
+} from "@/components/ui";
 
 type Reservation = {
   id: string;
@@ -423,11 +423,11 @@ const PendingReservationsWidget = () => {
       </Sheet>
 
       {/* Owner Modal */}
-      <Dialog open={isOwnerModalOpen} onOpenChange={setIsOwnerModalOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Profil du propriétaire</DialogTitle>
-          </DialogHeader>
+      <Credenza open={isOwnerModalOpen} onOpenChange={setIsOwnerModalOpen}>
+        <CredenzaContent className="sm:max-w-[600px]">
+          <CredenzaHeader>
+            <CredenzaTitle>Profil du propriétaire</CredenzaTitle>
+          </CredenzaHeader>
           {selectedReservation && (
             <div className="space-y-6">
               <div className="flex items-start gap-4">
@@ -508,8 +508,8 @@ const PendingReservationsWidget = () => {
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
+        </CredenzaContent>
+      </Credenza>
     </>
   );
 };

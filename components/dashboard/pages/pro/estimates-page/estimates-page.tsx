@@ -4,37 +4,37 @@ import { useSearchParams } from "next/navigation";
 import { useQuotesSearchParams } from "@/src/hooks/use-quotes-search-params";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { QuotesDataTable } from "./components/quotes-data-table";
 import { QuotesFilters } from "./components/quotes-filters";
+import {
+  CredenzaDescription,
+  CredenzaTitle,
+  CredenzaHeader,
+  CredenzaTrigger,
+} from "@/components/ui/credenza";
+import { CredenzaContent } from "@/components/ui/credenza";
+import { Credenza } from "@/components/ui/credenza";
 
 const NewQuoteDialog = () => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Credenza>
+      <CredenzaTrigger asChild>
         <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
           <Plus className="size-4 mr-2" />
           Nouveau devis
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Créer un nouveau devis</DialogTitle>
-          <DialogDescription>
+      </CredenzaTrigger>
+      <CredenzaContent className="sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>Créer un nouveau devis</CredenzaTitle>
+          <CredenzaDescription>
             Remplissez les informations ci-dessous pour créer un nouveau devis.
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
         {/* TODO: Ajouter le formulaire de création de devis ici */}
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 };
 
@@ -60,15 +60,8 @@ const EstimatesHeader = () => {
 
 export function DashboardEstimatesComponent() {
   const searchParams = useSearchParams();
-  const {
-    page,
-    perPage,
-    sort,
-    status,
-    search,
-    dateRange,
-    updateSearchParams
-  } = useQuotesSearchParams();
+  const { page, perPage, sort, status, search, dateRange, updateSearchParams } =
+    useQuotesSearchParams();
 
   return (
     <div className="space-y-4">

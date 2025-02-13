@@ -2,8 +2,8 @@
 
 import Stepper from "@/components/onboarding/components/stepper";
 import {
-  Dialog,
-  DialogTrigger,
+  Credenza,
+  CredenzaTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -48,7 +48,7 @@ const SidebarHeaderComponent = () => {
   };
 
   return (
-    <Dialog>
+    <Credenza>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -127,20 +127,20 @@ const SidebarHeaderComponent = () => {
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator className="mx-1" />
-              <DialogTrigger asChild>
+              <CredenzaTrigger asChild>
                 <DropdownMenuItem className="flex flex-row gap-2 items-center justify-start w-full">
                   <div className="flex aspect-square size-6 items-center justify-center rounded-lg bg-gray-300/30 text-sidebar-accent-foreground">
                     <Plus className="size-4" />
                   </div>
                   <p>Ajouter une entreprise</p>
                 </DropdownMenuItem>
-              </DialogTrigger>
+              </CredenzaTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
       <Stepper />
-    </Dialog>
+    </Credenza>
   );
 };
 

@@ -21,7 +21,6 @@ import { proServicesSchema } from "../../types/onboarding-schemas";
 import { createServicesStepAction } from "@/src/actions";
 import { toast } from "sonner";
 import { useActionMutation } from "@/src/hooks/action-hooks";
-import { DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/src/lib/utils";
 
 const ServicesForm = ({
