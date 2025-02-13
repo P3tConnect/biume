@@ -1,8 +1,11 @@
-'use server';
+"use server";
 
-import { headers } from 'next/headers';
-import { auth } from './auth';
-import { ActionError, ServerActionContext } from './action-utils';
+import { headers } from "next/headers";
+import { auth } from "./auth";
+import { ActionError, ServerActionContext } from "./action-utils";
+import { db } from "./db";
+import { organization as organizationTable } from "@/src/db";
+import { eq } from "drizzle-orm";
 
 // Predefined middlewares
 export async function requireAuth(ctx: ServerActionContext) {
@@ -14,7 +17,7 @@ export async function requireAuth(ctx: ServerActionContext) {
     const user = session?.user;
 
     if (!user) {
-      throw new ActionError('Not authenticated');
+      throw new ActionError("Not authenticated");
     }
 
     Object.assign(ctx, {
@@ -23,7 +26,7 @@ export async function requireAuth(ctx: ServerActionContext) {
       meta: {},
     });
   } catch (error) {
-    throw new ActionError('Not authenticated');
+    throw new ActionError("Not authenticated");
   }
 }
 
@@ -33,7 +36,7 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 
   if (!organization) {
-    throw new Error('Organization required');
+    throw new Error("Organization required");
   }
 
   const membership = await auth.api.getActiveMember({
@@ -43,11 +46,11 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 
   if (!membership) {
-    throw new Error('User is not a member of any organization!');
+    throw new Error("User is not a member of any organization!");
   }
 
-  if (membership?.role !== 'owner') {
-    throw new Error('User is not an owner of the organization!');
+  if (membership?.role !== "owner") {
+    throw new Error("User is not an owner of the organization!");
   }
 
   Object.assign(ctx, {
@@ -57,7 +60,7 @@ export async function requireOwner(ctx: ServerActionContext) {
   });
 }
 
-export async function requireOrganization(ctx: ServerActionContext) {
+export async function requireFullOrganization(ctx: ServerActionContext) {
   const organization = await auth.api.getFullOrganization({
     headers: await headers(),
   });
@@ -66,7 +69,11 @@ export async function requireOrganization(ctx: ServerActionContext) {
     throw new Error("Organization required");
   }
 
-  Object.assign(ctx, { organization });
+  const fullOrganization = await db.query.organization.findFirst({
+    where: eq(organizationTable.id, organization.id),
+  });
+
+  Object.assign(ctx, { organization, fullOrganization });
 }
 
 export async function requireMember(ctx: ServerActionContext) {
@@ -75,11 +82,11 @@ export async function requireMember(ctx: ServerActionContext) {
   });
 
   if (!organization) {
-    throw new ActionError('User is not a member of any organization!');
+    throw new ActionError("User is not a member of any organization!");
   }
 
   if (!ctx.user) {
-    throw new Error('Not authenticated');
+    throw new Error("Not authenticated");
   }
 
   const membership = await auth.api.getActiveMember({
@@ -89,11 +96,11 @@ export async function requireMember(ctx: ServerActionContext) {
   });
 
   if (!membership) {
-    throw new Error('User is not a member of the organization!');
+    throw new Error("User is not a member of the organization!");
   }
 
-  if (membership?.role !== 'member') {
-    throw new Error('User is not a member of the organization!');
+  if (membership?.role !== "member") {
+    throw new Error("User is not a member of the organization!");
   }
 
   Object.assign(ctx, {

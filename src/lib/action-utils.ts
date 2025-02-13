@@ -1,10 +1,10 @@
-import { z } from 'zod';
-import { User, Organization } from './auth';
-
+import { z } from "zod";
+import { User, Organization } from "./auth";
+import { Organization as FullOrganization } from "@/src/db";
 export class ActionError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'Action Error';
+    this.name = "Action Error";
   }
 }
 
@@ -12,11 +12,12 @@ const handleReturnedServerError = (error: Error) => {
   if (error instanceof ActionError) {
     return error.message;
   }
-  return 'An unexpected error occurred';
+  return "An unexpected error occurred";
 };
 export type ServerActionContext = {
   user: User | null;
   organization: Organization | null;
+  fullOrganization: FullOrganization | null;
   meta: Record<string, unknown> | null;
 };
 
@@ -28,9 +29,9 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
   schema: TSchema,
   handler: (
     input: z.infer<TSchema>,
-    ctx: ServerActionContext
+    ctx: ServerActionContext,
   ) => Promise<TOutput>,
-  middlewares: ((ctx: ServerActionContext) => Promise<void>)[] = []
+  middlewares: ((ctx: ServerActionContext) => Promise<void>)[] = [],
 ): (input: z.infer<TSchema>) => Promise<ActionResult<TOutput>> {
   return async (input: z.infer<TSchema>) => {
     try {
@@ -39,6 +40,7 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
         meta: {},
         user: null,
         organization: null,
+        fullOrganization: null,
       };
 
       // Execute all middlewares in sequence
@@ -60,7 +62,7 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
       if (e instanceof Error) {
         return { error: e.message };
       }
-      return { error: 'An unexpected error occurred' };
+      return { error: "An unexpected error occurred" };
     }
   };
 }

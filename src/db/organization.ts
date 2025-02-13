@@ -83,6 +83,7 @@ export const organization = pgTable("organizations", {
   lang: text("lang").notNull().default("fr"),
   siren: text("siren"),
   siret: text("siret"),
+  onDemand: boolean("onDemand").notNull().default(false),
   updatedAt: timestamp("updatedAt"),
 });
 
