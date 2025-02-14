@@ -10,19 +10,42 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
 import {
   getBillingInfo,
   updateOrganizationPlan,
+  createPaymentMethodUpdateSession,
+  getInvoiceHistory,
 } from "@/src/actions/stripe.action";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Check } from "lucide-react";
+import {
+  Check,
+  Download,
+  ExternalLink,
+  CreditCard,
+  Receipt,
+  Package2,
+} from "lucide-react";
 import { cn } from "@/src/lib";
 import { toast } from "sonner";
 import { safeConfig } from "@/src/lib";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const plans = [
   {
@@ -74,7 +97,9 @@ const plans = [
 export const BillingSection = () => {
   const params = useParams();
   const orgId = params.orgId as string;
+  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isInvoicesOpen, setIsInvoicesOpen] = React.useState(false);
   const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null);
 
   const { data: billingInfo, isLoading } = useActionQuery(
@@ -83,9 +108,34 @@ export const BillingSection = () => {
     "billing-info",
   );
 
+  const { data: invoices, isLoading: isLoadingInvoices } = useActionQuery(
+    getInvoiceHistory,
+    { organizationId: orgId },
+    "invoice-history",
+    {
+      enabled: isInvoicesOpen,
+    },
+  );
+
+  const { mutateAsync: updatePaymentMethod } = useActionMutation(
+    createPaymentMethodUpdateSession,
+    {
+      onSuccess: (url) => {
+        if (url) {
+          router.push(url);
+        }
+      },
+      onError: () => {
+        toast.error(
+          "Une erreur est survenue lors de la mise à jour du moyen de paiement",
+        );
+      },
+    },
+  );
+
   const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
     onSuccess: (data) => {
-      window.location.href = data;
+      router.push(data);
     },
     onError: () => {
       toast.error("Une erreur est survenue");
@@ -99,50 +149,103 @@ export const BillingSection = () => {
     });
   };
 
+  const handleUpdatePaymentMethod = async () => {
+    await updatePaymentMethod({
+      organizationId: orgId,
+    });
+  };
+
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Facturation & Abonnement</CardTitle>
-          <CardDescription>
+      <Card className="overflow-hidden">
+        <CardHeader className="border-b bg-muted/10 pb-8 pt-6">
+          <CardTitle className="text-2xl font-bold">
+            Facturation & Abonnement
+          </CardTitle>
+          <CardDescription className="text-base">
             Gérez votre abonnement et vos informations de facturation
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="rounded-lg border p-4">
-            <h3 className="font-medium mb-2">Plan actuel</h3>
-            {isLoading ? (
-              <Skeleton className="h-4 w-[200px]" />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {billingInfo?.currentPlan} - {billingInfo?.currentPrice}/mois
-              </p>
-            )}
-            <Button variant="outline" className="mt-4" onClick={() => setIsOpen(true)}>
-              Changer de plan
-            </Button>
-          </div>
-          <div className="rounded-lg border p-4">
-            <h3 className="font-medium mb-2">Moyen de paiement</h3>
-            {isLoading ? (
-              <Skeleton className="h-4 w-[200px]" />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {billingInfo?.paymentMethod}
-              </p>
-            )}
-            <Button variant="outline" className="mt-4">
-              Mettre à jour le moyen de paiement
-            </Button>
-          </div>
-          <div className="rounded-lg border p-4">
-            <h3 className="font-medium mb-2">Historique de facturation</h3>
-            <p className="text-sm text-muted-foreground">
-              Voir et télécharger les factures passées
-            </p>
-            <Button variant="outline" className="mt-4">
-              Voir l&apos;historique de facturation
-            </Button>
+        <CardContent className="p-8">
+          <div className="space-y-8">
+            {/* Plan actuel */}
+            <div className="flex flex-col space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex aspect-square size-10 items-center justify-center rounded-full bg-primary/10">
+                    <Package2 className="size-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium">Plan actuel</h3>
+                    {isLoading ? (
+                      <Skeleton className="mt-1 h-4 w-[120px]" />
+                    ) : (
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-bold text-primary">
+                          {billingInfo?.currentPrice}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          /mois
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <Button onClick={() => setIsOpen(true)}>Changer de plan</Button>
+              </div>
+              {!isLoading && (
+                <p className="text-sm text-muted-foreground">
+                  Vous êtes actuellement sur le plan{" "}
+                  <span className="font-medium text-foreground">
+                    {billingInfo?.currentPlan}
+                  </span>
+                </p>
+              )}
+            </div>
+
+            <div className="h-px bg-border" />
+
+            {/* Moyen de paiement */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex aspect-square size-10 items-center justify-center rounded-full bg-primary/10">
+                  <CreditCard className="size-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium">Moyen de paiement</h3>
+                  {isLoading ? (
+                    <Skeleton className="mt-1 h-4 w-[200px]" />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      {billingInfo?.paymentMethod}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Button variant="outline" onClick={handleUpdatePaymentMethod}>
+                Mettre à jour
+              </Button>
+            </div>
+
+            <div className="h-px bg-border" />
+
+            {/* Historique de facturation */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex aspect-square size-10 items-center justify-center rounded-full bg-primary/10">
+                  <Receipt className="size-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium">Factures</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Consultez vos factures et paiements
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" onClick={() => setIsInvoicesOpen(true)}>
+                Voir les factures
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -198,6 +301,81 @@ export const BillingSection = () => {
               </Card>
             ))}
           </div>
+        </CredenzaContent>
+      </Credenza>
+
+      <Credenza open={isInvoicesOpen} onOpenChange={setIsInvoicesOpen}>
+        <CredenzaContent>
+          <CredenzaHeader className="pb-6">
+            <CredenzaTitle>Historique des factures</CredenzaTitle>
+            <CredenzaDescription>
+              Consultez et téléchargez vos factures des 12 derniers mois
+            </CredenzaDescription>
+          </CredenzaHeader>
+          {isLoadingInvoices ? (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : invoices && invoices.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Numéro</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Montant</TableHead>
+                  <TableHead>Statut</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {invoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                    <TableCell>{invoice.number}</TableCell>
+                    <TableCell>{invoice.date}</TableCell>
+                    <TableCell>{invoice.amount}</TableCell>
+                    <TableCell>
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
+                          {
+                            "bg-green-50 text-green-700":
+                              invoice.status === "paid",
+                            "bg-yellow-50 text-yellow-700":
+                              invoice.status === "open",
+                            "bg-red-50 text-red-700":
+                              invoice.status === "uncollectible",
+                          },
+                        )}
+                      >
+                        {invoice.status === "paid" && "Payée"}
+                        {invoice.status === "open" && "En attente"}
+                        {invoice.status === "uncollectible" && "Non payée"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {invoice.pdfUrl && (
+                        <a
+                          href={invoice.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                        >
+                          <Download className="h-4 w-4" />
+                          Télécharger
+                        </a>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              Aucune facture disponible
+            </div>
+          )}
         </CredenzaContent>
       </Credenza>
     </>

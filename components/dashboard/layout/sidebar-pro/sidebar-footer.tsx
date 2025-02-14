@@ -16,9 +16,15 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import { signOut } from "@/src/lib/auth-client";
-import { ChevronsUpDown, Link, LogOut, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { signOut, useActiveOrganization } from "@/src/lib/auth-client";
+import {
+  ChevronsUpDown,
+  Link,
+  LogOut,
+  Settings,
+  ExternalLink,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import Avvvatars from "avvvatars-react";
 import { useActionQuery } from "@/src/hooks/action-hooks";
@@ -26,14 +32,36 @@ import { getUserInformations } from "@/src/actions/user.action";
 
 const SidebarFooterComponent = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const { data: activeOrganization } = useActiveOrganization();
   const { data: session, isPending } = useActionQuery(
     getUserInformations,
     {},
     "user-informations",
   );
 
+  const handleSettingsClick = () => {
+    router.push(`/dashboard/organization/${activeOrganization?.id}/settings`);
+  };
+
   return (
-    <SidebarMenu>
+    <SidebarMenu className="flex flex-col gap-2">
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          tooltip="Paramètres de l'entreprise"
+          isActive={
+            pathname ===
+            `/dashboard/organization/${activeOrganization?.id}/settings`
+          }
+          onClick={handleSettingsClick}
+          asChild
+        >
+          <div className="flex items-center gap-2">
+            <Settings />
+            <span>Paramètres</span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

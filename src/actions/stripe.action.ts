@@ -8,6 +8,7 @@ import {
   requireOwner,
   requireAuth,
   getPlanName,
+  requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
 import { organization } from "../db";
@@ -248,4 +249,70 @@ export const getBillingInfo = createServerAction(
       );
     }
   },
+);
+
+export const createPaymentMethodUpdateSession = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        customer: ctx.fullOrganization.stripeId,
+        payment_method_types: ["card"],
+        mode: "setup",
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+      });
+
+      return session.url;
+    } catch (error) {
+      console.error("Erreur lors de la création de la session:", error);
+      throw new ActionError(
+        "Impossible de créer la session de mise à jour du moyen de paiement",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const getInvoiceHistory = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const invoices = await stripe.invoices.list({
+        customer: ctx.fullOrganization.stripeId,
+        limit: 12, // Derniers 12 mois
+      });
+
+      return invoices.data.map((invoice) => ({
+        id: invoice.id,
+        amount: `${(invoice.amount_paid / 100).toFixed(2)}€`,
+        date: new Date(invoice.created * 1000).toLocaleDateString("fr-FR"),
+        status: invoice.status,
+        pdfUrl: invoice.invoice_pdf,
+        number: invoice.number,
+      }));
+    } catch (error) {
+      console.error("Erreur lors de la récupération des factures:", error);
+      throw new ActionError(
+        "Impossible de récupérer l'historique des factures",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
 );
