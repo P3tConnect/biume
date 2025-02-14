@@ -61,9 +61,6 @@ export function OptionsForm({
       <form onSubmit={onSubmit} className="space-y-8">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Vos Options
-            </h2>
             {fields.length > 0 && (
               <Button
                 type="button"
@@ -102,7 +99,7 @@ export function OptionsForm({
                       <FormItem>
                         <FormControl>
                           <Input
-                            placeholder="Nom de l&apos;option"
+                            placeholder="Nom de l'option"
                             className="text-lg font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
                             {...field}
                             value={field.value ?? ""}
@@ -120,7 +117,7 @@ export function OptionsForm({
                       <FormItem>
                         <FormControl>
                           <Textarea
-                            placeholder="Description de l&apos;option..."
+                            placeholder="Description de l'option..."
                             className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary"
                             {...field}
                             value={field.value ?? ""}
@@ -203,7 +200,7 @@ export function OptionsForm({
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-8 border-t">
+        <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
           <Button
             type="button"
             variant="outline"
@@ -219,31 +216,13 @@ export function OptionsForm({
               onClick={nextStep}
               className="text-muted-foreground"
             >
-              Passer cette étape
+              Passer
             </Button>
             <Button type="submit" className="rounded-xl px-6">
               Suivant →
             </Button>
           </div>
         </div>
-
-        <CredenzaFooter>
-          <div className="flex justify-end gap-4 w-full">
-            <Button
-              variant="outline"
-              className="rounded-xl"
-              onClick={previousStep}
-            >
-              Précédent
-            </Button>
-            <Button
-              type="submit"
-              className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
-            >
-              Suivant
-            </Button>
-          </div>
-        </CredenzaFooter>
       </form>
     </Form>
   );

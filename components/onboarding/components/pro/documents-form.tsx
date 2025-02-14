@@ -30,7 +30,13 @@ const ACCEPTED_FILE_TYPES = {
   "image/png": [".png"],
 };
 
-export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) {
+export function DocumentsForm({
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) {
   const form = useForm<z.infer<typeof proDocumentsSchema>>({
     resolver: zodResolver(proDocumentsSchema),
     defaultValues: {
@@ -66,14 +72,19 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
             render={({ field }) => (
               <FormItem className="space-y-6">
                 <div className="space-y-2">
-                  <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
+                  <FormLabel className="text-lg font-semibold">
+                    Documents justificatifs
+                  </FormLabel>
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <FormDescription>
-                      Pour vérifier l&apos;identité de votre entreprise, veuillez fournir :
+                      Pour vérifier l&apos;identité de votre entreprise,
+                      veuillez fournir :
                     </FormDescription>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Un extrait Kbis récent (moins de 3 mois)</li>
-                      <li>Ou tout autre document officiel d&apos;identification</li>
+                      <li>
+                        Ou tout autre document officiel d&apos;identification
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -88,7 +99,9 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
 
           <div className="grid gap-8 pt-6">
             <div className="flex flex-col space-y-6">
-              <h3 className="text-lg font-semibold">Informations d&apos;identification</h3>
+              <h3 className="text-lg font-semibold">
+                Informations d&apos;identification
+              </h3>
               <div className="grid gap-6 sm:grid-cols-2">
                 <FormField
                   control={control}
@@ -140,7 +153,7 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
           </div>
 
           {/* Footer with buttons */}
-          <div className="flex justify-between items-center pt-8 border-t">
+          <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
             <Button
               type="button"
               variant="outline"
@@ -156,7 +169,7 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
                 onClick={nextStep}
                 className="text-muted-foreground"
               >
-                Passer cette étape
+                Passer
               </Button>
               <Button type="submit" className="rounded-xl px-6">
                 Suivant →
@@ -207,8 +220,10 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
         className={cn(
           "border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all duration-200",
           "hover:border-primary hover:bg-primary/5",
-          isDragActive ? "border-primary bg-primary/10 scale-[1.02]" : "border-muted-foreground/25",
-          isUploading && "opacity-50 cursor-not-allowed"
+          isDragActive
+            ? "border-primary bg-primary/10 scale-[1.02]"
+            : "border-muted-foreground/25",
+          isUploading && "opacity-50 cursor-not-allowed",
         )}
       >
         <input {...getInputProps()} disabled={isUploading} />
@@ -266,7 +281,9 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
                     />
                   </svg>
                 </div>
-                <span className="text-sm font-medium">Document {index + 1}</span>
+                <span className="text-sm font-medium">
+                  Document {index + 1}
+                </span>
               </div>
               <Button
                 type="button"

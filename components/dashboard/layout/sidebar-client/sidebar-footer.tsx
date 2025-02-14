@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Stepper from '@/components/onboarding/components/stepper';
+import Stepper from "@/components/onboarding/components/stepper";
 import {
   Avatar,
   AvatarFallback,
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui";
 import { getUserInformations } from "@/src/actions/user.action";
 import { useActionQuery } from "@/src/hooks/action-hooks";
-import { signOut } from "@/src/lib/auth-client";
+import { signOut, useListOrganizations } from "@/src/lib/auth-client";
 import Avvvatars from "avvvatars-react";
 import {
   BadgeCheck,
@@ -42,6 +42,7 @@ const SidebarClientFooterComponent = () => {
     {},
     "user-informations",
   );
+  const { data: organizations } = useListOrganizations();
   const [open, setOpen] = useState(false);
 
   return (
@@ -51,80 +52,80 @@ const SidebarClientFooterComponent = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
-                size='lg'
-                className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 {session?.user.image ? (
-                  <Avatar className='h-8 w-8 rounded-lg'>
+                  <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
                       src={session?.user.image}
                       alt={session?.user.name}
-                      className='object-cover'
+                      className="object-cover"
                     />
-                    <AvatarFallback className='rounded-lg'>
-                      <Skeleton className='h-8 w-8 rounded-lg bg-gray-200' />
+                    <AvatarFallback className="rounded-lg">
+                      <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
                     </AvatarFallback>
                   </Avatar>
                 ) : (
-                  <div className='flex h-8 w-8 items-center justify-center'>
+                  <div className="flex h-8 w-8 items-center justify-center">
                     <Avvvatars
-                      value={session?.user.email || ''}
+                      value={session?.user.email || ""}
                       size={32}
-                      style='shape'
+                      style="shape"
                     />
                   </div>
                 )}
-                <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">
                     {session?.user.name}
                   </span>
-                  <span className='truncate text-xs'>
+                  <span className="truncate text-xs">
                     {session?.user.email}
                   </span>
                 </div>
-                <ChevronsUpDown className='ml-auto size-4' />
+                <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
-              side={'right'}
-              align='end'
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              side={"right"}
+              align="end"
               sideOffset={4}
             >
-              <DropdownMenuLabel className='p-0 font-normal'>
-                <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   {session?.user.image ? (
-                    <Avatar className='h-8 w-8 rounded-lg'>
+                    <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
                         src={session?.user.image}
                         alt={session?.user.name}
-                        className='object-cover'
+                        className="object-cover"
                       />
-                      <AvatarFallback className='rounded-lg'>
-                        <Skeleton className='h-8 w-8 rounded-lg bg-gray-200' />
+                      <AvatarFallback className="rounded-lg">
+                        <Skeleton className="h-8 w-8 rounded-lg bg-gray-200" />
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <div className='flex h-8 w-8 items-center justify-center'>
+                    <div className="flex h-8 w-8 items-center justify-center">
                       <Avvvatars
-                        value={session?.user.email || ''}
+                        value={session?.user.email || ""}
                         size={32}
-                        style='shape'
+                        style="shape"
                       />
                     </div>
                   )}
-                  <div className='grid flex-1 text-left text-sm leading-tight'>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
                     {isPending ? (
                       <>
-                        <Skeleton className='h-4 w-full rounded-md bg-gray-200' />
-                        <Skeleton className='h-4 w-full rounded-md bg-gray-200' />
+                        <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
+                        <Skeleton className="h-4 w-full rounded-md bg-gray-200" />
                       </>
                     ) : (
                       <>
-                        <span className='truncate font-semibold'>
+                        <span className="truncate font-semibold">
                           {session?.user.name}
                         </span>
-                        <span className='truncate text-xs'>
+                        <span className="truncate text-xs">
                           {session?.user.email}
                         </span>
                       </>
@@ -134,20 +135,11 @@ const SidebarClientFooterComponent = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <CredenzaTrigger asChild>
-                  <DropdownMenuItem className="gap-2">
-                    <Sparkles size={14} />
-                    Become a pro
-                  </DropdownMenuItem>
-                </CredenzaTrigger>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem className='gap-2'>
+                <DropdownMenuItem className="gap-2">
                   <BadgeCheck size={14} />
                   Account
                 </DropdownMenuItem>
-                <DropdownMenuItem className='gap-2'>
+                <DropdownMenuItem className="gap-2">
                   <CreditCard size={14} />
                   Billing
                 </DropdownMenuItem>

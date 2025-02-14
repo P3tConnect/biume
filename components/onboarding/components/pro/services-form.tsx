@@ -282,7 +282,7 @@ const ServicesForm = ({
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-8 border-t">
+        <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
           <Button
             type="button"
             variant="outline"
@@ -298,31 +298,13 @@ const ServicesForm = ({
               onClick={nextStep}
               className="text-muted-foreground"
             >
-              Passer cette étape
+              Passer
             </Button>
             <Button type="submit" className="rounded-xl px-6">
               Suivant →
             </Button>
           </div>
         </div>
-
-        <CredenzaFooter>
-          <div className="flex justify-end gap-4 w-full">
-            <Button
-              variant="outline"
-              className="rounded-xl"
-              onClick={previousStep}
-            >
-              Précédent
-            </Button>
-            <Button
-              type="submit"
-              className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
-            >
-              Suivant
-            </Button>
-          </div>
-        </CredenzaFooter>
       </form>
     </Form>
   );

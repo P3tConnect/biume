@@ -16,7 +16,11 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import { signOut, useSession } from "@/src/lib/auth-client";
+import {
+  signOut,
+  useSession,
+  useListOrganizations,
+} from "@/src/lib/auth-client";
 import {
   ChevronsUpDown,
   LogOut,
@@ -32,6 +36,7 @@ import { getUserInformations } from "@/src/actions/user.action";
 
 const SidebarFooterComponent = () => {
   const router = useRouter();
+  const { data: organizations } = useListOrganizations();
   const { data: session, isPending } = useActionQuery(
     getUserInformations,
     {},
@@ -123,23 +128,6 @@ const SidebarFooterComponent = () => {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2">
-                <Sparkles size={14} />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="gap-2"
-              onClick={() => {
-                router.push(`/dashboard/user/${session?.user.id}`);
-              }}
-            >
-              <User2 size={14} />
-              Back to personnal
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2"

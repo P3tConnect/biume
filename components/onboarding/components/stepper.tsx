@@ -106,7 +106,7 @@ const Stepper = () => {
   };
 
   return (
-    <CredenzaContent className="w-[1200px]">
+    <CredenzaContent>
       <CredenzaHeader className="flex flex-row items-center space-x-4">
         <StepIndicator
           currentStep={currentStep + 1}
@@ -123,7 +123,7 @@ const Stepper = () => {
         </div>
       </CredenzaHeader>
 
-      <div className="h-[700px] overflow-y-auto">
+      <div className="max-h-[700px] overflow-y-auto">
         {switchStep({
           start: () => (
             <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />

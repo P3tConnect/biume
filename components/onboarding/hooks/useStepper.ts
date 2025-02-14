@@ -29,7 +29,7 @@ export const { steps, useStepper, utils } = defineStepper(
     id: "documents",
     title: "Documents",
     description:
-      "Les documents nous permettent de vous identifier et de vous authentifier en tant que professionnel, vous pourrez les modifier à tout moment dans les réglages du compte de votre entreprise.",
+      "Les documents nous permettent de vous identifier et de vous authentifier en tant que professionnel.",
   },
   {
     id: "subscription",
