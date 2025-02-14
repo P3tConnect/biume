@@ -81,7 +81,11 @@ const SidebarHeaderComponent = () => {
                   <span className="truncate font-semibold">
                     {activeOrganization?.name}
                   </span>
-                  <span className="truncate text-xs">Organisation</span>
+                  <span className="truncate text-xs">
+                    {isPersonalDashboard
+                      ? "Tableau de bord personnel"
+                      : activeOrganization?.slug}
+                  </span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>

@@ -6,7 +6,6 @@ import {
   AvatarFallback,
   AvatarImage,
   Credenza,
-  CredenzaTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -21,7 +20,7 @@ import {
 } from "@/components/ui";
 import { getUserInformations } from "@/src/actions/user.action";
 import { useActionQuery } from "@/src/hooks/action-hooks";
-import { signOut, useListOrganizations } from "@/src/lib/auth-client";
+import { signOut } from "@/src/lib/auth-client";
 import Avvvatars from "avvvatars-react";
 import {
   BadgeCheck,
@@ -29,11 +28,10 @@ import {
   CreditCard,
   LogOut,
   Settings,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
@@ -42,11 +40,9 @@ const SidebarClientFooterComponent = () => {
     {},
     "user-informations",
   );
-  const { data: organizations } = useListOrganizations();
-  const [open, setOpen] = useState(false);
 
   return (
-    <Credenza onOpenChange={setOpen}>
+    <Credenza>
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
@@ -133,16 +129,7 @@ const SidebarClientFooterComponent = () => {
                   </div>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="gap-2">
-                  <BadgeCheck size={14} />
-                  Account
-                </DropdownMenuItem>
-                <DropdownMenuItem className="gap-2">
-                  <CreditCard size={14} />
-                  Billing
-                </DropdownMenuItem>
                 <Link href={`/dashboard/user/${session?.user.id}/settings`}>
                   <DropdownMenuItem className="gap-2">
                     <Settings size={14} />

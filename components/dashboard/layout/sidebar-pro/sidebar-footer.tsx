@@ -16,18 +16,8 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import {
-  signOut,
-  useSession,
-  useListOrganizations,
-} from "@/src/lib/auth-client";
-import {
-  ChevronsUpDown,
-  LogOut,
-  Settings,
-  Sparkles,
-  User2,
-} from "lucide-react";
+import { signOut } from "@/src/lib/auth-client";
+import { ChevronsUpDown, Link, LogOut, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import Avvvatars from "avvvatars-react";
@@ -36,7 +26,6 @@ import { getUserInformations } from "@/src/actions/user.action";
 
 const SidebarFooterComponent = () => {
   const router = useRouter();
-  const { data: organizations } = useListOrganizations();
   const { data: session, isPending } = useActionQuery(
     getUserInformations,
     {},
@@ -128,6 +117,14 @@ const SidebarFooterComponent = () => {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <Link href={`/dashboard/user/${session?.user.id}/settings`}>
+                <DropdownMenuItem className="gap-2">
+                  <Settings size={14} />
+                  Settings
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2"
