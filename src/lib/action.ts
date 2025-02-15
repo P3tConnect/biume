@@ -71,6 +71,14 @@ export async function requireFullOrganization(ctx: ServerActionContext) {
 
   const fullOrganization = await db.query.organization.findFirst({
     where: eq(organizationTable.id, organization.id),
+    with: {
+      invitations: true,
+      members: {
+        with: {
+          user: true,
+        },
+      },
+    },
   });
 
   Object.assign(ctx, { organization, fullOrganization });

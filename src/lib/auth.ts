@@ -38,7 +38,7 @@ export const owner = ac.newRole({
 });
 
 export const auth = betterAuth({
-  appName: "PawThera",
+  appName: "Biume",
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -169,10 +169,14 @@ export const auth = betterAuth({
           }),
         });
       },
+      membershipLimit: 10,
     }),
   ],
 });
 
 export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session;
-export type Organization = typeof auth.$Infer.Organization;
+export type Organization = typeof auth.$Infer.Organization & {
+  members: (typeof auth.$Infer.Member)[]
+  invitations: (typeof auth.$Infer.Invitation)[]
+};

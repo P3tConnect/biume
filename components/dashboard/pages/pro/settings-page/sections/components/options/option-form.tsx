@@ -1,40 +1,39 @@
-"use client";
-
+import { FormControl, FormMessage } from "@/components/ui/form";
+import { Form, FormItem } from "@/components/ui/form";
+import { FormField } from "@/components/ui/form";
+import { Option, CreateOption } from "@/src/db";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Euro, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Euro } from "lucide-react";
-import { toast } from "sonner";
-import { useActionMutation } from "@/src/hooks/action-hooks";
-import { updateOption, deleteOption } from "@/src/actions";
-import { Option } from "@/src/db";
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import { createOption, updateOption } from "@/src/actions";
+import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
+import { CredenzaContent } from "@/components/ui";
 
 const optionSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
+  description: z.string().nullable().optional(),
   price: z.number().min(0, "Le prix est requis"),
   organizationId: z.string().optional(),
 });
 
 interface OptionFormProps {
-  option: Option;
+  option: Partial<Option> | Option;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
+export const OptionForm = ({
+  option,
+  open,
+  onOpenChange,
+}: OptionFormProps) => {
   const form = useForm<z.infer<typeof optionSchema>>({
     resolver: zodResolver(optionSchema),
     defaultValues: {
@@ -46,47 +45,43 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
     },
   });
 
-  const { mutateAsync: updateOptionMutation } = useActionMutation(
-    updateOption,
-    {
-      onSuccess: () => {
-        toast.success("Option mise à jour avec succès!");
-        onOpenChange(false);
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    },
-  );
+  const isCreating = !option.id;
 
-  const { mutateAsync: deleteOptionMutation } = useActionMutation(
-    deleteOption,
-    {
-      onSuccess: () => {
-        toast.success("Option supprimée avec succès!");
-        onOpenChange(false);
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
+  const { mutateAsync: createMutation } = useActionMutation(createOption, {
+    onSuccess: () => {
+      toast.success("Option créée avec succès!");
+      onOpenChange(false);
     },
-  );
-
-  const onSubmit = form.handleSubmit(async (data) => {
-    await updateOptionMutation(data);
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
-  const handleDelete = async () => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette option ?")) {
-      await deleteOptionMutation(option.id);
+  const { mutateAsync: updateMutation } = useActionMutation(updateOption, {
+    onSuccess: () => {
+      toast.success("Option mise à jour avec succès!");
+      onOpenChange(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = form.handleSubmit(async (data) => {
+    if (isCreating) {
+      await createMutation(data);
+    } else {
+      await updateMutation(data);
     }
-  };
+  });
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Modifier l&apos;option</CredenzaTitle>
+          <CredenzaTitle>
+            {isCreating ? "Créer une option" : "Modifier l'option"}
+          </CredenzaTitle>
         </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
@@ -114,6 +109,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
                         placeholder="Description de l'option..."
                         className="min-h-[100px]"
                         {...field}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -146,19 +142,14 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
               />
             </div>
 
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleDelete}
-              >
-                Supprimer
+            <div className="flex justify-end">
+              <Button type="submit">
+                {isCreating ? "Créer" : "Enregistrer"}
               </Button>
-              <Button type="submit">Enregistrer</Button>
             </div>
           </form>
         </Form>
       </CredenzaContent>
     </Credenza>
   );
-};
+}; 

@@ -94,3 +94,61 @@ export const getCompanyDocuments = createServerAction(
   },
   [requireAuth, requireOwner],
 );
+
+export const updateCompanyDocuments = createServerAction(
+  proDocumentsSchema,
+  async (input, ctx) => {
+    if (!ctx.organization) {
+      throw new ActionError("Organization not found");
+    }
+
+    const documents = input.documents;
+    if (!documents) {
+      throw new ActionError("Documents are required");
+    }
+
+    // Supprimer les anciens documents
+    await db
+      .delete(organizationDocuments)
+      .where(eq(organizationDocuments.organizationId, ctx.organization.id))
+      .execute();
+
+    // Insérer les nouveaux documents
+    const documentsResult = await db
+      .insert(organizationDocuments)
+      .values(
+        documents.map((file) => ({
+          file: file ?? "",
+          organizationId: ctx.organization?.id ?? "",
+        })),
+      )
+      .returning()
+      .execute();
+
+    if (!documentsResult) {
+      throw new ActionError("Documents not created");
+    }
+
+    // Mettre à jour les informations de l'organisation
+    const organizationResult = await db
+      .update(organizationTable)
+      .set({
+        siret: input.siret,
+        siren: input.siren,
+        updatedAt: new Date(),
+      })
+      .where(eq(organizationTable.id, ctx.organization.id))
+      .returning()
+      .execute();
+
+    if (!organizationResult) {
+      throw new ActionError("Organization not updated");
+    }
+
+    return {
+      documents: documentsResult,
+      organization: organizationResult[0],
+    };
+  },
+  [requireAuth, requireOwner],
+);

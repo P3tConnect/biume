@@ -129,6 +129,7 @@ const SidebarClientFooterComponent = () => {
                   </div>
                 </div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <Link href={`/dashboard/user/${session?.user.id}/settings`}>
                   <DropdownMenuItem className="gap-2">

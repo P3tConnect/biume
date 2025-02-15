@@ -2,7 +2,7 @@ import { FormControl, FormMessage } from "@/components/ui/form";
 
 import { Form, FormItem } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
-import { Service } from "@/src/db";
+import { Service, CreateService } from "@/src/db";
 import { useActionMutation } from "@/src/hooks/action-hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ import { DropzoneInput } from "@/components/ui/dropzone-input";
 import { DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { updateService } from "@/src/actions";
+import { createService, updateService } from "@/src/actions";
 import Image from "next/image";
 import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
 import { CredenzaContent } from "@/components/ui";
@@ -30,7 +30,7 @@ const servicesSchema = z.object({
 });
 
 interface ServiceFormProps {
-  service: Service;
+  service: Partial<Service> | Service;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -53,7 +53,19 @@ export const ServiceForm = ({
     },
   });
 
-  const { mutateAsync } = useActionMutation(updateService, {
+  const isCreating = !service.id;
+
+  const { mutateAsync: createMutation } = useActionMutation(createService, {
+    onSuccess: () => {
+      toast.success("Service créé avec succès!");
+      onOpenChange(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutateAsync: updateMutation } = useActionMutation(updateService, {
     onSuccess: () => {
       toast.success("Service mis à jour avec succès!");
       onOpenChange(false);
@@ -64,14 +76,20 @@ export const ServiceForm = ({
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    await mutateAsync(data);
+    if (isCreating) {
+      await createMutation(data);
+    } else {
+      await updateMutation(data);
+    }
   });
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Modifier le service</CredenzaTitle>
+          <CredenzaTitle>
+            {isCreating ? "Créer un service" : "Modifier le service"}
+          </CredenzaTitle>
         </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
@@ -207,7 +225,9 @@ export const ServiceForm = ({
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit">Enregistrer</Button>
+              <Button type="submit">
+                {isCreating ? "Créer" : "Enregistrer"}
+              </Button>
             </div>
           </form>
         </Form>

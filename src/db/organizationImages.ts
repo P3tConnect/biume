@@ -1,14 +1,13 @@
-import { organizations } from "@/auth-schema";
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { Organization } from "./organization";
+import { organization, Organization } from "./organization";
 
 export const organizationImages = pgTable("organization_images", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  organizationId: text("organization_id").references(() => organizations.id),
+  organizationId: text("organization_id").references(() => organization.id),
   imageUrl: text("image_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -17,9 +16,9 @@ export const organizationImages = pgTable("organization_images", {
 export const organizationImagesRelations = relations(
   organizationImages,
   ({ one }) => ({
-    organization: one(organizations, {
+    organization: one(organization, {
       fields: [organizationImages.organizationId],
-      references: [organizations.id],
+      references: [organization.id],
     }),
   }),
 );

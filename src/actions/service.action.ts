@@ -51,11 +51,29 @@ export const getServicesFromOrganization = createServerAction(
 );
 
 export const createService = createServerAction(
-  proServicesSchema,
+  CreateServiceSchema,
   async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
     });
+    if (!organization) {
+      throw new ActionError("Organization not found");
+    }
+
+    const result = await db
+      .insert(service)
+      .values({
+        ...input,
+        organizationId: organization.id,
+      })
+      .returning()
+      .execute();
+
+    if (!result) {
+      throw new ActionError("Service not created");
+    }
+
+    return result[0];
   },
   [requireAuth],
 );

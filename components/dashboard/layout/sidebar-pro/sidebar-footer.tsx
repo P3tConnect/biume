@@ -48,6 +48,7 @@ const SidebarFooterComponent = () => {
     <SidebarMenu className="flex flex-col gap-2">
       <SidebarMenuItem>
         <SidebarMenuButton
+          className="cursor-pointer"
           tooltip="Paramètres de l'entreprise"
           isActive={
             pathname ===

@@ -6,7 +6,7 @@ import { Euro, Pencil, Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { toast } from "sonner";
 import { useState } from "react";
-import { OptionForm } from "./options-form";
+import { OptionForm } from "./option-form";
 import { ActionResult } from "@/src/lib";
 
 interface OptionsGridProps {

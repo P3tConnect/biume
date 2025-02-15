@@ -18,6 +18,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Calendar } from "@/components/ui/calendar";
+import { useMediaQuery } from "@/src/hooks/useMediaQuery";
 
 type Appointment = {
   id: string;
@@ -53,6 +55,7 @@ const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Exemple de données (à remplacer par vos vraies données)
   const appointments: DayAppointments = {
@@ -340,93 +343,131 @@ const CalendarWidget = () => {
   return (
     <>
       <div className="h-full flex flex-col">
-        <div className="flex justify-between items-center pb-4">
-          <h2 className="text-lg font-semibold">
-            {currentDate.toLocaleString("default", {
-              month: "long",
-              year: "numeric",
-            })}
-          </h2>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={handlePrevMonth}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              onClick={handleNextMonth}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+        {isMobile ? (
+          <div className="flex-1 flex flex-col space-y-4">
+            <h2 className="text-lg font-semibold">
+              {currentDate.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h2>
+            <Calendar
+              mode="single"
+              selected={selectedDate || undefined}
+              onSelect={(date) => {
+                if (date) {
+                  setSelectedDate(date);
+                  setIsDrawerOpen(true);
+                }
+              }}
+              className="w-full flex justify-center items-center rounded-lg border"
+              classNames={{
+                months: "flex flex-col items-center w-full",
+                month: "w-full max-w-full",
+                head_row: "flex w-full justify-center",
+                head_cell: "text-muted-foreground rounded-md w-14 font-normal text-[0.8rem]",
+                row: "flex w-full justify-center mt-2",
+                cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent",
+                day: "h-14 w-14 p-0 font-normal text-foreground aria-selected:opacity-100 hover:bg-accent rounded-md text-base",
+                day_today: "bg-accent text-accent-foreground",
+                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                day_outside: "text-muted-foreground opacity-50",
+                day_disabled: "text-muted-foreground opacity-50",
+                day_hidden: "invisible",
+              }}
+            />
           </div>
-        </div>
-
-        <div className="flex-1 overflow-auto px-1">
-          <div className="grid grid-cols-7 gap-2 mb-2">
-            {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
-              <div
-                key={day}
-                className={cn(
-                  "text-center text-sm font-medium p-1",
-                  day === "Dim" || day === "Sam"
-                    ? "text-red-500"
-                    : "text-gray-600 dark:text-gray-300",
-                )}
-              >
-                {day}
+        ) : (
+          <>
+            <div className="flex justify-between items-center pb-4">
+              <h2 className="text-lg font-semibold">
+                {currentDate.toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h2>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={handlePrevMonth}
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-xl hover:bg-secondary/5"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  onClick={handleNextMonth}
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-xl hover:bg-secondary/5"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="space-y-2">
-            {getWeeksInMonth().map((week, weekIndex) => (
-              <div key={weekIndex} className="grid grid-cols-7 gap-2">
-                {week.map((day, dayIndex) => (
+            <div className="flex-1 overflow-auto px-1">
+              <div className="grid grid-cols-7 gap-2 mb-2">
+                {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
                   <div
-                    key={`${weekIndex}-${dayIndex}`}
+                    key={day}
                     className={cn(
-                      "relative overflow-y-auto p-1.5 transition-all duration-200",
-                      "min-h-[110px]",
-                      day === 0
-                        ? "invisible"
-                        : cn(
-                            "rounded-xl border border-border hover:border-border/80",
-                            "dark:border-gray-700 dark:hover:border-gray-600",
-                            isToday(day) && "bg-primary/5 ring-2 ring-primary",
-                            isSelected(day) &&
-                              "bg-secondary/5 ring-2 ring-secondary",
-                            isWeekend(dayIndex) && "bg-muted/50",
-                            "cursor-pointer",
-                          ),
+                      "text-center text-sm font-medium p-1",
+                      day === "Dim" || day === "Sam"
+                        ? "text-red-500"
+                        : "text-gray-600 dark:text-gray-300",
                     )}
-                    onClick={() => handleDayClick(day)}
                   >
-                    {day !== 0 && (
-                      <>
-                        <div
-                          className={cn(
-                            "text-sm font-medium mb-1.5",
-                            isToday(day) && "text-primary",
-                            isSelected(day) && "text-secondary",
-                          )}
-                        >
-                          {day}
-                        </div>
-                        {renderAppointments(day)}
-                      </>
-                    )}
+                    {day}
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
-        </div>
+
+              <div className="space-y-2">
+                {getWeeksInMonth().map((week, weekIndex) => (
+                  <div key={weekIndex} className="grid grid-cols-7 gap-2">
+                    {week.map((day, dayIndex) => (
+                      <div
+                        key={`${weekIndex}-${dayIndex}`}
+                        className={cn(
+                          "relative overflow-y-auto p-1.5 transition-all duration-200",
+                          "min-h-[110px]",
+                          day === 0
+                            ? "invisible"
+                            : cn(
+                              "rounded-xl border border-border hover:border-border/80",
+                              "dark:border-gray-700 dark:hover:border-gray-600",
+                              isToday(day) && "bg-primary/5 ring-2 ring-primary",
+                              isSelected(day) &&
+                              "bg-secondary/5 ring-2 ring-secondary",
+                              isWeekend(dayIndex) && "bg-muted/50",
+                              "cursor-pointer",
+                            ),
+                        )}
+                        onClick={() => handleDayClick(day)}
+                      >
+                        {day !== 0 && (
+                          <>
+                            <div
+                              className={cn(
+                                "text-sm font-medium mb-1.5",
+                                isToday(day) && "text-primary",
+                                isSelected(day) && "text-secondary",
+                              )}
+                            >
+                              {day}
+                            </div>
+                            {renderAppointments(day)}
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

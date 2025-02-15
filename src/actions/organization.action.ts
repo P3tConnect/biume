@@ -85,17 +85,10 @@ export const getCurrentOrganization = createServerAction(
         "L'identifiant de l'organisation ne peut pas être indéfini",
       );
     }
-    const organization = await db.query.organization.findFirst({
-      where: eq(organizationTable.id, ctx.organization.id),
-    });
 
-    if (!organization) {
-      throw new ActionError("Organisation non trouvée");
-    }
-
-    return organization;
+    return ctx.fullOrganization;
   },
-  [requireAuth, requireFullOrganization],
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
 export const createOrganization = createServerAction(

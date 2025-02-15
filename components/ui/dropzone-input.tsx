@@ -98,27 +98,6 @@ export const DropzoneInput = ({
           </p>
         </div>
       </div>
-
-      {value && value.length > 0 && (
-        <div className="grid gap-4">
-          {value.map((file, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-3 bg-muted rounded-lg"
-            >
-              <span className="text-sm truncate max-w-[80%]">{file}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => removeFile(index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }; 

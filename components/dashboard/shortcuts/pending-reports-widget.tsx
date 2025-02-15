@@ -108,7 +108,7 @@ const PendingReportsWidget = () => {
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={report.imageUrl} alt={report.petName} />
                         <AvatarFallback className="bg-primary">
-                          <PawPrintIcon className="w-4 h-4" />
+                          <PawPrintIcon className="w-4 h-4 text-white" />
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
