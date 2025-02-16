@@ -65,42 +65,21 @@ const appointmentLabels = {
 
 const CALENDAR_VIEW_MODE_KEY = "calendar-widget-view-mode";
 
-const ChevronLeftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-    <path d="M15 18L9 12l6-6" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"></path>
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-    <path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"></path>
-  </svg>
-);
-
-const ListIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-    <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"></path>
-  </svg>
-);
-
-const CalendarSvgIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-    <path d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z M16 2v4M8 2v4M3 10h18" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"></path>
-  </svg>
-);
-
 const CalendarWidget = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"calendar" | "list">(() => {
-    if (typeof window !== "undefined") {
-      const savedMode = localStorage.getItem(CALENDAR_VIEW_MODE_KEY);
-      return (savedMode === "calendar" || savedMode === "list") ? savedMode : "calendar";
-    }
-    return "calendar";
-  });
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
 
+  // Charger la préférence utilisateur au montage du composant
+  useEffect(() => {
+    const savedMode = localStorage.getItem(CALENDAR_VIEW_MODE_KEY);
+    if (savedMode === "calendar" || savedMode === "list") {
+      setViewMode(savedMode);
+    }
+  }, []);
+
+  // Sauvegarder la préférence utilisateur quand elle change
   useEffect(() => {
     localStorage.setItem(CALENDAR_VIEW_MODE_KEY, viewMode);
   }, [viewMode]);
@@ -484,7 +463,7 @@ const CalendarWidget = () => {
                       size="icon"
                       className="h-8 w-8 rounded-xl hover:bg-secondary/5"
                     >
-                      <ChevronLeftIcon />
+                      <ChevronLeft className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -500,7 +479,7 @@ const CalendarWidget = () => {
                       size="icon"
                       className="h-8 w-8 rounded-xl hover:bg-secondary/5"
                     >
-                      <ChevronRightIcon />
+                      <ChevronRight className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -517,7 +496,11 @@ const CalendarWidget = () => {
                   className="h-8 w-8 rounded-xl hover:bg-secondary/5"
                   onClick={() => setViewMode(viewMode === "calendar" ? "list" : "calendar")}
                 >
-                  {viewMode === "calendar" ? <ListIcon /> : <CalendarSvgIcon />}
+                  {viewMode === "calendar" ? (
+                    <List className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
+                  ) : (
+                    <CalendarIcon className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
+                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
