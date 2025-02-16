@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PersonIcon, StarIcon, CalendarIcon } from "@radix-ui/react-icons";
+import { Star, User, Calendar } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -104,7 +104,7 @@ const TopClientsWidget = () => {
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <StarIcon className="w-5 h-5" />
+              <Star className="h-5 w-5" />
             </motion.div>
             Meilleurs clients
           </CardTitle>
@@ -126,7 +126,7 @@ const TopClientsWidget = () => {
                     <div className="flex items-center gap-3">
                       <Avatar>
                         <AvatarFallback>
-                          <PersonIcon className="w-4 h-4" />
+                          <User className="h-4 w-4" />
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
@@ -173,7 +173,7 @@ const TopClientsWidget = () => {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-16 w-16">
                               <AvatarFallback className="text-xl">
-                                <PersonIcon className="w-8 h-8" />
+                                <User className="h-8 w-8" />
                               </AvatarFallback>
                             </Avatar>
                             <div className="space-y-1">
@@ -311,7 +311,7 @@ const TopClientsWidget = () => {
                                       <div className="flex justify-between items-start">
                                         <div>
                                           <div className="flex items-center gap-2">
-                                            <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                                            <Calendar className="h-4 w-4 text-muted-foreground" />
                                             <p className="text-sm text-muted-foreground">{visit.date}</p>
                                           </div>
                                           <h4 className="font-medium">{visit.type}</h4>
@@ -330,7 +330,7 @@ const TopClientsWidget = () => {
                                   {(client.notes || []).map((note, index) => (
                                     <div key={index} className="p-4 bg-muted rounded-lg space-y-2">
                                       <div className="flex items-center gap-2">
-                                        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                                        <Calendar className="h-4 w-4 text-muted-foreground" />
                                         <p className="text-sm text-muted-foreground">{note.date}</p>
                                       </div>
                                       <p className="text-sm">{note.content}</p>
