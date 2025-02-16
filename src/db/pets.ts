@@ -43,8 +43,8 @@ export const pets = pgTable("pets", {
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
   furColor: text("furColor"),
   eyeColor: text("eyeColor"),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
-  updatedAt: timestamp("updatedAt"),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const petsRelations = relations(pets, ({ one, many }) => ({

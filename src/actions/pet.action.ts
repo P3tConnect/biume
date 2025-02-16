@@ -1,46 +1,30 @@
 'use server';
 
-import { CreatePetSchema, pets } from '@/src/db/pets';
+import { CreatePetSchema, Pet, pets } from '@/src/db/pets';
 import { createServerAction, db, requireAuth } from '../lib';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 export const createPet = createServerAction(
   CreatePetSchema,
   async (input, ctx) => {
-    if (!ctx.user?.id) {
-      throw new Error('Vous devez être connecté pour créer un animal');
+    const pet = await db
+      .insert(pets)
+      .values({
+        ...input,
+        ownerId: ctx.user?.id ?? '',
+      })
+      .returning()
+      .execute();
+
+    if (!pet) {
+      throw new Error('Erreur lors de la création de l\'animal');
     }
 
-    try {
-      const pet = await db
-        .insert(pets)
-        .values([
-          {
-            name: input.name,
-            image: input.image ?? '',
-            breed: input.breed ?? '',
-            gender: input.gender,
-            type: input.type,
-            nacType: input.nacType ?? '',
-            weight: input.weight ?? 0,
-            height: input.height ?? 0,
-            eyeColor: input.eyeColor ?? '',
-            furColor: input.furColor ?? '',
-            description: input.description ?? '',
-            birthDate: input.birthDate,
-            ownerId: ctx.user.id,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ])
-        .returning();
+    revalidatePath(`/dashboard/user/${ctx.user?.id}/pets`);
 
-      return pet;
-    } catch (error) {
-      console.error('Erreur lors de la création:', error);
-      throw new Error("Erreur lors de la création de l'animal");
-    }
+    return pet;
   },
   [requireAuth]
 );
@@ -48,21 +32,19 @@ export const createPet = createServerAction(
 export const getPets = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    if (!ctx.user?.id) {
-      throw new Error('Vous devez être connecté pour voir vos animaux');
+
+    console.log(ctx.user?.id, "ctx.user?.id");
+
+    const userPets = await db
+      .query.pets.findMany({
+        where: eq(pets.ownerId, ctx.user?.id ?? ''),
+      });
+
+    if (!userPets) {
+      throw new Error('Aucun animal trouvé');
     }
 
-    try {
-      const userPets = await db
-        .select()
-        .from(pets)
-        .where(eq(pets.ownerId, ctx.user.id));
-
-      return userPets;
-    } catch (error) {
-      console.error('Erreur lors de la récupération:', error);
-      throw new Error('Erreur lors de la récupération des animaux');
-    }
+    return userPets as unknown as Pet[];
   },
   [requireAuth]
 );

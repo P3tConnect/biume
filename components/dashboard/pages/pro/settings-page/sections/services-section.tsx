@@ -3,7 +3,8 @@ import { ServicesGrid } from "./components/services/services-grid";
 import { ActionResult } from "@/src/lib";
 import { Service } from "@/src/db";
 import { ServicesHeader } from "./components/services/services-header";
-import { use } from "react";
+import { Suspense, use } from "react";
+import { Skeleton } from "@/components/ui";
 
 export const ServicesSection = ({
   services,
@@ -17,7 +18,13 @@ export const ServicesSection = ({
       <div className="space-y-8">
         <div className="space-y-4">
           <ServicesHeader />
-          <ServicesGrid services={data} />
+          <Suspense
+            fallback={
+              <Skeleton className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' />
+            }
+          >
+            <ServicesGrid services={data} />
+          </Suspense>
         </div>
       </div>
     </Card>

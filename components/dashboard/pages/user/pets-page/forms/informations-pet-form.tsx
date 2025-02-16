@@ -29,7 +29,6 @@ import { CreatePetSchema } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
-import Image from 'next/image';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -48,7 +47,6 @@ const InformationsPetForm = () => {
       type: 'Dog',
       gender: 'Male',
       breed: '',
-      nacType: 'NAC',
       image: '',
       birthDate: new Date(),
       furColor: '',
@@ -67,7 +65,7 @@ const InformationsPetForm = () => {
       form.reset();
     },
     onError: (error) => {
-      toast.error(`Erreur lors de la création de l&apos;animal: ${error.message}`);
+      toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
     },
   });
 
@@ -105,24 +103,6 @@ const InformationsPetForm = () => {
       if (acceptedFiles.length > 0) {
         setIsUploading(true);
         toast.info("Téléchargement de l'image en cours...");
-        await startImageUpload(acceptedFiles);
-        setIsUploading(false);
-      }
-    },
-  });
-
-  const {
-    getRootProps: getCoverRootProps,
-    getInputProps: getCoverInputProps,
-    isDragActive: isCoverDragActive,
-  } = useDropzone({
-    accept: ACCEPTED_IMAGE_TYPES,
-    maxSize: MAX_FILE_SIZE,
-    multiple: false,
-    onDrop: async (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        setIsUploading(true);
-        toast.info("Téléchargement de l'image de couverture en cours...");
         await startImageUpload(acceptedFiles);
         setIsUploading(false);
       }
@@ -182,9 +162,7 @@ const InformationsPetForm = () => {
                       ) : (
                         <div className='w-full'>
                           <div className='group relative w-full h-52 rounded-2xl overflow-hidden border-2 border-primary/20'>
-                            <Image
-                              width={200}
-                              height={200}
+                            <img
                               src={form.getValues('image') ?? ''}
                               alt='logo'
                               className='w-full h-full object-cover'
@@ -266,38 +244,10 @@ const InformationsPetForm = () => {
                 name='type'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type d&apos;animal</FormLabel>
+                    <FormLabel>Type d'animal</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder='Sélectionnez un type' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value='Dog'>Chien</SelectItem>
-                        <SelectItem value='Cat'>Chat</SelectItem>
-                        <SelectItem value='Bird'>Oiseau</SelectItem>
-                        <SelectItem value='Horse'>Cheval</SelectItem>
-                        <SelectItem value='NAC'>NAC</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='nacType'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type d&apos;animal</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value ?? 'NAC'}
                     >
                       <FormControl>
                         <SelectTrigger>
