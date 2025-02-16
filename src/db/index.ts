@@ -52,3 +52,4 @@ export * from "./user";
 export * from "./verification";
 export * from "./organization";
 export * from "./reminder";
+export * from "./waitlist";
