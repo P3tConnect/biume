@@ -32,9 +32,6 @@ export const createPet = createServerAction(
 export const getPets = createServerAction(
   z.object({}),
   async (input, ctx) => {
-
-    console.log(ctx.user?.id, "ctx.user?.id");
-
     const userPets = await db
       .query.pets.findMany({
         where: eq(pets.ownerId, ctx.user?.id ?? ''),

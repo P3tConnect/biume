@@ -176,7 +176,7 @@ const MetricsWidget = () => {
                 <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
                   <CalendarIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <span className="font-medium">Aujourd&apos;hui</span>
+                <span className="font-medium">Rendez-vous prévus</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <TrendingUpIcon className="w-3 h-3" />
@@ -191,7 +191,7 @@ const MetricsWidget = () => {
                 <CountAnimation value={24} />
               </div>
               <p className="text-sm text-muted-foreground">
-                Rendez-vous prévus
+                Aujourd&apos;hui
               </p>
             </div>
 
@@ -214,7 +214,7 @@ const MetricsWidget = () => {
                 <div className="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
                   <PawPrintIcon className="w-5 h-5 text-rose-600 dark:text-rose-400" />
                 </div>
-                <span className="font-medium">Ce mois</span>
+                <span className="font-medium">Nouveaux patients</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <TrendingUpIcon className="w-3 h-3" />
@@ -228,7 +228,7 @@ const MetricsWidget = () => {
               <div className="text-3xl font-bold">
                 <CountAnimation value={45} />
               </div>
-              <p className="text-sm text-muted-foreground">Nouveaux patients</p>
+              <p className="text-sm text-muted-foreground">Ce mois</p>
             </div>
 
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -254,7 +254,7 @@ const MetricsWidget = () => {
                 <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
                   <HeartPulseIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <span className="font-medium">Cette semaine</span>
+                <span className="font-medium">Soins réalisés</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600">
                 <TrendingUpIcon className="w-3 h-3" />
@@ -268,7 +268,7 @@ const MetricsWidget = () => {
               <div className="text-3xl font-bold">
                 <CountAnimation value={128} />
               </div>
-              <p className="text-sm text-muted-foreground">Soins réalisés</p>
+              <p className="text-sm text-muted-foreground">Cette semaine</p>
             </div>
 
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
