@@ -1,19 +1,15 @@
 "use client";
 
 import { useDropzone } from "react-dropzone";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { toast } from "sonner";
-import { FileRoute } from "uploadthing/types";
-import { EndpointArg } from "uploadthing/types";
 
 export type AcceptedFileTypes = Record<string, Array<string>>;
 
 interface DropzoneInputProps {
-  onFilesChanged: (files: string[]) => void;
-  value: string[];
+  onFilesChanged: (files: Array<{ url: string; name: string }>) => void;
+  value: Array<{ url: string; name: string }>;
   maxFileSize?: number;
   acceptedFileTypes?: AcceptedFileTypes;
   uploadEndpoint: "documentsUploader" | "imageUploader";
@@ -51,7 +47,10 @@ export const DropzoneInput = ({
   const { startUpload } = useUploadThing(uploadEndpoint as "documentsUploader", {
     onClientUploadComplete: (res) => {
       if (res) {
-        const newFiles = res.map((file) => file.url);
+        const newFiles = res.map((file) => ({
+          url: file.url,
+          name: file.name
+        }));
         onFilesChanged([...value, ...newFiles]);
         toast.success("Fichiers téléchargés avec succès!");
       }

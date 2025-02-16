@@ -66,22 +66,27 @@ export const organizationFormSchema = z.object({
   siret: z.string().length(14, "Le numéro SIRET doit contenir 14 chiffres"),
 });
 
-export const ProfileSection = async () => {
-  const org = await getCurrentOrganization({});
+export const organizationImagesFormSchema = z.object({
+  logo: z.string().optional(),
+  coverImage: z.string().optional(),
+});
+
+export const ProfileSection = () => {
+  const data = getCurrentOrganization({});
 
   return (
     <div className="relative pb-20">
-      <ProfileCoverSection org={org.data!} />
+      <ProfileCoverSection org={data} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-20">
         <div className="md:col-span-2 space-y-6">
-          <ProfileMainInfoSection org={org.data!} />
-          <ProfileLegalInfoSection org={org.data!} />
+          <ProfileMainInfoSection org={data} />
+          <ProfileLegalInfoSection org={data} />
         </div>
 
         <div className="space-y-6">
-          <ProfileScheduleSection org={org.data!} />
-          <ProfileServicesSection org={org.data!} />
+          <ProfileScheduleSection org={data} />
+          <ProfileServicesSection org={data} />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { OrganizationCertifications, organizationCertifications } from "./organizationCertifications";
 import { Organization, organization } from "./organization";
@@ -8,12 +8,14 @@ export const organizationDocuments = pgTable("organization_documents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull().default(""),
   file: text("file").notNull().default(""),
   organizationId: text("organizationId")
     .notNull()
     .references(() => organization.id, {
       onDelete: "cascade",
     }),
+  valid: boolean("valid").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 });

@@ -32,11 +32,24 @@ const ClientDashboardHomePage = () => {
         </CardHeader>
       </Card>
 
-      <div className='grid pt-4 grid-cols-2 gap-6'>
-        <ClientPetsWidget />
-        <ClientTimetableWidget />
-        <ClientObservationsWidget />
-        <ClientHistoryReservationWidget />
+      <div className='grid pt-4 grid-cols-1 lg:grid-cols-12 gap-6'>
+        {/* Colonne principale - Calendrier et Animaux */}
+        <div className='lg:col-span-8 space-y-4'>
+          {/* Section Calendrier */}
+          <ClientTimetableWidget />
+
+          {/* Section Animaux */}
+          <ClientPetsWidget />
+        </div>
+
+        {/* Colonne latérale - Observations et Historique */}
+        <div className='lg:col-span-4 space-y-4'>
+          <div className='sticky top-4'>
+            <ClientObservationsWidget />
+            <div className='h-4' /> {/* Espaceur */}
+            <ClientHistoryReservationWidget />
+          </div>
+        </div>
       </div>
     </div>
   );

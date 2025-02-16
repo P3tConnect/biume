@@ -12,28 +12,14 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropzoneInput } from "@/components/ui/dropzone-input";
 import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
-import { getCompanyDocuments, updateCompanyDocuments } from "@/src/actions/companyDocuments.action";
+import { deleteCompanyDocument, getCompanyDocuments, updateCompanyDocuments } from "@/src/actions/companyDocuments.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ExternalLink, FileText, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { documentsSchema, DocumentsFormData } from "./types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-const getFileExtension = (url: string) => {
-  const extension = url.split('.').pop()?.toLowerCase();
-  return extension || '';
-};
-
-const getDocumentName = (url: string, index: number) => {
-  const extension = getFileExtension(url);
-  const isImage = ['jpg', 'jpeg', 'png', 'webp'].includes(extension);
-  const isPDF = extension === 'pdf';
-
-  if (isImage) return `Image ${index + 1}`;
-  if (isPDF) return `Document PDF ${index + 1}`;
-  return `Document ${index + 1}`;
-};
+import { getDocumentName } from "@/src/lib/utils";
 
 export const DocumentsForm = () => {
   const { data: documents, refetch: refetchDocuments } = useActionQuery(
@@ -54,22 +40,39 @@ export const DocumentsForm = () => {
 
   const form = useForm<DocumentsFormData>({
     resolver: zodResolver(documentsSchema),
-    defaultValues: {
-      documents: documents?.map((document) => document.file) || [],
+    values: {
+      documents: documents?.map((document) => ({
+        url: document.file,
+        name: document.name || getDocumentName({ url: document.file, name: document.name }, 0)
+      })) || [],
     },
   });
 
   const { control, setValue, handleSubmit, watch } = form;
   const currentDocuments = watch("documents") || [];
 
-  const onSubmit = handleSubmit(async (data) => {
-    await updateDocuments(data);
+  const { mutateAsync: deleteDocument } = useActionMutation(deleteCompanyDocument, {
+    onSuccess: () => {
+      refetchDocuments();
+      toast.success("Document supprimé avec succès!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
-  const handleDeleteDocument = (index: number) => {
-    const newDocuments = [...currentDocuments];
-    newDocuments.splice(index, 1);
-    setValue("documents", newDocuments, { shouldDirty: true });
+  const onSubmit = handleSubmit(async (data) => {
+    await updateDocuments({
+      ...data,
+      documents: data.documents?.map(doc => ({
+        url: doc.url,
+        name: doc.name || getDocumentName(doc, 0)
+      })) || []
+    });
+  });
+
+  const handleDeleteDocument = async (index: number) => {
+    await deleteDocument({ id: currentDocuments[index].url });
   };
 
   useFormChangeToast({
@@ -132,7 +135,7 @@ export const DocumentsForm = () => {
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 p-0"
-                              onClick={() => window.open(doc, '_blank')}
+                              onClick={() => window.open(doc.url, '_blank')}
                             >
                               <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-primary" />
                             </Button>
@@ -174,7 +177,7 @@ export const DocumentsForm = () => {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleDeleteDocument(index)}
+                              onClick={async () => await handleDeleteDocument(index)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             >
                               Supprimer

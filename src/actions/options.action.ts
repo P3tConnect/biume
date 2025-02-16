@@ -7,19 +7,25 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
+  requireFullOrganization,
 } from "../lib";
 import { CreateOptionSchema, Option, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
 import { auth } from "../lib/auth";
 import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const getOptions = createServerAction(
-  z.object({}),
+  z.object({ organizationId: z.string() }),
   async (input, ctx) => {
-    return [];
+    const options = await db.query.options.findMany({
+      where: eq(optionsTable.organizationId, input.organizationId),
+    });
+
+    return options;
   },
-  [requireAuth, requireOwner],
+  [],
 );
 
 export const getOptionsFromOrganization = createServerAction(
@@ -49,9 +55,12 @@ export const createOption = createServerAction(
     if (!data) {
       throw new ActionError("Option not created");
     }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return data;
   },
-  [requireAuth, requireOwner],
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
 export const createOptionsStepAction = createServerAction(
@@ -78,7 +87,7 @@ export const createOptionsStepAction = createServerAction(
     }
     return optionsResult;
   },
-  [requireAuth, requireOwner],
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
 export const updateOption = createServerAction(
@@ -95,9 +104,11 @@ export const updateOption = createServerAction(
       throw new ActionError("Option not updated");
     }
 
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return data;
   },
-  [requireAuth, requireOwner],
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
 export const deleteOption = createServerAction(
@@ -112,6 +123,10 @@ export const deleteOption = createServerAction(
     if (!data) {
       throw new ActionError("Option not deleted");
     }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return data;
   },
-  [requireAuth, requireOwner],
+  [requireAuth, requireOwner, requireFullOrganization],
 );

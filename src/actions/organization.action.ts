@@ -19,7 +19,8 @@ import {
 } from "../db";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { organizationFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+import { organizationFormSchema, organizationImagesFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+import { revalidatePath } from "next/cache";
 
 export const getAllOrganizations = createServerAction(
   z.object({}),
@@ -187,6 +188,32 @@ export const updateOrganization = createServerAction(
     if (!data) {
       throw new ActionError("Organization not updated");
     }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return data;
+  },
+  [requireAuth, requireOwner],
+);
+
+export const updateOrganizationImages = createServerAction(
+  organizationImagesFormSchema,
+  async (input, ctx) => {
+    const data = await db
+      .update(organizationTable)
+      .set({
+        logo: input.logo,
+        coverImage: input.coverImage,
+      })
+      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ActionError("Organization not updated");
+    }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
 
     return data;
   },

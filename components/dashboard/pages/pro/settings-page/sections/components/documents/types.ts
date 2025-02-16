@@ -2,7 +2,12 @@ import { z } from "zod";
 
 export const documentsSchema = z.object({
   documents: z
-    .array(z.string().url())
+    .array(
+      z.object({
+        url: z.string().url(),
+        name: z.string()
+      })
+    )
     .min(1, "Veuillez télécharger au moins un document")
     .optional(),
   siren: z

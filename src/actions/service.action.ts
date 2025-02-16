@@ -5,7 +5,6 @@ import {
   db,
   ActionError,
   createServerAction,
-  requireOwner,
   requireAuth,
   requireFullOrganization,
 } from "../lib";
@@ -14,24 +13,18 @@ import { eq } from "drizzle-orm";
 import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const getServices = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const organization = await auth.api.getFullOrganization({
-      headers: await headers(),
+    const services = await db.query.service.findMany({
+      where: eq(service.organizationId, ctx.organization?.id as string),
     });
-    if (!organization) return [];
-
-    const services = await db
-      .select()
-      .from(service)
-      .where(eq(service.organizationId, organization.id))
-      .execute();
 
     return services;
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );
 
 export const getServicesFromOrganization = createServerAction(
@@ -73,9 +66,12 @@ export const createService = createServerAction(
       throw new ActionError("Service not created");
     }
 
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return result[0];
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createServicesStepAction = createServerAction(
@@ -121,9 +117,12 @@ export const updateService = createServerAction(
       throw new ActionError("Service not updated");
     }
 
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return data;
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );
 
 export const deleteService = createServerAction(
@@ -138,6 +137,9 @@ export const deleteService = createServerAction(
     if (!data) {
       throw new ActionError("Service not deleted");
     }
+
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );

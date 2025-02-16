@@ -59,6 +59,7 @@ export const ServiceForm = ({
     onSuccess: () => {
       toast.success("Service créé avec succès!");
       onOpenChange(false);
+      form.reset();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -126,7 +127,7 @@ export const ServiceForm = ({
                                 field.onChange(files[0]);
                               }
                             }}
-                            value={field.value ? [field.value] : []}
+                            value={field.value ? [{ url: field.value, name: field.value }] : []}
                             uploadEndpoint="imageUploader"
                             acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
                             placeholder={{

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import {
   Card,
   CardContent,
@@ -27,38 +27,45 @@ import { updateOrganization } from "@/src/actions/organization.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { ActionResult } from "@/src/lib";
 
 interface ProfileServicesSectionProps {
-  org: Organization;
+  org: Promise<ActionResult<Organization | null>>;
 }
 
 export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => {
+  const dataOrg = use(org);
   const form = useForm<z.infer<typeof organizationFormSchema>>({
     resolver: zodResolver(organizationFormSchema),
     values: {
-      name: org?.name || "",
-      email: org?.email || "",
+      name: dataOrg?.data?.name || "",
+      email: dataOrg?.data?.email || "",
       website: "",
-      address: org?.addressId || "",
-      description: org?.description || "",
-      openAt: org?.openAt || "09:00",
-      closeAt: org?.closeAt || "18:00",
-      atHome: org?.atHome || false,
-      nac: org?.nac || "",
-      siren: org?.siren || "",
-      siret: org?.siret || "",
+      address: dataOrg?.data?.addressId || "",
+      description: dataOrg?.data?.description || "",
+      openAt: dataOrg?.data?.openAt || "09:00",
+      closeAt: dataOrg?.data?.closeAt || "18:00",
+      atHome: dataOrg?.data?.atHome || false,
+      nac: dataOrg?.data?.nac || "",
+      siren: dataOrg?.data?.siren || "",
+      siret: dataOrg?.data?.siret || "",
     },
   });
 
   const { handleSubmit } = form;
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await updateOrganization(data);
+  const { mutateAsync } = useActionMutation(updateOrganization, {
+    onSuccess: () => {
       toast.success("Modifications enregistrées avec succès !");
-    } catch (error) {
+    },
+    onError: () => {
       toast.error("Erreur lors de l'enregistrement des modifications");
-    }
+    },
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    await mutateAsync(data);
   });
 
   useFormChangeToast({

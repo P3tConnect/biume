@@ -183,15 +183,15 @@ export function DocumentsForm({
 }
 
 interface DropzoneInputProps {
-  onFilesChanged: (files: string[]) => void;
-  value: string[];
+  onFilesChanged: (files: { url: string; name?: string }[]) => void;
+  value: { url: string; name?: string }[];
 }
 
 function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
   const { startUpload, isUploading } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
       if (!res) return;
-      const uploadedUrls = res.map((file) => file.url);
+      const uploadedUrls = res.map((file) => ({ url: file.url, name: file.name }));
       onFilesChanged(uploadedUrls);
       toast.success("Documents téléchargés avec succès");
     },
@@ -209,8 +209,8 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
     },
   });
 
-  const removeFile = (fileToRemove: string) => {
-    onFilesChanged(value.filter((file) => file !== fileToRemove));
+  const removeFile = (fileToRemove: { url: string; name?: string }) => {
+    onFilesChanged(value.filter((file) => file.url !== fileToRemove.url));
   };
 
   return (
