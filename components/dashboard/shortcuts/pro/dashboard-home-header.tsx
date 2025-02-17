@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import NewShortcut from "../layout/new-shortcut";
+import NewShortcut from "../../layout/new-shortcut";
 
 export const DashboardHomeHeader = () => {
   return (

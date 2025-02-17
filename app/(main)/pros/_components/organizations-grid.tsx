@@ -19,7 +19,7 @@ export function OrganizationsGrid({ organizations }: OrganizationsGridProps) {
       {organizationsData.data?.map((organization) => (
         <Link
           key={organization.id}
-          href={`/companies/${organization.id}`}
+          href={`/pros/${organization.id}`}
           className="block"
         >
           <div className="flex flex-col bg-card rounded-lg border border-border card-highlight hover-card-effect">

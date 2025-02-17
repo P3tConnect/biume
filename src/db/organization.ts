@@ -9,11 +9,8 @@ import {
 import { z } from "zod";
 import { organizationDocuments } from "./organizationDocuments";
 import { InferSelectModel, relations } from "drizzle-orm";
-import { reportTemplate } from "./report_template";
 import { progression } from "./progression";
 import { cancelPolicies } from "./cancelPolicies";
-import { project } from "./project";
-import { task } from "./task";
 import { Rating, ratings } from "./ratings";
 import { Service, service } from "./service";
 import { options } from "./options";
@@ -22,11 +19,7 @@ import {
   OrganizationAddress,
   organizationAddress,
 } from "./organizationAddress";
-import { Category, category } from "./category";
 import { Topic, topic } from "./topic";
-import { Product, product } from "./products";
-import { Newsletter, newsletter } from "./newsletter";
-import { Receipt, receipt } from "./receipts";
 import { transaction } from "./transaction";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
@@ -37,6 +30,7 @@ import { Option } from "./options";
 import { Member, member } from "./member";
 import { ClientNote, clientNote } from "./clientNote";
 import { OrganizationImage, organizationImages } from "./organizationImages";
+import { OrganizationSlots, organizationSlots } from "./organizationSlots";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -59,7 +53,6 @@ export const organization = pgTable("organizations", {
   name: text("name").notNull(),
   slug: text("slug").unique(),
   logo: text("logo"),
-  coverImage: text("coverImage"),
   description: text("description"),
   createdAt: timestamp("createdAt").notNull(),
   verified: boolean("verified").notNull().default(false),
@@ -90,7 +83,6 @@ export const organization = pgTable("organizations", {
 export const organizationRelations = relations(
   organization,
   ({ one, many }) => ({
-    reportTemplates: many(reportTemplate),
     progression: one(progression, {
       fields: [organization.progressionId],
       references: [progression.id],
@@ -98,16 +90,10 @@ export const organizationRelations = relations(
     documents: many(organizationDocuments),
     appointments: many(appointments),
     cancelPolicies: many(cancelPolicies),
-    projects: many(project),
-    tasks: many(task),
     ratings: many(ratings),
     services: many(service),
     options: many(options),
-    newslettersWritter: many(newsletter),
-    receipts: many(receipt),
-    products: many(product),
     topics: many(topic),
-    categories: many(category),
     address: one(organizationAddress, {
       fields: [organization.addressId],
       references: [organizationAddress.id],
@@ -119,6 +105,7 @@ export const organizationRelations = relations(
     members: many(member),
     clientNotes: many(clientNote),
     images: many(organizationImages),
+    slots: many(organizationSlots),
   }),
 );
 
@@ -128,13 +115,10 @@ export type Organization = InferSelectModel<typeof organization> & {
   ratings: Rating[];
   services: Service[];
   options: Option[];
-  categories: Category[];
   topics: Topic[];
-  products: Product[];
-  newslettersWritter: Newsletter[];
-  receipts: Receipt[];
   clientNotes: ClientNote[];
   images: OrganizationImage[];
+  slots: OrganizationSlots[];
 };
 export type CreateOrganization = typeof organization.$inferInsert;
 

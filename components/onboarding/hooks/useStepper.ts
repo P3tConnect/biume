@@ -14,6 +14,12 @@ export const { steps, useStepper, utils } = defineStepper(
       "Renseignez les informations de votre entreprise pour que nous puissions créer le compte de votre établissement.",
   },
   {
+    id: "images",
+    title: "Images",
+    description:
+      "Ajoutez des photos de votre établissement pour le mettre en valeur auprès de vos clients.",
+  },
+  {
     id: "services",
     title: "Services",
     description:

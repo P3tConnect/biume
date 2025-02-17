@@ -12,9 +12,9 @@ export const organizationSlots = pgTable("organization_slots", {
   }),
   start: date("start").notNull(),
   end: date("end").notNull(),
+  isAvailable: boolean("isAvailable").notNull().default(true),
   createdAt: timestamp("createdAt").notNull().default(new Date()),
   updatedAt: timestamp("updatedAt"),
-  isAvailable: boolean("isAvailable").notNull().default(true),
 });
 
 export const organizationSlotsRelations = relations(organizationSlots, ({ one }) => ({

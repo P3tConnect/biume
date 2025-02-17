@@ -16,7 +16,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { OrganizationsGrid } from "./components/organizations-grid";
+import { OrganizationsGrid } from "./_components/organizations-grid";
 import { getAllOrganizations } from "@/src/actions/organization.action";
 
 export default function CompaniesListPage() {

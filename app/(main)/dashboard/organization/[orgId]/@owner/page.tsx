@@ -1,17 +1,25 @@
 import React from "react";
 import { Metadata } from "next";
 import { Card } from "@/components/ui/card";
-import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/dashboard-home-header";
-import MetricsWidget from "@/components/dashboard/shortcuts/metrics-widget";
-import ObservationsWidget from "@/components/dashboard/shortcuts/observations-widget";
-import PendingReportsWidget from "@/components/dashboard/shortcuts/pending-reports-widget";
+import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/pro/dashboard-home-header";
+import MetricsWidget from "@/components/dashboard/shortcuts/pro/metrics-widget";
+import ObservationsWidget from "@/components/dashboard/shortcuts/pro/observations-widget";
+import PendingReportsWidget from "@/components/dashboard/shortcuts/pro/pending-reports-widget";
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget";
-import PendingReservationsWidget from "@/components/dashboard/shortcuts/pending-reservations-widget";
-import TopClientsWidget from "@/components/dashboard/shortcuts/top-clients-widget";
+import PendingReservationsWidget from "@/components/dashboard/shortcuts/pro/pending-reservations-widget";
+import TopClientsWidget from "@/components/dashboard/shortcuts/pro/top-clients-widget";
 
 export const metadata: Metadata = {
   title: "Home - Dashboard",
   description: "Accueil du Dashboard",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    }
+  },
 };
 
 const DashboardHomeProPage = () => {
@@ -37,9 +45,6 @@ const DashboardHomeProPage = () => {
             <ObservationsWidget />
             <PendingReportsWidget />
           </div>
-
-          {/* Top Clients Section */}
-          <TopClientsWidget />
         </div>
 
         {/* Right Column - Notifications and Actions */}

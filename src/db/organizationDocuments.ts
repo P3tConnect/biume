@@ -1,7 +1,6 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { OrganizationCertifications, organizationCertifications } from "./organizationCertifications";
 import { Organization, organization } from "./organization";
 
 export const organizationDocuments = pgTable("organization_documents", {
@@ -27,7 +26,6 @@ export const organizationDocumentsRelations = relations(
       fields: [organizationDocuments.organizationId],
       references: [organization.id],
     }),
-    certifications: many(organizationCertifications),
   }),
 );
 
@@ -35,7 +33,6 @@ export type OrganizationDocuments = InferSelectModel<
   typeof organizationDocuments
 > & {
   organization: Organization;
-  certifications: OrganizationCertifications[];
 };
 export type CreateOrganizationDocuments =
   typeof organizationDocuments.$inferInsert;

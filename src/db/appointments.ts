@@ -8,14 +8,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { Invoice, invoice } from "./invoice";
-import { SessionOption, sessionOptions } from "./sessionOptions";
+import { AppointmentOption, appointmentOptions } from "./appointmentOptions";
 import { Pet, pets } from "./pets";
 import { report } from "./report";
 import { Observation, observation } from "./observation";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { Service, service } from "./service";
 import { Organization, organization } from "./organization";
-import { User, user } from "./user";
+import { user } from "./user";
 
 export const appointmentType = pgEnum("appointment_type", [
   "oneToOne",
@@ -76,7 +76,7 @@ export const appointmentsRelations = relations(
       fields: [appointments.serviceId],
       references: [service.id],
     }),
-    options: many(sessionOptions),
+    options: many(appointmentOptions),
     pet: one(pets, {
       fields: [appointments.patientId],
       references: [pets.id],
@@ -100,7 +100,7 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   pro: Organization;
   invoice: Invoice;
   service: Service;
-  options: SessionOption[];
+  options: AppointmentOption[];
   pet: Pet;
   report: Report;
   observation: Observation;

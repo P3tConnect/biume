@@ -55,7 +55,7 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
   owner: one(user, {
     fields: [pets.ownerId],
     references: [user.id],
-  }),
+  })
 }));
 
 export type Pet = InferSelectModel<typeof pets> & {

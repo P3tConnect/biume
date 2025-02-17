@@ -7,112 +7,10 @@ import { CompanyTeam } from "./CompanyTeam";
 import { CompanyServices } from "./CompanyServices";
 import { CompanyOptions } from "./CompanyOptions";
 import { CompanyReviews } from "./CompanyReviews";
-import { BookingCard } from "./BookingCard";
 import { Separator } from "@/components/ui";
-import { Organization, Service, Rating, Option } from "@/src/db";
+import { Organization } from "@/src/db";
 import { ActionResult } from "@/src/lib";
-
-interface SimpleService {
-  id: string;
-  name: string;
-  duration: string;
-  price: string;
-}
-
-interface SimpleOption {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-}
-
-interface SimpleReview {
-  id: string;
-  writer: {
-    name: string;
-  };
-  rate: number;
-  comment: string;
-  createdAt: Date;
-}
-
-// Mock data
-const mockProfessionals = [
-  {
-    id: "1",
-    name: "Dr. Sophie Martin",
-    role: "Vétérinaire",
-    speciality: "Chirurgie",
-    rating: 4.8,
-    reviews: 127,
-    image: "/avatars/sophie-martin.jpg",
-    availability: [
-      { date: "2024-03-20", slots: ["09:00", "10:00", "14:00", "15:00"] },
-      { date: "2024-03-21", slots: ["11:00", "13:30", "16:00"] },
-    ],
-  },
-  {
-    id: "2",
-    name: "Dr. Thomas Bernard",
-    role: "Vétérinaire",
-    speciality: "Médecine générale",
-    rating: 4.9,
-    reviews: 93,
-    image: "/avatars/thomas-bernard.jpg",
-    availability: [
-      { date: "2024-03-20", slots: ["10:30", "11:30", "15:30"] },
-      { date: "2024-03-21", slots: ["09:30", "14:00", "16:30"] },
-    ],
-  },
-];
-
-const mockServices: SimpleService[] = [
-  {
-    id: "1",
-    name: "Consultation générale",
-    duration: "30 min",
-    price: "50€",
-  },
-  {
-    id: "2",
-    name: "Vaccination",
-    duration: "20 min",
-    price: "40€",
-  },
-  {
-    id: "3",
-    name: "Chirurgie de stérilisation",
-    duration: "1h30",
-    price: "200€",
-  },
-];
-
-const mockOptions: SimpleOption[] = [
-  {
-    id: "1",
-    title: "Parking gratuit",
-    description: "Stationnement facile",
-    icon: "🚗",
-  },
-  {
-    id: "2",
-    title: "Urgences 24/7",
-    description: "Service d'urgence disponible",
-    icon: "🏥",
-  },
-  {
-    id: "3",
-    title: "Téléconsultation",
-    description: "Consultations en ligne",
-    icon: "📱",
-  },
-  {
-    id: "4",
-    title: "Paiement facilité",
-    description: "CB, espèces, paiement en plusieurs fois",
-    icon: "💳",
-  },
-];
+import { BookingCard } from "./BookingCard";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -203,7 +101,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
               variants={fadeInUp}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <h2 className="text-2xl font-semibold mb-6">Options</h2>
+              <h2 className="text-2xl font-semibold mb-6">Nos options</h2>
               {companyResult.data?.options && (
                 <CompanyOptions options={companyResult.data.options} />
               )}
@@ -217,7 +115,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
               variants={fadeInUp}
               transition={{ duration: 0.5, delay: 0.8 }}
             >
-              <h2 className="text-2xl font-semibold mb-6">Avis clients</h2>
+              <h2 className="text-2xl font-semibold mb-6">Les avis clients</h2>
               {companyResult.data?.ratings && (
                 <CompanyReviews reviews={companyResult.data.ratings} />
               )}

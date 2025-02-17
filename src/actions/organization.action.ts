@@ -9,7 +9,7 @@ import {
   stripe,
 } from "../lib";
 import { auth } from "../lib/auth";
-import { Organization, organization as organizationTable } from "../db";
+import { Organization, organizationImages, organization as organizationTable } from "../db";
 import { db } from "../lib";
 import { eq, desc } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
@@ -25,7 +25,11 @@ import { revalidatePath } from "next/cache";
 export const getAllOrganizations = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const organizations = await db.select().from(organizationTable);
+    const organizations = await db.query.organization.findMany({
+      with: {
+        images: true,
+      },
+    });
 
     return organizations as Organization[];
   },
@@ -50,6 +54,11 @@ export const getCompanyById = createServerAction(
                 name: true,
                 email: true,
                 image: true,
+              },
+            },
+            jobs: {
+              with: {
+                job: true,
               },
             },
           },
@@ -137,7 +146,6 @@ export const createOrganization = createServerAction(
       const [organizationResult] = await db
         .update(organizationTable)
         .set({
-          coverImage: data.coverImage,
           description: data.description,
           progressionId: progression.id,
           companyType: data.companyType,
@@ -203,7 +211,6 @@ export const updateOrganizationImages = createServerAction(
       .update(organizationTable)
       .set({
         logo: input.logo,
-        coverImage: input.coverImage,
       })
       .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()
@@ -250,4 +257,23 @@ export const getUsersWithAppointments = createServerAction(
     return uniqueUsers;
   },
   [requireAuth, requireFullOrganization],
+);
+
+export const addImagesToOrganization = createServerAction(
+  z.object({
+    images: z.array(z.string()),
+  }),
+  async (input, ctx) => {
+    const data = await db.insert(organizationImages).values(input.images.map((image) => ({
+      organizationId: ctx.organization?.id,
+      imageUrl: image,
+    })));
+
+    if (!data) {
+      throw new ActionError("Images not added");
+    }
+
+    return data;
+  },
+  [requireAuth, requireOwner],
 );

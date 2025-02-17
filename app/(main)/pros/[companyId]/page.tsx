@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Suspense, use } from "react";
-import { CompanyDetails } from "./components/CompanyDetails";
+import { CompanyDetails } from "./_components/CompanyDetails";
 import { getCompanyById } from "@/src/actions/organization.action";
 import { Loader2 } from "lucide-react";
 

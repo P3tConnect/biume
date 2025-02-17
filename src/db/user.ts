@@ -10,11 +10,8 @@ import { Member, member } from "./member";
 import { notification } from "./notifications";
 import { Pet, pets } from "./pets";
 import { Appointment, appointments } from "./appointments";
-import { projectsInvitees } from "./projectsInvitees";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { session } from "./session";
-import { usersJobs, UsersJobs } from "./usersJobs";
-import { usersNewsletters, UserNewsletter } from "./usersNewsletter";
 import { Account } from "better-auth";
 import { Address, address } from "./addresses";
 import { ClientNote, clientNote } from "./clientNote";
@@ -43,9 +40,7 @@ export const user = pgTable("users", {
 
 export const userRelations = relations(user, ({ one, many }) => ({
   pets: many(pets),
-  jobs: many(usersJobs),
   appointments: many(appointments),
-  newsletter: many(usersNewsletters),
   allergies: many(allergies),
   deseases: many(deseases),
   intolerences: many(intolerences),
@@ -53,7 +48,6 @@ export const userRelations = relations(user, ({ one, many }) => ({
   accounts: many(account),
   memberships: many(member),
   notifications: many(notification),
-  projects: many(projectsInvitees),
   invitations: many(invitation),
   addresses: many(address),
   clientNotes: many(clientNote),
@@ -61,8 +55,6 @@ export const userRelations = relations(user, ({ one, many }) => ({
 
 export type User = InferSelectModel<typeof user> & {
   pets: Pet[];
-  jobs: UsersJobs[];
-  newsletter: UserNewsletter[];
   allergies: Allergy[];
   deseases: Desease[];
   intolerences: Intolerence[];

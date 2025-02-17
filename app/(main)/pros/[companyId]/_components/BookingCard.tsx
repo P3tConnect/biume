@@ -12,7 +12,7 @@ import {
   CredenzaDescription,
   CredenzaFooter,
 } from "@/components/ui";
-import { ChevronRight, Dog, Cat, Bird, PawPrint } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
 import { Dispatch, SetStateAction, useState } from "react";
 import { format } from "date-fns";
@@ -20,7 +20,7 @@ import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
 import { useActionQuery } from "@/src/hooks/action-hooks";
-import { steps, useStepper, StepId } from "../hooks/useBookingStepper";
+import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
 import { SummaryStep } from "./steps/SummaryStep";
@@ -54,22 +54,9 @@ export function BookingCard({
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const { data: userPets = [] } = useActionQuery(getPets, {}, "user-pets");
 
-  const stepper = useStepper({
+  const { switch: switchStep, current, metadata, setMetadata, isFirst, isLast, next, prev } = useStepper({
     initialStep: "pet",
   });
-
-  const getPetIcon = (type: string) => {
-    switch (type) {
-      case "Dog":
-        return <Dog className="h-5 w-5" />;
-      case "Cat":
-        return <Cat className="h-5 w-5" />;
-      case "Bird":
-        return <Bird className="h-5 w-5" />;
-      default:
-        return <PawPrint className="h-5 w-5" />;
-    }
-  };
 
   const selectedServiceData = selectedService
     ? (services.find((s) => s.id === selectedService) ?? null)
@@ -80,7 +67,7 @@ export function BookingCard({
     : null;
 
   const selectedPet = userPets.find(
-    (p) => p.id === stepper.metadata?.pet?.petId,
+    (p) => p.id === metadata?.pet?.petId,
   );
 
   const handleBooking = () => {
@@ -90,9 +77,9 @@ export function BookingCard({
       professional: selectedProData,
       date: selectedDate,
       time: selectedTime,
-      additionalInfo: stepper.metadata?.summary?.additionalInfo,
+      additionalInfo: metadata?.summary?.additionalInfo,
       pet: selectedPet,
-      isHomeVisit: stepper.metadata?.consultationType?.isHomeVisit,
+      isHomeVisit: metadata?.consultationType?.isHomeVisit,
     });
     setIsConfirmModalOpen(false);
   };
@@ -101,15 +88,15 @@ export function BookingCard({
     pet: (
       <PetStep
         userPets={userPets}
-        selectedPetId={stepper.metadata?.pet?.petId ?? ""}
-        onSelectPet={(petId) => stepper.setMetadata("pet", { petId })}
+        selectedPetId={metadata?.pet?.petId ?? ""}
+        onSelectPet={(petId) => setMetadata("pet", { petId })}
       />
     ),
     consultationType: (
       <ConsultationTypeStep
-        isHomeVisit={stepper.metadata?.consultationType?.isHomeVisit ?? false}
+        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
         onSelectType={(isHomeVisit) =>
-          stepper.setMetadata("consultationType", { isHomeVisit })
+          setMetadata("consultationType", { isHomeVisit })
         }
       />
     ),
@@ -120,10 +107,10 @@ export function BookingCard({
         selectedPro={selectedProData}
         selectedDate={selectedDate}
         selectedTime={selectedTime}
-        isHomeVisit={stepper.metadata?.consultationType?.isHomeVisit ?? false}
-        additionalInfo={stepper.metadata?.summary?.additionalInfo ?? ""}
+        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+        additionalInfo={metadata?.summary?.additionalInfo ?? ""}
         onAdditionalInfoChange={(value) =>
-          stepper.setMetadata("summary", { additionalInfo: value })
+          setMetadata("summary", { additionalInfo: value })
         }
       />
     ),
@@ -136,13 +123,8 @@ export function BookingCard({
           {/* Prix */}
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-semibold">
-              {selectedServiceData?.price || "À partir de 40€"}
+              À partir de 40€
             </span>
-            {selectedServiceData && (
-              <span className="text-muted-foreground">
-                · {selectedServiceData.duration}
-              </span>
-            )}
           </div>
 
           {/* Service Selection */}
@@ -274,8 +256,8 @@ export function BookingCard({
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-                locale: fr,
-              })} à ${selectedTime}`
+              locale: fr,
+            })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -289,12 +271,12 @@ export function BookingCard({
                   <div
                     className={cn(
                       "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
-                      stepper.current.id === stepItem.id
+                      current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                            Object.values(steps).findIndex(
-                              (s) => s.id === stepper.current.id,
-                            )
+                          Object.values(steps).findIndex(
+                            (s) => s.id === current.id,
+                          )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
@@ -312,14 +294,38 @@ export function BookingCard({
                 </div>
               ))}
             </div>
-            <CredenzaTitle>{stepper.current.title}</CredenzaTitle>
+            <CredenzaTitle>{current.title}</CredenzaTitle>
             <CredenzaDescription>
-              {stepper.current.description}
+              {current.description}
             </CredenzaDescription>
           </CredenzaHeader>
 
           <div className="py-4">
-            {stepContent[stepper.current.id as keyof typeof stepContent]}
+            {switchStep({
+              pet: () => <PetStep
+                userPets={userPets}
+                selectedPetId={metadata?.pet?.petId ?? ""}
+                onSelectPet={(petId) => setMetadata("pet", { petId })}
+              />,
+              consultationType: () => <ConsultationTypeStep
+                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                onSelectType={(isHomeVisit) =>
+                  setMetadata("consultationType", { isHomeVisit })
+                }
+              />,
+              summary: () => <SummaryStep
+                selectedPet={selectedPet}
+                selectedService={selectedServiceData}
+                selectedPro={selectedProData}
+                selectedDate={selectedDate}
+                selectedTime={selectedTime}
+                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                additionalInfo={metadata?.summary?.additionalInfo ?? ""}
+                onAdditionalInfoChange={(value) =>
+                  setMetadata("summary", { additionalInfo: value })
+                }
+              />,
+            })}
           </div>
 
           <CredenzaFooter>
@@ -327,30 +333,30 @@ export function BookingCard({
               <Button
                 variant="outline"
                 onClick={() => {
-                  if (stepper.isFirst) {
+                  if (isFirst) {
                     setIsConfirmModalOpen(false);
                   } else {
-                    stepper.prev();
+                    prev();
                   }
                 }}
               >
-                {stepper.isFirst ? "Annuler" : "Retour"}
+                {isFirst ? "Annuler" : "Retour"}
               </Button>
               <Button
                 onClick={() => {
-                  if (stepper.isLast) {
+                  if (isLast) {
                     handleBooking();
                   } else {
-                    stepper.next();
+                    next();
                   }
                 }}
                 disabled={
-                  (stepper.current.id === "pet" &&
-                    !stepper.metadata?.pet?.petId) ||
-                  (stepper.isLast && !stepper.metadata?.pet?.petId)
+                  (current.id === "pet" &&
+                    !metadata?.pet?.petId) ||
+                  (isLast && !metadata?.pet?.petId)
                 }
               >
-                {stepper.isLast ? "Confirmer" : "Suivant"}
+                {isLast ? "Confirmer" : "Suivant"}
               </Button>
             </div>
           </CredenzaFooter>

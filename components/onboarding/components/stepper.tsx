@@ -28,6 +28,7 @@ import {
   CredenzaDescription,
   CredenzaTitle,
 } from "@/components/ui";
+import ImagesStep from "../pro/images-step";
 
 const Stepper = () => {
   const {
@@ -130,6 +131,9 @@ const Stepper = () => {
           ),
           informations: () => (
             <ProInformationsStep nextStep={next} previousStep={prev} />
+          ),
+          images: () => (
+            <ImagesStep nextStep={next} previousStep={prev} />
           ),
           services: () => (
             <ProServicesStep nextStep={next} previousStep={prev} />

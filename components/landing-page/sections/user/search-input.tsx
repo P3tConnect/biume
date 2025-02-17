@@ -15,7 +15,7 @@ const SearchInput = () => {
     const searchParams = new URLSearchParams();
     if (profession) searchParams.set("profession", profession);
     if (location) searchParams.set("location", location);
-    router.push(`/companies?${searchParams.toString()}`);
+    router.push(`/pros?${searchParams.toString()}`);
   };
 
   return (

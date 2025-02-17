@@ -8,6 +8,7 @@ export const organizationImages = pgTable("organization_images", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   organizationId: text("organization_id").references(() => organization.id),
+  name: text("name"),
   imageUrl: text("image_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

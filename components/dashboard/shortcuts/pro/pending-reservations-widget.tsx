@@ -139,7 +139,7 @@ const PendingReservationsWidget = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ClockIcon className="w-5 h-5 text-muted-foreground" />
-              <CardTitle>Réservations en attente</CardTitle>
+              <CardTitle>Demandes de rendez-vous</CardTitle>
             </div>
             <Badge>{reservations.length}</Badge>
           </div>
@@ -148,11 +148,10 @@ const PendingReservationsWidget = () => {
           {reservations.map((reservation) => (
             <div
               key={reservation.id}
-              className={`flex items-center gap-3 p-3 bg-background shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-lg hover:shadow-[0_3px_12px_-3px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-all duration-200 cursor-pointer ${
-                reservation.conflicts
+              className={`flex items-center gap-3 p-3 bg-background shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-lg hover:shadow-[0_3px_12px_-3px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-all duration-200 cursor-pointer ${reservation.conflicts
                   ? "ring-2 ring-red-200 dark:ring-red-900/30"
                   : ""
-              }`}
+                }`}
               onClick={() => {
                 setSelectedReservation(reservation);
                 setIsDrawerOpen(true);

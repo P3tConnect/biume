@@ -16,14 +16,12 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { NuqsAdapter } from "nuqs/adapters/next";
 const geist = GeistSans;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateMetadata(): Promise<Metadata> {
 
-  const t = await getTranslations({ locale: locale, namespace: 'metadata' });
+  const locale = await getLocale();
+
+  const t = await getTranslations({ namespace: 'metadata' });
+
   return {
     title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
@@ -69,6 +67,10 @@ export async function generateMetadata({
     robots: {
       follow: true,
       index: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
     },
     keywords: [
       t('keywords.keyword1'),
@@ -88,6 +90,19 @@ export async function generateMetadata({
       t('keywords.keyword15'),
       t('keywords.keyword16'),
       t('keywords.keyword17'),
+      t('keywords.keyword18'),
+      t('keywords.keyword19'),
+      t('keywords.keyword20'),
+      t('keywords.keyword21'),
+      t('keywords.keyword22'),
+      t('keywords.keyword23'),
+      t('keywords.keyword24'),
+      t('keywords.keyword25'),
+      t('keywords.keyword26'),
+      t('keywords.keyword27'),
+      t('keywords.keyword28'),
+      t('keywords.keyword29'),
+      t('keywords.keyword30'),
     ],
   };
 }
