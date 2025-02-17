@@ -17,9 +17,8 @@ import {
   Ticket,
   UsersRound,
 } from "lucide-react";
-import { useSession } from "../lib/auth-client";
 
-type Submenu = {
+export type Submenu = {
   href: string;
   label: string;
   active: boolean;
@@ -31,10 +30,10 @@ export type Menu = {
   label: string;
   active: boolean;
   icon: LucideIcon;
-  submenus: Submenu[];
+  submenus?: Submenu[];
 };
 
-type Group = {
+export type Group = {
   groupLabel: string;
   menus: Menu[];
 };
@@ -49,14 +48,12 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           label: "dashboard.sidebar.dashboard",
           active: pathname == `/dashboard/organization/${companyId}`,
           icon: LayoutGrid,
-          submenus: [],
         },
         {
           href: `/dashboard/organization/${companyId}/timetable`,
           label: "dashboard.sidebar.calendar",
           active: pathname == `/dashboard/organization/${companyId}/timetable`,
           icon: Calendar,
-          submenus: [],
         },
       ],
     },
@@ -117,14 +114,12 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           label: "dashboard.sidebar.clients",
           active: pathname == `/dashboard/organization/${companyId}/clients`,
           icon: Contact2,
-          submenus: [],
         },
         {
           href: `/dashboard/organization/${companyId}/patients`,
           label: "dashboard.sidebar.patients",
           active: pathname == `/dashboard/organization/${companyId}/patients`,
           icon: PawPrint,
-          submenus: [],
         },
       ],
     },
@@ -136,7 +131,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           label: "dashboard.sidebar.reports",
           active: pathname == `/dashboard/organization/${companyId}/reports`,
           icon: LineChart,
-          submenus: [],
         },
         {
           href: `/dashboard/organization/${companyId}/observations`,
@@ -144,14 +138,12 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active:
             pathname == `/dashboard/organization/${companyId}/observations`,
           icon: Eye,
-          submenus: [],
         },
         {
           href: `/dashboard/organization/${companyId}/reminders`,
           label: "dashboard.sidebar.reminders",
           active: pathname == `/dashboard/organization/${companyId}/reminders`,
           icon: Timer,
-          submenus: [],
         },
       ],
     },
@@ -163,7 +155,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           label: "dashboard.sidebar.help",
           active: pathname == `/help`,
           icon: LucideMessageCircleQuestion,
-          submenus: [],
         },
       ],
     },
@@ -180,14 +171,12 @@ export function clientMenuList(pathname: string, userId: string) {
           label: "dashboard",
           active: pathname == `/dashboard/user/${userId}`,
           icon: LayoutGrid,
-          submenus: [],
         },
         {
           href: `/dashboard/user/${userId}/timetable`,
           label: "calendrier",
           active: pathname == `/dashboard/user/${userId}/timetable`,
           icon: Calendar,
-          submenus: [],
         },
       ],
     },
@@ -199,21 +188,18 @@ export function clientMenuList(pathname: string, userId: string) {
           label: "reservations",
           active: pathname == `/dashboard/user/${userId}/reservations`,
           icon: Ticket,
-          submenus: [],
         },
         {
           href: `/dashboard/user/${userId}/pets`,
           label: "animaux",
           active: pathname == `/dashboard/user/${userId}/pets`,
           icon: PawPrint,
-          submenus: [],
         },
         {
           href: `/dashboard/user/${userId}/settings`,
           label: "paramètres",
           active: pathname == `/dashboard/user/${userId}/settings`,
           icon: UsersRound,
-          submenus: [],
         },
       ],
     },

@@ -4,13 +4,7 @@ import {
   CardContent,
   CardFooter,
   Calendar,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Separator,
-  Textarea,
-  Label,
-  Badge,
   Credenza,
   CredenzaHeader,
   CredenzaContent,
@@ -18,15 +12,19 @@ import {
   CredenzaDescription,
   CredenzaFooter,
 } from "@/components/ui";
-import { Star, Home, Dog, Cat, Bird, ChevronRight } from "lucide-react";
+import { ChevronRight, Dog, Cat, Bird, PawPrint } from "lucide-react";
 import { fr } from "date-fns/locale";
 import { Dispatch, SetStateAction, useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
-import { motion } from "framer-motion";
-import Avvvatars from "avvvatars-react";
 import { Service, Member } from "@/src/db";
-import Image from "next/image";
+import { getPets } from "@/src/actions";
+import { useActionQuery } from "@/src/hooks/action-hooks";
+import { steps, useStepper, StepId } from "../hooks/useBookingStepper";
+import { PetStep } from "./steps/PetStep";
+import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
+import { SummaryStep } from "./steps/SummaryStep";
+import Avvvatars from "avvvatars-react";
 
 interface BookingCardProps {
   services: Service[];
@@ -54,32 +52,11 @@ export function BookingCard({
   setSelectedTime,
 }: BookingCardProps) {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [additionalInfo, setAdditionalInfo] = useState("");
-  const [selectedPet, setSelectedPet] = useState<string>("");
-  const [isHomeVisit, setIsHomeVisit] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+  const { data: userPets = [] } = useActionQuery(getPets, {}, "user-pets");
 
-  // Simulation de la liste des animaux de l'utilisateur
-  const userPets = [
-    {
-      id: "1",
-      name: "Max",
-      type: "Dog",
-      image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1",
-    },
-    {
-      id: "2",
-      name: "Luna",
-      type: "Cat",
-      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba",
-    },
-    {
-      id: "3",
-      name: "Rio",
-      type: "Bird",
-      image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3",
-    },
-  ];
+  const stepper = useStepper({
+    initialStep: "pet",
+  });
 
   const getPetIcon = (type: string) => {
     switch (type) {
@@ -90,17 +67,21 @@ export function BookingCard({
       case "Bird":
         return <Bird className="h-5 w-5" />;
       default:
-        return null;
+        return <PawPrint className="h-5 w-5" />;
     }
   };
 
   const selectedServiceData = selectedService
-    ? services.find((s) => s.id === selectedService)
+    ? (services.find((s) => s.id === selectedService) ?? null)
     : null;
 
   const selectedProData = selectedPro
-    ? professionals.find((p) => p.id === selectedPro)
+    ? (professionals.find((p) => p.id === selectedPro) ?? null)
     : null;
+
+  const selectedPet = userPets.find(
+    (p) => p.id === stepper.metadata?.pet?.petId,
+  );
 
   const handleBooking = () => {
     // TODO: Implémenter la logique de réservation
@@ -109,258 +90,43 @@ export function BookingCard({
       professional: selectedProData,
       date: selectedDate,
       time: selectedTime,
-      additionalInfo,
-      pet: userPets.find((p) => p.id === selectedPet),
-      isHomeVisit,
+      additionalInfo: stepper.metadata?.summary?.additionalInfo,
+      pet: selectedPet,
+      isHomeVisit: stepper.metadata?.consultationType?.isHomeVisit,
     });
     setIsConfirmModalOpen(false);
   };
 
-  const steps = [
-    {
-      title: "Animal",
-      description: "Choisissez l'animal pour la consultation",
-      content: (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          className="space-y-6"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {userPets.map((pet) => (
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                key={pet.id}
-                onClick={() => setSelectedPet(pet.id)}
-                className={cn(
-                  "relative cursor-pointer rounded-xl border-2 p-4 transition-all",
-                  selectedPet === pet.id
-                    ? "border-primary bg-primary/5"
-                    : "hover:border-primary/50",
-                )}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="relative h-16 w-16 overflow-hidden rounded-lg">
-                    <Image
-                      width={64}
-                      height={64}
-                      src={pet.image}
-                      alt={pet.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{pet.name}</h4>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      {getPetIcon(pet.type)}
-                      <span>{pet.type}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      ),
-    },
-    {
-      title: "Type de consultation",
-      description: "Choisissez le type de consultation",
-      content: (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          className="space-y-6"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setIsHomeVisit(false)}
-              className={cn(
-                "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
-                !isHomeVisit
-                  ? "border-primary bg-primary/5"
-                  : "hover:border-primary/50",
-              )}
-            >
-              <div className="flex flex-col items-center text-center gap-4">
-                <div className="rounded-full bg-primary/10 p-4">
-                  <Star className="h-8 w-8 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium">Au cabinet</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Consultation classique au cabinet vétérinaire
-                  </p>
-                </div>
-                <Badge variant="secondary">Prix standard</Badge>
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setIsHomeVisit(true)}
-              className={cn(
-                "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
-                isHomeVisit
-                  ? "border-primary bg-primary/5"
-                  : "hover:border-primary/50",
-              )}
-            >
-              <div className="flex flex-col items-center text-center gap-4">
-                <div className="rounded-full bg-primary/10 p-4">
-                  <Home className="h-8 w-8 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium">À domicile</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Le vétérinaire se déplace chez vous
-                  </p>
-                </div>
-                <Badge variant="secondary">+10€</Badge>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      ),
-    },
-    {
-      title: "Récapitulatif",
-      description: "Vérifiez les détails de votre réservation",
-      content: (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          className="space-y-6"
-        >
-          <div className="rounded-xl border bg-muted/50 p-6 space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="relative h-20 w-20 overflow-hidden rounded-lg">
-                <Image
-                  width={64}
-                  height={64}
-                  src={userPets.find((p) => p.id === selectedPet)?.image!}
-                  alt="Animal"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div>
-                <h4 className="font-medium">
-                  {userPets.find((p) => p.id === selectedPet)?.name}
-                </h4>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  {getPetIcon(
-                    userPets.find((p) => p.id === selectedPet)?.type || "",
-                  )}
-                  <span>
-                    {userPets.find((p) => p.id === selectedPet)?.type}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Service</span>
-                <span className="font-medium">{selectedServiceData?.name}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Professionnel</span>
-                <div className="flex items-center gap-2">
-                  {selectedProData?.user.image ? (
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={selectedProData.user.image} />
-                      <AvatarFallback>
-                        {selectedProData.user.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="h-6 w-6 rounded-full overflow-hidden">
-                      <Avvvatars
-                        value={selectedProData?.user.name || ""}
-                        style="shape"
-                        size={24}
-                      />
-                    </div>
-                  )}
-                  <span className="font-medium">
-                    {selectedProData?.user.name}
-                  </span>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Date et heure</span>
-                <span className="font-medium">
-                  {selectedDate && selectedTime
-                    ? `${format(selectedDate, "d MMMM yyyy", { locale: fr })} à ${selectedTime}`
-                    : "Non spécifié"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">
-                  Type de consultation
-                </span>
-                <div className="flex items-center gap-2">
-                  {isHomeVisit ? (
-                    <>
-                      <Home className="h-4 w-4" />
-                      <span className="font-medium">À domicile</span>
-                    </>
-                  ) : (
-                    <>
-                      <Star className="h-4 w-4" />
-                      <span className="font-medium">Au cabinet</span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <Separator />
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Prix total</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-semibold">
-                    {isHomeVisit
-                      ? `${parseInt(selectedServiceData?.price?.toString() || "0") + 10}€`
-                      : selectedServiceData?.price}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Informations complémentaires</Label>
-            <Textarea
-              placeholder="Ajoutez des informations utiles pour le professionnel..."
-              value={additionalInfo}
-              onChange={(e) => setAdditionalInfo(e.target.value)}
-              className="min-h-[100px] resize-none"
-            />
-          </div>
-        </motion.div>
-      ),
-    },
-  ];
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
-    return format(date, "d MMMM", { locale: fr });
-  };
-
-  const formatFullDate = (date: Date | undefined) => {
-    if (!date) return "";
-    return format(date, "d MMMM yyyy", { locale: fr });
+  const stepContent = {
+    pet: (
+      <PetStep
+        userPets={userPets}
+        selectedPetId={stepper.metadata?.pet?.petId ?? ""}
+        onSelectPet={(petId) => stepper.setMetadata("pet", { petId })}
+      />
+    ),
+    consultationType: (
+      <ConsultationTypeStep
+        isHomeVisit={stepper.metadata?.consultationType?.isHomeVisit ?? false}
+        onSelectType={(isHomeVisit) =>
+          stepper.setMetadata("consultationType", { isHomeVisit })
+        }
+      />
+    ),
+    summary: (
+      <SummaryStep
+        selectedPet={selectedPet}
+        selectedService={selectedServiceData}
+        selectedPro={selectedProData}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        isHomeVisit={stepper.metadata?.consultationType?.isHomeVisit ?? false}
+        additionalInfo={stepper.metadata?.summary?.additionalInfo ?? ""}
+        onAdditionalInfoChange={(value) =>
+          stepper.setMetadata("summary", { additionalInfo: value })
+        }
+      />
+    ),
   };
 
   return (
@@ -389,10 +155,12 @@ export function BookingCard({
                 <button
                   key={service.id}
                   onClick={() => setSelectedService(service.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${selectedService === service.id
-                    ? "border-2 border-primary"
-                    : "hover:border-primary/50"
-                    }`}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl border transition-all",
+                    selectedService === service.id
+                      ? "border-2 border-primary"
+                      : "hover:border-primary/50",
+                  )}
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{service.name}</span>
@@ -421,36 +189,26 @@ export function BookingCard({
                   <button
                     key={pro.id}
                     onClick={() => setSelectedPro(pro.id)}
-                    className={`w-full text-left p-4 rounded-xl border transition-all ${selectedPro === pro.id
-                      ? "border-2 border-primary"
-                      : "hover:border-primary/50"
-                      }`}
+                    className={cn(
+                      "w-full text-left p-4 rounded-xl border transition-all",
+                      selectedPro === pro.id
+                        ? "border-2 border-primary"
+                        : "hover:border-primary/50",
+                    )}
                   >
                     <div className="flex gap-4">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage
-                          src={pro.user.image || ""}
-                          alt={pro.user.name || ""}
+                      <div className="h-12 w-12 rounded-full overflow-hidden">
+                        <Avvvatars
+                          value={pro.user.name || ""}
+                          style="shape"
+                          size={48}
                         />
-                        <AvatarFallback>
-                          {pro.user.name
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .join("") || ""}
-                        </AvatarFallback>
-                      </Avatar>
+                      </div>
                       <div>
                         <p className="font-medium">{pro.user.name}</p>
                         <p className="text-sm text-muted-foreground">
                           {pro.role}
                         </p>
-                        {/* <div className="flex items-center gap-1 mt-1">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm">{pro.user.ratings.length}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ({pro.user.ratings.length} avis)
-                          </span>
-                        </div> */}
                       </div>
                     </div>
                   </button>
@@ -515,7 +273,9 @@ export function BookingCard({
           onClick={() => setIsConfirmModalOpen(true)}
         >
           {selectedTime && selectedDate
-            ? `Réserver pour ${formatDate(selectedDate)} à ${selectedTime}`
+            ? `Réserver pour ${format(selectedDate, "d MMMM", {
+                locale: fr,
+              })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -524,62 +284,73 @@ export function BookingCard({
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
             <div className="flex items-center gap-4 mb-4">
-              {steps.map((step, index) => (
-                <div key={index} className="flex items-center">
+              {Object.values(steps).map((stepItem, index) => (
+                <div key={stepItem.id} className="flex items-center">
                   <div
                     className={cn(
                       "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
-                      currentStep > index + 1
-                        ? "border-primary bg-primary text-white"
-                        : currentStep === index + 1
-                          ? "border-primary text-primary"
+                      stepper.current.id === stepItem.id
+                        ? "border-primary text-primary"
+                        : index <
+                            Object.values(steps).findIndex(
+                              (s) => s.id === stepper.current.id,
+                            )
+                          ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
+                    onClick={() => {
+                      // stepper.switch(stepItem.id);
+                    }}
+                    role="button"
+                    tabIndex={0}
                   >
                     {index + 1}
                   </div>
-                  {index < steps.length - 1 && (
+                  {index < Object.values(steps).length - 1 && (
                     <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
                   )}
                 </div>
               ))}
             </div>
-            <CredenzaTitle>{steps[currentStep - 1].title}</CredenzaTitle>
+            <CredenzaTitle>{stepper.current.title}</CredenzaTitle>
             <CredenzaDescription>
-              {steps[currentStep - 1].description}
+              {stepper.current.description}
             </CredenzaDescription>
           </CredenzaHeader>
 
-          <div className="py-4">{steps[currentStep - 1].content}</div>
+          <div className="py-4">
+            {stepContent[stepper.current.id as keyof typeof stepContent]}
+          </div>
 
           <CredenzaFooter>
             <div className="flex w-full justify-between">
               <Button
                 variant="outline"
                 onClick={() => {
-                  if (currentStep === 1) {
+                  if (stepper.isFirst) {
                     setIsConfirmModalOpen(false);
                   } else {
-                    setCurrentStep(currentStep - 1);
+                    stepper.prev();
                   }
                 }}
               >
-                {currentStep === 1 ? "Annuler" : "Retour"}
+                {stepper.isFirst ? "Annuler" : "Retour"}
               </Button>
               <Button
                 onClick={() => {
-                  if (currentStep === steps.length) {
+                  if (stepper.isLast) {
                     handleBooking();
                   } else {
-                    setCurrentStep(currentStep + 1);
+                    stepper.next();
                   }
                 }}
                 disabled={
-                  (currentStep === 1 && !selectedPet) ||
-                  (currentStep === steps.length && !selectedPet)
+                  (stepper.current.id === "pet" &&
+                    !stepper.metadata?.pet?.petId) ||
+                  (stepper.isLast && !stepper.metadata?.pet?.petId)
                 }
               >
-                {currentStep === steps.length ? "Confirmer" : "Suivant"}
+                {stepper.isLast ? "Confirmer" : "Suivant"}
               </Button>
             </div>
           </CredenzaFooter>

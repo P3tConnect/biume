@@ -7,7 +7,6 @@ import ObservationsWidget from "@/components/dashboard/shortcuts/observations-wi
 import PendingReportsWidget from "@/components/dashboard/shortcuts/pending-reports-widget";
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget";
 import PendingReservationsWidget from "@/components/dashboard/shortcuts/pending-reservations-widget";
-import ActiveRemindersWidget from "@/components/dashboard/shortcuts/active-reminders-widget";
 import TopClientsWidget from "@/components/dashboard/shortcuts/top-clients-widget";
 
 export const metadata: Metadata = {
