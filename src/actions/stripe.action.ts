@@ -7,11 +7,12 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
+  getPlanName,
+  requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
-import { organization, PlanEnum } from "../db";
+import { organization } from "../db";
 import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
 
 export const createBalancePayout = createServerAction(
   z.object({
@@ -168,10 +169,14 @@ export const updateOrganizationPlan = createServerAction(
       throw new ActionError("Organisation non trouvée");
     }
 
+    if (!org.stripeId) {
+      throw new ActionError("Compte Stripe non configuré");
+    }
+
     const stripeCustomer = org.stripeId;
 
     const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomer!,
+      customer: stripeCustomer ?? "",
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [
@@ -191,4 +196,123 @@ export const updateOrganizationPlan = createServerAction(
     return session.url;
   },
   [requireAuth, requireOwner],
+);
+
+export const getBillingInfo = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      const org = await db
+        .select()
+        .from(organization)
+        .where(eq(organization.id, input.organizationId))
+        .execute();
+
+      if (!org[0] || !org[0].stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const customer = await stripe.customers.retrieve(org[0].stripeId);
+      const subscriptions = await stripe.subscriptions.list({
+        customer: org[0].stripeId,
+        limit: 1,
+      });
+      const paymentMethods = await stripe.paymentMethods.list({
+        customer: org[0].stripeId,
+        type: "card",
+      });
+
+      const currentSubscription = subscriptions.data[0];
+      const defaultPaymentMethod = paymentMethods.data[0];
+
+      return {
+        currentPlan: await getPlanName(
+          currentSubscription?.items.data[0].plan.product as string,
+        ),
+        currentPrice: `${(currentSubscription?.items.data[0]?.price.unit_amount || 0) / 100}€`,
+        paymentMethod: defaultPaymentMethod
+          ? `${defaultPaymentMethod.card?.brand.toLocaleUpperCase()} se terminant par ${defaultPaymentMethod.card?.last4}`
+          : "Aucun moyen de paiement",
+        subscriptionStatus: currentSubscription?.status || "inactive",
+      };
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des informations de facturation:",
+        error,
+      );
+      throw new ActionError(
+        "Impossible de récupérer les informations de facturation",
+      );
+    }
+  },
+);
+
+export const createPaymentMethodUpdateSession = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        customer: ctx.fullOrganization.stripeId,
+        payment_method_types: ["card"],
+        mode: "setup",
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+      });
+
+      return session.url;
+    } catch (error) {
+      console.error("Erreur lors de la création de la session:", error);
+      throw new ActionError(
+        "Impossible de créer la session de mise à jour du moyen de paiement",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const getInvoiceHistory = createServerAction(
+  z.object({
+    organizationId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.stripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe non configuré",
+        );
+      }
+
+      const invoices = await stripe.invoices.list({
+        customer: ctx.fullOrganization.stripeId,
+        limit: 12, // Derniers 12 mois
+      });
+
+      return invoices.data.map((invoice) => ({
+        id: invoice.id,
+        amount: `${(invoice.amount_paid / 100).toFixed(2)}€`,
+        date: new Date(invoice.created * 1000).toLocaleDateString("fr-FR"),
+        status: invoice.status,
+        pdfUrl: invoice.invoice_pdf,
+        number: invoice.number,
+      }));
+    } catch (error) {
+      console.error("Erreur lors de la récupération des factures:", error);
+      throw new ActionError(
+        "Impossible de récupérer l'historique des factures",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
 );

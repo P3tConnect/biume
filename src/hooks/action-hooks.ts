@@ -39,10 +39,11 @@ export function useActionMutation<TInput, TOutput>(
 export function useActionQuery<TInput, TOutput>(
   action: ServerAction<TInput, TOutput>,
   input: TInput,
+  queryKey: string,
   options?: ActionQueryOptions<TInput, TOutput>,
 ) {
   return useQuery<TOutput, Error, TOutput, (string | TInput)[]>({
-    queryKey: ["action", action.name, input],
+    queryKey: [queryKey],
     queryFn: async () => {
       const result = await action(input);
       if (result.error || !result.data) {

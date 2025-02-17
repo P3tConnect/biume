@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  CredenzaFooter,
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui";
 import { Input } from "@/components/ui/input";
@@ -14,18 +14,23 @@ import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { X, Plus, Clock, Euro, ImageIcon } from "lucide-react";
+import { z } from "zod";
+import { X, Plus, Clock, Euro } from "lucide-react";
 import { UploadButton } from "@/src/lib/uploadthing";
 import Image from "next/image";
 import { proServicesSchema } from "../../types/onboarding-schemas";
 import { createServicesStepAction } from "@/src/actions";
 import { toast } from "sonner";
 import { useActionMutation } from "@/src/hooks/action-hooks";
-import { DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/src/lib/utils";
 
-const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) => {
+const ServicesForm = ({
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const form = useForm<z.infer<typeof proServicesSchema>>({
     resolver: zodResolver(proServicesSchema),
     defaultValues: {
@@ -86,7 +91,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                 className={cn(
                   "group relative rounded-2xl border bg-card transition-all duration-300",
                   "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-                  "dark:bg-gray-950/50 dark:backdrop-blur-xl"
+                  "dark:bg-gray-950/50 dark:backdrop-blur-xl",
                 )}
               >
                 <FormField
@@ -185,12 +190,16 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                                 value={field.value ?? ""}
                                 onChange={(e) =>
                                   field.onChange(
-                                    e.target.value ? parseFloat(e.target.value) : null
+                                    e.target.value
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   )
                                 }
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">min</span>
+                            <span className="text-sm text-gray-500 mr-1">
+                              min
+                            </span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -213,12 +222,16 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                                 value={field.value ?? ""}
                                 onChange={(e) =>
                                   field.onChange(
-                                    e.target.value ? parseFloat(e.target.value) : null
+                                    e.target.value
+                                      ? parseFloat(e.target.value)
+                                      : null,
                                   )
                                 }
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">€</span>
+                            <span className="text-sm text-gray-500 mr-1">
+                              €
+                            </span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -257,7 +270,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                   "flex flex-col items-center justify-center gap-4 p-8",
                   "rounded-2xl border-2 border-dashed",
                   "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200"
+                  "transition-colors duration-200",
                 )}
               >
                 <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -269,23 +282,29 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
           </div>
         </div>
 
-        <DialogFooter>
-          <div className="flex justify-end gap-4 w-full">
+        <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={previousStep}
+          >
+            ← Précédent
+          </Button>
+          <div className="flex gap-3">
             <Button
-              variant="outline"
-              className="rounded-xl"
-              onClick={previousStep}
+              type="button"
+              variant="ghost"
+              onClick={nextStep}
+              className="text-muted-foreground"
             >
-              Précédent
+              Passer
             </Button>
-            <Button
-              type="submit"
-              className="rounded-xl bg-gradient-to-r from-primary to-primary/80"
-            >
-              Suivant
+            <Button type="submit" className="rounded-xl px-6">
+              Suivant →
             </Button>
           </div>
-        </DialogFooter>
+        </div>
       </form>
     </Form>
   );

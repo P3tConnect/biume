@@ -1,9 +1,4 @@
-interface Service {
-  id: string;
-  name: string;
-  duration: string;
-  price: string;
-}
+import { Service } from "@/src/db";
 
 interface CompanyServicesProps {
   services: Service[];
@@ -32,4 +27,4 @@ export function CompanyServices({ services }: CompanyServicesProps) {
       ))}
     </div>
   );
-} 
+}

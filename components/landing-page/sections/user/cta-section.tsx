@@ -28,16 +28,16 @@ export function CTASection() {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
                 <Heart className="w-4 h-4" />
                 <span className="text-sm font-medium">
-                  Pour l'amour de nos compagnons
+                  Pour l&apos;amour de nos compagnons
                 </span>
               </div>
 
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Rejoignez notre communauté d'amoureux des animaux
+                Rejoignez notre communauté d&apos;amoureux des animaux
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Commencez dès aujourd'hui à prendre soin de vos compagnons comme
-                ils le méritent. Plus de 15 000 propriétaires nous font déjà
+                Commencez dès aujourd&apos;hui à prendre soin de vos compagnons
+                comme ils le méritent. Plus de 15 000 propriétaires nous font déjà
                 confiance.
               </p>
 

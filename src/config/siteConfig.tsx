@@ -5,12 +5,12 @@ import { RiInstagramFill } from "react-icons/ri";
 export const BLUR_FADE_DELAY = 0.15;
 
 export const siteConfig = {
-  name: "PawThera",
+  name: "Biume",
   description: "L'application qui fait gagner du temps aux indépendants du secteur animalier",
   url: safeConfig.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   keywords: ["SaaS", "Template", "Next.js", "React", "Tailwind CSS"],
   links: {
-    email: "contact@pawthera.com",
+    email: "contact@biume.com",
     linkedin: "https://www.linkedin.com/in/mathieu-chambaud-9b4106170/",
     instagram: "https://instagram.com/magicuidesign/",
   },

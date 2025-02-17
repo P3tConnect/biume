@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import NewShortcut from "../layout/new-shortcut";
 
 export const DashboardHomeHeader = () => {
   return (
@@ -13,9 +14,10 @@ export const DashboardHomeHeader = () => {
               Tableau de bord
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Gérez votre activité en un coup d'œil
+              Gérez votre activité en un coup d&apos;œil
             </p>
           </div>
+          <NewShortcut />
         </div>
       </CardHeader>
     </Card>

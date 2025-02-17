@@ -1,16 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui";
+import { Organization, Rating, Option, Service } from "@/src/db";
 import { Heart, MapPin, Share2, Star, ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 interface CompanyHeaderProps {
-  company: {
-    name: string;
-    address: string;
-    rating: number;
-    reviews: number;
-    images?: string[];
-  };
+  company: Organization;
 }
 
 export function CompanyHeader({ company }: CompanyHeaderProps) {
@@ -19,7 +16,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
     "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388",
     "https://images.unsplash.com/photo-1472851294608-062f824d29cc",
     "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6",
-    "https://images.unsplash.com/photo-1486299267070-83823f5448dd"
+    "https://images.unsplash.com/photo-1486299267070-83823f5448dd",
   ];
 
   const displayImages = defaultImages;
@@ -30,7 +27,10 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
       <div className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
         <div className="container mx-auto py-4">
           <div className="flex items-center">
-            <Link href="/companies" className="flex items-center text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="/companies"
+              className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
+            >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Retour aux résultats
             </Link>
@@ -45,17 +45,21 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-primary text-primary" />
-              <span className="font-medium">{company.rating}</span>
+              <span className="font-medium">
+                {company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+                  company.ratings.length}
+                sur 5
+              </span>
               <span className="text-muted-foreground">·</span>
               <button className="font-medium underline-offset-4 hover:underline">
-                {company.reviews} avis
+                {company.ratings.reduce((acc, curr) => acc + curr.rate, 0) / company.ratings.length} sur 5
               </button>
             </div>
             <span className="text-muted-foreground">·</span>
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
               <button className="font-medium underline-offset-4 hover:underline">
-                {company.address}
+                Unknown
               </button>
             </div>
           </div>
@@ -119,4 +123,4 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
       </div>
     </div>
   );
-} 
+}

@@ -8,9 +8,7 @@ import {
   twoFactor as twoFactorSchema,
   verification,
 } from "../db";
-import { organization, phoneNumber, twoFactor } from "better-auth/plugins";
-
-import { FireExtinguisher } from "lucide-react";
+import { organization, twoFactor, username } from "better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { createAccessControl } from "better-auth/plugins/access";
 import { db } from "./db";
@@ -40,7 +38,7 @@ export const owner = ac.newRole({
 });
 
 export const auth = betterAuth({
-  appName: "PawThera",
+  appName: "Biume",
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -147,6 +145,7 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    username(),
     twoFactor(),
     organization({
       ac: ac,
@@ -170,10 +169,14 @@ export const auth = betterAuth({
           }),
         });
       },
+      membershipLimit: 10,
     }),
   ],
 });
 
 export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session;
-export type Organization = typeof auth.$Infer.Organization;
+export type Organization = typeof auth.$Infer.Organization & {
+  members: (typeof auth.$Infer.Member)[]
+  invitations: (typeof auth.$Infer.Invitation)[]
+};

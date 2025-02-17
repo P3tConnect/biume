@@ -9,7 +9,7 @@ const testimonials = [
     avatar: "/avatars/user-1.jpg",
     animal: "Chat",
     content:
-      "Super application ! J'ai pu trouver un osthéopathe disponible en urgence pour mon chat. Le processus de réservation est simple et rapide.",
+      "Super application ! J&apos;ai pu trouver un osthéopathe disponible en urgence pour mon chat. Le processus de réservation est simple et rapide.",
     rating: 5,
     date: "Il y a 2 jours",
   },
@@ -27,7 +27,7 @@ const testimonials = [
     avatar: "/avatars/user-3.jpg",
     animal: "Lapin",
     content:
-      "J'apprécie particulièrement la possibilité de voir les avis des autres propriétaires. Cela m'a aidé à choisir le bon vétérinaire pour mon lapin.",
+      "J&apos;apprécie particulièrement la possibilité de voir les avis des autres propriétaires. Cela m&apos;a aidé à choisir le bon vétérinaire pour mon lapin.",
     rating: 5,
     date: "Il y a 2 semaines",
   },
@@ -42,7 +42,7 @@ export function TestimonialsSection() {
             La confiance de nos utilisateurs
           </h2>
           <p className="text-lg text-muted-foreground">
-            Découvrez les expériences des propriétaires d'animaux qui utilisent
+            Découvrez les expériences des propriétaires d&apos;animaux qui utilisent
             Pawthera
           </p>
         </div>
@@ -57,7 +57,7 @@ export function TestimonialsSection() {
                 <div className="flex-1">
                   <div className="font-semibold">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    Propriétaire d'un {testimonial.animal}
+                    Propriétaire d&apos;un {testimonial.animal}
                   </div>
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -70,17 +70,16 @@ export function TestimonialsSection() {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-4 h-4 ${
-                      i < testimonial.rating
-                        ? "fill-primary text-primary"
-                        : "fill-muted text-muted"
-                    }`}
+                    className={`w-4 h-4 ${i < testimonial.rating
+                      ? "fill-primary text-primary"
+                      : "fill-muted text-muted"
+                      }`}
                   />
                 ))}
               </div>
 
               {/* Contenu */}
-              <p className="text-sm leading-relaxed">"{testimonial.content}"</p>
+              <p className="text-sm leading-relaxed">&quot;{testimonial.content}&quot;</p>
             </div>
           ))}
         </div>

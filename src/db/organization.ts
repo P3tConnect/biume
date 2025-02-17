@@ -8,28 +8,35 @@ import {
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { organizationDocuments } from "./organizationDocuments";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { reportTemplate } from "./report_template";
 import { progression } from "./progression";
 import { cancelPolicies } from "./cancelPolicies";
 import { project } from "./project";
 import { task } from "./task";
-import { ratings } from "./ratings";
-import { service } from "./service";
+import { Rating, ratings } from "./ratings";
+import { Service, service } from "./service";
 import { options } from "./options";
 import { address } from "./addresses";
-import { organizationAddress } from "./organizationAddress";
-import { category } from "./category";
-import { topic } from "./topic";
-import { product } from "./products";
-import { newsletter } from "./newsletter";
-import { receipt } from "./receipts";
+import {
+  OrganizationAddress,
+  organizationAddress,
+} from "./organizationAddress";
+import { Category, category } from "./category";
+import { Topic, topic } from "./topic";
+import { Product, product } from "./products";
+import { Newsletter, newsletter } from "./newsletter";
+import { Receipt, receipt } from "./receipts";
 import { transaction } from "./transaction";
 import { widgets } from "./widgets";
 import { bgJobs } from "./bgJobs";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { invitation } from "./invitation";
 import { appointments } from "./appointments";
+import { Option } from "./options";
+import { Member, member } from "./member";
+import { ClientNote, clientNote } from "./clientNote";
+import { OrganizationImage, organizationImages } from "./organizationImages";
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
 
@@ -76,6 +83,7 @@ export const organization = pgTable("organizations", {
   lang: text("lang").notNull().default("fr"),
   siren: text("siren"),
   siret: text("siret"),
+  onDemand: boolean("onDemand").notNull().default(false),
   updatedAt: timestamp("updatedAt"),
 });
 
@@ -108,10 +116,26 @@ export const organizationRelations = relations(
     widgets: many(widgets),
     bgJobs: many(bgJobs),
     invitations: many(invitation),
+    members: many(member),
+    clientNotes: many(clientNote),
+    images: many(organizationImages),
   }),
 );
 
-export type Organization = typeof organization.$inferSelect;
+export type Organization = InferSelectModel<typeof organization> & {
+  address: OrganizationAddress;
+  members: Member[];
+  ratings: Rating[];
+  services: Service[];
+  options: Option[];
+  categories: Category[];
+  topics: Topic[];
+  products: Product[];
+  newslettersWritter: Newsletter[];
+  receipts: Receipt[];
+  clientNotes: ClientNote[];
+  images: OrganizationImage[];
+};
 export type CreateOrganization = typeof organization.$inferInsert;
 
 export const OrganizationSchema = createSelectSchema(organization);

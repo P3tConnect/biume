@@ -1,36 +1,30 @@
 'use server';
 
-import { CreatePetSchema, pets } from '@/src/db/pets';
+import { CreatePetSchema, Pet, pets } from '@/src/db/pets';
 import { createServerAction, db, requireAuth } from '../lib';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 export const createPet = createServerAction(
   CreatePetSchema,
   async (input, ctx) => {
-    if (!ctx.user?.id) {
-      throw new Error('Vous devez être connecté pour créer un animal');
-    }
+    const pet = await db
+      .insert(pets)
+      .values({
+        ...input,
+        ownerId: ctx.user?.id ?? '',
+      })
+      .returning()
+      .execute();
 
-    try {
-      const pet = await db
-        .insert(pets)
-        .values([
-          {
-            ...input,
-            ownerId: ctx.user.id,
-            birthDate: new Date(input.birthDate),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ])
-        .returning();
-
-      return pet;
-    } catch (error) {
-      console.error('Erreur lors de la création:', error);
+    if (!pet) {
       throw new Error("Erreur lors de la création de l'animal");
     }
+
+    revalidatePath(`/dashboard/user/${ctx.user?.id}/pets`);
+
+    return pet;
   },
   [requireAuth]
 );
@@ -38,21 +32,15 @@ export const createPet = createServerAction(
 export const getPets = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    if (!ctx.user?.id) {
-      throw new Error('Vous devez être connecté pour voir vos animaux');
+    const userPets = await db.query.pets.findMany({
+      where: eq(pets.ownerId, ctx.user?.id ?? ''),
+    });
+
+    if (!userPets) {
+      throw new Error('Aucun animal trouvé');
     }
 
-    try {
-      const userPets = await db
-        .select()
-        .from(pets)
-        .where(eq(pets.ownerId, ctx.user.id));
-
-      return userPets;
-    } catch (error) {
-      console.error('Erreur lors de la récupération:', error);
-      throw new Error('Erreur lors de la récupération des animaux');
-    }
+    return userPets as unknown as Pet[];
   },
   [requireAuth]
 );

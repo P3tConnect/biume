@@ -16,27 +16,53 @@ import {
   SidebarMenuItem,
   Skeleton,
 } from "@/components/ui";
-import { signOut, updateUser, useSession } from "@/src/lib/auth-client";
+import { signOut, useActiveOrganization } from "@/src/lib/auth-client";
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
+  Link,
   LogOut,
   Settings,
-  Sparkles,
-  User2,
+  ExternalLink,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import Avvvatars from "avvvatars-react";
+import { useActionQuery } from "@/src/hooks/action-hooks";
+import { getUserInformations } from "@/src/actions/user.action";
 
 const SidebarFooterComponent = () => {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const pathname = usePathname();
+  const { data: activeOrganization } = useActiveOrganization();
+  const { data: session, isPending } = useActionQuery(
+    getUserInformations,
+    {},
+    "user-informations",
+  );
+
+  const handleSettingsClick = () => {
+    router.push(`/dashboard/organization/${activeOrganization?.id}/settings`);
+  };
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="flex flex-col gap-2">
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          className="cursor-pointer"
+          tooltip="Paramètres de l'entreprise"
+          isActive={
+            pathname ===
+            `/dashboard/organization/${activeOrganization?.id}/settings`
+          }
+          onClick={handleSettingsClick}
+          asChild
+        >
+          <div className="flex items-center gap-2">
+            <Settings />
+            <span>Paramètres</span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -120,30 +146,14 @@ const SidebarFooterComponent = () => {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2">
-                <Sparkles size={14} />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <Link href={`/dashboard/user/${session?.user.id}/settings`}>
+                <DropdownMenuItem className="gap-2">
+                  <Settings size={14} />
+                  Settings
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2">
-                <Settings size={14} />
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="gap-2"
-              onClick={async () => {
-                router.push(`/dashboard/user/${session?.user.id}`);
-              }}
-            >
-              <User2 size={14} />
-              Back to personnal
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2"

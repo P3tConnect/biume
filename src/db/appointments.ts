@@ -6,17 +6,16 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { invoice } from "./invoice";
-import { sessionOptions } from "./sessionOptions";
-import { pets } from "./pets";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { Invoice, invoice } from "./invoice";
+import { SessionOption, sessionOptions } from "./sessionOptions";
+import { Pet, pets } from "./pets";
 import { report } from "./report";
-import { observation } from "./observation";
+import { Observation, observation } from "./observation";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-import { service } from "./service";
-import { organization } from "./organization";
-import { user } from "./user";
+import { Service, service } from "./service";
+import { Organization, organization } from "./organization";
+import { User, user } from "./user";
 
 export const appointmentType = pgEnum("appointment_type", [
   "oneToOne",
@@ -72,7 +71,7 @@ export const appointmentsRelations = relations(
       fields: [appointments.proId],
       references: [organization.id],
     }),
-    invoice: one(invoice),
+    invoices: many(invoice),
     service: one(service, {
       fields: [appointments.serviceId],
       references: [service.id],
@@ -97,12 +96,17 @@ export const appointmentsRelations = relations(
   }),
 );
 
-export type Appointment = typeof appointments.$inferSelect;
+export type Appointment = InferSelectModel<typeof appointments> & {
+  pro: Organization;
+  invoice: Invoice;
+  service: Service;
+  options: SessionOption[];
+  pet: Pet;
+  report: Report;
+  observation: Observation;
+  client: InferSelectModel<typeof user>;
+};
 export type CreateAppointment = typeof appointments.$inferInsert;
-export const AppointmentTypeEnum = z.enum(appointmentType.enumValues);
-export const AppointmentStatusTypeEnum = z.enum(
-  appointmentStatusType.enumValues,
-);
 
 export const AppointmentSchema = createSelectSchema(appointments);
 export const CreateAppointmentSchema = createInsertSchema(appointments);

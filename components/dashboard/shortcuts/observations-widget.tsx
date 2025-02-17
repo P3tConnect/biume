@@ -1,303 +1,259 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import Link from "next/link";
-import { cn } from "@/src/lib/utils";
-import { useState } from "react";
-// import { CaretSort } from "@phosphor-icons/react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ArrowDownIcon } from "lucide-react";
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Eye } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  StethoscopeIcon,
+  PawPrintIcon,
+  ChevronRightIcon,
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 
-interface Observation {
-  id: string;
-  clientId: string;
-  clientName: string;
-  clientAvatar?: string;
-  dueDate: Date;
-  type: string;
-  status: "pending" | "completed";
-}
-
-const MOCK_OBSERVATIONS: Observation[] = [
-  {
-    id: "1",
-    clientId: "client1",
-    clientName: "Sophie Martin",
-    clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",
-    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Dans 2 jours
-    type: "Suivi cicatrisation",
-    status: "pending",
-  },
-  {
-    id: "2",
-    clientId: "client2",
-    clientName: "Lucas Dubois",
-    clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas",
-    dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Dans 1 jour
-    type: "Contrôle pigmentation",
-    status: "pending",
-  },
-  {
-    id: "3",
-    clientId: "client3",
-    clientName: "Emma Bernard",
-    clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
-    dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Dans 4 jours
-    type: "Suivi post-traitement",
-    status: "completed",
-  },
-  {
-    id: "4",
-    clientId: "client4",
-    clientName: "Thomas Petit",
-    clientAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Thomas",
-    dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Dans 1 jour
-    type: "Évaluation résultats",
-    status: "pending",
-  },
-];
-
-const columnHelper = createColumnHelper<Observation>();
-
-const columns = [
-  columnHelper.accessor("clientName", {
-    header: "Client",
-    cell: (info) => (
-      <div className="flex items-center gap-2">
-        <Avatar className="h-8 w-8">
-          <AvatarImage
-            src={info.row.original.clientAvatar}
-            alt={info.getValue()}
-          />
-          <AvatarFallback>
-            {info.getValue().slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <span className="font-medium">{info.getValue()}</span>
-      </div>
-    ),
-  }),
-  columnHelper.accessor("type", {
-    header: "Type",
-    cell: (info) => (
-      <Badge
-        variant="outline"
-        className={cn(
-          "text-xs",
-          info.row.original.status === "pending"
-            ? "border-orange-200 bg-orange-100 text-orange-700"
-            : "border-green-200 bg-green-100 text-green-700"
-        )}
-      >
-        {info.getValue()}
-      </Badge>
-    ),
-  }),
-  columnHelper.accessor("dueDate", {
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center gap-1 cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date d'échéance
-          <ArrowDownIcon className="ml-2 h-4 w-4" />
-        </div>
-      );
+const ObservationsWidget = () => {
+  const [selectedObservation, setSelectedObservation] = React.useState<any>(null);
+  // Exemple de données (à remplacer par vos vraies données)
+  const observations = [
+    {
+      id: 1,
+      type: "Surveillance post-op",
+      petName: "Charlie",
+      petType: "Chien",
+      breed: "Carlin",
+      ownerName: "Sophie Laurent",
+      symptoms: ["Difficulté respiratoire", "Fatigue"],
+      notes:
+        "Surveiller la cicatrisation et les signes de détresse respiratoire",
+      startDate: "2024-03-19",
+      duration: "72h",
+      priority: "high",
+      status: "en cours",
+      imageUrl: "/pets/dog3.jpg",
+      lastCheck: "Il y a 2h",
     },
-    cell: (info) => (
-      <span className="text-sm text-muted-foreground">
-        {format(new Date(info.getValue()), "d MMMM yyyy", {
-          locale: fr,
-        })}
-      </span>
-    ),
-  }),
-  columnHelper.accessor("id", {
-    header: "Actions",
-    cell: (info) => {
-      const observation = info.row.original;
-      return (
-        <TooltipProvider>
-          <div className="flex items-center gap-2">
-            {observation.status === "pending" && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // TODO: Implémenter la logique pour marquer comme terminé
-                      console.log("Marquer comme terminé:", observation.id);
-                    }}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Marquer comme terminé</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // TODO: Implémenter la navigation vers les détails
-                    console.log("Voir les détails:", observation.id);
-                  }}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Voir les détails</p>
-              </TooltipContent>
-            </Tooltip>
+    {
+      id: 2,
+      type: "Suivi traitement",
+      petName: "Milo",
+      petType: "Chat",
+      breed: "Persan",
+      ownerName: "Marc Dubois",
+      symptoms: ["Perte d'appétit"],
+      notes: "Vérifier la prise de poids quotidienne",
+      startDate: "2024-03-20",
+      duration: "48h",
+      priority: "medium",
+      status: "à faire",
+      imageUrl: "/pets/cat2.jpg",
+      lastCheck: "Il y a 6h",
+    },
+    {
+      id: 3,
+      type: "Observation comportementale",
+      petName: "Nina",
+      petType: "Chat",
+      breed: "Européen",
+      ownerName: "Julie Martin",
+      symptoms: ["Agressivité inhabituelle"],
+      notes: "Observer le comportement avec les autres animaux",
+      startDate: "2024-03-21",
+      duration: "24h",
+      priority: "low",
+      status: "planifié",
+      imageUrl: "/pets/cat3.jpg",
+      lastCheck: "Aujourd'hui 9h",
+    },
+  ];
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "text-red-500 bg-red-100 dark:bg-red-900/30";
+      case "medium":
+        return "text-orange-500 bg-orange-100 dark:bg-orange-900/30";
+      default:
+        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "en cours":
+        return "text-green-500 bg-green-100 dark:bg-green-900/30";
+      case "à faire":
+        return "text-orange-500 bg-orange-100 dark:bg-orange-900/30";
+      default:
+        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30";
+    }
+  };
+
+  return (
+    <>
+      <Card className="rounded-2xl">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <StethoscopeIcon className="w-5 h-5" />
+              <CardTitle>Observations à réaliser</CardTitle>
+            </div>
+            <Badge variant="secondary">{observations.length}</Badge>
           </div>
-        </TooltipProvider>
-      );
-    },
-  }),
-];
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[280px] pr-4">
+            <div className="space-y-2">
+              {observations.map((observation) => (
+                <div
+                  key={observation.id}
+                  className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+                  onClick={() => setSelectedObservation(observation)}
+                >
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={observation.imageUrl}
+                        alt={observation.petName}
+                      />
+                      <AvatarFallback className="bg-primary">
+                        <PawPrintIcon className="w-4 h-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-3">
+                        <span className="font-medium">{observation.petName}</span>
+                        <Badge
+                          variant="outline"
+                          className={getPriorityColor(observation.priority)}
+                        >
+                          {observation.type}
+                        </Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Dernier contrôle: {observation.lastCheck}
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRightIcon className="w-4 h-4 text-muted-foreground ml-4" />
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
 
-function useMockObservations() {
-  return useQuery({
-    queryKey: ["observations-to-make"],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      return MOCK_OBSERVATIONS;
-    },
-  });
-}
+      <Sheet open={!!selectedObservation} onOpenChange={() => setSelectedObservation(null)}>
+        <SheetContent className="w-full sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle>Détails de l&apos;observation</SheetTitle>
+          </SheetHeader>
+          {selectedObservation && (
+            <div className="mt-6 space-y-6">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage
+                    src={selectedObservation.imageUrl}
+                    alt={selectedObservation.petName}
+                  />
+                  <AvatarFallback className="bg-primary">
+                    <PawPrintIcon className="w-6 h-6" />
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold">{selectedObservation.petName}</h3>
+                    <Badge variant="outline" className={getPriorityColor(selectedObservation.priority)}>
+                      Priorité {selectedObservation.priority === "high" ? "haute" : selectedObservation.priority === "medium" ? "moyenne" : "basse"}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground">
+                    {selectedObservation.petType} • {selectedObservation.breed}
+                  </p>
+                </div>
+              </div>
 
-export function ObservationsWidget() {
-  const { data: observations, isLoading } = useMockObservations();
-  const [sorting, setSorting] = useState<SortingState>([]);
+              <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Informations sur l&apos;animal</h4>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm text-muted-foreground">Type d&apos;observation:</span>
+                      <p className="font-medium">{selectedObservation.type}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Date de début:</span>
+                      <p className="font-medium">{selectedObservation.startDate}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Durée prévue:</span>
+                      <p className="font-medium">{selectedObservation.duration}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Dernier contrôle:</span>
+                      <p className="font-medium">{selectedObservation.lastCheck}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Statut:</span>
+                      <Badge className={`mt-1 ${getStatusColor(selectedObservation.status)}`}>
+                        {selectedObservation.status}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
 
-  const table = useReactTable({
-    data: observations ?? [],
-    columns,
-    state: {
-      sorting,
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-  });
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Informations sur le propriétaire</h4>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm text-muted-foreground">Nom:</span>
+                      <p className="font-medium">{selectedObservation.ownerName}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">Animal:</span>
+                      <p className="font-medium">{selectedObservation.petType} {selectedObservation.breed}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-  return (
-    <Card className="col-span-3">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base">Observations à réaliser</CardTitle>
-        <Link
-          href="/dashboard/observations"
-          className="text-sm text-muted-foreground hover:underline"
-        >
-          Voir tout
-        </Link>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
-          {isLoading ? (
-            <ObservationsLoadingSkeleton />
-          ) : observations?.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">
-              Aucune observation à réaliser
-            </p>
-          ) : (
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+              <div>
+                <h4 className="text-sm font-medium mb-2">Symptômes</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedObservation.symptoms.map((symptom: string, index: number) => (
+                    <Badge key={index} variant="secondary">
+                      {symptom}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium mb-2">Notes</h4>
+                <p className="text-muted-foreground bg-muted p-3 rounded-md">
+                  {selectedObservation.notes}
+                </p>
+              </div>
+
+              <SheetFooter>
+                <Button className="w-full">
+                  Commencer l&apos;observation
+                  <ChevronRightIcon className="w-4 h-4 ml-2" />
+                </Button>
+              </SheetFooter>
+            </div>
           )}
-        </ScrollArea>
-      </CardContent>
-    </Card>
+        </SheetContent>
+      </Sheet>
+    </>
   );
-}
+};
 
-function ObservationsLoadingSkeleton() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-6 w-32" />
-        ))}
-      </div>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-4">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-6 w-28" />
-          <Skeleton className="h-8 w-20" />
-        </div>
-      ))}
-    </div>
-  );
-}
+export default ObservationsWidget;

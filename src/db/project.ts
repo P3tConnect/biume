@@ -1,8 +1,8 @@
 import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { projectsInvitees } from "./projectsInvitees";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const project = pgTable("project", {
   id: text("id")
@@ -31,7 +31,9 @@ export const projectRelations = relations(project, ({ one, many }) => ({
   invitees: many(projectsInvitees),
 }));
 
-export type Project = typeof project.$inferSelect;
+export type Project = InferSelectModel<typeof project> & {
+  owner: Organization;
+};
 export type CreateProject = typeof project.$inferInsert;
 
 export const ProjectSchema = createSelectSchema(project);

@@ -1,7 +1,7 @@
 import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-import { organization } from "./organization";
+import { Organization, organization } from "./organization";
 
 export const task = pgTable("task", {
   id: text("id")
@@ -27,7 +27,9 @@ export const taskRelations = relations(task, ({ one }) => ({
   }),
 }));
 
-export type Task = typeof task.$inferSelect;
+export type Task = InferSelectModel<typeof task> & {
+  owner: Organization;
+};
 export type CreateTask = typeof task.$inferInsert;
 
 export const CreateTaskSchema = createInsertSchema(task);

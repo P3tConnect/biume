@@ -1,45 +1,12 @@
-import {
-  Calendar,
-  Clock,
-  Star,
-  MessageSquare,
-  CreditCard,
-  Stethoscope,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-
-const userFeatures = [
-  {
-    title: "Réservation instantanée",
-    description: "Prenez rendez-vous en quelques clics, 24h/24 et 7j/7.",
-    icon: Calendar,
-  },
-  {
-    title: "Disponibilités en temps réel",
-    description: "Visualisez les créneaux disponibles instantanément.",
-    icon: Clock,
-  },
-  {
-    title: "Avis vérifiés",
-    description: "Consultez les avis de propriétaires d'animaux comme vous.",
-    icon: Star,
-  },
-  {
-    title: "Rappels automatiques",
-    description: "Recevez des rappels pour ne jamais manquer un rendez-vous.",
-    icon: MessageSquare,
-  },
-  {
-    title: "Paiement sécurisé",
-    description: "Payez en ligne en toute sécurité lors de la réservation.",
-    icon: CreditCard,
-  },
-  {
-    title: "Suivi santé",
-    description: "Accédez à l'historique médical de votre animal.",
-    icon: Stethoscope,
-  },
-];
+import { features } from "./data";
+import { CredenzaDescription } from "@/components/ui";
+import { CredenzaTitle } from "@/components/ui";
+import { CredenzaHeader, CredenzaTrigger } from "@/components/ui";
+import { Credenza } from "@/components/ui";
+import { CredenzaContent } from "@/components/ui";
 
 export function FeaturesSection() {
   return (
@@ -56,78 +23,163 @@ export function FeaturesSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
-          {userFeatures.map((feature, index) => (
-            <div
-              key={index}
-              className="group relative bg-gradient-to-br from-background to-accent/5 p-8 rounded-2xl border hover:border-primary/50 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative">
-                <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="w-8 h-8 text-primary" />
+          {features.map((feature, index) => (
+            <Credenza key={index}>
+              <CredenzaTrigger asChild>
+                <div className="group relative bg-gradient-to-br from-background to-accent/5 p-8 rounded-2xl border hover:border-primary/50 transition-all duration-300 cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative">
+                    <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <feature.icon className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      {feature.title}
+                      <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+              </CredenzaTrigger>
+              <CredenzaContent className="sm:max-w-[900px] p-0 overflow-hidden grid md:grid-cols-[2fr,3fr]">
+                <div className="relative md:h-full h-[200px]">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent md:hidden">
+                    <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                      <feature.icon className="w-6 h-6" />
+                      {feature.title}
+                    </h3>
+                  </div>
+                </div>
+                <div className="p-6 bg-gradient-to-br from-background to-accent/5">
+                  <CredenzaHeader className="space-y-4">
+                    <CredenzaTitle className="hidden md:flex items-center gap-3 text-2xl">
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <feature.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      {feature.title}
+                    </CredenzaTitle>
+                    <CredenzaDescription className="!mt-6 text-base leading-relaxed">
+                      {feature.details}
+                    </CredenzaDescription>
+                  </CredenzaHeader>
 
-        {/* Statistiques */}
-        <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4 sm:space-y-6">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left bg-clip-text text-transparent bg-foreground/80">
-                La plateforme de référence pour la santé animale
-              </h3>
-              <div className="grid grid-cols-2 gap-3 sm:gap-6">
-                <div className="bg-gradient-to-br from-background via-background/95 to-secondary/5 p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-secondary/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2">
-                    98%
+                  <div className="mt-8 grid grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-background/50 border">
+                      <h4 className="font-medium mb-2">Avantages</h4>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        {feature.title === "Réservation instantanée" && (
+                          <>
+                            <li>• Disponible 24h/24</li>
+                            <li>• Confirmation immédiate</li>
+                            <li>• Choix flexibles</li>
+                          </>
+                        )}
+                        {feature.title === "Disponibilités en temps réel" && (
+                          <>
+                            <li>• Mise à jour instantanée</li>
+                            <li>• Vue calendrier claire</li>
+                            <li>• Filtres avancés</li>
+                          </>
+                        )}
+                        {feature.title === "Avis vérifiés" && (
+                          <>
+                            <li>• Avis authentiques</li>
+                            <li>• Notes détaillées</li>
+                            <li>• Retours d&apos;expérience</li>
+                          </>
+                        )}
+                        {feature.title === "Rappels automatiques" && (
+                          <>
+                            <li>• SMS & Emails</li>
+                            <li>• Personnalisables</li>
+                            <li>• Instructions incluses</li>
+                          </>
+                        )}
+                        {feature.title === "Paiement sécurisé" && (
+                          <>
+                            <li>• Multiples options</li>
+                            <li>• Transactions cryptées</li>
+                            <li>• Reçus automatiques</li>
+                          </>
+                        )}
+                        {feature.title === "Suivi santé" && (
+                          <>
+                            <li>• Historique complet</li>
+                            <li>• Documents numériques</li>
+                            <li>• Partage facile</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
+                    <div className="p-4 rounded-xl bg-background/50 border">
+                      <h4 className="font-medium mb-2">Comment ça marche</h4>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        {feature.title === "Réservation instantanée" && (
+                          <>
+                            <li>1. Choisissez un créneau</li>
+                            <li>2. Remplissez vos infos</li>
+                            <li>3. Confirmez la réservation</li>
+                          </>
+                        )}
+                        {feature.title === "Disponibilités en temps réel" && (
+                          <>
+                            <li>1. Sélectionnez une date</li>
+                            <li>2. Consultez les créneaux</li>
+                            <li>3. Réservez directement</li>
+                          </>
+                        )}
+                        {feature.title === "Avis vérifiés" && (
+                          <>
+                            <li>1. Consultez les avis</li>
+                            <li>2. Filtrez par critères</li>
+                            <li>3. Prenez votre décision</li>
+                          </>
+                        )}
+                        {feature.title === "Rappels automatiques" && (
+                          <>
+                            <li>1. Activez les notifications</li>
+                            <li>2. Choisissez le format</li>
+                            <li>3. Recevez les rappels</li>
+                          </>
+                        )}
+                        {feature.title === "Paiement sécurisé" && (
+                          <>
+                            <li>1. Choisissez le mode</li>
+                            <li>2. Validez le paiement</li>
+                            <li>3. Recevez la confirmation</li>
+                          </>
+                        )}
+                        {feature.title === "Suivi santé" && (
+                          <>
+                            <li>1. Accédez au carnet</li>
+                            <li>2. Consultez l&apos;historique</li>
+                            <li>3. Gérez les documents</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    de satisfaction client
+
+                  <div className="mt-6 flex justify-end">
+                    <Button asChild size="lg" className="gap-2">
+                      <a href={feature.ctaLink}>
+                        {feature.cta}
+                        <ChevronRight className="w-4 h-4" />
+                      </a>
+                    </Button>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-background via-background/95 to-secondary/5 p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-secondary/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2">
-                    15k+
-                  </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    rendez-vous pris
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-background via-background/95 to-secondary/5 p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-secondary/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2">
-                    2000+
-                  </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    vétérinaires
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-background via-background/95 to-secondary/5 p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-border/50 hover:border-secondary/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-secondary mb-1 sm:mb-2">
-                    4.8/5
-                  </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    note moyenne
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative mt-8 md:mt-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-primary/5 rounded-2xl sm:rounded-3xl blur-2xl"></div>
-              <div className="relative">
-                <Image
-                  src="https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=800&auto=format&fit=crop"
-                  alt="Fonctionnalités Pawthera"
-                  width={500}
-                  height={500}
-                  className="rounded-xl sm:rounded-2xl shadow-lg w-full"
-                />
-              </div>
-            </div>
-          </div>
+              </CredenzaContent>
+            </Credenza>
+          ))}
         </div>
       </div>
     </section>

@@ -27,7 +27,7 @@ export function OrganizationsGrid({ organizations }: OrganizationsGridProps) {
             <div className="w-full h-[200px] relative">
               {organization.coverImage ? <Image fill src={organization.coverImage} quality={80} alt="Image de l'organisation" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-accent" />}
               <Badge className="absolute top-3 left-3 bg-secondary hover:bg-secondary/90 transition-colors">
-                Disponible aujourd'hui
+                Disponible aujourd&apos;hui
               </Badge>
             </div>
 

@@ -1,29 +1,26 @@
 'use server';
 
-import { ActionError, createServerAction, db, requireAuth } from '../lib';
-import { clientSettingsSchema } from '@/components/dashboard/pages/user/settings-page/types/settings-schema';
-import { auth } from '../lib/auth';
-import { headers } from 'next/headers';
-import { z } from 'zod';
-import { eq } from 'drizzle-orm';
-import { user } from '../db';
+import { ActionError, createServerAction, db, requireAuth } from "../lib";
+import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema";
+import { auth } from "../lib/auth";
+import { headers } from "next/headers";
+import { z } from "zod";
 
 export const getUserInformations = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const data = await db.query.user.findFirst({
-      where: eq(user.id, ctx.user?.id ?? ''),
+    const data = await auth.api.getSession({
+      headers: await headers(),
     });
 
     if (!data) {
-      throw new ActionError('User not found');
+      throw new ActionError("User not found");
     }
 
     return data;
   },
-  [requireAuth]
+  [requireAuth],
 );
-
 export const updateUserInformations = createServerAction(
   clientSettingsSchema,
   async (input, ctx) => {
@@ -36,7 +33,7 @@ export const updateUserInformations = createServerAction(
         country: input.country,
         city: input.city,
         zipCode: input.zipCode,
-        phoneNumber: input.phoneNumber,
+        phone: input.phoneNumber,
         smsNotifications: input.smsNotifications,
         emailNotifications: input.emailNotifications,
         twoFactorEnabled: input.twoFactorEnabled,
@@ -44,10 +41,10 @@ export const updateUserInformations = createServerAction(
     });
 
     if (!user) {
-      throw new ActionError('User not updated');
+      throw new ActionError("User not updated");
     }
 
     return user;
   },
-  [requireAuth]
+  [requireAuth],
 );

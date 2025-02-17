@@ -20,7 +20,7 @@ export const MetricsGrid = ({ data }: MetricsGridProps) => {
       <Card className="rounded-2xl hover:bg-gradient-to-br hover:from-green-50 hover:to-transparent dark:hover:from-green-950/30 dark:hover:to-transparent transition-all duration-300">
         <CardHeader className="relative flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-base font-medium">
-            Chiffre d'affaires
+            Chiffre d&apos;affaires
           </CardTitle>
           <div className="absolute end-4 top-4 flex size-12 items-center justify-center rounded-full bg-gradient-to-br from-green-200 to-green-100 dark:from-green-900 dark:to-green-950 p-4">
             <TrendingUp className="size-5 text-green-700 dark:text-green-400" />

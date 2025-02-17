@@ -1,6 +1,17 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Credenza,
+  CredenzaTitle,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTrigger,
+  CredenzaDescription,
+} from "@/components/ui";
 import React from "react";
 import {
   Table,
@@ -43,14 +54,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import PatientDetailsDrawer from "./patient-details-drawer";
 
 // Define the type for our patient data
@@ -362,22 +365,22 @@ const PatientsPageComponent = () => {
               </p>
             </div>
             <div className="flex gap-3">
-              <Dialog>
-                <DialogTrigger asChild>
+              <Credenza>
+                <CredenzaTrigger asChild>
                   <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
                     <Plus className="size-4 mr-2" />
                     Nouveau patient
                   </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Ajouter un nouveau patient</DialogTitle>
-                    <DialogDescription>
-                      Formulaire d'ajout de patient à implémenter
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
+                </CredenzaTrigger>
+                <CredenzaContent>
+                  <CredenzaHeader>
+                    <CredenzaTitle>Ajouter un nouveau patient</CredenzaTitle>
+                    <CredenzaDescription>
+                      Formulaire d&apos;ajout de patient à implémenter
+                    </CredenzaDescription>
+                  </CredenzaHeader>
+                </CredenzaContent>
+              </Credenza>
             </div>
           </div>
         </CardHeader>
@@ -444,7 +447,7 @@ const PatientsPageComponent = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
-                    <DropdownMenuItem>Date d'inscription</DropdownMenuItem>
+                    <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
                     <DropdownMenuItem>Âge</DropdownMenuItem>
                     <DropdownMenuItem>Type</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -504,8 +507,8 @@ const PatientsPageComponent = () => {
               </Table>
             </TabsContent>
           </Tabs>
-        </CardHeader >
-      </Card >
+        </CardHeader>
+      </Card>
 
       <PatientDetailsDrawer
         patient={selectedPatient}
@@ -520,7 +523,7 @@ const PatientsPageComponent = () => {
           console.log("Delete patient:", patient);
         }}
       />
-    </div >
+    </div>
   );
 };
 

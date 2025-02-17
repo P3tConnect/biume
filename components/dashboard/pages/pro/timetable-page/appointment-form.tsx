@@ -1,13 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -22,13 +15,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { fr } from "date-fns/locale";
 import { cn } from "@/src/lib/utils";
-import {
-  CalendarIcon,
-  Clock,
-  User2,
-  FileText,
-  AlertCircle,
-} from "lucide-react";
+import { CalendarIcon, Clock, User2, FileText } from "lucide-react";
 import { format } from "date-fns";
 import {
   Popover,
@@ -37,6 +24,13 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import {
+  Credenza,
+  CredenzaFooter,
+  CredenzaTitle,
+  CredenzaHeader,
+  CredenzaContent,
+} from "@/components/ui";
 
 interface AppointmentFormProps {
   isOpen: boolean;
@@ -90,10 +84,10 @@ export function AppointmentForm({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl w-[90vw] h-[85vh] flex flex-col overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle className="flex items-center gap-2 text-xl">
+    <Credenza open={isOpen} onOpenChange={onClose}>
+      <CredenzaContent className="max-w-3xl w-[90vw] h-[85vh] flex flex-col overflow-hidden">
+        <CredenzaHeader className="px-6 pt-6 pb-4 border-b">
+          <CredenzaTitle className="flex items-center gap-2 text-xl">
             {isEditing ? (
               <>
                 <Clock className="w-5 h-5" /> Modifier le rendez-vous
@@ -103,8 +97,8 @@ export function AppointmentForm({
                 <Clock className="w-5 h-5" /> Nouveau rendez-vous
               </>
             )}
-          </DialogTitle>
-        </DialogHeader>
+          </CredenzaTitle>
+        </CredenzaHeader>
 
         <form
           onSubmit={handleSubmit}
@@ -286,15 +280,15 @@ export function AppointmentForm({
           </Card>
         </form>
 
-        <DialogFooter className="px-6 py-4 border-t">
+        <CredenzaFooter className="px-6 py-4 border-t">
           <Button type="button" variant="outline" onClick={onClose}>
             Annuler
           </Button>
           <Button type="submit" onClick={handleSubmit}>
             {isEditing ? "Mettre à jour" : "Créer"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

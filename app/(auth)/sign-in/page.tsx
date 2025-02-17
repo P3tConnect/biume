@@ -15,6 +15,7 @@ import { ErrorContext } from '@better-fetch/fetch';
 
 const LoginPage = () => {
   const router = useRouter();
+  ("");
   const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -50,8 +51,8 @@ const LoginPage = () => {
       <div className='flex flex-col items-center justify-center w-1/2 space-y-4'>
         <h1 className='text-4xl font-bold text-primary'>Connexion</h1>
         <p className='text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14'>
-          Ceci est du texte de description pour justifier de l'utilité de
-          s'inscrire sur notre plateforme PawThera
+          Ceci est du texte de description pour justifier de l&apos;utilité de
+          s&apos;inscrire sur notre plateforme PawThera
         </p>
         <form
           className='flex flex-col items-center justify-center w-1/2 space-y-4'
@@ -106,7 +107,7 @@ const LoginPage = () => {
           </Button>
 
           <p className='text-sm font-normal pt-5'>
-            Vous n'avez pas encore de compte ?{' '}
+            Vous n&apos;avez pas encore de compte ?{' '}
             <Link
               href='/sign-up'
               className='dark:text-blue-300 text-blue-600 hover:cursor-pointer'

@@ -1,10 +1,7 @@
-import SettingsPageComponent from '@/components/dashboard/pages/pro/settings-page/settings-page'
-import React from 'react'
+import SettingsPageComponent from "@/components/dashboard/pages/pro/settings-page/settings-page";
 
-const DashboardOrganizationSeetingsPage = () => {
-  return (
-    <SettingsPageComponent />
-  )
-}
+const SettingsPage = () => {
+  return <SettingsPageComponent />;
+};
 
-export default DashboardOrganizationSeetingsPage
+export default SettingsPage;

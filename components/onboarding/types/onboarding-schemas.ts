@@ -37,7 +37,10 @@ export const proDocumentsSchema = z.object({
     .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
     .optional(),
   documents: z
-    .array(z.string().url())
+    .array(z.object({
+      url: z.string().url(),
+      name: z.string().optional(),
+    }))
     .min(1, "Veuillez télécharger au moins un document")
     .optional(),
 });

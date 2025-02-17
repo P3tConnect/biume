@@ -1,9 +1,4 @@
-interface Option {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-}
+import { Option } from "@/src/db";
 
 interface CompanyOptionsProps {
   options: Option[];
@@ -19,10 +14,10 @@ export function CompanyOptions({ options }: CompanyOptionsProps) {
         >
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-xl">{option.icon}</span>
+              <span className="text-xl">💉</span>
             </div>
             <div>
-              <p className="font-medium">{option.name}</p>
+              <p className="font-medium">{option.title}</p>
               <p className="text-sm text-muted-foreground">
                 {option.description}
               </p>
@@ -32,4 +27,4 @@ export function CompanyOptions({ options }: CompanyOptionsProps) {
       ))}
     </div>
   );
-} 
+}

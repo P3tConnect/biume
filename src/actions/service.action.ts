@@ -5,30 +5,73 @@ import {
   db,
   ActionError,
   createServerAction,
-  requireOwner,
   requireAuth,
-  requireOrganization,
+  requireFullOrganization,
 } from "../lib";
-import { CreateServiceSchema, service } from "../db";
+import { CreateServiceSchema, Service, service } from "../db";
 import { eq } from "drizzle-orm";
 import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const getServices = createServerAction(
   z.object({}),
-  async (input, ctx) => {},
-  [requireAuth],
+  async (input, ctx) => {
+    const services = await db.query.service.findMany({
+      where: eq(service.organizationId, ctx.organization?.id as string),
+    });
+
+    return services;
+  },
+  [requireAuth, requireFullOrganization],
+);
+
+export const getServicesFromOrganization = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const services = await db.query.service.findMany({
+      where: eq(service.organizationId, ctx.organization?.id as string),
+    });
+
+    if (!services) {
+      throw new ActionError("Services not found");
+    }
+
+    return services as unknown as Service[];
+  },
+  [requireAuth, requireFullOrganization],
 );
 
 export const createService = createServerAction(
-  proServicesSchema,
+  CreateServiceSchema,
   async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
     });
+    if (!organization) {
+      throw new ActionError("Organization not found");
+    }
+
+    const result = await db
+      .insert(service)
+      .values({
+        ...input,
+        organizationId: organization.id,
+      })
+      .returning()
+      .execute();
+
+    if (!result) {
+      throw new ActionError("Service not created");
+    }
+
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return result[0];
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createServicesStepAction = createServerAction(
@@ -57,7 +100,7 @@ export const createServicesStepAction = createServerAction(
 
     return result;
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const updateService = createServerAction(
@@ -74,9 +117,12 @@ export const updateService = createServerAction(
       throw new ActionError("Service not updated");
     }
 
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return data;
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );
 
 export const deleteService = createServerAction(
@@ -91,6 +137,9 @@ export const deleteService = createServerAction(
     if (!data) {
       throw new ActionError("Service not deleted");
     }
+
+    // Revalidate the services page
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
   },
-  [requireAuth],
+  [requireAuth, requireFullOrganization],
 );

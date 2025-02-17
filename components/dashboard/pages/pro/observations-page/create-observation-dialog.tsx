@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  CredenzaContent,
+  CredenzaTitle,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaFooter,
+} from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -33,7 +33,9 @@ interface CreateObservationDialogProps {
   onClose: () => void;
 }
 
-export function CreateObservationDialog({ onClose }: CreateObservationDialogProps) {
+export function CreateObservationDialog({
+  onClose,
+}: CreateObservationDialogProps) {
   const form = useForm<CreateObservationForm>({
     resolver: zodResolver(createObservationSchema),
     defaultValues: {
@@ -53,13 +55,13 @@ export function CreateObservationDialog({ onClose }: CreateObservationDialogProp
   }
 
   return (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Nouvelle observation</DialogTitle>
-        <DialogDescription>
+    <CredenzaContent>
+      <CredenzaHeader>
+        <CredenzaTitle>Nouvelle observation</CredenzaTitle>
+        <CredenzaDescription>
           Créez une nouvelle observation pour un patient
-        </DialogDescription>
-      </DialogHeader>
+        </CredenzaDescription>
+      </CredenzaHeader>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -95,14 +97,14 @@ export function CreateObservationDialog({ onClose }: CreateObservationDialogProp
             )}
           />
 
-          <DialogFooter>
+          <CredenzaFooter>
             <Button variant="outline" type="button" onClick={onClose}>
               Annuler
             </Button>
             <Button type="submit">Créer</Button>
-          </DialogFooter>
+          </CredenzaFooter>
         </form>
       </Form>
-    </DialogContent>
+    </CredenzaContent>
   );
-} 
+}

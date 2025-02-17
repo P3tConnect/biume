@@ -5,24 +5,75 @@ import {
   createServerAction,
   requireOwner,
   requireAuth,
-  requireOrganization,
+  requireFullOrganization,
+  stripe,
 } from "../lib";
 import { auth } from "../lib/auth";
-import { organization as organizationTable } from "../db";
-import { CreateOrganizationSchema } from "../db";
+import { Organization, organization as organizationTable } from "../db";
 import { db } from "../lib";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
-import { progression as progressionTable } from "../db";
+import {
+  progression as progressionTable,
+  appointments as appointmentsTable,
+} from "../db";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { organizationFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+import { organizationFormSchema, organizationImagesFormSchema } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
+import { revalidatePath } from "next/cache";
+
 export const getAllOrganizations = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const organizations = await db.select().from(organizationTable);
 
-    return organizations;
+    return organizations as Organization[];
+  },
+  [],
+);
+
+export const getCompanyById = createServerAction(
+  z.object({
+    companyId: z.string(),
+  }),
+  async (input, ctx) => {
+    const company = await db.query.organization.findFirst({
+      where: eq(organizationTable.id, input.companyId),
+      with: {
+        options: true,
+        services: true,
+        members: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+        ratings: {
+          with: {
+            writer: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!company) {
+      throw new ActionError("Company not found");
+    }
+
+    return company as unknown as Organization;
   },
   [],
 );
@@ -35,18 +86,12 @@ export const getCurrentOrganization = createServerAction(
         "L'identifiant de l'organisation ne peut pas être indéfini",
       );
     }
-    const organization = await db.query.organization.findFirst({
-      where: eq(organizationTable.id, ctx.organization.id),
-    });
 
-    if (!organization) {
-      throw new ActionError("Organisation non trouvée");
-    }
-
-    return organization;
+    return ctx.fullOrganization;
   },
-  [requireAuth, requireOrganization],
+  [requireAuth, requireOwner, requireFullOrganization],
 );
+
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
@@ -66,13 +111,9 @@ export const createOrganization = createServerAction(
         },
       });
 
-      console.log(result, "result after create organization");
-
       if (!result) {
         throw new ActionError("Organization not created");
       }
-
-      console.log(result, "result before create progression");
 
       // Créer une progression
       const [progression] = await db
@@ -85,7 +126,13 @@ export const createOrganization = createServerAction(
         })
         .returning();
 
-      console.log(progression, "progression after create progression");
+      const stripeCustomer = await stripe.customers.create({
+        name: data.name as string,
+        email: ctx.user?.email as string,
+        metadata: {
+          organizationId: result?.id,
+        },
+      });
 
       const [organizationResult] = await db
         .update(organizationTable)
@@ -95,24 +142,18 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
+          stripeId: stripeCustomer.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
         .execute();
 
-      console.log(
-        organizationResult,
-        "organizationResult after update organization",
-      );
-
-      const activeOrganization = await auth.api.setActiveOrganization({
+      await auth.api.setActiveOrganization({
         headers: await headers(),
         body: {
           organizationId: result?.id,
         },
       });
-
-      console.log(activeOrganization, "activeOrganization");
 
       // Retourner les données de l'organisation créée
       return organizationResult;
@@ -148,7 +189,65 @@ export const updateOrganization = createServerAction(
       throw new ActionError("Organization not updated");
     }
 
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
     return data;
   },
   [requireAuth, requireOwner],
+);
+
+export const updateOrganizationImages = createServerAction(
+  organizationImagesFormSchema,
+  async (input, ctx) => {
+    const data = await db
+      .update(organizationTable)
+      .set({
+        logo: input.logo,
+        coverImage: input.coverImage,
+      })
+      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .returning()
+      .execute();
+
+    if (!data) {
+      throw new ActionError("Organization not updated");
+    }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return data;
+  },
+  [requireAuth, requireOwner],
+);
+
+export const getUsersWithAppointments = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const usersWithAppointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.proId, ctx.organization.id),
+      with: {
+        client: true,
+      },
+      orderBy: desc(appointmentsTable.createdAt),
+    });
+
+    // Get unique users from appointments
+    const uniqueUsers = [
+      ...usersWithAppointments
+        .map((appointment) => appointment.client)
+        .filter(
+          (user, index, self) =>
+            index === self.findIndex((u) => u?.id === user?.id),
+        ),
+    ];
+
+    return uniqueUsers;
+  },
+  [requireAuth, requireFullOrganization],
 );

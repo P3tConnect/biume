@@ -10,9 +10,9 @@ import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { safeConfig } from "../lib";
 
-const Providers = ({ children }: PropsWithChildren) => {
-  const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
+const Providers = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     posthog.init(safeConfig.NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: safeConfig.NEXT_PUBLIC_POSTHOG_HOST,

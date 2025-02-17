@@ -29,7 +29,7 @@ const ReportsPageComponent = () => {
                 Rapports
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Gérez et analysez vos rapports d'activité
+                Gérez et analysez vos rapports d&apos;activité
               </p>
             </div>
             <div className="flex gap-3">

@@ -25,7 +25,7 @@ export default function PaymentFailure() {
           </h1>
 
           <p className="text-muted-foreground">
-            Le paiement de {amount}€ à {professionalName} n'a pas pu être effectué.
+            Le paiement de {amount}€ à {professionalName} n&apos;a pas pu être effectué.
           </p>
 
           <div className="w-full p-4 rounded-lg bg-red-50 border border-red-100">

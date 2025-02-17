@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { report } from "./report";
-import { organization } from "./organization";
+import { Report, report } from "./report";
+import { Organization, organization } from "./organization";
 
 export const reportTemplate = pgTable("report_template", {
   id: text("id")
@@ -31,7 +31,10 @@ export const reportTemplateRelations = relations(
   }),
 );
 
-export type ReportTemplate = typeof reportTemplate.$inferSelect;
+export type ReportTemplate = InferSelectModel<typeof reportTemplate> & {
+  owner: Organization;
+  reports: Report[];
+};
 export type ReportTemplateWithOwner = typeof reportTemplate.$inferSelect;
 
 export const reporttemplateSchema = createSelectSchema(reportTemplate);

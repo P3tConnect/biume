@@ -11,6 +11,7 @@ import {
 } from '@/components/ui';
 import { cn } from '@/src/lib';
 import { PawPrint, Plus, Pencil, Calendar, Weight } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const pets = [
@@ -100,7 +101,9 @@ const PetCard = ({ pet }: { pet: (typeof pets)[0] }) => {
       <div className='relative h-[280px]'>
         <div className='absolute inset-0'>
           {pet.image ? (
-            <img
+            <Image
+              width={100}
+              height={100}
               src={pet.image}
               alt={pet.name}
               className={cn(
@@ -174,14 +177,14 @@ const PetCard = ({ pet }: { pet: (typeof pets)[0] }) => {
 const ClientPetsWidget = () => {
   return (
     <Card className='relative overflow-hidden rounded-xl'>
-      <CardHeader className='relative border-b border-white/5 pb-4'>
+      <CardHeader className='relative border-b border-white/5'>
         <div className='flex items-center justify-between'>
           <div className='space-y-1'>
-            <CardTitle className='flex items-center gap-2 text-lg font-medium text-white'>
+            <CardTitle className='flex items-center gap-2 text-foreground'>
               <PawPrint className='size-5' />
               Mes animaux
             </CardTitle>
-            <p className='text-sm'>{pets.length} animaux enregistrés</p>
+            <p className='text-sm text-muted-foreground'>{pets.length} animaux enregistrés</p>
           </div>
           <Button
             variant='ghost'
@@ -192,14 +195,12 @@ const ClientPetsWidget = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className='p-4 pt-6'>
-        <ScrollArea className='h-[600px] pr-4'>
-          <div className='grid grid-cols-2 gap-4'>
-            {pets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
-          </div>
-        </ScrollArea>
+      <CardContent className='p-4'>
+        <div className='grid grid-cols-2 gap-4 overflow-y-auto max-h-[700px]'>
+          {pets.map((pet) => (
+            <PetCard key={pet.id} pet={pet} />
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

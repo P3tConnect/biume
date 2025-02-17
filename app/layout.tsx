@@ -1,19 +1,19 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
-import Providers from '@/src/context/providers';
-import { cn } from '@/src/lib/utils';
-import { safeConfig } from '@/src/lib';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages, getTranslations } from 'next-intl/server';
-import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { GeistSans } from 'geist/font/sans';
-import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
-import { extractRouterConfig } from 'uploadthing/server';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { cookies } from 'next/headers';
-import { ourFileRouter } from '@/app/api/uploadthing/core';
-import { NuqsAdapter } from 'nuqs/adapters/next';
+import Providers from "@/src/context/providers";
+import { cn } from "@/src/lib/utils";
+import { safeConfig } from "@/src/lib";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { GeistSans } from "geist/font/sans";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { NuqsAdapter } from "nuqs/adapters/next";
 const geist = GeistSans;
 
 export async function generateMetadata({
@@ -25,37 +25,37 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale: locale, namespace: 'metadata' });
   return {
-    title: 'PawThera',
+    title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t('description'),
     icons: {
       icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
-      title: 'PawThera',
+      title: "Biume",
     },
     openGraph: {
       type: 'website',
       locale: locale,
-      url: 'https://pawthera.com',
-      description: t('description'),
-      siteName: 'PawThera',
+      url: "https://biume.com",
+      description: t("description"),
+      siteName: "Biume",
       images: [
         {
           url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
           width: 1200,
           height: 630,
-          alt: 'PawThera',
+          alt: "Biume",
         },
       ],
     },
     twitter: {
-      card: 'summary_large_image',
-      title: 'PawThera',
-      description: t('description'),
+      card: "summary_large_image",
+      title: "Biume",
+      description: t("description"),
       images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
     },
-    applicationName: 'PawThera',
+    applicationName: "Biume",
     authors: [
       {
         name: 'Mathieu Chambaud',

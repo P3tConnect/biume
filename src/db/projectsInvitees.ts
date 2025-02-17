@@ -1,8 +1,8 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { project } from "./project";
+import { Project, project } from "./project";
 import { createInsertSchema } from "drizzle-zod";
-import { user } from "./user";
+import { User, user } from "./user";
 
 export const projectsInvitees = pgTable("projects_invitees", {
   userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
@@ -25,7 +25,10 @@ export const projectInviteesRelations = relations(
   }),
 );
 
-export type ProjectInvitee = typeof projectsInvitees.$inferSelect;
+export type ProjectInvitee = InferSelectModel<typeof projectsInvitees> & {
+  project: Project;
+  user: User;
+};
 export type CreateProjectInvitee = typeof projectsInvitees.$inferInsert;
 
 export const CreateProjectInviteeSchema = createInsertSchema(projectsInvitees);

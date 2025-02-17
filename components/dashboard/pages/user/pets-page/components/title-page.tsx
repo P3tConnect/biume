@@ -5,7 +5,6 @@ import {
   CardTitle,
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui';
