@@ -41,23 +41,6 @@ export const organizationFormSchema = z.object({
       },
     )
     .optional(),
-  coverImage: z
-    .any()
-    .refine(
-      (file) => !file || (file instanceof File && file.size <= MAX_FILE_SIZE),
-      {
-        message: "Le fichier doit faire moins de 5MB",
-      },
-    )
-    .refine(
-      (file) =>
-        !file ||
-        (file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)),
-      {
-        message: "Format accepté : .jpg, .jpeg, .png et .webp",
-      },
-    )
-    .optional(),
   openAt: z.string(),
   closeAt: z.string(),
   atHome: z.boolean(),
@@ -68,7 +51,6 @@ export const organizationFormSchema = z.object({
 
 export const organizationImagesFormSchema = z.object({
   logo: z.string().optional(),
-  coverImage: z.string().optional(),
 });
 
 export const ProfileSection = () => {

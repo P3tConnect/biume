@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const proInformationsSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Email invalide" }),
   logo: z.string().min(1, { message: "Logo is required" }),
-  coverImage: z.string().min(1, { message: "Cover image is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   companyType: CompanyTypeEnum,
   atHome: z.boolean(),
@@ -37,10 +37,12 @@ export const proDocumentsSchema = z.object({
     .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
     .optional(),
   documents: z
-    .array(z.object({
-      url: z.string().url(),
-      name: z.string().optional(),
-    }))
+    .array(
+      z.object({
+        url: z.string().url(),
+        name: z.string().optional(),
+      }),
+    )
     .min(1, "Veuillez télécharger au moins un document")
     .optional(),
 });
@@ -48,7 +50,6 @@ export const proDocumentsSchema = z.object({
 export const onboardingSchema = z.object({
   name: z.string().optional(),
   logo: z.string().url().optional(),
-  coverImage: z.string().url().optional(),
   description: z.string().optional(),
   services: z.array(CreateServiceSchema).optional(),
   options: z.array(CreateOptionSchema).optional(),
