@@ -9,7 +9,7 @@ const testimonials = [
     avatar: "/avatars/user-1.jpg",
     animal: "Chat",
     content:
-      "Super application ! J&apos;ai pu trouver un osthéopathe disponible en urgence pour mon chat. Le processus de réservation est simple et rapide.",
+      "Super application ! J'ai pu trouver un osthéopathe disponible en urgence pour mon chat. Le processus de réservation est simple et rapide.",
     rating: 5,
     date: "Il y a 2 jours",
   },
@@ -27,7 +27,7 @@ const testimonials = [
     avatar: "/avatars/user-3.jpg",
     animal: "Lapin",
     content:
-      "J&apos;apprécie particulièrement la possibilité de voir les avis des autres propriétaires. Cela m&apos;a aidé à choisir le bon vétérinaire pour mon lapin.",
+      "J'apprécie particulièrement la possibilité de voir les avis des autres propriétaires. Cela m'a aidé à choisir le bon vétérinaire pour mon lapin.",
     rating: 5,
     date: "Il y a 2 semaines",
   },

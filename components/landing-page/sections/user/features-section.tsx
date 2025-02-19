@@ -85,7 +85,6 @@ export function FeaturesSection() {
                         {feature.title === "Disponibilités en temps réel" && (
                           <>
                             <li>• Mise à jour instantanée</li>
-                            <li>• Vue calendrier claire</li>
                             <li>• Filtres avancés</li>
                           </>
                         )}

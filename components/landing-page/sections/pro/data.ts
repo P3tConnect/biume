@@ -11,19 +11,19 @@ export const features = [
     image:
       "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=800&auto=format&fit=crop",
     cta: "Commencer le suivi",
-    ctaLink: "/dashboard",
+    ctaLink: "/about/pro",
   },
   {
     title: "Gestion des rendez-vous",
     description:
-      "Planifiez et gérez tous les rendez-vous de vos animaux en quelques clics.",
+      "Planifiez et gérez tous les rendez-vous de vos clients en quelques clics.",
     icon: Calendar,
     details:
       "Notre calendrier intelligent optimise votre planning quotidien. Gérez facilement les rendez-vous, les urgences et les suivis réguliers. La synchronisation en temps réel permet d'éviter les conflits d'horaires et de maximiser votre temps de consultation.",
     image:
       "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&auto=format&fit=crop",
     cta: "Gérer mon agenda",
-    ctaLink: "/dashboard/calendar",
+    ctaLink: "/about/pro/calendar",
   },
   {
     title: "Dossier médical complet",
@@ -35,7 +35,7 @@ export const features = [
     image:
       "https://images.unsplash.com/photo-1516916759473-600c07bc12d4?w=800&auto=format&fit=crop",
     cta: "Voir les dossiers",
-    ctaLink: "/dashboard/records",
+    ctaLink: "/about/pro/records",
   },
   {
     title: "Collaboration simplifiée",
@@ -47,31 +47,31 @@ export const features = [
     image:
       "https://images.unsplash.com/photo-1581594549595-35f6edc7b762?w=800&auto=format&fit=crop",
     cta: "Collaborer",
-    ctaLink: "/dashboard/team",
+    ctaLink: "/about/pro/team",
   },
   {
-    title: "Notifications intelligentes",
+    title: "Délais de rétractation",
     description:
-      "Recevez des alertes personnalisées pour ne jamais manquer un rendez-vous important.",
+      "Les délais de rétractation sont un atout important en cas de problème avec un client.",
     icon: Zap,
     details:
-      "Notre système de notifications intelligent vous alerte des événements importants : rendez-vous à venir, rappels de vaccins, suivis post-opératoires. Personnalisez les alertes selon vos préférences pour une gestion optimale de votre activité.",
+      "Les délais de rétractation vous permettent de mettre en place une stratégie de visibilité sur votre activité et vos prestations. Il vous suffit de les configurer et une fois fait, Biume AI s'en chargera de les appliquer.",
     image:
       "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop",
     cta: "Configurer les alertes",
-    ctaLink: "/dashboard/settings",
+    ctaLink: "/about/pro/settings",
   },
   {
-    title: "Récompenses et conseils",
+    title: "Intelligence artificielle",
     description:
-      "Gagnez des points et recevez des conseils personnalisés pour vos animaux.",
+      "Profitez d'un assistant IA pour optimiser vos soins et développer votre activité.",
     icon: Gift,
     details:
-      "Bénéficiez d'un programme de fidélité innovant et d'outils d'aide à la décision basés sur l'intelligence artificielle. Recevez des recommandations personnalisées pour optimiser vos soins et développer votre activité.",
+      "Profitez vous aussi de la puissance de l'IA. Biume AI vous propose des recommandations personnalisées pour optimiser vos soins, vos déplacements et démarches administratives.",
     image:
       "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&auto=format&fit=crop",
-    cta: "Découvrir les avantages",
-    ctaLink: "/dashboard/rewards",
+    cta: "Découvrir Biume AI",
+    ctaLink: "/about/pro/ai",
   },
 ];
 

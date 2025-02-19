@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const waitlist = pgTable("waitlist", {
@@ -6,7 +6,8 @@ export const waitlist = pgTable("waitlist", {
   name: text("name").notNull(),
   firstName: text("firstname").notNull(),
   email: text("email").notNull().unique(),
-  organizationName: text("organization_name").notNull(),
+  organizationName: text("organization_name"),
+  isPro: boolean("is_pro").notNull().default(false),
   comment: text("comment"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

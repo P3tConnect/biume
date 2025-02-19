@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { HeroSection } from "./sections/pro/hero-section";
 import { FeaturesSection } from "./sections/pro/features-section";
-import { TestimonialsSection } from "./sections/pro/testimonials-section";
+// import { TestimonialsSection } from "./sections/pro/testimonials-section";
 import { PricingSection } from "./sections/pro/pricing-section";
 import { CTASection } from "./sections/pro/cta-section";
 
@@ -35,14 +35,14 @@ export function ProLanding() {
         <FeaturesSection />
       </motion.div>
 
-      <motion.div
+      {/* <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={sectionVariants}
       >
         <TestimonialsSection />
-      </motion.div>
+      </motion.div> */}
 
       <motion.div
         initial="hidden"

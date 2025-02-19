@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Avvvatars from "avvvatars-react";
 import { ArrowRight, Heart, MessageCircle, Star, Calendar } from "lucide-react";
-import Image from "next/image";
+import WaitListUser from "./waitlist-user";
+// import Image from "next/image";
 
 export function CTASection() {
   return (
@@ -37,12 +38,11 @@ export function CTASection() {
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
                 Commencez dès aujourd&apos;hui à prendre soin de vos compagnons
-                comme ils le méritent. Plus de 15 000 propriétaires nous font déjà
-                confiance.
+                comme ils le méritent.
               </p>
 
               {/* Statistiques */}
-              <div className="grid grid-cols-3 gap-8 mb-8">
+              <div className="grid grid-cols-2 gap-2 mb-8">
                 <div className="text-center">
                   <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-xl">
                     <Calendar className="w-6 h-6 text-primary" />
@@ -61,7 +61,7 @@ export function CTASection() {
                     Note moyenne
                   </div>
                 </div>
-                <div className="text-center">
+                {/* <div className="text-center">
                   <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-xl">
                     <Heart className="w-6 h-6 text-primary" />
                   </div>
@@ -69,19 +69,17 @@ export function CTASection() {
                   <div className="text-sm text-muted-foreground">
                     Propriétaires
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Boutons */}
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button size="lg" className="h-12 px-8">
-                  Créer un compte gratuit
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-                <Button variant="outline" size="lg" className="h-12 px-8">
-                  Voir les témoignages
-                  <MessageCircle className="ml-2 w-5 h-5" />
-                </Button>
+                <WaitListUser>
+                  <Button size="lg" className="h-12 px-8">
+                    Rejoindre la liste d&apos;attente
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </WaitListUser>
               </div>
             </div>
 

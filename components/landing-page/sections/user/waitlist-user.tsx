@@ -1,36 +1,39 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { addToWaitList } from "@/src/actions/waitlist.action";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { waitlistInsertSchema } from "@/src/db";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionMutation } from "@/src/hooks/action-hooks";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { Loader2, CheckCircle2 } from "lucide-react";
-import { Credenza, CredenzaTrigger, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { addToWaitList } from "@/src/actions/waitlist.action";
+import { waitlistInsertSchema } from "@/src/db";
 
-const WaitListPro = ({ children }: { children: React.ReactNode }) => {
+interface WaitListUserProps {
+  children: React.ReactNode;
+}
+
+const WaitListUser = ({ children }: WaitListUserProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -38,16 +41,15 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
   const form = useForm<z.infer<typeof waitlistInsertSchema>>({
     resolver: zodResolver(waitlistInsertSchema),
     defaultValues: {
-      email: "",
       name: "",
       firstName: "",
-      organizationName: "",
-      isPro: true,
+      email: "",
+      isPro: false,
       comment: "",
     },
   });
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit } = form;
 
   const { mutateAsync } = useActionMutation(addToWaitList, {
     onSuccess: () => {
@@ -78,32 +80,34 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <Credenza open={open} onOpenChange={setOpen}>
-      <CredenzaTrigger asChild>{children}</CredenzaTrigger>
-      <CredenzaContent className="sm:max-w-[425px]">
-        <CredenzaHeader>
-          <CredenzaTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            Rejoignez l'aventure Biume Pro
-          </CredenzaTitle>
-          <CredenzaDescription className="text-base">
-            Soyez parmi les premiers professionnels à découvrir Biume. Remplissez le formulaire ci-dessous pour vous inscrire à notre liste d'attente.
-          </CredenzaDescription>
-        </CredenzaHeader>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+            Rejoignez l'aventure Biume
+          </DialogTitle>
+          <DialogDescription className="text-base">
+            Soyez parmi les premiers à découvrir Biume. Remplissez le formulaire ci-dessous pour vous inscrire à notre liste d'attente.
+          </DialogDescription>
+        </DialogHeader>
         {!isSuccess ? (
           <Form {...form}>
             <form onSubmit={onSubmit} className="space-y-4 mt-4">
               <FormField
-                control={control}
+                control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Prénom</FormLabel>
                     <FormControl>
                       <Input
+                        placeholder="John"
                         {...field}
-                        placeholder="Votre prénom"
                         className="h-11 rounded-xl"
                         disabled={isLoading}
-                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -111,17 +115,17 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
                 )}
               />
               <FormField
-                control={control}
+                control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Nom</FormLabel>
                     <FormControl>
                       <Input
+                        placeholder="Doe"
                         {...field}
-                        placeholder="Votre nom"
                         className="h-11 rounded-xl"
                         disabled={isLoading}
-                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -129,36 +133,18 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
                 )}
               />
               <FormField
-                control={control}
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        {...field}
+                        placeholder="john.doe@example.com"
                         type="email"
-                        placeholder="Votre adresse email"
-                        className="h-11 rounded-xl"
-                        disabled={isLoading}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="organizationName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
                         {...field}
-                        placeholder="Nom de votre organisation"
                         className="h-11 rounded-xl"
                         disabled={isLoading}
-                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -166,17 +152,18 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
                 )}
               />
               <FormField
-                control={control}
+                control={form.control}
                 name="comment"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Un message à nous transmettre ? (optionnel)</FormLabel>
                     <FormControl>
                       <Textarea
-                        {...field}
-                        placeholder="Un commentaire ? (optionnel)"
+                        placeholder="Partagez-nous vos attentes, questions ou suggestions..."
                         className="rounded-xl resize-none min-h-[100px]"
                         disabled={isLoading}
-                        value={field.value ?? ""}
+                        {...field}
+                        value={field.value ?? ''}
                       />
                     </FormControl>
                     <FormMessage />
@@ -210,41 +197,13 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
               Merci de votre inscription !
             </p>
             <p className="text-sm text-muted-foreground text-center">
-              Nous vous contacterons dès que possible pour vous donner accès à Biume Pro.
+              Nous vous contacterons dès que possible pour vous donner accès à Biume.
             </p>
           </div>
         )}
-      </CredenzaContent>
-    </Credenza>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export function CTASection() {
-  return (
-    <section id="waitlist" className="py-16 sm:py-32 relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5"></div>
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-3xl blur-2xl"></div>
-          <div className="relative bg-background border rounded-3xl p-6 sm:p-12 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">
-              Rejoignez notre liste d&apos;attente
-            </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Soyez parmi les premiers professionnels à rejoindre notre plateforme et bénéficiez d&apos;avantages exclusifs
-            </p>
-            <WaitListPro>
-              <Button
-                size="lg"
-                className="custom-button h-12 px-6 text-base rounded-xl"
-              >
-                S'inscrire maintenant
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </WaitListPro>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-} 
+export default WaitListUser;

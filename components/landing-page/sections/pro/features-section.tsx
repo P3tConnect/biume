@@ -106,14 +106,14 @@ export function FeaturesSection() {
                             <li>• Coordination efficace</li>
                           </>
                         )}
-                        {feature.title === "Notifications intelligentes" && (
+                        {feature.title === "Délais de rétractation" && (
                           <>
-                            <li>• Alertes personnalisées</li>
-                            <li>• Rappels automatiques</li>
-                            <li>• Suivi post-soins</li>
+                            <li>• Délais personnalisés</li>
+                            <li>• Notifications automatiques</li>
+                            <li>• Remboursement automatique</li>
                           </>
                         )}
-                        {feature.title === "Récompenses et conseils" && (
+                        {feature.title === "Intelligence artificielle" && (
                           <>
                             <li>• Programme fidélité</li>
                             <li>• IA prédictive</li>
@@ -153,14 +153,14 @@ export function FeaturesSection() {
                             <li>3. Partage des informations</li>
                           </>
                         )}
-                        {feature.title === "Notifications intelligentes" && (
+                        {feature.title === "Délais de rétractation" && (
                           <>
-                            <li>1. Choix des notifications</li>
-                            <li>2. Configuration des délais</li>
-                            <li>3. Activation du système</li>
+                            <li>1. Choix des délais</li>
+                            <li>2. Configuration des remboursements</li>
+                            <li>3. Automatisation du système</li>
                           </>
                         )}
-                        {feature.title === "Récompenses et conseils" && (
+                        {feature.title === "Intelligence artificielle" && (
                           <>
                             <li>1. Activation du programme</li>
                             <li>2. Cumul des points</li>

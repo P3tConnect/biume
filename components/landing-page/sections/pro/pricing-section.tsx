@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { pricingPlans } from "./data";
 import { cn } from "@/src/lib/utils";
+import Link from "next/link";
 
 export function PricingSection() {
   return (
@@ -62,8 +63,11 @@ export function PricingSection() {
                     ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                     }`}
+                  asChild
                 >
-                  Choisir {plan.name}
+                  <Link href="#waitlist">
+                    Je m&apos;inscris à la liste d&apos;attente
+                  </Link>
                 </Button>
               </div>
             </div>

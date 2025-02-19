@@ -31,8 +31,8 @@ export function HeroSection() {
           </Suspense>
 
           {/* Trust Indicators */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
-            <div>
+          <div className="grid grid-cols-2 max-w-2xl mx-auto text-center">
+            {/* <div>
               <div className="text-3xl font-bold text-primary mb-2">2000+</div>
               <div className="text-sm text-muted-foreground">
                 Professionnels
@@ -41,7 +41,7 @@ export function HeroSection() {
             <div>
               <div className="text-3xl font-bold text-primary mb-2">15k+</div>
               <div className="text-sm text-muted-foreground">Utilisateurs</div>
-            </div>
+            </div> */}
             <div>
               <div className="text-3xl font-bold text-primary mb-2">4.8/5</div>
               <div className="text-sm text-muted-foreground">Note moyenne</div>
