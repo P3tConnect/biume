@@ -102,7 +102,9 @@ const RegisterClientPage = () => {
               height={20}
               alt="facebook icon"
             />
-            <p className="text-muted-foreground">S&apos;inscrire avec Facebook</p>
+            <p className="text-muted-foreground">
+              S&apos;inscrire avec Facebook
+            </p>
           </Button>
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"

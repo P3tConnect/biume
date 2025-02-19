@@ -1,0 +1,108 @@
+---
+description: You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
+globs: *.tsx, *.ts, *.mjs, *.json, *.css
+---
+# Project Context
+
+## **Description**
+This project is a management SaaS application for health and animal wellness businesses. It is developed with **Next.js**, **Drizzle ORM**, and **Neon** as the database. 
+The goal is to streamline the management of information related to animals, veterinarians, and owners.
+
+## **Technologies Used**
+- `Next.js` (Full-Stack)
+- `Drizzle ORM` for database query management
+- `Neon` as the database
+- `Tailwind CSS` for styling
+- `shadcn/ui` for UI components
+- `next-intl` for localization
+- `bun` for package manager
+
+## **Code Structure**
+
+### Backend (Next.js)
+ - The backend uses **Server Actions** to handle database queries. There are routes for fetching information about animals, veterinarians, and owners. Pagination of results is handled using a cursor-based system.
+
+### Frontend
+ - The frontend is built with **React** and **Next.js**. State management is handled using **React hooks** and **useContext**. UI components are created using **Tailwind CSS** and **shadcn/ui**.
+ - Optimize SEO on each page if it's relevant, accordingly to Next.js docs best practices.
+
+## **Key Rules**
+
+### **Priorize Server Components and Server Side Rendering**
+- limit usage of `useEffect` and `useState` hooks and use them only if necessary.
+- 
+
+### **Use Drizzle ORM for All Data Queries**
+- All database queries, including fetch and update operations, must use **Drizzle ORM** to ensure consistency and optimize query handling.
+- Raw SQL queries should be avoided unless absolutely necessary. Use the Drizzle ORM API for abstraction and maintainability.
+
+### **Use Server Actions for all actions and mutations**
+- Server Actions is based on `src/actions/`.
+- Don't forget to export all of them in the `index.ts` inside the folder.
+- we have our own util to handle server actions and mutations named `createServerAction` and it's located in `src/lib/action.ts` file.
+- if you don't know how to use it, see in files of the `src/actions/` folder.  
+
+### **Use React Email and Resend for emails**
+- When it's relevant you can use `react-email` and `resend` for sending emails.
+- I wan't you to design beautiful emails for owners and pros.
+- all email are located in the `emails/` folder.
+
+### **For URL State Management you can use `nuqs`**
+- you can create a folder named `nuqs-queries/` inside the `src/` folder if it's not created.
+- separate each queries in separate files and name the files properly related to their functions.
+
+### **Use `uploadthing` and `react-dropzone` for uploading images and documents**
+- In that case you need to make beautifully designed dropzones for use to drop images or documents.
+- Don't forget to read the docs before you make any changes about this two rules.
+- a `dropzone-input` is made in the `component/ui/` folder see if it's possible to use is first, you can also makes changes on it as you wish.
+
+### **Use our custom react-query like handler**
+- inspired by `@tanstack/react-query` we have our own hook to handle server actions and mutations.
+- `useActionMutation` for mutations on the client side located in the `src/lib/action-utils.ts` file.
+- `useActionQuery` for queries on the client side located in the `src/lib/action-utils.ts` file.
+
+### **we are using `trigger.dev` for heavy-processed tasks**
+- only if necessary you can use `trigger.dev` to make heavy-processed tasks or scheduled tasks.
+- you can create this tasks inside the `src/trigger/` folder.
+- don't forget to export them inside the `index.ts` inside the folder.
+
+### **Use `better-auth` for handling authentication : `https://www.better-auth.com/`**
+- you can retreive the client side utils inside the `src/lib/auth-client.ts` file to handle authentication on the client side.
+- you can retreive the server side util inside the `src/lib/auth.ts` file to handle authentication on the server side.
+- most of server side function of `better-auth` library await the next headers.
+
+### **Use `stripe` for handling payment and subscriptions**
+- we are using `payment-intent` to handle payment between owners and pros.
+- we are using `subscriptions` to handle subscription payments between pros and Biume app.
+- `stripe` is already instanciated in the `src/lib/stripe.ts` file.
+
+### **Use `sonner` for toasts**
+- `<Toast />` tag is already putted in the layout file at the base of the application.
+
+### **Use `tslog` for logging errors**
+- `tslog` is already instanciated in the `src/lib/logger.ts` file.
+
+### **Use `next-intl` for translations**
+- translation are located in the `public/messages/` folder.
+- utils are located and instanciated in the `src/i18n/` folder.
+
+### **Use `lucide-react` for icons**
+- only use `lucide-react` for icons in the project.
+
+### **Use `zod` for validation**
+
+### **Use `react-hook-form` for forms**
+
+### **Use `zustand` for state management**
+
+### **Use `@stepperize/react` for making steppers**
+
+### **Use `moment` for date formatting**
+
+### **Use `next-themes` for handling dark and light theme**
+- In the projet `next-themes` is used to change theme of the app (dark mode and light mode).
+- Is used in combination with `tailwindcss`.
+
+## Goals
+- Implement AI to simplify scheduling and managing journey for professionnals.
+- I would like the best UX/UI in the world and you need to do it with `shadcn/ui` and `tailwindcss`.

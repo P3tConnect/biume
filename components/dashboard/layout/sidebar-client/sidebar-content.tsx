@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   SidebarGroup,
@@ -7,23 +7,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui';
-import { clientMenuList } from '@/src/config';
-import { useSession } from '@/src/lib/auth-client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+} from "@/components/ui";
+import { clientMenuList } from "@/src/config";
+import { useSession } from "@/src/lib/auth-client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const SidebarClientContentComponent = () => {
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  const menuList = clientMenuList(pathname, session?.user?.id ?? '');
+  const menuList = clientMenuList(pathname, session?.user?.id ?? "");
 
   return (
     <>
       {menuList.map(({ groupLabel, menus }, index) => (
         <SidebarGroup key={index}>
-          {groupLabel != '' ? (
+          {groupLabel != "" ? (
             <SidebarGroupLabel asChild>
               <p>{groupLabel}</p>
             </SidebarGroupLabel>
