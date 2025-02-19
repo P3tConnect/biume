@@ -3,7 +3,6 @@ import "./globals.css";
 
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
-import { safeConfig } from "@/src/lib";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -26,10 +25,10 @@ export async function generateMetadata({
   const t = await getTranslations({ locale: locale, namespace: "metadata" });
   return {
     title: "PawThera",
-    metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
+      icon: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
       title: "PawThera",
@@ -42,7 +41,7 @@ export async function generateMetadata({
       siteName: "PawThera",
       images: [
         {
-          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
+          url: `${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
           width: 1200,
           height: 630,
           alt: "PawThera",
@@ -53,7 +52,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: "PawThera",
       description: t("description"),
-      images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
+      images: [`${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
     },
     applicationName: "PawThera",
     authors: [
