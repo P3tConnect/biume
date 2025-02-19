@@ -1,23 +1,25 @@
 import { Card } from "@/components/ui/card";
 import { OptionsGrid } from "./components/options/options-grid";
-import { ActionResult } from "@/src/lib";
-import { Option } from "@/src/db";
 import { OptionsHeader } from "./components/options/options-header";
-import { use } from "react";
+import { Suspense } from "react";
+import { getOptionsFromOrganization } from "@/src/actions";
+import { Skeleton } from "@/components/ui";
 
-export const OptionsSection = ({
-  options,
-}: {
-  options: Promise<ActionResult<Option[]>>;
-}) => {
-  const data = use(options);
+export const OptionsSection = () => {
+  const options = getOptionsFromOrganization({});
 
   return (
     <Card className="p-6">
       <div className="space-y-8">
         <div className="space-y-4">
           <OptionsHeader />
-          <OptionsGrid options={data} />
+          <Suspense
+            fallback={
+              <Skeleton className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" />
+            }
+          >
+            <OptionsGrid options={options} />
+          </Suspense>
         </div>
       </div>
     </Card>

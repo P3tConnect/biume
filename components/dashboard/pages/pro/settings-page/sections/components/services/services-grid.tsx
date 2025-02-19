@@ -6,18 +6,19 @@ import { Clock, Euro, Pencil, Plus } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/src/lib/utils";
 import { toast } from "sonner";
-import { useState } from "react";
+import { use, useState } from "react";
 import { ServiceForm } from "./services-form";
 import { ActionResult } from "@/src/lib";
 
 interface ServicesGridProps {
-  services: ActionResult<Service[]>;
+  services: Promise<ActionResult<Service[]>>;
 }
 
 export const ServicesGrid = ({ services }: ServicesGridProps) => {
+  const data = use(services);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
 
-  if (!services || services.data?.length === 0) {
+  if (!data || data.data?.length === 0) {
     return (
       <button
         type="button"
@@ -43,7 +44,7 @@ export const ServicesGrid = ({ services }: ServicesGridProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.data?.map((service) => (
+        {data.data?.map((service) => (
           <div
             key={service.id}
             className={cn(

@@ -16,7 +16,6 @@ import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOptionsFromOrganization } from "@/src/actions";
-import { getServicesFromOrganization } from "@/src/actions";
 
 const SettingsPageComponent = () => {
   return (
@@ -70,11 +69,11 @@ const SettingsPageComponent = () => {
           </TabsContent>
 
           <TabsContent value="services">
-            <ServicesSection services={getServicesFromOrganization({})} />
+            <ServicesSection />
           </TabsContent>
 
           <TabsContent value="options">
-            <OptionsSection options={getOptionsFromOrganization({})} />
+            <OptionsSection />
           </TabsContent>
 
           <TabsContent value="documents">

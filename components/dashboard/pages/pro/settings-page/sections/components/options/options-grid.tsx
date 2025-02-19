@@ -5,18 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Euro, Pencil, Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { toast } from "sonner";
-import { useState } from "react";
+import { use, useState } from "react";
 import { OptionForm } from "./option-form";
 import { ActionResult } from "@/src/lib";
 
-interface OptionsGridProps {
-  options: ActionResult<Option[]>;
-}
-
-export const OptionsGrid = ({ options }: OptionsGridProps) => {
+export const OptionsGrid = ({
+  options,
+}: {
+  options: Promise<ActionResult<Option[]>>;
+}) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const data = use(options);
 
-  if (!options || options.data?.length === 0) {
+  if (!data || data.data?.length === 0) {
     return (
       <button
         type="button"
@@ -42,7 +43,7 @@ export const OptionsGrid = ({ options }: OptionsGridProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {options.data?.map((option) => (
+        {data.data?.map((option) => (
           <div
             key={option.id}
             className={cn(
