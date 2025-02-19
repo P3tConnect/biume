@@ -2,9 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const WaitListPage = async () => {
+  redirect("/");
+
   const t = await getTranslations("waitlist");
 
   return (

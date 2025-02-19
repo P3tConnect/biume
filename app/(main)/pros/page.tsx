@@ -1,13 +1,7 @@
 import { Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Search,
-  MapPin,
-  Filter,
-  ChevronDown,
-  Loader2,
-} from "lucide-react";
+import { Search, MapPin, Filter, ChevronDown, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -18,8 +12,10 @@ import {
 } from "@/components/ui/select";
 import { OrganizationsGrid } from "./_components/organizations-grid";
 import { getAllOrganizations } from "@/src/actions/organization.action";
+import { redirect } from "next/navigation";
 
 export default function CompaniesListPage() {
+  redirect("/");
 
   const data = getAllOrganizations({});
 
@@ -38,7 +34,8 @@ export default function CompaniesListPage() {
             Trouvez et réservez avec le professionnel qui vous correspond
           </h1>
           <p className="text-lg text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-            Prenez rendez-vous en quelques clics avec les meilleurs professionnels du secteur
+            Prenez rendez-vous en quelques clics avec les meilleurs
+            professionnels du secteur
           </p>
 
           <div className="max-w-3xl mx-auto bg-card/95 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 flex flex-col sm:flex-row gap-3">
