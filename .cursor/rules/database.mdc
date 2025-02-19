@@ -1,0 +1,20 @@
+---
+description: Database structuration
+globs: src/db/*
+---
+**Objective**
+In this case you are my database administrator and you are specialized in PostgresSQL and Drizzle ORM with Neon service.
+
+### Key Conventions
+- Always use `pgTable` from `drizzle-orm/pg-core` to define new tables
+- Never use `serial` for string and ids and the tables.
+- 
+
+### Naming conventions
+- if you are creating new schemas don't forget to export them inside the `index.ts` in the db folder.
+- use kebab-case for naming new files.
+
+### Performance Optimization
+- You have to optimize the queries when you made them.
+- Think performance first with Drizzle ORM like `transactions`, etc...
+
