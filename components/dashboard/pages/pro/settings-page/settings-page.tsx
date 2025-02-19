@@ -1,26 +1,25 @@
 import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Building2,
-  CreditCard,
-  Users,
-  FileText,
-  Briefcase,
-  Settings,
-} from "lucide-react";
-import { ProfileSection } from "./sections/profile-section";
-import { BillingSection } from "./sections/billing-section";
-import { TeamSection } from "./sections/team-section";
-import { DocumentsSection } from "./sections/documents-section";
-import { ServicesSection } from "./sections/services-section";
-import { OptionsSection } from "./sections/options-section";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { getOptionsFromOrganization } from "@/src/actions";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import {
+//   Building2,
+//   CreditCard,
+//   Users,
+//   FileText,
+//   Briefcase,
+//   Settings,
+// } from "lucide-react";
+// import { ProfileSection } from "./sections/profile-section";
+// import { BillingSection } from "./sections/billing-section";
+// import { TeamSection } from "./sections/team-section";
+// import { DocumentsSection } from "./sections/documents-section";
+// import { ServicesSection } from "./sections/services-section";
+// import { OptionsSection } from "./sections/options-section";
+// import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const SettingsPageComponent = () => {
   return (
     <div>
-      <Card className="overflow-hidden rounded-2xl mb-4">
+      {/* <Card className="overflow-hidden rounded-2xl mb-4">
         <CardHeader className="border-b border-gray-100 dark:border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
@@ -88,7 +87,7 @@ const SettingsPageComponent = () => {
             <TeamSection />
           </TabsContent>
         </Tabs>
-      </div>
+      </div> */}
     </div>
   );
 };
