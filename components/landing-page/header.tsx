@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Avvvatars from "avvvatars-react";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 
 export function Header() {
   const searchParams = useSearchParams();
@@ -108,8 +109,20 @@ export function Header() {
               </Button>
             </div>
 
+            <div className="flex flex-col gap-2">
+              <Button variant="ghost" className="w-full justify-start">
+                <Link
+                  href="https://forms.gle/HH5UVacg7tQDPPrG7"
+                  target="_blank"
+                >
+                  <QuestionMarkCircledIcon className="w-5 h-5 mr-2" />
+                  Répondre au formulaire
+                </Link>
+              </Button>
+            </div>
+
             {/* Auth Buttons or User Menu */}
-            {session?.user ? (
+            {/* {session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -209,7 +222,7 @@ export function Header() {
                   </Button>
                 </Link>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Mobile Menu */}
@@ -245,8 +258,19 @@ export function Header() {
                 </Button>
               </div>
 
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="w-full justify-start"
+                >
+                  <User className="w-5 h-5 mr-2" />
+                  Répondre au formulaire
+                </Button>
+              </div>
+
               {/* Auth Buttons or User Menu */}
-              {session?.user ? (
+              {/* {session?.user ? (
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-3 px-2 py-3">
                     {session.user.image ? (
@@ -345,7 +369,7 @@ export function Header() {
                     </Button>
                   </Link>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
