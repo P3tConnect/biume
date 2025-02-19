@@ -16,6 +16,7 @@ import {
 import { createAccessControl } from "better-auth/plugins/access";
 import { stripe } from "./stripe";
 import { eq } from "drizzle-orm";
+import { safeConfig } from "./env";
 
 const statement = {
   organization: ["create", "share", "update", "delete"],
@@ -37,6 +38,7 @@ export const owner = ac.newRole({
 
 export const auth = betterAuth({
   appName: "PawThera",
+  secret: safeConfig.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
