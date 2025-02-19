@@ -1,19 +1,7 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui'
-import React from 'react'
+import { DocumentsForm } from "../components/pro/documents-form";
 
-const ProDocumentsStep = () => {
-  return (
-    <Card className='h-full rounded-2xl'>
-      <CardHeader>
-        <CardTitle>Documents</CardTitle>
-        <CardDescription>
-          Vous êtes maintenant sur la page pour renseigner vos documents. <br /> Vous pouvez modifier ces documents à tout moment.
-        </CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter></CardFooter>
-    </Card>
-  )
-}
+const ProDocumentsStep = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
+  return <DocumentsForm nextStep={nextStep} previousStep={previousStep} />;
+};
 
 export default ProDocumentsStep

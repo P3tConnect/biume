@@ -1,43 +1,49 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
-import { useServerActionMutation } from "@/src/hooks";
 import { loginSchema } from "@/src/lib";
 import { signIn } from "@/src/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
-  redirect("/");
   const router = useRouter();
+  ("");
+  const [loading, setLoading] = useState(false);
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-        rememberMe: z.boolean(),
-      }),
-    ),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signIn.email({
-      email: data.email,
-      password: data.password,
-      rememberMe: data.rememberMe,
-    }, {
-      onSuccess: () => {
-        router.push("/")
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
       },
-      onError: () => {
-        toast.error("Email ou mot de passe incorrect")
-      }
-    });
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log(ctx, "ctx");
+          toast.success("Connexion réussie ! Vous allez être redirigé ...");
+          router.push(`/dashboard/user/${ctx.data.user.id}`);
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
+        },
+      },
+    );
   });
 
   return (
@@ -67,7 +73,7 @@ const LoginPage = () => {
           <Link href="/forgot-password" className="pb-5">
             <p className="text-xs underline">Mot de passe oublié ?</p>
           </Link>
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button disabled={loading} className="w-96 rounded-3xl" type="submit">
             Se connecter
           </Button>
 
@@ -76,6 +82,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/facebook-icon.svg"}
@@ -88,6 +95,7 @@ const LoginPage = () => {
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
             variant="outline"
+            disabled={loading}
           >
             <Image
               src={"/assets/svg/google-icon.svg"}

@@ -1,8 +1,9 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { petsAllergies } from "./petsAllergies";
-import { user } from "./user";
+import { User, user } from "./user";
+import { Pet } from "./pets";
 
 export const allergies = pgTable("allergies", {
   id: text("id")
@@ -25,7 +26,10 @@ export const allergiesRelations = relations(allergies, ({ one, many }) => ({
   }),
 }));
 
-export type Allergy = typeof allergies.$inferSelect;
+export type Allergy = InferSelectModel<typeof allergies> & {
+  pets: Pet[];
+  owner: User;
+};
 export type CreateAllergy = typeof allergies.$inferInsert;
 
 export const CreateAllergySchema = createInsertSchema(allergies);

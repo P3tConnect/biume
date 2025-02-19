@@ -1,19 +1,7 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui'
-import React from 'react'
+import OptionsForm from "../components/pro/options-form";
 
-const ProOptionsStep = () => {
-  return (
-    <Card className='h-full rounded-2xl'>
-      <CardHeader>
-        <CardTitle>Options</CardTitle>
-        <CardDescription>
-          Vous êtes maintenant sur la page pour renseigner les options de vos services. <br /> Vous pouvez modifier ces options à tout moment.
-        </CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter></CardFooter>
-    </Card>
-  )
-}
+const ProOptionsStep = ({ nextStep, previousStep }: { nextStep: () => void, previousStep: () => void }) => {
+  return <OptionsForm nextStep={nextStep} previousStep={previousStep} />;
+};
 
 export default ProOptionsStep

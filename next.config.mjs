@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: 'https',
       },
       {
+        hostname: 'images.unsplash.com',
+        protocol: "https",
+      },
+      {
         hostname: 'sea1.ingest.uploadthing.com',
         protocol: 'https',
       },
@@ -31,6 +35,7 @@ const nextConfig = {
   env: {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
     TRIGGER_PUBLIC_API_KEY: process.env.TRIGGER_PUBLIC_API_KEY,
@@ -41,6 +46,13 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    STRIPE_BASIC_PLAN_ID: process.env.STRIPE_BASIC_PLAN_ID,
+    STRIPE_PRO_PLAN_ID: process.env.STRIPE_PRO_PLAN_ID,
+    STRIPE_ULTIMATE_PLAN_ID: process.env.STRIPE_ULTIMATE_PLAN_ID,
+    STRIPE_WEBHOOK_BASIC_SECRET: process.env.STRIPE_WEBHOOK_BASIC_SECRET,
+    STRIPE_WEBHOOK_PRO_SECRET: process.env.STRIPE_WEBHOOK_PRO_SECRET,
+    STRIPE_WEBHOOK_ULTIMATE_SECRET: process.env.STRIPE_WEBHOOK_ULTIMATE_SECRET,
   },
 };
 

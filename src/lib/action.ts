@@ -1,75 +1,128 @@
-import { ZSAError, createServerAction, createServerActionProcedure } from "zsa";
+"use server";
 
-import { currentUser } from "./current-user";
+import { headers } from "next/headers";
+import { auth } from "./auth";
+import { ActionError, ServerActionContext } from "./action-utils";
 import { db } from "./db";
+import { organization as organizationTable } from "@/src/db";
 import { eq } from "drizzle-orm";
 
-export const action = createServerAction();
-
-const authedProcedure = createServerActionProcedure().handler(async () => {
+// Predefined middlewares
+export async function requireAuth(ctx: ServerActionContext) {
   try {
-    const user = await currentUser();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    const user = session?.user;
 
     if (!user) {
-      throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
+      throw new ActionError("Not authenticated");
     }
 
-    return {
+    Object.assign(ctx, {
       user,
-    };
-  } catch (err) {
-    throw new ZSAError("NOT_AUTHORIZED", "You must be logged in !");
+      organization: null,
+      meta: {},
+    });
+  } catch (error) {
+    throw new ActionError("Not authenticated");
   }
-});
+}
 
-export const authedAction = authedProcedure.createServerAction();
+export async function requireOwner(ctx: ServerActionContext) {
+  const organization = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
 
-const clientProcedure = createServerActionProcedure(authedProcedure).handler(
-  async ({ ctx }) => {
-    if (ctx.user) {
-      
-
-      throw new ZSAError(
-        "NOT_AUTHORIZED",
-        "You need to be registered to perform this action",
-      );
-    }
-
-    throw new ZSAError(
-      "NOT_AUTHORIZED",
-      "You need to be registered to perform this action",
-    );
-  },
-);
-
-export const clientAction = clientProcedure.createServerAction();
-
-const memberProcedure = createServerActionProcedure(authedProcedure).handler(
-  async ({ ctx }) => {
-    if (ctx.user) {
-
-    }
-
-    throw new ZSAError(
-      "NOT_AUTHORIZED",
-      "You need to be in a company to perform this action",
-    );
-  },
-);
-
-export const memberAction = memberProcedure.createServerAction();
-
-export const ownerProcedure = createServerActionProcedure(
-  authedProcedure,
-).handler(async ({ ctx }) => {
-  if (ctx.user) {
-    
+  if (!organization) {
+    throw new Error("Organization required");
   }
 
-  throw new ZSAError(
-    "NOT_AUTHORIZED",
-    "You need to be registered to perform this action",
-  );
-});
+  const membership = await auth.api.getActiveMember({
+    headers: await headers(),
+    organizationId: organization.id,
+    userId: ctx.user?.id,
+  });
 
-export const ownerAction = ownerProcedure.createServerAction();
+  if (!membership) {
+    throw new Error("User is not a member of any organization!");
+  }
+
+  if (membership?.role !== "owner") {
+    throw new Error("User is not an owner of the organization!");
+  }
+
+  Object.assign(ctx, {
+    user: ctx.user,
+    organization,
+    meta: {},
+  });
+}
+
+export async function requireFullOrganization(ctx: ServerActionContext) {
+  const organization = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
+
+  if (!organization) {
+    throw new Error("Organization required");
+  }
+
+  const fullOrganization = await db.query.organization.findFirst({
+    where: eq(organizationTable.id, organization.id),
+    with: {
+      invitations: true,
+      members: {
+        with: {
+          user: true,
+        },
+      },
+    },
+  });
+
+  Object.assign(ctx, { organization, fullOrganization });
+}
+
+export async function requireMember(ctx: ServerActionContext) {
+  const organization = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
+
+  if (!organization) {
+    throw new ActionError("User is not a member of any organization!");
+  }
+
+  if (!ctx.user) {
+    throw new Error("Not authenticated");
+  }
+
+  const membership = await auth.api.getActiveMember({
+    headers: await headers(),
+    organizationId: ctx.organization?.id,
+    userId: ctx.user?.id,
+  });
+
+  if (!membership) {
+    throw new Error("User is not a member of the organization!");
+  }
+
+  if (membership?.role !== "member") {
+    throw new Error("User is not a member of the organization!");
+  }
+
+  Object.assign(ctx, {
+    user: ctx.user,
+    organization: ctx.organization,
+    meta: {},
+  });
+}
+
+// Example usage:
+// export const createUser = createServerAction(
+//   async (input: CreateUserInput, ctx) => {
+//     // Your action logic here
+//     return { success: true };
+//   },
+//   [requireAuth, requireOwner]
+// );

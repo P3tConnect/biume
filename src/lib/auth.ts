@@ -1,43 +1,44 @@
+import OrganizationInvitation from "@/emails/OrganizationInvitation";
+import {
+  account,
+  invitation,
+  member as memberSchema,
+  organization as organizationSchema,
+  session,
+  twoFactor as twoFactorSchema,
+  verification,
+} from "../db";
+import { organization, twoFactor, username } from "better-auth/plugins";
 import { betterAuth } from "better-auth";
-import { nextCookies } from "better-auth/next-js";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { organization, twoFactor } from "better-auth/plugins";
+import { createAccessControl } from "better-auth/plugins/access";
 import { db } from "./db";
 import { user as dbUser } from "../db";
-import {
-  organization as organizationSchema,
-  account,
-  verification,
-  twoFactor as twoFactorSchema,
-  session,
-  member as memberSchema,
-  invitation,
-} from "../db";
-import { createAccessControl } from "better-auth/plugins/access";
-import { stripe } from "./stripe";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { eq } from "drizzle-orm";
+import { nextCookies } from "better-auth/next-js";
+import { stripe } from "./stripe";
+import { resend } from "./resend";
 
 const statement = {
-  organization: ["create", "share", "update", "delete"],
+  project: ["create", "share", "update", "delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
 
 export const member = ac.newRole({
-  organization: ["create"],
+  project: ["create"],
 });
 
 export const admin = ac.newRole({
-  organization: ["create", "update"],
+  project: ["create", "update"],
 });
 
 export const owner = ac.newRole({
-  organization: ["create", "update", "delete"],
+  project: ["create", "update", "delete"],
 });
 
 export const auth = betterAuth({
-  appName: "PawThera",
-  secret: process.env.BETTER_AUTH_SECRET,
+  appName: "Biume",
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -57,19 +58,60 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
+      image: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
       isPro: {
         type: "boolean",
         defaultValue: false,
-        required: true,
+        required: false,
       },
       onBoardingComplete: {
         type: "boolean",
         defaultValue: false,
-        required: true,
+        required: false,
       },
       stripeId: {
         type: "string",
         defaultValue: "",
+        required: false,
+      },
+      address: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      zipCode: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      country: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      city: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      phoneNumber: {
+        type: "string",
+        defaultValue: "",
+        required: false,
+      },
+      smsNotifications: {
+        type: "boolean",
+        defaultValue: false,
+        required: false,
+      },
+      emailNotifications: {
+        type: "boolean",
+        defaultValue: false,
+        required: false,
       },
     },
   },
@@ -103,6 +145,7 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
+    username(),
     twoFactor(),
     organization({
       ac: ac,
@@ -111,9 +154,29 @@ export const auth = betterAuth({
         admin,
         owner,
       },
+      sendInvitationEmail: async (data, request) => {
+        console.log(data, request);
+        const { email, inviter, role, organization } = data;
+
+        await resend.emails.send({
+          from: "PawThera <onboarding@pawthera.com>",
+          to: email,
+          subject: "Invitation à rejoindre l'organisation",
+          react: OrganizationInvitation({
+            inviterName: inviter.user.name,
+            organizationName: organization.name,
+            inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${data.id}`,
+          }),
+        });
+      },
+      membershipLimit: 10,
     }),
   ],
 });
 
-type Session = typeof auth.$Infer.Session;
-type Organization = typeof auth.$Infer.Organization;
+export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session;
+export type Organization = typeof auth.$Infer.Organization & {
+  members: (typeof auth.$Infer.Member)[];
+  invitations: (typeof auth.$Infer.Invitation)[];
+};

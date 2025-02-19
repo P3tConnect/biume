@@ -1,7 +1,8 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text } from "drizzle-orm/pg-core";
-import { usersJobs } from "./usersJobs";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { membersJobs } from "./membersJob";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { Member } from "./member";
 
 export const job = pgTable("job", {
   id: text("id")
@@ -9,14 +10,18 @@ export const job = pgTable("job", {
     .$defaultFn(() => crypto.randomUUID()),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
+  updatedAt: timestamp("updatedAt", { mode: "date" }),
 });
 
 export const jobRelations = relations(job, ({ many }) => ({
-  users: many(usersJobs),
+  members: many(membersJobs),
 }));
 
-export type ProJob = typeof job.$inferSelect;
-export type CreateProJob = typeof job.$inferInsert;
+export type Job = InferSelectModel<typeof job> & {
+  members: Member[];
+};
+export type CreateJob = typeof job.$inferInsert;
 
 export const SelectJobSchema = createSelectSchema(job);
 export const CreateJobSchema = createInsertSchema(job);

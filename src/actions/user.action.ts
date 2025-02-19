@@ -1,24 +1,50 @@
-import { action, registerSchema } from "../lib";
-import { APIError } from "better-auth/api";
-import { auth } from "../lib/auth";
+'use server';
 
-export const signUp = action.input(registerSchema).handler(async ({ input }) => {
-    try {
-        await auth.api.signUpEmail({
-            body: {
-                name: input.name,
-                email: input.email,
-                password: input.password,
-                stripeId: "",
-                image: "",
-                onBoardingComplete: false,
-            },
-            asResponse: true,
-        })
-    } catch (err) {
-        if (err instanceof APIError) {
-            return err
-        }
-        console.log(err);
+import { ActionError, createServerAction, db, requireAuth } from "../lib";
+import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema";
+import { auth } from "../lib/auth";
+import { headers } from "next/headers";
+import { z } from "zod";
+
+export const getUserInformations = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const data = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!data) {
+      throw new ActionError("User not found");
     }
-});
+
+    return data;
+  },
+  [requireAuth],
+);
+export const updateUserInformations = createServerAction(
+  clientSettingsSchema,
+  async (input, ctx) => {
+    const user = await auth.api.updateUser({
+      headers: await headers(),
+      body: {
+        name: input.name,
+        image: input.image,
+        address: input.address,
+        country: input.country,
+        city: input.city,
+        zipCode: input.zipCode,
+        phone: input.phoneNumber,
+        smsNotifications: input.smsNotifications,
+        emailNotifications: input.emailNotifications,
+        twoFactorEnabled: input.twoFactorEnabled,
+      },
+    });
+
+    if (!user) {
+      throw new ActionError("User not updated");
+    }
+
+    return user;
+  },
+  [requireAuth],
+);

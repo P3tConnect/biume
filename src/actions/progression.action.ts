@@ -2,15 +2,30 @@
 
 import { z } from "zod";
 import { CreateProgressionSchema, progression } from "../db";
-import { ownerAction, db } from "../lib";
+import { organization } from "../db/organization";
+import { ActionError, createServerAction, db, requireAuth } from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getProgression = ownerAction.handler(async () => {});
+export const getProgression = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const org = ctx.organization;
 
-export const createProgression = ownerAction
-  .input(CreateProgressionSchema)
-  .handler(async ({ input }) => {
+    const [progressionResult] = await db
+      .select()
+      .from(progression)
+      .innerJoin(organization, eq(organization.progressionId, progression.id))
+      .where(eq(organization.id, org?.id ?? ""))
+      .execute();
+
+    return progressionResult;
+  },
+  [requireAuth],
+);
+
+export const createProgression = createServerAction(
+  CreateProgressionSchema,
+  async (input, ctx) => {
     const data = await db
       .insert(progression)
       .values(input)
@@ -18,15 +33,17 @@ export const createProgression = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not created");
+      throw new ActionError("Progression not created");
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
 
-export const updateProgression = ownerAction
-  .input(CreateProgressionSchema)
-  .handler(async ({ input }) => {
+export const updateProgression = createServerAction(
+  CreateProgressionSchema,
+  async (input, ctx) => {
     const data = await db
       .update(progression)
       .set(input)
@@ -35,15 +52,17 @@ export const updateProgression = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not updated");
+      throw new ActionError("Progression not updated");
     }
 
     return data;
-  });
+  },
+  [requireAuth],
+);
 
-export const deleteProgression = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+export const deleteProgression = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(progression)
       .where(eq(progression.id, input))
@@ -51,6 +70,8 @@ export const deleteProgression = ownerAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Progression not deleted");
+      throw new ActionError("Progression not deleted");
     }
-  });
+  },
+  [requireAuth],
+);

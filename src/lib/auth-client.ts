@@ -1,10 +1,12 @@
-import { createAuthClient } from "better-auth/react";
+import { ac, admin, member, owner } from "./auth";
 import {
+  inferAdditionalFields,
   organizationClient,
   twoFactorClient,
-  inferAdditionalFields,
+  usernameClient,
 } from "better-auth/client/plugins";
-import { ac, member, admin, owner } from "./auth";
+
+import { createAuthClient } from "better-auth/react";
 
 export const {
   signIn,
@@ -26,6 +28,7 @@ export const {
 } = createAuthClient({
   baseURL: "http://localhost:3000",
   plugins: [
+    usernameClient(),
     organizationClient({
       ac: ac,
       roles: {
@@ -44,12 +47,47 @@ export const {
         isPro: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
         },
         onBoardingComplete: {
           type: "boolean",
           defaultValue: false,
-          required: true,
+          required: false,
+        },
+        address: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        zipCode: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        country: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        city: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        phoneNumber: {
+          type: "string",
+          defaultValue: "",
+          required: false,
+        },
+        smsNotifications: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
+        },
+        emailNotifications: {
+          type: "boolean",
+          defaultValue: false,
+          required: false,
         },
       },
     }),

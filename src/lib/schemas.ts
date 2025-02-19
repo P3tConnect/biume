@@ -7,7 +7,6 @@ export const emailSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
-  rememberMe: z.boolean(),
 });
 
 export const registerSchema = z.object({
@@ -15,3 +14,23 @@ export const registerSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
+
+export interface Event {
+  id: string;
+  title: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  category:
+    | "work"
+    | "personal"
+    | "other"
+    | "education"
+    | "hobbies"
+    | "health"
+    | "finance";
+}
+
+export interface DayEvents {
+  [date: string]: Event[];
+}

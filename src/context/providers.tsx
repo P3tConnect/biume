@@ -8,9 +8,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 
-const Providers = ({ children }: PropsWithChildren) => {
-  const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
+const Providers = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "", {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "",
