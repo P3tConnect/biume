@@ -1,18 +1,20 @@
-import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { pets } from "./pets";
-import { usersJobs } from "./usersJobs";
-import { proSession } from "./pro_session";
-import { usersNewsletters } from "./usersNewsletter";
-import { allergies } from "./allergies";
-import { deseases } from "./deseases";
-import { intolerences } from "./intolerences";
-import { session } from "./session";
+
 import { account } from "./account";
-import { member } from "./member";
-import { notification } from "./notifications";
-import { projectsInvitees } from "./projectsInvitees";
+import { allergies, Allergy } from "./allergies";
+import { createInsertSchema } from "drizzle-zod";
+import { Desease, deseases } from "./deseases";
+import { Intolerence, intolerences } from "./intolerences";
 import { invitation } from "./invitation";
+import { Member, member } from "./member";
+import { notification } from "./notifications";
+import { Pet, pets } from "./pets";
+import { Appointment, appointments } from "./appointments";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { session } from "./session";
+import { Account } from "better-auth";
+import { Address, address } from "./addresses";
+import { ClientNote, clientNote } from "./clientNote";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -24,15 +26,21 @@ export const user = pgTable("users", {
   updatedAt: timestamp("updatedAt").notNull(),
   twoFactorEnabled: boolean("twoFactorEnabled"),
   isPro: boolean("isPro").notNull(),
-  onBoardingComplete: boolean("onBoardingComplete").notNull(),
+  onBoardingComplete: boolean("onBoardingComplete").notNull().default(false),
   stripeId: text("stripeId"),
+  address: text("address"),
+  zipCode: text("zipCode"),
+  city: text("city"),
+  country: text("country"),
+  lang: text("lang").default("fr"),
+  phoneNumber: text("phoneNumber"),
+  emailNotifications: boolean("emailNotifications").notNull().default(false),
+  smsNotifications: boolean("smsNotifications").notNull().default(false),
 });
 
 export const userRelations = relations(user, ({ one, many }) => ({
   pets: many(pets),
-  jobs: many(usersJobs),
-  proSessions: many(proSession),
-  newsletter: many(usersNewsletters),
+  appointments: many(appointments),
   allergies: many(allergies),
   deseases: many(deseases),
   intolerences: many(intolerences),
@@ -40,6 +48,21 @@ export const userRelations = relations(user, ({ one, many }) => ({
   accounts: many(account),
   memberships: many(member),
   notifications: many(notification),
-  projects: many(projectsInvitees),
   invitations: many(invitation),
+  addresses: many(address),
+  clientNotes: many(clientNote),
 }));
+
+export type User = InferSelectModel<typeof user> & {
+  pets: Pet[];
+  allergies: Allergy[];
+  deseases: Desease[];
+  intolerences: Intolerence[];
+  appointments: Appointment[];
+  accounts: Account[];
+  memberships: Member[];
+  addresses: Address[];
+  clientNotes: ClientNote[];
+};
+
+export const CreateUserSchema = createInsertSchema(user);

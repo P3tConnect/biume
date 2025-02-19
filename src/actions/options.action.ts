@@ -1,50 +1,132 @@
 "use server";
 
 import { z } from "zod";
-import { clientAction, ownerAction, db } from "../lib";
-import { CreateOptionSchema, options } from "../db";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireOwner,
+  requireAuth,
+  requireFullOrganization,
+} from "../lib";
+import { CreateOptionSchema, Option, options as optionsTable } from "../db";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
+import { auth } from "../lib/auth";
+import { proOptionsSchema } from "@/components/onboarding/types/onboarding-schemas";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
-export const getOptions = clientAction.handler(async () => {});
+export const getOptions = createServerAction(
+  z.object({ organizationId: z.string() }),
+  async (input, ctx) => {
+    const options = await db.query.options.findMany({
+      where: eq(optionsTable.organizationId, input.organizationId),
+    });
 
-export const createOption = ownerAction
-  .input(CreateOptionSchema)
-  .handler(async ({ input }) => {
-    const data = await db.insert(options).values(input).returning().execute();
-    if (!data) {
-      throw new ZSAError("ERROR", "Option not created");
+    return options;
+  },
+  [],
+);
+
+export const getOptionsFromOrganization = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const options = await db
+      .select()
+      .from(optionsTable)
+      .where(eq(optionsTable.organizationId, ctx.organization?.id || ""));
+
+    if (!options) {
+      throw new ActionError("Options not found");
     }
-    return data;
-  });
 
-export const updateOption = ownerAction
-  .input(CreateOptionSchema)
-  .handler(async ({ input }) => {
+    return options as unknown as Option[];
+  },
+  [requireAuth, requireOwner],
+);
+export const createOption = createServerAction(
+  CreateOptionSchema,
+  async (input, ctx) => {
     const data = await db
-      .update(options)
+      .insert(optionsTable)
+      .values(input)
+      .returning()
+      .execute();
+    if (!data) {
+      throw new ActionError("Option not created");
+    }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return data;
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const createOptionsStepAction = createServerAction(
+  proOptionsSchema,
+  async (input, ctx) => {
+    const organization = await auth.api.getFullOrganization({
+      headers: await headers(),
+    });
+    if (!organization) return;
+    const options = input.options;
+    const optionsResult = await db
+      .insert(optionsTable)
+      .values(
+        options.map((option) => ({
+          ...option,
+          organizationId: organization.id,
+        })),
+      )
+      .returning()
+      .execute();
+
+    if (!optionsResult) {
+      throw new ActionError("Options not created");
+    }
+    return optionsResult;
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const updateOption = createServerAction(
+  CreateOptionSchema,
+  async (input, ctx) => {
+    const data = await db
+      .update(optionsTable)
       .set(input)
-      .where(eq(options.id, input.id as string))
+      .where(eq(optionsTable.id, input.id as string))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Option not updated");
+      throw new ActionError("Option not updated");
     }
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
 
-export const deleteOption = ownerAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+export const deleteOption = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
-      .delete(options)
-      .where(eq(options.id, input))
+      .delete(optionsTable)
+      .where(eq(optionsTable.id, input))
       .returning()
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Option not deleted");
+      throw new ActionError("Option not deleted");
     }
-  });
+
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+
+    return data;
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);

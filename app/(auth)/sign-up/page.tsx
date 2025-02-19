@@ -1,18 +1,22 @@
 "use client";
 
 import { Button, Input } from "@/components/ui";
-import Link from "next/link";
+import React, { useState } from "react";
+
+import { ErrorContext } from "@better-fetch/fetch";
 import Image from "next/image";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import Link from "next/link";
 import { registerSchema } from "@/src/lib";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/src/lib/auth-client";
-import { redirect } from "next/navigation";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterClientPage = () => {
-  redirect('/');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -23,13 +27,30 @@ const RegisterClientPage = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      image: "",
-      callbackURL: "/",
-    });
+    await signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        image: "",
+        isPro: false,
+        onBoardingComplete: false,
+      },
+      {
+        onRequest: () => {
+          setLoading(true);
+        },
+        onSuccess: (ctx) => {
+          toast.success("Inscription réussie ! Vous allez être redirigé ...");
+          router.push(`/dashboard/user/${ctx.data.user.id}`);
+        },
+        onError: (error: ErrorContext) => {
+          setLoading(false);
+          console.log(error, "error");
+          toast.error(`Error : ${error.error.message}`);
+        },
+      },
+    );
   });
 
   return (
@@ -65,7 +86,7 @@ const RegisterClientPage = () => {
 
           <div className="h-5" />
 
-          <Button className="w-96 rounded-3xl" type="submit">
+          <Button className="w-96 rounded-3xl" type="submit" disabled={loading}>
             S&apos;inscrire
           </Button>
 
@@ -81,7 +102,9 @@ const RegisterClientPage = () => {
               height={20}
               alt="facebook icon"
             />
-            <p className="text-muted-foreground">S&apos;inscrire avec Facebook</p>
+            <p className="text-muted-foreground">
+              S&apos;inscrire avec Facebook
+            </p>
           </Button>
           <Button
             className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"

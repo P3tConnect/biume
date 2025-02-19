@@ -8,15 +8,21 @@ import {
   LucideIcon,
   LucideMessageCircleQuestion,
   PawPrint,
-  Ticket,
+  Settings,
   Timer,
+  FileText,
+  Receipt,
+  PieChart,
+  DollarSignIcon,
+  Ticket,
   UsersRound,
 } from "lucide-react";
 
-type Submenu = {
+export type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  icon: LucideIcon;
 };
 
 export type Menu = {
@@ -24,35 +30,30 @@ export type Menu = {
   label: string;
   active: boolean;
   icon: LucideIcon;
-  submenus: Submenu[];
+  submenus?: Submenu[];
 };
 
-type Group = {
+export type Group = {
   groupLabel: string;
   menus: Menu[];
 };
 
-export function proMenuList(
-  pathname: string,
-  companyId: string,
-): Group[] {
+export function proMenuList(pathname: string, companyId: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/dashboard/${companyId}`,
+          href: `/dashboard/organization/${companyId}`,
           label: "dashboard.sidebar.dashboard",
-          active: pathname == `/dashboard/${companyId}`,
+          active: pathname == `/dashboard/organization/${companyId}`,
           icon: LayoutGrid,
-          submenus: [],
         },
         {
-          href: `/dashboard/${companyId}/timetable`,
+          href: `/dashboard/organization/${companyId}/timetable`,
           label: "dashboard.sidebar.calendar",
-          active: pathname == `/dashboard/${companyId}/timetable`,
+          active: pathname == `/dashboard/organization/${companyId}/timetable`,
           icon: Calendar,
-          submenus: [],
         },
       ],
     },
@@ -60,25 +61,65 @@ export function proMenuList(
       groupLabel: "dashboard.sidebar.groupLabels.management",
       menus: [
         {
-          href: `/dashboard/${companyId}/accounting`,
+          href: `/dashboard/organization/${companyId}/accounting`,
           label: "dashboard.sidebar.accounting",
-          active: pathname == `/dashboard/${companyId}/accounting`,
+          active: pathname.startsWith(
+            `/dashboard/organization/${companyId}/accounting`,
+          ),
           icon: FolderOpen,
-          submenus: [],
+          submenus: [
+            {
+              href: `/dashboard/organization/${companyId}/accounting`,
+              label: "dashboard.sidebar.home",
+              active:
+                pathname === `/dashboard/organization/${companyId}/accounting`,
+              icon: Contact2,
+            },
+            {
+              href: `/dashboard/organization/${companyId}/accounting/estimates`,
+              label: "dashboard.sidebar.estimates",
+              active:
+                pathname ===
+                `/dashboard/organization/${companyId}/accounting/estimates`,
+              icon: FileText,
+            },
+            {
+              href: `/dashboard/organization/${companyId}/accounting/invoices`,
+              label: "dashboard.sidebar.invoices",
+              active:
+                pathname ===
+                `/dashboard/organization/${companyId}/accounting/invoices`,
+              icon: Receipt,
+            },
+            {
+              href: `/dashboard/organization/${companyId}/accounting/expenses`,
+              label: "dashboard.sidebar.expenses",
+              active:
+                pathname ===
+                `/dashboard/organization/${companyId}/accounting/expenses`,
+              icon: DollarSignIcon,
+            },
+            {
+              href: `/dashboard/organization/${companyId}/accounting/reports`,
+              label: "dashboard.sidebar.financialReports",
+              active:
+                pathname ===
+                `/dashboard/organization/${companyId}/accounting/reports`,
+              icon: PieChart,
+            },
+          ],
         },
         {
-          href: `/dashboard/${companyId}/team`,
-          label: "dashboard.sidebar.team",
-          active: pathname == `/dashboard/${companyId}/team`,
-          icon: UsersRound,
-          submenus: [],
+          href: `/dashboard/organization/${companyId}/clients`,
+          label: "dashboard.sidebar.clients",
+          active: pathname == `/dashboard/organization/${companyId}/clients`,
+          icon: Contact2,
         },
         {
-          href: `/dashboard/${companyId}/reminders`,
-          label: "dashboard.sidebar.reminders",
-          active: pathname == `/dashboard/${companyId}/reminders`,
-          icon: Timer,
-          submenus: [],
+          href: `/dashboard/organization/${companyId}/patients`,
+          label: "dashboard.sidebar.patients",
+          active: pathname == `/dashboard/organization/${companyId}/patients`,
+          icon: PawPrint,
         },
       ],
     },
@@ -86,32 +127,23 @@ export function proMenuList(
       groupLabel: "dashboard.sidebar.groupLabels.services",
       menus: [
         {
-          href: `/dashboard/${companyId}/clients`,
-          label: "dashboard.sidebar.clients",
-          active: pathname == `/dashboard/${companyId}/clients`,
-          icon: Contact2,
-          submenus: [],
-        },
-        {
-          href: `/dashboard/${companyId}/patients`,
-          label: "dashboard.sidebar.patients",
-          active: pathname == `/dashboard/${companyId}/patients`,
-          icon: PawPrint,
-          submenus: [],
-        },
-        {
-          href: `/dashboard/${companyId}/reports`,
+          href: `/dashboard/organization/${companyId}/reports`,
           label: "dashboard.sidebar.reports",
-          active: pathname == `/dashboard/${companyId}/reports`,
+          active: pathname == `/dashboard/organization/${companyId}/reports`,
           icon: LineChart,
-          submenus: [],
         },
         {
-          href: `/dashboard/${companyId}/observations`,
+          href: `/dashboard/organization/${companyId}/observations`,
           label: "dashboard.sidebar.observations",
-          active: pathname == `/dashboard/${companyId}/observations`,
+          active:
+            pathname == `/dashboard/organization/${companyId}/observations`,
           icon: Eye,
-          submenus: [],
+        },
+        {
+          href: `/dashboard/organization/${companyId}/reminders`,
+          label: "dashboard.sidebar.reminders",
+          active: pathname == `/dashboard/organization/${companyId}/reminders`,
+          icon: Timer,
         },
       ],
     },
@@ -123,50 +155,51 @@ export function proMenuList(
           label: "dashboard.sidebar.help",
           active: pathname == `/help`,
           icon: LucideMessageCircleQuestion,
-          submenus: [],
         },
       ],
     },
   ];
 }
 
-export function clientMenuList(pathname: string, locale: string): Group[] {
+export function clientMenuList(pathname: string, userId: string) {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: `/${locale}/dashboard`,
-          label: "Dashboard",
-          active: pathname == `/${locale}/dashboard`,
+          href: `/dashboard/user/${userId}`,
+          label: "dashboard",
+          active: pathname == `/dashboard/user/${userId}`,
           icon: LayoutGrid,
-          submenus: [],
         },
         {
-          href: `/${locale}/dashboard/timetable`,
-          label: "Agenda",
-          active: pathname == `/${locale}/dashboard/timetable`,
+          href: `/dashboard/user/${userId}/timetable`,
+          label: "calendrier",
+          active: pathname == `/dashboard/user/${userId}/timetable`,
           icon: Calendar,
-          submenus: [],
         },
       ],
     },
     {
-      groupLabel: "Mon compte",
+      groupLabel: "compte",
       menus: [
         {
-          href: `/${locale}/dashboard/reservations`,
-          label: "Mes réservations",
-          active: pathname == `/${locale}/dashboard/reservations`,
+          href: `/dashboard/user/${userId}/reservations`,
+          label: "reservations",
+          active: pathname == `/dashboard/user/${userId}/reservations`,
           icon: Ticket,
-          submenus: [],
         },
         {
-          href: `/${locale}/dashboard/pets`,
-          label: "Mes animaux",
-          active: pathname == `/${locale}/dashboard/pets`,
+          href: `/dashboard/user/${userId}/pets`,
+          label: "animaux",
+          active: pathname == `/dashboard/user/${userId}/pets`,
           icon: PawPrint,
-          submenus: [],
+        },
+        {
+          href: `/dashboard/user/${userId}/settings`,
+          label: "paramètres",
+          active: pathname == `/dashboard/user/${userId}/settings`,
+          icon: UsersRound,
         },
       ],
     },

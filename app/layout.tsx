@@ -3,7 +3,6 @@ import "./globals.css";
 
 import Providers from "@/src/context/providers";
 import { cn } from "@/src/lib/utils";
-import { safeConfig } from "@/src/lib";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -13,49 +12,47 @@ import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-
+import { NuqsAdapter } from "nuqs/adapters/next";
+import { safeConfig } from "@/src/lib/env";
 const geist = GeistSans;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
 
-  const t = await getTranslations({ locale: locale, namespace: "metadata" });
+  const t = await getTranslations({ namespace: "metadata" });
+
   return {
-    title: "PawThera",
+    title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
+      icon: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
-      title: "PawThera",
+      title: "Biume",
     },
     openGraph: {
       type: "website",
       locale: locale,
-      url: "https://pawthera.com",
+      url: "https://biume.com",
       description: t("description"),
-      siteName: "PawThera",
+      siteName: "Biume",
       images: [
         {
-          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
+          url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`,
           width: 1200,
           height: 630,
-          alt: "PawThera",
+          alt: "Biume",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "PawThera",
+      title: "Biume",
       description: t("description"),
-      images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
+      images: [`${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`],
     },
-    applicationName: "PawThera",
+    applicationName: "Biume",
     authors: [
       {
         name: "Mathieu Chambaud",
@@ -69,6 +66,10 @@ export async function generateMetadata({
     robots: {
       follow: true,
       index: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
     },
     keywords: [
       t("keywords.keyword1"),
@@ -88,6 +89,19 @@ export async function generateMetadata({
       t("keywords.keyword15"),
       t("keywords.keyword16"),
       t("keywords.keyword17"),
+      t("keywords.keyword18"),
+      t("keywords.keyword19"),
+      t("keywords.keyword20"),
+      t("keywords.keyword21"),
+      t("keywords.keyword22"),
+      t("keywords.keyword23"),
+      t("keywords.keyword24"),
+      t("keywords.keyword25"),
+      t("keywords.keyword26"),
+      t("keywords.keyword27"),
+      t("keywords.keyword28"),
+      t("keywords.keyword29"),
+      t("keywords.keyword30"),
     ],
   };
 }
@@ -115,7 +129,7 @@ export default async function RootLayout({
                 <NextSSRPlugin
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />
-                {children}
+                <NuqsAdapter>{children}</NuqsAdapter>
               </div>
               <TailwindIndicator />
             </SidebarProvider>

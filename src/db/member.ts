@@ -1,19 +1,24 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { organization } from "./organization";
-import { relations } from "drizzle-orm";
-import { user } from "./user";
+import { Organization, organization } from "./organization";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { User, user } from "./user";
+import { createInsertSchema } from "drizzle-zod";
+import { createSelectSchema } from "drizzle-zod";
+import { MembersJobs, membersJobs } from "./membersJob";
 
 export const member = pgTable("members", {
   id: text("id").primaryKey(),
   organizationId: text("organizationId")
     .notNull()
     .references(() => organization.id),
-  userId: text("userId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id),
   role: text("role").notNull(),
   createdAt: timestamp("createdAt").notNull(),
 });
 
-export const memberRelations = relations(member, ({ one }) => ({
+export const memberRelations = relations(member, ({ one, many }) => ({
   organization: one(organization, {
     fields: [member.organizationId],
     references: [organization.id],
@@ -22,4 +27,15 @@ export const memberRelations = relations(member, ({ one }) => ({
     fields: [member.userId],
     references: [user.id],
   }),
+  jobs: many(membersJobs),
 }));
+
+export type Member = InferSelectModel<typeof member> & {
+  organization: Organization;
+  user: User;
+  jobs: MembersJobs[];
+};
+export type CreateMember = typeof member.$inferInsert;
+
+export const MemberSchema = createSelectSchema(member);
+export const CreateMemberSchema = createInsertSchema(member);

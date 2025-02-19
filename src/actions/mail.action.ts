@@ -3,13 +3,12 @@
 import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
 import { resend } from "../lib/resend";
 import { redirect } from "next/navigation";
-import { action } from "../lib/action";
+import { ActionError, createServerAction } from "../lib";
 import { emailSchema } from "../lib/schemas";
-import { ZSAError } from "zsa";
 
-export const newSubWaitList = action
-  .input(emailSchema)
-  .handler(async ({ input }) => {
+export const newSubWaitList = createServerAction(
+  emailSchema,
+  async (input, ctx) => {
     const mail = await resend.emails.send({
       from: "PawThera<contact@pawthera.com>",
       subject: "New person in the WaitList",
@@ -19,8 +18,10 @@ export const newSubWaitList = action
 
     if (mail.error) {
       console.log(mail.error.message);
-      throw new ZSAError("ERROR", mail.error.message);
+      throw new ActionError(mail.error.message);
     } else {
       redirect("/waitlist");
     }
-  });
+  },
+  [],
+);

@@ -2,15 +2,26 @@
 
 import { z } from "zod";
 import { CreateTransactionSchema, transaction } from "../db";
-import { db, clientAction } from "../lib";
+import {
+  db,
+  ActionError,
+  createServerAction,
+  requireAuth,
+  requireOwner,
+} from "../lib";
 import { eq } from "drizzle-orm";
-import { ZSAError } from "zsa";
 
-export const getTransactions = clientAction.handler(async () => {});
+export const getTransactions = createServerAction(
+  z.string(),
+  async (input, ctx) => {
+    return [];
+  },
+  [requireAuth, requireOwner],
+);
 
-export const createTransactions = clientAction
-  .input(CreateTransactionSchema)
-  .handler(async ({ input }) => {
+export const createTransactions = createServerAction(
+  CreateTransactionSchema,
+  async (input, ctx) => {
     const data = await db
       .insert(transaction)
       .values(input)
@@ -18,15 +29,17 @@ export const createTransactions = clientAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not created");
+      throw new ActionError("Transaction not created");
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const updateTransactions = clientAction
-  .input(CreateTransactionSchema)
-  .handler(async ({ input }) => {
+export const updateTransactions = createServerAction(
+  CreateTransactionSchema,
+  async (input, ctx) => {
     const data = await db
       .update(transaction)
       .set(input)
@@ -35,15 +48,17 @@ export const updateTransactions = clientAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not updated");
+      throw new ActionError("Transaction not updated");
     }
 
     return data;
-  });
+  },
+  [requireAuth, requireOwner],
+);
 
-export const deleteTransaction = clientAction
-  .input(z.string())
-  .handler(async ({ input }) => {
+export const deleteTransaction = createServerAction(
+  z.string(),
+  async (input, ctx) => {
     const data = await db
       .delete(transaction)
       .where(eq(transaction.id, input))
@@ -51,6 +66,10 @@ export const deleteTransaction = clientAction
       .execute();
 
     if (!data) {
-      throw new ZSAError("ERROR", "Transaction not deleted");
+      throw new ActionError("Transaction not deleted");
     }
-  });
+
+    return data;
+  },
+  [requireAuth, requireOwner],
+);

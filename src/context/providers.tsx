@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { PropsWithChildren, useEffect } from "react";
@@ -8,14 +7,13 @@ import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
-import { safeConfig } from "../lib";
+
+export const queryClient = new QueryClient();
 
 const Providers = ({ children }: PropsWithChildren) => {
-  const queryClient = new QueryClient();
-
   useEffect(() => {
-    posthog.init(safeConfig.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: safeConfig.NEXT_PUBLIC_POSTHOG_HOST,
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "", {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "",
       person_profiles: "always",
     });
   }, []);
