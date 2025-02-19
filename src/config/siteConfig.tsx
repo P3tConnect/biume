@@ -8,7 +8,7 @@ export const siteConfig = {
   name: "PawThera",
   description:
     "L'application qui fait gagner du temps aux indépendants du secteur animalier",
-  url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000",
   keywords: ["SaaS", "Template", "Next.js", "React", "Tailwind CSS"],
   links: {
     email: "contact@pawthera.com",

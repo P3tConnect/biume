@@ -11,7 +11,6 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 const geist = GeistSans;
 
@@ -25,10 +24,10 @@ export async function generateMetadata({
   const t = await getTranslations({ locale: locale, namespace: "metadata" });
   return {
     title: "PawThera",
-    metadataBase: new URL(`${process.env.NEXT_PUBLIC_APP_URL}`),
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_VERCEL_URL}`),
     description: t("description"),
     icons: {
-      icon: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/Icone.png`,
+      icon: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/Icone.png`,
     },
     appleWebApp: {
       title: "PawThera",
@@ -41,7 +40,7 @@ export async function generateMetadata({
       siteName: "PawThera",
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`,
+          url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`,
           width: 1200,
           height: 630,
           alt: "PawThera",
@@ -52,7 +51,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: "PawThera",
       description: t("description"),
-      images: [`${process.env.NEXT_PUBLIC_APP_URL}/PawThera.jpeg`],
+      images: [`${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`],
     },
     applicationName: "PawThera",
     authors: [
@@ -110,12 +109,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <SidebarProvider defaultOpen={defaultOpen}>
-              <div vaul-drawer-wrapper="">
-                <NextSSRPlugin
-                  routerConfig={extractRouterConfig(ourFileRouter)}
-                />
-                {children}
-              </div>
+              <div vaul-drawer-wrapper="">{children}</div>
               <TailwindIndicator />
             </SidebarProvider>
           </Providers>
