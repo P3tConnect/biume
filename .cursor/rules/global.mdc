@@ -1,0 +1,74 @@
+---
+description: You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
+globs: *.tsx, *.ts, *.mjs, *.json, *.css
+---
+**Context**
+- Biume is a SaaS that helps animals health professionnals to manage their business.
+
+### Objective
+- Create a Next.js solution that is not only functional but also adheres to the best practices in performance, security, and maintainability.
+
+### Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples.
+- Use functional and declarative programming patterns; avoid classes.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Structure files: exported component, subcomponents, helpers, static content, types.
+  
+### Naming Conventions
+- Use lowercase with dashes for directories (e.g., components/auth-wizard).
+- Favor named exports for components.
+  
+### TypeScript Usage
+- Use TypeScript for all code; prefer interfaces over types.
+- Avoid enums; use maps instead.
+- Use functional components with TypeScript interfaces.
+  
+### Syntax and Formatting
+- Use the `function` keyword for pure functions.
+- Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+- Use declarative JSX.
+  
+### UI and Styling
+- Use modern UI frameworks (e.g., Tailwind CSS, Shadcn UI, Radix UI) for styling (prior to Shadcn UI).
+- Implement responsive design with Tailwind CSS; use a mobile-first approach.
+- Implement consistent design and responsive patterns across platforms.
+- Use `framer-motion` to do animation on components.
+  
+### Performance Optimization
+- Minimize `use client`, `useEffect`, and `setState`; favor React Server Components (RSC).
+- Wrap client components in Suspense with fallback.
+- Use dynamic loading for non-critical components.
+- Optimize images: use WebP format, include size data, implement lazy loading.
+
+### Methodology
+1. **System 2 Thinking**: Approach the problem with analytical rigor. Break down the requirements into smaller, manageable parts and thoroughly consider each step before implementation.
+2. **Tree of Thoughts**: Evaluate multiple possible solutions and their consequences. Use a structured approach to explore different paths and select the optimal one.
+3. **Iterative Refinement**: Before finalizing the code, consider improvements, edge cases, and optimizations. Iterate through potential enhancements to ensure the final solution is robust.
+  
+### Key Conventions
+- Use `nuqs` for URL search parameter state management.
+- Optimize Web Vitals (LCP, CLS, FID).
+- Limit `use client`:
+  - Favor server components and Next.js SSR.
+  - Use only for Web API access in small components.
+  - Avoid for data fetching or state management.
+- Use `uploadthing` and `react-dropzone` for uploading images.
+- Use `trigger.dev` to schedule tasks.
+- Use `vercel-ai-sdk` to treat some AI tasks.
+- Use `drizzle-orm` to make data schemas and `drizzle-kit` for visualizing data
+- Use my util to create server actions in `src/lib/action.ts` file.
+- Use `better-auth` for authentication.
+- Use `stripe` for doing payments.
+- Use `react-hook-form` for forms.
+- Use `lucide-react` from icons.
+
+**Process**:
+1. **Deep Dive Analysis**: Begin by conducting a thorough analysis of the task at hand, considering the technical requirements and constraints.
+2. **Planning**: Develop a clear plan that outlines the architectural structure and flow of the solution, using <PLANNING> tags if necessary.
+3. **Implementation**: Implement the solution step-by-step, ensuring that each part adheres to the specified best practices.
+4. **Review and Optimize**: Perform a review of the code, looking for areas of potential optimization and improvement.
+5. **Finalization**: Finalize the code by ensuring it meets all requirements, is secure, and is performant.
+  
+Follow Next.js docs for Data Fetching, Rendering, and Routing.
+  
