@@ -19,16 +19,15 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import * as React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Loader2, CheckCircle2 } from "lucide-react";
-import { Credenza, CredenzaTrigger, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import {
+  Credenza,
+  CredenzaTrigger,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui";
 
 const WaitListPro = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -83,10 +82,12 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
       <CredenzaContent className="sm:max-w-[425px]">
         <CredenzaHeader>
           <CredenzaTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            Rejoignez l'aventure Biume Pro
+            Rejoignez l&apos;aventure Biume Pro
           </CredenzaTitle>
           <CredenzaDescription className="text-base">
-            Soyez parmi les premiers professionnels à découvrir Biume. Remplissez le formulaire ci-dessous pour vous inscrire à notre liste d'attente.
+            Soyez parmi les premiers professionnels à découvrir Biume.
+            Remplissez le formulaire ci-dessous pour vous inscrire à notre liste
+            d&apos;attente.
           </CredenzaDescription>
         </CredenzaHeader>
         {!isSuccess ? (
@@ -210,7 +211,8 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
               Merci de votre inscription !
             </p>
             <p className="text-sm text-muted-foreground text-center">
-              Nous vous contacterons dès que possible pour vous donner accès à Biume Pro.
+              Nous vous contacterons dès que possible pour vous donner accès à
+              Biume Pro.
             </p>
           </div>
         )}
@@ -231,14 +233,15 @@ export function CTASection() {
               Rejoignez notre liste d&apos;attente
             </h2>
             <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Soyez parmi les premiers professionnels à rejoindre notre plateforme et bénéficiez d&apos;avantages exclusifs
+              Soyez parmi les premiers professionnels à rejoindre notre
+              plateforme et bénéficiez d&apos;avantages exclusifs
             </p>
             <WaitListPro>
               <Button
                 size="lg"
                 className="custom-button h-12 px-6 text-base rounded-xl"
               >
-                S'inscrire maintenant
+                S&apos;inscrire maintenant
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </WaitListPro>
@@ -247,4 +250,4 @@ export function CTASection() {
       </div>
     </section>
   );
-} 
+}

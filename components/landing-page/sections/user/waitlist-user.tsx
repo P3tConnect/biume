@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -81,16 +81,15 @@ const WaitListUser = ({ children }: WaitListUserProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            Rejoignez l'aventure Biume
+            Rejoignez l&apos;aventure Biume
           </DialogTitle>
           <DialogDescription className="text-base">
-            Soyez parmi les premiers à découvrir Biume. Remplissez le formulaire ci-dessous pour vous inscrire à notre liste d'attente.
+            Soyez parmi les premiers à découvrir Biume. Remplissez le formulaire
+            ci-dessous pour vous inscrire à notre liste d&apos;attente.
           </DialogDescription>
         </DialogHeader>
         {!isSuccess ? (
@@ -156,14 +155,16 @@ const WaitListUser = ({ children }: WaitListUserProps) => {
                 name="comment"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Un message à nous transmettre ? (optionnel)</FormLabel>
+                    <FormLabel>
+                      Un message à nous transmettre ? (optionnel)
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Partagez-nous vos attentes, questions ou suggestions..."
                         className="rounded-xl resize-none min-h-[100px]"
                         disabled={isLoading}
                         {...field}
-                        value={field.value ?? ''}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -197,7 +198,8 @@ const WaitListUser = ({ children }: WaitListUserProps) => {
               Merci de votre inscription !
             </p>
             <p className="text-sm text-muted-foreground text-center">
-              Nous vous contacterons dès que possible pour vous donner accès à Biume.
+              Nous vous contacterons dès que possible pour vous donner accès à
+              Biume.
             </p>
           </div>
         )}

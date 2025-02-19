@@ -79,7 +79,7 @@ export function PetStep({
           <div className="col-span-2 flex flex-col items-center justify-center p-8 text-center">
             <PawPrint className="h-12 w-12 text-muted-foreground/20 mb-4" />
             <p className="text-muted-foreground">
-              Vous n'avez pas encore enregistré d'animal.
+              Vous n&apos;avez pas encore enregistré d&apos;animal.
             </p>
           </div>
         )}
