@@ -57,10 +57,10 @@ export const ProfileSection = () => {
   const data = getCurrentOrganization({});
 
   return (
-    <div className="relative pb-20">
+    <div className="relative">
       <ProfileCoverSection org={data} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
         <div className="md:col-span-2 space-y-6">
           <ProfileMainInfoSection org={data} />
           <ProfileLegalInfoSection org={data} />

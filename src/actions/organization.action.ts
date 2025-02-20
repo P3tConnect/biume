@@ -15,7 +15,7 @@ import {
   organization as organizationTable,
 } from "../db";
 import { db } from "../lib";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, gte, lte } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import {
   progression as progressionTable,
@@ -298,3 +298,93 @@ export const addImagesToOrganization = createServerAction(
   },
   [requireAuth, requireOwner],
 );
+
+export const getNewClientsThisMonth = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const firstDayOfMonth = new Date();
+    firstDayOfMonth.setDate(1);
+    firstDayOfMonth.setHours(0, 0, 0, 0);
+
+    const appointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.proId, ctx.organization.id),
+      with: {
+        client: true,
+      },
+      orderBy: desc(appointmentsTable.createdAt),
+    });
+
+    // Filtrer pour obtenir uniquement les clients dont le premier rendez-vous est dans le mois en cours
+    const clientsFirstAppointments = new Map();
+    
+    appointments.forEach(appointment => {
+      const clientId = appointment.clientId;
+      if (!clientsFirstAppointments.has(clientId)) {
+        clientsFirstAppointments.set(clientId, appointment.createdAt);
+      }
+    });
+
+    const newClientsThisMonth = Array.from(clientsFirstAppointments.entries())
+      .filter(([_, firstAppointmentDate]) => firstAppointmentDate >= firstDayOfMonth)
+      .length;
+
+    return {
+      count: newClientsThisMonth,
+    };
+  },
+  [requireAuth, requireFullOrganization],
+);
+
+export const getCompletedAppointmentsThisMonth = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const firstDayOfMonth = new Date();
+    firstDayOfMonth.setDate(1);
+    firstDayOfMonth.setHours(0, 0, 0, 0);
+
+    const lastDayOfMonth = new Date(
+      firstDayOfMonth.getFullYear(),
+      firstDayOfMonth.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    const appointments = await db.query.appointments.findMany({
+      where: (appointments) => {
+        return and(
+          eq(appointments.proId, ctx.organization?.id as string),
+          eq(appointments.status, "CLIENT ACCEPTED"),
+          and(
+            gte(appointments.beginAt, firstDayOfMonth.toISOString()),
+            lte(appointments.beginAt, lastDayOfMonth.toISOString())
+          )
+        );
+      },
+      with: {
+        service: true,
+      },
+    });
+
+    return {
+      count: appointments.length,
+      appointments: appointments,
+    };
+  },
+  [requireAuth, requireFullOrganization],
+);
+

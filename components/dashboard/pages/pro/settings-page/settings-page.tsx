@@ -15,7 +15,6 @@ import { DocumentsSection } from "./sections/documents-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { getOptionsFromOrganization } from "@/src/actions";
 
 const SettingsPageComponent = () => {
   return (

@@ -98,36 +98,38 @@ export const ProfileCoverSection = ({ org }: ProfileCoverSectionProps) => {
 
   return (
     <Form {...form}>
-      <div className="relative w-full h-[200px] rounded-xl overflow-visible bg-gradient-to-r from-blue-50 to-blue-100">
-        <div className="absolute -bottom-16 left-8">
-          <div className="relative w-32 h-32">
-            <div className="w-full h-full rounded-full shadow-lg">
-              {previewUrl || dataOrg?.data?.logo ? (
-                <Image
-                  src={previewUrl || dataOrg?.data?.logo || ""}
-                  alt="Logo"
-                  fill
-                  className="object-cover rounded-full"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100 rounded-full">
-                  <p className="text-sm text-muted-foreground text-center px-4">
-                    Ajoutez votre logo
-                  </p>
-                </div>
-              )}
-            </div>
-            <label className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-full">
-              <Input
-                type="file"
-                accept={ACCEPTED_IMAGE_TYPES.join(",")}
-                onChange={handleImageChange}
-                className="hidden rounded-full"
-                disabled={isUploading}
+      <div className="flex items-center justify-start">
+        <div className="relative w-32 h-32">
+          <div className="w-full h-full rounded-full shadow-lg">
+            {previewUrl || dataOrg?.data?.logo ? (
+              <Image
+                src={previewUrl || dataOrg?.data?.logo || ""}
+                alt="Logo"
+                fill
+                className="object-cover rounded-full"
               />
-              <p className="text-white text-xs">Modifier le logo</p>
-            </label>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-100 rounded-full border border-muted">
+                <p className="text-sm text-muted-foreground text-center px-4">
+                  Ajoutez votre logo
+                </p>
+              </div>
+            )}
           </div>
+          <label className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-full">
+            <Input
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES.join(",")}
+              onChange={handleImageChange}
+              className="hidden rounded-full"
+              disabled={isUploading}
+            />
+            <p className="text-white text-xs font-medium">Modifier le logo</p>
+          </label>
+        </div>
+        <div className="ml-8">
+          <h2 className="text-xl font-semibold">{dataOrg?.data?.name || "Votre entreprise"}</h2>
+          <p className="text-sm text-muted-foreground mt-1">Personnalisez votre profil professionnel</p>
         </div>
       </div>
     </Form>
