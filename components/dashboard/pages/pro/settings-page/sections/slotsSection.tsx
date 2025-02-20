@@ -127,12 +127,6 @@ const SlotsSection = () => {
             </p>
           </div>
           <Credenza open={isOpen} onOpenChange={setIsOpen}>
-            <CredenzaTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter des créneaux
-              </Button>
-            </CredenzaTrigger>
             <CredenzaContent className="sm:max-w-[800px]">
               <VisuallyHidden>
                 <CredenzaTitle>
