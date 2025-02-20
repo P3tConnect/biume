@@ -131,7 +131,11 @@ export default async function RootLayout({
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />
                 <NuqsAdapter>
-                  <NextTopLoader height={4} color="#A594FF" />
+                  <NextTopLoader
+                    height={4}
+                    color="#A594FF"
+                    showSpinner={false}
+                  />
                   {children}
                 </NuqsAdapter>
               </div>
