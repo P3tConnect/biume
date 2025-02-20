@@ -142,7 +142,7 @@ export const ServiceForm = ({
                                 onClick={() => field.onChange("")}
                               >
                                 <X className="h-4 w-4 mr-2" />
-                                Supprimer l'image
+                                Supprimer l&apos;image
                               </Button>
                             </div>
                           </div>
