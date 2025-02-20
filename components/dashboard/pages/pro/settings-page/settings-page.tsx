@@ -7,6 +7,8 @@ import {
   FileText,
   Briefcase,
   Settings,
+  Image,
+  Clock,
 } from "lucide-react";
 import { ProfileSection } from "./sections/profile-section";
 import { BillingSection } from "./sections/billing-section";
@@ -15,6 +17,8 @@ import { DocumentsSection } from "./sections/documents-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import ImagesSection from "./sections/images-section";
+import SlotsSection from "./sections/slotsSection";
 
 const SettingsPageComponent = () => {
   return (
@@ -41,6 +45,10 @@ const SettingsPageComponent = () => {
               <Building2 className="h-4 w-4" />
               Profil
             </TabsTrigger>
+            <TabsTrigger value="images" className="flex items-center gap-2">
+              <Image className="h-4 w-4" />
+              Images
+            </TabsTrigger>
             <TabsTrigger value="services" className="flex items-center gap-2">
               <Briefcase className="h-4 w-4" />
               Services
@@ -48,6 +56,10 @@ const SettingsPageComponent = () => {
             <TabsTrigger value="options" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
               Options
+            </TabsTrigger>
+            <TabsTrigger value="slots" className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Slots
             </TabsTrigger>
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -67,12 +79,20 @@ const SettingsPageComponent = () => {
             <ProfileSection />
           </TabsContent>
 
+          <TabsContent value="images">
+            <ImagesSection />
+          </TabsContent>
+
           <TabsContent value="services">
             <ServicesSection />
           </TabsContent>
 
           <TabsContent value="options">
             <OptionsSection />
+          </TabsContent>
+
+          <TabsContent value="slots">
+            <SlotsSection />
           </TabsContent>
 
           <TabsContent value="documents">

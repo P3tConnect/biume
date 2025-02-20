@@ -322,17 +322,19 @@ export const getNewClientsThisMonth = createServerAction(
 
     // Filtrer pour obtenir uniquement les clients dont le premier rendez-vous est dans le mois en cours
     const clientsFirstAppointments = new Map();
-    
-    appointments.forEach(appointment => {
+
+    appointments.forEach((appointment) => {
       const clientId = appointment.clientId;
       if (!clientsFirstAppointments.has(clientId)) {
         clientsFirstAppointments.set(clientId, appointment.createdAt);
       }
     });
 
-    const newClientsThisMonth = Array.from(clientsFirstAppointments.entries())
-      .filter(([_, firstAppointmentDate]) => firstAppointmentDate >= firstDayOfMonth)
-      .length;
+    const newClientsThisMonth = Array.from(
+      clientsFirstAppointments.entries(),
+    ).filter(
+      ([_, firstAppointmentDate]) => firstAppointmentDate >= firstDayOfMonth,
+    ).length;
 
     return {
       count: newClientsThisMonth,
@@ -361,7 +363,7 @@ export const getCompletedAppointmentsThisMonth = createServerAction(
       23,
       59,
       59,
-      999
+      999,
     );
 
     const appointments = await db.query.appointments.findMany({
@@ -371,8 +373,8 @@ export const getCompletedAppointmentsThisMonth = createServerAction(
           eq(appointments.status, "CLIENT ACCEPTED"),
           and(
             gte(appointments.beginAt, firstDayOfMonth.toISOString()),
-            lte(appointments.beginAt, lastDayOfMonth.toISOString())
-          )
+            lte(appointments.beginAt, lastDayOfMonth.toISOString()),
+          ),
         );
       },
       with: {
@@ -388,3 +390,55 @@ export const getCompletedAppointmentsThisMonth = createServerAction(
   [requireAuth, requireFullOrganization],
 );
 
+export const getOrganizationImages = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const images = await db.query.organizationImages.findMany({
+      where: eq(organizationImages.organizationId, ctx.organization.id),
+      orderBy: desc(organizationImages.createdAt),
+    });
+
+    return images.map((image) => ({
+      url: image.imageUrl,
+      name: image.name,
+    }));
+  },
+  [requireAuth, requireFullOrganization],
+);
+
+export const deleteOrganizationImage = createServerAction(
+  z.object({
+    imageUrl: z.string(),
+  }),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError(
+        "L'identifiant de l'organisation ne peut pas être indéfini",
+      );
+    }
+
+    const deletedImage = await db
+      .delete(organizationImages)
+      .where(
+        and(
+          eq(organizationImages.organizationId, ctx.organization.id),
+          eq(organizationImages.imageUrl, input.imageUrl),
+        ),
+      )
+      .returning()
+      .execute();
+
+    if (!deletedImage || deletedImage.length === 0) {
+      throw new ActionError("Image non trouvée");
+    }
+
+    return deletedImage[0];
+  },
+  [requireAuth, requireOwner],
+);

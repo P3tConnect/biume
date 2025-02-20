@@ -1,4 +1,9 @@
-import { FormControl, FormMessage } from "@/components/ui/form";
+import {
+  FormControl,
+  FormMessage,
+  FormLabel,
+  FormDescription,
+} from "@/components/ui/form";
 
 import { Form, FormItem } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
@@ -9,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Clock, Euro, X } from "lucide-react";
+import { Clock, Euro, X, ImageIcon } from "lucide-react";
 import { DropzoneInput } from "@/components/ui/dropzone-input";
 import { DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input";
 import { Input } from "@/components/ui/input";
@@ -18,6 +23,7 @@ import { createService, updateService } from "@/src/actions";
 import Image from "next/image";
 import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
 import { CredenzaContent } from "@/components/ui";
+import { cn } from "@/src/lib";
 
 const servicesSchema = z.object({
   id: z.string().optional(),
@@ -86,57 +92,82 @@ export const ServiceForm = ({
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
-      <CredenzaContent>
-        <CredenzaHeader>
-          <CredenzaTitle>
+      <CredenzaContent className="max-w-3xl">
+        <CredenzaHeader className="pb-6">
+          <CredenzaTitle className="text-2xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
             {isCreating ? "Créer un service" : "Modifier le service"}
           </CredenzaTitle>
+          <p className="text-muted-foreground mt-2">
+            Remplissez les informations ci-dessous pour{" "}
+            {isCreating ? "créer" : "modifier"} votre service.
+          </p>
         </CredenzaHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-6">
-            <div className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-8">
+            <div
+              className={cn(
+                "space-y-6",
+                "hover:shadow-lg hover:border-primary/20",
+                "transition-all duration-300",
+              )}
+            >
               <FormField
                 control={form.control}
                 name="image"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-base font-semibold">
+                      Image du service
+                    </FormLabel>
+                    <FormDescription className="text-sm text-muted-foreground">
+                      Ajoutez une image représentative de votre service. Format
+                      JPEG ou PNG, 5MB maximum.
+                    </FormDescription>
                     <FormControl>
-                      <div className="relative h-48 w-full rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-900">
+                      <div className="relative h-56 w-full rounded-xl overflow-hidden">
                         {field.value ? (
-                          <div className="relative w-full h-full">
+                          <div className="relative w-full h-full group">
                             <Image
                               src={field.value}
                               alt="Aperçu du service"
                               fill
-                              className="object-cover"
+                              className="object-cover rounded-xl"
                             />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-2 right-2 p-2 bg-red-500/80 backdrop-blur-sm text-white rounded-full"
-                              onClick={() => field.onChange("")}
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="text-white"
+                                onClick={() => field.onChange("")}
+                              >
+                                <X className="h-4 w-4 mr-2" />
+                                Supprimer l'image
+                              </Button>
+                            </div>
                           </div>
                         ) : (
-                          <DropzoneInput
-                            onFilesChanged={(files) => {
-                              if (files.length > 0) {
-                                field.onChange(files[0]);
+                          <div className="group relative h-full w-full">
+                            <DropzoneInput
+                              onFilesChanged={(files) => {
+                                if (files.length > 0) {
+                                  field.onChange(files[0]);
+                                }
+                              }}
+                              value={
+                                field.value
+                                  ? [{ url: field.value, name: field.value }]
+                                  : []
                               }
-                            }}
-                            value={field.value ? [{ url: field.value, name: field.value }] : []}
-                            uploadEndpoint="imageUploader"
-                            acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
-                            placeholder={{
-                              dragActive: "Déposez l'image ici",
-                              dragInactive:
-                                "Glissez-déposez une image ici, ou cliquez pour sélectionner",
-                              fileTypes: "JPEG, PNG - 5MB max",
-                            }}
-                          />
+                              uploadEndpoint="imageUploader"
+                              acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
+                              placeholder={{
+                                dragActive: "Relâchez pour ajouter l'image",
+                                dragInactive: "Déposez votre image ici",
+                                fileTypes: "JPEG, PNG - 5MB max",
+                              }}
+                            />
+                          </div>
                         )}
                       </div>
                     </FormControl>
@@ -144,55 +175,24 @@ export const ServiceForm = ({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Nom du service" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Description du service..."
-                        className="min-h-[100px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-6 pt-4">
                 <FormField
                   control={form.control}
-                  name="duration"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-base font-semibold">
+                        Nom du service
+                      </FormLabel>
+                      <FormDescription className="text-sm text-muted-foreground">
+                        Donnez un nom clair et concis à votre service.
+                      </FormDescription>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            type="number"
-                            placeholder="Durée"
-                            className="pl-9"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                          <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        </div>
+                        <Input
+                          placeholder="ex: Consultation vétérinaire"
+                          className="bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -201,33 +201,105 @@ export const ServiceForm = ({
 
                 <FormField
                   control={form.control}
-                  name="price"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-base font-semibold">
+                        Description
+                      </FormLabel>
+                      <FormDescription className="text-sm text-muted-foreground">
+                        Décrivez en détail ce que comprend votre service.
+                      </FormDescription>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            type="number"
-                            placeholder="Prix"
-                            className="pl-9"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                          <Euro className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        </div>
+                        <Textarea
+                          placeholder="Détaillez votre service..."
+                          className="min-h-[120px] resize-none bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <div className="grid grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="duration"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-semibold">
+                          Durée (minutes)
+                        </FormLabel>
+                        <FormDescription className="text-sm text-muted-foreground">
+                          Temps nécessaire pour ce service
+                        </FormDescription>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type="number"
+                              placeholder="30"
+                              className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                            <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-semibold">
+                          Prix (€)
+                        </FormLabel>
+                        <FormDescription className="text-sm text-muted-foreground">
+                          Tarif du service
+                        </FormDescription>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type="number"
+                              placeholder="50"
+                              className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                            <Euro className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <Button type="submit">
-                {isCreating ? "Créer" : "Enregistrer"}
+            <div className="flex justify-end gap-3 pt-4 border-t">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => onOpenChange(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                className="min-w-[120px] bg-primary/90 hover:bg-primary"
+              >
+                {isCreating ? "Créer le service" : "Enregistrer"}
               </Button>
             </div>
           </form>

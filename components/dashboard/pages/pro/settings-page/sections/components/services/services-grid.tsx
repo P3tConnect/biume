@@ -1,14 +1,13 @@
 "use client";
 
 import { Service } from "@/src/db";
-import { Button } from "@/components/ui/button";
-import { Clock, Euro, Pencil, Plus } from "lucide-react";
-import Image from "next/image";
+import { Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { toast } from "sonner";
 import { use, useState } from "react";
 import { ServiceForm } from "./services-form";
 import { ActionResult } from "@/src/lib";
+import { ServiceItem } from "./service-item";
 
 interface ServicesGridProps {
   services: Promise<ActionResult<Service[]>>;
@@ -45,54 +44,11 @@ export const ServicesGrid = ({ services }: ServicesGridProps) => {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.data?.map((service) => (
-          <div
+          <ServiceItem
             key={service.id}
-            className={cn(
-              "group relative p-6 rounded-xl border bg-card transition-all duration-300",
-              "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-              "dark:bg-gray-950/50 dark:backdrop-blur-xl",
-            )}
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="relative h-16 w-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-900">
-                {service.image ? (
-                  <Image
-                    src={service.image}
-                    alt={service.name || ""}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <span>📷</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-medium">{service.name}</h3>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>{service.duration} min</span>
-                  <span className="mx-1">·</span>
-                  <Euro className="h-4 w-4" />
-                  <span>{service.price} €</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-sm text-muted-foreground line-clamp-3">
-              {service.description}
-            </p>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => setSelectedService(service)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </div>
+            service={service}
+            onEdit={setSelectedService}
+          />
         ))}
       </div>
 

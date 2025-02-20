@@ -92,6 +92,7 @@ The goal is to streamline the management of information related to animals, vete
 ### **Use `zod` for validation**
 
 ### **Use `react-hook-form` for forms**
+- Never use `useEffect` or `useState` for doing forms
 
 ### **Use `zustand` for state management**
 
