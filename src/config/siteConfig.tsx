@@ -8,7 +8,7 @@ export const siteConfig = {
   name: "Biume",
   description:
     "L'application qui fait gagner du temps aux indépendants du secteur animalier",
-  url: safeConfig.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  url: safeConfig.NEXT_PUBLIC_APP_URL || "",
   keywords: ["SaaS", "Template", "Next.js", "React", "Tailwind CSS"],
   links: {
     email: "contact@biume.com",
