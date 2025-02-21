@@ -3,6 +3,7 @@ import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { Appointment, appointments } from "./appointments";
 import { Organization, organization } from "./organization";
+import { OrganizationSlots, organizationSlots } from "./organizationSlots";
 
 export const service = pgTable("service", {
   id: text("id")
@@ -26,11 +27,13 @@ export const servicesRelations = relations(service, ({ one, many }) => ({
     references: [organization.id],
   }),
   appointments: many(appointments),
+  organizationSlots: many(organizationSlots),
 }));
 
 export type Service = InferSelectModel<typeof service> & {
   organization: Organization;
   appointments: Appointment[];
+  organizationSlots: OrganizationSlots[];
 };
 export type CreateService = typeof service.$inferInsert;
 

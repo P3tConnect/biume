@@ -104,6 +104,14 @@ const theme = {
                     transform: "translate(-50%, -50%) scale(0.9)",
                 },
             },
+            gradient: {
+                "0%, 100%": {
+                    "background-position": "0% 50%"
+                },
+                "50%": {
+                    "background-position": "100% 50%"
+                }
+            }
         },
         animation: {
             marquee: "marquee var(--duration) linear infinite",

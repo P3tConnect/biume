@@ -53,9 +53,25 @@ export function CalendarGrid({
     const dateString = date.toDateString();
     const dayAppointments = appointments[dateString] || [];
 
-    return dayAppointments.map((appointment) => (
-      <AppointmentCalendarItem key={appointment.id} appointment={appointment} />
-    ));
+    if (dayAppointments.length === 0) return null;
+
+    return (
+      <>
+        {dayAppointments.slice(0, 2).map((appointment) => (
+          <AppointmentCalendarItem
+            key={appointment.id}
+            appointment={appointment}
+          />
+        ))}
+        {dayAppointments.length > 2 && (
+          <div className="flex justify-end">
+            <div className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              +{dayAppointments.length - 2}
+            </div>
+          </div>
+        )}
+      </>
+    );
   };
 
   const getWeeksInMonth = () => {
@@ -89,7 +105,7 @@ export function CalendarGrid({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 mb-1">
       <div className="grid grid-cols-7 gap-2 mb-2">
         {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
           <div
@@ -113,7 +129,7 @@ export function CalendarGrid({
               key={`${weekIndex}-${dayIndex}`}
               className={cn(
                 "relative overflow-y-auto p-1.5 transition-all duration-200",
-                "min-h-[110px]",
+                "h-[140px]",
                 day === 0
                   ? "invisible"
                   : cn(
