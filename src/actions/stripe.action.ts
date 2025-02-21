@@ -15,6 +15,7 @@ import { Invoice, organization } from "../db";
 import { eq } from "drizzle-orm";
 import { BillingInfo } from "@/types/billing-info";
 import { StripeInvoice } from "@/types/stripe-invoice";
+import { redirect } from "next/navigation";
 
 export const createBalancePayout = createServerAction(
   z.object({
@@ -229,10 +230,12 @@ export const getBillingInfo = createServerAction(
       const currentSubscription = subscriptions.data[0];
       const defaultPaymentMethod = paymentMethods.data[0];
 
+      const planName = await getPlanName(
+        currentSubscription?.items.data[0].plan.product as string,
+      );
+
       return {
-        currentPlan: await getPlanName(
-          currentSubscription?.items.data[0].plan.product as string,
-        ),
+        currentPlan: planName,
         currentPrice: `${(currentSubscription?.items.data[0]?.price.unit_amount || 0) / 100}€`,
         paymentMethod: defaultPaymentMethod
           ? `${defaultPaymentMethod.card?.brand.toLocaleUpperCase()} se terminant par ${defaultPaymentMethod.card?.last4}`

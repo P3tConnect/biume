@@ -83,7 +83,7 @@ export function SubscriptionStep() {
 
   const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
     onSuccess: (data) => {
-      router.push(data);
+      window.location.href = data;
     },
     onError: () => {
       toast.error("Une erreur est survenue");
