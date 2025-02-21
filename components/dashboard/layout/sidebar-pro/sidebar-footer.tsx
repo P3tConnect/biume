@@ -22,7 +22,6 @@ import {
   Link,
   LogOut,
   Settings,
-  ExternalLink,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";

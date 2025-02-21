@@ -31,12 +31,44 @@ export const member = ac.newRole({
 });
 
 export const admin = ac.newRole({
-  project: ["create", "update"],
+  project: ["create", "share", "update"],
 });
 
 export const owner = ac.newRole({
-  project: ["create", "update", "delete"],
+  project: ["create", "share", "update", "delete"],
 });
+
+// Define base types
+export type BaseUser = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type BaseMember = {
+  id: string;
+  role: string;
+  userId: string;
+  organizationId: string;
+};
+
+export type BaseInvitation = {
+  id: string;
+  email: string;
+  role: string;
+  organizationId: string;
+};
+
+export type BaseOrganization = {
+  id: string;
+  name: string;
+  members: BaseMember[];
+  invitations: BaseInvitation[];
+};
 
 export const auth = betterAuth({
   appName: "Biume",
@@ -176,9 +208,7 @@ export const auth = betterAuth({
   ],
 });
 
-export type User = typeof auth.$Infer.Session.user;
+// Export inferred types
+export type User = BaseUser & typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session;
-export type Organization = typeof auth.$Infer.Organization & {
-  members: (typeof auth.$Infer.Member)[];
-  invitations: (typeof auth.$Infer.Invitation)[];
-};
+export type Organization = BaseOrganization & typeof auth.$Infer.Organization;

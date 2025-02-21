@@ -1,6 +1,13 @@
 import { z } from "zod";
-import { User, Organization } from "./auth";
+import type { User } from "better-auth";
 import { Organization as FullOrganization } from "@/src/db";
+
+// Define minimal types needed for the context
+type MinimalOrganization = {
+  id: string;
+  name: string;
+};
+
 export class ActionError extends Error {
   constructor(message: string) {
     super(message);
@@ -14,9 +21,10 @@ const handleReturnedServerError = (error: Error) => {
   }
   return "An unexpected error occurred";
 };
+
 export type ServerActionContext = {
   user: User | null;
-  organization: Organization | null;
+  organization: MinimalOrganization | null;
   fullOrganization: FullOrganization | null;
   meta: Record<string, unknown> | null;
 };

@@ -24,21 +24,19 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 interface ProfileCoverSectionProps {
-  org: Promise<ActionResult<Organization | null>>;
+  org: ActionResult<Organization | null>;
 }
 
 export const ProfileCoverSection = ({ org }: ProfileCoverSectionProps) => {
-  const dataOrg = use(org);
-
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    dataOrg?.data?.logo || null,
+    org.data?.logo || null,
   );
   const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<z.infer<typeof organizationImagesFormSchema>>({
     resolver: zodResolver(organizationImagesFormSchema),
     values: {
-      logo: dataOrg?.data?.logo || "",
+      logo: org.data?.logo || "",
     },
   });
 
@@ -101,9 +99,9 @@ export const ProfileCoverSection = ({ org }: ProfileCoverSectionProps) => {
       <div className="flex items-center justify-start">
         <div className="relative w-32 h-32">
           <div className="w-full h-full rounded-full shadow-lg">
-            {previewUrl || dataOrg?.data?.logo ? (
+            {previewUrl || org.data?.logo ? (
               <Image
-                src={previewUrl || dataOrg?.data?.logo || ""}
+                src={previewUrl || org.data?.logo || ""}
                 alt="Logo"
                 fill
                 className="object-cover rounded-full"
@@ -128,7 +126,7 @@ export const ProfileCoverSection = ({ org }: ProfileCoverSectionProps) => {
           </label>
         </div>
         <div className="ml-8">
-          <h2 className="text-xl font-semibold">{dataOrg?.data?.name || "Votre entreprise"}</h2>
+          <h2 className="text-xl font-semibold">{org.data?.name || "Votre entreprise"}</h2>
           <p className="text-sm text-muted-foreground mt-1">Personnalisez votre profil professionnel</p>
         </div>
       </div>

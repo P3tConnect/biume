@@ -25,30 +25,28 @@ import { updateOrganization } from "@/src/actions/organization.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
-import { useQueryClient } from "@tanstack/react-query";
 import { useActionMutation } from "@/src/hooks/action-hooks";
 import { ActionResult } from "@/src/lib";
 
 interface ProfileScheduleSectionProps {
-  org: Promise<ActionResult<Organization | null>>;
+  org: ActionResult<Organization | null>;
 }
 
 export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => {
-  const dataOrg = use(org);
   const form = useForm<z.infer<typeof organizationFormSchema>>({
     resolver: zodResolver(organizationFormSchema),
     values: {
-      name: dataOrg?.data?.name || "",
-      email: dataOrg?.data?.email || "",
+      name: org.data?.name || "",
+      email: org.data?.email || "",
       website: "",
-      address: dataOrg?.data?.addressId || "",
-      description: dataOrg?.data?.description || "",
-      openAt: dataOrg?.data?.openAt || "09:00",
-      closeAt: dataOrg?.data?.closeAt || "18:00",
-      atHome: dataOrg?.data?.atHome || false,
-      nac: dataOrg?.data?.nac || "",
-      siren: dataOrg?.data?.siren || "",
-      siret: dataOrg?.data?.siret || "",
+      address: org.data?.addressId || "",
+      description: org.data?.description || "",
+      openAt: org.data?.openAt || "09:00",
+      closeAt: org.data?.closeAt || "18:00",
+      atHome: org.data?.atHome || false,
+      nac: org.data?.nac || "",
+      siren: org.data?.siren || "",
+      siret: org.data?.siret || "",
     },
   });
 

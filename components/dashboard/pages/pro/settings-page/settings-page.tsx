@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -76,7 +78,7 @@ const SettingsPageComponent = () => {
           </TabsList>
 
           <TabsContent value="profile">
-            <ProfileSection />
+            {/* <ProfileSection /> */}
           </TabsContent>
 
           <TabsContent value="images">
