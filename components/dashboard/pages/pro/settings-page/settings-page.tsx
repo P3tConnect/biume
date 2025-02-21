@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -21,8 +19,34 @@ import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import ImagesSection from "./sections/images-section";
 import SlotsSection from "./sections/slotsSection";
+import { getOrganizationImages } from "@/src/actions/organization.action";
+import { getCurrentOrganization } from "@/src/actions/organization.action";
+import {
+  getBillingInfo,
+  getCompanyDocuments,
+  getInvoiceHistory,
+  getOptionsFromOrganization,
+} from "@/src/actions";
+import { getServicesFromOrganization } from "@/src/actions";
+import { auth } from "@/src/lib/auth";
+import { headers } from "next/headers";
 
-const SettingsPageComponent = () => {
+const SettingsPageComponent = async () => {
+  const activeOrganization = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
+
+  const [profile, images, services, options, documents, billing, invoices] =
+    await Promise.all([
+      getCurrentOrganization({}),
+      getOrganizationImages({}),
+      getServicesFromOrganization({}),
+      getOptionsFromOrganization({}),
+      getCompanyDocuments({}),
+      getBillingInfo({ organizationId: activeOrganization?.id! }),
+      getInvoiceHistory({ organizationId: activeOrganization?.id! }),
+    ]);
+
   return (
     <div>
       <Card className="overflow-hidden rounded-2xl mb-4">
@@ -78,19 +102,19 @@ const SettingsPageComponent = () => {
           </TabsList>
 
           <TabsContent value="profile">
-            {/* <ProfileSection /> */}
+            <ProfileSection org={profile} />
           </TabsContent>
 
           <TabsContent value="images">
-            <ImagesSection />
+            <ImagesSection images={images} />
           </TabsContent>
 
           <TabsContent value="services">
-            <ServicesSection />
+            <ServicesSection services={services} />
           </TabsContent>
 
           <TabsContent value="options">
-            <OptionsSection />
+            <OptionsSection options={options} />
           </TabsContent>
 
           <TabsContent value="slots">
@@ -98,11 +122,11 @@ const SettingsPageComponent = () => {
           </TabsContent>
 
           <TabsContent value="documents">
-            <DocumentsSection />
+            <DocumentsSection documents={documents} />
           </TabsContent>
 
           <TabsContent value="billing">
-            <BillingSection />
+            <BillingSection billingInfo={billing} invoices={invoices} />
           </TabsContent>
 
           <TabsContent value="team">

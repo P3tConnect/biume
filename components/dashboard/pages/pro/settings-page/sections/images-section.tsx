@@ -8,10 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropzoneInput,
-  DEFAULT_ACCEPTED_IMAGE_TYPES,
-} from "@/components/ui/dropzone-input";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -28,8 +24,14 @@ import { Progress } from "@/components/ui/progress";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { OrganizationImage } from "@/src/db";
+import { ActionResult } from "@/src/lib";
 
-const ImagesSection = () => {
+const ImagesSection = ({
+  images,
+}: {
+  images: ActionResult<OrganizationImage[]>;
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { startUpload } = useUploadThing("documentsUploader", {
@@ -38,18 +40,11 @@ const ImagesSection = () => {
     },
   });
 
-  const {
-    data: imagesData,
-    isLoading,
-    refetch,
-  } = useActionQuery(getOrganizationImages, {}, "images");
-
   const { mutateAsync: addImages } = useActionMutation(
     addImagesToOrganization,
     {
       onSuccess: () => {
         toast.success("Images ajoutées avec succès");
-        refetch();
       },
       onError: (error) => {
         toast.error(error.message);
@@ -62,7 +57,6 @@ const ImagesSection = () => {
     {
       onSuccess: () => {
         toast.success("Image supprimée avec succès");
-        refetch();
       },
       onError: () => {
         toast.error("Erreur lors de la suppression de l'image");
@@ -107,33 +101,6 @@ const ImagesSection = () => {
     await deleteImage({ imageUrl });
   };
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Images</CardTitle>
-          <CardDescription>Chargement des images...</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="border-2 border-dashed rounded-lg p-8 text-center border-muted-foreground/20">
-            <div className="flex flex-col items-center space-y-2">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-4 w-64" />
-              <Skeleton className="h-3 w-48" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[...Array(3)].map((_, index) => (
-              <div key={index} className="relative aspect-square w-64 h-64">
-                <Skeleton className="w-full h-full rounded-xl" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -176,15 +143,15 @@ const ImagesSection = () => {
           )}
         </div>
 
-        {imagesData!.length > 0 && (
+        {images.data!.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {imagesData!.map((image, index) => (
+            {images.data!.map((image, index) => (
               <div
                 key={index}
                 className="relative group aspect-square w-64 h-64"
               >
                 <Image
-                  src={image.url ?? ""}
+                  src={image.imageUrl ?? ""}
                   alt={image.name ?? ""}
                   fill
                   className="object-cover rounded-xl shadow-sm"
@@ -193,7 +160,7 @@ const ImagesSection = () => {
                   variant="destructive"
                   size="icon"
                   className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
-                  onClick={() => handleDeleteImage(image.url ?? "")}
+                  onClick={() => handleDeleteImage(image.imageUrl ?? "")}
                 >
                   <X className="h-5 w-5" />
                 </Button>

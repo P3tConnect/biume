@@ -11,8 +11,10 @@ import {
   requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
-import { organization } from "../db";
+import { Invoice, organization } from "../db";
 import { eq } from "drizzle-orm";
+import { BillingInfo } from "@/types/billing-info";
+import { StripeInvoice } from "@/types/stripe-invoice";
 
 export const createBalancePayout = createServerAction(
   z.object({
@@ -238,7 +240,7 @@ export const getBillingInfo = createServerAction(
           ? `${defaultPaymentMethod.card?.brand.toLocaleUpperCase()} se terminant par ${defaultPaymentMethod.card?.last4}`
           : "Aucun moyen de paiement",
         subscriptionStatus: currentSubscription?.status || "inactive",
-      };
+      } as unknown as BillingInfo;
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des informations de facturation:",
@@ -306,7 +308,7 @@ export const getInvoiceHistory = createServerAction(
         status: invoice.status,
         pdfUrl: invoice.invoice_pdf,
         number: invoice.number,
-      }));
+      })) as unknown as StripeInvoice[];
     } catch (error) {
       console.error("Erreur lors de la récupération des factures:", error);
       throw new ActionError(

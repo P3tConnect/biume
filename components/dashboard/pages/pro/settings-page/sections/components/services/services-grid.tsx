@@ -10,14 +10,14 @@ import { ActionResult } from "@/src/lib";
 import { ServiceItem } from "./service-item";
 
 interface ServicesGridProps {
-  services: Promise<ActionResult<Service[]>>;
+  services: ActionResult<Service[]>;
 }
 
 export const ServicesGrid = ({ services }: ServicesGridProps) => {
-  const data = use(services);
+  const data = services.data;
   const [selectedService, setSelectedService] = useState<Service | null>(null);
 
-  if (!data || data.data?.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <button
         type="button"
@@ -43,7 +43,7 @@ export const ServicesGrid = ({ services }: ServicesGridProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.data?.map((service) => (
+        {data?.map((service) => (
           <ServiceItem
             key={service.id}
             service={service}

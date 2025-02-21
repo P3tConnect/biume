@@ -12,12 +12,12 @@ import { OptionItem } from "./option-item";
 export const OptionsGrid = ({
   options,
 }: {
-  options: Promise<ActionResult<Option[]>>;
+  options: ActionResult<Option[]>;
 }) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const data = use(options);
+  const data = options.data;
 
-  if (!data || data.data?.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <button
         type="button"
@@ -43,7 +43,7 @@ export const OptionsGrid = ({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.data?.map((option) => (
+        {data?.map((option) => (
           <OptionItem
             key={option.id}
             option={option}

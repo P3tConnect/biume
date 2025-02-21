@@ -6,10 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { safeConfig } from "@/src/lib";
+import { ActionResult, safeConfig } from "@/src/lib";
 import { BillingPlanSection } from "./components/billing/billing-plan-section";
 import { BillingPaymentSection } from "./components/billing/billing-payment-section";
 import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
+import { BillingInfo } from "@/types/billing-info";
+import { StripeInvoice } from "@/types/stripe-invoice";
 
 export const plans = [
   {
@@ -58,7 +60,13 @@ export const plans = [
   },
 ];
 
-export const BillingSection = () => {
+export const BillingSection = ({
+  billingInfo,
+  invoices,
+}: {
+  billingInfo: ActionResult<BillingInfo>;
+  invoices: ActionResult<StripeInvoice[]>;
+}) => {
   return (
     <Card className="overflow-hidden">
       <CardHeader className="border-b bg-muted/10 pb-8 pt-6">
@@ -71,11 +79,11 @@ export const BillingSection = () => {
       </CardHeader>
       <CardContent className="p-8">
         <div className="space-y-8">
-          <BillingPlanSection plans={plans} />
+          <BillingPlanSection plans={plans} billingInfo={billingInfo} />
           <div className="h-px bg-border" />
-          <BillingPaymentSection />
+          <BillingPaymentSection billingInfo={billingInfo} />
           <div className="h-px bg-border" />
-          <BillingInvoicesSection />
+          <BillingInvoicesSection invoices={invoices} />
         </div>
       </CardContent>
     </Card>

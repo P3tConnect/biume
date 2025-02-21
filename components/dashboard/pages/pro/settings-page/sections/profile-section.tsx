@@ -3,9 +3,10 @@ import { ProfileMainInfoSection } from "./components/profile/profile-main-info-s
 import { ProfileLegalInfoSection } from "./components/profile/profile-legal-info-section";
 import { ProfileScheduleSection } from "./components/profile/profile-schedule-section";
 import { ProfileServicesSection } from "./components/profile/profile-services-section";
-import { getCurrentOrganization } from "@/src/actions/organization.action";
 import { z } from "zod";
 import { Suspense } from "react";
+import { Organization } from "@/src/db";
+import { ActionResult } from "@/src/lib";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -54,26 +55,30 @@ export const organizationImagesFormSchema = z.object({
   logo: z.string().optional(),
 });
 
-export const ProfileSection = async () => {
-  const data = await getCurrentOrganization({});
+export const ProfileSection = async ({
+  org,
+}: {
+  org: ActionResult<Organization | null>;
+}) => {
+  if (!org.data) {
+    return null;
+  }
 
   return (
-    <Suspense fallback={"Loading ..."}>
-      <div className="relative">
-        <ProfileCoverSection org={data} />
+    <div className="relative">
+      <ProfileCoverSection org={org} />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
-          <div className="md:col-span-2 space-y-6">
-            <ProfileMainInfoSection org={data} />
-            <ProfileLegalInfoSection org={data} />
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
+        <div className="md:col-span-2 space-y-6">
+          <ProfileMainInfoSection org={org} />
+          <ProfileLegalInfoSection org={org} />
+        </div>
 
-          <div className="space-y-6">
-            <ProfileScheduleSection org={data} />
-            <ProfileServicesSection org={data} />
-          </div>
+        <div className="space-y-6">
+          <ProfileScheduleSection org={org} />
+          <ProfileServicesSection org={org} />
         </div>
       </div>
-    </Suspense>
+    </div>
   );
 };

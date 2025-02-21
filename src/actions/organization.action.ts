@@ -11,6 +11,7 @@ import {
 import { auth } from "../lib/auth";
 import {
   Organization,
+  OrganizationImage,
   organizationImages,
   organization as organizationTable,
 } from "../db";
@@ -407,7 +408,7 @@ export const getOrganizationImages = createServerAction(
     return images.map((image) => ({
       url: image.imageUrl,
       name: image.name,
-    }));
+    })) as unknown as OrganizationImage[];
   },
   [requireAuth, requireFullOrganization],
 );

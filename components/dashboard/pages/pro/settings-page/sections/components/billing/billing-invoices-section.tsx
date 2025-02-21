@@ -2,12 +2,8 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Receipt, Download } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useActionQuery } from "@/src/hooks/action-hooks";
-import { getInvoiceHistory } from "@/src/actions/stripe.action";
-import { cn } from "@/src/lib";
+import { ActionResult, cn } from "@/src/lib";
 import {
   Credenza,
   CredenzaContent,
@@ -23,20 +19,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { StripeInvoice } from "@/types/stripe-invoice";
 
-export const BillingInvoicesSection = () => {
-  const params = useParams();
-  const orgId = params.orgId as string;
+export const BillingInvoicesSection = ({
+  invoices,
+}: {
+  invoices: ActionResult<StripeInvoice[]>;
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const { data: invoices, isLoading } = useActionQuery(
-    getInvoiceHistory,
-    { organizationId: orgId },
-    "invoice-history",
-    {
-      enabled: isOpen,
-    },
-  );
 
   return (
     <>
@@ -65,13 +55,7 @@ export const BillingInvoicesSection = () => {
               Consultez et téléchargez vos factures des 12 derniers mois
             </CredenzaDescription>
           </CredenzaHeader>
-          {isLoading ? (
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          ) : invoices && invoices.length > 0 ? (
+          {invoices.data && invoices.data.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -83,7 +67,7 @@ export const BillingInvoicesSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.map((invoice) => (
+                {invoices.data?.map((invoice) => (
                   <TableRow key={invoice.id}>
                     <TableCell>{invoice.number}</TableCell>
                     <TableCell>{invoice.date}</TableCell>
@@ -133,4 +117,4 @@ export const BillingInvoicesSection = () => {
       </Credenza>
     </>
   );
-}; 
+};

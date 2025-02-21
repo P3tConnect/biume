@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import {
   db,
@@ -7,7 +7,11 @@ import {
   requireAuth,
   requireOwner,
 } from "../lib";
-import { organization, organizationDocuments } from "../db";
+import {
+  organization,
+  OrganizationDocuments,
+  organizationDocuments,
+} from "../db";
 import { eq } from "drizzle-orm";
 import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { organization as organizationTable } from "../db";
@@ -91,7 +95,7 @@ export const getCompanyDocuments = createServerAction(
       throw new ActionError("Documents not found");
     }
 
-    return documents;
+    return documents as unknown as OrganizationDocuments[];
   },
   [requireAuth, requireOwner],
 );

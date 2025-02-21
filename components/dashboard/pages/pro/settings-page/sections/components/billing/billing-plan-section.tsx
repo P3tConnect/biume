@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, Check } from "lucide-react";
-import { cn } from "@/src/lib";
+import { ActionResult, cn } from "@/src/lib";
 import { useParams, useRouter } from "next/navigation";
-import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
-import { getBillingInfo, updateOrganizationPlan } from "@/src/actions/stripe.action";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { updateOrganizationPlan } from "@/src/actions/stripe.action";
 import { toast } from "sonner";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
@@ -18,6 +18,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui";
+import { BillingInfo } from "@/types/billing-info";
 
 interface Plan {
   name: string;
@@ -29,20 +30,18 @@ interface Plan {
 
 interface BillingPlanSectionProps {
   plans: Plan[];
+  billingInfo: ActionResult<BillingInfo>;
 }
 
-export const BillingPlanSection = ({ plans }: BillingPlanSectionProps) => {
+export const BillingPlanSection = ({
+  plans,
+  billingInfo,
+}: BillingPlanSectionProps) => {
   const params = useParams();
   const orgId = params.orgId as string;
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null);
-
-  const { data: billingInfo, isLoading } = useActionQuery(
-    getBillingInfo,
-    { organizationId: orgId },
-    "billing-info",
-  );
 
   const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
     onSuccess: (data) => {
@@ -70,28 +69,22 @@ export const BillingPlanSection = ({ plans }: BillingPlanSectionProps) => {
             </div>
             <div>
               <h3 className="text-lg font-medium">Plan actuel</h3>
-              {isLoading ? (
-                <Skeleton className="mt-1 h-4 w-[120px]" />
-              ) : (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-primary">
-                    {billingInfo?.currentPrice}
-                  </span>
-                  <span className="text-sm text-muted-foreground">/mois</span>
-                </div>
-              )}
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl font-bold text-primary">
+                  {billingInfo?.data?.currentPrice}
+                </span>
+                <span className="text-sm text-muted-foreground">/mois</span>
+              </div>
             </div>
           </div>
           <Button onClick={() => setIsOpen(true)}>Changer de plan</Button>
         </div>
-        {!isLoading && (
-          <p className="text-sm text-muted-foreground">
-            Vous êtes actuellement sur le plan{" "}
-            <span className="font-medium text-foreground">
-              {billingInfo?.currentPlan}
-            </span>
-          </p>
-        )}
+        <p className="text-sm text-muted-foreground">
+          Vous êtes actuellement sur le plan{" "}
+          <span className="font-medium text-foreground">
+            {billingInfo?.data?.currentPlan}
+          </span>
+        </p>
       </div>
 
       <Credenza open={isOpen} onOpenChange={setIsOpen}>
@@ -149,4 +142,4 @@ export const BillingPlanSection = ({ plans }: BillingPlanSectionProps) => {
       </Credenza>
     </>
   );
-}; 
+};
