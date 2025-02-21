@@ -201,15 +201,13 @@ export const updateOrganizationPlan = createServerAction(
 );
 
 export const getBillingInfo = createServerAction(
-  z.object({
-    organizationId: z.string(),
-  }),
+  z.object({}),
   async (input, ctx) => {
     try {
       const org = await db
         .select()
         .from(organization)
-        .where(eq(organization.id, input.organizationId))
+        .where(eq(organization.id, ctx.organization?.id ?? ""))
         .execute();
 
       if (!org[0] || !org[0].stripeId) {
@@ -251,6 +249,7 @@ export const getBillingInfo = createServerAction(
       );
     }
   },
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
 export const createPaymentMethodUpdateSession = createServerAction(
@@ -285,9 +284,7 @@ export const createPaymentMethodUpdateSession = createServerAction(
 );
 
 export const getInvoiceHistory = createServerAction(
-  z.object({
-    organizationId: z.string(),
-  }),
+  z.object({}),
   async (input, ctx) => {
     try {
       if (!ctx.fullOrganization?.stripeId) {

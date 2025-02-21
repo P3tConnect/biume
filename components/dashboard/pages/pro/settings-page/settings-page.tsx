@@ -1,5 +1,4 @@
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import {
   Building2,
   CreditCard,
@@ -28,14 +27,9 @@ import {
   getOptionsFromOrganization,
 } from "@/src/actions";
 import { getServicesFromOrganization } from "@/src/actions";
-import { auth } from "@/src/lib/auth";
-import { headers } from "next/headers";
+import { Suspense } from "react";
 
 const SettingsPageComponent = async () => {
-  const activeOrganization = await auth.api.getFullOrganization({
-    headers: await headers(),
-  });
-
   const [profile, images, services, options, documents, billing, invoices] =
     await Promise.all([
       getCurrentOrganization({}),
@@ -43,8 +37,8 @@ const SettingsPageComponent = async () => {
       getServicesFromOrganization({}),
       getOptionsFromOrganization({}),
       getCompanyDocuments({}),
-      getBillingInfo({ organizationId: activeOrganization?.id! }),
-      getInvoiceHistory({ organizationId: activeOrganization?.id! }),
+      getBillingInfo({}),
+      getInvoiceHistory({}),
     ]);
 
   return (
@@ -102,35 +96,51 @@ const SettingsPageComponent = async () => {
           </TabsList>
 
           <TabsContent value="profile">
-            <ProfileSection org={profile} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <ProfileSection org={profile} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="images">
-            <ImagesSection images={images} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <ImagesSection images={images} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="services">
-            <ServicesSection services={services} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <ServicesSection services={services} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="options">
-            <OptionsSection options={options} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <OptionsSection options={options} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="slots">
-            <SlotsSection />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <SlotsSection />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="documents">
-            <DocumentsSection documents={documents} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <DocumentsSection documents={documents} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="billing">
-            <BillingSection billingInfo={billing} invoices={invoices} />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <BillingSection billingInfo={billing} invoices={invoices} />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="team">
-            <TeamSection />
+            <Suspense fallback={<div>Chargement...</div>}>
+              <TeamSection />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

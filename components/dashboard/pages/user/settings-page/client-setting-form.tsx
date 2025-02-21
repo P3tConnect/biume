@@ -21,21 +21,20 @@ import {
   updateUserInformations,
 } from "@/src/actions/user.action";
 import { clientSettingsSchema } from "./types/settings-schema";
-import { useActionMutation, useActionQuery } from "@/src/hooks/action-hooks";
+import { useActionMutation } from "@/src/hooks/action-hooks";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { ProfileForm } from "./forms/profile-form";
 import { NotificationsForm } from "./forms/notifications-form";
 import { SecurityForm } from "./forms/security-form";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const ClientSettingsForm = () => {
-  const { data: userInformations, refetch } = useActionQuery(
-    getUserInformations,
-    {},
-    "user-informations",
-  );
   const queryClient = useQueryClient();
+  const { data: userInformations, refetch } = useQuery({
+    queryKey: ["user-informations"],
+    queryFn: () => getUserInformations({}),
+  });
 
   const handleRefetch = async () => {
     await refetch();
@@ -44,17 +43,18 @@ const ClientSettingsForm = () => {
   const form = useForm<z.infer<typeof clientSettingsSchema>>({
     resolver: zodResolver(clientSettingsSchema),
     values: {
-      image: userInformations?.user.image ?? "",
-      name: userInformations?.user.name ?? "",
-      address: userInformations?.user.address ?? "",
-      email: userInformations?.user.email ?? "",
-      country: userInformations?.user.country ?? "",
-      city: userInformations?.user.city ?? "",
-      zipCode: userInformations?.user.zipCode ?? "",
-      phoneNumber: userInformations?.user.phoneNumber ?? "",
-      emailNotifications: userInformations?.user.emailNotifications ?? false,
-      smsNotifications: userInformations?.user.smsNotifications ?? false,
-      twoFactorEnabled: userInformations?.user.twoFactorEnabled ?? false,
+      image: userInformations?.data?.user.image ?? "",
+      name: userInformations?.data?.user.name ?? "",
+      address: userInformations?.data?.user.address ?? "",
+      email: userInformations?.data?.user.email ?? "",
+      country: userInformations?.data?.user.country ?? "",
+      city: userInformations?.data?.user.city ?? "",
+      zipCode: userInformations?.data?.user.zipCode ?? "",
+      phoneNumber: userInformations?.data?.user.phoneNumber ?? "",
+      emailNotifications:
+        userInformations?.data?.user.emailNotifications ?? false,
+      smsNotifications: userInformations?.data?.user.smsNotifications ?? false,
+      twoFactorEnabled: userInformations?.data?.user.twoFactorEnabled ?? false,
     },
   });
 
@@ -72,7 +72,7 @@ const ClientSettingsForm = () => {
     await mutateAsync(data);
   });
 
-  const { } = useFormChangeToast({
+  const {} = useFormChangeToast({
     form,
     onSubmit,
     message: "Informations modifiées",
@@ -141,8 +141,8 @@ const ClientSettingsForm = () => {
               <CardHeader>
                 <CardTitle>Sécurité</CardTitle>
                 <CardDescription>
-                  Gérez vos paramètres de sécurité et l&apos;authentification à deux
-                  facteurs.
+                  Gérez vos paramètres de sécurité et l&apos;authentification à
+                  deux facteurs.
                 </CardDescription>
               </CardHeader>
               <CardContent>

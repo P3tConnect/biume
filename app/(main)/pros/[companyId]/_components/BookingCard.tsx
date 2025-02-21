@@ -19,12 +19,12 @@ import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
-import { useActionQuery } from "@/src/hooks/action-hooks";
 import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface BookingCardProps {
   services: Service[];
@@ -52,9 +52,22 @@ export function BookingCard({
   setSelectedTime,
 }: BookingCardProps) {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const { data: userPets = [] } = useActionQuery(getPets, {}, "user-pets");
 
-  const { switch: switchStep, current, metadata, setMetadata, isFirst, isLast, next, prev } = useStepper({
+  const { data: userPets } = useQuery({
+    queryKey: ["user-pets"],
+    queryFn: () => getPets({}),
+  });
+
+  const {
+    switch: switchStep,
+    current,
+    metadata,
+    setMetadata,
+    isFirst,
+    isLast,
+    next,
+    prev,
+  } = useStepper({
     initialStep: "pet",
   });
 
@@ -66,7 +79,7 @@ export function BookingCard({
     ? (professionals.find((p) => p.id === selectedPro) ?? null)
     : null;
 
-  const selectedPet = userPets.find(
+  const selectedPet = userPets?.data?.find(
     (p) => p.id === metadata?.pet?.petId,
   );
 
@@ -87,7 +100,7 @@ export function BookingCard({
   const stepContent = {
     pet: (
       <PetStep
-        userPets={userPets}
+        userPets={userPets?.data ?? []}
         selectedPetId={metadata?.pet?.petId ?? ""}
         onSelectPet={(petId) => setMetadata("pet", { petId })}
       />
@@ -122,9 +135,7 @@ export function BookingCard({
         <div className="space-y-6">
           {/* Prix */}
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-semibold">
-              À partir de 40€
-            </span>
+            <span className="text-2xl font-semibold">À partir de 40€</span>
           </div>
 
           {/* Service Selection */}
@@ -256,8 +267,8 @@ export function BookingCard({
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-              locale: fr,
-            })} à ${selectedTime}`
+                locale: fr,
+              })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -274,9 +285,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                          Object.values(steps).findIndex(
-                            (s) => s.id === current.id,
-                          )
+                            Object.values(steps).findIndex(
+                              (s) => s.id === current.id,
+                            )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
@@ -295,36 +306,40 @@ export function BookingCard({
               ))}
             </div>
             <CredenzaTitle>{current.title}</CredenzaTitle>
-            <CredenzaDescription>
-              {current.description}
-            </CredenzaDescription>
+            <CredenzaDescription>{current.description}</CredenzaDescription>
           </CredenzaHeader>
 
           <div className="py-4">
             {switchStep({
-              pet: () => <PetStep
-                userPets={userPets}
-                selectedPetId={metadata?.pet?.petId ?? ""}
-                onSelectPet={(petId) => setMetadata("pet", { petId })}
-              />,
-              consultationType: () => <ConsultationTypeStep
-                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                onSelectType={(isHomeVisit) =>
-                  setMetadata("consultationType", { isHomeVisit })
-                }
-              />,
-              summary: () => <SummaryStep
-                selectedPet={selectedPet}
-                selectedService={selectedServiceData}
-                selectedPro={selectedProData}
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
-                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                additionalInfo={metadata?.summary?.additionalInfo ?? ""}
-                onAdditionalInfoChange={(value) =>
-                  setMetadata("summary", { additionalInfo: value })
-                }
-              />,
+              pet: () => (
+                <PetStep
+                  userPets={userPets?.data ?? []}
+                  selectedPetId={metadata?.pet?.petId ?? ""}
+                  onSelectPet={(petId) => setMetadata("pet", { petId })}
+                />
+              ),
+              consultationType: () => (
+                <ConsultationTypeStep
+                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                  onSelectType={(isHomeVisit) =>
+                    setMetadata("consultationType", { isHomeVisit })
+                  }
+                />
+              ),
+              summary: () => (
+                <SummaryStep
+                  selectedPet={selectedPet}
+                  selectedService={selectedServiceData}
+                  selectedPro={selectedProData}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                  additionalInfo={metadata?.summary?.additionalInfo ?? ""}
+                  onAdditionalInfoChange={(value) =>
+                    setMetadata("summary", { additionalInfo: value })
+                  }
+                />
+              ),
             })}
           </div>
 
@@ -351,8 +366,7 @@ export function BookingCard({
                   }
                 }}
                 disabled={
-                  (current.id === "pet" &&
-                    !metadata?.pet?.petId) ||
+                  (current.id === "pet" && !metadata?.pet?.petId) ||
                   (isLast && !metadata?.pet?.petId)
                 }
               >

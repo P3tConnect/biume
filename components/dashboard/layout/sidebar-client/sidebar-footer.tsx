@@ -19,27 +19,20 @@ import {
   Skeleton,
 } from "@/components/ui";
 import { getUserInformations } from "@/src/actions/user.action";
-import { useActionQuery } from "@/src/hooks/action-hooks";
 import { signOut } from "@/src/lib/auth-client";
+import { useQuery } from "@tanstack/react-query";
 import Avvvatars from "avvvatars-react";
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Settings,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const SidebarClientFooterComponent = () => {
   const router = useRouter();
-  const { data: session, isPending } = useActionQuery(
-    getUserInformations,
-    {},
-    "user-informations",
-  );
+  const { data: session, isPending } = useQuery({
+    queryKey: ["user-informations"],
+    queryFn: () => getUserInformations({}),
+  });
 
   return (
     <Credenza>
@@ -51,11 +44,11 @@ const SidebarClientFooterComponent = () => {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                {session?.user.image ? (
+                {session?.data?.user.image ? (
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={session?.user.image}
-                      alt={session?.user.name}
+                      src={session?.data?.user.image}
+                      alt={session?.data?.user.name}
                       className="object-cover"
                     />
                     <AvatarFallback className="rounded-lg">
@@ -65,7 +58,7 @@ const SidebarClientFooterComponent = () => {
                 ) : (
                   <div className="flex h-8 w-8 items-center justify-center">
                     <Avvvatars
-                      value={session?.user.email || ""}
+                      value={session?.data?.user.email || ""}
                       size={32}
                       style="shape"
                     />
@@ -73,10 +66,10 @@ const SidebarClientFooterComponent = () => {
                 )}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {session?.user.name}
+                    {session?.data?.user.name}
                   </span>
                   <span className="truncate text-xs">
-                    {session?.user.email}
+                    {session?.data?.user.email}
                   </span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
@@ -90,11 +83,11 @@ const SidebarClientFooterComponent = () => {
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  {session?.user.image ? (
+                  {session?.data?.user.image ? (
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
-                        src={session?.user.image}
-                        alt={session?.user.name}
+                        src={session?.data?.user.image}
+                        alt={session?.data?.user.name}
                         className="object-cover"
                       />
                       <AvatarFallback className="rounded-lg">
@@ -104,7 +97,7 @@ const SidebarClientFooterComponent = () => {
                   ) : (
                     <div className="flex h-8 w-8 items-center justify-center">
                       <Avvvatars
-                        value={session?.user.email || ""}
+                        value={session?.data?.user.email || ""}
                         size={32}
                         style="shape"
                       />
@@ -119,10 +112,10 @@ const SidebarClientFooterComponent = () => {
                     ) : (
                       <>
                         <span className="truncate font-semibold">
-                          {session?.user.name}
+                          {session?.data?.user.name}
                         </span>
                         <span className="truncate text-xs">
-                          {session?.user.email}
+                          {session?.data?.user.email}
                         </span>
                       </>
                     )}
@@ -131,7 +124,9 @@ const SidebarClientFooterComponent = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <Link href={`/dashboard/user/${session?.user.id}/settings`}>
+                <Link
+                  href={`/dashboard/user/${session?.data?.user.id}/settings`}
+                >
                   <DropdownMenuItem className="gap-2">
                     <Settings size={14} />
                     Settings

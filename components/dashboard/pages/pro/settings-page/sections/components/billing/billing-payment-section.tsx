@@ -2,14 +2,10 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CreditCard } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
-import {
-  getBillingInfo,
-  createPaymentMethodUpdateSession,
-} from "@/src/actions/stripe.action";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { createPaymentMethodUpdateSession } from "@/src/actions/stripe.action";
 import { toast } from "sonner";
 import { ActionResult } from "@/src/lib";
 import { BillingInfo } from "@/types/billing-info";

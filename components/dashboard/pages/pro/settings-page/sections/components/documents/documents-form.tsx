@@ -12,10 +12,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DropzoneInput } from "@/components/ui/dropzone-input";
-import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
+import { useActionMutation } from "@/src/hooks/action-hooks";
 import {
   deleteCompanyDocument,
-  getCompanyDocuments,
   updateCompanyDocuments,
 } from "@/src/actions/companyDocuments.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";

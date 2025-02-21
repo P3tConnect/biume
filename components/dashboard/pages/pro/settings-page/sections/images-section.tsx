@@ -14,16 +14,14 @@ import { X } from "lucide-react";
 import {
   addImagesToOrganization,
   deleteOrganizationImage,
-  getOrganizationImages,
 } from "@/src/actions/organization.action";
 import { toast } from "sonner";
-import { useActionMutation, useActionQuery } from "@/src/hooks/action-hooks";
+import { useActionMutation } from "@/src/hooks/action-hooks";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { useDropzone } from "react-dropzone";
 import { Progress } from "@/components/ui/progress";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { OrganizationImage } from "@/src/db";
 import { ActionResult } from "@/src/lib";
 
