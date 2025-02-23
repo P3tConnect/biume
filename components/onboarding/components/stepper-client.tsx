@@ -48,6 +48,18 @@ const StepperClient = ({ open }: { open: boolean }) => {
     }
 
     if (stepper.current.id == 'informations') {
+      const isValid = await form.trigger([
+        'address',
+        'city',
+        'country',
+        'zipCode',
+        'phoneNumber',
+      ]);
+
+      if (!isValid) {
+        return;
+      }
+
       await updateUser({
         image: data.image,
         address: data.address,
@@ -125,6 +137,14 @@ const StepperClient = ({ open }: { open: boolean }) => {
               <Button
                 onClick={async () => await onSubmit(form.getValues())}
                 className='rounded-xl'
+                disabled={
+                  stepper.current.id === 'informations' &&
+                  (!form.getValues().address ||
+                    !form.getValues().city ||
+                    !form.getValues().country ||
+                    !form.getValues().zipCode ||
+                    !form.getValues().phoneNumber)
+                }
               >
                 Suivant
               </Button>
