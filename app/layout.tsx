@@ -65,11 +65,11 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     ],
     robots: {
-      follow: true,
-      index: true,
+      follow: false,
+      index: false,
       googleBot: {
-        index: true,
-        follow: true,
+        index: false,
+        follow: false,
       },
     },
     keywords: [
@@ -132,7 +132,7 @@ export default async function RootLayout({
                 />
                 <NuqsAdapter>
                   <NextTopLoader
-                    height={4}
+                    height={3}
                     color="#A594FF"
                     showSpinner={false}
                   />

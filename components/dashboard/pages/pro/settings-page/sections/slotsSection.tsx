@@ -1,85 +1,171 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Credenza,
   CredenzaContent,
-  CredenzaDescription,
-  CredenzaHeader,
   CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import SlotsForm from "./components/slots/slots-form";
-import SlotsGrid from "./components/slots/slots-grid";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui";
+import SlotsForm, { FormValues } from "./components/slots/slots-form";
+import SlotsGrid from "./components/slots/slots-grid";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { createOrganizationSlot, deleteOrganizationSlot, updateOrganizationSlot } from "@/src/actions";
+import { toast } from "sonner";
+import { OrganizationSlots } from "@/src/db/organizationSlots";
 
-interface Slot {
-  id: string;
+interface SlotFormData {
   type: "unique" | "recurring";
+  date?: Date;
+  serviceId: string;
   startTime: string;
   endTime: string;
-  duration: string;
-  date: string;
   selectedDays: string[];
-  serviceId: string;
+  endRecurrence?: Date;
+  serviceDuration: number;
 }
 
-const SlotsSection = () => {
+const weekDays = [
+  { id: "monday", label: "Lun" },
+  { id: "tuesday", label: "Mar" },
+  { id: "wednesday", label: "Mer" },
+  { id: "thursday", label: "Jeu" },
+  { id: "friday", label: "Ven" },
+  { id: "saturday", label: "Sam" },
+  { id: "sunday", label: "Dim" },
+] as const;
+
+const SlotsSection = ({ slots }: { slots: OrganizationSlots[] }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedSlotId, setSelectedSlotId] = React.useState<string | null>(
-    null,
-  );
+  const [selectedSlotId, setSelectedSlotId] = React.useState<string | null>(null);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  // Exemple de données de créneaux (à remplacer par les vraies données)
-  const exampleSlots: Slot[] = [
-    {
-      id: "1",
-      type: "unique",
-      startTime: "09:00",
-      endTime: "09:30",
-      duration: "30",
-      date: "Lundi 15 Avril 2024",
-      selectedDays: [],
-      serviceId: "1",
+  const createSlotMutation = useActionMutation(createOrganizationSlot, {
+    onSuccess: () => {
+      toast.success("Le créneau a été créé avec succès");
+      setIsOpen(false);
     },
-    {
-      id: "2",
-      type: "recurring",
-      startTime: "09:30",
-      endTime: "10:00",
-      duration: "30",
-      date: "Lundi 15 Avril 2024",
-      selectedDays: ["monday", "wednesday", "friday"],
-      serviceId: "2",
+    onError: (error) => {
+      toast.error("Erreur: " + error);
     },
-  ];
+  });
 
-  const handleSubmit = (data: any) => {
-    if (isEditing && selectedSlotId) {
-      console.log("Modification du créneau:", selectedSlotId, data);
-      // Ajouter ici la logique de modification
-    } else {
-      console.log("Création d'un nouveau créneau:", data);
-      // Ajouter ici la logique de création
+  const updateSlotMutation = useActionMutation(updateOrganizationSlot, {
+    onSuccess: () => {
+      toast.success("Le créneau a été modifié avec succès");
+      setIsOpen(false);
+      setIsEditing(false);
+      setSelectedSlotId(null);
+    },
+    onError: (error) => {
+      toast.error("Erreur: " + error);
+    },
+  });
+
+  const { mutateAsync: deleteSlot } = useActionMutation(deleteOrganizationSlot, {
+    onSuccess: () => {
+      toast.success("Le créneau a été supprimé avec succès");
+      setIsDeleteDialogOpen(false);
+      setSelectedSlotId(null);
+    },
+  });
+
+  const handleSubmit = async (formData: FormValues) => {
+    try {
+      if (formData.type === "unique") {
+        const data = {
+          serviceId: formData.serviceId,
+          start: new Date(formData.date!.setHours(
+            parseInt(formData.startTime.split(":")[0]),
+            parseInt(formData.startTime.split(":")[1])
+          )).toISOString(),
+          end: new Date(formData.date!.setHours(
+            parseInt(formData.endTime.split(":")[0]),
+            parseInt(formData.endTime.split(":")[1])
+          )).toISOString(),
+          isAvailable: true,
+        };
+
+        if (isEditing && selectedSlotId) {
+          await updateSlotMutation.mutateAsync({
+            ...data,
+            id: selectedSlotId,
+          });
+        } else {
+          await createSlotMutation.mutateAsync(data);
+        }
+      } else {
+        // Créneaux récurrents
+        if (!formData.date || !formData.endRecurrence || !formData.selectedDays?.length) {
+          toast.error("Veuillez sélectionner une période et des jours de récurrence");
+          return;
+        }
+
+        const startDate = new Date(formData.date);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(formData.endRecurrence);
+        endDate.setHours(23, 59, 59, 999);
+
+        // Convertir les heures en minutes pour faciliter les calculs
+        const [startHour, startMinute] = formData.startTime.split(":").map(Number);
+        const [endHour, endMinute] = formData.endTime.split(":").map(Number);
+        const startMinutes = startHour * 60 + startMinute;
+        const endMinutes = endHour * 60 + endMinute;
+
+        // Créer un créneau pour chaque jour sélectionné dans la période
+        const slots = [];
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+          const dayOfWeek = currentDate.getDay();
+          const dayName = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayOfWeek];
+
+          if (formData.selectedDays.includes(dayName)) {
+            // Pour chaque jour sélectionné, créer des créneaux en fonction de la durée du service
+            let currentMinute = startMinutes;
+            while (currentMinute + formData.serviceDuration <= endMinutes) {
+              const slotStart = new Date(currentDate);
+              slotStart.setHours(Math.floor(currentMinute / 60), currentMinute % 60);
+
+              const slotEnd = new Date(currentDate);
+              const endMinute = currentMinute + formData.serviceDuration;
+              slotEnd.setHours(Math.floor(endMinute / 60), endMinute % 60);
+
+              slots.push({
+                serviceId: formData.serviceId,
+                start: slotStart.toISOString(),
+                end: slotEnd.toISOString(),
+                isAvailable: true,
+              });
+
+              currentMinute += formData.serviceDuration;
+            }
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Créer tous les créneaux
+        await Promise.all(slots.map(slot => createSlotMutation.mutateAsync(slot)));
+        toast.success(`${slots.length} créneaux ont été créés avec succès`);
+        setIsOpen(false);
+      }
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de la création des créneaux");
     }
-    setIsOpen(false);
-    setIsEditing(false);
-    setSelectedSlotId(null);
   };
 
   const handleEditClick = (slotId: string) => {
@@ -95,24 +181,25 @@ const SlotsSection = () => {
 
   const handleDeleteConfirm = () => {
     if (selectedSlotId) {
-      console.log("Suppression du créneau:", selectedSlotId);
-      // Ajouter ici la logique de suppression
+      deleteSlot({
+        id: selectedSlotId,
+      });
     }
-    setIsDeleteDialogOpen(false);
-    setSelectedSlotId(null);
   };
 
   const getInitialData = () => {
     if (!isEditing || !selectedSlotId) return undefined;
-    const slot = exampleSlots.find((s) => s.id === selectedSlotId);
+    const slot = slots.find((s) => s.id === selectedSlotId);
     if (!slot) return undefined;
+
     return {
-      type: slot.type,
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      serviceId: slot.serviceId,
-      date: new Date(), // À remplacer par la vraie date
-      selectedDays: slot.selectedDays,
+      type: "unique" as const,
+      date: new Date(slot.start),
+      serviceId: slot.serviceId || "",
+      startTime: new Date(slot.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+      endTime: new Date(slot.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+      selectedDays: [] as string[],
+      serviceDuration: 60,
     };
   };
 
@@ -149,7 +236,7 @@ const SlotsSection = () => {
 
         <CardContent>
           <SlotsGrid
-            slots={exampleSlots}
+            slots={slots || []}
             onAddClick={() => {
               setIsEditing(false);
               setSelectedSlotId(null);

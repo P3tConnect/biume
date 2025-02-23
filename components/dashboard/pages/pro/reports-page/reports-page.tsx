@@ -14,8 +14,12 @@ import {
 import { FileText, Plus, Table } from "lucide-react";
 import React, { useState } from "react";
 import ReportDetailsDrawer, { type Report } from "./report-details-drawer";
+import { useParams, useRouter } from "next/navigation";
 
 const ReportsPageComponent = () => {
+  const router = useRouter();
+  const params = useParams();
+  const orgId = params.orgId as string;
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
   return (
@@ -40,7 +44,10 @@ const ReportsPageComponent = () => {
                 <Table className="size-4 mr-2" />
                 Liste des rapports
               </Button>
-              <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
+              <Button
+                className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300"
+                onClick={() => router.push(`/dashboard/organization/${orgId}/reports/new`)}
+              >
                 <Plus className="size-4 mr-2" />
                 Nouveau rapport
               </Button>

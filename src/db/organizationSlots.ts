@@ -1,8 +1,13 @@
-import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { Organization, organization } from "./organization";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { Service, service } from "./service";
+
+export const organizationSlotsType = pgEnum("organization_slots_type", [
+  "unique",
+  "recurring",
+]);
 
 export const organizationSlots = pgTable("organization_slots", {
   id: text("id")
@@ -16,6 +21,7 @@ export const organizationSlots = pgTable("organization_slots", {
   }),
   start: date("start").notNull(),
   end: date("end").notNull(),
+  type: organizationSlotsType("type").notNull().default("unique"),
   isAvailable: boolean("isAvailable").notNull().default(true),
   createdAt: timestamp("createdAt").notNull().default(new Date()),
   updatedAt: timestamp("updatedAt"),
@@ -40,5 +46,4 @@ export type OrganizationSlots = InferSelectModel<typeof organizationSlots> & {
   service: Service;
 };
 
-export const CreateOrganizationSlotsSchema =
-  createInsertSchema(organizationSlots);
+export const CreateOrganizationSlotsSchema = createInsertSchema(organizationSlots);

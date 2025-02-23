@@ -13,10 +13,11 @@ import {
   Organization,
   OrganizationImage,
   organizationImages,
+  organizationSlots,
   organization as organizationTable,
 } from "../db";
 import { db } from "../lib";
-import { eq, desc, and, gte, lte } from "drizzle-orm";
+import { eq, desc, and, gte, lte, asc } from "drizzle-orm";
 import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import {
   progression as progressionTable,
@@ -35,8 +36,32 @@ export const getAllOrganizations = createServerAction(
   async (input, ctx) => {
     const organizations = await db.query.organization.findMany({
       with: {
-        images: true,
-        slots: true,
+        images: {
+          columns: {
+            id: true,
+            name: true,
+            imageUrl: true,
+          },
+        },
+        slots: {
+          where: eq(organizationSlots.isAvailable, true),
+          limit: 4,
+          orderBy: asc(organizationSlots.start),
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            isAvailable: true,
+          }
+        },
+      },
+      columns: {
+        id: true,
+        name: true,
+        description: true,
+        atHome: true,
+        onDemand: true,
+        verified: true,
       },
     });
 
@@ -402,13 +427,14 @@ export const getOrganizationImages = createServerAction(
 
     const images = await db.query.organizationImages.findMany({
       where: eq(organizationImages.organizationId, ctx.organization.id),
+      columns: {
+        name: true,
+        imageUrl: true,
+      },
       orderBy: desc(organizationImages.createdAt),
     });
 
-    return images.map((image) => ({
-      url: image.imageUrl,
-      name: image.name,
-    })) as unknown as OrganizationImage[];
+    return images as unknown as OrganizationImage[];
   },
   [requireAuth, requireFullOrganization],
 );

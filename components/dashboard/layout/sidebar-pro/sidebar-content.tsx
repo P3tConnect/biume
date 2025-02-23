@@ -78,7 +78,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                                     isActive={submenu.active}
                                     asChild
                                   >
-                                    <Link href={submenu.href}>
+                                    <Link href={submenu.href} prefetch>
                                       <submenu.icon className="h-4 w-4 shrink-0 stroke-[2]" />
                                       <span>{t(submenu.label)}</span>
                                     </Link>
@@ -118,6 +118,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                                       ? "bg-sidebar-accent"
                                       : "",
                                   )}
+                                  prefetch
                                 >
                                   <submenu.icon className="h-4 w-4 shrink-0 stroke-[2]" />
                                   <span>{t(submenu.label)}</span>
@@ -135,7 +136,7 @@ const SidebarContentComponent = ({ companyId }: { companyId: string }) => {
                         asChild
                         isActive={active}
                       >
-                        <Link href={href}>
+                        <Link href={href} prefetch>
                           <Icon />
                           <span>{t(label)}</span>
                         </Link>
