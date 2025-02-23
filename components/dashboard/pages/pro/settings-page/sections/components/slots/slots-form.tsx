@@ -12,13 +12,12 @@ import { getServices } from "@/src/actions/service.action";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { CreateOrganizationSlotsSchema } from "@/src/db/organizationSlots";
 import { z } from "zod";
 import { useActiveOrganization } from "@/src/lib/auth-client";
 
-const formSchema = z.object({
+const slotSchema = z.object({
   type: z.enum(["unique", "recurring"]),
   date: z.date().optional(),
   serviceId: z.string().min(1, "Veuillez sélectionner un service"),
@@ -27,6 +26,12 @@ const formSchema = z.object({
   selectedDays: z.array(z.string()).min(1, "Veuillez sélectionner au moins un jour").optional(),
   endRecurrence: z.date().optional(),
   serviceDuration: z.number(),
+});
+
+export type SlotFormValues = z.infer<typeof slotSchema>;
+
+const formSchema = z.object({
+  slots: z.array(slotSchema)
 });
 
 export type FormValues = z.infer<typeof formSchema>;
@@ -80,30 +85,36 @@ const SlotsForm = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: initialData?.type || "unique",
-      date: initialData?.date || new Date(),
-      serviceId: initialData?.serviceId || "",
-      startTime: initialData?.startTime || "09:00",
-      endTime: initialData?.endTime || "17:00",
-      selectedDays: initialData?.selectedDays || [],
-      endRecurrence: initialData?.endRecurrence,
-      serviceDuration: initialData?.serviceDuration || 60,
+      slots: initialData?.slots || [{
+        type: "unique",
+        startTime: "09:00",
+        endTime: "17:00",
+        serviceDuration: 60,
+        selectedDays: [],
+      }],
     },
   });
 
+  const { fields, append, update } = useFieldArray({
+    control: form.control,
+    name: "slots",
+  });
+
   const { handleSubmit, watch, setValue, formState: { errors } } = form;
-  const type = watch("type");
-  const date = watch("date");
-  const endRecurrence = watch("endRecurrence");
-  const selectedDays = watch("selectedDays");
-  const serviceId = watch("serviceId");
-  const startTime = watch("startTime");
-  const endTime = watch("endTime");
+  const currentSlot = fields[0];
+
+  const type = watch(`slots.0.type`);
+  const date = watch(`slots.0.date`);
+  const endRecurrence = watch(`slots.0.endRecurrence`);
+  const selectedDays = watch(`slots.0.selectedDays`);
+  const serviceId = watch(`slots.0.serviceId`);
+  const startTime = watch(`slots.0.startTime`);
+  const endTime = watch(`slots.0.endTime`);
 
   const handleDayToggle = (dayId: string) => {
-    const currentDays = form.getValues("selectedDays") || [];
+    const currentDays = form.getValues("slots.0.selectedDays") || [];
     setValue(
-      "selectedDays",
+      "slots.0.selectedDays",
       currentDays.includes(dayId)
         ? currentDays.filter((d) => d !== dayId)
         : [...currentDays, dayId],
@@ -137,7 +148,7 @@ const SlotsForm = ({
   const renderTypeStep = () => (
     <div className="grid grid-cols-2 gap-4 h-full">
       <button
-        onClick={() => setValue("type", "unique")}
+        onClick={() => setValue("slots.0.type", "unique")}
         className={cn(
           "h-full text-left p-6 rounded-xl border transition-all flex items-stretch",
           type === "unique"
@@ -161,7 +172,7 @@ const SlotsForm = ({
       </button>
 
       <button
-        onClick={() => setValue("type", "recurring")}
+        onClick={() => setValue("slots.0.type", "recurring")}
         className={cn(
           "h-full text-left p-6 rounded-xl border transition-all flex items-stretch",
           type === "recurring"
@@ -197,8 +208,8 @@ const SlotsForm = ({
             <button
               key={service.id}
               onClick={() => {
-                setValue("serviceId", service.id);
-                setValue("serviceDuration", service.duration || 60);
+                setValue(`slots.0.serviceId`, service.id);
+                setValue(`slots.0.serviceDuration`, service.duration || 60);
               }}
               className={cn(
                 "w-full text-left p-4 rounded-xl border transition-all",
@@ -219,8 +230,8 @@ const SlotsForm = ({
             </button>
           ))}
         </div>
-        {errors.serviceId && (
-          <p className="text-sm text-destructive mt-2">{errors.serviceId.message}</p>
+        {errors.slots?.[0]?.serviceId?.message && (
+          <p className="text-sm text-destructive mt-2">{errors.slots[0].serviceId.message}</p>
         )}
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -230,7 +241,7 @@ const SlotsForm = ({
           </Label>
           <TimePicker
             value={startTime}
-            onChange={(value) => setValue("startTime", value)}
+            onChange={(value) => setValue(`slots.0.startTime`, value)}
           />
         </div>
         <div>
@@ -239,7 +250,7 @@ const SlotsForm = ({
           </Label>
           <TimePicker
             value={endTime}
-            onChange={(value) => setValue("endTime", value)}
+            onChange={(value) => setValue(`slots.0.endTime`, value)}
           />
         </div>
       </div>
@@ -257,7 +268,7 @@ const SlotsForm = ({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(value) => setValue("date", value)}
+              onSelect={(value) => setValue(`slots.0.date`, value)}
               locale={fr}
               className={cn(
                 "w-full [&_table]:w-full [&_table_td]:p-0 [&_table_td_button]:w-full [&_table_td_button]:h-9",
@@ -288,8 +299,8 @@ const SlotsForm = ({
                 ))}
               </div>
             </div>
-            {errors.selectedDays && (
-              <p className="text-sm text-destructive mt-2">{errors.selectedDays.message}</p>
+            {errors.slots?.[0]?.selectedDays?.message && (
+              <p className="text-sm text-destructive mt-2">{errors.slots[0].selectedDays.message}</p>
             )}
           </div>
           <div>
@@ -300,8 +311,8 @@ const SlotsForm = ({
               label="Période de récurrence"
               date={date && endRecurrence ? { from: date, to: endRecurrence } : undefined}
               onSelect={(range: DateRange | undefined) => {
-                if (range?.from) setValue("date", range.from);
-                if (range?.to) setValue("endRecurrence", range.to);
+                if (range?.from) setValue(`slots.0.date`, range.from);
+                if (range?.to) setValue(`slots.0.endRecurrence`, range.to);
               }}
             />
           </div>

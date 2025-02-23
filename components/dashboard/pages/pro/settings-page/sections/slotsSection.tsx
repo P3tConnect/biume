@@ -85,16 +85,17 @@ const SlotsSection = ({ slots }: { slots: OrganizationSlots[] }) => {
 
   const handleSubmit = async (formData: FormValues) => {
     try {
-      if (formData.type === "unique") {
+      const slot = formData.slots[0];
+      if (slot.type === "unique") {
         const data = {
-          serviceId: formData.serviceId,
-          start: new Date(formData.date!.setHours(
-            parseInt(formData.startTime.split(":")[0]),
-            parseInt(formData.startTime.split(":")[1])
+          serviceId: slot.serviceId,
+          start: new Date(slot.date!.setHours(
+            parseInt(slot.startTime.split(":")[0]),
+            parseInt(slot.startTime.split(":")[1])
           )).toISOString(),
-          end: new Date(formData.date!.setHours(
-            parseInt(formData.endTime.split(":")[0]),
-            parseInt(formData.endTime.split(":")[1])
+          end: new Date(slot.date!.setHours(
+            parseInt(slot.endTime.split(":")[0]),
+            parseInt(slot.endTime.split(":")[1])
           )).toISOString(),
           isAvailable: true,
         };
@@ -109,49 +110,49 @@ const SlotsSection = ({ slots }: { slots: OrganizationSlots[] }) => {
         }
       } else {
         // Créneaux récurrents
-        if (!formData.date || !formData.endRecurrence || !formData.selectedDays?.length) {
+        if (!slot.date || !slot.endRecurrence || !slot.selectedDays?.length) {
           toast.error("Veuillez sélectionner une période et des jours de récurrence");
           return;
         }
 
-        const startDate = new Date(formData.date);
+        const startDate = new Date(slot.date);
         startDate.setHours(0, 0, 0, 0);
-        const endDate = new Date(formData.endRecurrence);
+        const endDate = new Date(slot.endRecurrence);
         endDate.setHours(23, 59, 59, 999);
 
         // Convertir les heures en minutes pour faciliter les calculs
-        const [startHour, startMinute] = formData.startTime.split(":").map(Number);
-        const [endHour, endMinute] = formData.endTime.split(":").map(Number);
+        const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+        const [endHour, endMinute] = slot.endTime.split(":").map(Number);
         const startMinutes = startHour * 60 + startMinute;
         const endMinutes = endHour * 60 + endMinute;
 
         // Créer un créneau pour chaque jour sélectionné dans la période
-        const slots = [];
+        const slotsToCreate = [];
         const currentDate = new Date(startDate);
 
         while (currentDate <= endDate) {
           const dayOfWeek = currentDate.getDay();
           const dayName = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayOfWeek];
 
-          if (formData.selectedDays.includes(dayName)) {
+          if (slot.selectedDays.includes(dayName)) {
             // Pour chaque jour sélectionné, créer des créneaux en fonction de la durée du service
             let currentMinute = startMinutes;
-            while (currentMinute + formData.serviceDuration <= endMinutes) {
+            while (currentMinute + slot.serviceDuration <= endMinutes) {
               const slotStart = new Date(currentDate);
               slotStart.setHours(Math.floor(currentMinute / 60), currentMinute % 60);
 
               const slotEnd = new Date(currentDate);
-              const endMinute = currentMinute + formData.serviceDuration;
+              const endMinute = currentMinute + slot.serviceDuration;
               slotEnd.setHours(Math.floor(endMinute / 60), endMinute % 60);
 
-              slots.push({
-                serviceId: formData.serviceId,
+              slotsToCreate.push({
+                serviceId: slot.serviceId,
                 start: slotStart.toISOString(),
                 end: slotEnd.toISOString(),
                 isAvailable: true,
               });
 
-              currentMinute += formData.serviceDuration;
+              currentMinute += slot.serviceDuration;
             }
           }
 
@@ -159,8 +160,8 @@ const SlotsSection = ({ slots }: { slots: OrganizationSlots[] }) => {
         }
 
         // Créer tous les créneaux
-        await Promise.all(slots.map(slot => createSlotMutation.mutateAsync(slot)));
-        toast.success(`${slots.length} créneaux ont été créés avec succès`);
+        await Promise.all(slotsToCreate.map(slot => createSlotMutation.mutateAsync(slot)));
+        toast.success(`${slotsToCreate.length} créneaux ont été créés avec succès`);
         setIsOpen(false);
       }
     } catch (error) {
@@ -193,13 +194,15 @@ const SlotsSection = ({ slots }: { slots: OrganizationSlots[] }) => {
     if (!slot) return undefined;
 
     return {
-      type: "unique" as const,
-      date: new Date(slot.start),
-      serviceId: slot.serviceId || "",
-      startTime: new Date(slot.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
-      endTime: new Date(slot.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
-      selectedDays: [] as string[],
-      serviceDuration: 60,
+      slots: [{
+        type: "unique" as const,
+        date: new Date(slot.start),
+        serviceId: slot.serviceId || "",
+        startTime: new Date(slot.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+        endTime: new Date(slot.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+        selectedDays: [] as string[],
+        serviceDuration: 60,
+      }]
     };
   };
 
