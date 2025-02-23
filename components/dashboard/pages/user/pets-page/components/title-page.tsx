@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Button,
   Card,
@@ -8,14 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui';
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import InformationsPetForm from '../forms/informations-pet-form';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import StepperAnimal from './stepper-animal';
 
 const TitlePage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Card className='overflow-hidden rounded-2xl mb-4'>
         <CardHeader className='border-b border-gray-100 dark:border-gray-800'>
           <div className='flex flex-row justify-between items-center gap-4'>
@@ -44,7 +48,7 @@ const TitlePage = () => {
         <VisuallyHidden>
           <DialogTitle>Ajouter un animal</DialogTitle>
         </VisuallyHidden>
-        <InformationsPetForm />
+        <StepperAnimal open={isOpen} onClose={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   );

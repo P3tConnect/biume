@@ -19,17 +19,18 @@ import {
 } from '@/components/ui';
 import { useDropzone } from 'react-dropzone';
 import { useUploadThing } from '@/src/lib/uploadthing';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib';
 import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
-import { CreatePetSchema } from '@/src/db/pets';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import Image from 'next/image';
+import { revalidatePath } from 'next/cache';
+import { useSession } from '@/src/lib/auth-client';
+import { petSchema } from '../hooks/useStepperAnimal';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -37,26 +38,14 @@ const ACCEPTED_IMAGE_TYPES = {
   'image/png': ['.png'],
 };
 
-const InformationsPetForm = () => {
+const InformationsPetForm = ({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof petSchema>>;
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-
-  const form = useForm<z.infer<typeof CreatePetSchema>>({
-    resolver: zodResolver(CreatePetSchema),
-    defaultValues: {
-      name: '',
-      type: 'Dog',
-      gender: 'Male',
-      breed: '',
-      image: '',
-      birthDate: new Date(),
-      furColor: '',
-      eyeColor: '',
-      description: '',
-      weight: 0,
-      height: 0,
-    },
-  });
+  const { data: session } = useSession();
 
   const { handleSubmit } = form;
 
@@ -64,6 +53,7 @@ const InformationsPetForm = () => {
     onSuccess: () => {
       toast.success('Animal créé avec succès!');
       form.reset();
+      revalidatePath(`/dashboard/user/${session?.user.id}/pets`);
     },
     onError: (error) => {
       toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
@@ -230,7 +220,7 @@ const InformationsPetForm = () => {
                   <FormItem>
                     <FormControl>
                       <DatePicker
-                        label="Date de naissance"
+                        label='Date de naissance'
                         date={field.value ?? new Date()}
                         onSelect={field.onChange}
                       />
