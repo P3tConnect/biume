@@ -99,6 +99,8 @@ const ImagesSection = ({
     await deleteImage({ imageUrl });
   };
 
+  console.log(images, "images");
+
   return (
     <Card>
       <CardHeader>
@@ -124,7 +126,7 @@ const ImagesSection = ({
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p>Téléchargement en cours...</p>
               <div className="w-full max-w-xs space-y-2">
-                <Progress value={uploadProgress} className="h-2" />
+                <Progress value={uploadProgress / 100} className="h-2" />
                 <p className="text-sm text-muted-foreground text-center">
                   {Math.round(uploadProgress)}%
                 </p>

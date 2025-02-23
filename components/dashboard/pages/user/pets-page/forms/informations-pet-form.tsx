@@ -228,11 +228,11 @@ const InformationsPetForm = () => {
                 name="birthDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de naissance</FormLabel>
                     <FormControl>
                       <DatePicker
+                        label="Date de naissance"
                         date={field.value ?? new Date()}
-                        setDate={field.onChange}
+                        onSelect={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

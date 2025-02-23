@@ -123,7 +123,11 @@ const theme = {
         },
     },
 };
-const plugins = [require("tailwindcss-animate"), addVariablesForColors];
+const plugins = [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    addVariablesForColors
+];
 
 function addVariablesForColors({ addBase, theme }) {
     let allColors = flattenColorPalette(theme("colors"));

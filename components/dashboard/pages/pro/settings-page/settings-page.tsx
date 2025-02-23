@@ -25,12 +25,13 @@ import {
   getCompanyDocuments,
   getInvoiceHistory,
   getOptionsFromOrganization,
+  getOrganizationSlots,
 } from "@/src/actions";
 import { getServicesFromOrganization } from "@/src/actions";
 import { Suspense } from "react";
 
 const SettingsPageComponent = async () => {
-  const [profile, images, services, options, documents, billing, invoices] =
+  const [profile, images, services, options, documents, billing, invoices, slots] =
     await Promise.all([
       getCurrentOrganization({}),
       getOrganizationImages({}),
@@ -39,6 +40,7 @@ const SettingsPageComponent = async () => {
       getCompanyDocuments({}),
       getBillingInfo({}),
       getInvoiceHistory({}),
+      getOrganizationSlots({}),
     ]);
 
   return (
@@ -121,7 +123,7 @@ const SettingsPageComponent = async () => {
 
           <TabsContent value="slots">
             <Suspense fallback={<div>Chargement...</div>}>
-              <SlotsSection />
+              <SlotsSection slots={slots.data ?? []} />
             </Suspense>
           </TabsContent>
 

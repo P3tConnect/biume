@@ -8,15 +8,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useId } from "react";
+import { DateRange } from "react-day-picker";
 
-export function DatePicker({
+export function DateRangePicker({
   label,
   date,
   onSelect,
 }: {
   label: string;
-  date: Date | undefined;
-  onSelect: (date: Date | undefined) => void;
+  date: DateRange | undefined;
+  onSelect: (date: DateRange | undefined) => void;
 }) {
   const id = useId();
 
@@ -35,7 +36,17 @@ export function DatePicker({
               )}
             >
               <span className={cn("truncate", !date && "text-muted-foreground")}>
-                {date ? format(date, "PPP") : "Pick a date"}
+                {date?.from ? (
+                  date.to ? (
+                    <>
+                      {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(date.from, "LLL dd, y")
+                  )
+                ) : (
+                  "Pick a date range"
+                )}
               </span>
               <CalendarIcon
                 size={16}
@@ -45,7 +56,7 @@ export function DatePicker({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2" align="start">
-            <Calendar mode="single" selected={date} onSelect={onSelect} />
+            <Calendar mode="range" selected={date} onSelect={onSelect} />
           </PopoverContent>
         </Popover>
       </div>

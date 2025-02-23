@@ -1,55 +1,27 @@
+"use client";
+
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "./input";
 
 interface TimePickerProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export const TimePicker: React.FC<TimePickerProps> = ({ value, onChange }) => {
-  // Générer les heures de 00 à 23
-  const hours = Array.from({ length: 24 }, (_, i) =>
-    i.toString().padStart(2, "0"),
-  );
-
-  // Générer les minutes par tranches de 15
-  const minutes = ["00", "15", "30", "45"];
-
-  const [hour, minute] = value.split(":");
+export const TimePicker = ({ value, onChange }: TimePickerProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value)) {
+      onChange(value);
+    }
+  };
 
   return (
-    <div className="flex gap-2">
-      <Select value={hour} onValueChange={(h) => onChange(`${h}:${minute}`)}>
-        <SelectTrigger className="w-[110px]">
-          <SelectValue placeholder="Heure" />
-        </SelectTrigger>
-        <SelectContent>
-          {hours.map((h) => (
-            <SelectItem key={h} value={h}>
-              {h}h
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <Select value={minute} onValueChange={(m) => onChange(`${hour}:${m}`)}>
-        <SelectTrigger className="w-[110px]">
-          <SelectValue placeholder="Minute" />
-        </SelectTrigger>
-        <SelectContent>
-          {minutes.map((m) => (
-            <SelectItem key={m} value={m}>
-              {m}min
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <Input
+      type="time"
+      value={value}
+      onChange={handleChange}
+      className="rounded-xl"
+    />
   );
 };

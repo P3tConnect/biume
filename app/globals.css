@@ -275,3 +275,14 @@
   transform: skewX(-15deg) translateX(200%);
   transition: transform 0.75s;
 }
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -6,8 +6,6 @@ import {
   MoreVertical,
   Pencil,
   Trash,
-  CalendarIcon,
-  RepeatIcon,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import {
@@ -17,31 +15,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { OrganizationSlots } from "@/src/db/organizationSlots";
 
 interface SlotsGridProps {
-  slots?: Array<{
-    id: string;
-    type: "unique" | "recurring";
-    startTime: string;
-    endTime: string;
-    duration: string;
-    date: string;
-    selectedDays?: string[];
-  }>;
+  slots?: OrganizationSlots[];
   onAddClick: () => void;
   onEditClick?: (slotId: string) => void;
   onDeleteClick?: (slotId: string) => void;
 }
-
-const weekDays = {
-  monday: "Lundi",
-  tuesday: "Mardi",
-  wednesday: "Mercredi",
-  thursday: "Jeudi",
-  friday: "Vendredi",
-  saturday: "Samedi",
-  sunday: "Dimanche",
-};
 
 const SlotsGrid = ({
   slots = [],
@@ -100,45 +83,27 @@ const SlotsGrid = ({
 
           <div className="flex items-start gap-3">
             <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              {slot.type === "unique" ? (
-                <CalendarIcon className="h-4 w-4 text-primary" />
-              ) : (
-                <RepeatIcon className="h-4 w-4 text-primary" />
-              )}
+              <Clock className="h-4 w-4 text-primary" />
             </div>
             <div className="space-y-2 min-w-0">
               <div className="flex items-center gap-2">
-                <Badge
-                  variant={slot.type === "unique" ? "outline" : "default"}
-                  className="rounded-md text-xs"
-                >
-                  {slot.type === "unique" ? "Unique" : "Récurrent"}
-                </Badge>
                 <p className="text-sm text-muted-foreground">
-                  {slot.duration} min
+                  {slot.service.duration} min
                 </p>
+                <Badge variant="outline" className="rounded-md text-xs">
+                  {slot.service.price}€
+                </Badge>
               </div>
 
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                 <p className="font-medium truncate">
-                  {slot.startTime} - {slot.endTime}
+                  {format(new Date(slot.start), "HH:mm")} - {format(new Date(slot.end), "HH:mm")}
                 </p>
               </div>
 
-              {slot.type === "unique" ? (
-                <p className="text-sm text-muted-foreground truncate">
-                  {slot.date}
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-1">
-                  {slot.selectedDays?.map((day) => (
-                    <Badge key={day} variant="secondary" className="text-xs">
-                      {weekDays[day as keyof typeof weekDays].slice(0, 3)}
-                    </Badge>
-                  ))}
-                </div>
-              )}
+              <p className="text-sm text-muted-foreground truncate">
+                {format(new Date(slot.start), "EEEE d MMMM yyyy", { locale: fr })}
+              </p>
             </div>
           </div>
         </div>
