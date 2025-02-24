@@ -427,6 +427,15 @@ const InformationsPetForm = ({
             )}
           />
         </div>
+
+        <div className='flex justify-end gap-2'>
+          <Button variant='outline' onClick={previousStep}>
+            Annuler
+          </Button>
+          <Button className='w-full' type='submit' onClick={nextStep}>
+            Suivant &gt;
+          </Button>
+        </div>
       </form>
     </Form>
   );

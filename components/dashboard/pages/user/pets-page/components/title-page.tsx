@@ -48,7 +48,9 @@ const TitlePage = () => {
         <VisuallyHidden>
           <DialogTitle>Ajouter un animal</DialogTitle>
         </VisuallyHidden>
-        <StepperAnimal open={isOpen} onClose={() => setIsOpen(false)} />
+        <div className='p-4'>
+          <StepperAnimal />
+        </div>
       </DialogContent>
     </Dialog>
   );

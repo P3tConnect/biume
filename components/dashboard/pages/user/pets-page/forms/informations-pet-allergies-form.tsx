@@ -1,16 +1,16 @@
 'use client';
 
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { allergiesSchema } from '../schema/pet-schema';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui';
 
 const InformationsPetAllergiesForm = ({
   nextStep,
@@ -25,6 +25,17 @@ const InformationsPetAllergiesForm = ({
     { label: 'Certains aliments', value: 'food' },
   ];
 
+  type FormData = {
+    allergies: string[];
+  };
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(allergiesSchema),
+    defaultValues: {
+      allergies: [],
+    },
+  });
+
   return (
     <Form {...form}>
       <FormField
@@ -34,7 +45,6 @@ const InformationsPetAllergiesForm = ({
           <FormItem>
             <FormLabel>Sélectionnez les allergies</FormLabel>
             <FormControl></FormControl>
-            <FormMessage />
           </FormItem>
         )}
       />

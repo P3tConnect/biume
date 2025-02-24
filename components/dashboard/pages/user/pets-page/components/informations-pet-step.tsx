@@ -1,3 +1,5 @@
+'use client';
+
 import InformationsPetForm from '../forms/informations-pet-form';
 
 const InformationsPetStep = ({

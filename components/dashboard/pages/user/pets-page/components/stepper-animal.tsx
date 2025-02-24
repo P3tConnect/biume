@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useStepper, utils } from '../hooks/useStepperAnimal';
 import {
   Credenza,
@@ -12,19 +12,23 @@ import {
 import StepIndicator from '@/components/onboarding/components/step-indicator';
 import InformationsPetStep from './informations-pet-step';
 import PetCompleteStep from '../forms/pet-complete-step';
-import InformationsPetDiseasesStep from './informations-pet-diseases-step';
+import InformationsPetDeseasesStep from './informations-pet-deseases-step';
 import InformationsPetIntolerancesStep from './informations-pet-intolerances-step';
 import InformationsPetAllergiesStep from './informations-pet-allergies-step';
 
-const StepperAnimal = ({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) => {
-  const stepper = useStepper();
-  const currentIndex = utils.getIndex(stepper.current.id);
+const StepperAnimal = () => {
+  const {
+    next,
+    prev,
+    current,
+    goTo,
+    all,
+    isLast,
+    switch: switchStep,
+  } = useStepper();
+
+  const currentIndex = utils.getIndex(current.id);
+  const [open, setOpen] = useState(true);
 
   return (
     <Credenza open={open}>
@@ -32,43 +36,32 @@ const StepperAnimal = ({
         <CredenzaHeader className='flex flex-row items-center space-x-4'>
           <StepIndicator
             currentStep={currentIndex + 1}
-            totalSteps={stepper.all.length}
-            isLast={stepper.isLast}
+            totalSteps={all.length}
+            isLast={isLast}
             size={100}
             strokeWidth={10}
           />
           <div className='space-y-1 flex flex-col'>
-            <CredenzaTitle>{stepper.current.title}</CredenzaTitle>
-            <CredenzaDescription>
-              {stepper.current.description}
-            </CredenzaDescription>
+            <CredenzaTitle>{current.title}</CredenzaTitle>
+            <CredenzaDescription>{current.description}</CredenzaDescription>
           </div>
         </CredenzaHeader>
 
-        {stepper.switch({
+        {switchStep({
           pet: () => (
-            <InformationsPetStep
-              nextStep={stepper.next}
-              previousStep={stepper.prev}
-            />
+            <InformationsPetStep nextStep={next} previousStep={prev} />
           ),
-          'pet-diseases': () => (
-            <InformationsPetDiseasesStep
-              nextStep={stepper.next}
-              previousStep={stepper.prev}
-            />
+          petDeseases: () => (
+            <InformationsPetDeseasesStep nextStep={next} previousStep={prev} />
           ),
-          'pet-intolerances': () => (
+          petIntolerences: () => (
             <InformationsPetIntolerancesStep
-              nextStep={stepper.next}
-              previousStep={stepper.prev}
+              nextStep={next}
+              previousStep={prev}
             />
           ),
-          'pet-allergies': () => (
-            <InformationsPetAllergiesStep
-              nextStep={stepper.next}
-              previousStep={stepper.prev}
-            />
+          petAllergies: () => (
+            <InformationsPetAllergiesStep nextStep={next} previousStep={prev} />
           ),
           complete: () => <PetCompleteStep />,
         })}

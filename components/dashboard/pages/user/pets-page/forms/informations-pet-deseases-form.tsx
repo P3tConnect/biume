@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
 import {
   Form,
   FormControl,
@@ -12,8 +10,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
+import { deseaseSchema } from '../schema/pet-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
-const InformationsPetDiseasesForm = ({
+type FormData = {
+  deseases: string[];
+};
+
+const InformationsPetDeseasesForm = ({
   nextStep,
   previousStep,
 }: {
@@ -33,11 +38,18 @@ const InformationsPetDiseasesForm = ({
     { label: 'Autre', value: 'other' },
   ];
 
+  const form = useForm<FormData>({
+    resolver: zodResolver(deseaseSchema),
+    defaultValues: {
+      deseases: [],
+    },
+  });
+
   return (
     <Form {...form}>
       <FormField
         control={form.control}
-        name='diseases'
+        name='deseases'
         render={({ field }) => (
           <FormItem>
             <FormLabel>Sélectionnez les maladies</FormLabel>
@@ -46,8 +58,8 @@ const InformationsPetDiseasesForm = ({
                 <FormField
                   key={disease.value}
                   control={form.control}
-                  name='diseases'
-                  render={({ field }) => (
+                  name='deseases'
+                  render={({ field: innerField }) => (
                     <FormItem
                       key={disease.value}
                       className='flex flex-row items-start space-x-3 space-y-0'
@@ -57,10 +69,10 @@ const InformationsPetDiseasesForm = ({
                           checked={field.value?.includes(disease.value)}
                           onCheckedChange={(checked) => {
                             const updatedValue = checked
-                              ? [...(field.value || []), disease.value]
-                              : field.value?.filter(
+                              ? [...field.value, disease.value]
+                              : field.value.filter(
                                   (value) => value !== disease.value
-                                ) || [];
+                                );
                             field.onChange(updatedValue);
                           }}
                         />
@@ -81,4 +93,4 @@ const InformationsPetDiseasesForm = ({
   );
 };
 
-export default InformationsPetDiseasesForm;
+export default InformationsPetDeseasesForm;
