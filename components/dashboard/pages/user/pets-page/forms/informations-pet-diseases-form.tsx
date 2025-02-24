@@ -11,41 +11,72 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Card, CardContent } from '@/components/ui/card';
-import { petSchema } from '../hooks/useStepperAnimal';
-
-interface InformationsPetDiseasesFormProps {
-  form: UseFormReturn<z.infer<typeof petSchema>>;
-}
+import { Checkbox } from '@/components/ui/checkbox';
 
 const InformationsPetDiseasesForm = ({
-  form,
-}: InformationsPetDiseasesFormProps) => {
-  // Ces options devraient venir de votre base de données
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const diseasesOptions = [
     { label: 'Diabète', value: 'diabetes' },
     { label: 'Arthrite', value: 'arthritis' },
     { label: 'Problèmes cardiaques', value: 'heart_problems' },
-    // Ajoutez d'autres maladies selon vos besoins
+    { label: 'Problèmes respiratoires', value: 'respiratory_problems' },
+    { label: 'Problèmes digestifs', value: 'digestive_problems' },
+    { label: 'Problèmes musculaires', value: 'muscular_problems' },
+    { label: 'Problèmes dermatologiques', value: 'dermatological_problems' },
+    { label: 'Problèmes endocriniennes', value: 'endocrine_problems' },
+    { label: 'Problèmes immunologiques', value: 'immunological_problems' },
+    { label: 'Autre', value: 'other' },
   ];
 
   return (
     <Form {...form}>
-      <Card>
-        <CardContent className='pt-6 space-y-4'>
-          <FormField
-            control={form.control}
-            name='diseases'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sélectionnez les maladies</FormLabel>
-                <FormControl></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
+      <FormField
+        control={form.control}
+        name='diseases'
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Sélectionnez les maladies</FormLabel>
+            <div className='grid grid-cols-2 gap-4'>
+              {diseasesOptions.map((disease) => (
+                <FormField
+                  key={disease.value}
+                  control={form.control}
+                  name='diseases'
+                  render={({ field }) => (
+                    <FormItem
+                      key={disease.value}
+                      className='flex flex-row items-start space-x-3 space-y-0'
+                    >
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value?.includes(disease.value)}
+                          onCheckedChange={(checked) => {
+                            const updatedValue = checked
+                              ? [...(field.value || []), disease.value]
+                              : field.value?.filter(
+                                  (value) => value !== disease.value
+                                ) || [];
+                            field.onChange(updatedValue);
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className='font-normal'>
+                        {disease.label}
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </Form>
   );
 };

@@ -19,7 +19,7 @@ import {
 } from '@/components/ui';
 import { useDropzone } from 'react-dropzone';
 import { useUploadThing } from '@/src/lib/uploadthing';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -28,9 +28,9 @@ import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import Image from 'next/image';
-import { revalidatePath } from 'next/cache';
 import { useSession } from '@/src/lib/auth-client';
-import { petSchema } from '../hooks/useStepperAnimal';
+import { petSchema } from '../schema/pet-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -39,21 +39,39 @@ const ACCEPTED_IMAGE_TYPES = {
 };
 
 const InformationsPetForm = ({
-  form,
+  nextStep,
+  previousStep,
 }: {
-  form: UseFormReturn<z.infer<typeof petSchema>>;
+  nextStep: () => void;
+  previousStep: () => void;
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { data: session } = useSession();
+
+  const form = useForm<z.infer<typeof petSchema>>({
+    resolver: zodResolver(petSchema),
+    defaultValues: {
+      image: '',
+      name: '',
+      birthDate: new Date(),
+      type: 'Dog',
+      gender: 'Male',
+      weight: 0,
+      height: 0,
+      breed: '',
+      furColor: '',
+      eyeColor: '',
+      description: '',
+    },
+  });
 
   const { handleSubmit } = form;
 
   const { mutateAsync } = useActionMutation(createPet, {
     onSuccess: () => {
       toast.success('Animal créé avec succès!');
-      form.reset();
-      revalidatePath(`/dashboard/user/${session?.user.id}/pets`);
+      nextStep();
     },
     onError: (error) => {
       toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
@@ -408,12 +426,6 @@ const InformationsPetForm = ({
               </FormItem>
             )}
           />
-        </div>
-
-        <div className='flex justify-end pt-2'>
-          <Button type='submit' onClick={() => console.log('Button clicked')}>
-            Enregistrer
-          </Button>
         </div>
       </form>
     </Form>

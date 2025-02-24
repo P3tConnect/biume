@@ -11,16 +11,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Card, CardContent } from '@/components/ui/card';
-import { petSchema } from '../hooks/useStepperAnimal';
-
-interface InformationsPetAllergiesFormProps {
-  form: UseFormReturn<z.infer<typeof petSchema>>;
-}
 
 const InformationsPetAllergiesForm = ({
-  form,
-}: InformationsPetAllergiesFormProps) => {
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const allergiesOptions = [
     { label: 'Pollen', value: 'pollen' },
     { label: 'Acariens', value: 'dust_mites' },
@@ -29,21 +27,17 @@ const InformationsPetAllergiesForm = ({
 
   return (
     <Form {...form}>
-      <Card>
-        <CardContent className='pt-6 space-y-4'>
-          <FormField
-            control={form.control}
-            name='allergies'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sélectionnez les allergies</FormLabel>
-                <FormControl></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
+      <FormField
+        control={form.control}
+        name='allergies'
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Sélectionnez les allergies</FormLabel>
+            <FormControl></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </Form>
   );
 };

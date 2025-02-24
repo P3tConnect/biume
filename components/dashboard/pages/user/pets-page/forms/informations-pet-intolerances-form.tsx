@@ -11,41 +11,33 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Card, CardContent } from '@/components/ui/card';
-import { petSchema } from '../hooks/useStepperAnimal';
-
-interface InformationsPetIntolerancesFormProps {
-  form: UseFormReturn<z.infer<typeof petSchema>>;
-}
 
 const InformationsPetIntolerancesForm = ({
-  form,
-}: InformationsPetIntolerancesFormProps) => {
-  // Ces options devraient venir de votre base de données
+  nextStep,
+  previousStep,
+}: {
+  nextStep: () => void;
+  previousStep: () => void;
+}) => {
   const intolerancesOptions = [
     { label: 'Lactose', value: 'lactose' },
     { label: 'Gluten', value: 'gluten' },
     { label: 'Certaines protéines', value: 'proteins' },
-    // Ajoutez d'autres intolérances selon vos besoins
   ];
 
   return (
     <Form {...form}>
-      <Card>
-        <CardContent className='pt-6 space-y-4'>
-          <FormField
-            control={form.control}
-            name='intolerances'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sélectionnez les intolérances</FormLabel>
-                <FormControl></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
+      <FormField
+        control={form.control}
+        name='intolerances'
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Sélectionnez les intolérances</FormLabel>
+            <FormControl></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </Form>
   );
 };
