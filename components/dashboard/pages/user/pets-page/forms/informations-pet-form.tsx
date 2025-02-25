@@ -28,9 +28,9 @@ import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
 import { createPet } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import Image from 'next/image';
-import { useSession } from '@/src/lib/auth-client';
 import { petSchema } from '../schema/pet-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePetContext } from '../context/pet-context';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -47,7 +47,7 @@ const InformationsPetForm = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const { data: session } = useSession();
+  const { setPetId } = usePetContext();
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -69,8 +69,9 @@ const InformationsPetForm = ({
   const { handleSubmit } = form;
 
   const { mutateAsync } = useActionMutation(createPet, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Animal créé avec succès!');
+      setPetId(data[0].id);
       nextStep();
     },
     onError: (error) => {
@@ -79,7 +80,17 @@ const InformationsPetForm = ({
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
+    try {
+      const result = await mutateAsync(data);
+      if (result && result[0] && result[0].id) {
+        setPetId(result[0].id);
+        nextStep();
+      } else {
+        toast.error("Erreur : Impossible de récupérer l'ID de l'animal");
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création:', error);
+    }
   });
 
   const { startUpload: startImageUpload } = useUploadThing(
@@ -432,8 +443,8 @@ const InformationsPetForm = ({
           <Button variant='outline' onClick={previousStep}>
             Annuler
           </Button>
-          <Button className='w-full' type='submit' onClick={nextStep}>
-            Suivant &gt;
+          <Button className='w-full' type='submit'>
+            Suivant
           </Button>
         </div>
       </form>

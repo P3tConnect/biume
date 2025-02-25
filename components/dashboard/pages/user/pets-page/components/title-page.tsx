@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import StepperAnimal from './stepper-animal';
+import { PetProvider } from '../context/pet-context';
 
 const TitlePage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +50,9 @@ const TitlePage = () => {
           <DialogTitle>Ajouter un animal</DialogTitle>
         </VisuallyHidden>
         <div className='p-4'>
-          <StepperAnimal />
+          <PetProvider>
+            <StepperAnimal />
+          </PetProvider>
         </div>
       </DialogContent>
     </Dialog>

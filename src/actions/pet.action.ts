@@ -4,7 +4,7 @@ import { CreatePetSchema, Pet, pets } from '@/src/db/pets';
 import { createServerAction, db, requireAuth } from '../lib';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { petsAllergies, petsDeseases, petsIntolerences } from '../db';
+import { allergies, deseases, intolerences } from '../db';
 
 export const createPet = createServerAction(
   CreatePetSchema,
@@ -45,48 +45,50 @@ export const getPets = createServerAction(
 
 export const createPetDeseases = createServerAction(
   z.object({
-    petId: z.string(),
-    diseases: z.array(z.string()),
+    pets: z.string(),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
       where: (pets) =>
-        eq(pets.id, input.petId) && eq(pets.ownerId, ctx.user?.id ?? ''),
+        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
     });
 
     if (!pet) {
       throw new Error("L'animal n'existe pas ou ne vous appartient pas");
     }
 
-    const createdDiseases = await db
-      .insert(petsDeseases)
+    const createdDeseases = await db
+      .insert(deseases)
       .values(
-        input.diseases.map((disease) => ({
-          petId: input.petId,
-          name: disease,
+        input.deseases.map(() => ({
+          name: '',
+          description: '',
+          pets: pet?.id,
+          ownerId: ctx.user?.id ?? '',
+          owner: ctx.user?.name ?? '',
         }))
       )
       .returning()
       .execute();
 
-    if (!createdDiseases) {
+    if (!createdDeseases) {
       throw new Error('Erreur lors de la création des maladies');
     }
 
-    return createdDiseases;
+    return createdDeseases;
   },
   [requireAuth]
 );
 
 export const createPetAllergies = createServerAction(
   z.object({
-    petId: z.string(),
+    pets: z.string(),
     allergies: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
       where: (pets) =>
-        eq(pets.id, input.petId) && eq(pets.ownerId, ctx.user?.id ?? ''),
+        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
     });
 
     if (!pet) {
@@ -94,11 +96,13 @@ export const createPetAllergies = createServerAction(
     }
 
     const createdAllergies = await db
-      .insert(petsAllergies)
+      .insert(allergies)
       .values(
         input.allergies.map((allergy) => ({
-          petId: input.petId,
           name: allergy,
+          description: '',
+          petId: input.petId,
+          ownerId: ctx.user?.id ?? '',
         }))
       )
       .returning()
@@ -129,11 +133,13 @@ export const createPetIntolerances = createServerAction(
     }
 
     const createdIntolerences = await db
-      .insert(petsIntolerences)
+      .insert(intolerences)
       .values(
         input.allergies.map((allergy) => ({
-          petId: input.petId,
           name: allergy,
+          description: '',
+          petId: input.petId,
+          ownerId: ctx.user?.id ?? '',
         }))
       )
       .returning()

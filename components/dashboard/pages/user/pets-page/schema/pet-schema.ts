@@ -1,8 +1,28 @@
 import { z } from 'zod';
 
-export const deseaseSchema = z.array(z.string());
-export const intolerencesSchema = z.array(z.string());
-export const allergiesSchema = z.array(z.string());
+export const deseaseSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  ownerId: z.string(),
+  owner: z.string(),
+  pets: z.string(),
+});
+
+export const intolerencesSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  ownerId: z.string(),
+  owner: z.string(),
+  pets: z.string(),
+});
+
+export const allergiesSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  ownerId: z.string(),
+  owner: z.string(),
+  pets: z.string(),
+});
 
 export const petSchema = z.object({
   name: z.string().min(1, "Le nom de l'animal est requis"),
@@ -16,7 +36,4 @@ export const petSchema = z.object({
   description: z.string().optional(),
   furColor: z.string().min(1, 'La couleur du pelage est requise'),
   eyeColor: z.string().min(1, 'La couleur des yeux est requise'),
-  deseases: deseaseSchema,
-  intolerences: intolerencesSchema,
-  allergies: allergiesSchema,
 });
