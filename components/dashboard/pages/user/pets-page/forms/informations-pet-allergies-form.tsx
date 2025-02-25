@@ -3,7 +3,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { allergiesSchema } from '../schema/pet-schema';
+import { petSchema } from '../schema/pet-schema';
 import {
   Form,
   FormControl,
@@ -18,10 +18,7 @@ import { createPetAllergies } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
-
-type FormData = {
-  allergies: string[];
-};
+import { z } from 'zod';
 
 const InformationsPetAllergiesForm = ({
   nextStep,
@@ -41,8 +38,8 @@ const InformationsPetAllergiesForm = ({
     { label: 'Autre', value: 'other' },
   ];
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(allergiesSchema),
+  const form = useForm<z.infer<typeof petSchema>>({
+    resolver: zodResolver(petSchema),
     defaultValues: {
       allergies: [],
     },
@@ -67,8 +64,8 @@ const InformationsPetAllergiesForm = ({
     }
 
     await mutateAsync({
-      petId,
-      allergies: data.allergies,
+      allergies: data.allergies ?? [],
+      pets: petId,
     });
   });
 

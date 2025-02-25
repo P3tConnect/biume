@@ -38,7 +38,7 @@ export const getPets = createServerAction(
       throw new Error('Aucun animal trouvé');
     }
 
-    return userPets as unknown as Pet[];
+    return userPets as Pet[];
   },
   [requireAuth]
 );
@@ -46,6 +46,7 @@ export const getPets = createServerAction(
 export const createPetDeseases = createServerAction(
   z.object({
     pets: z.string(),
+    deseases: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
@@ -101,7 +102,7 @@ export const createPetAllergies = createServerAction(
         input.allergies.map((allergy) => ({
           name: allergy,
           description: '',
-          petId: input.petId,
+          pets: pet?.id,
           ownerId: ctx.user?.id ?? '',
         }))
       )
@@ -119,13 +120,13 @@ export const createPetAllergies = createServerAction(
 
 export const createPetIntolerances = createServerAction(
   z.object({
-    petId: z.string(),
-    allergies: z.array(z.string()),
+    pets: z.string(),
+    intolerences: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
       where: (pets) =>
-        eq(pets.id, input.petId) && eq(pets.ownerId, ctx.user?.id ?? ''),
+        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
     });
 
     if (!pet) {
@@ -135,10 +136,10 @@ export const createPetIntolerances = createServerAction(
     const createdIntolerences = await db
       .insert(intolerences)
       .values(
-        input.allergies.map((allergy) => ({
-          name: allergy,
+        input.intolerences.map((intolerance) => ({
+          name: intolerance,
           description: '',
-          petId: input.petId,
+          pets: pet?.id,
           ownerId: ctx.user?.id ?? '',
         }))
       )

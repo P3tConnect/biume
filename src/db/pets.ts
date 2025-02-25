@@ -2,14 +2,12 @@ import { integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { InferSelectModel, relations } from 'drizzle-orm';
 import { appointments } from './appointments';
 import { createInsertSchema } from 'drizzle-zod';
-import { petsDeseases } from './petsDeseases';
 import { z } from 'zod';
-import { petsAllergies } from './petsAllergies';
-import { petsIntolerences } from './petsIntolerences';
-import { User, user } from './user';
+import { user } from './user';
+import { Desease } from './deseases';
 import { Allergy } from './allergies';
 import { Intolerence } from './intolerences';
-import { Desease } from './deseases';
+import { User } from 'better-auth';
 
 export const petType = pgEnum('petType', [
   'Dog',
@@ -40,19 +38,15 @@ export const pets = pgTable('pets', {
   birthDate: timestamp('birthDate', { mode: 'date' }).notNull(),
   furColor: text('furColor'),
   eyeColor: text('eyeColor'),
+  deseases: text('deseases').array(),
+  allergies: text('allergies').array(),
+  intolerences: text('intolerences').array(),
   createdAt: timestamp('createdAt', { mode: 'date' }).defaultNow(),
   updatedAt: timestamp('updatedAt', { mode: 'date' }),
 });
 
-export const petsRelations = relations(pets, ({ one, many }) => ({
+export const petsRelations = relations(pets, ({ many }) => ({
   appointments: many(appointments),
-  deseases: many(petsDeseases),
-  allergies: many(petsAllergies),
-  intolerences: many(petsIntolerences),
-  owner: one(user, {
-    fields: [pets.ownerId],
-    references: [user.id],
-  }),
 }));
 
 export type Pet = InferSelectModel<typeof pets> & {
@@ -61,6 +55,7 @@ export type Pet = InferSelectModel<typeof pets> & {
   allergies: Allergy[];
   intolerences: Intolerence[];
 };
+
 export type CreatePet = typeof pets.$inferInsert;
 export const PetTypeEnum = z.enum(petType.enumValues);
 

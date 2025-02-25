@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import { deseaseSchema } from '../schema/pet-schema';
+import { petSchema } from '../schema/pet-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { createPetDeseases } from '@/src/actions';
@@ -58,14 +58,11 @@ const InformationsPetDeseasesForm = ({
     { label: 'Autre', value: 'other' },
   ];
 
-  const form = useForm<z.infer<typeof deseaseSchema>>({
-    resolver: zodResolver(deseaseSchema),
+  const form = useForm<z.infer<typeof petSchema>>({
+    resolver: zodResolver(petSchema),
     defaultValues: {
-      name: '',
-      description: '',
-      ownerId: session?.user?.id ?? '',
-      owner: session?.user?.name ?? '',
-      pets: petId ?? '',
+      deseases: [],
+      pets: petId,
     },
   });
 
@@ -88,11 +85,8 @@ const InformationsPetDeseasesForm = ({
     }
 
     await mutateAsync({
-      name: data.name,
-      description: data.description,
-      ownerId: data.ownerId,
-      owner: data.owner,
-      pets: data.pets,
+      pets: petId,
+      deseases: data.deseases ?? [],
     });
   });
 

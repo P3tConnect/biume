@@ -13,15 +13,12 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { intolerencesSchema } from '../schema/pet-schema';
+import { petSchema } from '../schema/pet-schema';
 import { createPetIntolerances } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
-
-type FormData = {
-  intolerences: string[];
-};
+import { z } from 'zod';
 
 const InformationsPetIntolerancesForm = ({
   nextStep,
@@ -41,8 +38,8 @@ const InformationsPetIntolerancesForm = ({
     { label: 'Autre', value: 'other' },
   ];
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(intolerencesSchema),
+  const form = useForm<z.infer<typeof petSchema>>({
+    resolver: zodResolver(petSchema),
     defaultValues: {
       intolerences: [],
     },
@@ -67,8 +64,8 @@ const InformationsPetIntolerancesForm = ({
     }
 
     await mutateAsync({
-      petId,
-      allergies: data.intolerences,
+      pets: petId,
+      intolerences: data.intolerences ?? [],
     });
   });
 
@@ -94,12 +91,12 @@ const InformationsPetIntolerancesForm = ({
                       >
                         <FormControl>
                           <Checkbox
-                            checked={field.value?.includes(intolerance.value)}
+                            checked={field.value?.includes(intolerance?.value)}
                             onCheckedChange={(checked) => {
                               const updatedValue = checked
-                                ? [...field.value, intolerance.value]
-                                : field.value.filter(
-                                    (value) => value !== intolerance.value
+                                ? [...(field.value || []), intolerance?.value]
+                                : field?.value?.filter(
+                                    (value) => value !== intolerance?.value
                                   );
                               field.onChange(updatedValue);
                             }}
