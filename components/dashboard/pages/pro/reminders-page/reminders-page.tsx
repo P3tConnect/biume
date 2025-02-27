@@ -33,13 +33,7 @@ import { CreateReminderSchema, type Reminder } from "@/src/db/reminder";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, PencilIcon, TrashIcon } from "lucide-react";
-
-type ReminderFormValues = {
-  title: string;
-  description?: string;
-  type: "appointment" | "followup" | "vaccination" | "medication" | "other";
-  dueDate: string;
-};
+import { z } from "zod";
 
 const RemindersPageComponent = () => {
   const [reminders, setReminders] = React.useState<Reminder[]>([]);
@@ -47,13 +41,13 @@ const RemindersPageComponent = () => {
     React.useState<Reminder | null>(null);
   const [isEditMode, setIsEditMode] = React.useState(false);
 
-  const form = useForm<ReminderFormValues>({
+  const form = useForm<z.infer<typeof CreateReminderSchema>>({
     resolver: zodResolver(CreateReminderSchema),
     defaultValues: {
       title: "",
       description: "",
       type: "other",
-      dueDate: new Date().toISOString(),
+      dueDate: new Date(),
     },
   });
 
@@ -108,7 +102,7 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -122,7 +116,7 @@ const RemindersPageComponent = () => {
                       <FormLabel>Type</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value ?? ''}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -152,7 +146,7 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Date d&apos;échéance</FormLabel>
                       <FormControl>
-                        <Input type="datetime-local" {...field} />
+                        <Input type="datetime-local" {...field} value={field.value ? field.value.toISOString().split('T')[0] + 'T' + field.value.toISOString().split('T')[1].split('.')[0] : ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

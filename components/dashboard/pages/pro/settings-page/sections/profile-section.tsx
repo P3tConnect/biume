@@ -7,6 +7,7 @@ import { z } from "zod";
 import { Suspense } from "react";
 import { Organization } from "@/src/db";
 import { ActionResult } from "@/src/lib";
+import { getCurrentOrganization } from "@/src/actions/organization.action";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -55,14 +56,8 @@ export const organizationImagesFormSchema = z.object({
   logo: z.string().optional(),
 });
 
-export const ProfileSection = async ({
-  org,
-}: {
-  org: ActionResult<Organization | null>;
-}) => {
-  if (!org.data) {
-    return null;
-  }
+export const ProfileSection = async () => {
+  const org = await getCurrentOrganization({});
 
   return (
     <div className="relative">

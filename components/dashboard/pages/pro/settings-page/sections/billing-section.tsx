@@ -6,12 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ActionResult, safeConfig } from "@/src/lib";
+import { safeConfig } from "@/src/lib";
 import { BillingPlanSection } from "./components/billing/billing-plan-section";
 import { BillingPaymentSection } from "./components/billing/billing-payment-section";
 import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
-import { BillingInfo } from "@/types/billing-info";
-import { StripeInvoice } from "@/types/stripe-invoice";
+import { getInvoiceHistory } from "@/src/actions/stripe.action";
+import { getBillingInfo } from "@/src/actions/stripe.action";
 
 export const plans = [
   {
@@ -60,13 +60,12 @@ export const plans = [
   },
 ];
 
-export const BillingSection = ({
-  billingInfo,
-  invoices,
-}: {
-  billingInfo: ActionResult<BillingInfo>;
-  invoices: ActionResult<StripeInvoice[]>;
-}) => {
+export const BillingSection = async () => {
+  const [billingInfo, invoices] = await Promise.all([
+    getBillingInfo({}),
+    getInvoiceHistory({}),
+  ])
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="border-b bg-muted/10 pb-8 pt-6">

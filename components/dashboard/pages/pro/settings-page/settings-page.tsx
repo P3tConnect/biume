@@ -6,43 +6,20 @@ import {
   FileText,
   Briefcase,
   Settings,
-  Image,
+  Image as ImageIcon,
   Clock,
 } from "lucide-react";
 import { ProfileSection } from "./sections/profile-section";
 import { BillingSection } from "./sections/billing-section";
 import { TeamSection } from "./sections/team-section";
-import { DocumentsSection } from "./sections/documents-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import ImagesSection from "./sections/images-section";
 import SlotsSection from "./sections/slotsSection";
-import { getOrganizationImages } from "@/src/actions/organization.action";
-import { getCurrentOrganization } from "@/src/actions/organization.action";
-import {
-  getBillingInfo,
-  getCompanyDocuments,
-  getInvoiceHistory,
-  getOptionsFromOrganization,
-  getOrganizationSlots,
-} from "@/src/actions";
-import { getServicesFromOrganization } from "@/src/actions";
-import { Suspense } from "react";
+import DocumentsSection from "./sections/documents-section";
 
 const SettingsPageComponent = async () => {
-  const [profile, images, services, options, documents, billing, invoices, slots] =
-    await Promise.all([
-      getCurrentOrganization({}),
-      getOrganizationImages({}),
-      getServicesFromOrganization({}),
-      getOptionsFromOrganization({}),
-      getCompanyDocuments({}),
-      getBillingInfo({}),
-      getInvoiceHistory({}),
-      getOrganizationSlots({}),
-    ]);
-
   return (
     <div>
       <Card className="overflow-hidden rounded-2xl mb-4">
@@ -68,7 +45,7 @@ const SettingsPageComponent = async () => {
               Profil
             </TabsTrigger>
             <TabsTrigger value="images" className="flex items-center gap-2">
-              <Image className="h-4 w-4" />
+              <ImageIcon className="h-4 w-4" />
               Images
             </TabsTrigger>
             <TabsTrigger value="services" className="flex items-center gap-2">
@@ -98,51 +75,35 @@ const SettingsPageComponent = async () => {
           </TabsList>
 
           <TabsContent value="profile">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ProfileSection org={profile} />
-            </Suspense>
+            <ProfileSection />
           </TabsContent>
 
           <TabsContent value="images">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ImagesSection images={images} />
-            </Suspense>
+            <ImagesSection />
           </TabsContent>
 
           <TabsContent value="services">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ServicesSection services={services} />
-            </Suspense>
+            <ServicesSection />
           </TabsContent>
 
           <TabsContent value="options">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <OptionsSection options={options} />
-            </Suspense>
+            <OptionsSection />
           </TabsContent>
 
           <TabsContent value="slots">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <SlotsSection slots={slots.data ?? []} />
-            </Suspense>
+            <SlotsSection />
           </TabsContent>
 
           <TabsContent value="documents">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <DocumentsSection documents={documents} />
-            </Suspense>
+            <DocumentsSection />
           </TabsContent>
 
           <TabsContent value="billing">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <BillingSection billingInfo={billing} invoices={invoices} />
-            </Suspense>
+            <BillingSection />
           </TabsContent>
 
           <TabsContent value="team">
-            <Suspense fallback={<div>Chargement...</div>}>
-              <TeamSection />
-            </Suspense>
+            <TeamSection />
           </TabsContent>
         </Tabs>
       </div>

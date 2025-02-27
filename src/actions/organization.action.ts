@@ -434,7 +434,7 @@ export const getOrganizationImages = createServerAction(
       orderBy: desc(organizationImages.createdAt),
     });
 
-    return images as unknown as OrganizationImage[];
+    return images as OrganizationImage[];
   },
   [requireAuth, requireFullOrganization],
 );

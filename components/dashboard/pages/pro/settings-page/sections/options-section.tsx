@@ -1,20 +1,21 @@
 import { Card } from "@/components/ui/card";
 import { OptionsGrid } from "./components/options/options-grid";
 import { OptionsHeader } from "./components/options/options-header";
-import { ActionResult } from "@/src/lib";
-import { Option } from "@/src/db";
+import { getOptionsFromOrganization } from "@/src/actions";
+import { Skeleton } from "@/components/ui";
+import { Suspense } from "react";
 
-export const OptionsSection = ({
-  options,
-}: {
-  options: ActionResult<Option[]>;
-}) => {
+export const OptionsSection = async () => {
+  const options = await getOptionsFromOrganization({});
+
   return (
     <Card className="p-6">
       <div className="space-y-8">
         <div className="space-y-4">
           <OptionsHeader />
-          <OptionsGrid options={options} />
+          <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
+            <OptionsGrid options={options} />
+          </Suspense>
         </div>
       </div>
     </Card>

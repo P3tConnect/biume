@@ -16,16 +16,14 @@ import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
 import { Separator } from "../ui/separator";
 import {
-  Image,
+  Image as ImageIcon,
   Table2,
   FileText,
   Paperclip,
   FileImage,
-  Edit,
-  HeartPulse
+  Edit
 } from "lucide-react";
 import { ReportTemplate } from "./report-generator";
-import { AnimalDiagram } from "./animal-diagram";
 
 interface AnimalData {
   id: string;
@@ -112,16 +110,12 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
                   <span>Contenu</span>
                 </TabsTrigger>
                 <TabsTrigger value="images" className="flex items-center gap-2">
-                  <Image className="h-4 w-4" />
+                  <ImageIcon className="h-4 w-4" />
                   <span>Images</span>
                 </TabsTrigger>
                 <TabsTrigger value="data" className="flex items-center gap-2">
                   <Table2 className="h-4 w-4" />
                   <span>Données</span>
-                </TabsTrigger>
-                <TabsTrigger value="diagram" className="flex items-center gap-2">
-                  <HeartPulse className="h-4 w-4" />
-                  <span>Diagramme</span>
                 </TabsTrigger>
                 <TabsTrigger value="attachments" className="flex items-center gap-2">
                   <Paperclip className="h-4 w-4" />
@@ -139,10 +133,6 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
 
               <TabsContent value="data" className="mt-6">
                 <DataTableEditor />
-              </TabsContent>
-
-              <TabsContent value="diagram" className="mt-6">
-                <AnimalDiagram />
               </TabsContent>
 
               <TabsContent value="attachments" className="mt-6">
