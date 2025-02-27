@@ -196,7 +196,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
           </div>
           <h3 className="text-lg font-medium">Aucun modèle trouvé</h3>
           <p className="text-muted-foreground mt-1 mb-4 max-w-md">
-            Nous n'avons pas trouvé de modèle correspondant à votre recherche. Essayez avec d'autres termes ou créez un nouveau modèle.
+            Nous n&apos;avons pas trouvé de modèle correspondant à votre recherche. Essayez avec d&apos;autres termes ou créez un nouveau modèle.
           </p>
           <Button onClick={() => console.log("Create new template")}>
             Créer un nouveau modèle

@@ -326,7 +326,7 @@ export function DataVisualizer() {
             <div>
               <CardTitle>Paramètres du graphique</CardTitle>
               <CardDescription>
-                Personnalisez l'apparence et les données de vos graphiques
+                Personnalisez l&apos;apparence et les données de vos graphiques
               </CardDescription>
             </div>
             <Button size="sm" variant="outline">
@@ -396,7 +396,7 @@ export function DataVisualizer() {
               <BarChart2 className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Aucun rapport enregistré</h3>
               <p className="text-muted-foreground max-w-md mb-6">
-                Vous n'avez pas encore enregistré de rapports statistiques.
+                Vous n&apos;avez pas encore enregistré de rapports statistiques.
                 Créez et enregistrez des visualisations de données pour les réutiliser dans vos rapports.
               </p>
               <Button>

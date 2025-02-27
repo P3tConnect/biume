@@ -148,13 +148,13 @@ export function ReportGenerator() {
             <CardHeader>
               <CardTitle>Assistant IA pour Rapports</CardTitle>
               <CardDescription>
-                Utilisez l'intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
+                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] flex items-center justify-center border rounded-md p-4">
                 <p className="text-muted-foreground text-center">
-                  Fonctionnalité d'assistant IA en développement
+                  Fonctionnalité d&apos;assistant IA en développement
                   <br />
                   <span className="text-sm">Bientôt disponible</span>
                 </p>

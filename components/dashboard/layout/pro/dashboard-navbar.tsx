@@ -373,7 +373,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                         </Link>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="rounded-lg bg-popover/95 backdrop-blur-sm border-border/30 shadow-md">
-                        Paramètres de l'organisation
+                        Paramètres de l&apos;organisation
                       </TooltipContent>
                     </Tooltip>
                   )}

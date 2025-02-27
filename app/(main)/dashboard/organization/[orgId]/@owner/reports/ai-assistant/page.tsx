@@ -12,7 +12,7 @@ const AIAssistantPage = () => {
             <div>
               <CardTitle>Assistant IA pour Rapports</CardTitle>
               <CardDescription>
-                Utilisez l'intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
+                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
               </CardDescription>
             </div>
           </div>

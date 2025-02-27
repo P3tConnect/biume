@@ -271,7 +271,7 @@ const ClientPetHealthWidget = () => {
                     <div className='space-y-4'>
                       <h4 className='text-sm font-medium flex items-center gap-2'>
                         <AlertTriangle className='size-4 text-yellow-500' />
-                        Points d'attention
+                        Points d&apos;attention
                       </h4>
                       <ul className='space-y-2'>
                         {selectedPet.alerts.map((alert, index) => (

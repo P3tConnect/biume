@@ -415,7 +415,7 @@ export function AnimalDiagram() {
           {/* Sélecteurs d'animal, de vue et de perspective */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="animal-type">Type d'animal</Label>
+              <Label htmlFor="animal-type">Type d&apos;animal</Label>
               <Select value={animalType} onValueChange={(value) => setAnimalType(value as AnimalType)}>
                 <SelectTrigger id="animal-type">
                   <SelectValue placeholder="Sélectionnez un animal" />
@@ -510,7 +510,7 @@ export function AnimalDiagram() {
               ))}
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Sélectionnez d'abord un symptôme, puis cliquez sur une zone du squelette pour la marquer
+              Sélectionnez d&apos;abord un symptôme, puis cliquez sur une zone du squelette pour la marquer
             </p>
           </div>
 

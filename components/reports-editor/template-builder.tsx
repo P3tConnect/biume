@@ -383,7 +383,7 @@ export function TemplateBuilder() {
         {showElementEditor && currentElement && (
           <Card>
             <CardHeader>
-              <CardTitle>Édition de l'élément</CardTitle>
+              <CardTitle>Édition de l&apos;élément</CardTitle>
               <CardDescription>
                 Personnalisez les propriétés de cet élément
               </CardDescription>
@@ -400,7 +400,7 @@ export function TemplateBuilder() {
 
               {(currentElement.type === "text" || currentElement.type === "textarea") && (
                 <div className="space-y-2">
-                  <Label htmlFor="element-placeholder">Texte d'aide (placeholder)</Label>
+                  <Label htmlFor="element-placeholder">Texte d&apos;aide (placeholder)</Label>
                   <Input
                     id="element-placeholder"
                     value={currentElement.placeholder || ""}

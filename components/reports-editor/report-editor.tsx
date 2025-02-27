@@ -15,16 +15,12 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
 import { Separator } from "../ui/separator";
-import { ScrollArea } from "../ui/scroll-area";
 import {
-  PenLine,
   Image,
   Table2,
   FileText,
-  Calendar,
   Paperclip,
   FileImage,
-  Check,
   Edit,
   HeartPulse
 } from "lucide-react";
@@ -242,7 +238,7 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
               <h3 className="font-medium">Options de mise en page</h3>
 
               <div className="flex items-center justify-between">
-                <Label htmlFor="include-header">Inclure l'en-tête</Label>
+                <Label htmlFor="include-header">Inclure l&apos;en-tête</Label>
                 <Switch
                   id="include-header"
                   checked={includeHeader}
@@ -289,7 +285,7 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
             <div className="aspect-[3/4] bg-muted rounded-md flex items-center justify-center">
               <Button variant="outline">
                 <FileImage className="h-4 w-4 mr-2" />
-                Générer l'aperçu
+                Générer l&apos;aperçu
               </Button>
             </div>
           </CardContent>
@@ -407,7 +403,7 @@ function NutritionReportEditor() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="feeding-schedule">Programme d'alimentation</Label>
+        <Label htmlFor="feeding-schedule">Programme d&apos;alimentation</Label>
         <Textarea id="feeding-schedule" placeholder="Détails sur les horaires et quantités..." className="min-h-[100px]" />
       </div>
     </div>
@@ -418,7 +414,7 @@ function StatisticsReportEditor() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="period">Période d'analyse</Label>
+        <Label htmlFor="period">Période d&apos;analyse</Label>
         <div className="grid grid-cols-2 gap-4">
           <Input id="period-start" type="date" placeholder="Date de début" />
           <Input id="period-end" type="date" placeholder="Date de fin" />
@@ -495,7 +491,7 @@ function DataTableEditor() {
         <p className="text-muted-foreground text-center">
           Aucun tableau de données ajouté.
           <br />
-          Cliquez sur "Nouveau tableau" pour commencer.
+          Cliquez sur &quot;Nouveau tableau&quot; pour commencer.
         </p>
       </div>
     </div>
@@ -518,7 +514,7 @@ function AttachmentsEditor() {
         <p className="text-muted-foreground text-center">
           Aucune pièce jointe.
           <br />
-          Cliquez sur "Ajouter" pour joindre des documents.
+          Cliquez sur &quot;Ajouter&quot; pour joindre des documents.
         </p>
       </div>
     </div>
