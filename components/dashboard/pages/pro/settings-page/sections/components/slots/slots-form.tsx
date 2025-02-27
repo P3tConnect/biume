@@ -16,6 +16,9 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useActiveOrganization } from "@/src/lib/auth-client";
+import { useActionMutation } from "@/src/hooks/action-hooks";
+import { createOrganizationSlot, updateOrganizationSlot } from "@/src/actions";
+import { toast } from "sonner";
 
 const slotSchema = z.object({
   type: z.enum(["unique", "recurring"]),
@@ -37,10 +40,11 @@ const formSchema = z.object({
 export type FormValues = z.infer<typeof formSchema>;
 
 interface SlotsFormProps {
-  onSubmit: (data: FormValues) => void;
+  onSubmit?: () => void;
   onCancel: () => void;
   initialData?: FormValues;
   isEditing?: boolean;
+  selectedSlotId?: string | null;
 }
 
 const steps = {
@@ -72,12 +76,12 @@ const weekDays = [
 ];
 
 const SlotsForm = ({
-  onSubmit,
+  onSubmit: onFormSubmit,
   onCancel,
   initialData,
   isEditing,
+  selectedSlotId,
 }: SlotsFormProps) => {
-  const { data: organization } = useActiveOrganization();
   const [currentStep, setCurrentStep] = React.useState<keyof typeof steps>(
     isEditing ? "service" : "type",
   );
@@ -128,7 +132,10 @@ const SlotsForm = ({
     if (currentIndex < stepOrder.length - 1) {
       setCurrentStep(stepOrder[currentIndex + 1]);
     } else {
-      handleSubmit(onSubmit)();
+      handleSubmit((data) => {
+        handleFormSubmit(data);
+        onFormSubmit?.();
+      })();
     }
   };
 
@@ -144,6 +151,114 @@ const SlotsForm = ({
     queryKey: ["services"],
     queryFn: () => getServices({}),
   });
+
+  const createSlotMutation = useActionMutation(createOrganizationSlot, {
+    onSuccess: () => {
+      toast.success("Le créneau a été créé avec succès");
+      onFormSubmit?.();
+    },
+    onError: (error) => {
+      toast.error("Erreur: " + error);
+    },
+  });
+
+  const updateSlotMutation = useActionMutation(updateOrganizationSlot, {
+    onSuccess: () => {
+      toast.success("Le créneau a été modifié avec succès");
+      onFormSubmit?.();
+    },
+    onError: (error) => {
+      toast.error("Erreur: " + error);
+    },
+  });
+
+  const handleFormSubmit = async (formData: FormValues) => {
+    try {
+      const slot = formData.slots[0];
+      if (slot.type === "unique") {
+        const data = {
+          serviceId: slot.serviceId,
+          start: new Date(slot.date!.setHours(
+            parseInt(slot.startTime.split(":")[0]),
+            parseInt(slot.startTime.split(":")[1])
+          )).toISOString(),
+          end: new Date(slot.date!.setHours(
+            parseInt(slot.endTime.split(":")[0]),
+            parseInt(slot.endTime.split(":")[1])
+          )).toISOString(),
+          isAvailable: true,
+          type: "unique" as const,
+        };
+
+        if (isEditing && selectedSlotId) {
+          await updateSlotMutation.mutateAsync({
+            ...data,
+            id: selectedSlotId,
+          });
+        } else {
+          await createSlotMutation.mutateAsync([data]);
+        }
+      } else {
+        // Créneaux récurrents
+        if (!slot.date || !slot.endRecurrence || !slot.selectedDays?.length) {
+          toast.error("Veuillez sélectionner une période et des jours de récurrence");
+          return;
+        }
+
+        const startDate = new Date(slot.date);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(slot.endRecurrence);
+        endDate.setHours(23, 59, 59, 999);
+
+        // Convertir les heures en minutes pour faciliter les calculs
+        const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+        const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+        const startMinutes = startHour * 60 + startMinute;
+        const endMinutes = endHour * 60 + endMinute;
+
+        // Créer un créneau pour chaque jour sélectionné dans la période
+        const slotsToCreate = [];
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+          const dayOfWeek = currentDate.getDay();
+          const dayName = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayOfWeek];
+
+          if (slot.selectedDays.includes(dayName)) {
+            // Pour chaque jour sélectionné, créer des créneaux en fonction de la durée du service
+            let currentMinute = startMinutes;
+            while (currentMinute + slot.serviceDuration <= endMinutes) {
+              const slotStart = new Date(currentDate);
+              slotStart.setHours(Math.floor(currentMinute / 60), currentMinute % 60);
+
+              const slotEnd = new Date(currentDate);
+              const endMinute = currentMinute + slot.serviceDuration;
+              slotEnd.setHours(Math.floor(endMinute / 60), endMinute % 60);
+
+              slotsToCreate.push({
+                serviceId: slot.serviceId,
+                start: slotStart.toISOString(),
+                end: slotEnd.toISOString(),
+                isAvailable: true,
+                type: "recurring" as const,
+              });
+
+              currentMinute += slot.serviceDuration;
+            }
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Créer tous les créneaux en une seule fois
+        await createSlotMutation.mutateAsync(slotsToCreate);
+        toast.success(`${slotsToCreate.length} créneaux ont été créés avec succès`);
+        onFormSubmit?.();
+      }
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de la création des créneaux");
+    }
+  };
 
   const renderTypeStep = () => (
     <div className="grid grid-cols-2 gap-4 h-full">
@@ -356,7 +471,10 @@ const SlotsForm = ({
   const isLastStep = currentStep === "date";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit((data) => {
+      handleFormSubmit(data);
+      onFormSubmit?.();
+    })} className="space-y-6">
       {!isEditing && (
         <div className="flex items-center gap-4 mb-4">
           {Object.values(steps).map((step, index) => (

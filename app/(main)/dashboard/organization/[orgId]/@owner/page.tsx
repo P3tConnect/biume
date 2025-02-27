@@ -7,7 +7,6 @@ import ObservationsWidget from "@/components/dashboard/shortcuts/pro/observation
 import PendingReportsWidget from "@/components/dashboard/shortcuts/pro/pending-reports-widget";
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget";
 import PendingReservationsWidget from "@/components/dashboard/shortcuts/pro/pending-reservations-widget";
-import TopClientsWidget from "@/components/dashboard/shortcuts/pro/top-clients-widget";
 
 export const metadata: Metadata = {
   title: "Home - Dashboard",
@@ -50,7 +49,7 @@ const DashboardHomeProPage = () => {
         {/* Right Column - Notifications and Actions */}
         <div className="lg:col-span-4 space-y-4">
           {/* Reservations Section */}
-          <div className="sticky top-4">
+          <div className="sticky top-16">
             <PendingReservationsWidget />
           </div>
         </div>

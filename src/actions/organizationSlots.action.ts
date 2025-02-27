@@ -12,6 +12,12 @@ export const getOrganizationSlots = createServerAction(
       with: {
         service: true,
       },
+      columns: {
+        id: true,
+        start: true,
+        end: true,
+        serviceId: true,
+      },
     });
 
     if (!slots) {
@@ -42,19 +48,19 @@ export const getOrganizationSlotsByService = createServerAction(
 );
 
 export const createOrganizationSlot = createServerAction(
-  CreateOrganizationSlotsSchema,
+  z.array(CreateOrganizationSlotsSchema),
   async (input, ctx) => {
-    const [slot] = await db
+    const slots = await db
       .insert(organizationSlots)
       .values(input)
       .returning()
       .execute();
 
-    if (!slot) {
-      throw new ActionError("Erreur lors de la création du créneau");
+    if (!slots) {
+      throw new ActionError("Erreur lors de la création des créneaux");
     }
 
-    return slot;
+    return slots;
   },
   [requireAuth, requireFullOrganization],
 );

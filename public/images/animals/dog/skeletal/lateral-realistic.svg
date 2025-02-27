@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="500" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Squelette de chien en vue latérale - Schéma réaliste avec zones cliquables -->
+  
+  <!-- Groupe pour le crâne -->
+  <g id="cranium" class="skeletal-zone" data-name="Crâne" data-id="cranium">
+    <!-- Os crâniens -->
+    <path d="M180,120 
+             C185,110 190,100 200,95 
+             C210,90 220,85 230,82 
+             C245,78 260,75 275,78 
+             C290,80 305,85 315,95 
+             C325,105 330,115 325,130 
+             C320,145 310,150 300,155 
+             C290,160 280,160 270,158 
+             C260,155 250,150 240,145 
+             C230,140 220,135 210,130
+             C200,125 190,125 180,120 Z" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails du crâne -->
+    <path d="M275,78 C280,75 290,74 300,78 C310,82 315,88 318,95" 
+          fill="none" stroke="black" stroke-width="1"/>
+    <path d="M300,155 C305,153 310,148 313,143 C316,138 317,132 315,125" 
+          fill="none" stroke="black" stroke-width="1"/>
+    <path d="M315,95 C320,100 322,110 320,120 C318,130 315,138 310,143" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Orbite oculaire -->
+    <ellipse cx="290" cy="105" rx="8" ry="10" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Cavité nasale -->
+    <path d="M315,95 C325,98 330,105 330,115 C330,125 325,130 315,125" 
+          fill="none" stroke="black" stroke-width="1"/>
+  </g>
+  
+  <!-- Groupe pour la mâchoire -->
+  <g id="jaw" class="skeletal-zone" data-name="Mâchoire" data-id="jaw">
+    <path d="M315,125 
+             C330,125 345,130 355,140 
+             C365,150 370,160 360,170 
+             C350,180 335,175 320,172 
+             C305,169 290,165 280,160
+             C290,165 300,168 315,125 Z" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails de la mâchoire -->
+    <path d="M315,125 C325,130 335,135 340,145" 
+          fill="none" stroke="black" stroke-width="1"/>
+    <path d="M340,145 C345,150 350,160 345,165" 
+          fill="none" stroke="black" stroke-width="1"/>
+    <path d="M345,165 C335,170 325,170 315,167" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Dents -->
+    <path d="M320,130 L322,140 M328,132 L330,142 M336,135 L338,145 M342,140 L344,150" 
+          stroke="black" stroke-width="0.5"/>
+    <path d="M315,140 L317,150 M310,142 L312,152 M305,145 L307,155" 
+          stroke="black" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale cervicale -->
+  <g id="cervical-spine" class="skeletal-zone" data-name="Colonne cervicale" data-id="cervical-spine">
+    <path d="M180,120 
+             C170,125 160,135 155,150 
+             C150,165 155,180 165,190 
+             C175,200 190,205 205,200" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Vertèbres cervicales détaillées -->
+    <g>
+      <!-- C1 (atlas) -->
+      <path d="M175,125 C170,123 165,123 160,125 C155,127 153,130 153,135 C153,140 155,143 160,145 C165,147 170,147 175,145 C180,143 182,140 182,135 C182,130 180,127 175,125Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C2 (axis) -->
+      <path d="M165,135 C160,133 155,133 150,135 C145,137 143,140 143,145 C143,150 145,153 150,155 C155,157 160,157 165,155 C170,153 172,150 172,145 C172,140 170,137 165,135Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C3 -->
+      <path d="M155,145 C150,143 145,143 140,145 C135,147 133,150 133,155 C133,160 135,163 140,165 C145,167 150,167 155,165 C160,163 162,160 162,155 C162,150 160,147 155,145Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C4 -->
+      <path d="M150,155 C145,153 140,153 135,155 C130,157 128,160 128,165 C128,170 130,173 135,175 C140,177 145,177 150,175 C155,173 157,170 157,165 C157,160 155,157 150,155Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C5 -->
+      <path d="M150,165 C145,163 140,163 135,165 C130,167 128,170 128,175 C128,180 130,183 135,185 C140,187 145,187 150,185 C155,183 157,180 157,175 C157,170 155,167 150,165Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C6 -->
+      <path d="M155,175 C150,173 145,173 140,175 C135,177 133,180 133,185 C133,190 135,193 140,195 C145,197 150,197 155,195 C160,193 162,190 162,185 C162,180 160,177 155,175Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- C7 -->
+      <path d="M165,185 C160,183 155,183 150,185 C145,187 143,190 143,195 C143,200 145,203 150,205 C155,207 160,207 165,205 C170,203 172,200 172,195 C172,190 170,187 165,185Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- Processus épineux -->
+      <path d="M175,125 L170,118 M165,135 L160,128 M155,145 L150,138 M150,155 L145,148 M150,165 L145,158 M155,175 L150,168 M165,185 L160,178" 
+            stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale thoracique -->
+  <g id="thoracic-spine" class="skeletal-zone" data-name="Colonne thoracique" data-id="thoracic-spine">
+    <path d="M205,200 
+             C215,205 220,215 225,230 
+             C230,245 235,260 240,275" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Vertèbres thoraciques détaillées -->
+    <g>
+      <!-- T1 -->
+      <path d="M205,200 C200,198 195,198 190,200 C185,202 183,205 183,210 C183,215 185,218 190,220 C195,222 200,222 205,220 C210,218 212,215 212,210 C212,205 210,202 205,200Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- T2 -->
+      <path d="M210,210 C205,208 200,208 195,210 C190,212 188,215 188,220 C188,225 190,228 195,230 C200,232 205,232 210,230 C215,228 217,225 217,220 C217,215 215,212 210,210Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- T3 à T13 (en simplifiant) -->
+      <path d="M215,220 C210,218 205,218 200,220 C195,222 193,225 193,230 C193,235 195,238 200,240 C205,242 210,242 215,240 C220,238 222,235 222,230 C222,225 220,222 215,220Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <path d="M220,230 C215,228 210,228 205,230 C200,232 198,235 198,240 C198,245 200,248 205,250 C210,252 215,252 220,250 C225,248 227,245 227,240 C227,235 225,232 220,230Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <path d="M225,240 C220,238 215,238 210,240 C205,242 203,245 203,250 C203,255 205,258 210,260 C215,262 220,262 225,260 C230,258 232,255 232,250 C232,245 230,242 225,240Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <path d="M230,250 C225,248 220,248 215,250 C210,252 208,255 208,260 C208,265 210,268 215,270 C220,272 225,272 230,270 C235,268 237,265 237,260 C237,255 235,252 230,250Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <path d="M235,260 C230,258 225,258 220,260 C215,262 213,265 213,270 C213,275 215,278 220,280 C225,282 230,282 235,280 C240,278 242,275 242,270 C242,265 240,262 235,260Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- Processus épineux (caractéristique du thorax) -->
+      <path d="M205,200 L198,190 M210,210 L203,200 M215,220 L208,210 M220,230 L213,220 M225,240 L218,230 M230,250 L223,240 M235,260 L228,250" 
+            stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale lombaire -->
+  <g id="lumbar-spine" class="skeletal-zone" data-name="Colonne lombaire" data-id="lumbar-spine">
+    <path d="M240,275 
+             C245,290 250,305 260,320" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Vertèbres lombaires détaillées -->
+    <g>
+      <!-- L1 -->
+      <path d="M240,275 C235,273 230,273 225,275 C220,277 218,280 218,285 C218,290 220,293 225,295 C230,297 235,297 240,295 C245,293 247,290 247,285 C247,280 245,277 240,275Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- L2 -->
+      <path d="M245,285 C240,283 235,283 230,285 C225,287 223,290 223,295 C223,300 225,303 230,305 C235,307 240,307 245,305 C250,303 252,300 252,295 C252,290 250,287 245,285Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- L3 -->
+      <path d="M250,295 C245,293 240,293 235,295 C230,297 228,300 228,305 C228,310 230,313 235,315 C240,317 245,317 250,315 C255,313 257,310 257,305 C257,300 255,297 250,295Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- L4 -->
+      <path d="M255,305 C250,303 245,303 240,305 C235,307 233,310 233,315 C233,320 235,323 240,325 C245,327 250,327 255,325 C260,323 262,320 262,315 C262,310 260,307 255,305Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- L5 -->
+      <path d="M260,315 C255,313 250,313 245,315 C240,317 238,320 238,325 C238,330 240,333 245,335 C250,337 255,337 260,335 C265,333 267,330 267,325 C267,320 265,317 260,315Z" 
+            fill="none" stroke="black" stroke-width="1"/>
+      
+      <!-- Processus transverses (plus proéminents dans la région lombaire) -->
+      <path d="M240,275 L230,273 L250,273 M245,285 L235,283 L255,283 M250,295 L240,293 L260,293 M255,305 L245,303 L265,303 M260,315 L250,313 L270,313" 
+            stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Groupe pour la région sacrale -->
+  <g id="sacral-region" class="skeletal-zone" data-name="Région sacrale" data-id="sacral-region">
+    <path d="M260,320 
+             C270,325 280,328 290,325" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Sacrum détaillé -->
+    <path d="M260,320 
+             C265,318 270,317 275,318
+             C280,319 285,321 290,325
+             C290,330 285,335 280,337
+             C275,339 270,338 265,335
+             C260,332 258,325 260,320Z" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Lignes de fusion des vertèbres sacrées -->
+    <path d="M265,323 L285,328 M270,327 L280,332" 
+          stroke="black" stroke-width="0.8" stroke-dasharray="2,1"/>
+  </g>
+  
+  <!-- Groupe pour la queue -->
+  <g id="tail" class="skeletal-zone" data-name="Queue" data-id="tail">
+    <path d="M290,325 
+             C300,330 310,340 320,355 
+             C330,370 335,385 330,400" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Vertèbres caudales détaillées -->
+    <ellipse cx="295" cy="330" rx="5" ry="3" transform="rotate(-10 295 330)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="305" cy="338" rx="5" ry="3" transform="rotate(-20 305 338)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="313" cy="348" rx="4" ry="3" transform="rotate(-30 313 348)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="320" cy="360" rx="4" ry="2.5" transform="rotate(-40 320 360)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="325" cy="370" rx="3.5" ry="2.5" transform="rotate(-30 325 370)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="330" cy="380" rx="3" ry="2" transform="rotate(-20 330 380)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="333" cy="390" rx="2.5" ry="2" transform="rotate(-10 333 390)" fill="none" stroke="black" stroke-width="0.8"/>
+    <ellipse cx="330" cy="400" rx="2" ry="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour la cage thoracique -->
+  <g id="rib-cage" class="skeletal-zone" data-name="Cage thoracique" data-id="rib-cage">
+    <!-- Côtes détaillées -->
+    <path d="M212,210 C225,215 240,225 230,240" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M217,220 C235,225 250,235 240,250" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M222,230 C245,235 260,245 250,260" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M227,240 C250,245 270,255 260,270" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M232,250 C255,255 280,265 270,280" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M237,260 C260,265 285,275 275,290" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M242,270 C265,275 290,285 280,300" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Courbature des côtes -->
+    <path d="M230,240 C235,242 240,245 240,250" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M240,250 C245,252 250,255 250,260" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M250,260 C255,262 260,265 260,270" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M260,270 C265,272 270,275 270,280" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M270,280 C275,282 280,285 275,290" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M275,290 C280,292 285,295 280,300" fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Sternum -->
+    <path d="M230,240 C240,250 250,260 260,270 C270,280 275,290 280,300" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Articulations costo-sternales -->
+    <circle cx="230" cy="240" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="240" cy="250" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="250" cy="260" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="260" cy="270" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="270" cy="280" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="275" cy="290" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+    <circle cx="280" cy="300" r="1.5" fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour l'épaule et la scapula -->
+  <g id="shoulder" class="skeletal-zone" data-name="Épaule" data-id="shoulder">
+    <!-- Scapula (omoplate) -->
+    <path d="M175,195 
+             C165,185 160,175 155,190 
+             C150,205 155,215 165,225 
+             C175,235 190,235 200,225 
+             C195,220 185,210 175,195 Z" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Épine scapulaire -->
+    <path d="M175,195 C180,205 185,215 190,225" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Cavité glénoïdale -->
+    <circle cx="165" cy="225" r="5" fill="none" stroke="black" stroke-width="1"/>
+  </g>
+  
+  <!-- Groupe pour l'humérus (bras avant) -->
+  <g id="humerus" class="skeletal-zone" data-name="Humérus" data-id="humerus">
+    <path d="M165,225 
+             C160,240 160,255 170,270" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails de l'humérus -->
+    <path d="M165,225 
+             C160,230 155,235 153,245 
+             C151,255 152,265 156,270
+             C160,275 165,275 170,270" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Tête humérale -->
+    <circle cx="165" cy="225" r="3" fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Condyles huméraux -->
+    <path d="M168,268 C170,272 173,272 175,270" 
+          fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour le radius/ulna (avant-bras) -->
+  <g id="radius-ulna" class="skeletal-zone" data-name="Radius/Ulna" data-id="radius-ulna">
+    <path d="M170,270 
+             C165,285 165,300 175,315" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails du radius et de l'ulna -->
+    <path d="M170,270 
+             C168,275 167,285 168,295 
+             C169,305 171,310 175,315" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <path d="M175,270 
+             C180,275 181,280 180,290 
+             C179,300 177,310 175,315" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Olécrâne (ulna) -->
+    <path d="M175,270 C178,265 180,267 178,272" 
+          fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour les carpes/métacarpes (poignet/patte avant) -->
+  <g id="carpus-metacarpus" class="skeletal-zone" data-name="Carpe/Métacarpe" data-id="carpus-metacarpus">
+    <path d="M175,315 
+             C180,320 185,325 185,335" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Carpes (os du poignet) -->
+    <rect x="172" y="315" width="6" height="10" rx="3" ry="3" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Métacarpes -->
+    <path d="M175,325 C177,330 179,335 180,340" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M175,325 C175,330 175,335 175,340" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M175,325 C173,330 171,335 170,340" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M175,325 C171,330 169,335 165,340" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Phalanges -->
+    <path d="M180,340 C182,345 183,350 184,355" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M175,340 C175,345 175,350 175,355" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M170,340 C168,345 167,350 166,355" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M165,340 C163,345 162,350 161,355" fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Phalanges distales (griffes) -->
+    <path d="M184,355 L186,360" stroke="black" stroke-width="0.8"/>
+    <path d="M175,355 L175,360" stroke="black" stroke-width="0.8"/>
+    <path d="M166,355 L164,360" stroke="black" stroke-width="0.8"/>
+    <path d="M161,355 L159,360" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour le bassin -->
+  <g id="pelvis" class="skeletal-zone" data-name="Bassin" data-id="pelvis">
+    <path d="M260,320 
+             C265,335 270,350 290,350 
+             C310,350 315,335 290,325" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Ilium -->
+    <path d="M260,320 
+             C255,325 250,330 255,335 
+             C260,340 265,342 270,340" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Pubis -->
+    <path d="M270,340 
+             C275,345 285,347 290,345" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Ischium -->
+    <path d="M290,345 
+             C295,347 300,345 305,340 
+             C310,335 310,330 305,325 
+             C300,320 295,320 290,325" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Acetabulum (cavité cotyloïde pour la tête fémorale) -->
+    <circle cx="280" cy="340" r="5" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Foramen obturé -->
+    <ellipse cx="285" cy="347" rx="5" ry="3" transform="rotate(-20 285 347)" fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour le fémur (cuisse) -->
+  <g id="femur" class="skeletal-zone" data-name="Fémur" data-id="femur">
+    <path d="M280,340 
+             C285,355 290,370 305,385" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails du fémur -->
+    <path d="M280,340 
+             C277,350 278,360 282,370 
+             C286,380 292,383 300,385 
+             C305,386 307,385 305,385" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Tête fémorale -->
+    <circle cx="280" cy="340" r="3" fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Grand trochanter -->
+    <path d="M282,343 C288,342 290,345 288,350" 
+          fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Condyles fémoraux -->
+    <path d="M300,385 C303,387 307,387 310,385" 
+          fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour le tibia/fibula (jambe) -->
+  <g id="tibia-fibula" class="skeletal-zone" data-name="Tibia/Fibula" data-id="tibia-fibula">
+    <path d="M305,385 
+             C300,400 300,415 305,430" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Détails du tibia -->
+    <path d="M305,385 
+             C302,395 300,405 301,415 
+             C302,425 304,428 305,430" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Détails de la fibula -->
+    <path d="M310,385 
+             C313,395 314,405 312,415 
+             C310,425 307,428 305,430" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Plateau tibial -->
+    <path d="M305,385 L310,385" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Malléole -->
+    <circle cx="305" cy="430" r="2" fill="none" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Groupe pour les tarses/métatarses (cheville/patte arrière) -->
+  <g id="tarsus-metatarsus" class="skeletal-zone" data-name="Tarse/Métatarse" data-id="tarsus-metatarsus">
+    <path d="M305,430 
+             C308,435 310,440 310,450" 
+          fill="none" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Tarse (calcanéum et autres os) -->
+    <path d="M305,430 
+             C303,428 300,430 300,435 
+             C300,440 303,442 305,440" 
+          fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Métatarses -->
+    <path d="M305,440 C307,445 309,450 310,455" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M305,440 C305,445 305,450 305,455" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M305,440 C303,445 301,450 300,455" fill="none" stroke="black" stroke-width="1"/>
+    <path d="M305,440 C301,445 299,450 295,455" fill="none" stroke="black" stroke-width="1"/>
+    
+    <!-- Phalanges -->
+    <path d="M310,455 C312,460 313,465 314,470" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M305,455 C305,460 305,465 305,470" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M300,455 C298,460 297,465 296,470" fill="none" stroke="black" stroke-width="0.8"/>
+    <path d="M295,455 C293,460 292,465 291,470" fill="none" stroke="black" stroke-width="0.8"/>
+    
+    <!-- Phalanges distales (griffes) -->
+    <path d="M314,470 L316,475" stroke="black" stroke-width="0.8"/>
+    <path d="M305,470 L305,475" stroke="black" stroke-width="0.8"/>
+    <path d="M296,470 L294,475" stroke="black" stroke-width="0.8"/>
+    <path d="M291,470 L289,475" stroke="black" stroke-width="0.8"/>
+  </g>
+  
+  <!-- Contour du corps (pour référence, en très léger) -->
+  <path d="M180,120 
+           C160,130 150,150 165,190 
+           C180,220 170,260 180,290 
+           C190,320 220,330 250,330 
+           C280,330 320,320 330,400 
+           M180,120 
+           C200,100 240,80 300,90 
+           C340,100 370,150 360,170 
+           C350,200 330,210 320,240 
+           C310,270 320,300 340,320 
+           C360,340 350,400 330,400 
+           M230,240 
+           C240,260 270,270 280,300" 
+        fill="none" stroke="black" stroke-width="0.3" stroke-dasharray="2,2"/>
+  
+  <!-- Légende et titre -->
+  <text x="400" y="30" font-family="Arial" font-size="24" text-anchor="middle" font-weight="bold">Squelette Canin - Vue Latérale</text>
+  <text x="400" y="60" font-family="Arial" font-size="16" text-anchor="middle" font-style="italic">Schéma anatomique détaillé pour l'ostéopathie animale</text>
+  <text x="500" y="480" font-family="Arial" font-size="14" text-anchor="middle" font-style="italic">Les zones sont interactives. Cliquez pour sélectionner.</text>
+</svg> 

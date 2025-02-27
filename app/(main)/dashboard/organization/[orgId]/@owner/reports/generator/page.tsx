@@ -1,7 +1,7 @@
 import { ReportGenerator } from '@/components/reports-editor';
 import React from 'react';
 
-const NewReportPage = () => {
+const ReportGeneratorPage = () => {
   return (
     <div className="py-4">
       <ReportGenerator />
@@ -9,4 +9,4 @@ const NewReportPage = () => {
   );
 };
 
-export default NewReportPage; 
+export default ReportGeneratorPage; 

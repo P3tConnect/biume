@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Squelette de chat en vue latérale - Schéma simplifié avec zones cliquables -->
+  
+  <!-- Groupe pour le crâne -->
+  <g id="cranium" class="skeletal-zone" data-name="Crâne" data-id="cranium">
+    <path d="M220,90 C240,70 270,65 300,75 C320,85 325,105 315,120 C305,135 285,140 265,135 C245,130 210,110 220,90 Z" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <circle cx="280" cy="95" r="4" fill="black"/> <!-- Œil -->
+  </g>
+  
+  <!-- Groupe pour la mâchoire -->
+  <g id="jaw" class="skeletal-zone" data-name="Mâchoire" data-id="jaw">
+    <path d="M315,120 C335,125 350,130 355,140 C360,150 345,155 325,152 C305,149 295,140 315,120 Z" 
+          fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale cervicale -->
+  <g id="cervical-spine" class="skeletal-zone" data-name="Colonne cervicale" data-id="cervical-spine">
+    <path d="M215,110 C200,115 190,130 200,145 C210,160 230,165 250,150" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <!-- Vertèbres cervicales -->
+    <circle cx="215" cy="115" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="205" cy="125" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="200" cy="135" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="205" cy="145" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="215" cy="155" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale thoracique -->
+  <g id="thoracic-spine" class="skeletal-zone" data-name="Colonne thoracique" data-id="thoracic-spine">
+    <path d="M215,155 C225,170 230,190 235,210" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <!-- Vertèbres thoraciques -->
+    <circle cx="220" cy="165" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="225" cy="175" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="227" cy="185" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="230" cy="195" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="232" cy="205" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Groupe pour la colonne vertébrale lombaire -->
+  <g id="lumbar-spine" class="skeletal-zone" data-name="Colonne lombaire" data-id="lumbar-spine">
+    <path d="M235,210 C240,230 245,250 255,265" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <!-- Vertèbres lombaires -->
+    <circle cx="237" cy="220" r="4" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="240" cy="230" r="4" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="243" cy="240" r="4" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="247" cy="250" r="4" fill="none" stroke="black" stroke-width="1.5"/>
+    <circle cx="252" cy="260" r="4" fill="none" stroke="black" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Groupe pour la région sacrale -->
+  <g id="sacral-region" class="skeletal-zone" data-name="Région sacrale" data-id="sacral-region">
+    <path d="M255,265 C265,275 275,280 285,278" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <rect x="255" y="265" width="30" height="12" rx="6" ry="6" fill="none" stroke="black" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Groupe pour la queue -->
+  <g id="tail" class="skeletal-zone" data-name="Queue" data-id="tail">
+    <path d="M285,278 C300,285 325,290 340,305 C355,320 370,345 375,365" 
+          fill="none" stroke="black" stroke-width="2"/>
+    <!-- Vertèbres caudales -->
+    <circle cx="295" cy="285" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="310" cy="290" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="325" cy="295" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="335" cy="305" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="345" cy="315" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="355" cy="330" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="365" cy="345" r="2" fill="none" stroke="black" stroke-width="1"/>
+    <circle cx="370" cy="360" r="2" fill="none" stroke="black" stroke-width="1"/>
+  </g>
+  
+  <!-- Groupe pour la cage thoracique -->
+  <g id="rib-cage" class="skeletal-zone" data-name="Cage thoracique" data-id="rib-cage">
+    <!-- Côtes -->
+    <path d="M227,175 C250,180 270,190 260,210" fill="none" stroke="black" stroke-width="1.5"/>
+    <path d="M230,185 C255,190 280,200 270,220" fill="none" stroke="black" stroke-width="1.5"/>
+    <path d="M235,195 C260,200 290,210 280,230" fill="none" stroke="black" stroke-width="1.5"/>
+    <path d="M237,205 C265,210 300,220 290,240" fill="none" stroke="black" stroke-width="1.5"/>
+    <!-- Sternum -->
+    <path d="M260,210 C270,220 280,230 290,240" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour l'épaule -->
+  <g id="shoulder" class="skeletal-zone" data-name="Épaule" data-id="shoulder">
+    <path d="M210,155 C195,160 185,170 175,190" fill="none" stroke="black" stroke-width="2"/>
+    <ellipse cx="195" cy="170" rx="12" ry="8" transform="rotate(-30 195 170)" fill="none" stroke="black" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Groupe pour l'humérus (bras avant) -->
+  <g id="humerus" class="skeletal-zone" data-name="Humérus" data-id="humerus">
+    <path d="M175,190 C170,210 175,230 185,245" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour le radius/ulna (avant-bras) -->
+  <g id="radius-ulna" class="skeletal-zone" data-name="Radius/Ulna" data-id="radius-ulna">
+    <path d="M185,245 C180,260 180,275 190,290" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour les carpes/métacarpes (poignet/patte avant) -->
+  <g id="carpus-metacarpus" class="skeletal-zone" data-name="Carpe/Métacarpe" data-id="carpus-metacarpus">
+    <path d="M190,290 C195,300 200,305 205,310" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M190,290 C195,300 190,305 185,310" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M190,290 C185,300 180,305 175,310" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M190,290 C185,300 195,305 200,310" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M190,290 C185,300 190,305 190,310" fill="none" stroke="black" stroke-width="2"/> <!-- Cinquième doigt -->
+  </g>
+  
+  <!-- Groupe pour le bassin -->
+  <g id="pelvis" class="skeletal-zone" data-name="Bassin" data-id="pelvis">
+    <path d="M255,265 C240,280 235,290 260,300 C285,310 295,290 285,278" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour le fémur (cuisse) -->
+  <g id="femur" class="skeletal-zone" data-name="Fémur" data-id="femur">
+    <path d="M260,300 C270,320 280,340 300,355" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour le tibia/fibula (jambe) -->
+  <g id="tibia-fibula" class="skeletal-zone" data-name="Tibia/Fibula" data-id="tibia-fibula">
+    <path d="M300,355 C295,370 290,380 295,395" fill="none" stroke="black" stroke-width="2"/>
+  </g>
+  
+  <!-- Groupe pour les tarses/métatarses (cheville/patte arrière) -->
+  <g id="tarsus-metatarsus" class="skeletal-zone" data-name="Tarse/Métatarse" data-id="tarsus-metatarsus">
+    <path d="M295,395 C300,405 305,410 310,415" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M295,395 C300,405 295,410 290,415" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M295,395 C290,405 285,410 280,415" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M295,395 C290,405 300,410 305,415" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M295,395 C290,405 295,410 295,415" fill="none" stroke="black" stroke-width="2"/> <!-- Cinquième doigt -->
+  </g>
+  
+  <!-- Légende et titre -->
+  <text x="400" y="30" font-family="Arial" font-size="20" text-anchor="middle" font-weight="bold">Squelette Félin - Vue Latérale</text>
+  <text x="400" y="380" font-family="Arial" font-size="14" text-anchor="middle" font-style="italic">Les zones sont interactives. Cliquez pour sélectionner.</text>
+</svg> 

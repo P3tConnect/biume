@@ -84,12 +84,16 @@ export const createDocumentsStepAction = createServerAction(
 export const getCompanyDocuments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const documents = await db
-      .select()
-      .from(organizationDocuments)
-      .where(
-        eq(organizationDocuments.organizationId, ctx.organization?.id || ""),
-      );
+    const documents = await db.query.organizationDocuments.findMany({
+      where: eq(organizationDocuments.organizationId, ctx.organization?.id || ""),
+      columns: {
+        id: true,
+        file: true,
+        name: true,
+        valid: true,
+      },
+    });
+
 
     if (!documents) {
       throw new ActionError("Documents not found");

@@ -1,3 +1,5 @@
+"use server";
+
 import { createServerAction, db, resend } from "../lib";
 import { waitlist, waitlistInsertSchema, waitlistSelectSchema } from "../db";
 import { revalidatePath } from "next/cache";

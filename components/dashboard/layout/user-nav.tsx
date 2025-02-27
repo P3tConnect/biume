@@ -2,15 +2,11 @@
 
 import Link from "next/link";
 import { LayoutGrid, LogOut, Settings, User } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -18,11 +14,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useLocale } from "next-intl";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui";
+import { signOut, useSession } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function UserNav() {
-  const locale = useLocale();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <>
@@ -35,8 +36,10 @@ export function UserNav() {
                 className="relative h-8 w-8 rounded-full"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="#" alt="Avatar" />
-                  <AvatarFallback className="bg-transparent">JD</AvatarFallback>
+                  <AvatarImage src={session?.user?.image ?? undefined} alt="Avatar" />
+                  <AvatarFallback className="bg-transparent">
+                    {session?.user?.name?.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -47,23 +50,23 @@ export function UserNav() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">John Doe</p>
+              <p className="text-sm font-medium leading-none">{session?.user?.name}</p>
               <p className="text-xs leading-none text-muted-foreground">
-                johndoe@example.com
+                {session?.user?.email}
               </p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link href={`/${locale}/dashboard`} className="flex items-center">
+              <Link href={`/dashboard/user/${session?.user?.id}`} className="flex items-center">
                 <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
                 Tableau de bord
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
               <Link
-                href={`/${locale}/dashboard/account`}
+                href={`/dashboard/user/${session?.user?.id}`}
                 className="flex items-center"
               >
                 <User className="w-4 h-4 mr-3 text-muted-foreground" />
@@ -72,7 +75,7 @@ export function UserNav() {
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:cursor-pointer" asChild>
               <Link
-                href={`/${locale}/dashboard/profile/settings`}
+                href={`/dashboard/user/${session?.user?.id}/settings`}
                 className="flex items-center"
               >
                 <Settings className="w-4 h-4 mr-3 text-muted-foreground" />
@@ -83,9 +86,16 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="hover:cursor-pointer"
+            onClick={async () => await signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  router.push("/login");
+                }
+              }
+            })}
           >
             <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-            Sign out
+            Se déconnecter
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
