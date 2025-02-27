@@ -11,7 +11,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ErrorContext } from "@better-fetch/fetch";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -37,7 +36,7 @@ const LoginPage = () => {
           toast.success("Connexion réussie ! Vous allez être redirigé ...");
           router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
-        onError: (error: ErrorContext) => {
+        onError: (error) => {
           setLoading(false);
           console.log(error, "error");
           toast.error(`Error : ${error.error.message}`);

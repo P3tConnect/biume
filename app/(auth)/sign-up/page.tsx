@@ -44,7 +44,7 @@ const RegisterClientPage = () => {
           toast.success("Inscription réussie ! Vous allez être redirigé ...");
           router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
-        onError: (error: ErrorContext) => {
+        onError: (error) => {
           setLoading(false);
           console.log(error, "error");
           toast.error(`Error : ${error.error.message}`);
