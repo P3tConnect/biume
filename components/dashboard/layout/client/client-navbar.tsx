@@ -26,7 +26,7 @@ import {
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Home, Calendar, Dog, Settings, Ticket, Building, Check, User, Plus } from 'lucide-react';
+import { Home, Calendar, Dog, Settings, Ticket, Building, Check, User, Plus, ArrowLeftRight } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, useActiveOrganization, useListOrganizations, organization } from '@/src/lib/auth-client';
 import { cn } from "@/src/lib/utils";
@@ -150,7 +150,7 @@ export function ClientNavbar() {
                   <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                     {isPersonalDashboard ? "Personnel" : "Pro"}
                   </span>
-                  <Home className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
+                  <ArrowLeftRight className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-top-5">

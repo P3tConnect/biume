@@ -361,22 +361,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                       </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  {isServicesGroup && (
-                    <Tooltip delayDuration={300}>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={`/dashboard/organization/${companyId}/settings`}
-                          className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200 text-foreground hover:bg-accent/80 hover:scale-105 hover:shadow-sm"
-                        >
-                          <Cog className="h-3.5 w-3.5" />
-                          <span>Paramètres</span>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="rounded-lg bg-popover/95 backdrop-blur-sm border-border/30 shadow-md">
-                        Paramètres de l&apos;organisation
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
+
                 </React.Fragment>
               );
             })}
@@ -453,55 +438,53 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
             onClick={() => setSearchOpen(true)}
           >
             <Search className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline-flex">Rechercher</span>
+            {/* <span className="hidden lg:inline-flex">Rechercher</span> */}
             <kbd className="hidden lg:inline-flex ml-2 pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span>{shortcutKey}</span>K
             </kbd>
           </Button>
 
-          <TooltipProvider>
-            <div className="flex items-center">
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-lg h-9 w-9 hover:bg-accent/70 transition-all duration-200 md:hidden"
-                    onClick={() => setSearchOpen(true)}
-                  >
-                    <Search className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="rounded-lg">
-                  Rechercher
-                </TooltipContent>
-              </Tooltip>
+          <div className="flex items-center">
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-lg h-9 w-9 hover:bg-accent/70 transition-all duration-200 md:hidden"
+                  onClick={() => setSearchOpen(true)}
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="rounded-lg">
+                Rechercher
+              </TooltipContent>
+            </Tooltip>
 
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger asChild>
-                  <div className="h-9 w-9">
-                    <ModeToggle />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="rounded-lg">
-                  Changer de thème
-                </TooltipContent>
-              </Tooltip>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <div className="h-9 w-9">
+                  <ModeToggle />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="rounded-lg">
+                Changer de thème
+              </TooltipContent>
+            </Tooltip>
 
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger asChild>
-                  <div className="h-9 w-9">
-                    <Notifications />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="rounded-lg">
-                  Notifications
-                </TooltipContent>
-              </Tooltip>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <div className="h-9 w-9">
+                  <Notifications />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="rounded-lg">
+                Notifications
+              </TooltipContent>
+            </Tooltip>
 
-              <UserNav />
-            </div>
-          </TooltipProvider>
+            <UserNav />
+          </div>
         </div>
       </div>
 
@@ -597,6 +580,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
           </div>
         </div>
       </CommandDialog>
-    </header>
+    </header >
   );
 } 

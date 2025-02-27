@@ -55,6 +55,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active: pathname == `/dashboard/organization/${companyId}/timetable`,
           icon: Calendar,
         },
+        
       ],
     },
     {
@@ -151,10 +152,10 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
       groupLabel: "dashboard.sidebar.groupLabels.informations",
       menus: [
         {
-          href: `/help`,
-          label: "dashboard.sidebar.help",
-          active: pathname == `/help`,
-          icon: LucideMessageCircleQuestion,
+          href: `/dashboard/organization/${companyId}/settings`,
+          label: "Paramètres",
+          active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
+          icon: Settings,
         },
       ],
     },

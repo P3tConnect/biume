@@ -49,7 +49,7 @@ const DashboardHomeProPage = () => {
         {/* Right Column - Notifications and Actions */}
         <div className="lg:col-span-4 space-y-4">
           {/* Reservations Section */}
-          <div className="sticky top-16">
+          <div className="sticky top-2">
             <PendingReservationsWidget />
           </div>
         </div>
