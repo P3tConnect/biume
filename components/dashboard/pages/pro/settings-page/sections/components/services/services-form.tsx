@@ -8,7 +8,6 @@ import {
 import { Form, FormItem } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
 import { Service, CreateService } from "@/src/db";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,6 +23,7 @@ import Image from "next/image";
 import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
 import { CredenzaContent } from "@/components/ui";
 import { cn } from "@/src/lib";
+import { useMutation } from "@tanstack/react-query";
 
 const servicesSchema = z.object({
   id: z.string().optional(),
@@ -61,7 +61,8 @@ export const ServiceForm = ({
 
   const isCreating = !service.id;
 
-  const { mutateAsync: createMutation } = useActionMutation(createService, {
+  const { mutateAsync: createMutation } = useMutation({
+    mutationFn: createService,
     onSuccess: () => {
       toast.success("Service créé avec succès!");
       onOpenChange(false);
@@ -72,7 +73,8 @@ export const ServiceForm = ({
     },
   });
 
-  const { mutateAsync: updateMutation } = useActionMutation(updateService, {
+  const { mutateAsync: updateMutation } = useMutation({
+    mutationFn: updateService,
     onSuccess: () => {
       toast.success("Service mis à jour avec succès!");
       onOpenChange(false);

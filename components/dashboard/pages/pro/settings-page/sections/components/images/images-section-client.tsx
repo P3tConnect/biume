@@ -9,13 +9,13 @@ import {
   deleteOrganizationImage,
 } from "@/src/actions/organization.action";
 import { toast } from "sonner";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { useDropzone } from "react-dropzone";
 import { Progress } from "@/components/ui/progress";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { OrganizationImage } from "@/src/db";
+import { useMutation } from "@tanstack/react-query";
 
 interface ImagesSectionClientProps {
   images: OrganizationImage[]
@@ -30,29 +30,26 @@ const ImagesSectionClient = ({ images }: ImagesSectionClientProps) => {
     },
   });
 
-  const { mutateAsync: addImages } = useActionMutation(
-    addImagesToOrganization,
-    {
-      onSuccess: () => {
-        toast.success("Images ajoutées avec succès");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
+  const { mutateAsync: addImages } = useMutation({
+    mutationFn: addImagesToOrganization,
+    onSuccess: () => {
+      toast.success("Images ajoutées avec succès");
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  },
   );
 
-  const { mutateAsync: deleteImage } = useActionMutation(
-    deleteOrganizationImage,
-    {
-      onSuccess: () => {
-        toast.success("Image supprimée avec succès");
-      },
-      onError: () => {
-        toast.error("Erreur lors de la suppression de l'image");
-      },
+  const { mutateAsync: deleteImage } = useMutation({
+    mutationFn: deleteOrganizationImage,
+    onSuccess: () => {
+      toast.success("Image supprimée avec succès");
     },
-  );
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {

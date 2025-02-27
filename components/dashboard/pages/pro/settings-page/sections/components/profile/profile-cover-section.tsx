@@ -14,7 +14,7 @@ import { organizationImagesFormSchema } from "../../profile-section";
 import { Form } from "@/components/ui/form";
 import * as z from "zod";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -42,7 +42,8 @@ export const ProfileCoverSection = ({ org }: ProfileCoverSectionProps) => {
 
   const { handleSubmit } = form;
 
-  const { mutateAsync: updateImages } = useActionMutation(updateOrganizationImages, {
+  const { mutateAsync: updateImages } = useMutation({
+    mutationFn: updateOrganizationImages,
     onSuccess: () => {
       toast.success("Images modifiées avec succès!");
     },

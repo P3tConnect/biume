@@ -16,9 +16,9 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useActiveOrganization } from "@/src/lib/auth-client";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { createOrganizationSlot, updateOrganizationSlot } from "@/src/actions";
-import { toast } from "sonner";
+import { toast } from "sonner"
+import { useMutation } from "@tanstack/react-query";
 
 const slotSchema = z.object({
   type: z.enum(["unique", "recurring"]),
@@ -152,7 +152,8 @@ const SlotsForm = ({
     queryFn: () => getServices({}),
   });
 
-  const createSlotMutation = useActionMutation(createOrganizationSlot, {
+  const createSlotMutation = useMutation({
+    mutationFn: createOrganizationSlot,
     onSuccess: () => {
       toast.success("Le créneau a été créé avec succès");
       onFormSubmit?.();
@@ -162,7 +163,8 @@ const SlotsForm = ({
     },
   });
 
-  const updateSlotMutation = useActionMutation(updateOrganizationSlot, {
+  const updateSlotMutation = useMutation({
+    mutationFn: updateOrganizationSlot,
     onSuccess: () => {
       toast.success("Le créneau a été modifié avec succès");
       onFormSubmit?.();

@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { waitlistInsertSchema } from "@/src/db";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import {
   Form,
   FormControl,
@@ -28,6 +27,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui";
+import { useMutation } from "@tanstack/react-query";
 
 const WaitListPro = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -48,7 +48,8 @@ const WaitListPro = ({ children }: { children: React.ReactNode }) => {
 
   const { handleSubmit, control } = form;
 
-  const { mutateAsync } = useActionMutation(addToWaitList, {
+  const { mutateAsync } = useMutation({
+    mutationFn: addToWaitList,
     onSuccess: () => {
       setIsSuccess(true);
       toast.success("Inscription réussie !", {

@@ -25,8 +25,8 @@ import { updateOrganization } from "@/src/actions/organization.action";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { ActionResult } from "@/src/lib";
+import { useMutation } from "@tanstack/react-query";
 
 interface ProfileScheduleSectionProps {
   org: ActionResult<Organization | null>;
@@ -52,12 +52,13 @@ export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => 
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(updateOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganization,
     onSuccess: () => {
       toast.success("Modifications enregistrées avec succès !");
     },
-    onError: () => {
-      toast.error("Erreur lors de l'enregistrement des modifications");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

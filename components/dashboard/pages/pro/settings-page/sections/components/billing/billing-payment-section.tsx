@@ -4,11 +4,11 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { CreditCard } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { createPaymentMethodUpdateSession } from "@/src/actions/stripe.action";
 import { toast } from "sonner";
 import { ActionResult } from "@/src/lib";
 import { BillingInfo } from "@/types/billing-info";
+import { useMutation } from "@tanstack/react-query";
 
 export const BillingPaymentSection = ({
   billingInfo,
@@ -19,21 +19,19 @@ export const BillingPaymentSection = ({
   const orgId = params.orgId as string;
   const router = useRouter();
 
-  const { mutateAsync: updatePaymentMethod } = useActionMutation(
-    createPaymentMethodUpdateSession,
-    {
-      onSuccess: (url) => {
-        if (url) {
-          router.push(url);
-        }
-      },
-      onError: () => {
-        toast.error(
-          "Une erreur est survenue lors de la mise à jour du moyen de paiement",
-        );
-      },
+  const { mutateAsync: updatePaymentMethod } = useMutation({
+    mutationFn: createPaymentMethodUpdateSession,
+    onSuccess: (url) => {
+      if (url.data) {
+        router.push(url.data);
+      }
     },
-  );
+    onError: () => {
+      toast.error(
+        "Une erreur est survenue lors de la mise à jour du moyen de paiement",
+      );
+    },
+  });
 
   const handleUpdatePaymentMethod = async () => {
     await updatePaymentMethod({

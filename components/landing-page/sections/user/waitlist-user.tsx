@@ -25,9 +25,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2 } from "lucide-react";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { addToWaitList } from "@/src/actions/waitlist.action";
 import { waitlistInsertSchema } from "@/src/db";
+import { useMutation } from "@tanstack/react-query";
 
 interface WaitListUserProps {
   children: React.ReactNode;
@@ -51,7 +51,8 @@ const WaitListUser = ({ children }: WaitListUserProps) => {
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(addToWaitList, {
+  const { mutateAsync } = useMutation({
+    mutationFn: addToWaitList,
     onSuccess: () => {
       setIsSuccess(true);
       toast.success("Inscription réussie !", {

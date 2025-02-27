@@ -21,13 +21,13 @@ import {
   updateUserInformations,
 } from "@/src/actions/user.action";
 import { clientSettingsSchema } from "./types/settings-schema";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
 import { ProfileForm } from "./forms/profile-form";
 import { NotificationsForm } from "./forms/notifications-form";
 import { SecurityForm } from "./forms/security-form";
 import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { MutateOptions, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const ClientSettingsForm = () => {
   const queryClient = useQueryClient();
@@ -58,7 +58,8 @@ const ClientSettingsForm = () => {
     },
   });
 
-  const { mutateAsync } = useActionMutation(updateUserInformations, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateUserInformations,
     onSuccess: async () => {
       toast.success("Vos informations ont été mises à jour");
       queryClient.invalidateQueries({ queryKey: ["user-informations"] });
@@ -72,7 +73,7 @@ const ClientSettingsForm = () => {
     await mutateAsync(data);
   });
 
-  const {} = useFormChangeToast({
+  const { } = useFormChangeToast({
     form,
     onSubmit,
     message: "Informations modifiées",
@@ -111,13 +112,13 @@ const ClientSettingsForm = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ProfileForm
+                {/* <ProfileForm
                   form={form}
                   userInformations={userInformations}
-                  mutateAsync={mutateAsync}
                   onSubmit={onSubmit}
                   refetch={handleRefetch}
-                />
+                  mutateAsync={mutateAsync}
+                /> */}
               </CardContent>
             </Card>
           </TabsContent>

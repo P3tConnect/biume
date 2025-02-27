@@ -17,10 +17,10 @@ import {
 import SlotsForm from "./slots-form";
 import SlotsGrid from "./slots-grid";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { deleteOrganizationSlot } from "@/src/actions";
 import { toast } from "sonner";
 import { OrganizationSlots } from "@/src/db/organizationSlots";
+import { useMutation } from "@tanstack/react-query";
 
 const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -28,7 +28,8 @@ const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
   const [selectedSlotId, setSelectedSlotId] = React.useState<string | null>(null);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const { mutateAsync: deleteSlot } = useActionMutation(deleteOrganizationSlot, {
+  const { mutateAsync: deleteSlot } = useMutation({
+    mutationFn: deleteOrganizationSlot,
     onSuccess: () => {
       toast.success("Le créneau a été supprimé avec succès");
       setIsDeleteDialogOpen(false);

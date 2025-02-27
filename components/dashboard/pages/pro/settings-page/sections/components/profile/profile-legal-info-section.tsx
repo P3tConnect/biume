@@ -27,8 +27,7 @@ import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
 import { use } from "react";
 import { ActionResult } from "@/src/lib";
-import { useQueryClient } from "@tanstack/react-query";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 
 interface ProfileLegalInfoSectionProps {
   org: ActionResult<Organization | null>;
@@ -54,12 +53,13 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(updateOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganization,
     onSuccess: () => {
       toast.success("Modifications enregistrées avec succès !");
     },
-    onError: () => {
-      toast.error("Erreur lors de l'enregistrement des modifications");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
