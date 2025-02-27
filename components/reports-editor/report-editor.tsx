@@ -463,7 +463,7 @@ function ImageUploader() {
         <FileImage className="h-10 w-10 text-muted-foreground mb-2" />
         <h3 className="font-medium mb-1">Déposez vos images ici</h3>
         <p className="text-sm text-muted-foreground text-center mb-3">
-          PNG, JPG ou GIF jusqu'à 10 MB
+          PNG, JPG ou GIF jusqu&apos;à 10 MB
         </p>
         <Button variant="secondary">Sélectionner des fichiers</Button>
       </div>
