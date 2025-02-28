@@ -26,34 +26,24 @@ export function AppointmentCalendarItem({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "flex items-center gap-2 text-xs rounded-lg px-2 py-1.5 mb-1 cursor-pointer transition-all",
+              "flex items-center gap-1 text-[0.7rem] rounded-md px-1.5 py-1 mb-1 cursor-pointer transition-all",
               appointmentColors[appointment.type],
-              "hover:ring-2 hover:ring-white/20",
+              "hover:ring-1 hover:ring-white/20",
             )}
           >
             <div className="relative flex-shrink-0">
-              <Avatar className="h-5 w-5">
+              <Avatar className="h-4 w-4">
                 <AvatarImage
                   src={appointment.petAvatar}
                   alt={appointment.petName}
                 />
-                <AvatarFallback>
+                <AvatarFallback className="text-[0.55rem]">
                   {appointment.petInitial || appointment.petName[0]}
                 </AvatarFallback>
               </Avatar>
-              <div
-                className={cn(
-                  "absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-background",
-                  appointment.status === "confirmed"
-                    ? "bg-primary"
-                    : "bg-secondary",
-                )}
-              />
             </div>
-            <div className="flex-1 truncate">
-              <span>{appointment.time}</span>
-              <span className="mx-1">•</span>
-              <span>{appointment.petName}</span>
+            <div className="flex-1 truncate font-medium">
+              {appointment.time}
             </div>
           </div>
         </TooltipTrigger>
@@ -65,7 +55,7 @@ export function AppointmentCalendarItem({
                 appointmentColors[appointment.type],
               )}
             >
-              <Avatar className="h-10 w-10 ring-2 ring-white/20">
+              <Avatar className="h-12 w-12 ring-2 ring-white/20">
                 <AvatarImage
                   src={appointment.petAvatar}
                   alt={appointment.petName}

@@ -1,188 +1,236 @@
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import Image from "next/image";
-import { features } from "./data";
-import { CredenzaTrigger } from "@/components/ui";
+"use client";
+
+import { motion } from "framer-motion";
 import {
-  Credenza,
-  CredenzaDescription,
-  CredenzaTitle,
-  CredenzaHeader,
-  CredenzaContent,
-} from "@/components/ui";
+  Calendar,
+  Users,
+  BarChart3,
+  MessageSquare,
+  Stethoscope,
+  FileText,
+  Clock,
+  Settings,
+} from "lucide-react";
+import { cn } from "@/src/lib/utils";
+import Image from "next/image";
+
+type FeatureProps = {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  colorClass: string;
+  delay: number;
+};
+
+const Feature = ({
+  icon: Icon,
+  title,
+  description,
+  colorClass,
+  delay,
+}: FeatureProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      className="rounded-xl border bg-card p-6 shadow-sm hover:shadow-md transition-all duration-300"
+    >
+      <div
+        className={cn(
+          "w-12 h-12 rounded-lg flex items-center justify-center mb-4",
+          colorClass,
+        )}
+      >
+        <Icon className="w-6 h-6" />
+      </div>
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <p className="text-muted-foreground">{description}</p>
+    </motion.div>
+  );
+};
 
 export function FeaturesSection() {
+  const features = [
+    {
+      icon: Calendar,
+      title: "Gestion des rendez-vous",
+      description:
+        "Optimisez votre agenda avec un système de prise de rendez-vous intuitif et automatisé.",
+      colorClass:
+        "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400",
+      delay: 0.1,
+    },
+    {
+      icon: Users,
+      title: "Gestion des clients",
+      description:
+        "Suivez l'historique complet de vos clients et leurs animaux en quelques clics.",
+      colorClass:
+        "bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400",
+      delay: 0.2,
+    },
+    {
+      icon: BarChart3,
+      title: "Analyses et statistiques",
+      description:
+        "Visualisez l'évolution de votre activité grâce à des tableaux de bord détaillés.",
+      colorClass:
+        "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400",
+      delay: 0.3,
+    },
+    {
+      icon: MessageSquare,
+      title: "Communication",
+      description:
+        "Échangez facilement avec vos clients via notre messagerie intégrée et sécurisée.",
+      colorClass:
+        "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400",
+      delay: 0.4,
+    },
+    {
+      icon: Stethoscope,
+      title: "Dossiers médicaux",
+      description:
+        "Accédez aux antécédents médicaux complets des animaux pour un suivi optimal.",
+      colorClass:
+        "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-400",
+      delay: 0.5,
+    },
+    {
+      icon: FileText,
+      title: "Documents et factures",
+      description:
+        "Générez et envoyez automatiquement ordonnances, factures et certificats.",
+      colorClass:
+        "bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400",
+      delay: 0.6,
+    },
+    {
+      icon: Clock,
+      title: "Rappels automatiques",
+      description:
+        "Réduisez les rendez-vous manqués grâce à des notifications personnalisées.",
+      colorClass:
+        "bg-cyan-100 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-400",
+      delay: 0.7,
+    },
+    {
+      icon: Settings,
+      title: "Personnalisation",
+      description:
+        "Adaptez l'interface à vos besoins spécifiques et à votre flux de travail.",
+      colorClass:
+        "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400",
+      delay: 0.8,
+    },
+  ];
+
   return (
-    <section className="py-12 sm:py-16 md:py-24 bg-accent/5">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-foreground/80">
-            Une suite complète pour le bien-être de vos animaux
+    <section id="features" className="py-24 relative">
+      {/* Éléments décoratifs de fond */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent"></div>
+        <div className="absolute bottom-0 right-0 w-2/3 h-80 bg-gradient-to-tl from-primary/5 to-transparent"></div>
+      </div>
+
+      <div className="container px-4 mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary">
+            <BarChart3 className="w-4 h-4" />
+            <span>Fonctionnalités professionnelles</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Tout ce dont vous avez besoin pour gérer votre cabinet
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground px-4">
-            Des outils intelligents pour une gestion optimale de la santé de vos
-            compagnons
+          <p className="text-lg text-muted-foreground">
+            Biume regroupe tous les outils essentiels aux professionnels de la
+            santé animale dans une interface moderne et intuitive.
           </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <Feature key={index} {...feature} />
+          ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
-          {features.map((feature, index) => (
-            <Credenza key={index}>
-              <CredenzaTrigger asChild>
-                <div className="group relative bg-gradient-to-br from-background to-accent/5 p-8 rounded-2xl border hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative">
-                    <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                      {feature.title}
-                      <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </CredenzaTrigger>
-              <CredenzaContent className="sm:max-w-[900px] p-0 overflow-hidden grid md:grid-cols-[2fr,3fr]">
-                <div className="relative md:h-full h-[200px]">
-                  <Image
-                    src={feature.image}
-                    alt={feature.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent md:hidden">
-                    <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                      <feature.icon className="w-6 h-6" />
-                      {feature.title}
-                    </h3>
-                  </div>
-                </div>
-                <div className="p-6 bg-gradient-to-br from-background to-accent/5">
-                  <CredenzaHeader className="space-y-4">
-                    <CredenzaTitle className="hidden md:flex items-center gap-3 text-2xl">
-                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                        <feature.icon className="w-6 h-6 text-primary" />
-                      </div>
-                      {feature.title}
-                    </CredenzaTitle>
-                    <CredenzaDescription className="!mt-6 text-base leading-relaxed">
-                      {feature.details}
-                    </CredenzaDescription>
-                  </CredenzaHeader>
+        <div className="mt-24 relative">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="grid md:grid-cols-2 gap-12 items-center"
+          >
+            <div className="relative">
+              <div className="relative z-10 rounded-xl overflow-hidden border shadow-xl">
+                <Image
+                  src="/images/dashboard-preview.webp"
+                  alt="Tableau de bord Biume"
+                  width={600}
+                  height={450}
+                  className="w-full h-auto"
+                />
+              </div>
+              {/* Éléments décoratifs */}
+              <div className="absolute -z-10 -bottom-6 -left-6 w-24 h-24 bg-primary/10 rounded-full blur-xl"></div>
+              <div className="absolute -z-10 -top-6 -right-6 w-32 h-32 bg-secondary/10 rounded-full blur-xl"></div>
+            </div>
 
-                  <div className="mt-8 grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-background/50 border">
-                      <h4 className="font-medium mb-2">Avantages</h4>
-                      <ul className="text-sm text-muted-foreground space-y-2">
-                        {feature.title === "Suivi de santé intelligent" && (
-                          <>
-                            <li>• Alertes automatiques</li>
-                            <li>• Suivi personnalisé</li>
-                            <li>• Historique complet</li>
-                          </>
-                        )}
-                        {feature.title === "Gestion des rendez-vous" && (
-                          <>
-                            <li>• Planning optimisé</li>
-                            <li>• Synchronisation temps réel</li>
-                            <li>• Gestion des urgences</li>
-                          </>
-                        )}
-                        {feature.title === "Dossier médical complet" && (
-                          <>
-                            <li>• Stockage sécurisé</li>
-                            <li>• Accès instantané</li>
-                            <li>• Organisation optimale</li>
-                          </>
-                        )}
-                        {feature.title === "Collaboration simplifiée" && (
-                          <>
-                            <li>• Partage facile</li>
-                            <li>• Communication fluide</li>
-                            <li>• Coordination efficace</li>
-                          </>
-                        )}
-                        {feature.title === "Délais de rétractation" && (
-                          <>
-                            <li>• Délais personnalisés</li>
-                            <li>• Notifications automatiques</li>
-                            <li>• Remboursement automatique</li>
-                          </>
-                        )}
-                        {feature.title === "Intelligence artificielle" && (
-                          <>
-                            <li>• Programme fidélité</li>
-                            <li>• IA prédictive</li>
-                            <li>• Recommandations ciblées</li>
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                    <div className="p-4 rounded-xl bg-background/50 border">
-                      <h4 className="font-medium mb-2">Comment ça marche</h4>
-                      <ul className="text-sm text-muted-foreground space-y-2">
-                        {feature.title === "Suivi de santé intelligent" && (
-                          <>
-                            <li>1. Configuration du profil</li>
-                            <li>2. Définition des alertes</li>
-                            <li>3. Suivi automatique</li>
-                          </>
-                        )}
-                        {feature.title === "Gestion des rendez-vous" && (
-                          <>
-                            <li>1. Paramétrage du calendrier</li>
-                            <li>2. Gestion des disponibilités</li>
-                            <li>3. Confirmation automatique</li>
-                          </>
-                        )}
-                        {feature.title === "Dossier médical complet" && (
-                          <>
-                            <li>1. Création du dossier</li>
-                            <li>2. Import des documents</li>
-                            <li>3. Organisation automatique</li>
-                          </>
-                        )}
-                        {feature.title === "Collaboration simplifiée" && (
-                          <>
-                            <li>1. Invitation des collaborateurs</li>
-                            <li>2. Définition des accès</li>
-                            <li>3. Partage des informations</li>
-                          </>
-                        )}
-                        {feature.title === "Délais de rétractation" && (
-                          <>
-                            <li>1. Choix des délais</li>
-                            <li>2. Configuration des remboursements</li>
-                            <li>3. Automatisation du système</li>
-                          </>
-                        )}
-                        {feature.title === "Intelligence artificielle" && (
-                          <>
-                            <li>1. Activation du programme</li>
-                            <li>2. Cumul des points</li>
-                            <li>3. Utilisation des avantages</li>
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-6">
+                Une interface conçue par et pour les vétérinaires
+              </h3>
+              <p className="text-lg mb-8 text-muted-foreground">
+                Nous avons travaillé en étroite collaboration avec des
+                professionnels de la santé animale pour créer un outil qui
+                répond précisément à vos besoins quotidiens.
+              </p>
 
-                  <div className="mt-6 flex justify-end">
-                    <Button asChild size="lg" className="gap-2">
-                      <a href={feature.ctaLink}>
-                        {feature.cta}
-                        <ChevronRight className="w-4 h-4" />
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </CredenzaContent>
-            </Credenza>
-          ))}
+              <ul className="space-y-4">
+                {[
+                  "Interface intuitive adaptée à votre flux de travail",
+                  "Accès rapide aux informations essentielles",
+                  "Fonctionnalités spécialisées pour différentes pratiques vétérinaires",
+                  "Mises à jour régulières basées sur vos retours",
+                ].map((item, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
+                    className="flex items-start gap-3"
+                  >
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center mt-0.5">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <span>{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

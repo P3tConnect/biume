@@ -1,43 +1,69 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { PawPrint, Stethoscope } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/src/lib/utils";
+import { PawPrint, Stethoscope } from "lucide-react";
 
-export function PageSwitch() {
+export const PageSwitch = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const version = searchParams.get("version") || "user";
+  const currentVersion = searchParams.get("version") || "user";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSwitch = (newVersion: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set("version", newVersion);
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  if (!mounted) return null;
+
   return (
-    <div className="fixed top-6 right-6 z-50 bg-background/80 backdrop-blur-lg rounded-full p-1 border shadow-lg">
-      <div className="flex items-center gap-2">
-        <Button
-          size="sm"
-          variant={version === "user" ? "default" : "ghost"}
-          className="rounded-full"
-          onClick={() => handleSwitch("user")}
-        >
-          <PawPrint className="w-4 h-4 mr-2" />
-          Propriétaires
-        </Button>
-        <Button
-          size="sm"
-          variant={version === "pro" ? "default" : "ghost"}
-          className="rounded-full"
-          onClick={() => handleSwitch("pro")}
-        >
-          <Stethoscope className="w-4 h-4 mr-2" />
-          Professionnels
-        </Button>
-      </div>
+    <div className="relative inline-flex p-1 rounded-full bg-muted/50 backdrop-blur-sm border border-border">
+      {["user", "pro"].map((version) => {
+        const isActive = currentVersion === version;
+
+        return (
+          <button
+            key={version}
+            onClick={() => handleSwitch(version)}
+            className={cn(
+              "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 z-10",
+              isActive
+                ? "text-background"
+                : "text-foreground/70 hover:text-foreground",
+            )}
+          >
+            {isActive && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-secondary"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative flex items-center gap-1.5">
+              {version === "user" ? (
+                <>
+                  <PawPrint className="w-3.5 h-3.5" />
+                  <span>Clients</span>
+                </>
+              ) : (
+                <>
+                  <Stethoscope className="w-3.5 h-3.5" />
+                  <span>Vétérinaires</span>
+                </>
+              )}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
-} 
+};

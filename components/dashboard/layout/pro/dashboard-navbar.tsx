@@ -24,21 +24,37 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
   DropdownMenuPortal,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from "@/components/ui";
 import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
-  Home, Calendar, Building, Check, User, Plus, Users,
+  Home,
+  Calendar,
+  Building,
+  Check,
+  User,
+  Plus,
+  Users,
   DollarSign as DollarSignIcon,
-  Briefcase, ClipboardList, Info, Book, Bell, Headphones, Cog, Activity,
-  ChevronDown, Search, Menu
-} from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession, useActiveOrganization, useListOrganizations, organization } from '@/src/lib/auth-client';
+  Briefcase,
+  ClipboardList,
+  Info,
+  Book,
+  Bell,
+  Headphones,
+  Cog,
+  Activity,
+  ChevronDown,
+  Search,
+  Menu,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  useSession,
+  useActiveOrganization,
+  useListOrganizations,
+  organization,
+} from "@/src/lib/auth-client";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -50,7 +66,8 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [orgMenuOpen, setOrgMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isWindows = typeof window !== "undefined" && window.navigator.platform.includes("Win");
+  const isWindows =
+    typeof window !== "undefined" && window.navigator.platform.includes("Win");
   const shortcutKey = isWindows ? "Ctrl" : "⌘";
   const pathname = usePathname();
   const router = useRouter();
@@ -142,7 +159,10 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                 <ChevronDown className="h-3.5 w-3.5 text-secondary/70 transition-transform duration-300 group-hover:text-secondary" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-72 p-2 rounded-xl border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200">
+            <DropdownMenuContent
+              align="start"
+              className="w-72 p-2 rounded-xl border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
+            >
               {organizations && organizations.length > 0 && (
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1.5 text-muted-foreground/80 mb-2">
@@ -157,16 +177,20 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                           companyId === org.id
                             ? "bg-secondary/10 text-secondary font-medium shadow-sm"
                             : "hover:bg-accent hover:pl-1 hover:shadow-sm",
-                          switchingOrg === org.id && "animate-pulse opacity-70"
+                          switchingOrg === org.id && "animate-pulse opacity-70",
                         )}
                         onSelect={() => handleOrganizationSwitch(org.id)}
                         disabled={switchingOrg !== null}
                       >
                         {org.logo ? (
-                          <div className={cn(
-                            "h-10 w-10 overflow-hidden rounded-lg shadow-sm flex-shrink-0 transition-all duration-300",
-                            companyId === org.id ? "ring-2 ring-secondary/30" : "ring-1 ring-border/50 hover:ring-secondary/20"
-                          )}>
+                          <div
+                            className={cn(
+                              "h-10 w-10 overflow-hidden rounded-lg shadow-sm flex-shrink-0 transition-all duration-300",
+                              companyId === org.id
+                                ? "ring-2 ring-secondary/30"
+                                : "ring-1 ring-border/50 hover:ring-secondary/20",
+                            )}
+                          >
                             <Image
                               src={org.logo}
                               alt={org.name}
@@ -174,21 +198,29 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                               height={40}
                               className={cn(
                                 "h-full w-full object-cover transition-transform duration-300",
-                                companyId !== org.id && "hover:scale-110"
+                                companyId !== org.id && "hover:scale-110",
                               )}
                             />
                           </div>
                         ) : (
-                          <div className={cn(
-                            "h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                            companyId === org.id ? "bg-secondary/20" : "bg-secondary/10 hover:bg-secondary/15"
-                          )}>
+                          <div
+                            className={cn(
+                              "h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                              companyId === org.id
+                                ? "bg-secondary/20"
+                                : "bg-secondary/10 hover:bg-secondary/15",
+                            )}
+                          >
                             <Building className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
                           </div>
                         )}
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium leading-none">{org.name}</span>
-                          <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
+                          <span className="text-sm font-medium leading-none">
+                            {org.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground mt-1">
+                            Compte professionnel
+                          </span>
                         </div>
                         {companyId === org.id && (
                           <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
@@ -201,14 +233,20 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               <DropdownMenuSeparator className="my-2" />
               <DropdownMenuItem
                 className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
-                onSelect={() => router.push(`/dashboard/user/${session?.user?.id}`)}
+                onSelect={() =>
+                  router.push(`/dashboard/user/${session?.user?.id}`)
+                }
               >
                 <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
                   <User className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">Espace personnel</span>
-                  <span className="text-xs text-muted-foreground mt-1">Accéder à votre compte</span>
+                  <span className="text-sm font-medium leading-none">
+                    Espace personnel
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">
+                    Accéder à votre compte
+                  </span>
                 </div>
               </DropdownMenuItem>
 
@@ -224,8 +262,12 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   <Plus className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">Créer une organisation</span>
-                  <span className="text-xs text-muted-foreground mt-1">Ajouter une nouvelle entreprise</span>
+                  <span className="text-sm font-medium leading-none">
+                    Créer une organisation
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">
+                    Ajouter une nouvelle entreprise
+                  </span>
                 </div>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -244,61 +286,87 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
 
         {/* Navigation principale - Desktop */}
         <div className="hidden md:flex items-center justify-center gap-3">
-          <TooltipProvider>
-            {/* Éléments sans groupLabel (menu principal) */}
-            {menuGroups.filter(group => !group.groupLabel).flatMap((group) =>
+          {/* Éléments sans groupLabel (menu principal) */}
+          {menuGroups
+            .filter((group) => !group.groupLabel)
+            .flatMap((group) =>
               group.menus.map((menu, menuIndex) => (
-                <Tooltip key={`main-tooltip-${menuIndex}`} delayDuration={300}>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href={menu.href}
+                <Link
+                  key={`main-menu-${menuIndex}`}
+                  href={menu.href}
+                  className={cn(
+                    "flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200",
+                    menu.active
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-foreground hover:bg-accent/80 hover:scale-105 hover:shadow-sm",
+                  )}
+                >
+                  {menu.icon && (
+                    <menu.icon
                       className={cn(
-                        "flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200",
-                        menu.active
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-foreground hover:bg-accent/80 hover:scale-105 hover:shadow-sm"
-                      )}
-                    >
-                      {menu.icon && <menu.icon className={cn(
                         "h-3.5 w-3.5",
-                        menu.active ? "text-primary-foreground" : ""
-                      )} />}
-                      <span>{t(menu.label)}</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="rounded-lg bg-popover/95 backdrop-blur-sm border-border/30 shadow-md">
-                    {t(menu.label)}
-                  </TooltipContent>
-                </Tooltip>
-              ))
+                        menu.active ? "text-primary-foreground" : "",
+                      )}
+                    />
+                  )}
+                  <span>{t(menu.label)}</span>
+                </Link>
+              )),
             )}
 
-            {/* Groupes de menus */}
-            {menuGroups.filter(group => group.groupLabel && !group.groupLabel.includes("informations")).map((group, index) => {
+          {/* Groupes de menus */}
+          {menuGroups
+            .filter(
+              (group) =>
+                group.groupLabel && !group.groupLabel.includes("informations"),
+            )
+            .map((group, index) => {
               const GroupIcon = getGroupIcon(group.groupLabel);
               const isServicesGroup = group.groupLabel.includes("services");
+
+              // Vérifier si un des menus ou sous-menus du groupe est actif
+              const isGroupActive = group.menus.some(
+                (menu) =>
+                  menu.active ||
+                  (menu.submenus &&
+                    menu.submenus.some((submenu) => submenu.active)),
+              );
+
               return (
                 <React.Fragment key={index}>
                   <DropdownMenu>
-                    <Tooltip delayDuration={300}>
-                      <TooltipTrigger asChild>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200 hover:bg-accent/80 hover:scale-105 hover:shadow-sm"
-                          >
-                            <GroupIcon className="h-3.5 w-3.5" />
-                            <span>{t(group.groupLabel)}</span>
-                            <ChevronDown className="h-3 w-3 ml-0.5 opacity-70" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="rounded-lg bg-popover/95 backdrop-blur-sm border-border/30 shadow-md">
-                        {t(group.groupLabel)}
-                      </TooltipContent>
-                    </Tooltip>
-                    <DropdownMenuContent align="center" className="w-64 p-2 rounded-xl border border-border/40 shadow-lg">
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={cn(
+                          "flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200",
+                          isGroupActive
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "hover:bg-accent/80 hover:scale-105 hover:shadow-sm",
+                        )}
+                      >
+                        <GroupIcon
+                          className={cn(
+                            "h-3.5 w-3.5",
+                            isGroupActive ? "text-primary-foreground" : "",
+                          )}
+                        />
+                        <span>{t(group.groupLabel)}</span>
+                        <ChevronDown
+                          className={cn(
+                            "h-3 w-3 ml-0.5",
+                            isGroupActive
+                              ? "text-primary-foreground opacity-100"
+                              : "opacity-70",
+                          )}
+                        />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="center"
+                      className="w-64 p-2 rounded-xl border border-border/40 shadow-lg"
+                    >
                       <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider p-2 mb-2 text-muted-foreground/80 border-b border-border/30">
                         <div className="flex items-center gap-2">
                           <GroupIcon className="h-4 w-4" />
@@ -309,13 +377,17 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                         {group.menus.map((menu, menuIndex) =>
                           menu.submenus ? (
                             <DropdownMenuSub key={menuIndex}>
-                              <DropdownMenuSubTrigger className={cn(
-                                "flex items-center rounded-lg p-2 transition-all duration-200",
-                                menu.active
-                                  ? "bg-accent/80 font-medium"
-                                  : "hover:bg-accent hover:pl-1"
-                              )}>
-                                {menu.icon && <menu.icon className="h-4 w-4 mr-2" />}
+                              <DropdownMenuSubTrigger
+                                className={cn(
+                                  "flex items-center rounded-lg p-2 transition-all duration-200",
+                                  menu.active
+                                    ? "bg-accent/80 font-medium"
+                                    : "hover:bg-accent hover:pl-1",
+                                )}
+                              >
+                                {menu.icon && (
+                                  <menu.icon className="h-4 w-4 mr-2" />
+                                )}
                                 <span>{t(menu.label)}</span>
                               </DropdownMenuSubTrigger>
                               <DropdownMenuPortal>
@@ -328,11 +400,16 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                                         "rounded-lg p-2 transition-all duration-200",
                                         submenu.active
                                           ? "bg-accent/80 font-medium"
-                                          : "hover:bg-accent hover:pl-1"
+                                          : "hover:bg-accent hover:pl-1",
                                       )}
                                     >
-                                      <Link href={submenu.href} className="flex w-full items-center">
-                                        {submenu.icon && <submenu.icon className="h-4 w-4 mr-2" />}
+                                      <Link
+                                        href={submenu.href}
+                                        className="flex w-full items-center"
+                                      >
+                                        {submenu.icon && (
+                                          <submenu.icon className="h-4 w-4 mr-2" />
+                                        )}
                                         <span>{t(submenu.label)}</span>
                                       </Link>
                                     </DropdownMenuItem>
@@ -348,82 +425,118 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                                 "rounded-lg p-2 transition-all duration-200",
                                 menu.active
                                   ? "bg-accent/80 font-medium"
-                                  : "hover:bg-accent hover:pl-1"
+                                  : "hover:bg-accent hover:pl-1",
                               )}
                             >
-                              <Link href={menu.href} className="flex items-center">
-                                {menu.icon && <menu.icon className="h-4 w-4 mr-2" />}
+                              <Link
+                                href={menu.href}
+                                className="flex items-center"
+                              >
+                                {menu.icon && (
+                                  <menu.icon className="h-4 w-4 mr-2" />
+                                )}
                                 <span>{t(menu.label)}</span>
                               </Link>
                             </DropdownMenuItem>
-                          )
+                          ),
                         )}
                       </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
+                  {isServicesGroup && (
+                    <Link
+                      href={`/dashboard/organization/${companyId}/settings`}
+                      className={cn(
+                        "flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all duration-200",
+                        pathname ===
+                          `/dashboard/organization/${companyId}/settings`
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-foreground hover:bg-accent/80 hover:scale-105 hover:shadow-sm",
+                      )}
+                    >
+                      <Cog
+                        className={cn(
+                          "h-3.5 w-3.5",
+                          pathname ===
+                            `/dashboard/organization/${companyId}/settings`
+                            ? "text-primary-foreground"
+                            : "",
+                        )}
+                      />
+                      <span>{t("dashboard.sidebar.settings")}</span>
+                    </Link>
+                  )}
                 </React.Fragment>
               );
             })}
-          </TooltipProvider>
         </div>
 
         {/* Menu mobile */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
-            <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)} />
+            <div
+              className="fixed inset-0 bg-black/50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
             <div className="fixed top-16 right-0 bottom-0 w-3/4 max-w-sm bg-background p-4 shadow-lg overflow-y-auto">
               <div className="space-y-4">
                 {/* Éléments sans groupLabel (menu principal) */}
-                {menuGroups.filter(group => !group.groupLabel).flatMap((group) =>
-                  group.menus.map((menu, menuIndex) => (
-                    <Link
-                      key={`mobile-main-${menuIndex}`}
-                      href={menu.href}
-                      className={cn(
-                        "flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
-                        menu.active
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-accent"
-                      )}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {menu.icon && <menu.icon className="h-5 w-5" />}
-                      <span className="text-sm font-medium">{t(menu.label)}</span>
-                    </Link>
-                  ))
-                )}
+                {menuGroups
+                  .filter((group) => !group.groupLabel)
+                  .flatMap((group) =>
+                    group.menus.map((menu, menuIndex) => (
+                      <Link
+                        key={`mobile-main-${menuIndex}`}
+                        href={menu.href}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
+                          menu.active
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-accent",
+                        )}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {menu.icon && <menu.icon className="h-5 w-5" />}
+                        <span className="text-sm font-medium">
+                          {t(menu.label)}
+                        </span>
+                      </Link>
+                    )),
+                  )}
 
                 {/* Groupes de menus */}
-                {menuGroups.filter(group => group.groupLabel).map((group, index) => {
-                  const GroupIcon = getGroupIcon(group.groupLabel);
-                  return (
-                    <div key={`mobile-group-${index}`} className="space-y-2">
-                      <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground border-b">
-                        <GroupIcon className="h-4 w-4" />
-                        <span>{t(group.groupLabel)}</span>
+                {menuGroups
+                  .filter((group) => group.groupLabel)
+                  .map((group, index) => {
+                    const GroupIcon = getGroupIcon(group.groupLabel);
+                    return (
+                      <div key={`mobile-group-${index}`} className="space-y-2">
+                        <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground border-b">
+                          <GroupIcon className="h-4 w-4" />
+                          <span>{t(group.groupLabel)}</span>
+                        </div>
+                        <div className="pl-3 space-y-1">
+                          {group.menus.map((menu, menuIndex) => (
+                            <Link
+                              key={`mobile-menu-${menuIndex}`}
+                              href={menu.href}
+                              className={cn(
+                                "flex items-center gap-3 p-2 rounded-lg transition-all duration-200",
+                                menu.active
+                                  ? "bg-accent/80 font-medium"
+                                  : "hover:bg-accent hover:pl-1",
+                              )}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {menu.icon && <menu.icon className="h-4 w-4" />}
+                              <span className="text-sm">{t(menu.label)}</span>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                      <div className="pl-3 space-y-1">
-                        {group.menus.map((menu, menuIndex) => (
-                          <Link
-                            key={`mobile-menu-${menuIndex}`}
-                            href={menu.href}
-                            className={cn(
-                              "flex items-center gap-3 p-2 rounded-lg transition-all duration-200",
-                              menu.active
-                                ? "bg-accent/80 font-medium"
-                                : "hover:bg-accent hover:pl-1"
-                            )}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            {menu.icon && <menu.icon className="h-4 w-4" />}
-                            <span className="text-sm">{t(menu.label)}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -438,50 +551,28 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
             onClick={() => setSearchOpen(true)}
           >
             <Search className="h-3.5 w-3.5" />
-            {/* <span className="hidden lg:inline-flex">Rechercher</span> */}
             <kbd className="hidden lg:inline-flex ml-2 pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
               <span>{shortcutKey}</span>K
             </kbd>
           </Button>
 
           <div className="flex items-center">
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-lg h-9 w-9 hover:bg-accent/70 transition-all duration-200 md:hidden"
-                  onClick={() => setSearchOpen(true)}
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="rounded-lg">
-                Rechercher
-              </TooltipContent>
-            </Tooltip>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-lg h-9 w-9 hover:bg-accent/70 transition-all duration-200 md:hidden"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="h-4 w-4" />
+            </Button>
 
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <div className="h-9 w-9">
-                  <ModeToggle />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="rounded-lg">
-                Changer de thème
-              </TooltipContent>
-            </Tooltip>
+            <div className="h-9 w-9">
+              <ModeToggle />
+            </div>
 
-            <Tooltip delayDuration={300}>
-              <TooltipTrigger asChild>
-                <div className="h-9 w-9">
-                  <Notifications />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="rounded-lg">
-                Notifications
-              </TooltipContent>
-            </Tooltip>
+            <div className="h-9 w-9">
+              <Notifications />
+            </div>
 
             <UserNav />
           </div>
@@ -503,23 +594,31 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               <div className="rounded-full bg-muted/30 p-3 mb-3">
                 <Search className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Aucun résultat trouvé.</p>
-              <p className="text-xs text-muted-foreground/70">Essayez avec des termes différents.</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Aucun résultat trouvé.
+              </p>
+              <p className="text-xs text-muted-foreground/70">
+                Essayez avec des termes différents.
+              </p>
             </div>
           </CommandEmpty>
 
-          <CommandGroup heading={
-            <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
-              Suggestions
-            </div>
-          }>
+          <CommandGroup
+            heading={
+              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                Suggestions
+              </div>
+            }
+          >
             <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
                 <Users className="h-4 w-4 text-foreground/80" />
               </div>
               <div className="flex flex-col">
                 <span className="font-medium">Clients</span>
-                <span className="text-xs text-muted-foreground/70">Gérer vos clients</span>
+                <span className="text-xs text-muted-foreground/70">
+                  Gérer vos clients
+                </span>
               </div>
             </CommandItem>
             <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
@@ -528,7 +627,9 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               </div>
               <div className="flex flex-col">
                 <span className="font-medium">Rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">Gérer votre agenda</span>
+                <span className="text-xs text-muted-foreground/70">
+                  Gérer votre agenda
+                </span>
               </div>
             </CommandItem>
             <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
@@ -537,23 +638,29 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               </div>
               <div className="flex flex-col">
                 <span className="font-medium">Rapports</span>
-                <span className="text-xs text-muted-foreground/70">Consulter vos statistiques</span>
+                <span className="text-xs text-muted-foreground/70">
+                  Consulter vos statistiques
+                </span>
               </div>
             </CommandItem>
           </CommandGroup>
 
-          <CommandGroup heading={
-            <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 mt-2">
-              Actions Rapides
-            </div>
-          }>
+          <CommandGroup
+            heading={
+              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 mt-2">
+                Actions Rapides
+              </div>
+            }
+          >
             <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
                 <Plus className="h-4 w-4 text-foreground/80" />
               </div>
               <div className="flex flex-col">
                 <span className="font-medium">Nouveau client</span>
-                <span className="text-xs text-muted-foreground/70">Ajouter un nouveau client</span>
+                <span className="text-xs text-muted-foreground/70">
+                  Ajouter un nouveau client
+                </span>
               </div>
             </CommandItem>
             <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
@@ -562,7 +669,9 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               </div>
               <div className="flex flex-col">
                 <span className="font-medium">Nouveau rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">Planifier un rendez-vous</span>
+                <span className="text-xs text-muted-foreground/70">
+                  Planifier un rendez-vous
+                </span>
               </div>
             </CommandItem>
           </CommandGroup>
@@ -571,15 +680,21 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
         <div className="flex items-center justify-between border-t border-border/30 px-4 py-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span>Parcourir</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">↑</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">↓</span>
+            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+              ↑
+            </span>
+            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+              ↓
+            </span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span>Sélectionner</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">↵</span>
+            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+              ↵
+            </span>
           </div>
         </div>
       </CommandDialog>
-    </header >
+    </header>
   );
-} 
+}
