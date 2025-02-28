@@ -418,7 +418,7 @@ const ProfitabilityByServiceWidget = ({ data }: ProfitabilityByServiceWidgetProp
           </div>
           <Button variant="outline" size="sm">
             <Lightbulb className="mr-2 h-4 w-4" />
-            Conseils d'optimisation
+            Conseils d&apos;optimisation
           </Button>
         </div>
       </CardContent>

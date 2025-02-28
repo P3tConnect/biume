@@ -312,7 +312,7 @@ const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Vue d'ensemble</CardTitle>
+        <CardTitle>Vue d&apos;ensemble</CardTitle>
         <CardDescription>Synthèse des résultats financiers</CardDescription>
       </CardHeader>
       <CardContent>
