@@ -23,6 +23,7 @@ import {
   Download,
   Printer,
 } from "lucide-react";
+import AccountingHeader from "../../../shortcuts/pro/accounting-header";
 
 // Interfaces pour les composants
 interface RevenueWidgetProps {
@@ -508,24 +509,7 @@ const AccountingPageComponent = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Comptabilité</h1>
-          <p className="text-muted-foreground">
-            Suivez vos finances et analysez votre rentabilité
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Calendar className="mr-2 h-4 w-4" />
-            Juin 2024
-          </Button>
-          <Button>
-            <PiggyBank className="mr-2 h-4 w-4" />
-            Nouvelle facture
-          </Button>
-        </div>
-      </div>
+      <AccountingHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <ConsultationRevenueWidget data={mockData.consultationRevenue} />
