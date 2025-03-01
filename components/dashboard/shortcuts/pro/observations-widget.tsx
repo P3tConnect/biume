@@ -166,7 +166,7 @@ const ObservationsWidget = () => {
                         <div className="p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-md">
                           <EyeIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        Détails de l'observation
+                        Détails de l&apos;observation
                       </SheetTitle>
                       <Badge
                         variant="outline"

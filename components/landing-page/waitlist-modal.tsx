@@ -107,7 +107,7 @@ export function WaitlistModal({
         {children || (
           <Button variant="outline" className="gap-2">
             <Sparkles className="h-4 w-4" />
-            Rejoindre la liste d'attente
+            Rejoindre la liste d&apos;attente
           </Button>
         )}
       </DialogTrigger>
@@ -120,11 +120,11 @@ export function WaitlistModal({
                 <span>Phase bêta</span>
               </div>
               <DialogTitle className="text-2xl">
-                Rejoignez notre liste d'attente
+                Rejoignez notre liste d&apos;attente
               </DialogTitle>
               <DialogDescription>
                 Soyez parmi les premiers à découvrir Biume Pro et transformez
-                votre pratique vétérinaire.
+                votre activité professionnelle.
               </DialogDescription>
             </DialogHeader>
 
@@ -226,7 +226,7 @@ export function WaitlistModal({
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="cursor-pointer">
-                          Je suis un professionnel vétérinaire
+                          Je suis un professionnel
                         </FormLabel>
                       </div>
                     </FormItem>
@@ -247,7 +247,7 @@ export function WaitlistModal({
                     ) : (
                       <>
                         <Sparkles className="h-4 w-4" />
-                        Rejoindre la liste d'attente
+                        Rejoindre la liste d&apos;attente
                       </>
                     )}
                   </Button>
@@ -270,7 +270,7 @@ export function WaitlistModal({
             </h2>
             <p className="text-muted-foreground mb-6">
               Nous vous contacterons dès que Biume Pro sera disponible pour
-              votre cabinet.
+              votre entreprise.
             </p>
 
             <div className="flex items-center gap-1 mb-6">

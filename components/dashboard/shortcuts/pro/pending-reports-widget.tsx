@@ -275,7 +275,7 @@ const PendingReportsWidget = () => {
                   Tous les rapports sont à jour
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Vous n'avez pas de rapports en attente pour le moment
+                  Vous n&apos;avez pas de rapports en attente pour le moment
                 </p>
               </div>
             )}

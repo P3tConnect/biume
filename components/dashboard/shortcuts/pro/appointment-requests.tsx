@@ -113,7 +113,7 @@ export const AppointmentRequests = () => {
                 </div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1 text-blue-500" />
-                  <span>Demande pour l'après-midi</span>
+                  <span>Demande pour l&apos;après-midi</span>
                 </div>
               </div>
               <div className="flex flex-col items-end ml-2">

@@ -199,7 +199,7 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="text-sm font-semibold">+42%</p>
-                <p className="text-xs text-muted-foreground">d'efficacité</p>
+                <p className="text-xs text-muted-foreground">d&apos;efficacité</p>
               </div>
             </div>
           </motion.div>
@@ -234,28 +234,6 @@ export function HeroSection() {
               </div>
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Logos des partenaires */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.3 }}
-          className="mt-24 text-center"
-        >
-          <p className="text-sm text-muted-foreground mb-8">
-            Utilisé et recommandé par les meilleurs réseaux vétérinaires
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="grayscale opacity-50 hover:opacity-80 hover:grayscale-0 transition-all"
-              >
-                <div className="h-8 w-24 bg-muted/50 rounded animate-pulse"></div>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </section>

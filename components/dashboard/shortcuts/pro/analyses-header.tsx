@@ -15,7 +15,7 @@ export const AnalysesHeader = () => {
               Statistiques et analyses
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Suivez l'activité et les performances de votre clinique
+              Suivez l&apos;activité et les performances de votre clinique
             </p>
           </div>
           <div className="flex gap-2">

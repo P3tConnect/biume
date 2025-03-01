@@ -39,9 +39,9 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
   const averageRating =
     company.ratings && company.ratings.length > 0
       ? (
-          company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          company.ratings.length
-        ).toFixed(1)
+        company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+        company.ratings.length
+      ).toFixed(1)
       : "4.8";
 
   return (
@@ -169,7 +169,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
                   <div className="flex items-center gap-1 bg-muted/50 px-3 py-1 rounded-full">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-muted-foreground">
-                      Ouvert aujourd'hui · 9:00 - 19:00
+                      Ouvert aujourd&apos;hui · 9:00 - 19:00
                     </span>
                   </div>
                 </div>

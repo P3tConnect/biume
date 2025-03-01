@@ -153,10 +153,10 @@ export const DashboardTabs = () => {
             <CardContent className="p-4">
               <div className="text-center text-muted-foreground py-8">
                 <FileText className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                <p className="mb-2">Rapports d'activité</p>
+                <p className="mb-2">Rapports d&apos;activité</p>
                 <p className="text-sm max-w-md mx-auto">
-                  Générez et consultez des rapports détaillés sur l'activité de
-                  votre clinique, les traitements effectués et le suivi des
+                  Générez et consultez des rapports détaillés sur l&apos;activité
+                  de votre clinique, les traitements effectués et le suivi des
                   patients.
                 </p>
               </div>

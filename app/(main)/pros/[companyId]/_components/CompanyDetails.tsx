@@ -138,9 +138,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          companyResult.data.ratings.length
-        ).toFixed(1)
+        companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+        companyResult.data.ratings.length
+      ).toFixed(1)
       : "4.8";
 
   return (
@@ -345,7 +345,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
                         <p className="text-lg font-medium">10+</p>
                         <p className="text-sm text-muted-foreground">
-                          Années d'expérience
+                          Années d&apos;expérience
                         </p>
                       </div>
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
@@ -357,7 +357,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
                         <p className="text-lg font-medium">24/7</p>
                         <p className="text-sm text-muted-foreground">
-                          Support d'urgence
+                          Support d&apos;urgence
                         </p>
                       </div>
                     </div>
@@ -611,7 +611,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     <div className="flex items-center gap-3">
                       <Phone className="h-5 w-5 text-primary" />
                       <div>
-                        <p className="font-medium">Besoin d'aide ?</p>
+                        <p className="font-medium">Besoin d&apos;aide ?</p>
                         <p className="text-sm text-muted-foreground">
                           Contactez-nous directement
                         </p>

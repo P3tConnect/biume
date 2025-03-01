@@ -222,7 +222,7 @@ const CalendarWidget = () => {
                 <CalendarDays className="w-4 h-4 text-blue-500" />
               </div>
               <p className="text-muted-foreground mb-1 text-sm">
-                Aucun rendez-vous pour aujourd'hui
+                Aucun rendez-vous pour aujourd&apos;hui
               </p>
               <p className="text-xs text-muted-foreground">
                 Profitez de cette journée tranquille!

@@ -78,7 +78,7 @@ export function FeaturesSection() {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Des outils conçus pour simplifier la vie des propriétaires
-              d'animaux
+              d&apos;animaux
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Notre plateforme vous offre tout ce dont vous avez besoin pour
@@ -120,8 +120,8 @@ export function FeaturesSection() {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Rejoignez des milliers de propriétaires d'animaux satisfaits qui
-            utilisent Biume pour prendre soin de leurs compagnons.
+            Rejoignez des milliers de propriétaires d&apos;animaux satisfaits
+            qui utilisent Biume pour prendre soin de leurs compagnons.
           </p>
           <div className="flex justify-center gap-6">
             <div className="flex flex-col items-center">

@@ -143,8 +143,8 @@ export function PricingSection() {
             Des forfaits adaptés à tous les professionnels
           </h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Choisissez l'offre qui correspond le mieux à vos besoins. Tous nos
-            forfaits incluent une garantie de remboursement de 30 jours.
+            Choisissez l&apos;offre qui correspond le mieux à vos besoins. Tous
+            nos forfaits incluent une garantie de remboursement de 30 jours.
           </p>
 
           {/* Sélecteur mensuel/annuel */}
@@ -319,11 +319,11 @@ export function PricingSection() {
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-4">
-            Besoin d'une solution personnalisée ?
+            Besoin d&apos;une solution personnalisée ?
           </h3>
           <p className="text-muted-foreground mb-8">
             Nous proposons également des solutions sur mesure pour les grandes
-            structures vétérinaires avec des besoins spécifiques.
+            structures avec des besoins spécifiques.
           </p>
           <Button variant="outline" size="lg">
             Demander un devis personnalisé

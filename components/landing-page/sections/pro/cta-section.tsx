@@ -41,11 +41,11 @@ export function CTASection() {
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit">
                   <Sparkles className="w-4 h-4" />
-                  <span>Optimisez votre cabinet</span>
+                  <span>Optimisez votre activité</span>
                 </div>
 
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Transformez votre pratique vétérinaire avec Biume
+                  Transformez votre activité professionnelle avec Biume
                 </h2>
 
                 <p className="text-lg mb-8 text-muted-foreground">
@@ -94,12 +94,12 @@ export function CTASection() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <WaitlistModal>
                     <Button size="lg" className="group">
-                      Rejoindre la liste d'attente
+                      Rejoindre la liste d&apos;attente
                       <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                   </WaitlistModal>
                   <Button asChild variant="outline" size="lg">
-                    <Link href="/demo">Demander une démo</Link>
+                    <Link href="/">Demander une démo</Link>
                   </Button>
                 </div>
               </motion.div>

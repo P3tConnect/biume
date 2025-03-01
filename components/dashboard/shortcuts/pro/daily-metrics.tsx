@@ -51,7 +51,7 @@ export const DailyMetrics = () => {
                 8
               </div>
               <div className="text-xs text-secondary-foreground/70">
-                Patients aujourd'hui
+                Patients aujourd&apos;hui
               </div>
             </div>
           </div>
@@ -103,7 +103,7 @@ export const DailyMetrics = () => {
         {/* État des tâches */}
         <div className="space-y-2">
           <div className="text-xs font-medium text-muted-foreground">
-            ÉTAT D'AVANCEMENT
+            ÉTAT D&apos;AVANCEMENT
           </div>
           <div className="pt-2 pb-3 space-y-1">
             <div className="flex items-center justify-between text-sm">

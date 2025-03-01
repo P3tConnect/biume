@@ -140,7 +140,7 @@ export function TestimonialsSection() {
               Ce que nos utilisateurs disent
             </h2>
             <p className="text-lg text-muted-foreground">
-              Découvrez les expériences des propriétaires d'animaux qui
+              Découvrez les expériences des propriétaires d&apos;animaux qui
               utilisent Biume au quotidien pour prendre soin de leurs
               compagnons.
             </p>
