@@ -24,7 +24,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden">
+    <section className="relative pt-24 pb-24 md:pt-36 md:pb-32 overflow-hidden">
       {/* Éléments décoratifs de fond */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
