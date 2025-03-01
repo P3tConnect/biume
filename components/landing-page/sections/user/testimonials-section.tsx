@@ -185,11 +185,11 @@ export function TestimonialsSection() {
 
                       <p className="text-lg italic relative">
                         <span className="absolute -left-2 -top-2 text-primary/20 text-4xl">
-                          "
+                          &quot;
                         </span>
                         {testimonial.content}
                         <span className="absolute -right-2 bottom-0 text-primary/20 text-4xl">
-                          "
+                          &quot;
                         </span>
                       </p>
                     </div>

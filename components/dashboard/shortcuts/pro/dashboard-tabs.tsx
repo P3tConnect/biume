@@ -176,7 +176,7 @@ export const DashboardTabs = () => {
                 <p className="mb-2">Aucun message récent</p>
                 <p className="text-sm max-w-md mx-auto">
                   Ici seront affichés vos messages, rappels automatiques et
-                  communications avec les propriétaires d'animaux.
+                  communications avec les propriétaires d&apos;animaux.
                 </p>
               </div>
             </CardContent>
