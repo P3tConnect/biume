@@ -261,7 +261,7 @@ export function TestimonialsSection() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: "250+", label: "Cliniques vétérinaires" },
+              { value: "250+", label: "Professionnels" },
               { value: "98%", label: "Taux de satisfaction" },
               { value: "45%", label: "Gain de temps administratif" },
               { value: "30%", label: "Augmentation de la productivité" },

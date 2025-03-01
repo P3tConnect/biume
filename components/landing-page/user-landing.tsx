@@ -22,7 +22,7 @@ export function UserLanding() {
       </main>
 
       {/* Footer simple */}
-      <footer className="border-t py-8 bg-muted/30">
+      <footer className="border-t py-4 bg-muted/30">
         <div className="container px-4 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <Link href="/" className="flex items-center gap-2 shrink-0">
