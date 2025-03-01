@@ -173,23 +173,29 @@ export function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+                    <DropdownMenuItem onClick={() => router.push(`/dashboard/user/${session.user?.id}`)}>
                       <Settings className="w-4 h-4 mr-2" />
                       <span>Tableau de bord</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push("/profile")}>
+                    <DropdownMenuItem onClick={() => router.push(`/dashboard/user/${session.user?.id}/settings`)}>
                       <UserIcon className="w-4 h-4 mr-2" />
                       <span>Profil</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => router.push("/reservations")}
+                      onClick={() => router.push(`/dashboard/user/${session.user?.id}/reservations`)}
                     >
                       <Calendar className="w-4 h-4 mr-2" />
                       <span>Rendez-vous</span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signOut()}>
+                  <DropdownMenuItem onClick={async () => await signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        router.push("/login");
+                      },
+                    },
+                  })}>
                     <LogOut className="w-4 h-4 mr-2" />
                     <span>Déconnexion</span>
                   </DropdownMenuItem>

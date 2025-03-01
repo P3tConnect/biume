@@ -92,7 +92,7 @@ export function CTASection() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <WaitlistModal>
+                  <WaitlistModal defaultIsPro={true}>
                     <Button size="lg" className="group">
                       Rejoindre la liste d&apos;attente
                       <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -114,7 +114,7 @@ export function CTASection() {
                 <div className="relative max-w-sm w-full">
                   <div className="relative rounded-2xl overflow-hidden border shadow-lg">
                     <Image
-                      src="/images/pro-dashboard.webp"
+                      src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=540&auto=format&fit=crop"
                       alt="Interface professionnelle Biume"
                       width={540}
                       height={380}

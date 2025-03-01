@@ -35,15 +35,26 @@ import { useMutation } from "@tanstack/react-query";
 interface WaitlistModalProps {
   children?: React.ReactNode;
   defaultIsPro?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function WaitlistModal({
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
   children,
   defaultIsPro = true,
 }: WaitlistModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Determine if we're in controlled or uncontrolled mode
+  const isControlled = controlledOpen !== undefined && setControlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  const setOpen = isControlled
+    ? setControlledOpen
+    : setUncontrolledOpen;
 
   const form = useForm<z.infer<typeof waitlistInsertSchema>>({
     resolver: zodResolver(waitlistInsertSchema),
@@ -91,26 +102,19 @@ export function WaitlistModal({
   const closeModal = () => {
     if (isSuccess) {
       // Reset form and states when closing after success
-      setIsOpen(false);
+      setOpen(false);
       setTimeout(() => {
         setIsSuccess(false);
         form.reset();
       }, 300);
     } else {
-      setIsOpen(false);
+      setOpen(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {children || (
-          <Button variant="outline" className="gap-2">
-            <Sparkles className="h-4 w-4" />
-            Rejoindre la liste d&apos;attente
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden">
         {!isSuccess ? (
           <div className="p-6">
@@ -123,8 +127,10 @@ export function WaitlistModal({
                 Rejoignez notre liste d&apos;attente
               </DialogTitle>
               <DialogDescription>
-                Soyez parmi les premiers à découvrir Biume Pro et transformez
-                votre activité professionnelle.
+                Soyez parmi les premiers à découvrir Biume et transformez
+                {defaultIsPro
+                  ? " votre activité professionnelle."
+                  : " l'expérience de soin de votre animal."}
               </DialogDescription>
             </DialogHeader>
 
@@ -164,11 +170,11 @@ export function WaitlistModal({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email professionnel</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="marie.dupont@clinique-veterinaire.fr"
+                          placeholder={defaultIsPro ? "marie.dupont@clinique-veterinaire.fr" : "marie.dupont@exemple.fr"}
                           {...field}
                         />
                       </FormControl>
@@ -177,23 +183,25 @@ export function WaitlistModal({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="organizationName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom de votre entreprise</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Clinique Vétérinaire des Alpes"
-                          {...field}
-                          value={field.value || ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {defaultIsPro && (
+                  <FormField
+                    control={form.control}
+                    name="organizationName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nom de votre entreprise</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Clinique Vétérinaire des Alpes"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <FormField
                   control={form.control}
@@ -269,8 +277,8 @@ export function WaitlistModal({
               Merci pour votre inscription !
             </h2>
             <p className="text-muted-foreground mb-6">
-              Nous vous contacterons dès que Biume Pro sera disponible pour
-              votre entreprise.
+              Nous vous contacterons dès que Biume sera disponible
+              {defaultIsPro ? " pour votre entreprise." : "."}
             </p>
 
             <div className="flex items-center gap-1 mb-6">

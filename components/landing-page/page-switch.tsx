@@ -57,7 +57,7 @@ export const PageSwitch = () => {
               ) : (
                 <>
                   <Stethoscope className="w-3.5 h-3.5" />
-                  <span>Vétérinaires</span>
+                  <span>Professionnels</span>
                 </>
               )}
             </span>

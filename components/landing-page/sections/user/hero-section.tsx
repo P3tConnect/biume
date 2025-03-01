@@ -147,7 +147,7 @@ export function HeroSection() {
             <div className="relative z-10">
               <div className="relative rounded-2xl overflow-hidden border shadow-lg">
                 <Image
-                  src="/images/pet-owner-app.webp"
+                  src="https://images.unsplash.com/photo-1581888227599-779811939961?q=80&w=600&auto=format&fit=crop"
                   alt="Application Biume pour les propriétaires d'animaux"
                   width={600}
                   height={700}
@@ -174,7 +174,7 @@ export function HeroSection() {
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-background">
                   <Image
-                    src="/images/dog-avatar.webp"
+                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=150&auto=format&fit=crop"
                     alt="Avatar d'animal"
                     fill
                     className="object-cover"

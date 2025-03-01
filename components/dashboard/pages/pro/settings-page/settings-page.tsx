@@ -1,4 +1,6 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+"use client";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger, Card, CardHeader, CardTitle } from "@/components/ui";
 import {
   Building2,
   CreditCard,
@@ -14,12 +16,11 @@ import { BillingSection } from "./sections/billing-section";
 import { TeamSection } from "./sections/team-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import ImagesSection from "./sections/images-section";
 import SlotsSection from "./sections/slotsSection";
 import DocumentsSection from "./sections/documents-section";
 
-const SettingsPageComponent = async () => {
+const SettingsPageComponent = () => {
   return (
     <div>
       <Card className="overflow-hidden rounded-2xl mb-4">

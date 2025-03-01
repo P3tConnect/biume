@@ -54,6 +54,7 @@ import {
   useActiveOrganization,
   useListOrganizations,
   organization,
+  getSession,
 } from "@/src/lib/auth-client";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
@@ -61,6 +62,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -72,7 +74,10 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
-  const { data: session } = useSession();
+  const { data: session } = useQuery({
+    queryKey: ["user-informations"],
+    queryFn: () => getSession(),
+  });
   const { data: activeOrganization } = useActiveOrganization();
   const { data: organizations } = useListOrganizations();
   const menuGroups = proMenuList(pathname || "", companyId);
@@ -234,7 +239,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
               <DropdownMenuItem
                 className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
                 onSelect={() =>
-                  router.push(`/dashboard/user/${session?.user?.id}`)
+                  router.push(`/dashboard/user/${session?.data?.user.id}`)
                 }
               >
                 <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">

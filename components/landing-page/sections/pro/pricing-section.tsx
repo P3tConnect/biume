@@ -10,6 +10,7 @@ import {
   Shield,
   Clock,
   Zap,
+  Info,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,12 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type PricingPlan = {
   id: string;
@@ -36,6 +43,7 @@ type PricingPlan = {
   features: {
     text: string;
     included: boolean;
+    explanation?: string;
   }[];
   cta: string;
   isPopular?: boolean;
@@ -49,20 +57,25 @@ const pricingPlans: PricingPlan[] = [
     name: "Essentiel",
     description: "Pour les petites cliniques et les vétérinaires indépendants",
     price: {
-      monthly: 29.99,
-      annually: 24.99,
+      monthly: 19.99,
+      annually: 14.99,
     },
     features: [
-      { text: "Gestion de 500 clients", included: true },
-      { text: "5 utilisateurs inclus", included: true },
-      { text: "Gestion des rendez-vous", included: true },
-      { text: "Dossiers médicaux de base", included: true },
-      { text: "Facturation simple", included: true },
-      { text: "Stockage de documents 5 GB", included: true },
-      { text: "Support par email", included: true },
-      { text: "Accès à Biume AI limité", included: false },
-      { text: "Rappels personnalisables", included: false },
-      { text: "Rapports avancés", included: false },
+      { text: "Gestion de clients illimitée", included: true },
+      { text: "Gestion de la comptabilité", included: true },
+      { text: "Gestion d'emploi du temps", included: true },
+      { text: "Comptes rendus et observations", included: true },
+      { text: "Partage de dossiers médicaux", included: true },
+      { text: "Rappels personnalisables", included: true },
+      { text: "Réservation client", included: true },
+      { text: "Paiement en ligne", included: true },
+      { text: "Biume AI", included: false },
+      { text: "Échelons de remboursement personnalisés", included: false },
+      { text: "Notifications et rappels", included: false },
+      { text: "Délais de rétractation", included: false },
+      { text: "Gestion d'équipe", included: false },
+      { text: "Communication centralisée", included: false },
+      { text: "Rapports de performance", included: false },
     ],
     cta: "Essai gratuit 14 jours",
     icon: Clock,
@@ -72,20 +85,25 @@ const pricingPlans: PricingPlan[] = [
     name: "Professionnel",
     description: "Pour les cliniques en croissance avec plusieurs vétérinaires",
     price: {
-      monthly: 59.99,
-      annually: 49.99,
+      monthly: 29.99,
+      annually: 24.99,
     },
     features: [
       { text: "Gestion de clients illimitée", included: true },
-      { text: "15 utilisateurs inclus", included: true },
-      { text: "Gestion avancée des rendez-vous", included: true },
-      { text: "Dossiers médicaux complets", included: true },
-      { text: "Facturation & devis personnalisés", included: true },
-      { text: "Stockage de documents 25 GB", included: true },
-      { text: "Support prioritaire", included: true },
-      { text: "Accès à Biume AI standard", included: true },
+      { text: "Gestion de la comptabilité", included: true },
+      { text: "Gestion d'emploi du temps", included: true },
+      { text: "Comptes rendus et observations", included: true },
+      { text: "Partage de dossiers médicaux", included: true },
       { text: "Rappels personnalisables", included: true },
-      { text: "Rapports avancés", included: false },
+      { text: "Réservation client", included: true },
+      { text: "Paiement en ligne", included: true },
+      { text: "Biume AI", included: true, explanation: "Inclus un contexte limité" },
+      { text: "Échelons de remboursement personnalisés", included: true },
+      { text: "Notifications et rappels", included: true },
+      { text: "Délais de rétractation", included: true },
+      { text: "Gestion d'équipe", included: true, explanation: "Jusqu'à 5 membres" },
+      { text: "Communication centralisée", included: false },
+      { text: "Rapports de performance", included: false },
     ],
     cta: "Commencer maintenant",
     isPopular: true,
@@ -97,20 +115,25 @@ const pricingPlans: PricingPlan[] = [
     name: "Entreprise",
     description: "Pour les grandes structures vétérinaires multi-sites",
     price: {
-      monthly: 99.99,
-      annually: 84.99,
+      monthly: 39.99,
+      annually: 34.99,
     },
     features: [
       { text: "Gestion de clients illimitée", included: true },
-      { text: "Utilisateurs illimités", included: true },
-      { text: "Gestion avancée des rendez-vous", included: true },
-      { text: "Dossiers médicaux complets", included: true },
-      { text: "Facturation & devis personnalisés", included: true },
-      { text: "Stockage de documents illimité", included: true },
-      { text: "Support dédié 24/7", included: true },
-      { text: "Accès à Biume AI premium", included: true },
+      { text: "Gestion de la comptabilité", included: true },
+      { text: "Gestion d'emploi du temps", included: true },
+      { text: "Comptes rendus et observations", included: true },
+      { text: "Partage de dossiers médicaux", included: true },
       { text: "Rappels personnalisables", included: true },
-      { text: "Rapports avancés & analytics", included: true },
+      { text: "Réservation client", included: true },
+      { text: "Paiement en ligne", included: true },
+      { text: "Biume AI", included: true, explanation: "Inclus un contexte plus large" },
+      { text: "Échelons de remboursement personnalisés", included: true },
+      { text: "Notifications et rappels", included: true },
+      { text: "Délais de rétractation", included: true },
+      { text: "Gestion d'équipe", included: true, explanation: "Jusqu'à 10 membres" },
+      { text: "Communication centralisée", included: true },
+      { text: "Rapports de performance", included: true },
     ],
     cta: "Contacter les ventes",
     icon: Shield,
@@ -276,11 +299,23 @@ export function PricingSection() {
                         </div>
                         <span
                           className={cn(
-                            "text-sm",
+                            "text-sm flex items-center gap-1.5",
                             !feature.included && "text-muted-foreground/70",
                           )}
                         >
                           {feature.text}
+                          {feature.explanation && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="cursor-help">
+                                  <Info className="w-3.5 h-3.5 text-muted-foreground/80" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">
+                                {feature.explanation}
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
                         </span>
                       </li>
                     ))}

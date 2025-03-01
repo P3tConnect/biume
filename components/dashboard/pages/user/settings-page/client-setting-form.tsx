@@ -28,6 +28,7 @@ import { SecurityForm } from "./forms/security-form";
 import { toast } from "sonner";
 import { MutateOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import { ActionResult } from "@/src/lib";
 
 const ClientSettingsForm = () => {
   const queryClient = useQueryClient();
@@ -73,7 +74,7 @@ const ClientSettingsForm = () => {
     await mutateAsync(data);
   });
 
-  const { } = useFormChangeToast({
+  useFormChangeToast({
     form,
     onSubmit,
     message: "Informations modifiées",
@@ -112,13 +113,13 @@ const ClientSettingsForm = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {/* <ProfileForm
+                <ProfileForm
                   form={form}
                   userInformations={userInformations}
                   onSubmit={onSubmit}
                   refetch={handleRefetch}
                   mutateAsync={mutateAsync}
-                /> */}
+                />
               </CardContent>
             </Card>
           </TabsContent>

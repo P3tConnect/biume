@@ -82,7 +82,7 @@ export function HeroSection() {
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
               Gérez votre activité animale{" "}
-              <span className="text-primary">efficacement</span>
+              <span className="text-primary">simplement</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -158,7 +158,7 @@ export function HeroSection() {
         >
           <div className="relative z-10 rounded-2xl overflow-hidden border shadow-xl">
             <Image
-              src="/images/pro-dashboard-hero.webp"
+              src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop"
               alt="Interface professionnelle Biume"
               width={1200}
               height={675}

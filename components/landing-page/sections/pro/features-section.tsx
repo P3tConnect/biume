@@ -148,7 +148,7 @@ export function FeaturesSection() {
             <span>Fonctionnalités professionnelles</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Tout ce dont vous avez besoin pour gérer votre cabinet
+            Tout ce dont vous avez besoin pour gérer votre activité
           </h2>
           <p className="text-lg text-muted-foreground">
             Biume regroupe tous les outils essentiels aux professionnels de la
@@ -173,7 +173,7 @@ export function FeaturesSection() {
             <div className="relative">
               <div className="relative z-10 rounded-xl overflow-hidden border shadow-xl">
                 <Image
-                  src="/images/dashboard-preview.webp"
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop"
                   alt="Tableau de bord Biume"
                   width={600}
                   height={450}
@@ -187,7 +187,7 @@ export function FeaturesSection() {
 
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-6">
-                Une interface conçue par et pour les vétérinaires
+                Une interface conçue par et pour les professionnels de la santé animale
               </h3>
               <p className="text-lg mb-8 text-muted-foreground">
                 Nous avons travaillé en étroite collaboration avec des
