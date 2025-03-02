@@ -17,7 +17,7 @@ import { TeamSection } from "./sections/team-section";
 import { ServicesSection } from "./sections/services-section";
 import { OptionsSection } from "./sections/options-section";
 import ImagesSection from "./sections/images-section";
-import SlotsSection from "./sections/slotsSection";
+import SlotsSection from "./sections/slots-section";
 import DocumentsSection from "./sections/documents-section";
 
 const SettingsPageComponent = () => {

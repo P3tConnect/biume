@@ -3,28 +3,24 @@
 import { Service } from "@/src/db";
 import { Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { toast } from "sonner";
-import { use, useState } from "react";
+import { useState } from "react";
 import { ServiceForm } from "./services-form";
-import { ActionResult } from "@/src/lib";
 import { ServiceItem } from "./service-item";
 
 interface ServicesGridProps {
-  services: ActionResult<Service[]>;
+  services: Service[];
+  onAddFirstService: () => void;
 }
 
-export const ServicesGrid = ({ services }: ServicesGridProps) => {
-  const data = services.data;
+export const ServicesGrid = ({ services, onAddFirstService }: ServicesGridProps) => {
+  const data = services;
   const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   if (!data || data.length === 0) {
     return (
       <button
         type="button"
-        onClick={() => {
-          // TODO: Implémenter l'ajout d'un nouveau service
-          toast.info("Fonctionnalité à venir");
-        }}
+        onClick={onAddFirstService}
         className={cn(
           "w-full flex flex-col items-center justify-center gap-4 p-8",
           "rounded-2xl border-2 border-dashed",

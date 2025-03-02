@@ -15,7 +15,6 @@ import { DateRangePicker } from "@/components/ui";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useActiveOrganization } from "@/src/lib/auth-client";
 import { createOrganizationSlot, updateOrganizationSlot } from "@/src/actions";
 import { toast } from "sonner"
 import { useMutation } from "@tanstack/react-query";
@@ -153,18 +152,42 @@ const SlotsForm = ({
   });
 
   const createSlotMutation = useMutation({
-    mutationFn: createOrganizationSlot,
-    onSuccess: () => {
+    mutationFn: (data: any) => {
+      // Préparation spéciale des données pour assurer la préservation des heures et minutes
+      const preparedData = Array.isArray(data)
+        ? data.map(slot => ({
+          ...slot,
+          // On envoie les dates sous forme de strings ISO pour éviter les pertes lors du passage client/serveur
+          start: slot.start.toISOString(),
+          end: slot.end.toISOString(),
+        }))
+        : data;
+
+      console.log('Envoi des données au serveur:', preparedData);
+      return createOrganizationSlot(preparedData);
+    },
+    onSuccess: (data) => {
+      console.log('Succès de la création:', data);
       toast.success("Le créneau a été créé avec succès");
       onFormSubmit?.();
     },
     onError: (error) => {
-      toast.error("Erreur: " + error);
+      console.error('Erreur mutation:', error);
+      toast.error("Erreur: " + JSON.stringify(error));
     },
   });
 
   const updateSlotMutation = useMutation({
-    mutationFn: updateOrganizationSlot,
+    mutationFn: (data: any) => {
+      // Même traitement pour la mise à jour
+      const preparedData = {
+        ...data,
+        start: data.start.toISOString(),
+        end: data.end.toISOString(),
+      };
+
+      return updateOrganizationSlot(preparedData);
+    },
     onSuccess: () => {
       toast.success("Le créneau a été modifié avec succès");
       onFormSubmit?.();
@@ -178,16 +201,37 @@ const SlotsForm = ({
     try {
       const slot = formData.slots[0];
       if (slot.type === "unique") {
+        if (!slot.date) {
+          toast.error("Veuillez sélectionner une date");
+          return;
+        }
+
+        // Créer une copie de la date pour éviter de modifier l'objet original
+        const dateObj = new Date(slot.date);
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth();
+        const day = dateObj.getDate();
+
+        // Régler les heures et minutes avec une construction explicite
+        const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+        const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+
+        // Création explicite des objets Date en spécifiant chaque composante
+        const startDate = new Date(year, month, day, startHour, startMinute, 0, 0);
+        const endDate = new Date(year, month, day, endHour, endMinute, 0, 0);
+
+        console.log('Création créneau unique :', {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          heureDebut: startHour,
+          minuteDebut: startMinute,
+          serviceId: slot.serviceId
+        });
+
         const data = {
           serviceId: slot.serviceId,
-          start: new Date(slot.date!.setHours(
-            parseInt(slot.startTime.split(":")[0]),
-            parseInt(slot.startTime.split(":")[1])
-          )).toISOString(),
-          end: new Date(slot.date!.setHours(
-            parseInt(slot.endTime.split(":")[0]),
-            parseInt(slot.endTime.split(":")[1])
-          )).toISOString(),
+          start: startDate,
+          end: endDate,
           isAvailable: true,
           type: "unique" as const,
         };
@@ -198,7 +242,8 @@ const SlotsForm = ({
             id: selectedSlotId,
           });
         } else {
-          await createSlotMutation.mutateAsync([data]);
+          const result = await createSlotMutation.mutateAsync([data]);
+          console.log('Résultat création:', result);
         }
       } else {
         // Créneaux récurrents
@@ -221,6 +266,27 @@ const SlotsForm = ({
         // Créer un créneau pour chaque jour sélectionné dans la période
         const slotsToCreate = [];
         const currentDate = new Date(startDate);
+        const service = services?.data?.find(s => s.id === slot.serviceId);
+
+        if (!service) {
+          toast.error("Service introuvable");
+          return;
+        }
+
+        if (!service.organizationId) {
+          toast.error("ID d'organisation manquant dans le service");
+          return;
+        }
+
+        console.log('Service sélectionné:', {
+          id: service.id,
+          name: service.name,
+          organizationId: service.organizationId
+        });
+
+        // Générer un ID unique pour cette récurrence
+        const recurrenceId = crypto.randomUUID();
+        console.log('ID de récurrence généré:', recurrenceId);
 
         while (currentDate <= endDate) {
           const dayOfWeek = currentDate.getDay();
@@ -230,19 +296,36 @@ const SlotsForm = ({
             // Pour chaque jour sélectionné, créer des créneaux en fonction de la durée du service
             let currentMinute = startMinutes;
             while (currentMinute + slot.serviceDuration <= endMinutes) {
-              const slotStart = new Date(currentDate);
-              slotStart.setHours(Math.floor(currentMinute / 60), currentMinute % 60);
+              // On récupère les composantes de la date
+              const year = currentDate.getFullYear();
+              const month = currentDate.getMonth();
+              const day = currentDate.getDate();
 
-              const slotEnd = new Date(currentDate);
-              const endMinute = currentMinute + slot.serviceDuration;
-              slotEnd.setHours(Math.floor(endMinute / 60), endMinute % 60);
+              // On calcule les heures et minutes
+              const startHour = Math.floor(currentMinute / 60);
+              const startMinuteValue = currentMinute % 60;
+              const endHour = Math.floor((currentMinute + slot.serviceDuration) / 60);
+              const endMinuteValue = (currentMinute + slot.serviceDuration) % 60;
+
+              // Création explicite des objets Date
+              const slotStart = new Date(year, month, day, startHour, startMinuteValue, 0, 0);
+              const slotEnd = new Date(year, month, day, endHour, endMinuteValue, 0, 0);
+
+              console.log('Création créneau récurrent :', {
+                date: slotStart.toISOString(),
+                heure: startHour,
+                minute: startMinuteValue,
+                organizationId: service.organizationId
+              });
 
               slotsToCreate.push({
                 serviceId: slot.serviceId,
-                start: slotStart.toISOString(),
-                end: slotEnd.toISOString(),
+                start: slotStart,
+                end: slotEnd,
                 isAvailable: true,
                 type: "recurring" as const,
+                organizationId: service.organizationId,
+                recurrenceId,
               });
 
               currentMinute += slot.serviceDuration;
@@ -342,7 +425,7 @@ const SlotsForm = ({
                     {service.duration} min
                   </p>
                 </div>
-                <span className="text-muted-foreground">{service.price}</span>
+                <span className="text-muted-foreground">{service.price}€</span>
               </div>
             </button>
           ))}
@@ -421,9 +504,6 @@ const SlotsForm = ({
             )}
           </div>
           <div>
-            <Label className="text-sm font-medium mb-2 block">
-              Période de récurrence
-            </Label>
             <DateRangePicker
               label="Période de récurrence"
               date={date && endRecurrence ? { from: date, to: endRecurrence } : undefined}

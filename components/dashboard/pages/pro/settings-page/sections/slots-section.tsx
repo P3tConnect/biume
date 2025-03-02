@@ -1,10 +1,14 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Card, CardHeader, CardTitle, CardContent, Skeleton } from "@/components/ui";
 import SlotsSectionClient from "./components/slots/slots-section-client";
-import { getOrganizationSlots } from "@/src/actions";
+import { getOrganizationSlots } from "@/src/actions/organizationSlots.action";
+import { useQuery } from "@tanstack/react-query";
 
-const SlotsSection = async () => {
-  const slots = await getOrganizationSlots({});
+const SlotsSection = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["organization-slots"],
+    queryFn: () => getOrganizationSlots({}),
+  });
 
   return (
     <Card>
@@ -18,9 +22,14 @@ const SlotsSection = async () => {
       </CardHeader>
 
       <CardContent>
-        <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-          <SlotsSectionClient slots={slots.data ?? []} />
-        </Suspense>
+        {isLoading ? (
+          <div className="space-y-3">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        ) : (
+          <SlotsSectionClient slots={data?.data || []} />
+        )}
       </CardContent>
     </Card>
   );

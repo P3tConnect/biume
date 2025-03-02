@@ -1,4 +1,5 @@
-import React, { Suspense } from "react";
+"use client";
+
 import {
   Card,
   CardContent,
@@ -6,12 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getOrganizationImages } from "@/src/actions/organization.action";
 import ImagesSectionClient from "./components/images/images-section-client";
+import { useQuery } from "@tanstack/react-query";
 
-const ImagesSection = async () => {
-  const images = await getOrganizationImages({});
+const ImagesSection = () => {
+  const { data: images } = useQuery({
+    queryKey: ["organization-images"],
+    queryFn: () => getOrganizationImages({}),
+  });
 
   return (
     <Card>
@@ -23,9 +27,7 @@ const ImagesSection = async () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-          <ImagesSectionClient images={images.data || []} />
-        </Suspense>
+        <ImagesSectionClient images={images?.data || []} />
       </CardContent>
     </Card>
   );

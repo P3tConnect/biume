@@ -6,7 +6,7 @@ import { ActionResult } from "@/src/lib";
 import { OrganizationDocuments } from "@/src/db";
 
 interface DocumentsSectionClientProps {
-  documents: ActionResult<OrganizationDocuments[]>;
+  documents: OrganizationDocuments[];
 }
 
 const DocumentsSectionClient = ({ documents }: DocumentsSectionClientProps) => {

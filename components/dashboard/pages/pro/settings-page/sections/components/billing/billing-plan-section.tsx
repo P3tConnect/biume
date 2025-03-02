@@ -29,7 +29,7 @@ interface Plan {
 
 interface BillingPlanSectionProps {
   plans: Plan[];
-  billingInfo: ActionResult<BillingInfo>;
+  billingInfo: ActionResult<BillingInfo> | undefined;
 }
 
 export const BillingPlanSection = ({

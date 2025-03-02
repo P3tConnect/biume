@@ -38,14 +38,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getDocumentName } from "@/src/lib/utils";
-import { ActionResult } from "@/src/lib";
 import { OrganizationDocuments } from "@/src/db";
 import { useMutation } from "@tanstack/react-query";
 
 export const DocumentsForm = ({
   documents,
 }: {
-  documents: ActionResult<OrganizationDocuments[]>;
+  documents: OrganizationDocuments[];
 }) => {
   const { mutateAsync: updateDocuments } = useMutation({
     mutationFn: updateCompanyDocuments,
@@ -61,7 +60,7 @@ export const DocumentsForm = ({
     resolver: zodResolver(documentsSchema),
     values: {
       documents:
-        documents?.data?.map((document) => ({
+        documents?.map((document) => ({
           url: document.file,
           name:
             document.name ||

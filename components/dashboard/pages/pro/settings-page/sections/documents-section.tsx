@@ -1,11 +1,14 @@
-import React, { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getCompanyDocuments } from "@/src/actions/companyDocuments.action";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import DocumentsSectionClient from "./components/documents/documents-section-client";
+import { getCompanyDocuments } from "@/src/actions/companyDocuments.action";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const DocumentsSection = async () => {
-  const documents = await getCompanyDocuments({});
+const DocumentsSection = () => {
+  const { data: documents, isLoading } = useQuery({
+    queryKey: ["company-documents"],
+    queryFn: () => getCompanyDocuments({}),
+  });
 
   return (
     <Card>
@@ -16,9 +19,11 @@ const DocumentsSection = async () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-          <DocumentsSectionClient documents={documents} />
-        </Suspense>
+        {isLoading ? (
+          <Skeleton className="h-[500px] w-full" />
+        ) : (
+          <DocumentsSectionClient documents={documents?.data || []} />
+        )}
       </CardContent>
     </Card>
   );

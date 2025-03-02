@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardFooter,
-  Calendar,
   Separator,
   Credenza,
   CredenzaHeader,
@@ -14,17 +13,19 @@ import {
 } from "@/components/ui";
 import { ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
-import { Dispatch, SetStateAction, useState } from "react";
-import { format } from "date-fns";
+import { Dispatch, SetStateAction, useState, useMemo } from "react";
+import { format, isSameDay } from "date-fns";
 import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
+import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action";
 import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
 import { useQuery } from "@tanstack/react-query";
+import AppointmentPicker from "@/components/ui/appointment-picker";
 
 interface BookingCardProps {
   services: Service[];
@@ -58,6 +59,16 @@ export function BookingCard({
     queryFn: () => getPets({}),
   });
 
+  // Récupération des slots d'organisation basés sur le service sélectionné
+  const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
+    queryKey: ["organization-slots", selectedService],
+    queryFn: async () => {
+      if (!selectedService) return { data: [] };
+      return getOrganizationSlotsByService({ serviceId: selectedService });
+    },
+    enabled: !!selectedService,
+  });
+
   const {
     switch: switchStep,
     current,
@@ -82,6 +93,12 @@ export function BookingCard({
   const selectedPet = userPets?.data?.find(
     (p) => p.id === metadata?.pet?.petId,
   );
+
+  // Fonction de callback pour AppointmentPicker
+  const handleDateTimeSelect = (date: Date, time: string | null) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+  };
 
   const handleBooking = () => {
     // TODO: Implémenter la logique de réservation
@@ -212,47 +229,24 @@ export function BookingCard({
 
           <Separator />
 
-          {/* Date Selection */}
+          {/* Date et Time Selection avec AppointmentPicker */}
           {selectedPro && (
             <div>
               <label className="text-sm font-medium mb-2 block">
-                Sélectionnez une date
+                Sélectionnez date et heure
               </label>
-              <div className="p-3 rounded-xl border">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  locale={fr}
-                  className={cn(
-                    "w-full [&_table]:w-full [&_table_td]:p-0 [&_table_td_button]:w-full [&_table_td_button]:h-9",
-                    "[&_table]:border-separate [&_table]:border-spacing-1",
-                  )}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Time Selection */}
-          {selectedDate && (
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Choisissez un horaire
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"].map(
-                  (time) => (
-                    <Button
-                      key={time}
-                      variant={selectedTime === time ? "default" : "outline"}
-                      className="w-full"
-                      onClick={() => setSelectedTime(time)}
-                    >
-                      {time}
-                    </Button>
-                  ),
-                )}
-              </div>
+              {isLoadingSlots ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  Chargement des disponibilités...
+                </div>
+              ) : (
+                <div className="w-full">
+                  <AppointmentPicker
+                    timeSlots={organizationSlots?.data ?? []}
+                    onSelectDateTime={handleDateTimeSelect}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -267,8 +261,8 @@ export function BookingCard({
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-                locale: fr,
-              })} à ${selectedTime}`
+              locale: fr,
+            })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -285,9 +279,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                            Object.values(steps).findIndex(
-                              (s) => s.id === current.id,
-                            )
+                          Object.values(steps).findIndex(
+                            (s) => s.id === current.id,
+                          )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}

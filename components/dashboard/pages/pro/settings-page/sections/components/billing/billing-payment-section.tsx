@@ -13,7 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 export const BillingPaymentSection = ({
   billingInfo,
 }: {
-  billingInfo: ActionResult<BillingInfo>;
+  billingInfo: ActionResult<BillingInfo> | undefined;
 }) => {
   const params = useParams();
   const orgId = params.orgId as string;

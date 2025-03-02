@@ -1,4 +1,4 @@
-import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { Organization, organization } from "./organization";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -19,10 +19,11 @@ export const organizationSlots = pgTable("organization_slots", {
   serviceId: text("serviceId").references(() => service.id, {
     onDelete: "cascade",
   }),
-  start: date("start").notNull(),
-  end: date("end").notNull(),
+  start: timestamp("start").notNull(),
+  end: timestamp("end").notNull(),
   type: organizationSlotsType("type").notNull().default("unique"),
   isAvailable: boolean("isAvailable").notNull().default(true),
+  recurrenceId: text("recurrenceId"),
   createdAt: timestamp("createdAt").notNull().default(new Date()),
   updatedAt: timestamp("updatedAt"),
 });

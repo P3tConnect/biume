@@ -12,6 +12,7 @@ import { BillingPaymentSection } from "./components/billing/billing-payment-sect
 import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
 import { getInvoiceHistory } from "@/src/actions/stripe.action";
 import { getBillingInfo } from "@/src/actions/stripe.action";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 export const plans = [
   {
@@ -60,11 +61,19 @@ export const plans = [
   },
 ];
 
-export const BillingSection = async () => {
-  const [billingInfo, invoices] = await Promise.all([
-    getBillingInfo({}),
-    getInvoiceHistory({}),
-  ])
+export const BillingSection = () => {
+  const [billingInfo, invoices] = useQueries({
+    queries: [
+      {
+        queryKey: ["billing-info"],
+        queryFn: () => getBillingInfo({}),
+      },
+      {
+        queryKey: ["invoices"],
+        queryFn: () => getInvoiceHistory({}),
+      },
+    ],
+  });
 
   return (
     <Card className="overflow-hidden">
@@ -78,11 +87,11 @@ export const BillingSection = async () => {
       </CardHeader>
       <CardContent className="p-8">
         <div className="space-y-8">
-          <BillingPlanSection plans={plans} billingInfo={billingInfo} />
+          <BillingPlanSection plans={plans} billingInfo={billingInfo?.data} />
           <div className="h-px bg-border" />
-          <BillingPaymentSection billingInfo={billingInfo} />
+          <BillingPaymentSection billingInfo={billingInfo?.data} />
           <div className="h-px bg-border" />
-          <BillingInvoicesSection invoices={invoices} />
+          <BillingInvoicesSection invoices={invoices?.data} />
         </div>
       </CardContent>
     </Card>

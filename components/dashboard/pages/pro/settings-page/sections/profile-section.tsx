@@ -1,3 +1,5 @@
+"use client";
+
 import { ProfileCoverSection } from "./components/profile/profile-cover-section";
 import { ProfileMainInfoSection } from "./components/profile/profile-main-info-section";
 import { ProfileLegalInfoSection } from "./components/profile/profile-legal-info-section";
@@ -8,6 +10,7 @@ import { Suspense } from "react";
 import { Organization } from "@/src/db";
 import { ActionResult } from "@/src/lib";
 import { getCurrentOrganization } from "@/src/actions/organization.action";
+import { useQuery } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -56,22 +59,25 @@ export const organizationImagesFormSchema = z.object({
   logo: z.string().optional(),
 });
 
-export const ProfileSection = async () => {
-  const org = await getCurrentOrganization({});
+export const ProfileSection = () => {
+  const { data: org } = useQuery({
+    queryKey: ["organization"],
+    queryFn: () => getCurrentOrganization({}),
+  });
 
   return (
     <div className="relative">
-      <ProfileCoverSection org={org} />
+      <ProfileCoverSection org={org?.data} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
         <div className="md:col-span-2 space-y-6">
-          <ProfileMainInfoSection org={org} />
-          <ProfileLegalInfoSection org={org} />
+          <ProfileMainInfoSection org={org?.data} />
+          <ProfileLegalInfoSection org={org?.data} />
         </div>
 
         <div className="space-y-6">
-          <ProfileScheduleSection org={org} />
-          <ProfileServicesSection org={org} />
+          <ProfileScheduleSection org={org?.data} />
+          <ProfileServicesSection org={org?.data} />
         </div>
       </div>
     </div>

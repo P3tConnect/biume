@@ -17,16 +17,18 @@ import {
 import SlotsForm from "./slots-form";
 import SlotsGrid from "./slots-grid";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { deleteOrganizationSlot } from "@/src/actions";
+import { deleteOrganizationSlot, deleteRecurrentOrganizationSlots } from "@/src/actions/organizationSlots.action";
 import { toast } from "sonner";
 import { OrganizationSlots } from "@/src/db/organizationSlots";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedSlotId, setSelectedSlotId] = React.useState<string | null>(null);
+  const [isRecurrenceDelete, setIsRecurrenceDelete] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
+  const queryClient = useQueryClient();
 
   const { mutateAsync: deleteSlot } = useMutation({
     mutationFn: deleteOrganizationSlot,
@@ -34,6 +36,18 @@ const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
       toast.success("Le créneau a été supprimé avec succès");
       setIsDeleteDialogOpen(false);
       setSelectedSlotId(null);
+      queryClient.invalidateQueries({ queryKey: ["organization-slots"] });
+    },
+  });
+
+  const { mutateAsync: deleteRecurrenceSlots } = useMutation({
+    mutationFn: deleteRecurrentOrganizationSlots,
+    onSuccess: () => {
+      toast.success("Les créneaux récurrents ont été supprimés avec succès");
+      setIsDeleteDialogOpen(false);
+      setSelectedSlotId(null);
+      setIsRecurrenceDelete(false);
+      queryClient.invalidateQueries({ queryKey: ["organization-slots"] });
     },
   });
 
@@ -44,12 +58,20 @@ const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
   };
 
   const handleDeleteClick = (slotId: string) => {
+    const isRecurrence = slots.some(s => s.recurrenceId === slotId);
+    setIsRecurrenceDelete(isRecurrence);
     setSelectedSlotId(slotId);
     setIsDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = () => {
-    if (selectedSlotId) {
+    if (!selectedSlotId) return;
+
+    if (isRecurrenceDelete) {
+      deleteRecurrenceSlots({
+        recurrenceId: selectedSlotId,
+      });
+    } else {
       deleteSlot({
         id: selectedSlotId,
       });
@@ -78,6 +100,7 @@ const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
     setIsOpen(false);
     setIsEditing(false);
     setSelectedSlotId(null);
+    queryClient.invalidateQueries({ queryKey: ["organization-slots"] });
   };
 
   return (
@@ -124,8 +147,10 @@ const SlotsSectionClient = ({ slots }: { slots: OrganizationSlots[] }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action ne peut pas être annulée. Le créneau sera
-              définitivement supprimé.
+              {isRecurrenceDelete
+                ? "Cette action supprimera tous les créneaux de cette récurrence. Cette opération est irréversible."
+                : "Cette action ne peut pas être annulée. Le créneau sera définitivement supprimé."
+              }
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
