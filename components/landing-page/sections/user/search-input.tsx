@@ -50,9 +50,6 @@ const SearchInput = () => {
           <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Button>
       </div>
-      <p className="text-xs text-muted-foreground mt-2 ml-1">
-        Plus de 500 vétérinaires disponibles dans votre région
-      </p>
     </div>
   );
 };

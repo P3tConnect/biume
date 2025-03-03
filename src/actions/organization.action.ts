@@ -52,7 +52,16 @@ export const getAllOrganizations = createServerAction(
             start: true,
             end: true,
             isAvailable: true,
-          }
+          },
+        },
+        address: {
+          columns: {
+            postalAddress: true,
+            lat: true,
+            lng: true,
+            cntryCode: true,
+            zip: true,
+          },
         },
       },
       columns: {

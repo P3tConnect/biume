@@ -138,9 +138,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-        companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-        companyResult.data.ratings.length
-      ).toFixed(1)
+          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+          companyResult.data.ratings.length
+        ).toFixed(1)
       : "4.8";
 
   return (
@@ -338,8 +338,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
 
                   <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <p className="text-foreground/90 leading-relaxed">
-                      {companyResult.data?.description ||
-                        "Notre clinique offre des soins vétérinaires de qualité, avec une équipe de professionnels dévoués au bien-être de vos animaux. Nous proposons des consultations, des vaccinations, et des traitements adaptés à chaque animal."}
+                      {companyResult.data?.description || ""}
                     </p>
                     <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">

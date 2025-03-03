@@ -31,6 +31,15 @@ import { waitlistInsertSchema } from "@/src/db";
 import { addToWaitList } from "@/src/actions/waitlist.action";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "../ui";
 
 interface WaitlistModalProps {
   children?: React.ReactNode;
@@ -50,11 +59,10 @@ export function WaitlistModal({
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Determine if we're in controlled or uncontrolled mode
-  const isControlled = controlledOpen !== undefined && setControlledOpen !== undefined;
+  const isControlled =
+    controlledOpen !== undefined && setControlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
-  const setOpen = isControlled
-    ? setControlledOpen
-    : setUncontrolledOpen;
+  const setOpen = isControlled ? setControlledOpen : setUncontrolledOpen;
 
   const form = useForm<z.infer<typeof waitlistInsertSchema>>({
     resolver: zodResolver(waitlistInsertSchema),
@@ -68,18 +76,23 @@ export function WaitlistModal({
     },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, control } = form;
 
   const { mutateAsync } = useMutation({
     mutationFn: addToWaitList,
     onSuccess: () => {
       setIsSuccess(true);
+      setIsSubmitting(false);
       toast.success("Inscription réussie ! Nous vous contacterons bientôt.");
+    },
+    onMutate: () => {
+      setIsSubmitting(true);
     },
     onError: () => {
       toast.error(
         "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       );
+      setIsSubmitting(false);
     },
   });
 
@@ -87,8 +100,6 @@ export function WaitlistModal({
     setIsSubmitting(true);
     try {
       await mutateAsync(values);
-      setIsSuccess(true);
-      toast.success("Inscription réussie ! Nous vous contacterons bientôt.");
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error);
       toast.error(
@@ -113,32 +124,32 @@ export function WaitlistModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden">
+    <Credenza open={open} onOpenChange={setOpen}>
+      {children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}
+      <CredenzaContent className="sm:max-w-[500px] p-0 overflow-hidden">
         {!isSuccess ? (
           <div className="p-6">
-            <DialogHeader className="mb-4">
+            <CredenzaHeader className="mb-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit">
                 <Sparkles className="w-4 h-4" />
                 <span>Phase bêta</span>
               </div>
-              <DialogTitle className="text-2xl">
+              <CredenzaTitle className="text-2xl">
                 Rejoignez notre liste d&apos;attente
-              </DialogTitle>
-              <DialogDescription>
+              </CredenzaTitle>
+              <CredenzaDescription>
                 Soyez parmi les premiers à découvrir Biume et transformez
                 {defaultIsPro
                   ? " votre activité professionnelle."
                   : " l'expérience de soin de votre animal."}
-              </DialogDescription>
-            </DialogHeader>
+              </CredenzaDescription>
+            </CredenzaHeader>
 
             <Form {...form}>
               <form onSubmit={onSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
@@ -151,7 +162,7 @@ export function WaitlistModal({
                     )}
                   />
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
@@ -166,7 +177,7 @@ export function WaitlistModal({
                 </div>
 
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
@@ -174,7 +185,11 @@ export function WaitlistModal({
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder={defaultIsPro ? "marie.dupont@clinique-veterinaire.fr" : "marie.dupont@exemple.fr"}
+                          placeholder={
+                            defaultIsPro
+                              ? "marie.dupont@clinique-veterinaire.fr"
+                              : "marie.dupont@exemple.fr"
+                          }
                           {...field}
                         />
                       </FormControl>
@@ -185,7 +200,7 @@ export function WaitlistModal({
 
                 {defaultIsPro && (
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="organizationName"
                     render={({ field }) => (
                       <FormItem>
@@ -221,27 +236,7 @@ export function WaitlistModal({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="isPro"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="cursor-pointer">
-                          Je suis un professionnel
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <DialogFooter className="pt-4">
+                <CredenzaFooter className="pt-4">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
@@ -259,7 +254,7 @@ export function WaitlistModal({
                       </>
                     )}
                   </Button>
-                </DialogFooter>
+                </CredenzaFooter>
               </form>
             </Form>
           </div>
@@ -295,7 +290,7 @@ export function WaitlistModal({
             </Button>
           </motion.div>
         )}
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }

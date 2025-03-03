@@ -104,7 +104,7 @@ export function TestimonialsSection() {
             <span>Témoignages de professionnels</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ce que nos vétérinaires partenaires disent
+            Ce que nos professionnels disent
           </h2>
           <p className="text-lg text-muted-foreground">
             Découvrez comment Biume aide les professionnels de la santé animale

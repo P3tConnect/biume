@@ -49,14 +49,13 @@ const NewShortcut = () => {
             <Stethoscope className="h-4 w-4" />
             <span>Patient</span>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <FileText className="h-4 w-4" />
-            <span>Rapport</span>
+            <span>Document</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <MessageSquarePlus className="h-4 w-4" />
-            <span>Observation</span>
+            <span>Message</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <Bell className="h-4 w-4" />

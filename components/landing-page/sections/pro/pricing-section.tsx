@@ -28,7 +28,6 @@ import { Label } from "@/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -55,7 +54,7 @@ const pricingPlans: PricingPlan[] = [
   {
     id: "basic",
     name: "Essentiel",
-    description: "Pour les petites cliniques et les vétérinaires indépendants",
+    description: "Pour les petites entreprises et les soignants indépendants",
     price: {
       monthly: 19.99,
       annually: 14.99,
@@ -77,13 +76,13 @@ const pricingPlans: PricingPlan[] = [
       { text: "Communication centralisée", included: false },
       { text: "Rapports de performance", included: false },
     ],
-    cta: "Essai gratuit 14 jours",
+    cta: "Commencer l'essai gratuit",
     icon: Clock,
   },
   {
     id: "professional",
     name: "Professionnel",
-    description: "Pour les cliniques en croissance avec plusieurs vétérinaires",
+    description: "Pour les entreprises en croissance avec plusieurs soignants",
     price: {
       monthly: 29.99,
       annually: 24.99,
@@ -97,15 +96,23 @@ const pricingPlans: PricingPlan[] = [
       { text: "Rappels personnalisables", included: true },
       { text: "Réservation client", included: true },
       { text: "Paiement en ligne", included: true },
-      { text: "Biume AI", included: true, explanation: "Inclus un contexte limité" },
+      {
+        text: "Biume AI",
+        included: true,
+        explanation: "Inclus un contexte limité",
+      },
       { text: "Échelons de remboursement personnalisés", included: true },
       { text: "Notifications et rappels", included: true },
       { text: "Délais de rétractation", included: true },
-      { text: "Gestion d'équipe", included: true, explanation: "Jusqu'à 5 membres" },
+      {
+        text: "Gestion d'équipe",
+        included: true,
+        explanation: "Jusqu'à 5 membres",
+      },
       { text: "Communication centralisée", included: false },
       { text: "Rapports de performance", included: false },
     ],
-    cta: "Commencer maintenant",
+    cta: "Essai gratuit 1 mois",
     isPopular: true,
     badge: "Le plus choisi",
     icon: Sparkles,
@@ -113,7 +120,7 @@ const pricingPlans: PricingPlan[] = [
   {
     id: "enterprise",
     name: "Entreprise",
-    description: "Pour les grandes structures vétérinaires multi-sites",
+    description: "Pour les grandes structures",
     price: {
       monthly: 39.99,
       annually: 34.99,
@@ -127,21 +134,38 @@ const pricingPlans: PricingPlan[] = [
       { text: "Rappels personnalisables", included: true },
       { text: "Réservation client", included: true },
       { text: "Paiement en ligne", included: true },
-      { text: "Biume AI", included: true, explanation: "Inclus un contexte plus large" },
+      {
+        text: "Biume AI",
+        included: true,
+        explanation: "Inclus un contexte plus large",
+      },
       { text: "Échelons de remboursement personnalisés", included: true },
       { text: "Notifications et rappels", included: true },
       { text: "Délais de rétractation", included: true },
-      { text: "Gestion d'équipe", included: true, explanation: "Jusqu'à 10 membres" },
+      {
+        text: "Gestion d'équipe",
+        included: true,
+        explanation: "Jusqu'à 10 membres",
+      },
       { text: "Communication centralisée", included: true },
       { text: "Rapports de performance", included: true },
     ],
-    cta: "Contacter les ventes",
+    cta: "Démarrer l'essai gratuit",
     icon: Shield,
   },
 ];
 
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true);
+  const [showPromotion, setShowPromotion] = useState(true);
+  const [remainingSpots] = useState(500);
+
+  const calculateDiscountedPrice = (price: number) => {
+    if (showPromotion) {
+      return (price * 0.8).toFixed(2);
+    }
+    return price.toFixed(2);
+  };
 
   return (
     <section id="pricing" className="py-24 relative">
@@ -165,9 +189,43 @@ export function PricingSection() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Des forfaits adaptés à tous les professionnels
           </h2>
+
+          {/* Bannière de promotion */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-amber-500/20 border border-amber-500/30 rounded-lg p-4 mb-8 relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-24 h-24 -mt-8 -mr-8 bg-amber-500/20 rounded-full blur-xl"></div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Badge className="bg-amber-500 text-white hover:bg-amber-600">
+                Offre spéciale
+              </Badge>
+              <p className="text-base font-medium">
+                <span className="text-amber-700 dark:text-amber-400 font-bold">
+                  -20% supplémentaires
+                </span>{" "}
+                pour les 500 premiers inscrits !
+              </p>
+            </div>
+            <div className="mt-2 text-sm text-center text-amber-700 dark:text-amber-400 font-medium">
+              <span className="inline-flex items-center">
+                <Clock className="w-3.5 h-3.5 mr-1" />
+                Il ne reste que
+                <br />
+                <span className="font-bold mx-1">{remainingSpots}</span> places
+                !
+              </span>
+            </div>
+          </motion.div>
+
           <p className="text-lg text-muted-foreground mb-10">
-            Choisissez l&apos;offre qui correspond le mieux à vos besoins. Tous
-            nos forfaits incluent une garantie de remboursement de 30 jours.
+            Choisissez l&apos;offre qui correspond le mieux à vos besoins.{" "}
+            <span className="font-medium text-foreground">
+              Tous nos forfaits incluent un mois d&apos;essai gratuit.
+            </span>
           </p>
 
           {/* Sélecteur mensuel/annuel */}
@@ -263,8 +321,8 @@ export function PricingSection() {
                     <div className="flex items-baseline justify-center gap-1">
                       <span className="text-3xl font-bold">
                         {isAnnual
-                          ? plan.price.annually.toFixed(2)
-                          : plan.price.monthly.toFixed(2)}
+                          ? calculateDiscountedPrice(plan.price.annually)
+                          : calculateDiscountedPrice(plan.price.monthly)}
                         €
                       </span>
                       <span className="text-muted-foreground text-sm">
@@ -272,15 +330,45 @@ export function PricingSection() {
                       </span>
                     </div>
 
+                    {showPromotion && (
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        <span className="text-xs line-through text-muted-foreground">
+                          {isAnnual
+                            ? plan.price.annually.toFixed(2)
+                            : plan.price.monthly.toFixed(2)}
+                          €
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-800"
+                        >
+                          -20%
+                        </Badge>
+                      </div>
+                    )}
+
                     {isAnnual && (
                       <p className="text-xs text-muted-foreground mt-1">
                         Facturé annuellement (
-                        {(plan.price.annually * 12).toFixed(2)}€)
+                        {(
+                          parseFloat(
+                            calculateDiscountedPrice(plan.price.annually),
+                          ) * 12
+                        ).toFixed(2)}
+                        €)
                       </p>
                     )}
                   </div>
 
                   <ul className="space-y-3">
+                    {/* Badge d'essai gratuit */}
+                    <li className="flex items-center justify-center bg-primary/5 rounded-md p-2 mb-2">
+                      <span className="text-sm font-medium text-primary flex items-center">
+                        <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                        Premier mois gratuit
+                      </span>
+                    </li>
+
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <div
