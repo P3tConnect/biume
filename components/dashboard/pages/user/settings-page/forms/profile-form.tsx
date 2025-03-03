@@ -17,7 +17,7 @@ import { ImageIcon, PenBox, Trash2, User } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/src/lib/uploadthing';
-import { cn } from '@/src/lib';
+import { ActionResult, cn } from '@/src/lib';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,11 +33,7 @@ const ACCEPTED_IMAGE_TYPES = {
 interface ProfileFormProps {
   form: UseFormReturn<z.infer<typeof clientSettingsSchema>>;
   userInformations: any;
-  mutateAsync: UseMutateAsyncFunction<
-    { status: boolean },
-    Error,
-    z.infer<typeof clientSettingsSchema>
-  >;
+  mutateAsync: UseMutateAsyncFunction<any, Error, z.infer<typeof clientSettingsSchema>>;
   onSubmit: () => Promise<void>;
   refetch: () => Promise<any>;
 }

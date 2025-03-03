@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import DashboardLayoutComponents from "@/components/dashboard/layout/dashboard-layout";
+import DashboardLayoutComponents from "@/components/dashboard/layout/pro/dashboard-layout";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

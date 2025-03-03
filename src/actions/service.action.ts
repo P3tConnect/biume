@@ -32,6 +32,14 @@ export const getServicesFromOrganization = createServerAction(
   async (input, ctx) => {
     const services = await db.query.service.findMany({
       where: eq(service.organizationId, ctx.organization?.id as string),
+      columns: {
+        id: true,
+        name: true,
+        price: true,
+        image: true,
+        description: true,
+        duration: true,
+      },
     });
 
     if (!services) {

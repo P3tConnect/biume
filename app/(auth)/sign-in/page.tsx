@@ -13,6 +13,34 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { ErrorContext } from '@better-fetch/fetch';
 
+// Définition du type de réponse pour l'authentification
+type AuthResponseContext = {
+  data: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      // autres propriétés de l'utilisateur
+      [key: string]: any;
+    };
+    // autres données potentielles dans la réponse
+    [key: string]: any;
+  };
+  // autres propriétés du contexte
+  [key: string]: any;
+};
+
+// Définition du type d'erreur pour l'authentification
+type AuthErrorContext = {
+  error: {
+    message: string;
+    // autres propriétés potentielles de l'erreur
+    [key: string]: any;
+  };
+  // autres propriétés du contexte d'erreur
+  [key: string]: any;
+};
+
 const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -36,7 +64,7 @@ const LoginPage = () => {
           toast.success('Connexion réussie ! Vous allez être redirigé ...');
           router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
-        onError: (error: ErrorContext) => {
+        onError: (error) => {
           setLoading(false);
           console.log(error, 'error');
           toast.error(`Error : ${error.error.message}`);

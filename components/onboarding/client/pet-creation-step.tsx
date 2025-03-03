@@ -22,7 +22,6 @@ import { useForm } from 'react-hook-form';
 import { CreatePetSchema } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useActionMutation } from '@/src/hooks/action-hooks';
 import { useDropzone } from 'react-dropzone';
 import { useUploadThing } from '@/src/lib/uploadthing';
 import { useState } from 'react';
@@ -37,6 +36,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { z } from 'zod';
+import { useMutation } from '@tanstack/react-query';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = {
@@ -63,7 +63,8 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
     },
   });
 
-  const { mutate, isPending } = useActionMutation(createPet, {
+  const { mutate, isPending } = useMutation({
+    mutationFn: createPet,
     onSuccess: () => {
       toast.success('Animal ajouté avec succès');
       form.reset();

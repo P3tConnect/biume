@@ -27,39 +27,39 @@ import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
 import { use } from "react";
 import { ActionResult } from "@/src/lib";
-import { useQueryClient } from "@tanstack/react-query";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 
 interface ProfileLegalInfoSectionProps {
-  org: ActionResult<Organization | null>;
+  org: Organization | null | undefined;
 }
 
 export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) => {
   const form = useForm<z.infer<typeof organizationFormSchema>>({
     resolver: zodResolver(organizationFormSchema),
     values: {
-      name: org.data?.name || "",
-      email: org.data?.email || "",
+      name: org?.name || "",
+      email: org?.email || "",
       website: "",
-      address: org.data?.addressId || "",
-      description: org.data?.description || "",
-      openAt: org.data?.openAt || "09:00",
-      closeAt: org?.data?.closeAt || "18:00",
-      atHome: org?.data?.atHome || false,
-      nac: org?.data?.nac || "",
-      siren: org?.data?.siren || "",
-      siret: org?.data?.siret || "",
+      address: org?.addressId || "",
+      description: org?.description || "",
+      openAt: org?.openAt || "09:00",
+      closeAt: org?.closeAt || "18:00",
+      atHome: org?.atHome || false,
+      nac: org?.nac || "",
+      siren: org?.siren || "",
+      siret: org?.siret || "",
     },
   });
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(updateOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganization,
     onSuccess: () => {
       toast.success("Modifications enregistrées avec succès !");
     },
-    onError: () => {
-      toast.error("Erreur lors de l'enregistrement des modifications");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

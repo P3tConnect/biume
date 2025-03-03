@@ -12,6 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import React from "react";
 
 interface OrganizationsGridProps {
   organizations: Organization[];
@@ -93,9 +94,8 @@ export function OrganizationsGrid({ organizations }: OrganizationsGridProps) {
                   <p className="text-sm text-muted-foreground">Plus de disponibilités pour aujourd&apos;hui</p>
                 ) : (
                   organization.slots.map((slot) => (
-                    <>
+                    <React.Fragment key={slot.id}>
                       <Button
-                        key={slot.id}
                         variant="outline"
                         size="sm"
                         className="whitespace-nowrap custom-button"
@@ -103,7 +103,7 @@ export function OrganizationsGrid({ organizations }: OrganizationsGridProps) {
                         <Clock className="h-3 w-3 mr-1" />
                         {moment(slot.start).format("HH:mm")}
                       </Button>
-                    </>
+                    </React.Fragment>
                   ))
                 )}
               </div>

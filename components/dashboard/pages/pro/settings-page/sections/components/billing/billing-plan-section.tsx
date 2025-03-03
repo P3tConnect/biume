@@ -3,11 +3,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Package2, Check } from "lucide-react";
 import { ActionResult, cn } from "@/src/lib";
 import { useParams, useRouter } from "next/navigation";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 import { updateOrganizationPlan } from "@/src/actions/stripe.action";
 import { toast } from "sonner";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -30,7 +29,7 @@ interface Plan {
 
 interface BillingPlanSectionProps {
   plans: Plan[];
-  billingInfo: ActionResult<BillingInfo>;
+  billingInfo: ActionResult<BillingInfo> | undefined;
 }
 
 export const BillingPlanSection = ({
@@ -43,9 +42,12 @@ export const BillingPlanSection = ({
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null);
 
-  const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganizationPlan,
     onSuccess: (data) => {
-      router.push(data);
+      if (data.data) {
+        router.push(data.data);
+      }
     },
     onError: () => {
       toast.error("Une erreur est survenue");

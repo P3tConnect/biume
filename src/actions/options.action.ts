@@ -31,10 +31,15 @@ export const getOptions = createServerAction(
 export const getOptionsFromOrganization = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const options = await db
-      .select()
-      .from(optionsTable)
-      .where(eq(optionsTable.organizationId, ctx.organization?.id || ""));
+    const options = await db.query.options.findMany({
+      where: eq(optionsTable.organizationId, ctx.organization?.id || ""),
+      columns: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+      },
+    });
 
     if (!options) {
       throw new ActionError("Options not found");
@@ -49,7 +54,10 @@ export const createOption = createServerAction(
   async (input, ctx) => {
     const data = await db
       .insert(optionsTable)
-      .values(input)
+      .values({
+        ...input,
+        organizationId: ctx.organization?.id || "",
+      })
       .returning()
       .execute();
     if (!data) {

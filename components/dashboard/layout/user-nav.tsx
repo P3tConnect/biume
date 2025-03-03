@@ -2,15 +2,11 @@
 
 import Link from "next/link";
 import { LayoutGrid, LogOut, Settings, User } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -18,78 +14,123 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useLocale } from "next-intl";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  Badge,
+} from "@/components/ui";
+import { signOut, useSession } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export function UserNav() {
-  const locale = useLocale();
+  const { data: session } = useSession();
+  const router = useRouter();
+  const userStatus = "active"; // À remplacer par une vraie logique de statut si nécessaire
+
+  // Liste des éléments du menu
+  const menuItems = [
+    {
+      href: `/dashboard/user/${session?.user?.id}`,
+      icon: <LayoutGrid className="w-4 h-4 text-muted-foreground" />,
+      label: "Tableau de bord"
+    },
+    {
+      href: `/dashboard/user/${session?.user?.id}`,
+      icon: <User className="w-4 h-4 text-muted-foreground" />,
+      label: "Mon profil"
+    },
+    {
+      href: `/dashboard/user/${session?.user?.id}/settings`,
+      icon: <Settings className="w-4 h-4 text-muted-foreground" />,
+      label: "Paramètres"
+    }
+  ];
 
   return (
-    <>
+    <div className="relative">
       <DropdownMenu>
-        <Tooltip delayDuration={100}>
+        <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
-                className="relative h-8 w-8 rounded-full"
+                variant="ghost"
+                className="relative h-9 w-9 rounded-full p-0 border border-transparent hover:border-border transition-colors duration-150"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="#" alt="Avatar" />
-                  <AvatarFallback className="bg-transparent">JD</AvatarFallback>
+                  <AvatarImage
+                    src={session?.user?.image ?? undefined}
+                    alt={session?.user?.name || "Avatar utilisateur"}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-primary/5 text-primary">
+                    {session?.user?.name?.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
+                {userStatus === "active" && (
+                  <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500 ring-1 ring-background" />
+                )}
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Profil</TooltipContent>
+          <TooltipContent side="bottom" className="text-xs font-normal">
+            Profil
+          </TooltipContent>
         </Tooltip>
 
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">John Doe</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                johndoe@example.com
-              </p>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link href={`/${locale}/dashboard`} className="flex items-center">
-                <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
-                Tableau de bord
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link
-                href={`/${locale}/dashboard/account`}
-                className="flex items-center"
-              >
-                <User className="w-4 h-4 mr-3 text-muted-foreground" />
-                Profil
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:cursor-pointer" asChild>
-              <Link
-                href={`/${locale}/dashboard/profile/settings`}
-                className="flex items-center"
-              >
-                <Settings className="w-4 h-4 mr-3 text-muted-foreground" />
-                Paramètres
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="hover:cursor-pointer"
+        <DropdownMenuContent className="w-56" align="end" sideOffset={6}>
+          <motion.div
+            initial={{ opacity: 0.9, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-            Sign out
-          </DropdownMenuItem>
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium">{session?.user?.name}</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {session?.user?.email}
+                </p>
+                {userStatus === "active" && (
+                  <Badge
+                    variant="outline"
+                    className="mt-1 text-xs w-fit px-2 py-0 border-green-500/30 text-green-600 bg-green-50 dark:bg-green-950/20"
+                  >
+                    Connecté
+                  </Badge>
+                )}
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              {menuItems.map((item, index) => (
+                <DropdownMenuItem key={index} asChild>
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={async () => await signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/login");
+                  }
+                }
+              })}
+              className="text-rose-400 hover:text-rose-500 focus:text-rose-500 cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              <span>Se déconnecter</span>
+            </DropdownMenuItem>
+          </motion.div>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="h-2 w-2 absolute top-2 right-2 rounded-full"></div>
-    </>
+    </div>
   );
 }

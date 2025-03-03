@@ -3,28 +3,27 @@
 import { Option } from "@/src/db";
 import { Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { toast } from "sonner";
-import { use, useState } from "react";
+import { useState } from "react";
 import { OptionForm } from "./option-form";
-import { ActionResult } from "@/src/lib";
 import { OptionItem } from "./option-item";
+
+interface OptionsGridProps {
+  options: Option[];
+  onAddFirstOption: () => void;
+}
 
 export const OptionsGrid = ({
   options,
-}: {
-  options: ActionResult<Option[]>;
-}) => {
+  onAddFirstOption,
+}: OptionsGridProps) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const data = options.data;
+  const data = options;
 
   if (!data || data.length === 0) {
     return (
       <button
         type="button"
-        onClick={() => {
-          // TODO: Implémenter l'ajout d'une nouvelle option
-          toast.info("Fonctionnalité à venir");
-        }}
+        onClick={onAddFirstOption}
         className={cn(
           "w-full flex flex-col items-center justify-center gap-4 p-8",
           "rounded-2xl border-2 border-dashed",

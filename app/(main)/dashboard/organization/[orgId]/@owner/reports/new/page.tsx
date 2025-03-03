@@ -1,17 +1,12 @@
-import { NewReportForm } from '@/components/reports-editor/forms/new-report-form'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ReportGenerator } from '@/components/reports-editor';
+import React from 'react';
 
-export default function NewReportPage() {
+const NewReportPage = () => {
   return (
-    <div className="py-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Nouveau Rapport de Prestation</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <NewReportForm />
-        </CardContent>
-      </Card>
+    <div className="py-4">
+      <ReportGenerator />
     </div>
-  )
-}
+  );
+};
+
+export default NewReportPage; 

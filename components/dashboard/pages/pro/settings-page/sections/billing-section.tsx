@@ -6,12 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ActionResult, safeConfig } from "@/src/lib";
+import { safeConfig } from "@/src/lib";
 import { BillingPlanSection } from "./components/billing/billing-plan-section";
 import { BillingPaymentSection } from "./components/billing/billing-payment-section";
 import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
-import { BillingInfo } from "@/types/billing-info";
-import { StripeInvoice } from "@/types/stripe-invoice";
+import { getInvoiceHistory } from "@/src/actions/stripe.action";
+import { getBillingInfo } from "@/src/actions/stripe.action";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 export const plans = [
   {
@@ -60,13 +61,20 @@ export const plans = [
   },
 ];
 
-export const BillingSection = ({
-  billingInfo,
-  invoices,
-}: {
-  billingInfo: ActionResult<BillingInfo>;
-  invoices: ActionResult<StripeInvoice[]>;
-}) => {
+export const BillingSection = () => {
+  const [billingInfo, invoices] = useQueries({
+    queries: [
+      {
+        queryKey: ["billing-info"],
+        queryFn: () => getBillingInfo({}),
+      },
+      {
+        queryKey: ["invoices"],
+        queryFn: () => getInvoiceHistory({}),
+      },
+    ],
+  });
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="border-b bg-muted/10 pb-8 pt-6">
@@ -79,11 +87,11 @@ export const BillingSection = ({
       </CardHeader>
       <CardContent className="p-8">
         <div className="space-y-8">
-          <BillingPlanSection plans={plans} billingInfo={billingInfo} />
+          <BillingPlanSection plans={plans} billingInfo={billingInfo?.data} />
           <div className="h-px bg-border" />
-          <BillingPaymentSection billingInfo={billingInfo} />
+          <BillingPaymentSection billingInfo={billingInfo?.data} />
           <div className="h-px bg-border" />
-          <BillingInvoicesSection invoices={invoices} />
+          <BillingInvoicesSection invoices={invoices?.data} />
         </div>
       </CardContent>
     </Card>

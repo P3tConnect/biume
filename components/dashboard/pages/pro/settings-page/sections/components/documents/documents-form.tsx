@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DropzoneInput } from "@/components/ui/dropzone-input";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import {
   deleteCompanyDocument,
   updateCompanyDocuments,
@@ -39,31 +38,29 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getDocumentName } from "@/src/lib/utils";
-import { ActionResult } from "@/src/lib";
 import { OrganizationDocuments } from "@/src/db";
+import { useMutation } from "@tanstack/react-query";
 
 export const DocumentsForm = ({
   documents,
 }: {
-  documents: ActionResult<OrganizationDocuments[]>;
+  documents: OrganizationDocuments[];
 }) => {
-  const { mutateAsync: updateDocuments } = useActionMutation(
-    updateCompanyDocuments,
-    {
-      onSuccess: () => {
-        toast.success("Documents mis à jour avec succès!");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
+  const { mutateAsync: updateDocuments } = useMutation({
+    mutationFn: updateCompanyDocuments,
+    onSuccess: () => {
+      toast.success("Documents mis à jour avec succès!");
     },
-  );
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const form = useForm<DocumentsFormData>({
     resolver: zodResolver(documentsSchema),
     values: {
       documents:
-        documents?.data?.map((document) => ({
+        documents?.map((document) => ({
           url: document.file,
           name:
             document.name ||
@@ -75,17 +72,15 @@ export const DocumentsForm = ({
   const { control, setValue, handleSubmit, watch } = form;
   const currentDocuments = watch("documents") || [];
 
-  const { mutateAsync: deleteDocument } = useActionMutation(
-    deleteCompanyDocument,
-    {
-      onSuccess: () => {
-        toast.success("Document supprimé avec succès!");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
+  const { mutateAsync: deleteDocument } = useMutation({
+    mutationFn: deleteCompanyDocument,
+    onSuccess: () => {
+      toast.success("Document supprimé avec succès!");
     },
-  );
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
     await updateDocuments({

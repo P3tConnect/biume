@@ -25,12 +25,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib';
 import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
-import { createPet } from '@/src/actions';
-import { useActionMutation } from '@/src/hooks/action-hooks';
-import Image from 'next/image';
-import { petSchema } from '../schema/pet-schema';
+import { CreatePetSchema } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePetContext } from '../context/pet-context';
+import { createPet } from '@/src/actions';
+import Image from 'next/image';
+import { useMutation } from '@tanstack/react-query';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -47,31 +46,29 @@ const InformationsPetForm = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const { setPetId } = usePetContext();
 
-  const form = useForm<z.infer<typeof petSchema>>({
-    resolver: zodResolver(petSchema),
+  const form = useForm<z.infer<typeof CreatePetSchema>>({
+    resolver: zodResolver(CreatePetSchema),
     defaultValues: {
-      image: '',
       name: '',
-      birthDate: new Date(),
       type: 'Dog',
       gender: 'Male',
+      breed: '',
+      image: '',
+      birthDate: new Date(),
+      description: '',
       weight: 0,
       height: 0,
-      breed: '',
-      furColor: '',
-      eyeColor: '',
-      description: '',
     },
   });
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(createPet, {
-    onSuccess: (data) => {
+  const { mutateAsync } = useMutation({
+    mutationFn: createPet,
+    onSuccess: () => {
       toast.success('Animal créé avec succès!');
-      setPetId(data[0].id);
+      form.reset();
       nextStep();
     },
     onError: (error) => {
@@ -80,17 +77,7 @@ const InformationsPetForm = ({
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const result = await mutateAsync(data);
-      if (result && result[0] && result[0].id) {
-        setPetId(result[0].id);
-        nextStep();
-      } else {
-        toast.error("Erreur : Impossible de récupérer l'ID de l'animal");
-      }
-    } catch (error) {
-      console.error('Erreur lors de la création:', error);
-    }
+    await mutateAsync(data);
   });
 
   const { startUpload: startImageUpload } = useUploadThing(
@@ -381,44 +368,6 @@ const InformationsPetForm = ({
             />
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
-            <FormField
-              control={form.control}
-              name='furColor'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Couleur du pelage</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Ex: Noir et blanc'
-                      {...field}
-                      value={field.value ?? ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='eyeColor'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Couleur des yeux</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Ex: Bleu'
-                      {...field}
-                      value={field.value ?? ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
           <FormField
             control={form.control}
             name='description'
@@ -439,12 +388,9 @@ const InformationsPetForm = ({
           />
         </div>
 
-        <div className='flex justify-end gap-2'>
-          <Button variant='outline' onClick={previousStep}>
-            Annuler
-          </Button>
-          <Button className='w-full' type='submit'>
-            Suivant
+        <div className='flex justify-end pt-2'>
+          <Button type='submit' onClick={() => console.log('Button clicked')}>
+            Enregistrer
           </Button>
         </div>
       </form>

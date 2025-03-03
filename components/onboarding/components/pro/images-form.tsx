@@ -10,8 +10,8 @@ import { ImageIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { addImagesToOrganization } from "@/src/actions/organization.action";
+import { useMutation } from "@tanstack/react-query";
 
 interface ImagesFormProps {
   onSuccess: () => void;
@@ -70,7 +70,8 @@ export default function ImagesForm({ onSuccess, onBack }: ImagesFormProps) {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const { mutateAsync } = useActionMutation(addImagesToOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: addImagesToOrganization,
     onSuccess: () => {
       toast.success("Images ajoutées avec succès.");
       onSuccess();

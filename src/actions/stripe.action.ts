@@ -205,25 +205,26 @@ export const getBillingInfo = createServerAction(
   z.object({}),
   async (input, ctx) => {
     try {
-      const org = await db
-        .select()
-        .from(organization)
-        .where(eq(organization.id, ctx.organization?.id ?? ""))
-        .execute();
+      const org = await db.query.organization.findFirst({
+        where: eq(organization.id, ctx.organization?.id ?? ""),
+        columns: {
+          stripeId: true,
+        },
+      });
 
-      if (!org[0] || !org[0].stripeId) {
+      if (!org || !org.stripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
 
-      const customer = await stripe.customers.retrieve(org[0].stripeId);
+      const customer = await stripe.customers.retrieve(org.stripeId);
       const subscriptions = await stripe.subscriptions.list({
-        customer: org[0].stripeId,
+        customer: org.stripeId,
         limit: 1,
       });
       const paymentMethods = await stripe.paymentMethods.list({
-        customer: org[0].stripeId,
+        customer: org.stripeId,
         type: "card",
       });
 

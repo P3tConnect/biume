@@ -31,16 +31,16 @@ export function AppointmentListItem({
       {/* Bande de statut */}
       <div
         className={cn(
-          "absolute left-0 top-0 bottom-0 w-1 rounded-l-xl transition-colors",
+          "absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl transition-colors",
           appointment.status === "confirmed" ? "bg-primary" : "bg-secondary",
         )}
       />
 
-      <div className="p-4 pl-6">
+      <div className="p-5 pl-6">
         {/* En-tête avec l'heure et le statut */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <Clock className="h-4 w-4 text-primary" />
+          <div className="flex items-center gap-2 text-base font-medium">
+            <Clock className="h-5 w-5 text-primary" />
             <span>{appointment.time}</span>
             <span className="text-muted-foreground">•</span>
             <span>{appointment.duration}</span>
@@ -49,35 +49,37 @@ export function AppointmentListItem({
             variant={
               appointment.status === "confirmed" ? "default" : "secondary"
             }
-            className="capitalize"
+            className="capitalize text-sm px-3 py-1"
           >
             {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
           </Badge>
         </div>
 
         {/* Contenu principal */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           {/* Informations sur l'animal */}
           <div className="relative">
-            <Avatar className="h-16 w-16 ring-4 ring-background">
+            <Avatar className="h-20 w-20 ring-4 ring-background">
               <AvatarImage
                 src={appointment.petAvatar}
                 alt={appointment.petName}
               />
-              <AvatarFallback>{appointment.petInitial}</AvatarFallback>
+              <AvatarFallback className="text-xl">
+                {appointment.petInitial}
+              </AvatarFallback>
             </Avatar>
           </div>
 
           {/* Détails du rendez-vous */}
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-lg tracking-tight">
+              <h3 className="font-semibold text-xl tracking-tight">
                 {appointment.petName}
               </h3>
               <Badge
                 variant="outline"
                 className={cn(
-                  "ml-2",
+                  "ml-2 px-2.5 py-0.5 text-sm",
                   appointmentColors[appointment.type]
                     .replace("bg-", "border-")
                     .replace("text-white", ""),
@@ -86,12 +88,12 @@ export function AppointmentListItem({
                 {appointmentLabels[appointment.type]}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               Propriétaire: {appointment.ownerName}
             </p>
             {appointment.location && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-2 text-base text-muted-foreground">
+                <MapPin className="h-5 w-5 text-primary" />
                 <span>{appointment.location}</span>
               </div>
             )}
@@ -99,8 +101,8 @@ export function AppointmentListItem({
 
           {/* Indicateur de clic */}
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Info className="h-4 w-4 text-primary" />
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Info className="h-5 w-5 text-primary" />
             </div>
           </div>
         </div>

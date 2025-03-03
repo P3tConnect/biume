@@ -1,25 +1,16 @@
 'use client';
 
 import React from 'react';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Button,
-  FormControl,
-} from '@/components/ui';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Form, Button } from '@/components/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { petSchema } from '../schema/pet-schema';
 import { updatePetIntolerences } from '@/src/actions';
-import { useActionMutation } from '@/src/hooks/action-hooks';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
+import { useMutation } from '@tanstack/react-query';
 
 const InformationsPetIntolerancesForm = ({
   nextStep,
@@ -37,7 +28,8 @@ const InformationsPetIntolerancesForm = ({
     },
   });
 
-  const { mutateAsync } = useActionMutation(updatePetIntolerences, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updatePetIntolerences,
     onSuccess: () => {
       toast.success('Intolérances enregistrées avec succès!');
       nextStep();

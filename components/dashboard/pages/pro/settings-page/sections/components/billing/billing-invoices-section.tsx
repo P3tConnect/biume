@@ -24,7 +24,7 @@ import { StripeInvoice } from "@/types/stripe-invoice";
 export const BillingInvoicesSection = ({
   invoices,
 }: {
-  invoices: ActionResult<StripeInvoice[]>;
+  invoices: ActionResult<StripeInvoice[]> | undefined;
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -55,7 +55,7 @@ export const BillingInvoicesSection = ({
               Consultez et téléchargez vos factures des 12 derniers mois
             </CredenzaDescription>
           </CredenzaHeader>
-          {invoices.data && invoices.data.length > 0 ? (
+          {invoices?.data && invoices?.data.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -67,7 +67,7 @@ export const BillingInvoicesSection = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices.data?.map((invoice) => (
+                {invoices?.data?.map((invoice) => (
                   <TableRow key={invoice.id}>
                     <TableCell>{invoice.number}</TableCell>
                     <TableCell>{invoice.date}</TableCell>

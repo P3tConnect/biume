@@ -7,99 +7,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import {
-  addImagesToOrganization,
-  deleteOrganizationImage,
-} from '@/src/actions/organization.action';
-import { toast } from 'sonner';
-import { useActionMutation } from '@/src/hooks/action-hooks';
-import { useUploadThing } from '@/src/lib/uploadthing';
-import { useDropzone } from 'react-dropzone';
-import { Progress } from '@/components/ui/progress';
-import { ImageIcon, Loader2 } from 'lucide-react';
-import { cn } from '@/src/lib/utils';
-import { OrganizationImage } from '@/src/db';
-import { ActionResult } from '@/src/lib';
+} from "@/components/ui/card";
+import { getOrganizationImages } from "@/src/actions/organization.action";
+import ImagesSectionClient from "./components/images/images-section-client";
+import { useQuery } from "@tanstack/react-query";
 
-const ImagesSection = ({
-  images,
-}: {
-  images: ActionResult<OrganizationImage[]>;
-}) => {
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const { startUpload } = useUploadThing('documentsUploader', {
-    onUploadProgress: (progress) => {
-      setUploadProgress(progress);
-    },
+const ImagesSection = () => {
+  const { data: images } = useQuery({
+    queryKey: ["organization-images"],
+    queryFn: () => getOrganizationImages({}),
   });
-
-  const { mutateAsync: addImages } = useActionMutation(
-    addImagesToOrganization,
-    {
-      onSuccess: () => {
-        toast.success('Images ajoutées avec succès');
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    }
-  );
-
-  const { mutateAsync: deleteImage } = useActionMutation(
-    deleteOrganizationImage,
-    {
-      onSuccess: () => {
-        toast.success('Image supprimée avec succès');
-      },
-      onError: () => {
-        toast.error("Erreur lors de la suppression de l'image");
-      },
-    }
-  );
-
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      setIsUploading(true);
-      setUploadProgress(0);
-      try {
-        const uploadedImages = await startUpload(acceptedFiles);
-        if (uploadedImages) {
-          const imageUrls = uploadedImages.map((img) => ({
-            name: img.name,
-            url: img.url,
-          }));
-          await addImages({ images: imageUrls });
-        }
-      } catch (error) {
-        toast.error(
-          'Une erreur est survenue lors du téléchargement des images.'
-        );
-      } finally {
-        setIsUploading(false);
-        setUploadProgress(0);
-      }
-    },
-    [startUpload, addImages]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.webp'],
-    },
-    maxFiles: 5,
-  });
-
-  const handleDeleteImage = async (imageUrl: string) => {
-    await deleteImage({ imageUrl });
-  };
-
-  console.log(images, 'images');
 
   return (
     <Card>
@@ -168,6 +85,8 @@ const ImagesSection = ({
             ))}
           </div>
         )}
+      <CardContent className="space-y-6">
+        <ImagesSectionClient images={images?.data || []} />
       </CardContent>
     </Card>
   );

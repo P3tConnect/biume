@@ -13,12 +13,12 @@ import { petSchema } from '../schema/pet-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { updatePetDeseases } from '@/src/actions';
-import { useActionMutation } from '@/src/hooks/action-hooks';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
 import { Tag, TagInput } from 'emblor';
+import { useMutation } from '@tanstack/react-query';
 
 // Liste des maladies communes chez les animaux comme exemple
 const commonDeseases = [
@@ -47,7 +47,8 @@ const InformationsPetDeseasesForm = ({
     },
   });
 
-  const { mutateAsync } = useActionMutation(updatePetDeseases, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updatePetDeseases,
     onSuccess: () => {
       toast.success('Maladies enregistrées avec succès!');
       nextStep();

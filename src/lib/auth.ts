@@ -70,6 +70,114 @@ export type BaseOrganization = {
   invitations: BaseInvitation[];
 };
 
+// export const auth = betterAuth({
+//   appName: "Biume",
+//   secret: safeConfig.BETTER_AUTH_SECRET,
+//   database: drizzleAdapter(db, {
+//     provider: "pg",
+//     schema: {
+//       organizations: organizationSchema,
+//       users: dbUser,
+//       accounts: account,
+//       verifications: verification,
+//       twoFactors: twoFactorSchema,
+//       sessions: session,
+//       invitations: invitation,
+//       members: memberSchema,
+//     },
+//     usePlural: true,
+//   }),
+//   emailAndPassword: {
+//     enabled: true,
+//   },
+//   user: {
+//     additionalFields: {
+//       image: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       isPro: {
+//         type: "boolean",
+//         defaultValue: false,
+//         required: false,
+//       },
+//       onBoardingComplete: {
+//         type: "boolean",
+//         defaultValue: false,
+//         required: false,
+//       },
+//       stripeId: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       address: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       zipCode: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       country: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       city: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       phoneNumber: {
+//         type: "string",
+//         defaultValue: "",
+//         required: false,
+//       },
+//       smsNotifications: {
+//         type: "boolean",
+//         defaultValue: false,
+//         required: false,
+//       },
+//       emailNotifications: {
+//         type: "boolean",
+//         defaultValue: false,
+//         required: false,
+//       },
+//     },
+//   },
+//   plugins: [
+//     nextCookies(),
+//     organization({
+//       ac: ac,
+//       roles: {
+//         member,
+//         admin,
+//         owner,
+//       },
+//       sendInvitationEmail: async (data, request) => {
+//         console.log(data, request);
+//         const { email, inviter, role, organization } = data;
+      
+//         await resend.emails.send({
+//           from: "PawThera <onboarding@pawthera.com>",
+//           to: email,
+//           subject: "Invitation à rejoindre l'organisation",
+//           react: OrganizationInvitation({
+//             inviterName: inviter.user.name,
+//             organizationName: organization.name,
+//             inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${data.id}`,
+//           }),
+//         });
+//       },
+//       membershipLimit: 10,
+//     }),
+//   ],
+// });
+
 export const auth = betterAuth({
   appName: "Biume",
   secret: safeConfig.BETTER_AUTH_SECRET,

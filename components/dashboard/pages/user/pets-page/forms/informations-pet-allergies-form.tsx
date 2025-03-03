@@ -4,22 +4,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { petSchema } from '../schema/pet-schema';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  Button,
-  FormMessage,
-} from '@/components/ui';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useActionMutation } from '@/src/hooks/action-hooks';
+import { Form, Button } from '@/components/ui';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
 import { z } from 'zod';
 import { useSession } from '@/src/lib/auth-client';
 import { updatePetAllergies } from '@/src/actions';
+import { useMutation } from '@tanstack/react-query';
 
 const InformationsPetAllergiesForm = ({
   nextStep,
@@ -38,7 +29,8 @@ const InformationsPetAllergiesForm = ({
     },
   });
 
-  const { mutateAsync } = useActionMutation(updatePetAllergies, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updatePetAllergies,
     onSuccess: () => {
       toast.success('Allergies enregistrées avec succès!');
       nextStep();

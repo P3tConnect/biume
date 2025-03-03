@@ -12,13 +12,14 @@ import { getServices } from "@/src/actions/service.action";
 import { DatePicker } from "@/components/ui/date-picker";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { CreateOrganizationSlotsSchema } from "@/src/db/organizationSlots";
 import { z } from "zod";
-import { useActiveOrganization } from "@/src/lib/auth-client";
+import { createOrganizationSlot, updateOrganizationSlot } from "@/src/actions";
+import { toast } from "sonner"
+import { useMutation } from "@tanstack/react-query";
 
-const formSchema = z.object({
+const slotSchema = z.object({
   type: z.enum(["unique", "recurring"]),
   date: z.date().optional(),
   serviceId: z.string().min(1, "Veuillez sélectionner un service"),
@@ -29,13 +30,20 @@ const formSchema = z.object({
   serviceDuration: z.number(),
 });
 
+export type SlotFormValues = z.infer<typeof slotSchema>;
+
+const formSchema = z.object({
+  slots: z.array(slotSchema)
+});
+
 export type FormValues = z.infer<typeof formSchema>;
 
 interface SlotsFormProps {
-  onSubmit: (data: FormValues) => void;
+  onSubmit?: () => void;
   onCancel: () => void;
   initialData?: FormValues;
   isEditing?: boolean;
+  selectedSlotId?: string | null;
 }
 
 const steps = {
@@ -67,12 +75,12 @@ const weekDays = [
 ];
 
 const SlotsForm = ({
-  onSubmit,
+  onSubmit: onFormSubmit,
   onCancel,
   initialData,
   isEditing,
+  selectedSlotId,
 }: SlotsFormProps) => {
-  const { data: organization } = useActiveOrganization();
   const [currentStep, setCurrentStep] = React.useState<keyof typeof steps>(
     isEditing ? "service" : "type",
   );
@@ -80,30 +88,36 @@ const SlotsForm = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: initialData?.type || "unique",
-      date: initialData?.date || new Date(),
-      serviceId: initialData?.serviceId || "",
-      startTime: initialData?.startTime || "09:00",
-      endTime: initialData?.endTime || "17:00",
-      selectedDays: initialData?.selectedDays || [],
-      endRecurrence: initialData?.endRecurrence,
-      serviceDuration: initialData?.serviceDuration || 60,
+      slots: initialData?.slots || [{
+        type: "unique",
+        startTime: "09:00",
+        endTime: "17:00",
+        serviceDuration: 60,
+        selectedDays: [],
+      }],
     },
   });
 
+  const { fields, append, update } = useFieldArray({
+    control: form.control,
+    name: "slots",
+  });
+
   const { handleSubmit, watch, setValue, formState: { errors } } = form;
-  const type = watch("type");
-  const date = watch("date");
-  const endRecurrence = watch("endRecurrence");
-  const selectedDays = watch("selectedDays");
-  const serviceId = watch("serviceId");
-  const startTime = watch("startTime");
-  const endTime = watch("endTime");
+  const currentSlot = fields[0];
+
+  const type = watch(`slots.0.type`);
+  const date = watch(`slots.0.date`);
+  const endRecurrence = watch(`slots.0.endRecurrence`);
+  const selectedDays = watch(`slots.0.selectedDays`);
+  const serviceId = watch(`slots.0.serviceId`);
+  const startTime = watch(`slots.0.startTime`);
+  const endTime = watch(`slots.0.endTime`);
 
   const handleDayToggle = (dayId: string) => {
-    const currentDays = form.getValues("selectedDays") || [];
+    const currentDays = form.getValues("slots.0.selectedDays") || [];
     setValue(
-      "selectedDays",
+      "slots.0.selectedDays",
       currentDays.includes(dayId)
         ? currentDays.filter((d) => d !== dayId)
         : [...currentDays, dayId],
@@ -117,7 +131,10 @@ const SlotsForm = ({
     if (currentIndex < stepOrder.length - 1) {
       setCurrentStep(stepOrder[currentIndex + 1]);
     } else {
-      handleSubmit(onSubmit)();
+      handleSubmit((data) => {
+        handleFormSubmit(data);
+        onFormSubmit?.();
+      })();
     }
   };
 
@@ -134,10 +151,204 @@ const SlotsForm = ({
     queryFn: () => getServices({}),
   });
 
+  const createSlotMutation = useMutation({
+    mutationFn: (data: any) => {
+      // Préparation spéciale des données pour assurer la préservation des heures et minutes
+      const preparedData = Array.isArray(data)
+        ? data.map(slot => ({
+          ...slot,
+          // On envoie les dates sous forme de strings ISO pour éviter les pertes lors du passage client/serveur
+          start: slot.start.toISOString(),
+          end: slot.end.toISOString(),
+        }))
+        : data;
+
+      console.log('Envoi des données au serveur:', preparedData);
+      return createOrganizationSlot(preparedData);
+    },
+    onSuccess: (data) => {
+      console.log('Succès de la création:', data);
+      toast.success("Le créneau a été créé avec succès");
+      onFormSubmit?.();
+    },
+    onError: (error) => {
+      console.error('Erreur mutation:', error);
+      toast.error("Erreur: " + JSON.stringify(error));
+    },
+  });
+
+  const updateSlotMutation = useMutation({
+    mutationFn: (data: any) => {
+      // Même traitement pour la mise à jour
+      const preparedData = {
+        ...data,
+        start: data.start.toISOString(),
+        end: data.end.toISOString(),
+      };
+
+      return updateOrganizationSlot(preparedData);
+    },
+    onSuccess: () => {
+      toast.success("Le créneau a été modifié avec succès");
+      onFormSubmit?.();
+    },
+    onError: (error) => {
+      toast.error("Erreur: " + error);
+    },
+  });
+
+  const handleFormSubmit = async (formData: FormValues) => {
+    try {
+      const slot = formData.slots[0];
+      if (slot.type === "unique") {
+        if (!slot.date) {
+          toast.error("Veuillez sélectionner une date");
+          return;
+        }
+
+        // Créer une copie de la date pour éviter de modifier l'objet original
+        const dateObj = new Date(slot.date);
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth();
+        const day = dateObj.getDate();
+
+        // Régler les heures et minutes avec une construction explicite
+        const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+        const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+
+        // Création explicite des objets Date en spécifiant chaque composante
+        const startDate = new Date(year, month, day, startHour, startMinute, 0, 0);
+        const endDate = new Date(year, month, day, endHour, endMinute, 0, 0);
+
+        console.log('Création créneau unique :', {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          heureDebut: startHour,
+          minuteDebut: startMinute,
+          serviceId: slot.serviceId
+        });
+
+        const data = {
+          serviceId: slot.serviceId,
+          start: startDate,
+          end: endDate,
+          isAvailable: true,
+          type: "unique" as const,
+        };
+
+        if (isEditing && selectedSlotId) {
+          await updateSlotMutation.mutateAsync({
+            ...data,
+            id: selectedSlotId,
+          });
+        } else {
+          const result = await createSlotMutation.mutateAsync([data]);
+          console.log('Résultat création:', result);
+        }
+      } else {
+        // Créneaux récurrents
+        if (!slot.date || !slot.endRecurrence || !slot.selectedDays?.length) {
+          toast.error("Veuillez sélectionner une période et des jours de récurrence");
+          return;
+        }
+
+        const startDate = new Date(slot.date);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(slot.endRecurrence);
+        endDate.setHours(23, 59, 59, 999);
+
+        // Convertir les heures en minutes pour faciliter les calculs
+        const [startHour, startMinute] = slot.startTime.split(":").map(Number);
+        const [endHour, endMinute] = slot.endTime.split(":").map(Number);
+        const startMinutes = startHour * 60 + startMinute;
+        const endMinutes = endHour * 60 + endMinute;
+
+        // Créer un créneau pour chaque jour sélectionné dans la période
+        const slotsToCreate = [];
+        const currentDate = new Date(startDate);
+        const service = services?.data?.find(s => s.id === slot.serviceId);
+
+        if (!service) {
+          toast.error("Service introuvable");
+          return;
+        }
+
+        if (!service.organizationId) {
+          toast.error("ID d'organisation manquant dans le service");
+          return;
+        }
+
+        console.log('Service sélectionné:', {
+          id: service.id,
+          name: service.name,
+          organizationId: service.organizationId
+        });
+
+        // Générer un ID unique pour cette récurrence
+        const recurrenceId = crypto.randomUUID();
+        console.log('ID de récurrence généré:', recurrenceId);
+
+        while (currentDate <= endDate) {
+          const dayOfWeek = currentDate.getDay();
+          const dayName = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayOfWeek];
+
+          if (slot.selectedDays.includes(dayName)) {
+            // Pour chaque jour sélectionné, créer des créneaux en fonction de la durée du service
+            let currentMinute = startMinutes;
+            while (currentMinute + slot.serviceDuration <= endMinutes) {
+              // On récupère les composantes de la date
+              const year = currentDate.getFullYear();
+              const month = currentDate.getMonth();
+              const day = currentDate.getDate();
+
+              // On calcule les heures et minutes
+              const startHour = Math.floor(currentMinute / 60);
+              const startMinuteValue = currentMinute % 60;
+              const endHour = Math.floor((currentMinute + slot.serviceDuration) / 60);
+              const endMinuteValue = (currentMinute + slot.serviceDuration) % 60;
+
+              // Création explicite des objets Date
+              const slotStart = new Date(year, month, day, startHour, startMinuteValue, 0, 0);
+              const slotEnd = new Date(year, month, day, endHour, endMinuteValue, 0, 0);
+
+              console.log('Création créneau récurrent :', {
+                date: slotStart.toISOString(),
+                heure: startHour,
+                minute: startMinuteValue,
+                organizationId: service.organizationId
+              });
+
+              slotsToCreate.push({
+                serviceId: slot.serviceId,
+                start: slotStart,
+                end: slotEnd,
+                isAvailable: true,
+                type: "recurring" as const,
+                organizationId: service.organizationId,
+                recurrenceId,
+              });
+
+              currentMinute += slot.serviceDuration;
+            }
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Créer tous les créneaux en une seule fois
+        await createSlotMutation.mutateAsync(slotsToCreate);
+        toast.success(`${slotsToCreate.length} créneaux ont été créés avec succès`);
+        onFormSubmit?.();
+      }
+    } catch (error) {
+      toast.error("Une erreur est survenue lors de la création des créneaux");
+    }
+  };
+
   const renderTypeStep = () => (
     <div className="grid grid-cols-2 gap-4 h-full">
       <button
-        onClick={() => setValue("type", "unique")}
+        onClick={() => setValue("slots.0.type", "unique")}
         className={cn(
           "h-full text-left p-6 rounded-xl border transition-all flex items-stretch",
           type === "unique"
@@ -161,7 +372,7 @@ const SlotsForm = ({
       </button>
 
       <button
-        onClick={() => setValue("type", "recurring")}
+        onClick={() => setValue("slots.0.type", "recurring")}
         className={cn(
           "h-full text-left p-6 rounded-xl border transition-all flex items-stretch",
           type === "recurring"
@@ -197,8 +408,8 @@ const SlotsForm = ({
             <button
               key={service.id}
               onClick={() => {
-                setValue("serviceId", service.id);
-                setValue("serviceDuration", service.duration || 60);
+                setValue(`slots.0.serviceId`, service.id);
+                setValue(`slots.0.serviceDuration`, service.duration || 60);
               }}
               className={cn(
                 "w-full text-left p-4 rounded-xl border transition-all",
@@ -214,13 +425,13 @@ const SlotsForm = ({
                     {service.duration} min
                   </p>
                 </div>
-                <span className="text-muted-foreground">{service.price}</span>
+                <span className="text-muted-foreground">{service.price}€</span>
               </div>
             </button>
           ))}
         </div>
-        {errors.serviceId && (
-          <p className="text-sm text-destructive mt-2">{errors.serviceId.message}</p>
+        {errors.slots?.[0]?.serviceId?.message && (
+          <p className="text-sm text-destructive mt-2">{errors.slots[0].serviceId.message}</p>
         )}
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -230,7 +441,7 @@ const SlotsForm = ({
           </Label>
           <TimePicker
             value={startTime}
-            onChange={(value) => setValue("startTime", value)}
+            onChange={(value) => setValue(`slots.0.startTime`, value)}
           />
         </div>
         <div>
@@ -239,7 +450,7 @@ const SlotsForm = ({
           </Label>
           <TimePicker
             value={endTime}
-            onChange={(value) => setValue("endTime", value)}
+            onChange={(value) => setValue(`slots.0.endTime`, value)}
           />
         </div>
       </div>
@@ -257,7 +468,7 @@ const SlotsForm = ({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(value) => setValue("date", value)}
+              onSelect={(value) => setValue(`slots.0.date`, value)}
               locale={fr}
               className={cn(
                 "w-full [&_table]:w-full [&_table_td]:p-0 [&_table_td_button]:w-full [&_table_td_button]:h-9",
@@ -288,20 +499,17 @@ const SlotsForm = ({
                 ))}
               </div>
             </div>
-            {errors.selectedDays && (
-              <p className="text-sm text-destructive mt-2">{errors.selectedDays.message}</p>
+            {errors.slots?.[0]?.selectedDays?.message && (
+              <p className="text-sm text-destructive mt-2">{errors.slots[0].selectedDays.message}</p>
             )}
           </div>
           <div>
-            <Label className="text-sm font-medium mb-2 block">
-              Période de récurrence
-            </Label>
             <DateRangePicker
               label="Période de récurrence"
               date={date && endRecurrence ? { from: date, to: endRecurrence } : undefined}
               onSelect={(range: DateRange | undefined) => {
-                if (range?.from) setValue("date", range.from);
-                if (range?.to) setValue("endRecurrence", range.to);
+                if (range?.from) setValue(`slots.0.date`, range.from);
+                if (range?.to) setValue(`slots.0.endRecurrence`, range.to);
               }}
             />
           </div>
@@ -345,7 +553,10 @@ const SlotsForm = ({
   const isLastStep = currentStep === "date";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit((data) => {
+      handleFormSubmit(data);
+      onFormSubmit?.();
+    })} className="space-y-6">
       {!isEditing && (
         <div className="flex items-center gap-4 mb-4">
           {Object.values(steps).map((step, index) => (

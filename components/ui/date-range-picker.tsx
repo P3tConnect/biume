@@ -6,8 +6,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { useId } from "react";
+import { useId, useState, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 
 export function DateRangePicker({
@@ -20,6 +21,17 @@ export function DateRangePicker({
   onSelect: (date: DateRange | undefined) => void;
 }) {
   const id = useId();
+  const [localDate, setLocalDate] = useState<DateRange | undefined>(date);
+
+  // Synchroniser l'état local avec les props
+  useEffect(() => {
+    setLocalDate(date);
+  }, [date]);
+
+  const handleSelect = (selectedDate: DateRange | undefined) => {
+    setLocalDate(selectedDate);
+    onSelect(selectedDate);
+  };
 
   return (
     <div>
@@ -32,20 +44,20 @@ export function DateRangePicker({
               variant={"outline"}
               className={cn(
                 "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                !date && "text-muted-foreground",
+                !localDate && "text-muted-foreground",
               )}
             >
-              <span className={cn("truncate", !date && "text-muted-foreground")}>
-                {date?.from ? (
-                  date.to ? (
+              <span className={cn("truncate", !localDate && "text-muted-foreground")}>
+                {localDate?.from ? (
+                  localDate.to ? (
                     <>
-                      {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                      {format(localDate.from, "dd MMM yyyy", { locale: fr })} - {format(localDate.to, "dd MMM yyyy", { locale: fr })}
                     </>
                   ) : (
-                    format(date.from, "LLL dd, y")
+                    format(localDate.from, "dd MMM yyyy", { locale: fr })
                   )
                 ) : (
-                  "Pick a date range"
+                  "Sélectionner une plage de dates"
                 )}
               </span>
               <CalendarIcon
@@ -56,7 +68,13 @@ export function DateRangePicker({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2" align="start">
-            <Calendar mode="range" selected={date} onSelect={onSelect} />
+            <Calendar
+              mode="range"
+              selected={localDate}
+              onSelect={handleSelect}
+              locale={fr}
+              footer={localDate?.from && !localDate.to ? "Sélectionnez la date de fin" : undefined}
+            />
           </PopoverContent>
         </Popover>
       </div>
