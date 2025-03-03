@@ -45,14 +45,11 @@ const InformationsPetDeseasesForm = ({
     },
   });
 
-  // Mettre à jour le formulaire lorsque selectedDeseases change
   useEffect(() => {
     form.setValue('deseases', selectedDeseases);
-    console.log('Maladies sélectionnées mises à jour:', selectedDeseases);
   }, [selectedDeseases, form]);
 
   const handleDiseaseSelection = (diseaseText: string) => {
-    console.log('Sélection de la maladie:', diseaseText);
     setSelectedDeseases((current) => {
       if (current.includes(diseaseText)) {
         return current;
@@ -62,8 +59,6 @@ const InformationsPetDeseasesForm = ({
   };
 
   const handleSubmit = async () => {
-    console.log('Fonction handleSubmit déclenchée');
-    console.log('Soumission des maladies:', selectedDeseases);
     await onSubmitDeseases(selectedDeseases);
   };
 

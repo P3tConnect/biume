@@ -67,7 +67,6 @@ const InformationsPetIntolerancesForm = ({
     },
   });
 
-  // Mettre à jour le formulaire lorsque selectedIntolerances change
   useEffect(() => {
     form.setValue('intolerences', selectedIntolerances);
   }, [selectedIntolerances, form]);

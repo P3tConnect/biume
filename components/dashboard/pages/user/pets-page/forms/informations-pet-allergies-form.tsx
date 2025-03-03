@@ -65,7 +65,6 @@ const InformationsPetAllergiesForm = ({
     },
   });
 
-  // Mettre à jour le formulaire lorsque selectedAllergies change
   useEffect(() => {
     form.setValue('allergies', selectedAllergies);
   }, [selectedAllergies, form]);

@@ -1,6 +1,13 @@
+'use client';
+
+import { Button } from '@/components/ui';
+import { useSession } from '@/src/lib/auth-client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const PetCompleteStep = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
   return (
     <div className='w-full h-full flex flex-col justify-center items-center gap-2'>
       <p className='text-8xl'>🥳</p>
@@ -15,6 +22,9 @@ const PetCompleteStep = () => {
           N&apos;hésitez pas à nous contacter si vous avez des questions
         </p>
       </div>
+      <Button onClick={() => router.refresh()} variant='default'>
+        Voir mes animaux
+      </Button>
     </div>
   );
 };

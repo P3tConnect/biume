@@ -68,7 +68,6 @@ const InformationsPetForm = ({
   const { mutateAsync } = useMutation({
     mutationFn: createPet,
     onSuccess: (data) => {
-      // Vérification plus stricte de la réponse
       if (!data) {
         toast.error('Erreur: Données de création invalides');
         return;
@@ -77,7 +76,6 @@ const InformationsPetForm = ({
       let animalId = null;
 
       try {
-        // Gestion des différents formats possibles de réponse
         if (typeof data === 'string') {
           animalId = data;
         } else if (Array.isArray(data)) {
@@ -89,7 +87,6 @@ const InformationsPetForm = ({
           if ('id' in data) {
             animalId = data.id;
           } else {
-            // Recherche récursive de l'ID dans l'objet
             const findId = (obj: any): string | null => {
               for (const key in obj) {
                 if (key === 'id' && typeof obj[key] === 'string') {
@@ -459,9 +456,7 @@ const InformationsPetForm = ({
         </div>
 
         <div className='flex justify-end pt-2'>
-          <Button type='submit' onClick={() => console.log('Button clicked')}>
-            Enregistrer
-          </Button>
+          <Button type='submit'>Enregistrer</Button>
         </div>
       </form>
     </Form>
