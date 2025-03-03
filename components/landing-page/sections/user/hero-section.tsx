@@ -158,7 +158,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="absolute -bottom-6 -left-6 md:bottom-8 md:left-8 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+              className="absolute -bottom-4 -left-4 md:bottom-4 md:left-4 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
             >
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-background">
@@ -182,7 +182,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.5 }}
-              className="absolute -top-6 -right-6 md:top-8 md:right-8 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+              className="absolute -top-4 -right-4 md:top-4 md:right-4 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center justify-center">
