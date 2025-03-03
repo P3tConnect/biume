@@ -187,7 +187,8 @@ export function FeaturesSection() {
 
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-6">
-                Une interface conçue par et pour les professionnels de la santé animale
+                Une interface conçue par et pour les professionnels de la santé
+                animale
               </h3>
               <p className="text-lg mb-8 text-muted-foreground">
                 Nous avons travaillé en étroite collaboration avec des
@@ -199,7 +200,7 @@ export function FeaturesSection() {
                 {[
                   "Interface intuitive adaptée à votre flux de travail",
                   "Accès rapide aux informations essentielles",
-                  "Fonctionnalités spécialisées pour différentes pratiques vétérinaires",
+                  "Fonctionnalités spécialisées pour différentes pratiques",
                   "Mises à jour régulières basées sur vos retours",
                 ].map((item, index) => (
                   <motion.li

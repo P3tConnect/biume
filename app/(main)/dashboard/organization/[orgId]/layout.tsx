@@ -13,6 +13,8 @@ const DashboardOrganizationLayout = async ({
   owner: ReactNode;
   params: Promise<{ orgId: string }>;
 }) => {
+  redirect("/");
+
   const { orgId } = await params;
 
   // Vérifier si l'utilisateur a une organisation active

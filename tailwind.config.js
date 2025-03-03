@@ -20,6 +20,10 @@ const theme = {
         },
     },
     extend: {
+        backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            'gradient-radial-br': 'radial-gradient(circle at bottom right, var(--tw-gradient-stops))',
+        },
         colors: {
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",

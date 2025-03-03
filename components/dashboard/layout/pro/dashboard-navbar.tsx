@@ -47,6 +47,7 @@ import {
   ChevronDown,
   Search,
   Menu,
+  ArrowLeftRight,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -133,55 +134,97 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-14 items-center justify-between px-4">
         {/* Logo et sélecteur d'organisation */}
         <div className="flex items-center">
           <DropdownMenu open={orgMenuOpen} onOpenChange={setOrgMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="flex items-center gap-2 mr-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-secondary/10 group"
+                className={cn(
+                  "flex items-center gap-2 text-xs mr-4 shadow-sm transition-all duration-300 group hover:shadow-md",
+                  "bg-secondary/5 hover:bg-secondary/10 border border-secondary/20 text-secondary",
+                )}
               >
                 {activeOrganization?.logo ? (
-                  <div className="h-7 w-7 overflow-hidden rounded-lg ring-1 ring-secondary/30 shadow-sm transition-all duration-300 group-hover:ring-secondary/50 group-hover:shadow-md">
+                  <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
                     <Image
                       src={activeOrganization.logo}
                       alt={activeOrganization.name}
-                      width={28}
-                      height={28}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      width={20}
+                      height={20}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 ) : (
-                  <div className="h-7 w-7 rounded-lg bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
-                    <Building className="h-4 w-4 text-secondary" />
+                  <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
+                    <Building className="h-3 w-3 text-secondary" />
                   </div>
                 )}
-                <span className="hidden md:inline-block font-medium">
+                <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                   {activeOrganization?.name || "Organisation"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5 text-secondary/70 transition-transform duration-300 group-hover:text-secondary" />
+                <ArrowLeftRight
+                  className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${orgMenuOpen ? "rotate-180" : "rotate-0"}`}
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="w-72 p-2 rounded-xl border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
+              className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
             >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                  Compte personnel
+                </DropdownMenuLabel>
+                <DropdownMenuItem
+                  className="flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all duration-200 hover:shadow-sm"
+                  onSelect={() =>
+                    router.push(`/dashboard/user/${session?.data?.user.id}`)
+                  }
+                >
+                  {session?.data?.user?.image ? (
+                    <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
+                      <Image
+                        src={session.data.user.image}
+                        alt={session.data.user.name || ""}
+                        width={32}
+                        height={32}
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium leading-none">
+                      {session?.data?.user?.name || "Personnel"}
+                    </span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      Compte personnel
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
               {organizations && organizations.length > 0 && (
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1.5 text-muted-foreground/80 mb-2">
+                  <DropdownMenuSeparator className="my-2" />
+                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
                     Comptes professionnels
                   </DropdownMenuLabel>
-                  <div className="max-h-[240px] overflow-y-auto mb-2 rounded-lg space-y-1 pr-1">
+                  <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
                     {organizations.map((org) => (
                       <DropdownMenuItem
                         key={org.id}
                         className={cn(
-                          "flex items-center gap-3 p-2.5 rounded-lg transition-all duration-200",
+                          "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
                           companyId === org.id
                             ? "bg-secondary/10 text-secondary font-medium shadow-sm"
-                            : "hover:bg-accent hover:pl-1 hover:shadow-sm",
+                            : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                           switchingOrg === org.id && "animate-pulse opacity-70",
                         )}
                         onSelect={() => handleOrganizationSwitch(org.id)}
@@ -190,7 +233,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                         {org.logo ? (
                           <div
                             className={cn(
-                              "h-10 w-10 overflow-hidden rounded-lg shadow-sm flex-shrink-0 transition-all duration-300",
+                              "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
                               companyId === org.id
                                 ? "ring-2 ring-secondary/30"
                                 : "ring-1 ring-border/50 hover:ring-secondary/20",
@@ -199,8 +242,8 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                             <Image
                               src={org.logo}
                               alt={org.name}
-                              width={40}
-                              height={40}
+                              width={32}
+                              height={32}
                               className={cn(
                                 "h-full w-full object-cover transition-transform duration-300",
                                 companyId !== org.id && "hover:scale-110",
@@ -210,13 +253,13 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                         ) : (
                           <div
                             className={cn(
-                              "h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                              "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
                               companyId === org.id
                                 ? "bg-secondary/20"
                                 : "bg-secondary/10 hover:bg-secondary/15",
                             )}
                           >
-                            <Building className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
+                            <Building className="h-4 w-4 text-secondary" />
                           </div>
                         )}
                         <div className="flex flex-col">
@@ -235,46 +278,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 </DropdownMenuGroup>
               )}
-              <DropdownMenuSeparator className="my-2" />
-              <DropdownMenuItem
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
-                onSelect={() =>
-                  router.push(`/dashboard/user/${session?.data?.user.id}`)
-                }
-              >
-                <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
-                  <User className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">
-                    Espace personnel
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Accéder à votre compte
-                  </span>
-                </div>
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator className="my-2" />
-              <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1.5 text-muted-foreground/80">
-                Gérer les entreprises
-              </DropdownMenuLabel>
-              <DropdownMenuItem
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
-                onSelect={() => router.push("/dashboard/create-organization")}
-              >
-                <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
-                  <Plus className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">
-                    Créer une organisation
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Ajouter une nouvelle entreprise
-                  </span>
-                </div>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

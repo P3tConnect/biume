@@ -31,12 +31,13 @@ const CATEGORIES = [
 ];
 
 export function FiltersBar() {
-  const { availableToday, instantBooking, sortBy, categories } = useSearchParams();
+  const { availableToday, instantBooking, sortBy, categories } =
+    useSearchParams();
 
   return (
     <div className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10 w-full">
       <div className="w-full px-8">
-        <div className="flex items-center justify-between py-4 gap-4 overflow-x-auto">
+        <div className="flex items-center justify-start py-4 gap-4 overflow-x-auto">
           <div className="flex items-center gap-4">
             <Sheet>
               <SheetTrigger asChild>
@@ -61,10 +62,16 @@ export function FiltersBar() {
                       {CATEGORIES.map((category) => (
                         <Badge
                           key={category}
-                          variant={categories.value.includes(category) ? "default" : "outline"}
+                          variant={
+                            categories.value.includes(category)
+                              ? "default"
+                              : "outline"
+                          }
                           className="cursor-pointer"
                           onClick={() => {
-                            const newCategories = categories.value.includes(category)
+                            const newCategories = categories.value.includes(
+                              category,
+                            )
                               ? categories.value.filter((c) => c !== category)
                               : [...categories.value, category];
                             categories.set(newCategories);
@@ -77,7 +84,9 @@ export function FiltersBar() {
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="available-today">Disponible aujourd&apos;hui</Label>
+                      <Label htmlFor="available-today">
+                        Disponible aujourd&apos;hui
+                      </Label>
                       <Switch
                         id="available-today"
                         checked={availableToday.value}
@@ -85,7 +94,9 @@ export function FiltersBar() {
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="instant-booking">Réservation instantanée</Label>
+                      <Label htmlFor="instant-booking">
+                        Réservation instantanée
+                      </Label>
                       <Switch
                         id="instant-booking"
                         checked={instantBooking.value}
@@ -121,7 +132,9 @@ export function FiltersBar() {
                   variant="secondary"
                   className="cursor-pointer hover:bg-secondary/90 transition-colors"
                   onClick={() => {
-                    categories.set(categories.value.filter((c) => c !== category));
+                    categories.set(
+                      categories.value.filter((c) => c !== category),
+                    );
                   }}
                 >
                   {category} ×
@@ -129,10 +142,7 @@ export function FiltersBar() {
               ))}
             </div>
           </div>
-          <Select
-            value={sortBy.value}
-            onValueChange={sortBy.set}
-          >
+          <Select value={sortBy.value} onValueChange={sortBy.set}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Trier par" />
             </SelectTrigger>
@@ -146,4 +156,4 @@ export function FiltersBar() {
       </div>
     </div>
   );
-} 
+}

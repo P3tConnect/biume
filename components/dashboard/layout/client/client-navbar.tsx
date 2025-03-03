@@ -26,9 +26,24 @@ import {
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Home, Calendar, Dog, Settings, Ticket, Building, Check, User, Plus, ArrowLeftRight } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSession, useActiveOrganization, useListOrganizations, organization } from '@/src/lib/auth-client';
+import {
+  Home,
+  Dog,
+  Settings,
+  Ticket,
+  Building,
+  Check,
+  User,
+  Plus,
+  ArrowLeftRight,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  useSession,
+  useActiveOrganization,
+  useListOrganizations,
+  organization,
+} from "@/src/lib/auth-client";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +54,8 @@ export function ClientNavbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null);
-  const isWindows = typeof window !== "undefined" && window.navigator.platform.includes("Win");
+  const isWindows =
+    typeof window !== "undefined" && window.navigator.platform.includes("Win");
   const shortcutKey = isWindows ? "Ctrl" : "⌘";
   const pathname = usePathname();
   const router = useRouter();
@@ -62,29 +78,31 @@ export function ClientNavbar() {
     }
   };
 
-  const isPersonalDashboard = pathname?.startsWith(`/dashboard/user/${session?.user?.id}`);
+  const isPersonalDashboard = pathname?.startsWith(
+    `/dashboard/user/${session?.user?.id}`,
+  );
 
   const navigation = [
     {
-      name: 'Accueil',
+      name: "Accueil",
       path: `/dashboard/user/${userId}`,
-      icon: Home
+      icon: Home,
     },
     {
-      name: 'Mes réservations',
+      name: "Mes réservations",
       path: `/dashboard/user/${userId}/reservations`,
-      icon: Ticket
+      icon: Ticket,
     },
     {
-      name: 'Mes animaux',
+      name: "Mes animaux",
       path: `/dashboard/user/${userId}/pets`,
-      icon: Dog
+      icon: Dog,
     },
     {
-      name: 'Paramètres',
+      name: "Paramètres",
       path: `/dashboard/user/${userId}/settings`,
-      icon: Settings
-    }
+      icon: Settings,
+    },
   ];
 
   useEffect(() => {
@@ -111,9 +129,9 @@ export function ClientNavbar() {
                   size="sm"
                   className={cn(
                     "flex items-center gap-2 text-xs mr-4 shadow-sm transition-all duration-300 group hover:shadow-md",
-                    !isPersonalDashboard ?
-                      "bg-secondary/5 hover:bg-secondary/10 border border-secondary/20 text-secondary" :
-                      "bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-secondary dark:bg-secondary/10 dark:hover:bg-secondary/20 dark:border-secondary/20 dark:text-secondary-foreground"
+                    !isPersonalDashboard
+                      ? "bg-secondary/5 hover:bg-secondary/10 border border-secondary/20 text-secondary"
+                      : "bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-secondary dark:bg-secondary/10 dark:hover:bg-secondary/20 dark:border-secondary/20 dark:text-secondary-foreground",
                   )}
                 >
                   {isPersonalDashboard ? (
@@ -150,10 +168,15 @@ export function ClientNavbar() {
                   <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                     {isPersonalDashboard ? "Personnel" : "Pro"}
                   </span>
-                  <ArrowLeftRight className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
+                  <ArrowLeftRight
+                    className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${dropdownOpen ? "rotate-180" : "rotate-0"}`}
+                  />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-top-5">
+              <DropdownMenuContent
+                align="start"
+                className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-top-5"
+              >
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
                     Compte personnel
@@ -161,19 +184,23 @@ export function ClientNavbar() {
                   <DropdownMenuItem
                     className={cn(
                       "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
-                      isPersonalDashboard ?
-                        "bg-secondary/10 text-secondary dark:bg-secondary/10 dark:text-secondary-foreground font-medium shadow-sm" :
-                        "hover:bg-accent hover:translate-x-1 hover:shadow-sm"
+                      isPersonalDashboard
+                        ? "bg-secondary/10 text-secondary dark:bg-secondary/10 dark:text-secondary-foreground font-medium shadow-sm"
+                        : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                     )}
-                    onSelect={() => router.push(`/dashboard/user/${session?.user?.id}`)}
+                    onSelect={() =>
+                      router.push(`/dashboard/user/${session?.user?.id}`)
+                    }
                   >
                     {session?.user?.image ? (
-                      <div className={cn(
-                        "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                        isPersonalDashboard ?
-                          "ring-2 ring-secondary/30" :
-                          "ring-1 ring-border/50 hover:ring-secondary/20"
-                      )}>
+                      <div
+                        className={cn(
+                          "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                          isPersonalDashboard
+                            ? "ring-2 ring-secondary/30"
+                            : "ring-1 ring-border/50 hover:ring-secondary/20",
+                        )}
+                      >
                         <Image
                           src={session?.user?.image ?? undefined}
                           alt={session?.user?.name || ""}
@@ -181,23 +208,29 @@ export function ClientNavbar() {
                           height={32}
                           className={cn(
                             "h-full w-full object-cover transition-transform duration-300",
-                            !isPersonalDashboard && "hover:scale-110"
+                            !isPersonalDashboard && "hover:scale-110",
                           )}
                         />
                       </div>
                     ) : (
-                      <div className={cn(
-                        "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                        isPersonalDashboard ?
-                          "bg-secondary/20 dark:bg-secondary/20" :
-                          "bg-secondary/10 dark:bg-secondary/10 hover:bg-secondary/20 dark:hover:bg-secondary/20"
-                      )}>
+                      <div
+                        className={cn(
+                          "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                          isPersonalDashboard
+                            ? "bg-secondary/20 dark:bg-secondary/20"
+                            : "bg-secondary/10 dark:bg-secondary/10 hover:bg-secondary/20 dark:hover:bg-secondary/20",
+                        )}
+                      >
                         <User className="h-4 w-4 text-secondary dark:text-secondary-foreground" />
                       </div>
                     )}
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium leading-none">{session?.user?.name || "Personnel"}</span>
-                      <span className="text-xs text-muted-foreground mt-1">Compte personnel</span>
+                      <span className="text-sm font-medium leading-none">
+                        {session?.user?.name || "Personnel"}
+                      </span>
+                      <span className="text-xs text-muted-foreground mt-1">
+                        Compte personnel
+                      </span>
                     </div>
                     {isPersonalDashboard && (
                       <Check className="h-4 w-4 ml-auto text-secondary dark:text-secondary-foreground animate-in zoom-in-50 duration-300" />
@@ -217,21 +250,26 @@ export function ClientNavbar() {
                           key={org.id}
                           className={cn(
                             "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
-                            !isPersonalDashboard && activeOrganization?.id === org.id ?
-                              "bg-secondary/10 text-secondary font-medium shadow-sm" :
-                              "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                            switchingOrg === org.id && "animate-pulse opacity-70"
+                            !isPersonalDashboard &&
+                              activeOrganization?.id === org.id
+                              ? "bg-secondary/10 text-secondary font-medium shadow-sm"
+                              : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                            switchingOrg === org.id &&
+                              "animate-pulse opacity-70",
                           )}
                           onSelect={() => handleOrganizationSwitch(org.id)}
                           disabled={switchingOrg !== null}
                         >
                           {org.logo ? (
-                            <div className={cn(
-                              "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                              !isPersonalDashboard && activeOrganization?.id === org.id ?
-                                "ring-2 ring-secondary/30" :
-                                "ring-1 ring-border/50 hover:ring-secondary/20"
-                            )}>
+                            <div
+                              className={cn(
+                                "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                !isPersonalDashboard &&
+                                  activeOrganization?.id === org.id
+                                  ? "ring-2 ring-secondary/30"
+                                  : "ring-1 ring-border/50 hover:ring-secondary/20",
+                              )}
+                            >
                               <Image
                                 src={org.logo}
                                 alt={org.name}
@@ -239,27 +277,37 @@ export function ClientNavbar() {
                                 height={32}
                                 className={cn(
                                   "h-full w-full object-cover transition-transform duration-300",
-                                  (isPersonalDashboard || activeOrganization?.id !== org.id) && "hover:scale-110"
+                                  (isPersonalDashboard ||
+                                    activeOrganization?.id !== org.id) &&
+                                    "hover:scale-110",
                                 )}
                               />
                             </div>
                           ) : (
-                            <div className={cn(
-                              "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                              !isPersonalDashboard && activeOrganization?.id === org.id ?
-                                "bg-secondary/20" :
-                                "bg-secondary/10 hover:bg-secondary/15"
-                            )}>
+                            <div
+                              className={cn(
+                                "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                !isPersonalDashboard &&
+                                  activeOrganization?.id === org.id
+                                  ? "bg-secondary/20"
+                                  : "bg-secondary/10 hover:bg-secondary/15",
+                              )}
+                            >
                               <Building className="h-4 w-4 text-secondary dark:text-secondary-foreground" />
                             </div>
                           )}
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium leading-none">{org.name}</span>
-                            <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
+                            <span className="text-sm font-medium leading-none">
+                              {org.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground mt-1">
+                              Compte professionnel
+                            </span>
                           </div>
-                          {!isPersonalDashboard && activeOrganization?.id === org.id && (
-                            <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
-                          )}
+                          {!isPersonalDashboard &&
+                            activeOrganization?.id === org.id && (
+                              <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
+                            )}
                         </DropdownMenuItem>
                       ))}
                     </div>
@@ -276,8 +324,12 @@ export function ClientNavbar() {
                           <Plus className="h-4 w-4 text-secondary dark:text-secondary-foreground" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium leading-none">Créer une organisation</span>
-                          <span className="text-xs text-muted-foreground mt-1">Devenez professionnel</span>
+                          <span className="text-sm font-medium leading-none">
+                            Créer une organisation
+                          </span>
+                          <span className="text-xs text-muted-foreground mt-1">
+                            Devenez professionnel
+                          </span>
                         </div>
                       </DropdownMenuItem>
                     </CredenzaTrigger>
@@ -299,13 +351,19 @@ export function ClientNavbar() {
                 href={item.path}
                 className={cn(
                   "group flex items-center gap-x-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all hover:bg-accent",
-                  isActive ? "bg-secondary text-secondary-foreground" : "text-muted-foreground hover:text-foreground"
+                  isActive
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Icon className={cn(
-                  "h-4 w-4 transition-colors",
-                  isActive ? "text-secondary-foreground" : "text-muted-foreground group-hover:text-foreground"
-                )} />
+                <Icon
+                  className={cn(
+                    "h-4 w-4 transition-colors",
+                    isActive
+                      ? "text-secondary-foreground"
+                      : "text-muted-foreground group-hover:text-foreground",
+                  )}
+                />
                 <span className="hidden sm:inline-block">{item.name}</span>
               </Link>
             );
@@ -320,9 +378,7 @@ export function ClientNavbar() {
             onClick={() => setSearchOpen(true)}
           >
             <MagnifyingGlassIcon className="mr-2 h-3 w-3" />
-            <span className="hidden lg:inline-flex">
-              {shortcutKey}+K
-            </span>
+            <span className="hidden lg:inline-flex">{shortcutKey}+K</span>
           </Button>
 
           <div className="flex items-center gap-2">

@@ -4,9 +4,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import Image from "next/image";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -93,37 +99,11 @@ export function HeroSection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Button asChild size="lg" className="h-12 px-6 group">
-                <Link href="/register/pro">
-                  Commencer gratuitement
+                <Link href="#cta">
+                  Je m&apos;inscrit à la phase bêta
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 px-6 flex items-center gap-2"
-                  >
-                    <Play className="w-4 h-4 fill-current" />
-                    Voir la démo
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl p-1 bg-background/95 backdrop-blur-sm">
-                  <div className="aspect-video w-full rounded-lg overflow-hidden">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example"
-                      title="Démonstration Biume Pro"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </DialogContent>
-              </Dialog>
             </div>
           </motion.div>
 
@@ -199,7 +179,9 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="text-sm font-semibold">+42%</p>
-                <p className="text-xs text-muted-foreground">d&apos;efficacité</p>
+                <p className="text-xs text-muted-foreground">
+                  d&apos;efficacité
+                </p>
               </div>
             </div>
           </motion.div>

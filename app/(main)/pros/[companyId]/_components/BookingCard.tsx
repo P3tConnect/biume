@@ -10,11 +10,12 @@ import {
   CredenzaTitle,
   CredenzaDescription,
   CredenzaFooter,
+  Input,
 } from "@/components/ui";
 import { ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
-import { Dispatch, SetStateAction, useState, useMemo } from "react";
-import { format, isSameDay } from "date-fns";
+import { Dispatch, SetStateAction, useState } from "react";
+import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
@@ -26,6 +27,14 @@ import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
 import { useQuery } from "@tanstack/react-query";
 import AppointmentPicker from "@/components/ui/appointment-picker";
+import { useSession, signIn } from "@/src/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/src/lib";
+import { z } from "zod";
+import Link from "next/link";
 
 interface BookingCardProps {
   services: Service[];
@@ -52,7 +61,14 @@ export function BookingCard({
   setSelectedDate,
   setSelectedTime,
 }: BookingCardProps) {
+  const router = useRouter();
+  const { data: session } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const { data: userPets } = useQuery({
     queryKey: ["user-pets"],
@@ -99,6 +115,41 @@ export function BookingCard({
     setSelectedDate(date);
     setSelectedTime(time);
   };
+
+  const handleOpenBookingModal = () => {
+    if (!session) {
+      // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion
+      setIsLoginModalOpen(true);
+    } else {
+      // Si l'utilisateur est connecté, ouvrir la modale de réservation
+      setIsConfirmModalOpen(true);
+    }
+  };
+
+  const onLoginSubmit = handleSubmit(async (data) => {
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
+      },
+      {
+        onRequest: () => {
+          setLoginLoading(true);
+        },
+        onSuccess: () => {
+          setLoginLoading(false);
+          toast.success("Connexion réussie !");
+          setIsLoginModalOpen(false);
+          setIsConfirmModalOpen(true); // Ouvrir la modale de réservation après connexion
+        },
+        onError: (error) => {
+          setLoginLoading(false);
+          toast.error(`Erreur : ${error.error.message}`);
+        },
+      },
+    );
+  });
 
   const handleBooking = () => {
     // TODO: Implémenter la logique de réservation
@@ -257,16 +308,88 @@ export function BookingCard({
           disabled={!selectedTime}
           className="w-full"
           size="lg"
-          onClick={() => setIsConfirmModalOpen(true)}
+          onClick={handleOpenBookingModal}
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-              locale: fr,
-            })} à ${selectedTime}`
+                locale: fr,
+              })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
 
+      {/* Modale de connexion */}
+      <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+        <CredenzaContent className="sm:max-w-[450px]">
+          <CredenzaHeader>
+            <CredenzaTitle>Connexion requise</CredenzaTitle>
+            <CredenzaDescription>
+              Veuillez vous connecter pour continuer votre réservation
+            </CredenzaDescription>
+          </CredenzaHeader>
+
+          <form onSubmit={onLoginSubmit} className="py-4 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="votre@email.com"
+                {...register("email")}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Mot de passe
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="********"
+                {...register("password")}
+              />
+            </div>
+
+            <CredenzaFooter className="px-0 pt-2">
+              <div className="flex w-full justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsLoginModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={loginLoading}>
+                  {loginLoading ? "Connexion..." : "Se connecter"}
+                </Button>
+              </div>
+              <div className="w-full text-center mt-4">
+                <p className="text-sm text-muted-foreground">
+                  Vous n&apos;avez pas de compte ?{" "}
+                  <Link
+                    href="/sign-up"
+                    className="text-primary hover:underline"
+                  >
+                    Inscrivez-vous
+                  </Link>
+                </p>
+              </div>
+            </CredenzaFooter>
+          </form>
+        </CredenzaContent>
+      </Credenza>
+
+      {/* Modale de réservation (existante) */}
       <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
@@ -279,9 +402,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                          Object.values(steps).findIndex(
-                            (s) => s.id === current.id,
-                          )
+                            Object.values(steps).findIndex(
+                              (s) => s.id === current.id,
+                            )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}

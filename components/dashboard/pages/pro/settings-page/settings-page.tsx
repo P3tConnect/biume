@@ -1,6 +1,14 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger, Card, CardHeader, CardTitle } from "@/components/ui";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Card,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui";
 import {
   Building2,
   CreditCard,
@@ -59,7 +67,7 @@ const SettingsPageComponent = () => {
             </TabsTrigger>
             <TabsTrigger value="slots" className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              Slots
+              Créneaux
             </TabsTrigger>
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />

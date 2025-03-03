@@ -5,8 +5,11 @@ import { Card } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function OrganizationSubscriptionSuccess() {
+  redirect("/");
+
   const searchParams = useSearchParams();
   const orgId = searchParams.get("org");
 
@@ -36,13 +39,17 @@ export default function OrganizationSubscriptionSuccess() {
                 </h1>
 
                 <p className="text-muted-foreground max-w-md mx-auto text-base">
-                  Merci pour votre abonnement. Votre organisation a maintenant accès à toutes les fonctionnalités premium.
+                  Merci pour votre abonnement. Votre organisation a maintenant
+                  accès à toutes les fonctionnalités premium.
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
-              <Link href={`/dashboard/organization/${orgId}`} className="w-full sm:w-auto">
+              <Link
+                href={`/dashboard/organization/${orgId}`}
+                className="w-full sm:w-auto"
+              >
                 <Button size="lg" className="w-full">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Retourner au tableau de bord

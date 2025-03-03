@@ -39,8 +39,7 @@ export const features = [
   },
   {
     title: "Collaboration simplifiée",
-    description:
-      "Partagez facilement les informations avec les vétérinaires et autres soignants.",
+    description: "Partagez facilement les informations avec les soignants.",
     icon: Users,
     details:
       "Facilitez la communication entre professionnels grâce à notre plateforme collaborative. Partagez des dossiers, échangez des avis et coordonnez les soins en toute simplicité. La collaboration n'a jamais été aussi fluide.",
