@@ -112,7 +112,7 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        <motion.div
+        {/* <motion.div
           className="mt-20 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -145,7 +145,7 @@ export function FeaturesSection() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
