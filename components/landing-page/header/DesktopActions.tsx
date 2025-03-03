@@ -33,10 +33,10 @@ export const DesktopActions = ({
           )}
         >
           <Button variant="ghost" size={isScrolled ? "sm" : "default"} asChild>
-            <Link href="/login">Connexion</Link>
+            <Link href="/sign-in">Connexion</Link>
           </Button>
           <Button size={isScrolled ? "sm" : "default"} asChild>
-            <Link href="/register">Inscription</Link>
+            <Link href="/sign-up">Inscription</Link>
           </Button>
         </div>
       )}
