@@ -10,16 +10,23 @@ type PetContextType = {
 const PetContext = createContext<PetContextType | undefined>(undefined);
 
 export const PetProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialiser petId depuis localStorage s'il existe
   const [petId, setPetId] = useState<string | null>(() => {
-    // Vérifier si nous sommes côté client
     if (typeof window !== 'undefined') {
       const savedPetId = localStorage.getItem('currentPetId');
       console.log(
         'PetContext: Initialisation depuis localStorage:',
         savedPetId
       );
-      return savedPetId;
+
+      // Validation de l'ID
+      if (savedPetId && savedPetId.trim() !== '') {
+        return savedPetId;
+      }
+
+      // Si l'ID n'est pas valide, on le supprime du localStorage
+      if (savedPetId) {
+        localStorage.removeItem('currentPetId');
+      }
     }
     return null;
   });
@@ -27,16 +34,24 @@ export const PetProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     console.log("PetContext: ID de l'animal mis à jour:", petId);
 
-    // Sauvegarder l'ID dans localStorage quand il change
-    if (petId) {
-      localStorage.setItem('currentPetId', petId);
+    if (typeof window !== 'undefined') {
+      if (petId && petId.trim() !== '') {
+        localStorage.setItem('currentPetId', petId);
+      } else {
+        // Si l'ID n'est pas valide, on le supprime du localStorage
+        localStorage.removeItem('currentPetId');
+      }
     }
   }, [petId]);
 
   const handleSetPetId = (id: string) => {
+    if (!id || id.trim() === '') {
+      console.error('Tentative de définir un ID invalide:', id);
+      return;
+    }
+
     console.log("PetContext: Définition de l'ID de l'animal:", id);
 
-    // Sauvegarder immédiatement dans localStorage aussi
     if (typeof window !== 'undefined') {
       localStorage.setItem('currentPetId', id);
     }

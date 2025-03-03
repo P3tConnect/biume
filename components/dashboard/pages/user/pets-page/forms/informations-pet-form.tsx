@@ -69,36 +69,75 @@ const InformationsPetForm = ({
   const { mutateAsync } = useMutation({
     mutationFn: createPet,
     onSuccess: (data) => {
-      toast.success('Animal créé avec succès!');
-      form.reset();
+      console.log('Réponse brute de createPet:', data);
+      console.log('Type de la réponse:', typeof data);
+      console.log('Structure de la réponse:', JSON.stringify(data, null, 2));
 
-      console.log('Réponse de createPet:', data);
+      // Vérification plus stricte de la réponse
+      if (!data) {
+        console.error('Données de réponse invalides (null ou undefined)');
+        toast.error('Erreur: Données de création invalides');
+        return;
+      }
 
       let animalId = null;
 
-      // Essayer d'extraire l'ID de la réponse selon sa structure
-      if (data && Array.isArray(data) && data.length > 0 && data[0]?.id) {
-        animalId = data[0].id;
-      } else if (data && typeof data === 'object' && 'id' in data) {
-        animalId = data.id;
-      }
+      try {
+        // Gestion des différents formats possibles de réponse
+        if (typeof data === 'string') {
+          console.log('Format de réponse: string');
+          animalId = data;
+        } else if (Array.isArray(data)) {
+          console.log('Format de réponse: array');
+          if (data.length > 0 && data[0]?.id) {
+            animalId = data[0].id;
+          } else {
+            console.error('Array reçu mais sans ID valide:', data);
+          }
+        } else if (typeof data === 'object') {
+          console.log('Format de réponse: object');
+          if ('id' in data) {
+            animalId = data.id;
+          } else {
+            // Recherche récursive de l'ID dans l'objet
+            const findId = (obj: any): string | null => {
+              for (const key in obj) {
+                if (key === 'id' && typeof obj[key] === 'string') {
+                  return obj[key];
+                } else if (typeof obj[key] === 'object') {
+                  const found = findId(obj[key]);
+                  if (found) return found;
+                }
+              }
+              return null;
+            };
+            animalId = findId(data);
+            if (animalId) {
+              console.log('ID trouvé dans la structure imbriquée:', animalId);
+            }
+          }
+        }
 
-      if (animalId) {
-        console.log('Setting petId à:', animalId);
+        if (!animalId) {
+          console.error('Structure complète de la réponse:', data);
+          toast.error("Erreur: Impossible de récupérer l'ID de l'animal");
+          return;
+        }
 
-        // Sauvegarder dans le contexte
+        console.log('ID animal trouvé:', animalId);
         setPetId(animalId);
 
-        // Sauvegarder dans localStorage pour plus de sécurité
         if (typeof window !== 'undefined') {
           localStorage.setItem('currentPetId', animalId);
           console.log("ID de l'animal sauvegardé dans localStorage:", animalId);
         }
-      } else {
-        console.error('Impossible de définir petId, données invalides:', data);
-      }
 
-      nextStep();
+        toast.success('Animal créé avec succès!');
+        nextStep();
+      } catch (error) {
+        console.error('Erreur lors du traitement de la réponse:', error);
+        toast.error('Erreur lors du traitement de la réponse');
+      }
     },
     onError: (error) => {
       console.error('Erreur création animal:', error);
@@ -107,8 +146,13 @@ const InformationsPetForm = ({
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('Soumission du formulaire animal avec:', data);
-    await mutateAsync(data);
+    try {
+      console.log('Données du formulaire avant soumission:', data);
+      const result = await mutateAsync(data);
+      console.log('Résultat de mutateAsync:', result);
+    } catch (error) {
+      console.error('Erreur lors de la soumission:', error);
+    }
   });
 
   const { startUpload: startImageUpload } = useUploadThing(
