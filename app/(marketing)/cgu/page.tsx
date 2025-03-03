@@ -37,7 +37,7 @@ const CGUPage = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl font-bold mb-8 text-foreground">
-            Conditions Générales d'Utilisation
+            Conditions Générales d&apos;Utilisation
           </h1>
 
           <div className="space-y-8 text-foreground/90">
@@ -47,9 +47,10 @@ const CGUPage = () => {
               </h2>
               <p>
                 Bienvenue sur Biume. Les présentes Conditions Générales
-                d'Utilisation régissent votre utilisation de notre application
-                et des services associés. En accédant à notre plateforme ou en
-                l'utilisant, vous acceptez d'être lié par ces conditions.
+                d&apos;Utilisation régissent votre utilisation de notre
+                application et des services associés. En accédant à notre
+                plateforme ou en l&apos;utilisant, vous acceptez d&apos;être lié
+                par ces conditions.
               </p>
             </section>
 
@@ -59,16 +60,16 @@ const CGUPage = () => {
               </h2>
               <ul className="list-disc pl-6 space-y-2">
                 <li>
-                  <strong>Service</strong> : l'application Biume et toutes ses
-                  fonctionnalités
+                  <strong>Service</strong> : l&apos;application Biume et toutes
+                  ses fonctionnalités
                 </li>
                 <li>
                   <strong>Utilisateur</strong> : toute personne qui accède ou
                   utilise le Service
                 </li>
                 <li>
-                  <strong>Compte</strong> : l'espace personnel créé lors de
-                  l'inscription
+                  <strong>Compte</strong> : l&apos;espace personnel créé lors de
+                  l&apos;inscription
                 </li>
                 <li>
                   <strong>Contenu</strong> : données, textes, images et autres
@@ -100,18 +101,19 @@ const CGUPage = () => {
               </p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>
-                  Utiliser le Service d'une manière qui pourrait l'endommager
+                  Utiliser le Service d&apos;une manière qui pourrait
+                  l&apos;endommager
                 </li>
                 <li>
-                  Tenter d'accéder à des parties du Service auxquelles vous
-                  n'êtes pas autorisé
+                  Tenter d&apos;accéder à des parties du Service auxquelles vous
+                  n&apos;êtes pas autorisé
                 </li>
                 <li>
                   Utiliser le Service pour distribuer des contenus illégaux ou
                   nuisibles
                 </li>
                 <li>
-                  Collecter des informations sur d'autres utilisateurs sans
+                  Collecter des informations sur d&apos;autres utilisateurs sans
                   autorisation
                 </li>
               </ul>
@@ -124,8 +126,8 @@ const CGUPage = () => {
               <p>
                 Le Service et son contenu original, fonctionnalités et
                 fonctionnalités sont la propriété de Biume et sont protégés par
-                les lois internationales sur le droit d'auteur et la propriété
-                intellectuelle.
+                les lois internationales sur le droit d&apos;auteur et la
+                propriété intellectuelle.
               </p>
             </section>
 
@@ -146,7 +148,10 @@ const CGUPage = () => {
               </h2>
               <p>
                 Si vous avez des questions concernant ces conditions, veuillez
-                nous contacter à l'adresse suivante : contact@biume.com
+                nous contacter à l&apos;adresse suivante :{" "}
+                <a href="mailto:contact@biume.com" className="text-primary">
+                  contact@biume.com
+                </a>
               </p>
             </section>
           </div>

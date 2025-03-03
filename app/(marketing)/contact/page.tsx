@@ -58,7 +58,7 @@ const ContactPage = () => {
         <Button variant="ghost" asChild className="mb-8 group">
           <Link href="/" className="flex items-center gap-2">
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Retour à l'accueil</span>
+            <span>Retour à l&apos;accueil</span>
           </Link>
         </Button>
 
@@ -78,8 +78,9 @@ const ContactPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Nous sommes là pour répondre à toutes vos questions. N'hésitez pas à
-            nous contacter et nous vous répondrons dans les plus brefs délais.
+            Nous sommes là pour répondre à toutes vos questions. N&apos;hésitez
+            pas à nous contacter et nous vous répondrons dans les plus brefs
+            délais.
           </motion.p>
         </div>
 

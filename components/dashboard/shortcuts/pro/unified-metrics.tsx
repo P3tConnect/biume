@@ -201,7 +201,9 @@ export const UnifiedMetrics = () => {
             <div className="text-2xl font-bold mb-0.5">
               <CountAnimation value={8} />
             </div>
-            <div className="text-xs text-muted-foreground">Aujourd'hui</div>
+            <div className="text-xs text-muted-foreground">
+              Aujourd&apos;hui
+            </div>
           </div>
         </Card>
 
@@ -293,7 +295,7 @@ export const UnifiedMetrics = () => {
           {/* État d'avancement */}
           <div className="mt-4 space-y-2">
             <div className="text-xs font-medium text-muted-foreground">
-              ÉTAT D'AVANCEMENT
+              ÉTAT D&apos;AVANCEMENT
             </div>
             <div className="pt-2 pb-3 space-y-1">
               <div className="flex items-center justify-between text-sm">

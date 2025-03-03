@@ -65,11 +65,12 @@ const PrivacyPage = () => {
               </p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>
-                  Informations d'identification (nom, prénom, adresse email)
+                  Informations d&apos;identification (nom, prénom, adresse
+                  email)
                 </li>
                 <li>Données de profil</li>
                 <li>Informations sur votre animal</li>
-                <li>Données d'utilisation et préférences</li>
+                <li>Données d&apos;utilisation et préférences</li>
               </ul>
             </section>
 
@@ -130,12 +131,12 @@ const PrivacyPage = () => {
                 personnelles, notamment :
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Le droit d'accéder à vos données</li>
+                <li>Le droit d&apos;accéder à vos données</li>
                 <li>Le droit de rectifier vos données</li>
-                <li>Le droit à l'effacement (droit à l'oubli)</li>
+                <li>Le droit à l&apos;effacement (droit à l&apos;oubli)</li>
                 <li>Le droit à la limitation du traitement</li>
                 <li>Le droit à la portabilité des données</li>
-                <li>Le droit d'opposition</li>
+                <li>Le droit d&apos;opposition</li>
               </ul>
             </section>
 
@@ -146,8 +147,8 @@ const PrivacyPage = () => {
               <p>
                 Nous utilisons des cookies et technologies similaires pour
                 améliorer votre expérience, analyser le trafic et personnaliser
-                le contenu. Vous pouvez contrôler l'utilisation des cookies via
-                les paramètres de votre navigateur.
+                le contenu. Vous pouvez contrôler l&apos;utilisation des cookies
+                via les paramètres de votre navigateur.
               </p>
             </section>
 
@@ -168,8 +169,8 @@ const PrivacyPage = () => {
               </h2>
               <p>
                 Si vous avez des questions concernant cette politique de
-                confidentialité, n'hésitez pas à nous contacter à l'adresse
-                suivante :{" "}
+                confidentialité, n&apos;hésitez pas à nous contacter à
+                l&apos;adresse suivante :{" "}
                 <a
                   href="mailto:privacy@biume.com"
                   className="text-primary hover:underline"

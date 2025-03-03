@@ -375,7 +375,7 @@ export function BookingCard({
               </div>
               <div className="w-full text-center mt-4">
                 <p className="text-sm text-muted-foreground">
-                  Vous n'avez pas de compte ?{" "}
+                  Vous n&apos;avez pas de compte ?{" "}
                   <Link
                     href="/sign-up"
                     className="text-primary hover:underline"

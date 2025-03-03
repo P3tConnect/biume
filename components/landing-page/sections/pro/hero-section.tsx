@@ -100,7 +100,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Button asChild size="lg" className="h-12 px-6 group">
                 <Link href="#cta">
-                  Je m'inscrit à la phase bêta
+                  Je m&apos;inscrit à la phase bêta
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
