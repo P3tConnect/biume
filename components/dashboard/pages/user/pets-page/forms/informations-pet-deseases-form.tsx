@@ -14,6 +14,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Tag, TagInput } from 'emblor';
+import { toast } from 'sonner';
+import { usePetContext } from '../context/pet-context';
+import { useSession } from '@/src/lib/auth-client';
+import { updatePetDeseases } from '@/src/actions';
+import { useMutation } from '@tanstack/react-query';
 
 // Liste des maladies communes chez les animaux comme exemple
 const commonDeseases = [
@@ -35,6 +40,8 @@ const InformationsPetDeseasesForm = ({
   onSubmitDeseases: (deseases: string[]) => Promise<void>;
   isPending: boolean;
 }) => {
+  const { petId } = usePetContext();
+  const { data: session } = useSession();
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [selectedDeseases, setSelectedDeseases] = useState<string[]>([]);
 
@@ -42,6 +49,19 @@ const InformationsPetDeseasesForm = ({
     resolver: zodResolver(petSchema),
     defaultValues: {
       deseases: [],
+    },
+  });
+
+  const { mutateAsync } = useMutation({
+    mutationFn: updatePetDeseases,
+    onSuccess: () => {
+      toast.success('Maladies enregistrées avec succès!');
+      nextStep();
+    },
+    onError: (error) => {
+      toast.error(
+        `Erreur lors de l'enregistrement des maladies: ${error.message}`
+      );
     },
   });
 
@@ -59,7 +79,20 @@ const InformationsPetDeseasesForm = ({
   };
 
   const handleSubmit = async () => {
-    await onSubmitDeseases(selectedDeseases);
+    if (!petId) {
+      toast.error("Erreur : ID de l'animal non trouvé");
+      return;
+    }
+
+    if (!session) {
+      toast.error('Erreur : Session non trouvée');
+      return;
+    }
+
+    await mutateAsync({
+      deseases: selectedDeseases,
+      petId: petId,
+    });
   };
 
   return (
