@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStepper, utils } from '../hooks/useStepperAnimal';
 import {
   Credenza,
@@ -15,6 +15,7 @@ import PetCompleteStep from '../forms/pet-complete-step';
 import InformationsPetDeseasesStep from './informations-pet-deseases-step';
 import InformationsPetIntolerancesStep from './informations-pet-intolerances-step';
 import InformationsPetAllergiesStep from './informations-pet-allergies-step';
+import { usePetContext } from '../context/pet-context';
 
 const StepperAnimal = () => {
   const {
@@ -26,9 +27,24 @@ const StepperAnimal = () => {
     isLast,
     switch: switchStep,
   } = useStepper();
+  const { petId } = usePetContext();
 
   const currentIndex = utils.getIndex(current.id);
   const [open, setOpen] = useState(true);
+
+  // Vérifier que l'ID est présent lors du passage aux étapes nécessitant un animal existant
+  useEffect(() => {
+    // On ne vérifie pas l'ID pour l'étape initiale de création de l'animal
+    if (current.id !== 'pet') {
+      const storedPetId =
+        typeof window !== 'undefined'
+          ? localStorage.getItem('currentPetId')
+          : null;
+      console.log(
+        `[StepperAnimal] Étape actuelle: ${current.id}, ID depuis le contexte: ${petId}, ID depuis localStorage: ${storedPetId}`
+      );
+    }
+  }, [current.id, petId]);
 
   return (
     <Credenza open={open}>

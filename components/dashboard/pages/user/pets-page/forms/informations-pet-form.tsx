@@ -30,6 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createPet } from '@/src/actions';
 import Image from 'next/image';
 import { useMutation } from '@tanstack/react-query';
+import { usePetContext } from '../context/pet-context';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -46,6 +47,7 @@ const InformationsPetForm = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const { setPetId } = usePetContext();
 
   const form = useForm<z.infer<typeof CreatePetSchema>>({
     resolver: zodResolver(CreatePetSchema),
@@ -66,17 +68,46 @@ const InformationsPetForm = ({
 
   const { mutateAsync } = useMutation({
     mutationFn: createPet,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Animal créé avec succès!');
       form.reset();
+
+      console.log('Réponse de createPet:', data);
+
+      let animalId = null;
+
+      // Essayer d'extraire l'ID de la réponse selon sa structure
+      if (data && Array.isArray(data) && data.length > 0 && data[0]?.id) {
+        animalId = data[0].id;
+      } else if (data && typeof data === 'object' && 'id' in data) {
+        animalId = data.id;
+      }
+
+      if (animalId) {
+        console.log('Setting petId à:', animalId);
+
+        // Sauvegarder dans le contexte
+        setPetId(animalId);
+
+        // Sauvegarder dans localStorage pour plus de sécurité
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('currentPetId', animalId);
+          console.log("ID de l'animal sauvegardé dans localStorage:", animalId);
+        }
+      } else {
+        console.error('Impossible de définir petId, données invalides:', data);
+      }
+
       nextStep();
     },
     onError: (error) => {
+      console.error('Erreur création animal:', error);
       toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
     },
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log('Soumission du formulaire animal avec:', data);
     await mutateAsync(data);
   });
 

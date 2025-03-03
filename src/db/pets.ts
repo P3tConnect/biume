@@ -40,8 +40,12 @@ export const pets = pgTable('pets', {
   updatedAt: timestamp('updatedAt', { mode: 'date' }),
 });
 
-export const petsRelations = relations(pets, ({ many }) => ({
+export const petsRelations = relations(pets, ({ many, one }) => ({
   appointments: many(appointments),
+  owner: one(user, {
+    fields: [pets.ownerId],
+    references: [user.id],
+  }),
 }));
 
 export type Pet = InferSelectModel<typeof pets> & {

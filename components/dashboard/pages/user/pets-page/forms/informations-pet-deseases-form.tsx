@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -12,13 +12,8 @@ import {
 import { petSchema } from '../schema/pet-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { updatePetDeseases } from '@/src/actions';
-import { toast } from 'sonner';
-import { usePetContext } from '../context/pet-context';
 import { z } from 'zod';
-import { useSession } from '@/src/lib/auth-client';
 import { Tag, TagInput } from 'emblor';
-import { useMutation } from '@tanstack/react-query';
 
 // Liste des maladies communes chez les animaux comme exemple
 const commonDeseases = [
@@ -32,13 +27,16 @@ const commonDeseases = [
 const InformationsPetDeseasesForm = ({
   nextStep,
   previousStep,
+  onSubmitDeseases,
+  isPending,
 }: {
   nextStep: () => void;
   previousStep: () => void;
+  onSubmitDeseases: (deseases: string[]) => Promise<void>;
+  isPending: boolean;
 }) => {
-  const { petId } = usePetContext();
-  const { data: session } = useSession();
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
+  const [selectedDeseases, setSelectedDeseases] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -47,39 +45,31 @@ const InformationsPetDeseasesForm = ({
     },
   });
 
-  const { mutateAsync } = useMutation({
-    mutationFn: updatePetDeseases,
-    onSuccess: () => {
-      toast.success('Maladies enregistrées avec succès!');
-      nextStep();
-    },
-    onError: (error) => {
-      toast.error(
-        `Erreur lors de l'enregistrement des maladies: ${error.message}`
-      );
-    },
-  });
+  // Mettre à jour le formulaire lorsque selectedDeseases change
+  useEffect(() => {
+    form.setValue('deseases', selectedDeseases);
+    console.log('Maladies sélectionnées mises à jour:', selectedDeseases);
+  }, [selectedDeseases, form]);
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    if (!petId) {
-      toast.error("Erreur : ID de l'animal non trouvé");
-      return;
-    }
-
-    if (!session) {
-      toast.error('Erreur : Session non trouvée');
-      return;
-    }
-
-    await mutateAsync({
-      deseases: data.deseases ?? [],
-      petId: petId,
+  const handleDiseaseSelection = (diseaseText: string) => {
+    console.log('Sélection de la maladie:', diseaseText);
+    setSelectedDeseases((current) => {
+      if (current.includes(diseaseText)) {
+        return current;
+      }
+      return [...current, diseaseText];
     });
-  });
+  };
+
+  const handleSubmit = async () => {
+    console.log('Fonction handleSubmit déclenchée');
+    console.log('Soumission des maladies:', selectedDeseases);
+    await onSubmitDeseases(selectedDeseases);
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className='space-y-6'>
+      <div className='space-y-6'>
         <FormField
           control={form.control}
           name='deseases'
@@ -89,7 +79,7 @@ const InformationsPetDeseasesForm = ({
               <FormControl>
                 <TagInput
                   tags={
-                    field.value?.map((desease, index) => ({
+                    selectedDeseases.map((desease, index) => ({
                       id: index.toString(),
                       text: desease,
                     })) || []
@@ -97,8 +87,10 @@ const InformationsPetDeseasesForm = ({
                   setTags={(newTagsOrSetter) => {
                     const tagsArray = Array.isArray(newTagsOrSetter)
                       ? newTagsOrSetter
-                      : [];
-                    field.onChange(tagsArray.map((tag: Tag) => tag.text));
+                      : newTagsOrSetter([]);
+
+                    const newDeseases = tagsArray.map((tag: Tag) => tag.text);
+                    setSelectedDeseases(newDeseases);
                   }}
                   placeholder='Ajouter une maladie'
                   styleClasses={{
@@ -126,12 +118,7 @@ const InformationsPetDeseasesForm = ({
                     type='button'
                     variant='outline'
                     size='sm'
-                    onClick={() => {
-                      const currentDeseases = field.value || [];
-                      if (!currentDeseases.includes(desease.text)) {
-                        field.onChange([...currentDeseases, desease.text]);
-                      }
-                    }}
+                    onClick={() => handleDiseaseSelection(desease.text)}
                     className='text-xs'
                   >
                     {desease.text}
@@ -142,12 +129,14 @@ const InformationsPetDeseasesForm = ({
           )}
         />
         <div className='flex justify-end gap-2'>
-          <Button variant='outline' onClick={previousStep}>
+          <Button variant='outline' onClick={previousStep} type='button'>
             Retour
           </Button>
-          <Button type='submit'>Suivant</Button>
+          <Button type='button' onClick={handleSubmit} disabled={isPending}>
+            {isPending ? 'Enregistrement...' : 'Suivant'}
+          </Button>
         </div>
-      </form>
+      </div>
     </Form>
   );
 };
