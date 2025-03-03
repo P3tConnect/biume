@@ -13,10 +13,6 @@ export const PetProvider = ({ children }: { children: React.ReactNode }) => {
   const [petId, setPetId] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const savedPetId = localStorage.getItem('currentPetId');
-      console.log(
-        'PetContext: Initialisation depuis localStorage:',
-        savedPetId
-      );
 
       // Validation de l'ID
       if (savedPetId && savedPetId.trim() !== '') {
@@ -32,8 +28,6 @@ export const PetProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    console.log("PetContext: ID de l'animal mis à jour:", petId);
-
     if (typeof window !== 'undefined') {
       if (petId && petId.trim() !== '') {
         localStorage.setItem('currentPetId', petId);
@@ -46,11 +40,8 @@ export const PetProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleSetPetId = (id: string) => {
     if (!id || id.trim() === '') {
-      console.error('Tentative de définir un ID invalide:', id);
       return;
     }
-
-    console.log("PetContext: Définition de l'ID de l'animal:", id);
 
     if (typeof window !== 'undefined') {
       localStorage.setItem('currentPetId', id);

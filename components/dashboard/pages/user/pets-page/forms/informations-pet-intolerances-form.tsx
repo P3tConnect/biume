@@ -70,14 +70,9 @@ const InformationsPetIntolerancesForm = ({
   // Mettre à jour le formulaire lorsque selectedIntolerances change
   useEffect(() => {
     form.setValue('intolerences', selectedIntolerances);
-    console.log(
-      'Intolérances sélectionnées mises à jour:',
-      selectedIntolerances
-    );
   }, [selectedIntolerances, form]);
 
   const handleIntoleranceSelection = (intoleranceText: string) => {
-    console.log("Sélection de l'intolérance:", intoleranceText);
     setSelectedIntolerances((current) => {
       if (current.includes(intoleranceText)) {
         return current;
@@ -87,8 +82,6 @@ const InformationsPetIntolerancesForm = ({
   };
 
   const handleSubmit = async () => {
-    console.log('Fonction handleSubmit déclenchée');
-    console.log('Soumission des intolérances:', selectedIntolerances);
     if (!petId) {
       toast.error("Erreur : ID de l'animal non trouvé");
       return;

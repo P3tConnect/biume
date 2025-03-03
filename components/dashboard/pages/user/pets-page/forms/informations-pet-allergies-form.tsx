@@ -68,11 +68,9 @@ const InformationsPetAllergiesForm = ({
   // Mettre à jour le formulaire lorsque selectedAllergies change
   useEffect(() => {
     form.setValue('allergies', selectedAllergies);
-    console.log('Allergies sélectionnées mises à jour:', selectedAllergies);
   }, [selectedAllergies, form]);
 
   const handleAllergySelection = (allergyText: string) => {
-    console.log("Sélection de l'allergie:", allergyText);
     setSelectedAllergies((current) => {
       if (current.includes(allergyText)) {
         return current;
@@ -82,8 +80,6 @@ const InformationsPetAllergiesForm = ({
   };
 
   const handleSubmit = async () => {
-    console.log('Fonction handleSubmit déclenchée');
-    console.log('Soumission des allergies:', selectedAllergies);
     if (!petId) {
       toast.error("Erreur : ID de l'animal non trouvé");
       return;
