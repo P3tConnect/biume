@@ -12,7 +12,6 @@ import Link from "next/link";
 import {
   CalendarDays,
   ChevronLeft,
-  ChevronRight,
   Clock,
   Heart,
   MapPin,
@@ -23,7 +22,6 @@ import {
   Clipboard,
   Settings,
   MessageSquare,
-  ArrowRight,
   ChevronDown,
 } from "lucide-react";
 import { Organization } from "@/src/db";
@@ -156,7 +154,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
           {/* Header flottant avec navigation et info essentielles */}
           <motion.header
             style={{ opacity: headerOpacity, scale: headerScale }}
-            className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm"
+            className="sticky top-2 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
           >
             <div className="container mx-auto py-3">
               <div className="flex justify-between items-center">
@@ -202,10 +200,6 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <Share2 className="h-5 w-5" />
-                  </Button>
-                  <Button size="sm" className="gap-1 hidden md:flex">
-                    <CalendarDays className="h-4 w-4" />
-                    <span>Rendez-vous</span>
                   </Button>
                 </div>
               </div>
