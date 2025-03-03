@@ -45,11 +45,11 @@ const TitlePage = () => {
           </div>
         </CardHeader>
       </Card>
-      <DialogContent className='max-h-[90vh] w-full max-w-4xl overflow-y-auto'>
+      <DialogContent className='max-h-[90vh] w-full max-w-[900px] overflow-y-auto'>
         <VisuallyHidden>
           <DialogTitle>Ajouter un animal</DialogTitle>
         </VisuallyHidden>
-        <div className='p-4'>
+        <div className='p-6'>
           <PetProvider>
             <StepperAnimal />
           </PetProvider>

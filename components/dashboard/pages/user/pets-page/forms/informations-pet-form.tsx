@@ -2,7 +2,6 @@
 
 import {
   Button,
-  DatePicker,
   Form,
   FormControl,
   FormField,
@@ -290,11 +289,26 @@ const InformationsPetForm = ({
                 name='birthDate'
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Date de naissance</FormLabel>
                     <FormControl>
-                      <DatePicker
-                        label='Date de naissance'
-                        date={field.value ?? new Date()}
-                        onSelect={field.onChange}
+                      <Input
+                        type='date'
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value)
+                                .toLocaleDateString('fr-FR')
+                                .split('/')
+                                .reverse()
+                                .join('-')
+                            : ''
+                        }
+                        onChange={(e) => {
+                          const date = e.target.value
+                            ? new Date(e.target.value)
+                            : null;
+                          field.onChange(date);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
