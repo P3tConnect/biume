@@ -14,11 +14,12 @@ import {
   FormMessage,
 } from '@/components/ui';
 import { Checkbox } from '@/components/ui/checkbox';
-import { createPetAllergies } from '@/src/actions';
 import { useActionMutation } from '@/src/hooks/action-hooks';
 import { toast } from 'sonner';
 import { usePetContext } from '../context/pet-context';
 import { z } from 'zod';
+import { useSession } from '@/src/lib/auth-client';
+import { updatePetAllergies } from '@/src/actions';
 
 const InformationsPetAllergiesForm = ({
   nextStep,
@@ -28,15 +29,7 @@ const InformationsPetAllergiesForm = ({
   previousStep: () => void;
 }) => {
   const { petId } = usePetContext();
-
-  const allergiesOptions = [
-    { label: 'Pollen', value: 'pollen' },
-    { label: 'Acariens', value: 'dust_mites' },
-    { label: 'Certains aliments', value: 'food' },
-    { label: 'Certains médicaments', value: 'medications' },
-    { label: 'Certains produits chimiques', value: 'chemicals' },
-    { label: 'Autre', value: 'other' },
-  ];
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -45,7 +38,7 @@ const InformationsPetAllergiesForm = ({
     },
   });
 
-  const { mutateAsync } = useActionMutation(createPetAllergies, {
+  const { mutateAsync } = useActionMutation(updatePetAllergies, {
     onSuccess: () => {
       toast.success('Allergies enregistrées avec succès!');
       nextStep();
@@ -63,58 +56,20 @@ const InformationsPetAllergiesForm = ({
       return;
     }
 
+    if (!session) {
+      toast.error('Erreur : Session non trouvée');
+      return;
+    }
+
     await mutateAsync({
       allergies: data.allergies ?? [],
-      pets: petId,
+      petId: petId,
     });
   });
 
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className='space-y-6'>
-        <FormField
-          control={form.control}
-          name='allergies'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sélectionnez les allergies</FormLabel>
-              <div className='grid grid-cols-2 gap-4'>
-                {allergiesOptions.map((allergy) => (
-                  <FormField
-                    key={allergy.value}
-                    control={form.control}
-                    name='allergies'
-                    render={({ field: innerField }) => (
-                      <FormItem
-                        key={allergy.value}
-                        className='flex flex-row items-start space-x-3 space-y-0'
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(allergy.value)}
-                            onCheckedChange={(checked) => {
-                              const updatedValue = checked
-                                ? [...field.value, allergy.value]
-                                : field.value.filter(
-                                    (value) => value !== allergy.value
-                                  );
-                              field.onChange(updatedValue);
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className='font-normal'>
-                          {allergy.label}
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className='flex justify-end gap-2'>
           <Button variant='outline' onClick={previousStep}>
             Retour

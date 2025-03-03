@@ -2,9 +2,8 @@
 
 import { CreatePetSchema, Pet, pets } from '@/src/db/pets';
 import { createServerAction, db, requireAuth } from '../lib';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { z } from 'zod';
-import { allergies, deseases, intolerences } from '../db';
 
 export const createPet = createServerAction(
   CreatePetSchema,
@@ -43,114 +42,108 @@ export const getPets = createServerAction(
   [requireAuth]
 );
 
-export const createPetDeseases = createServerAction(
+export const updatePetDeseases = createServerAction(
   z.object({
-    pets: z.string(),
+    petId: z.string().uuid(),
     deseases: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
-      where: (pets) =>
-        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
     });
 
     if (!pet) {
       throw new Error("L'animal n'existe pas ou ne vous appartient pas");
     }
 
-    const createdDeseases = await db
-      .insert(deseases)
-      .values(
-        input.deseases.map(() => ({
-          name: '',
-          description: '',
-          pets: pet?.id,
-          ownerId: ctx.user?.id ?? '',
-          owner: ctx.user?.name ?? '',
-        }))
-      )
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        deseases: input.deseases,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
       .returning()
       .execute();
 
-    if (!createdDeseases) {
-      throw new Error('Erreur lors de la création des maladies');
+    if (!updatedPet[0]) {
+      throw new Error("Erreur lors de la mise à jour des maladies de l'animal");
     }
 
-    return createdDeseases;
+    return updatedPet[0];
   },
   [requireAuth]
 );
 
-export const createPetAllergies = createServerAction(
+export const updatePetAllergies = createServerAction(
   z.object({
-    pets: z.string(),
+    petId: z.string().uuid(),
     allergies: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
-      where: (pets) =>
-        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
     });
 
     if (!pet) {
       throw new Error("L'animal n'existe pas ou ne vous appartient pas");
     }
 
-    const createdAllergies = await db
-      .insert(allergies)
-      .values(
-        input.allergies.map((allergy) => ({
-          name: allergy,
-          description: '',
-          pets: pet?.id,
-          ownerId: ctx.user?.id ?? '',
-        }))
-      )
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        allergies: input.allergies,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
       .returning()
       .execute();
 
-    if (!createdAllergies) {
-      throw new Error('Erreur lors de la création des maladies');
+    if (!updatedPet[0]) {
+      throw new Error(
+        "Erreur lors de la mise à jour des allergies de l'animal"
+      );
     }
 
-    return createdAllergies;
+    return updatedPet[0];
   },
   [requireAuth]
 );
 
-export const createPetIntolerances = createServerAction(
+export const updatePetIntolerences = createServerAction(
   z.object({
-    pets: z.string(),
+    petId: z.string().uuid(),
     intolerences: z.array(z.string()),
   }),
   async (input, ctx) => {
     const pet = await db.query.pets.findFirst({
-      where: (pets) =>
-        eq(pets.id, input.pets) && eq(pets.ownerId, ctx.user?.id ?? ''),
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
     });
 
     if (!pet) {
       throw new Error("L'animal n'existe pas ou ne vous appartient pas");
     }
 
-    const createdIntolerences = await db
-      .insert(intolerences)
-      .values(
-        input.intolerences.map((intolerance) => ({
-          name: intolerance,
-          description: '',
-          pets: pet?.id,
-          ownerId: ctx.user?.id ?? '',
-        }))
-      )
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        intolerences: input.intolerences,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
       .returning()
       .execute();
 
-    if (!createdIntolerences) {
-      throw new Error('Erreur lors de la création des maladies');
+    if (!updatedPet[0]) {
+      throw new Error(
+        "Erreur lors de la mise à jour des intolerences de l'animal"
+      );
     }
 
-    return createdIntolerences;
+    return updatedPet[0];
   },
   [requireAuth]
 );

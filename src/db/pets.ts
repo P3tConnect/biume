@@ -4,9 +4,6 @@ import { appointments } from './appointments';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { user } from './user';
-import { Desease } from './deseases';
-import { Allergy } from './allergies';
-import { Intolerence } from './intolerences';
 import { User } from 'better-auth';
 
 export const petType = pgEnum('petType', [
@@ -25,19 +22,17 @@ export const pets = pgTable('pets', {
     .$defaultFn(() => crypto.randomUUID()),
   name: text('name').notNull(),
   type: petType('type').default('Dog').notNull(),
-  weight: integer('weight'),
-  height: integer('height'),
+  weight: integer('weight').notNull(),
+  height: integer('height').notNull(),
   description: text('description'),
   ownerId: text('ownerId').references(() => user.id, {
     onDelete: 'cascade',
   }),
-  breed: text('breed'),
+  breed: text('breed').notNull(),
   image: text('image'),
   gender: petGender('gender').notNull().default('Male'),
   nacType: text('nacType'),
   birthDate: timestamp('birthDate', { mode: 'date' }).notNull(),
-  furColor: text('furColor'),
-  eyeColor: text('eyeColor'),
   deseases: text('deseases').array(),
   allergies: text('allergies').array(),
   intolerences: text('intolerences').array(),
@@ -51,9 +46,6 @@ export const petsRelations = relations(pets, ({ many }) => ({
 
 export type Pet = InferSelectModel<typeof pets> & {
   owner: User;
-  deseases: Desease[];
-  allergies: Allergy[];
-  intolerences: Intolerence[];
 };
 
 export type CreatePet = typeof pets.$inferInsert;
