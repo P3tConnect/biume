@@ -158,14 +158,15 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="absolute -bottom-6 -left-6 md:bottom-8 md:left-8 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+              className="absolute -bottom-2 -left-2 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
             >
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-background">
                   <Image
-                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=150&auto=format&fit=crop"
+                    src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=150&auto=format&fit=crop"
                     alt="Avatar d'animal"
-                    fill
+                    width={48}
+                    height={48}
                     className="object-cover"
                   />
                 </div>
@@ -182,7 +183,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.5 }}
-              className="absolute -top-6 -right-6 md:top-8 md:right-8 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+              className="absolute -top-2 -right-2 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center justify-center">
