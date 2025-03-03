@@ -1,7 +1,6 @@
 import { ArrowLeft, Building2, Heart, Shield, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/src/lib/auth-client";
 import { UserNav } from "@/components/dashboard/layout/user-nav";
 import { HeroSection } from "./_components/hero-section";
 import { MissionSection } from "./_components/mission-section";
