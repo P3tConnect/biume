@@ -21,6 +21,13 @@ import {
   CredenzaHeader,
 } from '@/components/ui';
 import PetCreationStep from '../client/pet-creation-step';
+import InformationsPetDeseasesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-deseases-step';
+import InformationsPetIntolerancesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-intolerances-step';
+import InformationsPetAllergiesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-allergies-step';
+import InformationsPetForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-form';
+import InformationsPetDeseasesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-deseases-form';
+import InformationsPetAllergiesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-allergies-form';
+import InformationsPetIntolerancesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-intolerances-form';
 
 const StepperClient = ({ open }: { open: boolean }) => {
   const { data: session } = useSession();
@@ -133,7 +140,6 @@ const StepperClient = ({ open }: { open: boolean }) => {
                   Retour
                 </Button>
               )}
-
               <Button
                 onClick={async () => await onSubmit(form.getValues())}
                 className='rounded-xl'
@@ -203,6 +209,9 @@ export const clientOnBoardingSchema = z.object({
       weight: z.number(),
       height: z.number(),
       description: z.string().optional(),
+      deseases: z.array(z.string()).optional(),
+      intolerances: z.array(z.string()).optional(),
+      allergies: z.array(z.string()).optional(),
     })
     .optional(),
 });

@@ -67,7 +67,7 @@ const StepperAnimal = () => {
         petAllergies: () => (
           <InformationsPetAllergiesStep nextStep={next} previousStep={prev} />
         ),
-        complete: () => <PetCompleteStep />,
+        complete: () => <PetCompleteStep nextStep={next} />,
       })}
     </div>
   );
