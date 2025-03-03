@@ -1,30 +1,29 @@
 "use client";
 
 import { Option } from "@/src/db";
-import { Button } from "@/components/ui/button";
-import { Euro, Pencil, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { toast } from "sonner";
-import { use, useState } from "react";
+import { useState } from "react";
 import { OptionForm } from "./option-form";
-import { ActionResult } from "@/src/lib";
+import { OptionItem } from "./option-item";
+
+interface OptionsGridProps {
+  options: Option[];
+  onAddFirstOption: () => void;
+}
 
 export const OptionsGrid = ({
   options,
-}: {
-  options: Promise<ActionResult<Option[]>>;
-}) => {
+  onAddFirstOption,
+}: OptionsGridProps) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const data = use(options);
+  const data = options;
 
-  if (!data || data.data?.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <button
         type="button"
-        onClick={() => {
-          // TODO: Implémenter l'ajout d'une nouvelle option
-          toast.info("Fonctionnalité à venir");
-        }}
+        onClick={onAddFirstOption}
         className={cn(
           "w-full flex flex-col items-center justify-center gap-4 p-8",
           "rounded-2xl border-2 border-dashed",
@@ -43,38 +42,12 @@ export const OptionsGrid = ({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.data?.map((option) => (
-          <div
+        {data?.map((option) => (
+          <OptionItem
             key={option.id}
-            className={cn(
-              "group relative p-6 rounded-xl border bg-card transition-all duration-300",
-              "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-              "dark:bg-gray-950/50 dark:backdrop-blur-xl",
-            )}
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex-1">
-                <h3 className="text-lg font-medium">{option.title}</h3>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Euro className="h-4 w-4" />
-                  <span>{option.price} €</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-sm text-muted-foreground line-clamp-3">
-              {option.description}
-            </p>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => setSelectedOption(option)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </div>
+            option={option}
+            onEdit={setSelectedOption}
+          />
         ))}
       </div>
 

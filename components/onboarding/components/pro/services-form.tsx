@@ -21,8 +21,8 @@ import Image from "next/image";
 import { proServicesSchema } from "../../types/onboarding-schemas";
 import { createServicesStepAction } from "@/src/actions";
 import { toast } from "sonner";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { cn } from "@/src/lib/utils";
+import { useMutation } from "@tanstack/react-query";
 
 const ServicesForm = ({
   nextStep,
@@ -45,7 +45,8 @@ const ServicesForm = ({
     name: "services",
   });
 
-  const { mutateAsync } = useActionMutation(createServicesStepAction, {
+  const { mutateAsync } = useMutation({
+    mutationFn: createServicesStepAction,
     onSuccess: () => {
       reset();
       nextStep();

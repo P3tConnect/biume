@@ -28,8 +28,8 @@ import { ImageIcon, PenBox, Trash2 } from "lucide-react";
 import { CreatePetSchema } from "@/src/db/pets";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPet } from "@/src/actions";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -60,7 +60,8 @@ const InformationsPetForm = () => {
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(createPet, {
+  const { mutateAsync } = useMutation({
+    mutationFn: createPet,
     onSuccess: () => {
       toast.success("Animal créé avec succès!");
       form.reset();
@@ -228,11 +229,11 @@ const InformationsPetForm = () => {
                 name="birthDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de naissance</FormLabel>
                     <FormControl>
                       <DatePicker
+                        label="Date de naissance"
                         date={field.value ?? new Date()}
-                        setDate={field.onChange}
+                        onSelect={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

@@ -17,8 +17,9 @@ import { updateOrganizationPlan } from "@/src/actions";
 import { useActiveOrganization } from "@/src/lib/auth-client";
 import { safeConfig } from "@/src/lib";
 import { toast } from "sonner";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+
 const plans = [
   {
     name: "Basic",
@@ -81,12 +82,13 @@ export function SubscriptionStep() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const { mutateAsync } = useActionMutation(updateOrganizationPlan, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganizationPlan,
     onSuccess: (data) => {
-      router.push(data);
+      window.location.href = data.data!;
     },
-    onError: () => {
-      toast.error("Une erreur est survenue");
+    onError: (error: { message: string }) => {
+      toast.error(error.message);
     },
   });
 

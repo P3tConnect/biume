@@ -151,55 +151,12 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
       groupLabel: "dashboard.sidebar.groupLabels.informations",
       menus: [
         {
-          href: `/help`,
-          label: "dashboard.sidebar.help",
-          active: pathname == `/help`,
-          icon: LucideMessageCircleQuestion,
-        },
-      ],
-    },
-  ];
-}
-
-export function clientMenuList(pathname: string, userId: string) {
-  return [
-    {
-      groupLabel: "",
-      menus: [
-        {
-          href: `/dashboard/user/${userId}`,
-          label: "dashboard",
-          active: pathname == `/dashboard/user/${userId}`,
-          icon: LayoutGrid,
-        },
-        {
-          href: `/dashboard/user/${userId}/timetable`,
-          label: "calendrier",
-          active: pathname == `/dashboard/user/${userId}/timetable`,
-          icon: Calendar,
-        },
-      ],
-    },
-    {
-      groupLabel: "compte",
-      menus: [
-        {
-          href: `/dashboard/user/${userId}/reservations`,
-          label: "reservations",
-          active: pathname == `/dashboard/user/${userId}/reservations`,
-          icon: Ticket,
-        },
-        {
-          href: `/dashboard/user/${userId}/pets`,
-          label: "animaux",
-          active: pathname == `/dashboard/user/${userId}/pets`,
-          icon: PawPrint,
-        },
-        {
-          href: `/dashboard/user/${userId}/settings`,
-          label: "paramètres",
-          active: pathname == `/dashboard/user/${userId}/settings`,
-          icon: UsersRound,
+          href: `/dashboard/organization/${companyId}/settings`,
+          label: "Paramètres",
+          active: pathname.includes(
+            `/dashboard/organization/${companyId}/settings`,
+          ),
+          icon: Settings,
         },
       ],
     },

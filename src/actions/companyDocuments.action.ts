@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import {
   db,
@@ -7,7 +7,11 @@ import {
   requireAuth,
   requireOwner,
 } from "../lib";
-import { organization, organizationDocuments } from "../db";
+import {
+  organization,
+  OrganizationDocuments,
+  organizationDocuments,
+} from "../db";
 import { eq } from "drizzle-orm";
 import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
 import { organization as organizationTable } from "../db";
@@ -80,18 +84,22 @@ export const createDocumentsStepAction = createServerAction(
 export const getCompanyDocuments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const documents = await db
-      .select()
-      .from(organizationDocuments)
-      .where(
-        eq(organizationDocuments.organizationId, ctx.organization?.id || ""),
-      );
+    const documents = await db.query.organizationDocuments.findMany({
+      where: eq(organizationDocuments.organizationId, ctx.organization?.id || ""),
+      columns: {
+        id: true,
+        file: true,
+        name: true,
+        valid: true,
+      },
+    });
+
 
     if (!documents) {
       throw new ActionError("Documents not found");
     }
 
-    return documents;
+    return documents as unknown as OrganizationDocuments[];
   },
   [requireAuth, requireOwner],
 );

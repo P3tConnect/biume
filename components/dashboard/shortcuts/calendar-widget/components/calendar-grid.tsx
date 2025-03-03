@@ -53,9 +53,25 @@ export function CalendarGrid({
     const dateString = date.toDateString();
     const dayAppointments = appointments[dateString] || [];
 
-    return dayAppointments.map((appointment) => (
-      <AppointmentCalendarItem key={appointment.id} appointment={appointment} />
-    ));
+    if (dayAppointments.length === 0) return null;
+
+    return (
+      <>
+        {dayAppointments.slice(0, 1).map((appointment) => (
+          <AppointmentCalendarItem
+            key={appointment.id}
+            appointment={appointment}
+          />
+        ))}
+        {dayAppointments.length > 1 && (
+          <div className="flex justify-end">
+            <div className="text-[0.65rem] font-medium px-1 py-0.5 rounded-full bg-primary/10 text-primary">
+              +{dayAppointments.length - 1}
+            </div>
+          </div>
+        )}
+      </>
+    );
   };
 
   const getWeeksInMonth = () => {
@@ -89,13 +105,13 @@ export function CalendarGrid({
   };
 
   return (
-    <div className="space-y-2">
-      <div className="grid grid-cols-7 gap-2 mb-2">
+    <div className="space-y-1 mb-1">
+      <div className="grid grid-cols-7 gap-1 mb-1">
         {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
           <div
             key={day}
             className={cn(
-              "text-center text-sm font-medium p-1",
+              "text-center text-xs font-medium",
               day === "Dim" || day === "Sam"
                 ? "text-red-500"
                 : "text-gray-600 dark:text-gray-300",
@@ -113,7 +129,7 @@ export function CalendarGrid({
               key={`${weekIndex}-${dayIndex}`}
               className={cn(
                 "relative overflow-y-auto p-1.5 transition-all duration-200",
-                "min-h-[110px]",
+                "h-[130px]",
                 day === 0
                   ? "invisible"
                   : cn(

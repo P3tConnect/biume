@@ -72,10 +72,25 @@ export async function requireFullOrganization(ctx: ServerActionContext) {
   const fullOrganization = await db.query.organization.findFirst({
     where: eq(organizationTable.id, organization.id),
     with: {
-      invitations: true,
+      invitations: {
+        columns: {
+          id: true,
+          role: true,
+          email: true,
+          status: true,
+        },
+      },
       members: {
         with: {
-          user: true,
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              stripeId: true,
+            },
+          },
         },
       },
     },
@@ -114,15 +129,5 @@ export async function requireMember(ctx: ServerActionContext) {
   Object.assign(ctx, {
     user: ctx.user,
     organization: ctx.organization,
-    meta: {},
   });
 }
-
-// Example usage:
-// export const createUser = createServerAction(
-//   async (input: CreateUserInput, ctx) => {
-//     // Your action logic here
-//     return { success: true };
-//   },
-//   [requireAuth, requireOwner]
-// );

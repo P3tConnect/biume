@@ -2,7 +2,6 @@ import { FormControl, FormMessage } from "@/components/ui/form";
 import { Form, FormItem } from "@/components/ui/form";
 import { FormField } from "@/components/ui/form";
 import { Option, CreateOption } from "@/src/db";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createOption, updateOption } from "@/src/actions";
 import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
 import { CredenzaContent } from "@/components/ui";
+import { useMutation } from "@tanstack/react-query";
 
 const optionSchema = z.object({
   id: z.string().optional(),
@@ -47,7 +47,8 @@ export const OptionForm = ({
 
   const isCreating = !option.id;
 
-  const { mutateAsync: createMutation } = useActionMutation(createOption, {
+  const { mutateAsync: createMutation } = useMutation({
+    mutationFn: createOption,
     onSuccess: () => {
       toast.success("Option créée avec succès!");
       onOpenChange(false);
@@ -57,7 +58,8 @@ export const OptionForm = ({
     },
   });
 
-  const { mutateAsync: updateMutation } = useActionMutation(updateOption, {
+  const { mutateAsync: updateMutation } = useMutation({
+    mutationFn: updateOption,
     onSuccess: () => {
       toast.success("Option mise à jour avec succès!");
       onOpenChange(false);

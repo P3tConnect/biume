@@ -14,6 +14,7 @@ import { cookies } from "next/headers";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { NuqsAdapter } from "nuqs/adapters/next";
 import { safeConfig } from "@/src/lib/env";
+import NextTopLoader from "nextjs-toploader";
 const geist = GeistSans;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,11 +65,11 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     ],
     robots: {
-      follow: true,
-      index: true,
+      follow: false,
+      index: false,
       googleBot: {
-        index: true,
-        follow: true,
+        index: false,
+        follow: false,
       },
     },
     keywords: [
@@ -129,7 +130,14 @@ export default async function RootLayout({
                 <NextSSRPlugin
                   routerConfig={extractRouterConfig(ourFileRouter)}
                 />
-                <NuqsAdapter>{children}</NuqsAdapter>
+                <NuqsAdapter>
+                  <NextTopLoader
+                    height={3}
+                    color="#A594FF"
+                    showSpinner={false}
+                  />
+                  {children}
+                </NuqsAdapter>
               </div>
               <TailwindIndicator />
             </SidebarProvider>

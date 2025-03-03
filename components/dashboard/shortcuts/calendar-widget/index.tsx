@@ -1,5 +1,12 @@
 "use client";
 
+// Modifications pour la vue compacte:
+// - Réduction des espacements et des marges
+// - Diminution de la hauteur des cellules à 60px pour un aspect plus carré
+// - Icônes et textes plus petits
+// - En-tête simplifié
+// - Structure visuelle optimisée pour un affichage compact
+
 import React, { useState, useEffect } from "react";
 import {
   ChevronLeft,
@@ -10,7 +17,6 @@ import {
 } from "lucide-react";
 import {
   ScrollArea,
-  CardTitle,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
@@ -83,13 +89,13 @@ const CalendarWidget = () => {
     const dayAppointments = mockAppointments[dateString] || [];
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {dayAppointments.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
-            <p className="text-muted-foreground mb-2">
+          <div className="flex flex-col items-center justify-center py-5 text-center">
+            <p className="text-muted-foreground mb-1">
               Aucun rendez-vous pour cette journée
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Cliquez sur un autre jour pour voir les rendez-vous
             </p>
           </div>
@@ -103,7 +109,7 @@ const CalendarWidget = () => {
                 + Nouveau rendez-vous
               </Button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {dayAppointments.map((appointment) => (
                 <AppointmentDetails
                   key={appointment.id}
@@ -118,128 +124,112 @@ const CalendarWidget = () => {
   };
 
   return (
-    <>
-      <div className="h-full flex flex-col">
-        <div className="flex items-center justify-between pb-4">
-          {viewMode === "calendar" ? (
-            <div className="flex items-center justify-between gap-4 flex-1">
-              <div className="space-y-1">
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarDays className="size-6 text-primary" />
-                  {capitalizeFirstLetter(
-                    currentDate.toLocaleString("fr-FR", {
-                      month: "long",
-                      year: "numeric",
-                    }),
-                  )}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Consultez et gérez vos rendez-vous
-                </p>
+    <div className="h-full w-full flex flex-col p-2">
+      <div className="flex items-center justify-between pb-1">
+        {viewMode === "calendar" ? (
+          <div className="flex items-center justify-between gap-2 flex-1">
+            <div className="flex items-center gap-1">
+              <div className="p-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-md">
+                <CalendarDays className="size-3 text-blue-600 dark:text-blue-400" />
               </div>
-              <div className="flex items-center gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={handlePrevMonth}
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-                    >
-                      <ChevronLeft
-                        className="h-4 w-4"
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Mois précédent</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={handleNextMonth}
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-                    >
-                      <ChevronRight
-                        className="h-4 w-4"
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Mois suivant</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
+              <h3 className="text-lg font-semibold">
+                {capitalizeFirstLetter(
+                  currentDate.toLocaleString("fr-FR", {
+                    month: "long",
+                    year: "numeric",
+                  }),
+                )}
+              </h3>
             </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarDays className="size-6 text-primary" />
-                  Rendez-vous du jour
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  {capitalizeFirstLetter(
-                    format(new Date(), "EEEE d MMMM yyyy", { locale: fr }),
-                  )}
-                </p>
-              </div>
-            </div>
-          )}
-          <Tooltip>
-            <TooltipTrigger asChild>
+            <div className="flex items-center">
               <Button
+                onClick={handlePrevMonth}
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-xl hover:bg-secondary/5"
-                onClick={() =>
-                  setViewMode(viewMode === "calendar" ? "list" : "calendar")
-                }
+                className="h-8 w-8 rounded-xl p-0 mr-1 hover:bg-secondary/10"
               >
-                {viewMode === "calendar" ? (
-                  <List
-                    className="h-4 w-4"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <CalendarIcon
-                    className="h-4 w-4"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  />
-                )}
+                <ChevronLeft
+                  className="h-5 w-5"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                Basculer en vue{" "}
-                {viewMode === "calendar" ? "liste" : "calendrier"}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-
-        {viewMode === "calendar" ? (
-          <div className="flex-1 overflow-auto px-1">
-            <CalendarGrid
-              currentDate={currentDate}
-              selectedDate={selectedDate}
-              appointments={mockAppointments}
-              onDayClick={handleDayClick}
-            />
+              <Button
+                onClick={handleNextMonth}
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-xl p-0 hover:bg-secondary/10"
+              >
+                <ChevronRight
+                  className="h-5 w-5"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
+              </Button>
+            </div>
           </div>
         ) : (
-          <ScrollArea className="h-[500px] pr-4">
-            {(mockAppointments[new Date().toDateString()] || []).map(
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="flex items-center gap-1 text-lg font-semibold">
+                <div className="p-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-md">
+                  <CalendarDays className="size-3 text-blue-600 dark:text-blue-400" />
+                </div>
+                Rendez-vous du jour
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {capitalizeFirstLetter(
+                  format(new Date(), "EEEE d MMMM yyyy", { locale: fr }),
+                )}
+              </p>
+            </div>
+          </div>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 rounded-xl p-0 hover:bg-secondary/10"
+          onClick={() =>
+            setViewMode(viewMode === "calendar" ? "list" : "calendar")
+          }
+        >
+          {viewMode === "calendar" ? (
+            <List className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+          ) : (
+            <CalendarIcon
+              className="h-5 w-5"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+          )}
+        </Button>
+      </div>
+
+      {viewMode === "calendar" ? (
+        <div className="flex-1 overflow-auto pt-1 rounded-md bg-muted/10">
+          <CalendarGrid
+            currentDate={currentDate}
+            selectedDate={selectedDate}
+            appointments={mockAppointments}
+            onDayClick={handleDayClick}
+          />
+        </div>
+      ) : (
+        <ScrollArea className="h-[500px] pr-3 pt-1 rounded-md bg-muted/10">
+          {(mockAppointments[new Date().toDateString()] || []).length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-5 text-center">
+              <div className="p-1.5 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-3">
+                <CalendarDays className="w-4 h-4 text-blue-500" />
+              </div>
+              <p className="text-muted-foreground mb-1 text-sm">
+                Aucun rendez-vous pour aujourd&apos;hui
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Profitez de cette journée tranquille!
+              </p>
+            </div>
+          ) : (
+            (mockAppointments[new Date().toDateString()] || []).map(
               (appointment, index) => (
                 <AppointmentListItem
                   key={appointment.id}
@@ -251,30 +241,25 @@ const CalendarWidget = () => {
                   }}
                 />
               ),
-            )}
-          </ScrollArea>
-        )}
-      </div>
+            )
+          )}
+        </ScrollArea>
+      )}
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <SheetContent className="sm:max-w-md w-full">
-          <SheetHeader className="space-y-1 mb-6">
-            <SheetTitle className="text-lg">
-              {selectedDate?.toLocaleDateString("fr-FR", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+        <SheetContent className="w-full sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle>
+              {selectedDate &&
+                capitalizeFirstLetter(
+                  format(selectedDate, "EEEE d MMMM yyyy", { locale: fr }),
+                )}
             </SheetTitle>
-            <p className="text-sm text-muted-foreground">
-              Gérez les rendez-vous de cette journée
-            </p>
           </SheetHeader>
-          <div className="mt-2">{renderSelectedDateAppointments()}</div>
+          {renderSelectedDateAppointments()}
         </SheetContent>
       </Sheet>
-    </>
+    </div>
   );
 };
 

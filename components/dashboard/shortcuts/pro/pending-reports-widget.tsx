@@ -13,6 +13,8 @@ import {
   UserIcon,
   StethoscopeIcon,
   XIcon,
+  AlertCircleIcon,
+  CheckCircleIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,7 +29,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 const PendingReportsWidget = () => {
-  const [selectedReport, setSelectedReport] = React.useState<typeof pendingReports[0] | null>(null);
+  const [selectedReport, setSelectedReport] = React.useState<
+    (typeof pendingReports)[0] | null
+  >(null);
 
   // Exemple de données (à remplacer par vos vraies données)
   const pendingReports = [
@@ -84,30 +88,39 @@ const PendingReportsWidget = () => {
   };
 
   return (
-    <Card className="rounded-2xl">
+    <Card className="border rounded-lg shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileTextIcon className="w-5 h-5" />
-            <CardTitle>Rapports à rédiger</CardTitle>
+            <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+              <FileTextIcon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            </div>
+            <CardTitle className="text-xl font-semibold">
+              Rapports à rédiger
+            </CardTitle>
           </div>
-          <Badge variant="secondary">{pendingReports.length}</Badge>
+          <Badge variant="secondary" className="px-2 py-0.5">
+            {pendingReports.length}
+          </Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3">
         <ScrollArea className="h-[280px] pr-4">
           <div className="space-y-2">
             {pendingReports.map((report) => (
               <Sheet key={report.id}>
                 <SheetTrigger asChild>
                   <div
-                    className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+                    className="flex items-center justify-between p-3 bg-muted/50 border border-muted hover:border-muted hover:bg-muted transition-colors rounded-md cursor-pointer"
                     onClick={() => setSelectedReport(report)}
                   >
                     <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={report.imageUrl} alt={report.petName} />
-                        <AvatarFallback className="bg-primary">
+                      <Avatar className="h-9 w-9 border-2 border-background">
+                        <AvatarImage
+                          src={report.imageUrl}
+                          alt={report.petName}
+                        />
+                        <AvatarFallback className="bg-purple-600">
                           <PawPrintIcon className="w-4 h-4 text-white" />
                         </AvatarFallback>
                       </Avatar>
@@ -116,7 +129,7 @@ const PendingReportsWidget = () => {
                           <span className="font-medium">{report.petName}</span>
                           <Badge
                             variant="outline"
-                            className={`text-xs px-1.5 py-0 ${getPriorityColor(report.priority)}`}
+                            className={`text-xs px-1.5 py-0 rounded-sm ${getPriorityColor(report.priority)}`}
                           >
                             {report.type}
                           </Badge>
@@ -140,61 +153,132 @@ const PendingReportsWidget = () => {
                 <SheetContent className="sm:max-w-md">
                   <SheetHeader className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <SheetTitle>Détails du rapport</SheetTitle>
+                      <SheetTitle className="flex items-center gap-2">
+                        <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+                          <FileTextIcon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        </div>
+                        Détails du rapport
+                      </SheetTitle>
                       <Badge
                         variant="outline"
-                        className={getPriorityColor(report.priority)}
+                        className={`${getPriorityColor(report.priority)}`}
                       >
                         {report.type}
                       </Badge>
                     </div>
-                  </SheetHeader>
-                  <div className="mt-6 space-y-6">
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16">
-                        <AvatarImage src={report.imageUrl} alt={report.petName} />
-                        <AvatarFallback className="bg-primary">
-                          <PawPrintIcon className="w-6 h-6" />
+
+                    <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-md">
+                      <Avatar className="h-14 w-14 border-2 border-background">
+                        <AvatarImage
+                          src={report.imageUrl}
+                          alt={report.petName}
+                        />
+                        <AvatarFallback className="bg-purple-600">
+                          <PawPrintIcon className="w-6 h-6 text-white" />
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="font-semibold text-lg">{report.petName}</h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-lg">
+                            {report.petName}
+                          </h3>
+                          <Badge variant="outline" className="text-xs">
+                            {report.petType}
+                          </Badge>
+                        </div>
                         <p className="text-sm text-muted-foreground">
-                          {report.petType} • {report.breed}
+                          {report.breed}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 text-sm">
+                          <UserIcon className="w-3.5 h-3.5" />
+                          <span>{report.ownerName}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </SheetHeader>
+
+                  <div className="space-y-6 mt-6">
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">
+                        Détails de la procédure
+                      </h4>
+                      <div className="bg-muted/30 p-3 rounded-md">
+                        <div className="flex items-center gap-2 mb-2">
+                          <StethoscopeIcon className="w-5 h-5 text-purple-600" />
+                          <span className="font-medium">
+                            {report.procedure}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Ce rapport concerne {report.procedure.toLowerCase()}{" "}
+                          effectué sur {report.petName}. Il est important de le
+                          compléter avant le {report.dueDate}.
                         </p>
                       </div>
                     </div>
-                    <Separator />
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <UserIcon className="w-4 h-4 text-muted-foreground" />
-                        <span>Propriétaire: {report.ownerName}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <StethoscopeIcon className="w-4 h-4 text-muted-foreground" />
-                        <span>Procédure: {report.procedure}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <ClockIcon className="w-4 h-4 text-muted-foreground" />
-                        <span>Date limite: {report.dueDate}</span>
+
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">
+                        Informations supplémentaires
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
+                          <div className="flex items-center gap-2">
+                            <ClockIcon className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm">Date limite</span>
+                          </div>
+                          <span className="text-sm font-medium">
+                            {report.dueDate}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
+                          <div className="flex items-center gap-2">
+                            <AlertCircleIcon className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm">Priorité</span>
+                          </div>
+                          <Badge
+                            className={`${getPriorityColor(report.priority)}`}
+                          >
+                            {report.priority === "high"
+                              ? "Haute"
+                              : report.priority === "medium"
+                                ? "Moyenne"
+                                : "Basse"}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <SheetFooter className="absolute bottom-0 left-0 right-0 p-6 bg-background border-t">
-                    <div className="flex flex-col gap-2 w-full">
-                      <Button size="lg" className="w-full">
-                        Rédiger le rapport
+
+                  <Separator className="my-6" />
+
+                  <SheetFooter className="flex-row gap-2 sm:justify-end">
+                    <SheetClose asChild>
+                      <Button variant="outline" className="flex-1">
+                        Annuler
                       </Button>
-                      <SheetClose asChild>
-                        <Button variant="outline" size="lg" className="w-full">
-                          Fermer
-                        </Button>
-                      </SheetClose>
-                    </div>
+                    </SheetClose>
+                    <Button className="flex-1 bg-purple-600 hover:bg-purple-700">
+                      Rédiger maintenant
+                    </Button>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>
             ))}
+
+            {pendingReports.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-3">
+                  <CheckCircleIcon className="w-6 h-6 text-purple-600" />
+                </div>
+                <p className="text-muted-foreground mb-1">
+                  Tous les rapports sont à jour
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Vous n&apos;avez pas de rapports en attente pour le moment
+                </p>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </CardContent>

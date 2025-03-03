@@ -20,6 +20,10 @@ const theme = {
         },
     },
     extend: {
+        backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            'gradient-radial-br': 'radial-gradient(circle at bottom right, var(--tw-gradient-stops))',
+        },
         colors: {
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
@@ -104,6 +108,14 @@ const theme = {
                     transform: "translate(-50%, -50%) scale(0.9)",
                 },
             },
+            gradient: {
+                "0%, 100%": {
+                    "background-position": "0% 50%"
+                },
+                "50%": {
+                    "background-position": "100% 50%"
+                }
+            }
         },
         animation: {
             marquee: "marquee var(--duration) linear infinite",
@@ -115,7 +127,11 @@ const theme = {
         },
     },
 };
-const plugins = [require("tailwindcss-animate"), addVariablesForColors];
+const plugins = [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    addVariablesForColors
+];
 
 function addVariablesForColors({ addBase, theme }) {
     let allColors = flattenColorPalette(theme("colors"));

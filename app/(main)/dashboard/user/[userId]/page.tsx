@@ -3,18 +3,19 @@
 import React from "react";
 import { useSession } from "@/src/lib/auth-client";
 import StepperClient from "@/components/onboarding/components/stepper-client";
-import ClientTimetableWidget from "@/components/dashboard/shortcuts/client/client-timetable-widget";
-import ClientPetsWidget from "@/components/dashboard/shortcuts/client/client-pets-widget";
-import ClientHistoryReservationWidget from "@/components/dashboard/shortcuts/client/client-history-reservation-widget";
-import ClientObservationsWidget from "@/components/dashboard/shortcuts/client/client-observations-widget";
 import { Card, CardHeader, CardTitle } from "@/components/ui";
+import ClientQuickActionsWidget from "@/components/dashboard/shortcuts/client/client-quick-actions-widget";
+import ClientUpcomingAppointmentsWidget from "@/components/dashboard/shortcuts/client/client-upcoming-appointments-widget";
+import ClientPetHealthWidget from "@/components/dashboard/shortcuts/client/client-pet-health-widget";
+import ClientPetsWidgetSimple from "@/components/dashboard/shortcuts/client/client-pets-widget-simple";
+import ClientExpensesWidget from "@/components/dashboard/shortcuts/client/client-expenses-widget";
 
 const ClientDashboardHomePage = () => {
   const { data: session } = useSession();
   const showModal = session?.user.onBoardingComplete === false;
 
   return (
-    <div>
+    <div className="space-y-4">
       {showModal && <StepperClient open={showModal} />}
 
       <Card className="overflow-hidden rounded-2xl">
@@ -32,23 +33,16 @@ const ClientDashboardHomePage = () => {
         </CardHeader>
       </Card>
 
-      <div className="grid pt-4 grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Colonne principale - Calendrier et Animaux */}
-        <div className="lg:col-span-8 space-y-4">
-          {/* Section Calendrier */}
-          <ClientTimetableWidget />
-
-          {/* Section Animaux */}
-          <ClientPetsWidget />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 space-y-4">
+          <ClientQuickActionsWidget />
+          <ClientUpcomingAppointmentsWidget />
+          <ClientPetHealthWidget />
         </div>
 
-        {/* Colonne latérale - Observations et Historique */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="sticky top-4">
-            <ClientObservationsWidget />
-            <div className="h-4" /> {/* Espaceur */}
-            <ClientHistoryReservationWidget />
-          </div>
+        <div className="space-y-4">
+          <ClientPetsWidgetSimple />
+          <ClientExpensesWidget />
         </div>
       </div>
     </div>

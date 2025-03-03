@@ -1,9 +1,32 @@
-import { DocumentsForm } from "./components/documents/documents-form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import DocumentsSectionClient from "./components/documents/documents-section-client";
+import { getCompanyDocuments } from "@/src/actions/companyDocuments.action";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const DocumentsSection = () => {
+const DocumentsSection = () => {
+  const { data: documents, isLoading } = useQuery({
+    queryKey: ["company-documents"],
+    queryFn: () => getCompanyDocuments({}),
+  });
+
   return (
-    <div className="space-y-6">
-      <DocumentsForm />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Documents</CardTitle>
+        <CardDescription>
+          Gérez vos documents professionnels
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {isLoading ? (
+          <Skeleton className="h-[500px] w-full" />
+        ) : (
+          <DocumentsSectionClient documents={documents?.data || []} />
+        )}
+      </CardContent>
+    </Card>
   );
 };
+
+export default DocumentsSection;

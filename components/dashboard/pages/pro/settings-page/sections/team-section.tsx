@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -9,9 +11,14 @@ import {
 import { getCurrentOrganization } from "@/src/actions/organization.action";
 import { TeamMembersList } from "./components/team/team-members-list";
 import { TeamInviteButton } from "./components/team/team-invite-button";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const TeamSection = async () => {
-  const activeOrganization = await getCurrentOrganization({});
+export const TeamSection = () => {
+  const { data: activeOrganization, isLoading } = useQuery({
+    queryKey: ["active-organization"],
+    queryFn: () => getCurrentOrganization({}),
+  });
 
   if (
     activeOrganization?.data?.plan === "NONE" ||
@@ -44,10 +51,18 @@ export const TeamSection = async () => {
             Gérez les membres de votre équipe et leurs rôles
           </CardDescription>
         </div>
-        <TeamInviteButton organization={activeOrganization.data!} />
+        {isLoading ? (
+          <Skeleton className="h-10 w-10" />
+        ) : (
+          <TeamInviteButton organization={activeOrganization?.data!} />
+        )}
       </CardHeader>
       <CardContent>
-        <TeamMembersList organization={activeOrganization.data!} />
+        {isLoading ? (
+          <Skeleton className="h-10 w-10" />
+        ) : (
+          <TeamMembersList organization={activeOrganization?.data!} />
+        )}
       </CardContent>
     </Card>
   );

@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { proDocumentsSchema } from "../../types/onboarding-schemas";
 import { createDocumentsStepAction } from "@/src/actions";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = {
@@ -48,12 +48,13 @@ export function DocumentsForm({
 
   const { control, setValue, handleSubmit, reset } = form;
 
-  const { mutateAsync } = useActionMutation(createDocumentsStepAction, {
+  const { mutateAsync } = useMutation({
+    mutationFn: createDocumentsStepAction,
     onSuccess: () => {
       reset();
       nextStep();
     },
-    onError: (error) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message);
     },
   });

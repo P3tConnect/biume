@@ -24,7 +24,7 @@ const NewShortcut = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 text-white hover:opacity-90 transition-opacity shadow-sm"
+          className="rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 dark:from-blue-400 dark:via-purple-400 dark:to-blue-400 text-white transition-all duration-300 shadow-sm bg-[length:200%_100%] bg-no-repeat hover:animate-[gradient_3s_ease-in-out_infinite]"
           size="default"
         >
           <Plus className="h-4 w-4" />
@@ -49,14 +49,13 @@ const NewShortcut = () => {
             <Stethoscope className="h-4 w-4" />
             <span>Patient</span>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <FileText className="h-4 w-4" />
-            <span>Rapport</span>
+            <span>Document</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <MessageSquarePlus className="h-4 w-4" />
-            <span>Observation</span>
+            <span>Message</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="gap-2 cursor-pointer">
             <Bell className="h-4 w-4" />

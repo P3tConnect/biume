@@ -26,9 +26,9 @@ import { useDropzone } from "react-dropzone";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { cn } from "@/src/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { createOrganization } from "@/src/actions/organization.action";
 import { proInformationsSchema } from "../../types/onboarding-schemas";
+import { useMutation } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -62,7 +62,8 @@ const InformationsForm = ({
 
   console.log(getValues(), "values");
 
-  const { mutateAsync } = useActionMutation(createOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: createOrganization,
     onSuccess: () => {
       toast.success("Entreprise créée avec succès!");
       nextStep();
@@ -223,7 +224,7 @@ const InformationsForm = ({
                             className={cn(
                               "h-9",
                               form.formState.errors.name &&
-                                "border-destructive",
+                              "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -248,7 +249,7 @@ const InformationsForm = ({
                             className={cn(
                               "h-9",
                               form.formState.errors.email &&
-                                "border-destructive",
+                              "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -332,7 +333,7 @@ const InformationsForm = ({
                         className={cn(
                           "flex-1 min-h-[120px] resize-none text-base",
                           form.formState.errors.description &&
-                            "border-destructive",
+                          "border-destructive",
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}

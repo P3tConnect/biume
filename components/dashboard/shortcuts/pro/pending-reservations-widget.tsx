@@ -15,6 +15,13 @@ import {
   TrendingUpIcon,
   ShieldIcon,
   AlertCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  InfoIcon,
+  TimerIcon,
+  MessageSquareIcon,
+  MapPinIcon,
+  CalendarCheck,
 } from "lucide-react";
 import {
   Tooltip,
@@ -36,6 +43,10 @@ import {
   CredenzaTitle,
   Credenza,
 } from "@/components/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Reservation = {
   id: string;
@@ -104,406 +115,652 @@ const PendingReservationsWidget = () => {
     },
   ];
 
-  // Exemple de données pour les graphiques
-  const metricData = {
-    vaccine: [
-      { month: "Jan", value: 2 },
-      { month: "Fév", value: 3 },
-      { month: "Mar", value: 1 },
-      { month: "Avr", value: 4 },
-      { month: "Mai", value: 2 },
-      { month: "Juin", value: 5 },
-    ],
-    deworming: [
-      { month: "Jan", value: 1 },
-      { month: "Fév", value: 2 },
-      { month: "Mar", value: 3 },
-      { month: "Avr", value: 2 },
-      { month: "Mai", value: 4 },
-      { month: "Juin", value: 3 },
-    ],
-    chip: [
-      { month: "Jan", value: 1 },
-      { month: "Fév", value: 1 },
-      { month: "Mar", value: 2 },
-      { month: "Avr", value: 1 },
-      { month: "Mai", value: 3 },
-      { month: "Juin", value: 2 },
-    ],
+  // Fonction pour formater la date au format français
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("fr-FR", options);
+  };
+
+  const handleAction = (action: string) => {
+    // Implémentation des actions (confirmer, reporter, annuler)
+    console.log(
+      `Action: ${action} pour la réservation ${selectedReservation?.id}`,
+    );
+    setIsDrawerOpen(false);
+  };
+
+  const openDrawer = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setIsDrawerOpen(true);
   };
 
   return (
     <>
-      <Card className="rounded-2xl">
+      <Card className="rounded-xl">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ClockIcon className="w-5 h-5 text-muted-foreground" />
-              <CardTitle>Demandes de rendez-vous</CardTitle>
+              <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
+                <CalendarCheck className="w-4 h-4 text-green-600 dark:text-green-400" />
+              </div>
+              <CardTitle className="text-7xl">
+                Demandes de rendez-vous
+              </CardTitle>
             </div>
-            <Badge>{reservations.length}</Badge>
+            <Badge variant="secondary" className="px-2 py-0.5">
+              {reservations.length}
+            </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {reservations.map((reservation) => (
-            <div
-              key={reservation.id}
-              className={`flex items-center gap-3 p-3 bg-background shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-lg hover:shadow-[0_3px_12px_-3px_rgba(0,0,0,0.1)] hover:scale-[1.01] transition-all duration-200 cursor-pointer ${reservation.conflicts
-                  ? "ring-2 ring-red-200 dark:ring-red-900/30"
-                  : ""
-                }`}
-              onClick={() => {
-                setSelectedReservation(reservation);
-                setIsDrawerOpen(true);
-              }}
-            >
-              <Avatar className="h-10 w-10 shrink-0">
-                <AvatarImage
-                  src={`/pets/${reservation.id}.jpg`}
-                  alt={reservation.petName}
-                />
-                <AvatarFallback>
-                  <PawPrintIcon className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <div className="truncate">
-                    <span className="font-medium">{reservation.petName}</span>
-                    <span className="text-muted-foreground"> · </span>
-                    <span className="text-sm text-muted-foreground">
+        <CardContent className="p-3">
+          <ScrollArea className="h-[280px] pr-4">
+            <div className="space-y-2">
+              {reservations.map((reservation) => (
+                <div
+                  key={reservation.id}
+                  className={`flex items-center gap-3 p-3 bg-muted/50 border border-muted hover:border-muted hover:bg-muted transition-colors rounded-md cursor-pointer ${
+                    reservation.conflicts
+                      ? "border-l-2 border-l-destructive"
+                      : ""
+                  }`}
+                  onClick={() => openDrawer(reservation)}
+                >
+                  <Avatar className="h-9 w-9 border-2 border-background">
+                    <AvatarImage
+                      src={`/pets/${reservation.id}.jpg`}
+                      alt={reservation.petName}
+                    />
+                    <AvatarFallback className="bg-green-600">
+                      <PawPrintIcon className="w-4 h-4 text-white" />
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {reservation.petName}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {reservation.petBreed}
+                        </span>
+
+                        {reservation.conflicts && (
+                          <Badge
+                            variant="destructive"
+                            className="text-xs px-1.5 py-0"
+                          >
+                            Conflit
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-xs font-medium mb-1 truncate">
                       {reservation.service}
-                    </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <CalendarIcon className="w-3 h-3" />
+                        <span>{formatDate(reservation.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <ClockIcon className="w-3 h-3" />
+                        <span>
+                          {reservation.time} ({reservation.duration})
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {reservation.conflicts && (
-                      <Badge variant="destructive" className="text-[10px]">
-                        Conflit
-                      </Badge>
-                    )}
-                    <Badge variant="secondary" className="text-xs shrink-0">
-                      {reservation.duration}
-                    </Badge>
+
+                  <div className="flex flex-col items-end">
+                    <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {reservation.ownerName}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
-                  <div className="flex items-center gap-1">
-                    <CalendarIcon className="h-3 w-3" />
-                    <span>
-                      {reservation.date} à {reservation.time}
-                    </span>
+              ))}
+
+              {reservations.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                  <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
+                    <CheckCircleIcon className="w-6 h-6 text-green-600" />
                   </div>
-                  {reservation.notes && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger className="flex items-center gap-1 hover:text-foreground transition-colors">
-                          <AlertCircleIcon className="h-3 w-3" />
-                          <span>Notes</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{reservation.notes}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                  <p className="text-muted-foreground mb-1">
+                    Aucune demande en attente
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Toutes les réservations ont été traitées.
+                  </p>
                 </div>
-              </div>
+              )}
             </div>
-          ))}
+          </ScrollArea>
         </CardContent>
       </Card>
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <SheetContent side="right" className="w-[600px] overflow-y-auto">
-          <SheetHeader className="space-y-2 pb-4 border-b">
-            <SheetTitle className="flex items-center justify-between">
-              <span>Détails de la réservation</span>
-              <Badge variant="outline" className="uppercase">
-                En attente
-              </Badge>
-            </SheetTitle>
-          </SheetHeader>
-
+        <SheetContent side="right" className="w-[600px] overflow-y-auto p-0">
           {selectedReservation && (
-            <div className="space-y-6 mt-6">
-              {/* Service Information */}
-              <div className="bg-muted/50 p-4 rounded-lg space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="font-medium text-lg">
-                      {selectedReservation.service}
-                    </div>
-                    <div className="text-sm text-muted-foreground flex items-center gap-2">
-                      <ClockIcon className="h-4 w-4" />
-                      <span>{selectedReservation.duration}</span>
-                    </div>
+            <>
+              <div className="sticky top-0 z-10 bg-background border-b p-6">
+                <SheetHeader className="text-left space-y-1">
+                  <div className="flex items-center justify-between">
+                    <SheetTitle className="text-xl">
+                      Détails de la réservation
+                    </SheetTitle>
+                    <Badge className="bg-amber-500/20 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 font-normal border-none">
+                      En attente
+                    </Badge>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium">
-                      {selectedReservation.date}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {selectedReservation.time}
-                    </div>
-                  </div>
-                </div>
-                {selectedReservation.notes && (
-                  <div className="bg-background/80 p-3 rounded-md mt-2">
-                    <p className="text-sm text-muted-foreground">
-                      {selectedReservation.notes}
-                    </p>
-                  </div>
-                )}
+                  <p className="text-sm text-muted-foreground">
+                    Demande reçue le {new Date().toLocaleDateString("fr-FR")}
+                  </p>
+                </SheetHeader>
               </div>
 
-              {/* Pet Information */}
-              <div className="bg-muted/50 rounded-lg overflow-hidden">
-                <div className="p-4">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-16 w-16 border-2 border-muted-foreground/10">
-                      <AvatarImage
-                        src={`/pets/${selectedReservation.id}.jpg`}
-                        alt={selectedReservation.petName}
-                      />
-                      <AvatarFallback className="bg-primary/5">
-                        <PawPrintIcon className="h-6 w-6 text-primary" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-lg">
-                              {selectedReservation.petName}
-                            </span>
-                            <Badge variant="secondary">
-                              {selectedReservation.petType}
-                            </Badge>
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {selectedReservation.petBreed}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-2 flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500" />
-                          <span className="text-muted-foreground">2 ans</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-blue-500" />
-                          <span className="text-muted-foreground">12 kg</span>
-                        </div>
-                      </div>
+              <div className="p-6 space-y-6">
+                {/* Carte de service avec mise en page améliorée */}
+                <div className="bg-muted/30 rounded-xl p-5 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
+                      <ActivityIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    </div>
+                    <h3 className="font-semibold text-lg">
+                      {selectedReservation.service}
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
+                      <CalendarIcon className="h-4 w-4 text-muted-foreground mb-1" />
+                      <span className="text-sm font-medium">
+                        {formatDate(selectedReservation.date)}
+                      </span>
+                    </div>
+                    <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
+                      <ClockIcon className="h-4 w-4 text-muted-foreground mb-1" />
+                      <span className="text-sm font-medium">
+                        {selectedReservation.time}
+                      </span>
+                    </div>
+                    <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
+                      <TimerIcon className="h-4 w-4 text-muted-foreground mb-1" />
+                      <span className="text-sm font-medium">
+                        {selectedReservation.duration}
+                      </span>
                     </div>
                   </div>
-                </div>
-                <div className="border-t bg-background/50 p-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <TrendingUpIcon className="h-4 w-4 text-primary" />
-                      <span>Suivi régulier</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <ShieldIcon className="h-4 w-4 text-primary" />
-                      <span>Vacciné</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <ActivityIcon className="h-4 w-4 text-primary" />
-                      <span>Bon état</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t">
-                  <div className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-sm font-medium">
-                        Dernières consultations
+
+                  {selectedReservation.notes && (
+                    <div className="bg-background/60 p-3 rounded-lg border border-border/50">
+                      <div className="flex items-start gap-2">
+                        <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
+                        <div>
+                          <h4 className="text-sm font-medium mb-1">Note</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedReservation.notes}
+                          </p>
+                        </div>
                       </div>
-                      <Badge variant="secondary" className="text-xs">
+                    </div>
+                  )}
+                </div>
+
+                {/* Information sur l'animal avec onglets */}
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4">
+                    <TabsTrigger value="info">Profil</TabsTrigger>
+                    <TabsTrigger value="history">Historique</TabsTrigger>
+                    <TabsTrigger value="health">Santé</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="info" className="mt-0">
+                    <div className="bg-muted/30 rounded-xl overflow-hidden">
+                      <div className="p-5">
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-20 w-20 border-2 border-muted">
+                            <AvatarImage
+                              src={`/pets/${selectedReservation.id}.jpg`}
+                              alt={selectedReservation.petName}
+                            />
+                            <AvatarFallback className="bg-green-600">
+                              <PawPrintIcon className="h-8 w-8 text-white" />
+                            </AvatarFallback>
+                          </Avatar>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="font-semibold text-xl">
+                                {selectedReservation.petName}
+                              </h3>
+                              <Badge variant="secondary">
+                                {selectedReservation.petType}
+                              </Badge>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {selectedReservation.petBreed}
+                            </p>
+
+                            <div className="grid grid-cols-3 gap-3">
+                              <div className="bg-background/80 rounded-lg p-2 text-center">
+                                <span className="text-xs text-muted-foreground">
+                                  Âge
+                                </span>
+                                <div className="font-medium">2 ans</div>
+                              </div>
+                              <div className="bg-background/80 rounded-lg p-2 text-center">
+                                <span className="text-xs text-muted-foreground">
+                                  Poids
+                                </span>
+                                <div className="font-medium">12 kg</div>
+                              </div>
+                              <div className="bg-background/80 rounded-lg p-2 text-center">
+                                <span className="text-xs text-muted-foreground">
+                                  Visites
+                                </span>
+                                <div className="font-medium">5</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border-t bg-background/20 p-4">
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="flex flex-col items-center gap-1 text-sm">
+                            <div className="flex items-center gap-1">
+                              <TrendingUpIcon className="h-4 w-4 text-green-600" />
+                              <span>Suivi régulier</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-center gap-1 text-sm">
+                            <div className="flex items-center gap-1">
+                              <ShieldIcon className="h-4 w-4 text-green-600" />
+                              <span>Vacciné</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-center gap-1 text-sm">
+                            <div className="flex items-center gap-1">
+                              <ActivityIcon className="h-4 w-4 text-green-600" />
+                              <span>Bon état</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="history" className="mt-0 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium">
+                        Consultations récentes
+                      </h3>
+                      <Badge variant="outline" className="text-xs">
                         5 visites
                       </Badge>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
-                        <div className="flex items-center gap-2">
-                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
-                          <span>15 Mars 2024</span>
+
+                    <div className="space-y-3">
+                      <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-medium">Vaccins annuels</div>
+                          <Badge variant="secondary" className="text-xs">
+                            15 Mars 2024
+                          </Badge>
                         </div>
-                        <div className="text-muted-foreground">
-                          Vaccins annuels
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
-                        <div className="flex items-center gap-2">
-                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
-                          <span>1 Fév 2024</span>
-                        </div>
-                        <div className="text-muted-foreground">
-                          Consultation de routine
+                        <div className="text-sm text-muted-foreground">
+                          Rappel vaccins CHPPIL + rage
                         </div>
                       </div>
-                      <div className="flex items-center justify-between text-sm bg-background/80 p-2 rounded-md">
-                        <div className="flex items-center gap-2">
-                          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
-                          <span>15 Déc 2023</span>
+
+                      <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-medium">
+                            Consultation de routine
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            1 Fév 2024
+                          </Badge>
                         </div>
-                        <div className="text-muted-foreground">Vermifuge</div>
+                        <div className="text-sm text-muted-foreground">
+                          Examen général, tout est normal
+                        </div>
+                      </div>
+
+                      <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-medium">Vermifuge</div>
+                          <Badge variant="secondary" className="text-xs">
+                            15 Déc 2023
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Traitement antiparasitaire interne
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="health" className="mt-0 space-y-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium">
+                          État de santé général
+                        </div>
+                        <span className="text-sm text-green-500 font-medium">
+                          Excellent
+                        </span>
+                      </div>
+                      <Progress value={90} className="h-2 bg-muted" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                        <h4 className="text-sm font-medium mb-2">Vaccins</h4>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">CHPPIL</span>
+                          <Badge
+                            variant="outline"
+                            className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900"
+                          >
+                            À jour
+                          </Badge>
+                        </div>
+                        <Separator className="my-2 bg-border/50" />
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Rage</span>
+                          <Badge
+                            variant="outline"
+                            className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900"
+                          >
+                            À jour
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                        <h4 className="text-sm font-medium mb-2">
+                          Antiparasites
+                        </h4>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Externe</span>
+                          <Badge
+                            variant="outline"
+                            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900"
+                          >
+                            Dans 2 semaines
+                          </Badge>
+                        </div>
+                        <Separator className="my-2 bg-border/50" />
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Interne</span>
+                          <Badge
+                            variant="outline"
+                            className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900"
+                          >
+                            À jour
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                      <h4 className="text-sm font-medium mb-2">
+                        Allergies et conditions
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline" className="bg-background">
+                          Aucune allergie connue
+                        </Badge>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+
+                {/* Information du propriétaire */}
+                <div className="bg-muted/30 rounded-xl overflow-hidden">
+                  <div className="p-5">
+                    <div className="flex items-start gap-4">
+                      <Avatar className="h-16 w-16 border-2 border-muted">
+                        <AvatarImage
+                          src={`/avatars/${selectedReservation.id}.jpg`}
+                          alt={selectedReservation.ownerName}
+                        />
+                        <AvatarFallback className="bg-green-600">
+                          <UserIcon className="h-6 w-6 text-white" />
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {selectedReservation.ownerName}
+                            </h3>
+                            <div className="text-sm text-muted-foreground">
+                              Client régulier
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setIsOwnerModalOpen(true)}
+                            className="rounded-full h-8 w-8 p-0"
+                          >
+                            <ChevronRightIcon className="h-5 w-5" />
+                          </Button>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 mt-3">
+                          <div className="flex items-center gap-2 p-2 bg-background/60 rounded-lg text-sm">
+                            <PhoneIcon className="h-4 w-4 text-muted-foreground" />
+                            <span>{selectedReservation.ownerPhone}</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 bg-background/60 rounded-lg text-sm">
+                            <PawPrintIcon className="h-4 w-4 text-muted-foreground" />
+                            <span>3 animaux</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Owner Information */}
-              <Button
-                variant="ghost"
-                className="w-full p-0 h-auto hover:bg-muted group rounded-lg overflow-hidden"
-                onClick={() => setIsOwnerModalOpen(true)}
-              >
-                <div className="flex flex-col w-full">
-                  <div className="flex items-start gap-4 p-4">
-                    <Avatar className="h-16 w-16 border-2 border-muted-foreground/10">
-                      <AvatarImage
-                        src={`/avatars/${selectedReservation.id}.jpg`}
-                        alt={selectedReservation.ownerName}
-                      />
-                      <AvatarFallback className="bg-primary/5">
-                        <UserIcon className="h-6 w-6 text-primary" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 text-left space-y-1 py-1">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-lg">
-                            {selectedReservation.ownerName}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            Client régulier
-                          </div>
-                        </div>
-                        <ChevronRightIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x divide-border border-t">
-                    <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                      <PhoneIcon className="h-4 w-4" />
-                      <span>{selectedReservation.ownerPhone}</span>
-                    </div>
-                    <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                      <PawPrintIcon className="h-4 w-4" />
-                      <span>3 animaux</span>
-                    </div>
-                  </div>
-                </div>
-              </Button>
-            </div>
+              <SheetFooter className="sticky bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-sm border-t flex flex-col sm:flex-row gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => handleAction("cancel")}
+                >
+                  <XCircleIcon className="h-4 w-4" />
+                  Refuser
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => handleAction("reschedule")}
+                >
+                  <CalendarIcon className="h-4 w-4" />
+                  Proposer autre horaire
+                </Button>
+                <Button
+                  className="flex-1 gap-2 bg-green-600 hover:bg-green-700"
+                  onClick={() => handleAction("confirm")}
+                >
+                  <CheckCircleIcon className="h-4 w-4" />
+                  Confirmer
+                </Button>
+              </SheetFooter>
+            </>
           )}
-
-          <SheetFooter className="absolute bottom-0 left-0 right-0 p-6 bg-background border-t">
-            <div className="flex gap-3 w-full">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setIsDrawerOpen(false)}
-              >
-                Fermer
-              </Button>
-              <Button
-                className="flex-1 bg-primary"
-                onClick={() => setIsDrawerOpen(false)}
-              >
-                Confirmer la réservation
-              </Button>
-            </div>
-          </SheetFooter>
         </SheetContent>
       </Sheet>
 
-      {/* Owner Modal */}
+      {/* Modal du propriétaire */}
       <Credenza open={isOwnerModalOpen} onOpenChange={setIsOwnerModalOpen}>
-        <CredenzaContent className="sm:max-w-[600px]">
-          <CredenzaHeader>
-            <CredenzaTitle>Profil du propriétaire</CredenzaTitle>
-          </CredenzaHeader>
-          {selectedReservation && (
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <Avatar className="h-20 w-20 border-2 border-muted-foreground/10">
-                  <AvatarImage
-                    src={`/avatars/${selectedReservation.id}.jpg`}
-                    alt={selectedReservation.ownerName}
-                  />
-                  <AvatarFallback className="bg-primary/5">
-                    <UserIcon className="h-8 w-8 text-primary" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="space-y-1">
-                  <h3 className="text-xl font-semibold">
-                    {selectedReservation.ownerName}
-                  </h3>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <PhoneIcon className="h-4 w-4" />
-                    <span>{selectedReservation.ownerPhone}</span>
+        <CredenzaContent className="sm:max-w-[600px] p-0 overflow-hidden">
+          <div className="bg-gradient-to-b from-green-100/50 to-background p-6">
+            <CredenzaHeader className="mb-6">
+              <CredenzaTitle>Profil du propriétaire</CredenzaTitle>
+            </CredenzaHeader>
+
+            {selectedReservation && (
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-20 w-20 border-4 border-background">
+                    <AvatarImage
+                      src={`/avatars/${selectedReservation.id}.jpg`}
+                      alt={selectedReservation.ownerName}
+                    />
+                    <AvatarFallback className="bg-green-600">
+                      <UserIcon className="h-8 w-8 text-white" />
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold">
+                      {selectedReservation.ownerName}
+                    </h3>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <PhoneIcon className="h-4 w-4" />
+                        <span>{selectedReservation.ownerPhone}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <MapPinIcon className="h-4 w-4" />
+                        <span>Paris, France</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <MessageSquareIcon className="h-4 w-4" />
+                        <span>Préfère être contacté par SMS</span>
+                      </div>
+                    </div>
+                    <Badge className="bg-green-600/20 text-green-700 hover:bg-green-600/30 mt-2">
+                      Client VIP
+                    </Badge>
                   </div>
-                  <Badge variant="secondary">Client régulier</Badge>
                 </div>
               </div>
+            )}
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-muted/50 p-4 rounded-lg space-y-1">
-                  <div className="text-sm text-muted-foreground">Animaux</div>
-                  <div className="font-medium text-lg">3 animaux</div>
-                  <div className="text-sm text-muted-foreground">
+          {selectedReservation && (
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Animaux
+                  </h4>
+                  <div className="font-semibold text-2xl">3</div>
+                  <div className="text-xs text-muted-foreground">
                     Enregistrés
                   </div>
                 </div>
-                <div className="bg-muted/50 p-4 rounded-lg space-y-1">
-                  <div className="text-sm text-muted-foreground">
-                    Rendez-vous
-                  </div>
-                  <div className="font-medium text-lg">12 visites</div>
-                  <div className="text-sm text-muted-foreground">
+                <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Visites
+                  </h4>
+                  <div className="font-semibold text-2xl">12</div>
+                  <div className="text-xs text-muted-foreground">
                     Cette année
+                  </div>
+                </div>
+                <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
+                    Fidélité
+                  </h4>
+                  <div className="font-semibold text-2xl">2</div>
+                  <div className="text-xs text-muted-foreground">Années</div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Animaux</h4>
+                  <Badge variant="outline" className="text-xs">
+                    Voir tous
+                  </Badge>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-2">
+                  <div className="min-w-[120px] bg-muted/30 rounded-xl p-3 flex flex-col items-center text-center border border-border/50">
+                    <Avatar className="h-12 w-12 mb-2">
+                      <AvatarImage src="/pets/1.jpg" alt="Luna" />
+                      <AvatarFallback>LU</AvatarFallback>
+                    </Avatar>
+                    <div className="font-medium text-sm">Luna</div>
+                    <div className="text-xs text-muted-foreground">
+                      Golden Retriever
+                    </div>
+                  </div>
+                  <div className="min-w-[120px] bg-muted/30 rounded-xl p-3 flex flex-col items-center text-center border border-border/50">
+                    <Avatar className="h-12 w-12 mb-2">
+                      <AvatarImage src="/pets/2.jpg" alt="Max" />
+                      <AvatarFallback>MA</AvatarFallback>
+                    </Avatar>
+                    <div className="font-medium text-sm">Max</div>
+                    <div className="text-xs text-muted-foreground">Siamois</div>
+                  </div>
+                  <div className="min-w-[120px] bg-muted/30 rounded-xl p-3 flex flex-col items-center text-center border border-border/50">
+                    <Avatar className="h-12 w-12 mb-2">
+                      <AvatarImage src="/pets/3.jpg" alt="Bella" />
+                      <AvatarFallback>BE</AvatarFallback>
+                    </Avatar>
+                    <div className="font-medium text-sm">Bella</div>
+                    <div className="text-xs text-muted-foreground">Caniche</div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <h4 className="font-medium">Historique récent</h4>
-                <div className="space-y-2">
-                  <div className="bg-muted/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">
-                        Consultation vétérinaire
-                      </div>
-                      <Badge variant="outline">15 Mars 2024</Badge>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      Luna - Vaccins annuels
-                    </div>
+              <div className="space-y-3">
+                <h4 className="font-medium">Dernières visites</h4>
+                <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="font-medium">Consultation vétérinaire</div>
+                    <Badge variant="outline">15 Mars 2024</Badge>
                   </div>
-                  <div className="bg-muted/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">Toilettage</div>
-                      <Badge variant="outline">1 Mars 2024</Badge>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      Max - Toilettage complet
-                    </div>
+                  <div className="text-sm text-muted-foreground">
+                    Luna - Vaccins annuels
+                  </div>
+                </div>
+                <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="font-medium">Toilettage</div>
+                    <Badge variant="outline">1 Mars 2024</Badge>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Max - Toilettage complet
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <h4 className="font-medium">Notes</h4>
-                <div className="bg-muted/50 p-3 rounded-lg">
+                <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
                   <p className="text-sm text-muted-foreground">
                     Client fidèle depuis 2022. Préfère les rendez-vous en
                     matinée. Toujours ponctuel et attentif aux recommandations.
+                    Très attaché à ses animaux et prêt à suivre toutes les
+                    recommandations pour leur bien-être.
                   </p>
                 </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsOwnerModalOpen(false)}
+                >
+                  Fermer
+                </Button>
               </div>
             </div>
           )}

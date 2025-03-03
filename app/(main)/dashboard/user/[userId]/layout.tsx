@@ -1,6 +1,6 @@
-import DashboardClientLayout from "@/components/dashboard/layout/dashboard-client-layout";
-import { ReactNode } from "react";
+import DashboardClientLayout from "@/components/dashboard/layout/client/dashboard-client-layout";
 import { redirect } from "next/navigation";
+import { ReactNode } from "react";
 
 const ClientDashboardLayout = async ({
   children,

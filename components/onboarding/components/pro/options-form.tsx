@@ -17,9 +17,9 @@ import * as z from "zod";
 import { X, Plus, Euro } from "lucide-react";
 import { proOptionsSchema } from "../../types/onboarding-schemas";
 import { createOptionsStepAction } from "@/src/actions";
-import { useActionMutation } from "@/src/hooks/action-hooks";
 import { toast } from "sonner";
 import { cn } from "@/src/lib/utils";
+import { useMutation } from "@tanstack/react-query";
 
 export function OptionsForm({
   nextStep,
@@ -42,7 +42,8 @@ export function OptionsForm({
     name: "options",
   });
 
-  const { mutateAsync } = useActionMutation(createOptionsStepAction, {
+  const { mutateAsync } = useMutation({
+    mutationFn: createOptionsStepAction,
     onSuccess: () => {
       reset();
       nextStep();

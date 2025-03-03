@@ -27,40 +27,39 @@ import { Organization } from "@/src/db/organization";
 import { organizationFormSchema } from "../../profile-section";
 import { use } from "react";
 import { ActionResult } from "@/src/lib";
-import { useQueryClient } from "@tanstack/react-query";
-import { useActionMutation } from "@/src/hooks/action-hooks";
+import { useMutation } from "@tanstack/react-query";
 
 interface ProfileLegalInfoSectionProps {
-  org: Promise<ActionResult<Organization | null>>;
+  org: Organization | null | undefined;
 }
 
 export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) => {
-  const dataOrg = use(org);
   const form = useForm<z.infer<typeof organizationFormSchema>>({
     resolver: zodResolver(organizationFormSchema),
     values: {
-      name: dataOrg?.data?.name || "",
-      email: dataOrg?.data?.email || "",
+      name: org?.name || "",
+      email: org?.email || "",
       website: "",
-      address: dataOrg?.data?.addressId || "",
-      description: dataOrg?.data?.description || "",
-      openAt: dataOrg?.data?.openAt || "09:00",
-      closeAt: dataOrg?.data?.closeAt || "18:00",
-      atHome: dataOrg?.data?.atHome || false,
-      nac: dataOrg?.data?.nac || "",
-      siren: dataOrg?.data?.siren || "",
-      siret: dataOrg?.data?.siret || "",
+      address: org?.addressId || "",
+      description: org?.description || "",
+      openAt: org?.openAt || "09:00",
+      closeAt: org?.closeAt || "18:00",
+      atHome: org?.atHome || false,
+      nac: org?.nac || "",
+      siren: org?.siren || "",
+      siret: org?.siret || "",
     },
   });
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useActionMutation(updateOrganization, {
+  const { mutateAsync } = useMutation({
+    mutationFn: updateOrganization,
     onSuccess: () => {
       toast.success("Modifications enregistrées avec succès !");
     },
-    onError: () => {
-      toast.error("Erreur lors de l'enregistrement des modifications");
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

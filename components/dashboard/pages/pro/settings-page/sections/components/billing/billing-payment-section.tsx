@@ -2,39 +2,36 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CreditCard } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useActionQuery, useActionMutation } from "@/src/hooks/action-hooks";
-import { getBillingInfo, createPaymentMethodUpdateSession } from "@/src/actions/stripe.action";
+import { createPaymentMethodUpdateSession } from "@/src/actions/stripe.action";
 import { toast } from "sonner";
+import { ActionResult } from "@/src/lib";
+import { BillingInfo } from "@/types/billing-info";
+import { useMutation } from "@tanstack/react-query";
 
-export const BillingPaymentSection = () => {
+export const BillingPaymentSection = ({
+  billingInfo,
+}: {
+  billingInfo: ActionResult<BillingInfo> | undefined;
+}) => {
   const params = useParams();
   const orgId = params.orgId as string;
   const router = useRouter();
 
-  const { data: billingInfo, isLoading } = useActionQuery(
-    getBillingInfo,
-    { organizationId: orgId },
-    "billing-info",
-  );
-
-  const { mutateAsync: updatePaymentMethod } = useActionMutation(
-    createPaymentMethodUpdateSession,
-    {
-      onSuccess: (url) => {
-        if (url) {
-          router.push(url);
-        }
-      },
-      onError: () => {
-        toast.error(
-          "Une erreur est survenue lors de la mise à jour du moyen de paiement",
-        );
-      },
+  const { mutateAsync: updatePaymentMethod } = useMutation({
+    mutationFn: createPaymentMethodUpdateSession,
+    onSuccess: (url) => {
+      if (url.data) {
+        router.push(url.data);
+      }
     },
-  );
+    onError: () => {
+      toast.error(
+        "Une erreur est survenue lors de la mise à jour du moyen de paiement",
+      );
+    },
+  });
 
   const handleUpdatePaymentMethod = async () => {
     await updatePaymentMethod({
@@ -50,13 +47,9 @@ export const BillingPaymentSection = () => {
         </div>
         <div>
           <h3 className="text-lg font-medium">Moyen de paiement</h3>
-          {isLoading ? (
-            <Skeleton className="mt-1 h-4 w-[200px]" />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              {billingInfo?.paymentMethod}
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground">
+            {billingInfo?.data?.paymentMethod}
+          </p>
         </div>
       </div>
       <Button variant="outline" onClick={handleUpdatePaymentMethod}>
@@ -64,4 +57,4 @@ export const BillingPaymentSection = () => {
       </Button>
     </div>
   );
-}; 
+};

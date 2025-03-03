@@ -1,7 +1,13 @@
-import { boolean, date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { Organization, organization } from "./organization";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
+import { Service, service } from "./service";
+
+export const organizationSlotsType = pgEnum("organization_slots_type", [
+  "unique",
+  "recurring",
+]);
 
 export const organizationSlots = pgTable("organization_slots", {
   id: text("id")
@@ -10,22 +16,35 @@ export const organizationSlots = pgTable("organization_slots", {
   organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
-  start: date("start").notNull(),
-  end: date("end").notNull(),
+  serviceId: text("serviceId").references(() => service.id, {
+    onDelete: "cascade",
+  }),
+  start: timestamp("start").notNull(),
+  end: timestamp("end").notNull(),
+  type: organizationSlotsType("type").notNull().default("unique"),
   isAvailable: boolean("isAvailable").notNull().default(true),
+  recurrenceId: text("recurrenceId"),
   createdAt: timestamp("createdAt").notNull().default(new Date()),
   updatedAt: timestamp("updatedAt"),
 });
 
-export const organizationSlotsRelations = relations(organizationSlots, ({ one }) => ({
-  organization: one(organization, {
-    fields: [organizationSlots.organizationId],
-    references: [organization.id],
+export const organizationSlotsRelations = relations(
+  organizationSlots,
+  ({ one }) => ({
+    organization: one(organization, {
+      fields: [organizationSlots.organizationId],
+      references: [organization.id],
+    }),
+    service: one(service, {
+      fields: [organizationSlots.serviceId],
+      references: [service.id],
+    }),
   }),
-}));
+);
 
 export type OrganizationSlots = InferSelectModel<typeof organizationSlots> & {
   organization: Organization;
+  service: Service;
 };
 
 export const CreateOrganizationSlotsSchema = createInsertSchema(organizationSlots);

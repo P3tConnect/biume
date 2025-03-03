@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardFooter,
-  Calendar,
   Separator,
   Credenza,
   CredenzaHeader,
@@ -11,6 +10,7 @@ import {
   CredenzaTitle,
   CredenzaDescription,
   CredenzaFooter,
+  Input,
 } from "@/components/ui";
 import { ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
@@ -19,12 +19,22 @@ import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
-import { useActionQuery } from "@/src/hooks/action-hooks";
+import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action";
 import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
+import { useQuery } from "@tanstack/react-query";
+import AppointmentPicker from "@/components/ui/appointment-picker";
+import { useSession, signIn } from "@/src/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/src/lib";
+import { z } from "zod";
+import Link from "next/link";
 
 interface BookingCardProps {
   services: Service[];
@@ -51,10 +61,40 @@ export function BookingCard({
   setSelectedDate,
   setSelectedTime,
 }: BookingCardProps) {
+  const router = useRouter();
+  const { data: session } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const { data: userPets = [] } = useActionQuery(getPets, {}, "user-pets");
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const { switch: switchStep, current, metadata, setMetadata, isFirst, isLast, next, prev } = useStepper({
+  const { data: userPets } = useQuery({
+    queryKey: ["user-pets"],
+    queryFn: () => getPets({}),
+  });
+
+  // Récupération des slots d'organisation basés sur le service sélectionné
+  const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
+    queryKey: ["organization-slots", selectedService],
+    queryFn: async () => {
+      if (!selectedService) return { data: [] };
+      return getOrganizationSlotsByService({ serviceId: selectedService });
+    },
+    enabled: !!selectedService,
+  });
+
+  const {
+    switch: switchStep,
+    current,
+    metadata,
+    setMetadata,
+    isFirst,
+    isLast,
+    next,
+    prev,
+  } = useStepper({
     initialStep: "pet",
   });
 
@@ -66,9 +106,50 @@ export function BookingCard({
     ? (professionals.find((p) => p.id === selectedPro) ?? null)
     : null;
 
-  const selectedPet = userPets.find(
+  const selectedPet = userPets?.data?.find(
     (p) => p.id === metadata?.pet?.petId,
   );
+
+  // Fonction de callback pour AppointmentPicker
+  const handleDateTimeSelect = (date: Date, time: string | null) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+  };
+
+  const handleOpenBookingModal = () => {
+    if (!session) {
+      // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion
+      setIsLoginModalOpen(true);
+    } else {
+      // Si l'utilisateur est connecté, ouvrir la modale de réservation
+      setIsConfirmModalOpen(true);
+    }
+  };
+
+  const onLoginSubmit = handleSubmit(async (data) => {
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
+      },
+      {
+        onRequest: () => {
+          setLoginLoading(true);
+        },
+        onSuccess: () => {
+          setLoginLoading(false);
+          toast.success("Connexion réussie !");
+          setIsLoginModalOpen(false);
+          setIsConfirmModalOpen(true); // Ouvrir la modale de réservation après connexion
+        },
+        onError: (error) => {
+          setLoginLoading(false);
+          toast.error(`Erreur : ${error.error.message}`);
+        },
+      },
+    );
+  });
 
   const handleBooking = () => {
     // TODO: Implémenter la logique de réservation
@@ -87,7 +168,7 @@ export function BookingCard({
   const stepContent = {
     pet: (
       <PetStep
-        userPets={userPets}
+        userPets={userPets?.data ?? []}
         selectedPetId={metadata?.pet?.petId ?? ""}
         onSelectPet={(petId) => setMetadata("pet", { petId })}
       />
@@ -122,9 +203,7 @@ export function BookingCard({
         <div className="space-y-6">
           {/* Prix */}
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-semibold">
-              À partir de 40€
-            </span>
+            <span className="text-2xl font-semibold">À partir de 40€</span>
           </div>
 
           {/* Service Selection */}
@@ -201,47 +280,24 @@ export function BookingCard({
 
           <Separator />
 
-          {/* Date Selection */}
+          {/* Date et Time Selection avec AppointmentPicker */}
           {selectedPro && (
             <div>
               <label className="text-sm font-medium mb-2 block">
-                Sélectionnez une date
+                Sélectionnez date et heure
               </label>
-              <div className="p-3 rounded-xl border">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  locale={fr}
-                  className={cn(
-                    "w-full [&_table]:w-full [&_table_td]:p-0 [&_table_td_button]:w-full [&_table_td_button]:h-9",
-                    "[&_table]:border-separate [&_table]:border-spacing-1",
-                  )}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Time Selection */}
-          {selectedDate && (
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Choisissez un horaire
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"].map(
-                  (time) => (
-                    <Button
-                      key={time}
-                      variant={selectedTime === time ? "default" : "outline"}
-                      className="w-full"
-                      onClick={() => setSelectedTime(time)}
-                    >
-                      {time}
-                    </Button>
-                  ),
-                )}
-              </div>
+              {isLoadingSlots ? (
+                <div className="p-4 text-center text-muted-foreground">
+                  Chargement des disponibilités...
+                </div>
+              ) : (
+                <div className="w-full">
+                  <AppointmentPicker
+                    timeSlots={organizationSlots?.data ?? []}
+                    onSelectDateTime={handleDateTimeSelect}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -252,16 +308,88 @@ export function BookingCard({
           disabled={!selectedTime}
           className="w-full"
           size="lg"
-          onClick={() => setIsConfirmModalOpen(true)}
+          onClick={handleOpenBookingModal}
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-              locale: fr,
-            })} à ${selectedTime}`
+                locale: fr,
+              })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
 
+      {/* Modale de connexion */}
+      <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+        <CredenzaContent className="sm:max-w-[450px]">
+          <CredenzaHeader>
+            <CredenzaTitle>Connexion requise</CredenzaTitle>
+            <CredenzaDescription>
+              Veuillez vous connecter pour continuer votre réservation
+            </CredenzaDescription>
+          </CredenzaHeader>
+
+          <form onSubmit={onLoginSubmit} className="py-4 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="votre@email.com"
+                {...register("email")}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Mot de passe
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="********"
+                {...register("password")}
+              />
+            </div>
+
+            <CredenzaFooter className="px-0 pt-2">
+              <div className="flex w-full justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsLoginModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={loginLoading}>
+                  {loginLoading ? "Connexion..." : "Se connecter"}
+                </Button>
+              </div>
+              <div className="w-full text-center mt-4">
+                <p className="text-sm text-muted-foreground">
+                  Vous n&apos;avez pas de compte ?{" "}
+                  <Link
+                    href="/sign-up"
+                    className="text-primary hover:underline"
+                  >
+                    Inscrivez-vous
+                  </Link>
+                </p>
+              </div>
+            </CredenzaFooter>
+          </form>
+        </CredenzaContent>
+      </Credenza>
+
+      {/* Modale de réservation (existante) */}
       <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
@@ -274,9 +402,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                          Object.values(steps).findIndex(
-                            (s) => s.id === current.id,
-                          )
+                            Object.values(steps).findIndex(
+                              (s) => s.id === current.id,
+                            )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
@@ -295,36 +423,40 @@ export function BookingCard({
               ))}
             </div>
             <CredenzaTitle>{current.title}</CredenzaTitle>
-            <CredenzaDescription>
-              {current.description}
-            </CredenzaDescription>
+            <CredenzaDescription>{current.description}</CredenzaDescription>
           </CredenzaHeader>
 
           <div className="py-4">
             {switchStep({
-              pet: () => <PetStep
-                userPets={userPets}
-                selectedPetId={metadata?.pet?.petId ?? ""}
-                onSelectPet={(petId) => setMetadata("pet", { petId })}
-              />,
-              consultationType: () => <ConsultationTypeStep
-                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                onSelectType={(isHomeVisit) =>
-                  setMetadata("consultationType", { isHomeVisit })
-                }
-              />,
-              summary: () => <SummaryStep
-                selectedPet={selectedPet}
-                selectedService={selectedServiceData}
-                selectedPro={selectedProData}
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
-                isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                additionalInfo={metadata?.summary?.additionalInfo ?? ""}
-                onAdditionalInfoChange={(value) =>
-                  setMetadata("summary", { additionalInfo: value })
-                }
-              />,
+              pet: () => (
+                <PetStep
+                  userPets={userPets?.data ?? []}
+                  selectedPetId={metadata?.pet?.petId ?? ""}
+                  onSelectPet={(petId) => setMetadata("pet", { petId })}
+                />
+              ),
+              consultationType: () => (
+                <ConsultationTypeStep
+                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                  onSelectType={(isHomeVisit) =>
+                    setMetadata("consultationType", { isHomeVisit })
+                  }
+                />
+              ),
+              summary: () => (
+                <SummaryStep
+                  selectedPet={selectedPet}
+                  selectedService={selectedServiceData}
+                  selectedPro={selectedProData}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
+                  additionalInfo={metadata?.summary?.additionalInfo ?? ""}
+                  onAdditionalInfoChange={(value) =>
+                    setMetadata("summary", { additionalInfo: value })
+                  }
+                />
+              ),
             })}
           </div>
 
@@ -351,8 +483,7 @@ export function BookingCard({
                   }
                 }}
                 disabled={
-                  (current.id === "pet" &&
-                    !metadata?.pet?.petId) ||
+                  (current.id === "pet" && !metadata?.pet?.petId) ||
                   (isLast && !metadata?.pet?.petId)
                 }
               >
