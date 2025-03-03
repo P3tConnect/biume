@@ -10,13 +10,13 @@ export function TeamSection() {
   const teamMembers: TeamMember[] = [
     {
       name: "Mathieu Chambaud",
-      role: "Fondateur & Développeur",
-      image: "/assets/images/mathieu.jpg"
+      role: "Co-fondateur & Développeur",
+      image: "/assets/images/mathieu-chambaud.jpg"
     },
     {
-      name: "Maxime Chambaud",
-      role: "Co-fondateur & Business Developer",
-      image: "/assets/images/maxime.jpg"
+      name: "Graig Kolodziejczyk",
+      role: "Co-fondateur & Développeur",
+      image: "/assets/images/graig-kolodziejczyk.png"
     }
   ];
 
