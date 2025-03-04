@@ -51,6 +51,30 @@ export const { steps, useStepper, utils } = defineStepper(
     }),
   },
   {
+    id: 'petDeseases',
+    title: 'les maladies de votre animal (optionnel)',
+    description: 'Ajoutez une maladie à votre animal',
+    schema: z.object({
+      deseases: z.array(z.string()),
+    }),
+  },
+  {
+    id: 'petIntolerances',
+    title: 'les intolérances de votre animal (optionnel)',
+    description: 'Ajoutez une intolérance à votre animal',
+    schema: z.object({
+      intolerences: z.array(z.string()),
+    }),
+  },
+  {
+    id: 'petAllergies',
+    title: 'les allergies de votre animal (optionnel)',
+    description: 'Ajoutez une allergie à votre animal',
+    schema: z.object({
+      allergies: z.array(z.string()),
+    }),
+  },
+  {
     id: 'complete',
     title: 'Complete',
     description:

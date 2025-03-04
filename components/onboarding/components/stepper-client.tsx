@@ -20,14 +20,11 @@ import {
   CredenzaDescription,
   CredenzaHeader,
 } from '@/components/ui';
-import PetCreationStep from '../client/pet-creation-step';
 import InformationsPetDeseasesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-deseases-step';
 import InformationsPetIntolerancesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-intolerances-step';
 import InformationsPetAllergiesStep from '@/components/dashboard/pages/user/pets-page/components/informations-pet-allergies-step';
 import InformationsPetForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-form';
-import InformationsPetDeseasesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-deseases-form';
-import InformationsPetAllergiesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-allergies-form';
-import InformationsPetIntolerancesForm from '@/components/dashboard/pages/user/pets-page/forms/informations-pet-intolerances-form';
+import { PetProvider } from '@/components/dashboard/pages/user/pets-page/context/pet-context';
 
 const StepperClient = ({ open }: { open: boolean }) => {
   const { data: session } = useSession();
@@ -118,7 +115,40 @@ const StepperClient = ({ open }: { open: boolean }) => {
             start: () => <ClientIntroStep />,
             informations: () => <ClientInformationsStep form={form} />,
             notifications: () => <ClientNotificationStep form={form} />,
-            pet: () => <PetCreationStep onSkip={() => stepper.next()} />,
+            pet: () => (
+              <PetProvider>
+                <InformationsPetForm
+                  nextStep={() => stepper.next()}
+                  previousStep={() => stepper.prev()}
+                />
+              </PetProvider>
+            ),
+            petDeseases: () => (
+              <PetProvider>
+                <InformationsPetDeseasesStep
+                  nextStep={() => stepper.next()}
+                  previousStep={() => stepper.prev()}
+                  isPending={false}
+                />
+              </PetProvider>
+            ),
+            petIntolerances: () => (
+              <PetProvider>
+                <InformationsPetIntolerancesStep
+                  nextStep={() => stepper.next()}
+                  previousStep={() => stepper.prev()}
+                  isPending={false}
+                />
+              </PetProvider>
+            ),
+            petAllergies: () => (
+              <PetProvider>
+                <InformationsPetAllergiesStep
+                  nextStep={() => stepper.next()}
+                  previousStep={() => stepper.prev()}
+                />
+              </PetProvider>
+            ),
             complete: () => <ClientCompleteStep />,
           })}
         <div className='space-y-4'>

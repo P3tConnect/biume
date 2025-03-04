@@ -32,12 +32,10 @@ const commonIntolerances = [
 const InformationsPetIntolerancesForm = ({
   nextStep,
   previousStep,
-  onSubmitIntolerances,
   isPending,
 }: {
   nextStep: () => void;
   previousStep: () => void;
-  onSubmitIntolerances: (intolerances: string[]) => Promise<void>;
   isPending: boolean;
 }) => {
   const { petId } = usePetContext();

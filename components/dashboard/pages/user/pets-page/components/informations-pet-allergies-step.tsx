@@ -11,6 +11,7 @@ const InformationsPetAllergiesStep = ({
     <InformationsPetAllergiesForm
       nextStep={nextStep}
       previousStep={previousStep}
+      isPending={false}
     />
   );
 };

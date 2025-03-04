@@ -32,12 +32,10 @@ const commonDeseases = [
 const InformationsPetDeseasesForm = ({
   nextStep,
   previousStep,
-  onSubmitDeseases,
   isPending,
 }: {
   nextStep: () => void;
   previousStep: () => void;
-  onSubmitDeseases: (deseases: string[]) => Promise<void>;
   isPending: boolean;
 }) => {
   const { petId } = usePetContext();

@@ -32,12 +32,10 @@ const commonAllergies = [
 const InformationsPetAllergiesForm = ({
   nextStep,
   previousStep,
-  onSubmitAllergies,
   isPending,
 }: {
   nextStep: () => void;
   previousStep: () => void;
-  onSubmitAllergies: (allergies: string[]) => Promise<void>;
   isPending: boolean;
 }) => {
   const { petId } = usePetContext();
