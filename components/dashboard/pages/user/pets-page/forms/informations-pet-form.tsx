@@ -50,8 +50,6 @@ const InformationsPetForm = () => {
       breed: "",
       image: "",
       birthDate: new Date(),
-      furColor: "",
-      eyeColor: "",
       description: "",
       weight: 0,
       height: 0,
