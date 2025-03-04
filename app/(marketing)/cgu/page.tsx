@@ -1,10 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PawPrint } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { UserNav } from "@/components/dashboard/layout/user-nav";
+import { useSession } from "@/src/lib/auth-client";
 
 const CGUPage = () => {
+  const { data: session } = useSession();
+
   return (
     <div className="h-screen w-screen bg-background">
       {/* Fond décoratif avec effets de gradient */}
@@ -15,19 +20,31 @@ const CGUPage = () => {
       </div>
 
       {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <Link href="/" className="flex items-center gap-2 w-fit">
-          <motion.div
-            whileHover={{ rotate: 10 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
-              <PawPrint className="w-5 h-5 text-white" />
-            </div>
-          </motion.div>
-          <span className="font-bold tracking-tight text-xl">Biume</span>
-        </Link>
-      </header>
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+        {/* Bouton retour */}
+        <Button variant="ghost" asChild className="group">
+          <Link href="/" className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Retour à l&apos;accueil</span>
+          </Link>
+        </Button>
+
+        {/* Navigation utilisateur ou boutons connexion/inscription */}
+        <div className="flex items-center gap-4">
+          {session ? (
+            <UserNav />
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/sign-in">Connexion</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/sign-up">Inscription</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* Contenu principal */}
       <main className="container mx-auto px-4 py-12 max-w-4xl">

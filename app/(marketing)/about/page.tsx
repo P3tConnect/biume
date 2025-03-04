@@ -64,9 +64,9 @@ const AboutPage = async () => {
   });
 
   return (
-    <div className="flex flex-col min-h-screen w-full overflow-visible">
+    <div className="flex flex-col h-screen w-screen overflow-visible">
       {/* Header */}
-      <div className="container mx-auto px-4 pt-8 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         {/* Bouton retour */}
         <Button variant="ghost" asChild className="group">
           <Link href="/" className="flex items-center gap-2">
