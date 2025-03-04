@@ -2,8 +2,8 @@
   "landingPage": {
     "waitlistShortcut": "Inscrivez-vous sur la liste d'attente !",
     "title1": "Bienvenue sur",
-    "title2": "PawThera",
-    "presentation1": "Simplifiez la gestion de votre entreprise animalière avec PawThera.",
+    "title2": "Biume",
+    "presentation1": "Simplifiez la gestion de votre entreprise animalière avec Biume.",
     "presentation2": "Et consacrez votre énergie sur nos amis a quatre pattes.",
     "survey": "Répondez à notre enquête",
     "features": {
@@ -61,8 +61,8 @@
     },
     "faqSection": {
       "q1": {
-        "title": "Qu'est ce que PawThera ?",
-        "answer": "PawThera est une application web qui permet de gérer votre entreprise du secteur animalier."
+        "title": "Qu'est ce que Biume ?",
+        "answer": "Biume est une application web qui permet de gérer votre entreprise du secteur animalier."
       },
       "q2": {
         "title": "",
@@ -97,7 +97,7 @@
     "slogan": "L'application qui fait gagner du temps aux indépendants du secteur animalier"
   },
   "metadata": {
-    "description": "PawThera, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
+    "description": "Biume, l'application qui fait gagner du temps aux auto-entrepreneur du secteur animalier",
     "keywords": {
       "keyword1": "osteopathe animalier",
       "keyword2": "animaux",
