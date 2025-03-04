@@ -18,11 +18,11 @@ interface ResetPasswordProps {
 }
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({
-  resetLink = "https://pawthera.com/reset-password",
+  resetLink = "https://biume.com/reset-password",
   username = "there",
 }) => {
   return (
-    <EmailLayout preview="Reset your PawThera password">
+    <EmailLayout preview="Reset your Biume password">
       <Container className="mx-auto">
         <Text className="text-2xl font-bold text-gray-800 mb-4">
           Password Reset Request
@@ -31,8 +31,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
         <Text className="text-gray-600 mb-4">Hi {username},</Text>
 
         <Text className="text-gray-600 mb-4">
-          We received a request to reset your PawThera account password. Click
-          the button below to choose a new password:
+          We received a request to reset your Biume account password. Click the
+          button below to choose a new password:
         </Text>
 
         <Section className="text-center my-8">
@@ -56,7 +56,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
         <Text className="text-gray-600">
           Best regards,
           <br />
-          The PawThera Team
+          The Biume Team
         </Text>
       </Container>
     </EmailLayout>

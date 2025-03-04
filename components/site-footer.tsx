@@ -11,7 +11,7 @@ const footerSocials = [
     icon: <LinkedInLogoIcon className="h-4 w-4" />,
   },
   {
-    href: "https://www.instagram.com/pawthera",
+    href: "https://www.instagram.com/biume_app",
     name: "Instagram",
     icon: <InstagramLogoIcon className="h-4 w-4" />,
   },
@@ -34,7 +34,7 @@ export async function SiteFooter() {
                 height={50}
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                PawThera
+                Biume
               </span>
             </Link>
             <p className="max-w-xs">{t("slogan")}</p>
@@ -57,7 +57,7 @@ export async function SiteFooter() {
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             Copyright © {new Date().getFullYear()}{" "}
             <Link href="/" className="cursor-pointer">
-              PawThera
+              Biume
             </Link>
             . {t("rights")}
           </span>

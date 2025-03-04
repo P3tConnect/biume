@@ -11,7 +11,7 @@ interface NewReportClientEmailProps {
 const NewReportClientEmail = ({
   clientName = "valued client",
   reportDate = "today",
-  reportUrl = "https://pawthera.com/reports",
+  reportUrl = "https://biume.com/reports",
   petName = "your pet",
 }: Partial<NewReportClientEmailProps>) => {
   return (
@@ -47,7 +47,7 @@ const NewReportClientEmail = ({
         <Text className="text-gray-600">
           Best regards,
           <br />
-          The PawThera Team
+          The Biume Team
         </Text>
       </Section>
     </EmailLayout>
