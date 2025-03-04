@@ -6,6 +6,9 @@ import { useState } from 'react';
 import { Pet } from '@/src/db/pets'; // Assurez-vous que ce type existe
 import Image from 'next/image';
 import { cn } from '@/src/lib';
+import { useMutation } from '@tanstack/react-query';
+import { deletePet } from '@/src/actions';
+import { toast } from 'sonner';
 
 interface PetCardProps {
   pet: Pet;
@@ -43,6 +46,25 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
     }
   };
 
+  const deletePetMutation = useMutation({
+    mutationFn: deletePet,
+    onSuccess: () => {
+      toast.success('Animal supprimé avec succès');
+      if (onDelete) {
+        onDelete(pet.id);
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(
+        `Erreur lors de la suppression de l'animal: ${error.message}`
+      );
+    },
+  });
+
+  const handleDelete = (petId: string) => {
+    deletePetMutation.mutate({ petId });
+  };
+
   return (
     <>
       <Card className='group overflow-hidden'>
@@ -78,7 +100,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
                 size='icon'
                 variant='destructive'
                 className='h-8 w-8 rounded-full'
-                onClick={() => onDelete(pet.id)}
+                onClick={() => handleDelete(pet.id)}
               >
                 <Trash2 className='h-4 w-4' />
               </Button>

@@ -3,9 +3,11 @@ import InformationsPetAllergiesForm from '../forms/informations-pet-allergies-fo
 const InformationsPetAllergiesStep = ({
   nextStep,
   previousStep,
+  isPending,
 }: {
   nextStep: () => void;
   previousStep: () => void;
+  isPending: boolean;
 }) => {
   return (
     <InformationsPetAllergiesForm

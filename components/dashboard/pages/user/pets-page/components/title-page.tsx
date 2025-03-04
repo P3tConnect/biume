@@ -10,17 +10,41 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Plus } from 'lucide-react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import StepperAnimal from './stepper-animal';
 import { PetProvider } from '../context/pet-context';
+import { useRouter } from 'next/navigation';
 
 const TitlePage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+
+    // Si la modal est fermée, on rafraîchit la page pour afficher le nouvel animal
+    if (!open) {
+      startTransition(() => {
+        router.refresh();
+      });
+    }
+  };
+
+  const handleComplete = () => {
+    // Ferme la modal et rafraîchit la page
+    setIsOpen(false);
+
+    // Rafraîchir explicitement la page pour afficher le nouvel animal
+    startTransition(() => {
+      router.refresh();
+    });
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <Card className='overflow-hidden rounded-2xl mb-4'>
         <CardHeader className='border-b border-gray-100 dark:border-gray-800'>
           <div className='flex flex-row justify-between items-center gap-4'>
@@ -51,7 +75,7 @@ const TitlePage = () => {
         </VisuallyHidden>
         <div className='p-6'>
           <PetProvider>
-            <StepperAnimal />
+            <StepperAnimal onComplete={handleComplete} />
           </PetProvider>
         </div>
       </DialogContent>

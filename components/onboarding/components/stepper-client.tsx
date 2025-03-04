@@ -146,6 +146,7 @@ const StepperClient = ({ open }: { open: boolean }) => {
                 <InformationsPetAllergiesStep
                   nextStep={() => stepper.next()}
                   previousStep={() => stepper.prev()}
+                  isPending={false}
                 />
               </PetProvider>
             ),

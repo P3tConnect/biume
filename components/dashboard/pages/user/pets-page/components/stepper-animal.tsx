@@ -11,7 +11,11 @@ import InformationsPetIntolerancesStep from './informations-pet-intolerances-ste
 import InformationsPetAllergiesStep from './informations-pet-allergies-step';
 import { usePetContext } from '../context/pet-context';
 
-const StepperAnimal = () => {
+interface StepperAnimalProps {
+  onComplete?: () => void;
+}
+
+const StepperAnimal = ({ onComplete }: StepperAnimalProps) => {
   const {
     next,
     prev,
@@ -56,18 +60,29 @@ const StepperAnimal = () => {
       {switchStep({
         pet: () => <InformationsPetStep nextStep={next} previousStep={prev} />,
         petDeseases: () => (
-          <InformationsPetDeseasesStep nextStep={next} previousStep={prev} />
+          <InformationsPetDeseasesStep
+            nextStep={next}
+            previousStep={prev}
+            isPending={false}
+          />
         ),
         petIntolerences: () => (
           <InformationsPetIntolerancesStep
             nextStep={next}
             previousStep={prev}
+            isPending={false}
           />
         ),
         petAllergies: () => (
-          <InformationsPetAllergiesStep nextStep={next} previousStep={prev} />
+          <InformationsPetAllergiesStep
+            nextStep={next}
+            previousStep={prev}
+            isPending={false}
+          />
         ),
-        complete: () => <PetCompleteStep nextStep={next} />,
+        complete: () => (
+          <PetCompleteStep nextStep={next} onComplete={onComplete} />
+        ),
       })}
     </div>
   );

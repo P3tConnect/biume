@@ -147,3 +147,22 @@ export const updatePetIntolerences = createServerAction(
   },
   [requireAuth]
 );
+
+export const deletePet = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    await db.delete(pets).where(eq(pets.id, input.petId));
+  },
+  [requireAuth]
+);
