@@ -27,12 +27,12 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/biume-logo.png`,
+      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
     },
     appleWebApp: {
       title: "Biume",
       startupImage: {
-        url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/biume-logo.png`,
+        url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
       },
     },
     openGraph: {
@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Biume",
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/biume-logo.png`,
+          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
           width: 1200,
           height: 630,
           alt: "Biume",
@@ -55,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Biume",
       description: t("description"),
       images: [
-        `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/biume-logo.png`,
+        `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
       ],
     },
     applicationName: "Biume",
