@@ -10,6 +10,7 @@ import {
   FileText,
   Clock,
   Settings,
+  Brain,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import Image from "next/image";
@@ -72,10 +73,10 @@ export function FeaturesSection() {
       delay: 0.2,
     },
     {
-      icon: BarChart3,
-      title: "Analyses et statistiques",
+      icon: Calendar,
+      title: "Réservation en ligne",
       description:
-        "Visualisez l'évolution de votre activité grâce à des tableaux de bord détaillés.",
+        "Permettez à vos clients de réserver directement leurs rendez-vous depuis votre agenda en ligne.",
       colorClass:
         "bg-green-100 dark:bg-green-950/50 text-green-700 dark:text-green-400",
       delay: 0.3,
@@ -117,10 +118,10 @@ export function FeaturesSection() {
       delay: 0.7,
     },
     {
-      icon: Settings,
-      title: "Personnalisation",
+      icon: Brain,
+      title: "Intelligence artificielle",
       description:
-        "Adaptez l'interface à vos besoins spécifiques et à votre flux de travail.",
+        "Optimisez votre pratique grâce à nos outils d'IA votre activité au quotidien et vous permet de gagner du temps.",
       colorClass:
         "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400",
       delay: 0.8,
