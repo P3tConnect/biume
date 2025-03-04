@@ -70,7 +70,7 @@ export function HeroSection() {
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
               Prenez soin de vos{" "}
-              <span className="text-primary">compagnons</span> à quatre pattes
+              <span className="text-gradient">compagnons</span> à quatre pattes
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8">

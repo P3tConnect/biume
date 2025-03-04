@@ -88,7 +88,7 @@ export function HeroSection() {
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
               Gérez votre activité animale{" "}
-              <span className="text-primary">simplement</span>
+              <span className="text-gradient">simplement</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">

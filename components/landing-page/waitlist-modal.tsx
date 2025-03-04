@@ -40,6 +40,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "../ui";
+import Link from "next/link";
 
 interface WaitlistModalProps {
   children?: React.ReactNode;
@@ -284,6 +285,16 @@ export function WaitlistModal({
                 />
               ))}
             </div>
+
+            <Button variant="outline" asChild>
+              <Link
+                href="https://forms.gle/ZWyhVPJfL1D98D716"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Répondre au questionnaire
+              </Link>
+            </Button>
 
             <Button variant="outline" className="gap-2" onClick={closeModal}>
               Fermer

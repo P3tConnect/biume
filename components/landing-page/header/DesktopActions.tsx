@@ -7,11 +7,15 @@ import { PageSwitch } from "@/components/landing-page/page-switch";
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserNav } from "../../dashboard/layout/user-nav";
 import { HeaderProps, SessionProps } from "./types";
+import { useSearchParams } from "next/navigation";
 
 export const DesktopActions = ({
   isScrolled,
   session,
 }: HeaderProps & SessionProps) => {
+  const params = useSearchParams();
+  const isPro = params.get("version") === "pro";
+
   return (
     <div
       className={cn(
@@ -32,7 +36,7 @@ export const DesktopActions = ({
             isScrolled ? "hidden lg:flex gap-2" : "hidden lg:flex gap-3",
           )}
         >
-          <Button size={isScrolled ? "sm" : "default"} asChild>
+          {isPro ? (<Button size={isScrolled ? "sm" : "default"} asChild>
             <Link
               href="https://forms.gle/ZWyhVPJfL1D98D716"
               target="_blank"
@@ -41,6 +45,11 @@ export const DesktopActions = ({
               Répondre au questionnaire
             </Link>
           </Button>
+          ) : (
+            <Button size={isScrolled ? "sm" : "default"} asChild>
+              <Link href="#cta">M&apos;inscrire à la bêta</Link>
+            </Button>
+          )}
         </div>
       )}
     </div>

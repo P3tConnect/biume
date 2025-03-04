@@ -64,7 +64,7 @@ const AboutPage = async () => {
   });
 
   return (
-    <div className="flex flex-col h-screen w-screen">
+    <div className="flex flex-col min-h-screen w-full overflow-visible">
       {/* Header */}
       <div className="container mx-auto px-4 pt-8 flex justify-between items-center">
         {/* Bouton retour */}
