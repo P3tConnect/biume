@@ -138,7 +138,7 @@ export function HeroSection() {
         >
           <div className="relative z-10 rounded-2xl overflow-hidden border shadow-xl">
             <Image
-              src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop"
+              src="/assets/images/pro-landing.jpg"
               alt="Interface professionnelle Biume"
               width={1200}
               height={675}

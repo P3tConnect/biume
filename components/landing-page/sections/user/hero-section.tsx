@@ -136,7 +136,7 @@ export function HeroSection() {
             <div className="relative z-10">
               <div className="relative rounded-2xl overflow-hidden border shadow-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1581888227599-779811939961?q=80&w=600&auto=format&fit=crop"
+                  src="/assets/images/landing-user.jpg"
                   alt="Application Biume pour les propriétaires d'animaux"
                   width={600}
                   height={700}
