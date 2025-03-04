@@ -7,31 +7,12 @@ import { z } from "zod";
 import { motion } from "framer-motion";
 import { Sparkles, Star, CheckCircle, Loader2 } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { waitlistInsertSchema } from "@/src/db";
-import { addToWaitList } from "@/src/actions/waitlist.action";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
-import {
   Credenza,
   CredenzaContent,
   CredenzaDescription,
@@ -39,8 +20,16 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "../ui";
+  Input,
+  Button,
+  Textarea,
+} from "@/components/ui";
+import { waitlistInsertSchema } from "@/src/db";
+import { addToWaitList } from "@/src/actions/waitlist.action";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { cn } from "@/src/lib";
 
 interface WaitlistModalProps {
   children?: React.ReactNode;
@@ -131,7 +120,7 @@ export function WaitlistModal({
         {!isSuccess ? (
           <div className="p-6">
             <CredenzaHeader className="mb-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit">
+              <div className={cn("inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit", !defaultIsPro ? "bg-secondary/10 text-secondary" : "")}>
                 <Sparkles className="w-4 h-4" />
                 <span>Phase bêta</span>
               </div>
@@ -240,6 +229,7 @@ export function WaitlistModal({
                 <CredenzaFooter className="pt-4">
                   <Button
                     type="submit"
+                    variant={!defaultIsPro ? "secondary" : "default"}
                     disabled={isSubmitting}
                     className="w-full gap-2"
                   >
@@ -266,8 +256,8 @@ export function WaitlistModal({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <CheckCircle className="h-8 w-8 text-primary" />
+            <div className={cn("w-16 h-16 rounded-full flex items-center justify-center mb-4", !defaultIsPro ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary")}>
+              <CheckCircle className="h-8 w-8" />
             </div>
             <h2 className="text-2xl font-bold mb-2">
               Merci pour votre inscription !
@@ -286,7 +276,7 @@ export function WaitlistModal({
               ))}
             </div>
 
-            <Button variant="outline" asChild>
+            {defaultIsPro && <Button variant="default" asChild>
               <Link
                 href="https://forms.gle/ZWyhVPJfL1D98D716"
                 target="_blank"
@@ -294,7 +284,7 @@ export function WaitlistModal({
               >
                 Répondre au questionnaire
               </Link>
-            </Button>
+            </Button>}
 
             <Button variant="outline" className="gap-2" onClick={closeModal}>
               Fermer

@@ -132,7 +132,7 @@ export function TestimonialsSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-secondary/10 text-secondary">
               <MessageSquareQuote className="w-4 h-4" />
               <span>Témoignages</span>
             </div>
@@ -248,8 +248,8 @@ export function TestimonialsSection() {
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all",
                     index === activeIndex
-                      ? "bg-primary scale-125"
-                      : "bg-primary/20 hover:bg-primary/40",
+                      ? "bg-secondary scale-125"
+                      : "bg-secondary/20 hover:bg-secondary/40",
                   )}
                 >
                   <span className="sr-only">Témoignage {index + 1}</span>

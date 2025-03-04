@@ -20,7 +20,7 @@ export function CTASection() {
         {/* Fond décoratif */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl">
-            <div className="absolute right-1/3 bottom-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+            <div className="absolute right-1/3 bottom-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
             <div className="absolute left-1/3 top-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
           </div>
         </div>
@@ -29,7 +29,7 @@ export function CTASection() {
           <div className="relative max-w-5xl mx-auto bg-gradient-to-br from-card/80 to-card border rounded-3xl overflow-hidden backdrop-blur-sm shadow-lg">
             {/* Motif de décoration */}
             <div className="absolute inset-0 overflow-hidden opacity-5">
-              <div className="absolute -right-8 -top-8 w-64 h-64 border-8 border-primary rounded-full"></div>
+              <div className="absolute -right-8 -top-8 w-64 h-64 border-8 border-secondary rounded-full"></div>
               <div className="absolute -left-8 -bottom-8 w-64 h-64 border-8 border-secondary rounded-full"></div>
             </div>
 
@@ -41,14 +41,14 @@ export function CTASection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                 >
-                  <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-secondary/10 text-secondary w-fit">
                     <Sparkles className="w-4 h-4" />
                     <span>Pour les propriétaires d&apos;animaux</span>
                   </div>
 
                   <h2 className="text-3xl md:text-4xl font-bold mb-6">
                     Prenez soin de votre{" "}
-                    <span className="text-primary">animal chéri</span> sans
+                    <span className="text-gradient">animal chéri</span> sans
                     soucis
                   </h2>
 
@@ -81,7 +81,7 @@ export function CTASection() {
                         transition={{ duration: 0.4, delay: index * 0.1 }}
                         className="flex items-center gap-3"
                       >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                           <item.icon className="w-5 h-5" />
                         </div>
                         <p>{item.text}</p>
@@ -91,7 +91,7 @@ export function CTASection() {
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <WaitlistModal defaultIsPro={false}>
-                      <Button size="lg" className="group relative z-20">
+                      <Button size="lg" variant="secondary" className="group relative z-20">
                         <span>Rejoindre la liste d&apos;attente</span>
                         <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </Button>
@@ -125,7 +125,7 @@ export function CTASection() {
                     className="absolute -bottom-6 -left-6 md:bottom-8 md:left-8 bg-background rounded-2xl shadow-lg p-4 border backdrop-blur-sm"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                      <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center text-secondary">
                         <CalendarClock className="w-6 h-6" />
                       </div>
                       <div>
@@ -146,7 +146,7 @@ export function CTASection() {
                     className="absolute -top-6 -right-6 md:top-8 md:right-8 bg-background/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 border"
                   >
                     <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 mb-1 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                      <div className="w-10 h-10 mb-1 bg-secondary/20 rounded-full flex items-center justify-center text-secondary">
                         <Medal className="w-5 h-5" />
                       </div>
                       <p className="text-sm font-medium">99% satisfaits</p>

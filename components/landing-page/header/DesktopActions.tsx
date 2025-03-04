@@ -46,7 +46,7 @@ export const DesktopActions = ({
             </Link>
           </Button>
           ) : (
-            <Button size={isScrolled ? "sm" : "default"} asChild>
+            <Button size={isScrolled ? "sm" : "default"} variant="secondary" asChild>
               <Link href="#cta">M&apos;inscrire à la bêta</Link>
             </Button>
           )}

@@ -359,6 +359,13 @@ export function PricingSection() {
                         €)
                       </p>
                     )}
+
+                    {/* Information sur la réduction */}
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {isAnnual
+                        ? "La réduction de 20% est appliquée sur l'ensemble de l'année."
+                        : "La réduction de 20% est appliquée sur les 3 premiers mois."}
+                    </p>
                   </div>
 
                   <ul className="space-y-3">
@@ -420,8 +427,9 @@ export function PricingSection() {
                         : "bg-primary/10 text-primary hover:bg-primary/20",
                     )}
                     size="lg"
+                    asChild
                   >
-                    {plan.cta}
+                    <Link href="#cta">{plan.cta}</Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -456,6 +464,6 @@ export function PricingSection() {
           </motion.div>
         </Link>
       </div>
-    </section>
+    </section >
   );
 }

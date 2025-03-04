@@ -63,7 +63,7 @@ export function HeroSection() {
             transition={{ duration: 0.7 }}
             className="flex flex-col"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit">
+            <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium rounded-full bg-secondary/10 text-secondary w-fit">
               <Badge className="w-4 h-4" />
               <span>La santé de vos animaux simplifiée</span>
             </div>
@@ -113,7 +113,7 @@ export function HeroSection() {
                   transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
                   className={`flex items-start gap-3 p-4 rounded-xl bg-card/50 ${index === 2 ? "col-span-2" : ""}`}
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                     <feature.icon className="w-5 h-5" />
                   </div>
                   <div>
