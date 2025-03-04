@@ -3,46 +3,18 @@
 import { Button, Input } from "@/components/ui";
 import React, { useState } from "react";
 
-import { ErrorContext } from "@better-fetch/fetch";
 import Image from "next/image";
 import Link from "next/link";
 import { registerSchema } from "@/src/lib";
 import { signUp } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Définition du type de réponse pour l'authentification
-type AuthResponseContext = {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      // autres propriétés de l'utilisateur
-      [key: string]: any;
-    };
-    // autres données potentielles dans la réponse
-    [key: string]: any;
-  };
-  // autres propriétés du contexte
-  [key: string]: any;
-};
-
-// Définition du type d'erreur pour l'authentification
-type AuthErrorContext = {
-  error: {
-    message: string;
-    // autres propriétés potentielles de l'erreur
-    [key: string]: any;
-  };
-  // autres propriétés du contexte d'erreur
-  [key: string]: any;
-};
-
 const RegisterClientPage = () => {
+  redirect("/");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
@@ -68,11 +40,11 @@ const RegisterClientPage = () => {
         onRequest: () => {
           setLoading(true);
         },
-        onSuccess: (ctx: AuthResponseContext) => {
+        onSuccess: (ctx) => {
           toast.success("Inscription réussie ! Vous allez être redirigé ...");
           router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
-        onError: (error: AuthErrorContext) => {
+        onError: (error) => {
           setLoading(false);
           console.log(error, "error");
           toast.error(`Error : ${error.error.message}`);
