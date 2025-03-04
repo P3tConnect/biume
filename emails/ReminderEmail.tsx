@@ -54,21 +54,19 @@ const ReminderEmail = ({
 
         <Text className="text-gray-600 mt-4">
           Please make sure to complete this task before the due date. You can
-          view and manage all your reminders in your PawThera dashboard.
+          view and manage all your reminders in your Biume dashboard.
         </Text>
 
-        <Section className="mt-6">
+        {/* <Section className="mt-6">
           <Button
             className="bg-blue-600 text-white px-6 py-3 rounded-md font-medium"
-            href="https://pawthera.com/dashboard/reminders"
+            href="https://biume.com/dashboard/reminders"
           >
             View Reminders
           </Button>
-        </Section>
+        </Section> */}
 
-        <Text className="text-gray-600 mt-6">
-          Thank you for using PawThera!
-        </Text>
+        <Text className="text-gray-600 mt-6">Thank you for using Biume!</Text>
       </Section>
     </EmailLayout>
   );

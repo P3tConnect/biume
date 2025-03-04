@@ -50,8 +50,6 @@ const InformationsPetForm = () => {
       breed: "",
       image: "",
       birthDate: new Date(),
-      furColor: "",
-      eyeColor: "",
       description: "",
       weight: 0,
       height: 0,
@@ -353,44 +351,6 @@ const InformationsPetForm = () => {
                   <FormControl>
                     <Input
                       placeholder="Ex: Golden Retriever"
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="furColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Couleur du pelage</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Ex: Noir et blanc"
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="eyeColor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Couleur des yeux</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Ex: Bleu"
                       {...field}
                       value={field.value ?? ""}
                     />

@@ -7,7 +7,7 @@ const DowngradeSubscription = ({ plan }: { plan: string }) => {
     <EmailLayout>
       <Section>
         <Heading className="text-2xl font-bold text-gray-800 mb-6">
-          Your PawThera Subscription Has Been Updated
+          Your Biume Pro Subscription Has Been Updated
         </Heading>
 
         <Text className="text-gray-700 mb-4">
@@ -29,20 +29,20 @@ const DowngradeSubscription = ({ plan }: { plan: string }) => {
         </Text>
 
         <Button
-          href="https://pawthera.com/support"
+          href="https://biume.com/support"
           className="bg-blue-600 text-white px-6 py-3 rounded-md font-medium"
         >
           Contact Support
         </Button>
 
         <Text className="text-gray-700 mt-6">
-          Thank you for being a valued member of the PawThera community.
+          Thank you for being a valued member of the Biume community.
         </Text>
 
         <Text className="text-gray-700 mt-4">
           Best regards,
           <br />
-          The PawThera Team
+          The Biume Team
         </Text>
       </Section>
     </EmailLayout>

@@ -24,7 +24,7 @@ export function ProLanding() {
                 Notre phase bêta arrive bientôt.
               </span>{" "}
               <Link
-                href="/register"
+                href="#cta"
                 className="underline font-semibold hover:text-primary transition-colors"
               >
                 Préinscrivez-vous dès maintenant

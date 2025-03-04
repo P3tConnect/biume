@@ -3,12 +3,14 @@ import { SearchResults } from "./_components/search-results";
 import { getAllOrganizations } from "@/src/actions/organization.action";
 import { parseSearchParams } from "@/src/nuqs-queries/search-queries";
 import { ProHeader } from "./_components/pro-header";
+import { redirect } from "next/navigation";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function CompaniesListPage({ searchParams }: PageProps) {
+  redirect("/");
   const searchParamsPromise = await searchParams;
   const params = parseSearchParams(searchParamsPromise);
 

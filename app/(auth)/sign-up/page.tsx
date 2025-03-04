@@ -2,7 +2,6 @@
 
 import { Button, Input } from "@/components/ui";
 import React, { useState } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import { registerSchema } from "@/src/lib";
@@ -59,7 +58,7 @@ const RegisterClientPage = () => {
         <h1 className="text-4xl font-bold text-primary">Inscription</h1>
         <p className="text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14">
           Ceci est du texte de description pour justifier de l&apos;utilité de
-          s&apos;inscrire sur notre plateforme PawThera
+          s&apos;inscrire sur notre plateforme Biume
         </p>
         <form
           onSubmit={onSubmit}

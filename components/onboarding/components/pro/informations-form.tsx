@@ -218,13 +218,13 @@ const InformationsForm = ({
                         <FormControl>
                           <Input
                             type="string"
-                            placeholder="PawThera Inc."
+                            placeholder="Biume Inc."
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
                               "h-9",
                               form.formState.errors.name &&
-                              "border-destructive",
+                                "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -243,13 +243,13 @@ const InformationsForm = ({
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="contact@pawthera.com"
+                            placeholder="contact@biume.com"
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
                               "h-9",
                               form.formState.errors.email &&
-                              "border-destructive",
+                                "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -333,7 +333,7 @@ const InformationsForm = ({
                         className={cn(
                           "flex-1 min-h-[120px] resize-none text-base",
                           form.formState.errors.description &&
-                          "border-destructive",
+                            "border-destructive",
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}

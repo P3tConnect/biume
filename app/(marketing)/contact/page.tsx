@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { sendContactEmail, type ContactFormData } from "./actions";
 
 const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     subject: "",
@@ -30,17 +31,33 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simuler l'envoi du formulaire
-    setTimeout(() => {
+    try {
+      const result = await sendContactEmail(formData);
+
+      if (result.success) {
+        toast.success("Votre message a été envoyé avec succès !");
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        if (result.validationErrors) {
+          // Afficher les erreurs de validation
+          result.validationErrors.forEach(err => {
+            toast.error(`${err.path}: ${err.message}`);
+          });
+        } else {
+          toast.error(result.error || "Une erreur est survenue lors de l'envoi du message");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi:", error);
+      toast.error("Une erreur est survenue lors de l'envoi du message");
+    } finally {
       setIsSubmitting(false);
-      toast.success("Votre message a été envoyé avec succès !");
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -109,35 +126,6 @@ const ContactPage = () => {
                     >
                       contact@biume.com
                     </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <Phone className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Téléphone</p>
-                    <a
-                      href="tel:+33123456789"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      +33 1 23 45 67 89
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Adresse</p>
-                    <p className="text-muted-foreground">
-                      123 Avenue des Champs-Élysées
-                      <br />
-                      75008 Paris, France
-                    </p>
                   </div>
                 </div>
               </div>

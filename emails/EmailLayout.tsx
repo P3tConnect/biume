@@ -31,12 +31,10 @@ export const EmailLayout = ({
                 src="https://i.imgur.com/zj63mcF.png"
                 width="40"
                 height="auto"
-                alt="PawThera"
+                alt="Biume"
                 className="mx-auto mb-2"
               />
-              <Text className="text-white text-sm font-medium m-0">
-                PawThera
-              </Text>
+              <Text className="text-white text-sm font-medium m-0">Biume</Text>
             </Container>
           </Section>
 
@@ -103,22 +101,20 @@ export const EmailLayout = ({
               </Text>
 
               <div className="text-xs text-gray-400 leading-relaxed">
-                <Text className="m-0">PawThera Inc.</Text>
-                <Text className="m-0">123 Innovation Drive, Suite 100</Text>
-                <Text className="m-0">San Francisco, CA 94105</Text>
+                <Text className="m-0">Biume Inc.</Text>
               </div>
 
               <Section className="mt-6">
                 <Link
-                  href="mailto:hello@pawthera.com"
+                  href="mailto:hello@biume.com"
                   className="text-xs text-indigo-600 hover:text-indigo-700 no-underline"
                 >
-                  hello@pawthera.com
+                  hello@biume.com
                 </Link>
               </Section>
 
               <Text className="text-xs text-gray-400 mt-6">
-                © {new Date().getFullYear()} PawThera. All rights reserved.
+                © {new Date().getFullYear()} Biume. All rights reserved.
               </Text>
             </Section>
           </Container>

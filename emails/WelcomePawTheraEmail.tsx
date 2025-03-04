@@ -1,22 +1,22 @@
 import { Section, Text, Button, Hr } from "@react-email/components";
 import { EmailLayout } from "./EmailLayout";
 
-export const WelcomePawThera = () => {
+export const WelcomeBiume = () => {
   return (
-    <EmailLayout preview="Welcome to PawThera - Let's Transform Pet Care Together! 🐾">
+    <EmailLayout preview="Welcome to Biume - Let's Transform Pet Care Together! 🐾">
       <Text className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Welcome to PawThera! 🐾
+        Welcome to Biume! 🐾
       </Text>
 
       <Text className="text-gray-600 mb-4">
         We're thrilled to have you join our community of pet care professionals.
-        PawThera is here to help you streamline your business and provide
+        Biume is here to help you streamline your business and provide
         exceptional care to your furry clients.
       </Text>
 
       <Section className="bg-white rounded-xl p-6 border border-gray-100 mb-6">
         <Text className="text-lg font-semibold text-gray-800 mb-4">
-          Here's what you can do with PawThera:
+          Here's what you can do with Biume:
         </Text>
 
         <ul className="list-disc pl-6 text-gray-600 space-y-2">
@@ -34,7 +34,7 @@ export const WelcomePawThera = () => {
         </Text>
 
         <Button
-          href="https://app.pawthera.com/dashboard"
+          href="https://biume.com/dashboard"
           className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium text-center block w-full"
         >
           Go to Dashboard
@@ -45,7 +45,7 @@ export const WelcomePawThera = () => {
 
       <Text className="text-sm text-gray-600">
         Need help? Our support team is always here to assist you. Just reply to
-        this email or contact us at support@pawthera.com
+        this email or contact us at support@biume.com
       </Text>
     </EmailLayout>
   );

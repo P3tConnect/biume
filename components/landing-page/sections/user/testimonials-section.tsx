@@ -137,7 +137,7 @@ export function TestimonialsSection() {
               <span>Témoignages</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ce que nos utilisateurs disent
+              Ce que nos utilisateurs disent de nous
             </h2>
             <p className="text-lg text-muted-foreground">
               Découvrez les expériences des propriétaires d&apos;animaux qui

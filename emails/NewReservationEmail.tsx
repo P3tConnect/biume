@@ -58,20 +58,20 @@ const NewReservationEmail = ({
 
         <Text className="text-gray-600 mt-4">
           Need to make changes? You can manage your reservation through your
-          PawThera account or contact us directly.
+          Biume account or contact us directly.
         </Text>
 
         <Section className="mt-6">
           <Button
             className="bg-blue-600 text-white px-6 py-3 rounded-md font-medium"
-            href="https://pawthera.com/dashboard"
+            href="https://biume.com/dashboard"
           >
             View Reservation Details
           </Button>
         </Section>
 
         <Text className="text-gray-600 mt-6">
-          Thank you for choosing PawThera for your pet care needs!
+          Thank you for choosing Biume for your pet care needs!
         </Text>
       </Section>
     </EmailLayout>

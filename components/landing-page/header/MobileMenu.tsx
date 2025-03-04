@@ -22,7 +22,7 @@ import { useSearchParams } from "next/navigation";
 // Définir les items de navigation de base
 const baseNavItems = [
   { name: "Fonctionnalités", href: "#features" },
-  { name: "A propos", href: "/about" },
+  { name: "À propos", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
