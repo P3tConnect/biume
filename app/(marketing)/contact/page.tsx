@@ -10,8 +10,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { sendContactEmail, type ContactFormData } from "./actions";
+import { UserNav } from "@/components/dashboard/layout/user-nav";
+import { useSession } from "@/src/lib/auth-client";
 
 const ContactPage = () => {
+  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
@@ -61,28 +64,40 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen relative pb-20">
-      {/* Fond décoratif avec effets de gradient */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background to-background"></div>
-        <div className="absolute top-0 left-0 right-0 h-[300px] bg-gradient-to-br from-primary/20 to-transparent opacity-50 dark:opacity-30 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-gradient-to-tl from-secondary/20 to-transparent opacity-50 dark:opacity-30 blur-3xl"></div>
-      </div>
-
-      {/* Contenu principal */}
-      <div className="container mx-auto px-4 pt-32 flex-1">
+    <div className="flex flex-col h-screen w-screen overflow-visible">
+      {/* Header */}
+      <div className="container mx-auto px-4 pt-8 flex justify-between items-center">
         {/* Bouton retour */}
-        <Button variant="ghost" asChild className="mb-8 group">
+        <Button variant="ghost" asChild className="group">
           <Link href="/" className="flex items-center gap-2">
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             <span>Retour à l&apos;accueil</span>
           </Link>
         </Button>
 
+        {/* Navigation utilisateur ou boutons connexion/inscription */}
+        <div className="flex items-center gap-4">
+          {session ? (
+            <UserNav />
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/sign-in">Connexion</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/sign-up">Inscription</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Contenu principal */}
+      <div className="container mx-auto px-4 pt-8 flex-1">
         {/* En-tête */}
         <div className="text-center mb-12">
           <motion.h1
-            className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+            className="text-4xl md:text-5xl font-bold mb-4 text-gradient"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
