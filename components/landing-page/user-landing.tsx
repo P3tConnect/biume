@@ -6,6 +6,7 @@ import { TestimonialsSection } from "./sections/user/testimonials-section";
 import { CTASection } from "./sections/user/cta-section";
 import { cn } from "@/src/lib/utils";
 import { PawPrint, AlertCircle } from "lucide-react";
+import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -63,9 +64,36 @@ export function UserLanding() {
               © {new Date().getFullYear()} Biume. Tous droits réservés.
             </div>
 
-            <div className="flex gap-6">
-              {["Roadmap", "Confidentialité", "CGU", "Contact", "Support"].map(
-                (item, i) => (
+            <div className="flex flex-col gap-4 items-center md:items-end">
+              <div className="flex gap-4">
+                <Link
+                  href="https://www.linkedin.com/company/biume"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <LinkedInLogoIcon className="w-5 h-5" />
+                  <span className="sr-only">LinkedIn</span>
+                </Link>
+                <Link
+                  href="https://www.instagram.com/biume_app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <InstagramLogoIcon className="w-5 h-5" />
+                  <span className="sr-only">Instagram</span>
+                </Link>
+              </div>
+
+              <div className="flex gap-6">
+                {[
+                  "Roadmap",
+                  "Confidentialité",
+                  "CGU",
+                  "Contact",
+                  "Support",
+                ].map((item, i) => (
                   <Link
                     key={i}
                     href={
@@ -83,8 +111,8 @@ export function UserLanding() {
                   >
                     {item}
                   </Link>
-                ),
-              )}
+                ))}
+              </div>
             </div>
           </div>
         </div>
