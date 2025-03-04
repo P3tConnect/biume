@@ -64,6 +64,15 @@ import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaDescription,
+  CredenzaBody,
+} from "@/components/ui";
+import Stepper from "@/components/onboarding/components/stepper";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -83,6 +92,8 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const { data: organizations } = useListOrganizations();
   const menuGroups = proMenuList(pathname || "", companyId);
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [showCreateOrgCredenza, setShowCreateOrgCredenza] = useState(false);
 
   // Fonction pour obtenir l'icône pour chaque groupe de menu
   const getGroupIcon = (groupLabel: string) => {
@@ -278,8 +289,50 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 </DropdownMenuGroup>
               )}
+
+              <DropdownMenuGroup>
+                <DropdownMenuSeparator className="my-2" />
+                <DropdownMenuItem
+                  className="flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all duration-200 hover:shadow-sm"
+                  onSelect={() => {
+                    setOrgMenuOpen(false);
+                    // Ouvrir la Credenza pour créer une nouvelle entreprise
+                    setShowCreateOrgCredenza(true);
+                  }}
+                >
+                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                    <Plus className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium leading-none">
+                      Créer une entreprise
+                    </span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      Configurer un nouveau compte
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Credenza pour le Stepper de création d'entreprise */}
+          <Credenza
+            open={showCreateOrgCredenza}
+            onOpenChange={setShowCreateOrgCredenza}
+          >
+            <CredenzaContent className="max-w-4xl">
+              <CredenzaHeader>
+                <CredenzaTitle>Créer une nouvelle entreprise</CredenzaTitle>
+                <CredenzaDescription>
+                  Configurez votre entreprise en quelques étapes simples
+                </CredenzaDescription>
+              </CredenzaHeader>
+              <CredenzaBody>
+                <Stepper />
+              </CredenzaBody>
+            </CredenzaContent>
+          </Credenza>
 
           {/* Bouton Menu Mobile */}
           <Button

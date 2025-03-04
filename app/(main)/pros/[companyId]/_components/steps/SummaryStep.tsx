@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import Avvvatars from "avvvatars-react";
 import { Pet, Service, Member } from "@/src/db";
+import { Option } from "./OptionsStep";
 
 interface SummaryStepProps {
   selectedPet: Pet | undefined;
@@ -24,6 +25,7 @@ interface SummaryStepProps {
   isHomeVisit: boolean;
   additionalInfo: string;
   onAdditionalInfoChange: (value: string) => void;
+  selectedOptions: Option[];
 }
 
 export function SummaryStep({
@@ -35,6 +37,7 @@ export function SummaryStep({
   isHomeVisit,
   additionalInfo,
   onAdditionalInfoChange,
+  selectedOptions,
 }: SummaryStepProps) {
   const getPetIcon = (type: string) => {
     switch (type) {
@@ -47,6 +50,18 @@ export function SummaryStep({
       default:
         return <PawPrint className="h-5 w-5" />;
     }
+  };
+
+  // Calculer le prix total en incluant les options
+  const calculateTotalPrice = () => {
+    const basePrice = parseInt(selectedService?.price?.toString() || "0");
+    const homeVisitFee = isHomeVisit ? 10 : 0;
+    const optionsPrice = selectedOptions.reduce(
+      (total, option) => total + option.price,
+      0,
+    );
+
+    return basePrice + homeVisitFee + optionsPrice;
   };
 
   return (
@@ -140,14 +155,34 @@ export function SummaryStep({
               )}
             </div>
           </div>
+
+          {/* Afficher les options sélectionnées */}
+          {selectedOptions.length > 0 && (
+            <>
+              <Separator />
+              <div>
+                <span className="text-muted-foreground">Options</span>
+                <div className="mt-2 space-y-2">
+                  {selectedOptions.map((option) => (
+                    <div
+                      key={option.id}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-sm">{option.name}</span>
+                      <span className="font-medium">+{option.price}€</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           <Separator />
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Prix total</span>
             <div className="flex items-center gap-2">
               <span className="text-xl font-semibold">
-                {isHomeVisit
-                  ? `${parseInt(selectedService?.price?.toString() || "0") + 10}€`
-                  : selectedService?.price}
+                {calculateTotalPrice()}€
               </span>
             </div>
           </div>

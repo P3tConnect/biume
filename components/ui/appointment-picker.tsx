@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { OrganizationSlots } from "@/src/db";
-import { format, isSameDay } from "date-fns";
-import { useEffect, useState } from "react";
+import { format, isSameDay, parseISO } from "date-fns";
+import { useEffect, useState, useMemo } from "react";
 
 // Interfaces pour les différents types de créneaux
 interface SimpleTimeSlot {
@@ -32,16 +32,78 @@ interface AppointmentPickerProps {
 
 export default function AppointmentPicker({
   timeSlots = [],
-  onSelectDateTime
+  onSelectDateTime,
 }: AppointmentPickerProps) {
   const today = new Date();
   const [date, setDate] = useState<Date>(today);
   const [time, setTime] = useState<string | null>(null);
   const [filteredSlots, setFilteredSlots] = useState<OrganizationSlots[]>([]);
 
+  // Calculer les dates pour lesquelles nous avons des créneaux et leur disponibilité
+  const { daysWithSlots, disabledDays } = useMemo(() => {
+    // Grouper les créneaux par date
+    const slotsByDate = new Map<string, OrganizationSlots[]>();
+
+    // Enregistrer toutes les dates avec des créneaux
+    const daysWithSlots = new Set<string>();
+
+    timeSlots.forEach((slot) => {
+      const slotDate = new Date(slot.start);
+      const dateKey = format(slotDate, "yyyy-MM-dd");
+
+      // Ajouter cette date à notre ensemble de dates avec créneaux
+      daysWithSlots.add(dateKey);
+
+      if (!slotsByDate.has(dateKey)) {
+        slotsByDate.set(dateKey, []);
+      }
+
+      slotsByDate.get(dateKey)?.push(slot);
+    });
+
+    // Trouver les dates où tous les créneaux sont indisponibles
+    const unavailableDates: Date[] = [];
+
+    slotsByDate.forEach((slots, dateKey) => {
+      // Vérifier si tous les créneaux de cette date sont indisponibles
+      const allUnavailable =
+        slots.length > 0 && slots.every((slot) => !slot.isAvailable);
+
+      if (allUnavailable) {
+        unavailableDates.push(parseISO(dateKey));
+      }
+    });
+
+    return {
+      daysWithSlots,
+      disabledDays: unavailableDates,
+    };
+  }, [timeSlots]);
+
+  // Fonction pour désactiver les dates
+  const isDayDisabled = useMemo(() => {
+    return (day: Date) => {
+      // 1. Désactiver les dates strictement antérieures à aujourd'hui (pas aujourd'hui)
+      const isBeforeToday = day < today && !isSameDay(day, today);
+      if (isBeforeToday) {
+        return true;
+      }
+
+      const dayKey = format(day, "yyyy-MM-dd");
+
+      // 2. Désactiver les dates sans aucun créneau
+      if (!daysWithSlots.has(dayKey)) {
+        return true;
+      }
+
+      // 3. Désactiver les dates où tous les créneaux sont indisponibles
+      return disabledDays.some((disabledDay) => isSameDay(disabledDay, day));
+    };
+  }, [today, daysWithSlots, disabledDays]);
+
   useEffect(() => {
     // Filtrer les créneaux pour la date sélectionnée
-    const filtered = timeSlots.filter(slot => {
+    const filtered = timeSlots.filter((slot) => {
       // Convertir les dates de début et de fin en objets Date
       const startDate = new Date(slot.start);
       return isSameDay(startDate, date);
@@ -70,15 +132,15 @@ export default function AppointmentPicker({
 
   // Fonction pour formater l'heure à partir d'une date
   const formatTime = (dateStr: string | Date): string => {
-    const date = typeof dateStr === 'string' ? new Date(dateStr) : dateStr;
-    return format(date, 'HH:mm');
+    const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
+    return format(date, "HH:mm");
   };
 
   // Determiner si des créneaux sont disponibles pour cette date
   const hasSlots = filteredSlots.length > 0;
 
   return (
-    <div>
+    <div className="w-full">
       <div className="rounded-md border">
         <div className="flex max-sm:flex-col">
           <Calendar
@@ -86,16 +148,16 @@ export default function AppointmentPicker({
             selected={date}
             onSelect={handleDateChange}
             className="p-2 sm:pe-5"
-            disabled={[
-              { before: today }, // Dates before today
-            ]}
+            disabled={isDayDisabled}
           />
-          <div className="relative w-full max-sm:h-48 sm:w-40">
+          <div className="relative w-full max-sm:h-48 sm:w-52">
             <div className="absolute inset-0 py-4 max-sm:border-t">
               <ScrollArea className="h-full sm:border-s">
                 <div className="space-y-3">
                   <div className="flex h-5 shrink-0 items-center px-5">
-                    <p className="text-sm font-medium">{format(date, "EEEE, d")}</p>
+                    <p className="text-sm font-medium">
+                      {format(date, "EEEE, d")}
+                    </p>
                   </div>
                   <div className="grid gap-1.5 px-5 max-sm:grid-cols-2">
                     {!hasSlots ? (
@@ -108,7 +170,9 @@ export default function AppointmentPicker({
                         return (
                           <Button
                             key={index}
-                            variant={time === timeString ? "default" : "outline"}
+                            variant={
+                              time === timeString ? "default" : "outline"
+                            }
                             size="sm"
                             className="w-full"
                             onClick={() => handleTimeChange(timeString)}

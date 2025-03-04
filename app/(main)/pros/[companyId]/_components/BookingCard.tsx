@@ -20,9 +20,11 @@ import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
 import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action";
+import { getOptionsFromOrganization } from "@/src/actions/options.action";
 import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
+import { OptionsStep, Option } from "./steps/OptionsStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
 import { useQuery } from "@tanstack/react-query";
@@ -35,6 +37,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/src/lib";
 import { z } from "zod";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 interface BookingCardProps {
   services: Service[];
@@ -61,7 +64,6 @@ export function BookingCard({
   setSelectedDate,
   setSelectedTime,
 }: BookingCardProps) {
-  const router = useRouter();
   const { data: session } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -83,6 +85,15 @@ export function BookingCard({
       return getOrganizationSlotsByService({ serviceId: selectedService });
     },
     enabled: !!selectedService,
+  });
+
+  // Récupération des options de l'organisation
+  const { data: organizationOptions, isLoading: isLoadingOptions } = useQuery({
+    queryKey: ["organization-options"],
+    queryFn: async () => {
+      const options = await getOptionsFromOrganization({});
+      return options;
+    },
   });
 
   const {
@@ -161,41 +172,20 @@ export function BookingCard({
       additionalInfo: metadata?.summary?.additionalInfo,
       pet: selectedPet,
       isHomeVisit: metadata?.consultationType?.isHomeVisit,
+      selectedOptions: metadata?.options?.selectedOptions,
     });
     setIsConfirmModalOpen(false);
   };
 
-  const stepContent = {
-    pet: (
-      <PetStep
-        userPets={userPets?.data ?? []}
-        selectedPetId={metadata?.pet?.petId ?? ""}
-        onSelectPet={(petId) => setMetadata("pet", { petId })}
-      />
-    ),
-    consultationType: (
-      <ConsultationTypeStep
-        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-        onSelectType={(isHomeVisit) =>
-          setMetadata("consultationType", { isHomeVisit })
-        }
-      />
-    ),
-    summary: (
-      <SummaryStep
-        selectedPet={selectedPet}
-        selectedService={selectedServiceData}
-        selectedPro={selectedProData}
-        selectedDate={selectedDate}
-        selectedTime={selectedTime}
-        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-        additionalInfo={metadata?.summary?.additionalInfo ?? ""}
-        onAdditionalInfoChange={(value) =>
-          setMetadata("summary", { additionalInfo: value })
-        }
-      />
-    ),
-  };
+  // Transformer les options de l'organisation au format attendu par le composant OptionsStep
+  const adaptedOptions: Option[] = (organizationOptions?.data || []).map(
+    (option) => ({
+      id: option.id,
+      name: option.title,
+      description: option.description || "",
+      price: option.price || 0,
+    }),
+  );
 
   return (
     <Card className="border-2">
@@ -389,7 +379,7 @@ export function BookingCard({
         </CredenzaContent>
       </Credenza>
 
-      {/* Modale de réservation (existante) */}
+      {/* Modale de réservation */}
       <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
@@ -443,6 +433,28 @@ export function BookingCard({
                   }
                 />
               ),
+              options: () =>
+                isLoadingOptions ? (
+                  <div className="flex flex-col items-center justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                    <p className="text-muted-foreground">
+                      Chargement des options...
+                    </p>
+                  </div>
+                ) : (
+                  <OptionsStep
+                    availableOptions={adaptedOptions}
+                    selectedOptions={metadata?.options?.selectedOptions ?? []}
+                    onToggleOption={(optionId: string) => {
+                      const currentOptions =
+                        metadata?.options?.selectedOptions ?? [];
+                      const newOptions = currentOptions.includes(optionId)
+                        ? currentOptions.filter((id: string) => id !== optionId)
+                        : [...currentOptions, optionId];
+                      setMetadata("options", { selectedOptions: newOptions });
+                    }}
+                  />
+                ),
               summary: () => (
                 <SummaryStep
                   selectedPet={selectedPet}
@@ -454,6 +466,14 @@ export function BookingCard({
                   additionalInfo={metadata?.summary?.additionalInfo ?? ""}
                   onAdditionalInfoChange={(value) =>
                     setMetadata("summary", { additionalInfo: value })
+                  }
+                  selectedOptions={
+                    metadata?.options?.selectedOptions
+                      ? metadata.options.selectedOptions.map(
+                          (id: string) =>
+                            adaptedOptions.find((o) => o.id === id)!,
+                        )
+                      : []
                   }
                 />
               ),
