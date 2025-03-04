@@ -30,6 +30,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 type PricingPlan = {
   id: string;
@@ -429,29 +430,31 @@ export function PricingSection() {
         </div>
 
         {/* Section FAQ ou Contact */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-20 text-center max-w-2xl mx-auto"
-        >
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-              <Zap className="w-6 h-6 text-primary" />
+        <Link href="/contact">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-20 text-center max-w-2xl mx-auto"
+          >
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                <Zap className="w-6 h-6 text-primary" />
+              </div>
             </div>
-          </div>
-          <h3 className="text-2xl font-bold mb-4">
-            Besoin d&apos;une solution personnalisée ?
-          </h3>
-          <p className="text-muted-foreground mb-8">
-            Nous proposons également des solutions sur mesure pour les grandes
-            structures avec des besoins spécifiques.
-          </p>
-          <Button variant="outline" size="lg">
-            Demander un devis personnalisé
-          </Button>
-        </motion.div>
+            <h3 className="text-2xl font-bold mb-4">
+              Besoin d&apos;une solution personnalisée ?
+            </h3>
+            <p className="text-muted-foreground mb-8">
+              Nous proposons également des solutions sur mesure pour les grandes
+              structures avec des besoins spécifiques.
+            </p>
+            <Button variant="outline" size="lg">
+              Demander un devis personnalisé
+            </Button>
+          </motion.div>
+        </Link>
       </div>
     </section>
   );

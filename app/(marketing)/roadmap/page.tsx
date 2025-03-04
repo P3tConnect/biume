@@ -17,38 +17,10 @@ const roadmapItems: Milestone[] = [
     status: "planned",
   },
   {
-    date: "Q4 2025",
+    date: "Q2 2026",
     title: "Application mobile",
     description:
       "Lancement de notre application mobile pour permettre aux professionnels d'accéder à leurs données en déplacement.",
-    status: "planned",
-  },
-  {
-    date: "Q1 2026",
-    title: "Intégration des dossiers médicaux avancés",
-    description:
-      "Ajout de fonctionnalités avancées pour la gestion des dossiers médicaux et le suivi des patients.",
-    status: "planned",
-  },
-  {
-    date: "Q2 2026",
-    title: "Système de téléconsultation",
-    description:
-      "Mise en place d'un système de téléconsultation pour faciliter les suivis à distance.",
-    status: "planned",
-  },
-  {
-    date: "Q3 2026",
-    title: "Intelligence artificielle diagnostique",
-    description:
-      "Intégration d'outils d'IA pour aider au diagnostic et aux recommandations de traitement.",
-    status: "planned",
-  },
-  {
-    date: "Q4 2026",
-    title: "Marketplace de services",
-    description:
-      "Lancement d'une marketplace permettant aux professionnels de proposer des services additionnels.",
     status: "planned",
   },
 ];

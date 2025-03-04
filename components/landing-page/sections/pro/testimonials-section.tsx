@@ -14,53 +14,53 @@ const testimonials = [
     id: 1,
     content:
       "Biume a considérablement amélioré la gestion de mon cabinet vétérinaire. La planification des rendez-vous est beaucoup plus efficace, et la communication avec les propriétaires d'animaux est simplifiée.",
-    author: "Dr. Sophie Moreau",
+    author: "Sophie M.",
     role: "Vétérinaire généraliste",
     clinic: "Clinique Animalis",
-    location: "Lyon",
     years: "10 ans d'expérience",
     avatar: "/images/testimonials/vet-1.webp",
     rating: 5,
     specialty: "Médecine générale",
+    usingBiumeSince: "1 mois",
   },
   {
     id: 2,
     content:
       "En tant que spécialiste en chirurgie, j'ai besoin d'un suivi précis de mes patients. Biume me permet de gérer efficacement les dossiers médicaux et d'avoir un historique complet pour chaque animal.",
-    author: "Dr. Thomas Lefèvre",
+    author: "Thomas L.",
     role: "Chirurgien vétérinaire",
     clinic: "Centre Vétérinaire Expert",
-    location: "Bordeaux",
     years: "15 ans d'expérience",
     avatar: "/images/testimonials/vet-2.webp",
     rating: 5,
     specialty: "Chirurgie",
+    usingBiumeSince: "1 mois",
   },
   {
     id: 3,
     content:
-      "La gestion administrative de mon cabinet n'a jamais été aussi simple. Les fonctionnalités de facturation et de gestion des documents sont particulièrement bien pensées et me font gagner un temps précieux.",
-    author: "Dr. Marie Dupont",
-    role: "Vétérinaire et directrice",
+      "La gestion administrative de mon activité n'a jamais été aussi simple. Les fonctionnalités de facturation et de gestion des documents sont particulièrement bien pensées et me font gagner un temps précieux.",
+    author: "Marie D.",
+    role: "Ostéopathe animale",
     clinic: "Clinique du Grand Chêne",
-    location: "Toulouse",
-    years: "8 ans d'expérience",
+    years: "1 an d'expérience",
     avatar: "/images/testimonials/vet-3.webp",
     rating: 4,
-    specialty: "Dermatologie",
+    specialty: "Ostéopathie",
+    usingBiumeSince: "1 mois",
   },
   {
     id: 4,
     content:
-      "Les statistiques et analyses fournies par Biume m'ont permis d'optimiser l'organisation de ma clinique et d'améliorer la rentabilité. Un outil indispensable pour tout vétérinaire entrepreneur.",
-    author: "Dr. Alexandre Martin",
-    role: "Vétérinaire comportementaliste",
+      "Biume AI m'a permis de gagner beaucoup de temps et de prendre plus de temps avec mes patients.",
+    author: "Alexandre M.",
+    role: "Comportementaliste",
     clinic: "Comport'Animal",
-    location: "Nantes",
     years: "12 ans d'expérience",
     avatar: "/images/testimonials/vet-4.webp",
     rating: 5,
     specialty: "Comportement animal",
+    usingBiumeSince: "6 mois",
   },
 ];
 
@@ -159,12 +159,6 @@ export function TestimonialsSection() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between gap-2 pb-2 border-b">
-                      <span className="font-medium">Localisation</span>
-                      <span className="text-muted-foreground">
-                        {currentTestimonial.location}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-2 pb-2 border-b">
                       <span className="font-medium">Expérience</span>
                       <span className="text-muted-foreground">
                         {currentTestimonial.years}
@@ -199,7 +193,8 @@ export function TestimonialsSection() {
                   <div className="mt-auto">
                     <div className="flex items-center justify-between gap-4">
                       <div className="text-sm text-muted-foreground">
-                        Utilisateur de Biume depuis 2 ans
+                        Utilisateur de Biume depuis{" "}
+                        {currentTestimonial.usingBiumeSince}
                       </div>
 
                       <div className="flex gap-1 items-center">
@@ -252,7 +247,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Statistiques */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -279,7 +274,7 @@ export function TestimonialsSection() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
