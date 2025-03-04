@@ -173,7 +173,7 @@ export function FeaturesSection() {
             <div className="relative">
               <div className="relative z-10 rounded-xl overflow-hidden border shadow-xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop"
+                  src="/assets/images/dashboard-image.jpg"
                   alt="Tableau de bord Biume"
                   width={600}
                   height={450}
