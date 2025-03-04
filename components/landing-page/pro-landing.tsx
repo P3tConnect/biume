@@ -94,7 +94,6 @@ export function ProLanding() {
                   "Confidentialité",
                   "CGU",
                   "Contact",
-                  "Support",
                 ].map((item, i) => (
                   <Link
                     key={i}

@@ -91,8 +91,7 @@ export function UserLanding() {
                   "Roadmap",
                   "Confidentialité",
                   "CGU",
-                  "Contact",
-                  "Support",
+                  "Contact"
                 ].map((item, i) => (
                   <Link
                     key={i}
