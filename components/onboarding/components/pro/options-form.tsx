@@ -14,12 +14,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { X, Plus, Euro } from "lucide-react";
+import { X, Plus, Euro, Loader2 } from "lucide-react";
 import { proOptionsSchema } from "../../types/onboarding-schemas";
 import { createOptionsStepAction } from "@/src/actions";
 import { toast } from "sonner";
 import { cn } from "@/src/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 export function OptionsForm({
   nextStep,
@@ -28,6 +29,7 @@ export function OptionsForm({
   nextStep: () => void;
   previousStep: () => void;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof proOptionsSchema>>({
     resolver: zodResolver(proOptionsSchema),
     defaultValues: {
@@ -45,11 +47,16 @@ export function OptionsForm({
   const { mutateAsync } = useMutation({
     mutationFn: createOptionsStepAction,
     onSuccess: () => {
+      setIsLoading(false);
       reset();
       nextStep();
     },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
+    },
+    onMutate: () => {
+      setIsLoading(true);
     },
   });
 
@@ -220,7 +227,14 @@ export function OptionsForm({
               Passer
             </Button>
             <Button type="submit" className="rounded-xl px-6">
-              Suivant →
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>En cours...</span>
+                </>
+              ) : (
+                "Suivant →"
+              )}
             </Button>
           </div>
         </div>

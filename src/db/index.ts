@@ -1,7 +1,5 @@
 export * from "./addresses";
 export * from "./allergies";
-export * from "./askAppointment";
-export * from "./askAppointmentOptions";
 export * from "./bgJobs";
 export * from "./cancelPolicies";
 export * from "./organizationAddress";

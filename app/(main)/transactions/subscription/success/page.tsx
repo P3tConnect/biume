@@ -5,11 +5,8 @@ import { Card } from "@/components/ui/card";
 import { CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { redirect } from "next/navigation";
 
 export default function OrganizationSubscriptionSuccess() {
-  redirect("/");
-
   const searchParams = useSearchParams();
   const orgId = searchParams.get("org");
 

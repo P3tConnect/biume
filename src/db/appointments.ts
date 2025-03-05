@@ -16,6 +16,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { Service, service } from "./service";
 import { Organization, organization } from "./organization";
 import { user } from "./user";
+import { organizationSlots } from "./organizationSlots";
 
 export const appointmentType = pgEnum("appointment_type", [
   "oneToOne",
@@ -23,14 +24,11 @@ export const appointmentType = pgEnum("appointment_type", [
 ]);
 
 export const appointmentStatusType = pgEnum("appointment_status_type", [
-  "CLIENT PAYED",
-  "CLIENT PENDING",
-  "CLIENT CANCELED",
-  "CLIENT ACCEPTED",
-  "COMPANY PENDING",
-  "COMPANY ACCEPTED",
-  "COMPANY CANCELED",
-  "COMPANY POSTPONED",
+  "PENDING PAYMENT",
+  "PAYED",
+  "CONFIRMED",
+  "CANCELED",
+  "POSTPONED",
 ]);
 
 export const appointments = pgTable("appointments", {
@@ -55,9 +53,12 @@ export const appointments = pgTable("appointments", {
     .references(() => service.id, {
       onDelete: "cascade",
     }),
-  beginAt: date("beginAt").notNull(),
-  endAt: date("endAt").notNull(),
-  status: appointmentStatusType("status").default("COMPANY PENDING").notNull(),
+  slotId: text("slotId").references(() => organizationSlots.id, {
+    onDelete: "cascade",
+  }),
+  beginAt: timestamp("beginAt").notNull(),
+  endAt: timestamp("endAt").notNull(),
+  status: appointmentStatusType("status").default("PENDING PAYMENT").notNull(),
   atHome: boolean("atHome").default(false).notNull(),
   type: appointmentType("type").default("oneToOne").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
@@ -92,6 +93,10 @@ export const appointmentsRelations = relations(
     client: one(user, {
       fields: [appointments.clientId],
       references: [user.id],
+    }),
+    slot: one(organizationSlots, {
+      fields: [appointments.slotId],
+      references: [organizationSlots.id],
     }),
   }),
 );

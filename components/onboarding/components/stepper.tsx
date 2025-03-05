@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useStepper, utils } from "../hooks/useStepper";
 import ProInformationsStep from "../pro/informations-step";
 import ProServicesStep from "../pro/services-step";
@@ -41,12 +41,13 @@ const Stepper = () => {
     switch: switchStep,
   } = useStepper();
   const currentStep = utils.getIndex(current.id);
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
 
   const skipOnboarding = async () => {
     try {
       // Créer une organisation minimale
-
+      setIsLoading(true);
       const name = generateMigrationName();
 
       const result = await organizationUtil.create({
@@ -73,10 +74,9 @@ const Stepper = () => {
       });
 
       // Marquer l'onboarding comme terminé et ajouter la progression
-      const stripeCustomer = await stripe.customers.create({
-        name: result.data?.name!,
-        metadata: {
-          organizationId: result.data?.id!,
+      const stripeCompany = await stripe.accounts.create({
+        company: {
+          name: result.data?.name!,
         },
       });
       await db
@@ -84,7 +84,7 @@ const Stepper = () => {
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
-          stripeId: stripeCustomer.id,
+          stripeId: stripeCompany.id,
         })
         .where(eq(organizationTable.id, result.data?.id as string))
         .execute();
@@ -93,6 +93,8 @@ const Stepper = () => {
       await updateUser({
         isPro: true,
       });
+
+      setIsLoading(false);
 
       // Rediriger vers le dashboard
       goTo("subscription");
@@ -127,14 +129,16 @@ const Stepper = () => {
       <div className="max-h-[700px] overflow-y-auto">
         {switchStep({
           start: () => (
-            <IntroStep skipOnboarding={skipOnboarding} nextStep={next} />
+            <IntroStep
+              skipOnboarding={skipOnboarding}
+              nextStep={next}
+              isLoading={isLoading}
+            />
           ),
           informations: () => (
             <ProInformationsStep nextStep={next} previousStep={prev} />
           ),
-          images: () => (
-            <ImagesStep nextStep={next} previousStep={prev} />
-          ),
+          images: () => <ImagesStep nextStep={next} previousStep={prev} />,
           services: () => (
             <ProServicesStep nextStep={next} previousStep={prev} />
           ),

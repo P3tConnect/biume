@@ -53,9 +53,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  useSession,
   useActiveOrganization,
-  useListOrganizations,
   organization,
   getSession,
 } from "@/src/lib/auth-client";
@@ -65,7 +63,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import {
   Credenza,
   CredenzaContent,
@@ -76,11 +74,7 @@ import {
 } from "@/components/ui";
 import Stepper from "@/components/onboarding/components/stepper";
 import { AccountSwitchDialog } from "../account-switch-dialog";
-import { auth } from "@/src/lib/auth";
-import {
-  getAllOrganizationsByUserId,
-  getCurrentOrganization,
-} from "@/src/actions/organization.action";
+import { getAllOrganizationsByUserId } from "@/src/actions/organization.action";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
   const pathname = usePathname();
@@ -97,16 +91,13 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const [showProfessionalDialog, setShowProfessionalDialog] = useState(false);
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { data: activeOrganization } = useActiveOrganization();
 
   const isWindows =
     typeof window !== "undefined" && window.navigator.platform.includes("Win");
   const shortcutKey = isWindows ? "Ctrl" : "⌘";
 
-  const [
-    { data: session },
-    { data: organizations },
-    { data: activeOrganization },
-  ] = useQueries({
+  const [{ data: session }, { data: organizations }] = useQueries({
     queries: [
       {
         queryKey: ["user-informations"],
@@ -115,10 +106,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
       {
         queryKey: ["user-organizations"],
         queryFn: () => getAllOrganizationsByUserId({}),
-      },
-      {
-        queryKey: ["active-organization"],
-        queryFn: () => getCurrentOrganization({}),
       },
     ],
   });
@@ -224,11 +211,11 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
                 )}
               >
-                {activeOrganization?.data?.logo ? (
+                {activeOrganization?.logo ? (
                   <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
                     <Image
-                      src={activeOrganization.data.logo}
-                      alt={activeOrganization.data.name}
+                      src={activeOrganization.logo}
+                      alt={activeOrganization.name}
                       width={20}
                       height={20}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -240,7 +227,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 )}
                 <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
-                  {activeOrganization?.data?.name || "Organisation"}
+                  {activeOrganization?.name || "Organisation"}
                 </span>
                 <ArrowLeftRight
                   className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${orgMenuOpen ? "rotate-180" : "rotate-0"}`}

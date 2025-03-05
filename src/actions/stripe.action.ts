@@ -11,7 +11,7 @@ import {
   requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
-import { Invoice, organization } from "../db";
+import { appointments, Invoice, organization, transaction } from "../db";
 import { eq } from "drizzle-orm";
 import { BillingInfo } from "@/types/billing-info";
 import { StripeInvoice } from "@/types/stripe-invoice";
@@ -102,63 +102,130 @@ export const getStripeBalance = createServerAction(
   },
 );
 
-export const createPaymentSession = createServerAction(
+export const createPaymentIntent = createServerAction(
   z.object({
     organizationId: z.string(),
     amount: z.number(),
-    description: z.string(),
-    successUrl: z.string(),
-    cancelUrl: z.string(),
-    metadata: z.record(z.any()).optional(),
-    customerEmail: z.string().email(),
+    serviceId: z.string().optional(),
+    appointmentId: z.string().optional(),
   }),
   async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db
-        .select()
-        .from(organization)
-        .where(eq(organization.id, input.organizationId))
-        .execute();
+    // try {
+    // Vérifier que l'utilisateur est connecté
+    if (!ctx.user) {
+      throw new ActionError("Utilisateur non authentifié");
+    }
 
-      if (!org[0] || !org[0].stripeId) {
-        throw new ActionError(
-          "Organisation non trouvée ou compte Stripe non configuré",
-        );
-      }
+    // Récupérer l'organisation du professionnel
+    const org = await db.query.organization.findFirst({
+      where: eq(organization.id, input.organizationId),
+    });
 
-      // Créer la session de paiement
-      const session = await stripe.checkout.sessions.create({
+    if (!org || !org.stripeId) {
+      throw new ActionError(
+        "Organisation du professionnel non trouvée ou compte Stripe non configuré",
+      );
+    }
+
+    // Vérifier si le stripeId est un compte connecté (commence par acct_) ou un compte client (commence par cus_)
+    const isConnectedAccount = org.stripeId.startsWith("acct_");
+
+    // Calculer les frais de plateforme (5%)
+    const applicationFeeAmount = Math.round(input.amount * 0.05);
+
+    let session;
+
+    if (isConnectedAccount) {
+      // Créer une session de paiement avec transfert vers le professionnel
+      session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
+        mode: "payment",
         line_items: [
           {
             price_data: {
               currency: "eur",
               product_data: {
-                name: input.description,
+                name: `Réservation de ${ctx.user.id} - ${ctx.user.name} à ${org.id} - ${org.name}`,
               },
-              unit_amount: input.amount, // Le montant doit être en centimes
+              unit_amount: input.amount,
             },
             quantity: 1,
           },
         ],
-        mode: "payment",
-        success_url: input.successUrl,
-        cancel_url: input.cancelUrl,
-        customer_email: input.customerEmail,
-        metadata: {
-          ...input.metadata,
-          userId: ctx.user?.id ?? null, // L'utilisateur est toujours défini avec authedAction
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/success?org=${org.id}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/failure?org=${org.id}`,
+        customer: ctx.user.stripeId || "",
+        payment_intent_data: {
+          application_fee_amount: applicationFeeAmount,
+          transfer_data: {
+            destination: org.stripeId,
+          },
+          metadata: {
+            userId: ctx.user.id,
+            organizationId: org.id,
+            serviceId: input.serviceId || "",
+            appointmentId: input.appointmentId || "",
+          },
         },
       });
-
-      return session;
-    } catch (error) {
-      throw new ActionError(
-        "Erreur lors de la création de la session de paiement",
-      );
+    } else {
+      // Le professionnel n'a pas de compte connecté, utiliser une session standard
+      // et gérer le transfert manuellement plus tard
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: "eur",
+              product_data: {
+                name: `Réservation de ${ctx.user.id} - ${ctx.user.name} à ${org.id} - ${org.name}`,
+              },
+              unit_amount: input.amount,
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/success?org=${org.id}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/failure?org=${org.id}`,
+        customer: ctx.user.stripeId || "",
+        metadata: {
+          userId: ctx.user.id,
+          organizationId: org.id,
+          serviceId: input.serviceId || "",
+          appointmentId: input.appointmentId || "",
+          requiresManualTransfer: "true",
+          applicationFeeAmount: applicationFeeAmount.toString(),
+          destination: org.stripeId,
+        },
+      });
     }
+
+    if (!session.url) {
+      throw new ActionError("Impossible de créer l'URL de paiement");
+    }
+
+    // Enregistrer la transaction dans la base de données
+    // Note: Nous utilisons le payment_intent qui sera créé par Checkout
+    // mais nous ne le connaissons pas encore à ce stade
+    await db.insert(transaction).values({
+      intentId: session.id, // Utiliser l'ID de session comme référence
+      amount: input.amount,
+      from: ctx.user.id,
+      to: org.id,
+      status: "pending", // La transaction est en attente jusqu'au paiement
+      createdAt: new Date(),
+    });
+
+    return session.url;
+    // } catch (error) {
+    //   console.error("Erreur lors de la création du paiement:", error);
+    //   throw new ActionError(
+    //     "Erreur lors de la création du paiement pour le professionnel",
+    //   );
+    // }
   },
+  [requireAuth],
 );
 
 export const updateOrganizationPlan = createServerAction(

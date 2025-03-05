@@ -157,7 +157,7 @@ export const getCurrentOrganization = createServerAction(
 
     return ctx.fullOrganization;
   },
-  [requireAuth, requireOwner, requireFullOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createOrganization = createServerAction(
@@ -194,11 +194,9 @@ export const createOrganization = createServerAction(
         })
         .returning();
 
-      const stripeCustomer = await stripe.customers.create({
-        name: data.name as string,
-        email: data.email as string,
-        metadata: {
-          organizationId: result?.id,
+      const stripeCompany = await stripe.accounts.create({
+        company: {
+          name: data.name as string,
         },
       });
 
@@ -210,7 +208,7 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
-          stripeId: stripeCustomer.id,
+          stripeId: stripeCompany.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
@@ -421,10 +419,10 @@ export const getCompletedAppointmentsThisMonth = createServerAction(
       where: (appointments) => {
         return and(
           eq(appointments.proId, ctx.organization?.id as string),
-          eq(appointments.status, "CLIENT ACCEPTED"),
+          eq(appointments.status, "PAYED"),
           and(
-            gte(appointments.beginAt, firstDayOfMonth.toISOString()),
-            lte(appointments.beginAt, lastDayOfMonth.toISOString()),
+            gte(appointments.beginAt, firstDayOfMonth),
+            lte(appointments.beginAt, lastDayOfMonth),
           ),
         );
       },

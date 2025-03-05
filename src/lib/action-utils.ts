@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { User } from "better-auth";
+import type { User } from "./auth";
 import { Organization as FullOrganization } from "@/src/db";
 
 // Define minimal types needed for the context

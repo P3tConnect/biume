@@ -3,6 +3,7 @@ import { Organization, organization } from "./organization";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { Service, service } from "./service";
+import { Appointment, appointments } from "./appointments";
 
 export const organizationSlotsType = pgEnum("organization_slots_type", [
   "unique",
@@ -39,12 +40,15 @@ export const organizationSlotsRelations = relations(
       fields: [organizationSlots.serviceId],
       references: [service.id],
     }),
+    appointments: one(appointments),
   }),
 );
 
 export type OrganizationSlots = InferSelectModel<typeof organizationSlots> & {
   organization: Organization;
   service: Service;
+  appointments: Appointment;
 };
 
-export const CreateOrganizationSlotsSchema = createInsertSchema(organizationSlots);
+export const CreateOrganizationSlotsSchema =
+  createInsertSchema(organizationSlots);

@@ -46,7 +46,7 @@ export const BillingPlanSection = ({
     mutationFn: updateOrganizationPlan,
     onSuccess: (data) => {
       if (data.data) {
-        router.push(data.data);
+        window.location.href = data.data;
       }
     },
     onError: () => {

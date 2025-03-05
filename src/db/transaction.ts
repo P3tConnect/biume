@@ -2,13 +2,17 @@ import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { Organization, organization } from "./organization";
+import { user } from "./user";
 
 export const transaction = pgTable("transaction", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+  intentId: text("intentId").notNull(),
   amount: integer("amount").notNull(),
-  from: text("from").notNull(),
+  from: text("from").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   to: text("to").references(() => organization.id, {
     onDelete: "cascade",
   }),

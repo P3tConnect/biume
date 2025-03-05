@@ -1,9 +1,5 @@
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { InferSelectModel, relations } from "drizzle-orm";
-import {
-  AskAppointmentOption,
-  askAppointmentOptions,
-} from "./askAppointmentOptions";
 import { InvoiceOption, invoiceOptions } from "./invoiceOptions";
 import { AppointmentOption, appointmentOptions } from "./appointmentOptions";
 import { createInsertSchema } from "drizzle-zod";
@@ -26,7 +22,6 @@ export const options = pgTable("options", {
 });
 
 export const optionsRelations = relations(options, ({ one, many }) => ({
-  askAppointmentsOptions: many(askAppointmentOptions),
   invoicesOptions: many(invoiceOptions),
   appointmentsOptions: many(appointmentOptions),
   organization: one(organization, {
@@ -37,7 +32,6 @@ export const optionsRelations = relations(options, ({ one, many }) => ({
 
 export type Option = InferSelectModel<typeof options> & {
   organization: Organization;
-  askAppointmentsOptions: AskAppointmentOption[];
   invoicesOptions: InvoiceOption[];
   appointmentsOptions: AppointmentOption[];
 };

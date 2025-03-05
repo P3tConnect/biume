@@ -5,11 +5,8 @@ import { Card } from "@/components/ui/card";
 import { CheckCircle2, Download, Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { redirect } from "next/navigation";
 
 export default function PaymentSuccess() {
-  redirect("/");
-
   const searchParams = useSearchParams();
   const amount = searchParams.get("amount") || "0";
   const professionalName =

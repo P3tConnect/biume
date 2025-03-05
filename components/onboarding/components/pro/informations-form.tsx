@@ -16,7 +16,7 @@ import {
   SelectValue,
   Switch,
 } from "@/components/ui";
-import { ImageIcon, PenBox, Trash2 } from "lucide-react";
+import { ImageIcon, Loader2, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,6 +45,7 @@ const InformationsForm = ({
 }) => {
   const [logoUploadProgress, setLogoUploadProgress] = useState(0);
   const [logoIsUploading, setLogoIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof proInformationsSchema>>({
     resolver: zodResolver(proInformationsSchema),
@@ -65,12 +66,17 @@ const InformationsForm = ({
   const { mutateAsync } = useMutation({
     mutationFn: createOrganization,
     onSuccess: () => {
+      setIsLoading(false);
       toast.success("Entreprise créée avec succès!");
       nextStep();
       reset();
     },
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
     },
   });
 
@@ -367,7 +373,14 @@ const InformationsForm = ({
               Passer
             </Button>
             <Button type="submit" className="rounded-xl px-6">
-              Suivant →
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>En cours...</span>
+                </>
+              ) : (
+                "Suivant →"
+              )}
             </Button>
           </div>
         </div>

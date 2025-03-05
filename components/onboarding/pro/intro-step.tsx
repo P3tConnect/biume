@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui";
 import { motion } from "framer-motion";
 
 const IntroStep = ({
   skipOnboarding,
   nextStep,
+  isLoading,
 }: {
   skipOnboarding: () => void;
   nextStep: () => void;
+  isLoading: boolean;
 }) => {
   return (
     <div className="w-full h-full relative bg-background">
@@ -131,7 +133,14 @@ const IntroStep = ({
             className="rounded-lg hover:scale-105 transition-transform"
             onClick={skipOnboarding}
           >
-            Passer la configuration
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Création en cours...</span>
+              </>
+            ) : (
+              "Passer la configuration"
+            )}
           </Button>
           <Button
             size="sm"

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Card,
@@ -27,17 +29,18 @@ import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
 import { OptionsStep, Option } from "./steps/OptionsStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import AppointmentPicker from "@/components/ui/appointment-picker";
 import { useSession, signIn } from "@/src/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/src/lib";
 import { z } from "zod";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { createPaymentIntent } from "@/src/actions/stripe.action";
 
 interface BookingCardProps {
   services: Service[];
@@ -162,19 +165,42 @@ export function BookingCard({
     );
   });
 
-  const handleBooking = () => {
-    // TODO: Implémenter la logique de réservation
-    console.log({
-      service: selectedServiceData,
-      professional: selectedProData,
-      date: selectedDate,
-      time: selectedTime,
-      additionalInfo: metadata?.summary?.additionalInfo,
-      pet: selectedPet,
-      isHomeVisit: metadata?.consultationType?.isHomeVisit,
-      selectedOptions: metadata?.options?.selectedOptions,
+  const params = useParams();
+  const companyId = params.companyId as string;
+
+  const { mutateAsync } = useMutation({
+    mutationFn: createPaymentIntent,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const handleBooking = async () => {
+    const servicePrice = selectedServiceData?.price ?? 0;
+    const optionsPrice = metadata?.options?.selectedOptions.reduce(
+      (acc: number, optionId: string) => {
+        const option = organizationOptions?.data?.find(
+          (o) => o.id === optionId,
+        );
+        return acc + (option?.price ?? 0);
+      },
+      0,
+    );
+
+    const homeVisitPrice = metadata?.consultationType?.isHomeVisit ? 10 : 0;
+
+    const amount = servicePrice + optionsPrice + homeVisitPrice;
+
+    console.log(amount, "amount");
+
+    await mutateAsync({
+      organizationId: companyId,
+      amount: amount,
+      serviceId: selectedService ?? undefined,
     });
-    setIsConfirmModalOpen(false);
   };
 
   // Transformer les options de l'organisation au format attendu par le composant OptionsStep

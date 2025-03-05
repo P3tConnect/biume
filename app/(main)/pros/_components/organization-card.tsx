@@ -19,7 +19,7 @@ interface OrganizationCardProps {
 
 export function OrganizationCard({ organization }: OrganizationCardProps) {
   return (
-    <Link href={`/pros/${organization.id}`} className="group block h-full">
+    <div className="group block h-full">
       <div className="flex flex-col bg-card rounded-lg border border-border overflow-hidden h-full transition-all duration-300 hover:border-primary/30 hover:shadow-sm">
         {/* Carousel */}
         <div className="w-full h-[220px] relative">
@@ -75,68 +75,70 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 p-4">
-          <h3 className="font-semibold text-lg text-foreground mb-1 group-hover:text-primary transition-colors">
-            {organization.name}
-          </h3>
+        <Link href={`/pros/${organization.id}`}>
+          <div className="flex-1 p-4">
+            <h3 className="font-semibold text-lg text-foreground mb-1 group-hover:text-primary transition-colors">
+              {organization.name}
+            </h3>
 
-          <div className="flex items-center gap-1 mb-3">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((_, index) => (
-                <Star
-                  key={index}
-                  className={`h-3.5 w-3.5 ${index < 4 ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
-                />
-              ))}
+            <div className="flex items-center gap-1 mb-3">
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((_, index) => (
+                  <Star
+                    key={index}
+                    className={`h-3.5 w-3.5 ${index < 4 ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
+                  />
+                ))}
+              </div>
+              <span className="text-xs font-medium ml-1">4.8</span>
+              <span className="text-muted-foreground text-xs">(124)</span>
             </div>
-            <span className="text-xs font-medium ml-1">4.8</span>
-            <span className="text-muted-foreground text-xs">(124)</span>
-          </div>
 
-          {organization.address && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-              <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
-              <span className="line-clamp-1">
-                {organization.address.postalAddress}
-              </span>
-            </div>
-          )}
+            {organization.address && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="line-clamp-1">
+                  {organization.address.postalAddress}
+                </span>
+              </div>
+            )}
 
-          {/* Availabilities */}
-          <div className="border-t border-border pt-3 mt-1">
-            <div className="flex items-center gap-1.5 text-xs font-medium mb-2">
-              <Calendar className="h-3.5 w-3.5 text-primary" />
-              <span>Prochaines disponibilités</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {!organization.slots || organization.slots.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  Plus de disponibilités pour aujourd&apos;hui
-                </p>
-              ) : (
-                organization.slots.slice(0, 3).map((slot) => (
+            {/* Availabilities */}
+            <div className="border-t border-border pt-3 mt-1">
+              <div className="flex items-center gap-1.5 text-xs font-medium mb-2">
+                <Calendar className="h-3.5 w-3.5 text-primary" />
+                <span>Prochaines disponibilités</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {!organization.slots || organization.slots.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    Plus de disponibilités pour aujourd&apos;hui
+                  </p>
+                ) : (
+                  organization.slots.slice(0, 3).map((slot) => (
+                    <Badge
+                      key={slot.id}
+                      variant="outline"
+                      className="text-xs font-normal px-2 py-0.5"
+                    >
+                      <Clock className="h-3 w-3 mr-1 text-primary" />
+                      {moment(slot.start).format("HH:mm")}
+                    </Badge>
+                  ))
+                )}
+                {organization.slots && organization.slots.length > 3 && (
                   <Badge
-                    key={slot.id}
-                    variant="outline"
-                    className="text-xs font-normal px-2 py-0.5"
+                    variant="secondary"
+                    className="text-xs whitespace-nowrap"
                   >
-                    <Clock className="h-3 w-3 mr-1 text-primary" />
-                    {moment(slot.start).format("HH:mm")}
+                    +{organization.slots.length - 3} créneaux
                   </Badge>
-                ))
-              )}
-              {organization.slots && organization.slots.length > 3 && (
-                <Badge
-                  variant="secondary"
-                  className="text-xs whitespace-nowrap"
-                >
-                  +{organization.slots.length - 3} créneaux
-                </Badge>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }

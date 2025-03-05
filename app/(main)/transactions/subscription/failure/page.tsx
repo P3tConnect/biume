@@ -4,11 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { XCircle, ArrowLeft, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default function OrganizationSubscriptionFailure() {
-  redirect("/");
-
   return (
     <div className="h-screen w-screen bg-gradient-to-b from-background to-red-50/30 flex items-center justify-center p-6">
       <Card className="w-full max-w-lg shadow-lg">

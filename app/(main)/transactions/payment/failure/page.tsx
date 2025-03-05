@@ -5,11 +5,8 @@ import { Card } from "@/components/ui/card";
 import { XCircle, AlertCircle, ArrowLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { redirect } from "next/navigation";
 
 export default function PaymentFailure() {
-  redirect("/");
-
   const searchParams = useSearchParams();
   const amount = searchParams.get("amount") || "0";
   const professionalName =
