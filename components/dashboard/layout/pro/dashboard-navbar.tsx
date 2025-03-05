@@ -155,7 +155,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                 size="sm"
                 className={cn(
                   "flex items-center gap-2 text-xs mr-4 shadow-sm transition-all duration-300 group hover:shadow-md",
-                  "bg-secondary/5 hover:bg-secondary/10 border border-secondary/20 text-secondary",
+                  "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
                 )}
               >
                 {activeOrganization?.logo ? (
@@ -170,7 +170,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 ) : (
                   <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
-                    <Building className="h-3 w-3 text-secondary" />
+                    <Building className="h-3 w-3 text-primary" />
                   </div>
                 )}
                 <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
@@ -234,7 +234,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                         className={cn(
                           "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
                           companyId === org.id
-                            ? "bg-secondary/10 text-secondary font-medium shadow-sm"
+                            ? "bg-primary/10 text-primary font-medium shadow-sm"
                             : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                           switchingOrg === org.id && "animate-pulse opacity-70",
                         )}
@@ -246,8 +246,8 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                             className={cn(
                               "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
                               companyId === org.id
-                                ? "ring-2 ring-secondary/30"
-                                : "ring-1 ring-border/50 hover:ring-secondary/20",
+                                ? "ring-2 ring-primary/30"
+                                : "ring-1 ring-border/50 hover:ring-primary/20",
                             )}
                           >
                             <Image
@@ -266,11 +266,11 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                             className={cn(
                               "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
                               companyId === org.id
-                                ? "bg-secondary/20"
-                                : "bg-secondary/10 hover:bg-secondary/15",
+                                ? "bg-primary/20"
+                                : "bg-primary/10 hover:bg-primary/15",
                             )}
                           >
-                            <Building className="h-4 w-4 text-secondary" />
+                            <Building className="h-4 w-4 text-primary" />
                           </div>
                         )}
                         <div className="flex flex-col">
@@ -282,7 +282,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                           </span>
                         </div>
                         {companyId === org.id && (
-                          <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
+                          <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
                         )}
                       </DropdownMenuItem>
                     ))}

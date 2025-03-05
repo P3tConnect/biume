@@ -8,12 +8,11 @@ import { registerSchema } from "@/src/lib";
 import { signUp } from "@/src/lib/auth-client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterClientPage = () => {
-  redirect("/");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
