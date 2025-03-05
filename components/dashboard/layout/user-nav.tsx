@@ -19,33 +19,56 @@ import {
   TooltipTrigger,
   Badge,
 } from "@/components/ui";
-import { signOut, useSession } from "@/src/lib/auth-client";
+import { signOut } from "@/src/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { getUserInformations } from "@/src/actions";
 
 export function UserNav() {
-  const { data: session } = useSession();
+  const { data: session, isLoading } = useQuery({
+    queryKey: ["user-informations"],
+    queryFn: () => getUserInformations({}),
+  });
   const router = useRouter();
   const userStatus = "active"; // À remplacer par une vraie logique de statut si nécessaire
 
   // Liste des éléments du menu
   const menuItems = [
     {
-      href: `/dashboard/user/${session?.user?.id}`,
+      href: `/dashboard/user/${session?.data?.user.id}`,
       icon: <LayoutGrid className="w-4 h-4 text-muted-foreground" />,
-      label: "Tableau de bord"
+      label: "Tableau de bord",
     },
     {
-      href: `/dashboard/user/${session?.user?.id}`,
+      href: `/dashboard/user/${session?.data?.user.id}`,
       icon: <User className="w-4 h-4 text-muted-foreground" />,
-      label: "Mon profil"
+      label: "Mon profil",
     },
     {
-      href: `/dashboard/user/${session?.user?.id}/settings`,
+      href: `/dashboard/user/${session?.data?.user.id}/settings`,
       icon: <Settings className="w-4 h-4 text-muted-foreground" />,
-      label: "Paramètres"
-    }
+      label: "Paramètres",
+    },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="relative">
+        <Button
+          variant="ghost"
+          className="relative h-9 w-9 rounded-full p-0 border border-transparent transition-colors duration-150"
+          disabled
+        >
+          <Avatar className="h-8 w-8">
+            <AvatarFallback className="animate-pulse bg-primary/10">
+              <span className="sr-only">Chargement</span>
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
@@ -59,12 +82,12 @@ export function UserNav() {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={session?.user?.image ?? undefined}
-                    alt={session?.user?.name || "Avatar utilisateur"}
+                    src={session?.data?.user.image ?? undefined}
+                    alt={session?.data?.user.name || "Avatar utilisateur"}
                     className="object-cover"
                   />
                   <AvatarFallback className="bg-primary/5 text-primary">
-                    {session?.user?.name?.charAt(0)}
+                    {session?.data?.user.name?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 {userStatus === "active" && (
@@ -86,9 +109,11 @@ export function UserNav() {
           >
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">{session?.user?.name}</p>
+                <p className="text-sm font-medium">
+                  {session?.data?.user.name}
+                </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {session?.user?.email}
+                  {session?.data?.user.email}
                 </p>
                 {userStatus === "active" && (
                   <Badge
@@ -116,13 +141,15 @@ export function UserNav() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={async () => await signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    router.push("/login");
-                  }
-                }
-              })}
+              onClick={async () =>
+                await signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/sign-in");
+                    },
+                  },
+                })
+              }
               className="text-rose-400 hover:text-rose-500 focus:text-rose-500 cursor-pointer"
             >
               <LogOut className="w-4 h-4 mr-2" />

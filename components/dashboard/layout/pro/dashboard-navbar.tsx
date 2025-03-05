@@ -48,6 +48,8 @@ import {
   Search,
   Menu,
   ArrowLeftRight,
+  AlertCircle,
+  Building2,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -63,7 +65,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   Credenza,
   CredenzaContent,
@@ -73,27 +75,55 @@ import {
   CredenzaBody,
 } from "@/components/ui";
 import Stepper from "@/components/onboarding/components/stepper";
+import { AccountSwitchDialog } from "../account-switch-dialog";
+import { auth } from "@/src/lib/auth";
+import {
+  getAllOrganizationsByUserId,
+  getCurrentOrganization,
+} from "@/src/actions/organization.action";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [orgMenuOpen, setOrgMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isWindows =
-    typeof window !== "undefined" && window.navigator.platform.includes("Win");
-  const shortcutKey = isWindows ? "Ctrl" : "⌘";
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
-  const { data: session } = useQuery({
-    queryKey: ["user-informations"],
-    queryFn: () => getSession(),
-  });
-  const { data: activeOrganization } = useActiveOrganization();
-  const { data: organizations } = useListOrganizations();
-  const menuGroups = proMenuList(pathname || "", companyId);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [orgMenuOpen, setOrgMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  const [switchingPersonal, setSwitchingPersonal] = useState(false);
   const [showCreateOrgCredenza, setShowCreateOrgCredenza] = useState(false);
+  const [showPersonalDialog, setShowPersonalDialog] = useState(false);
+  const [showProfessionalDialog, setShowProfessionalDialog] = useState(false);
+  const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isWindows =
+    typeof window !== "undefined" && window.navigator.platform.includes("Win");
+  const shortcutKey = isWindows ? "Ctrl" : "⌘";
+
+  const [
+    { data: session },
+    { data: organizations },
+    { data: activeOrganization },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ["user-informations"],
+        queryFn: () => getSession(),
+      },
+      {
+        queryKey: ["user-organizations"],
+        queryFn: () => getAllOrganizationsByUserId({}),
+      },
+      {
+        queryKey: ["active-organization"],
+        queryFn: () => getCurrentOrganization({}),
+      },
+    ],
+  });
+
+  const menuGroups = proMenuList(pathname || "", companyId);
 
   // Fonction pour obtenir l'icône pour chaque groupe de menu
   const getGroupIcon = (groupLabel: string) => {
@@ -114,15 +144,54 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
     return Book;
   };
 
+  const handlePersonalAccountSwitch = async () => {
+    // Ne pas déclencher si déjà sur le compte personnel
+    if (pathname?.startsWith(`/dashboard/user/${session?.data?.user.id}`))
+      return;
+
+    setSwitchingPersonal(true);
+    setIsLoading(true);
+    setShowPersonalDialog(true);
+
+    try {
+      // Attendre 3 secondes avant la redirection
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Redirection après le délai
+      router.push(`/dashboard/user/${session?.data?.user.id}`);
+      setIsLoading(false);
+    } catch (error) {
+      // Notification d'erreur en cas d'échec
+      toast.error("Erreur lors du changement de compte", {
+        description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
+      });
+      setShowPersonalDialog(false);
+    } finally {
+      setSwitchingPersonal(false);
+    }
+  };
+
   const handleOrganizationSwitch = async (orgId: string) => {
     setSwitchingOrg(orgId);
+    setActiveOrgId(orgId);
+    setIsLoading(true);
+    setShowProfessionalDialog(true);
+
     try {
+      // Attendre 3 secondes avant la redirection
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       await organization.setActive({ organizationId: orgId });
+
       router.push(`/dashboard/organization/${orgId}`);
+      setIsLoading(false);
     } catch (error) {
       toast.error("Erreur lors du changement d'organisation", {
         description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
       });
+      setShowProfessionalDialog(false);
     } finally {
       setSwitchingOrg(null);
     }
@@ -140,9 +209,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  // Classes communes pour la navigation
-  const navIconClass = "h-4 w-4";
-
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95 shadow-sm">
       <div className="flex h-14 items-center justify-between px-4">
@@ -158,11 +224,11 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
                 )}
               >
-                {activeOrganization?.logo ? (
+                {activeOrganization?.data?.logo ? (
                   <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
                     <Image
-                      src={activeOrganization.logo}
-                      alt={activeOrganization.name}
+                      src={activeOrganization.data.logo}
+                      alt={activeOrganization.data.name}
                       width={20}
                       height={20}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -174,7 +240,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 )}
                 <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
-                  {activeOrganization?.name || "Organisation"}
+                  {activeOrganization?.data?.name || "Organisation"}
                 </span>
                 <ArrowLeftRight
                   className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${orgMenuOpen ? "rotate-180" : "rotate-0"}`}
@@ -190,10 +256,12 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   Compte personnel
                 </DropdownMenuLabel>
                 <DropdownMenuItem
-                  className="flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all duration-200 hover:shadow-sm"
-                  onSelect={() =>
-                    router.push(`/dashboard/user/${session?.data?.user.id}`)
-                  }
+                  className={cn(
+                    "group flex items-center gap-3 p-2 rounded-md transition-all duration-200 hover:bg-accent hover:translate-x-1 hover:shadow-sm cursor-pointer",
+                    switchingPersonal && "animate-pulse opacity-70",
+                  )}
+                  onSelect={handlePersonalAccountSwitch}
+                  disabled={switchingPersonal || switchingOrg !== null}
                 >
                   {session?.data?.user?.image ? (
                     <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
@@ -221,74 +289,77 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
-              {organizations && organizations.length > 0 && (
-                <DropdownMenuGroup>
-                  <DropdownMenuSeparator className="my-2" />
-                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                    Comptes professionnels
-                  </DropdownMenuLabel>
-                  <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
-                    {organizations.map((org) => (
-                      <DropdownMenuItem
-                        key={org.id}
-                        className={cn(
-                          "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
-                          companyId === org.id
-                            ? "bg-primary/10 text-primary font-medium shadow-sm"
-                            : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                          switchingOrg === org.id && "animate-pulse opacity-70",
-                        )}
-                        onSelect={() => handleOrganizationSwitch(org.id)}
-                        disabled={switchingOrg !== null}
-                      >
-                        {org.logo ? (
-                          <div
-                            className={cn(
-                              "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                              companyId === org.id
-                                ? "ring-2 ring-primary/30"
-                                : "ring-1 ring-border/50 hover:ring-primary/20",
-                            )}
-                          >
-                            <Image
-                              src={org.logo}
-                              alt={org.name}
-                              width={32}
-                              height={32}
+              {organizations &&
+                organizations.data &&
+                organizations.data.length > 0 && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuSeparator className="my-2" />
+                    <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                      Comptes professionnels
+                    </DropdownMenuLabel>
+                    <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                      {organizations.data.map((org) => (
+                        <DropdownMenuItem
+                          key={org.id}
+                          className={cn(
+                            "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                            companyId === org.id
+                              ? "bg-primary/10 text-primary font-medium shadow-sm"
+                              : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                            switchingOrg === org.id &&
+                              "animate-pulse opacity-70",
+                          )}
+                          onSelect={() => handleOrganizationSwitch(org.id)}
+                          disabled={switchingOrg !== null}
+                        >
+                          {org.logo ? (
+                            <div
                               className={cn(
-                                "h-full w-full object-cover transition-transform duration-300",
-                                companyId !== org.id && "hover:scale-110",
+                                "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                companyId === org.id
+                                  ? "ring-2 ring-primary/30"
+                                  : "ring-1 ring-border/50 hover:ring-primary/20",
                               )}
-                            />
+                            >
+                              <Image
+                                src={org.logo}
+                                alt={org.name}
+                                width={32}
+                                height={32}
+                                className={cn(
+                                  "h-full w-full object-cover transition-transform duration-300",
+                                  companyId !== org.id && "hover:scale-110",
+                                )}
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className={cn(
+                                "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                companyId === org.id
+                                  ? "bg-primary/20"
+                                  : "bg-primary/10 hover:bg-primary/15",
+                              )}
+                            >
+                              <Building className="h-4 w-4 text-primary" />
+                            </div>
+                          )}
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium leading-none">
+                              {org.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground mt-1">
+                              Compte professionnel
+                            </span>
                           </div>
-                        ) : (
-                          <div
-                            className={cn(
-                              "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                              companyId === org.id
-                                ? "bg-primary/20"
-                                : "bg-primary/10 hover:bg-primary/15",
-                            )}
-                          >
-                            <Building className="h-4 w-4 text-primary" />
-                          </div>
-                        )}
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium leading-none">
-                            {org.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground mt-1">
-                            Compte professionnel
-                          </span>
-                        </div>
-                        {companyId === org.id && (
-                          <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
-                        )}
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
-                </DropdownMenuGroup>
-              )}
+                          {companyId === org.id && (
+                            <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </DropdownMenuGroup>
+                )}
 
               <DropdownMenuGroup>
                 <DropdownMenuSeparator className="my-2" />
@@ -756,6 +827,24 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
           </div>
         </div>
       </CommandDialog>
+
+      {/* Dialogues de changement de compte */}
+      <AccountSwitchDialog
+        open={showPersonalDialog}
+        onOpenChange={setShowPersonalDialog}
+        type="personal"
+        isLoading={isLoading}
+      />
+
+      <AccountSwitchDialog
+        open={showProfessionalDialog}
+        onOpenChange={setShowProfessionalDialog}
+        type="professional"
+        organizationName={
+          organizations?.data?.find((org) => org.id === activeOrgId)?.name
+        }
+        isLoading={isLoading}
+      />
     </header>
   );
 }

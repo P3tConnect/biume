@@ -12,7 +12,6 @@ interface CompanyDetailsPageProps {
 export default async function CompanyDetailsPage({
   params,
 }: CompanyDetailsPageProps) {
-  redirect("/");
   const { companyId } = await params;
 
   if (!companyId) {

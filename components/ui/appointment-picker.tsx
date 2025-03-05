@@ -5,6 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { OrganizationSlots } from "@/src/db";
 import { format, isSameDay, parseISO } from "date-fns";
+import { fr } from "date-fns/locale";
 import { useEffect, useState, useMemo } from "react";
 
 // Interfaces pour les différents types de créneaux
@@ -133,7 +134,7 @@ export default function AppointmentPicker({
   // Fonction pour formater l'heure à partir d'une date
   const formatTime = (dateStr: string | Date): string => {
     const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
-    return format(date, "HH:mm");
+    return format(date, "HH'h'mm", { locale: fr });
   };
 
   // Determiner si des créneaux sont disponibles pour cette date
@@ -149,17 +150,18 @@ export default function AppointmentPicker({
             onSelect={handleDateChange}
             className="p-2 sm:pe-5"
             disabled={isDayDisabled}
+            locale={fr}
           />
           <div className="relative w-full max-sm:h-48 sm:w-52">
             <div className="absolute inset-0 py-4 max-sm:border-t">
               <ScrollArea className="h-full sm:border-s">
                 <div className="space-y-3">
-                  <div className="flex h-5 shrink-0 items-center px-5">
-                    <p className="text-sm font-medium">
-                      {format(date, "EEEE, d")}
+                  <div className="flex shrink-0 items-center px-5 justify-center border-b pb-2">
+                    <p className="text-base font-medium">
+                      {format(date, "EEEE d MMMM", { locale: fr })}
                     </p>
                   </div>
-                  <div className="grid gap-1.5 px-5 max-sm:grid-cols-2">
+                  <div className="grid gap-1.5 px-5 max-sm:grid-cols-2 pt-2">
                     {!hasSlots ? (
                       <div className="text-center text-sm text-muted-foreground col-span-2 py-4">
                         Aucun créneau disponible pour cette date

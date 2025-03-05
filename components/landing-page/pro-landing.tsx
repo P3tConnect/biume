@@ -53,7 +53,7 @@ export function ProLanding() {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
-                  <PawPrint className={"w-5 h-5 text-white"} />
+                  <PawPrint fill="white" className={"w-5 h-5 text-white"} />
                 </div>
               </motion.div>
               <span className={cn("font-bold tracking-tight transition-all")}>

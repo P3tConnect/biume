@@ -17,10 +17,28 @@ import {
   Syringe,
   ChevronRight,
   RefreshCw,
-  Cat,
   CalendarIcon,
   HeartPulseIcon,
   TrendingUpIcon,
+  Info,
+  Users,
+  Weight,
+  Heart,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Shield,
+  Activity,
+  Pen,
+  FileClock,
+  LayoutGrid,
+  FileText,
+  BookOpen,
+  ArrowRightCircle,
+  BellRing,
+  User,
+  Calendar,
+  Cat,
 } from "lucide-react";
 import {
   LineChart,
@@ -34,8 +52,14 @@ import {
   CredenzaContent,
   CredenzaTitle,
   CredenzaHeader,
+  CredenzaBody,
+  CredenzaFooter,
+  CredenzaClose,
 } from "@/components/ui";
 import { Credenza } from "@/components/ui";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { AnimalCredenza } from "./unified-metrics/AnimalCredenza";
+import { ActiveTab, AnimalDetails } from "./unified-metrics/types";
 
 // Données simulées pour les graphiques (conservées du MetricsWidget)
 const appointmentsData = [
@@ -92,6 +116,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null);
+  const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<
+    "info" | "vaccinations" | "medical" | "appointments" | "documents"
+  >("info");
 
   // Formatage de la date
   const today = new Date();
@@ -100,6 +128,176 @@ export const UnifiedMetrics = () => {
     day: "numeric",
     month: "long",
   });
+
+  // Données enrichies pour la fiche de l'animal
+  const animalDetails: AnimalDetails = {
+    id: "felix-001",
+    name: "Félix",
+    species: "Chat",
+    breed: "Européen",
+    gender: "male",
+    birthDate: "2020-06-15", // Format ISO
+    weight: 4.2,
+    age: "3 ans",
+    color: "Tigré gris",
+    microchipNumber: "250269100123456",
+    sterilized: true,
+    sterilizationDate: "2021-03-20",
+    ownerName: "Sophie Dupont",
+    ownerContact: "sophie.dupont@email.com",
+    profileImage: "/images/cat-profile.jpg",
+    notes:
+      "Félix est un chat calme et affectueux. Il a tendance à être stressé lors des visites vétérinaires.",
+    nextVisit: "09/10/2023",
+    // Vaccinations
+    vaccinations: [
+      {
+        id: "vax-001",
+        name: "Typhus",
+        date: "2023-04-12",
+        expiryDate: "2024-04-12",
+        status: "valid",
+        notes: "Aucune réaction adverse",
+        veterinarian: "Martinez",
+      },
+      {
+        id: "vax-002",
+        name: "Leucose",
+        date: "2023-04-12",
+        expiryDate: "2024-04-12",
+        status: "valid",
+        veterinarian: "Martinez",
+      },
+      {
+        id: "vax-003",
+        name: "Rage",
+        date: "2021-06-30",
+        expiryDate: "2023-06-30",
+        status: "expired",
+        notes: "À renouveler",
+        veterinarian: "Lopez",
+      },
+      {
+        id: "vax-004",
+        name: "Coryza",
+        date: "2023-10-15",
+        status: "upcoming",
+        veterinarian: "Martinez",
+      },
+    ],
+    // Dossier médical
+    medicalRecords: [
+      {
+        id: "med-001",
+        type: "consultation",
+        date: "2023-04-12",
+        diagnosis: "Examen général",
+        symptoms: ["Perte d'appétit légère"],
+        treatment: "Aucun traitement nécessaire",
+        notes: "Animal en bonne santé générale",
+        veterinarian: "Martinez",
+      },
+      {
+        id: "med-002",
+        type: "treatment",
+        date: "2023-01-03",
+        diagnosis: "Infection urinaire",
+        symptoms: ["Douleur à la miction", "Urine fréquente", "Léchargie"],
+        treatment: "Antibiotiques pendant 10 jours",
+        prescriptions: [
+          "Amoxicilline 50mg 2x/jour pendant 10 jours",
+          "Augmenter l'apport en eau",
+        ],
+        notes: "Suivi dans 2 semaines pour vérifier l'évolution",
+        veterinarian: "Lopez",
+      },
+      {
+        id: "med-003",
+        type: "surgery",
+        date: "2021-03-20",
+        diagnosis: "Stérilisation",
+        treatment: "Castration chirurgicale",
+        prescriptions: [
+          "Anti-inflammatoires 5 jours",
+          "Repos strict pendant 7 jours",
+        ],
+        notes: "Intervention sans complications",
+        veterinarian: "Martinez",
+      },
+    ],
+    // Rendez-vous
+    appointments: [
+      {
+        id: "apt-001",
+        date: "2023-10-09",
+        time: "14:30",
+        duration: 30,
+        type: "vaccination",
+        status: "scheduled",
+        notes: "Rappel vaccins typhus et leucose",
+        veterinarian: "Martinez",
+      },
+      {
+        id: "apt-002",
+        date: "2023-04-12",
+        time: "10:30",
+        duration: 45,
+        type: "check-up",
+        status: "completed",
+        notes: "Bilan de santé annuel",
+        veterinarian: "Martinez",
+      },
+      {
+        id: "apt-003",
+        date: "2023-01-03",
+        time: "15:00",
+        duration: 30,
+        type: "emergency",
+        status: "completed",
+        notes: "Consultation d'urgence pour infection urinaire",
+        veterinarian: "Lopez",
+      },
+    ],
+    // Documents
+    documents: [
+      {
+        id: "doc-001",
+        title: "Carnet de vaccination",
+        type: "certificate",
+        date: "2023-04-12",
+        fileUrl: "/documents/cat-vaccination.pdf",
+        fileType: "pdf",
+        uploadedBy: "Dr. Martinez",
+      },
+      {
+        id: "doc-002",
+        title: "Ordonnance - Infection urinaire",
+        type: "prescription",
+        date: "2023-01-03",
+        fileUrl: "/documents/urinary-prescription.pdf",
+        fileType: "pdf",
+        uploadedBy: "Dr. Lopez",
+      },
+      {
+        id: "doc-003",
+        title: "Résultats analyses sanguines",
+        type: "lab-result",
+        date: "2023-04-12",
+        fileUrl: "/documents/blood-test.pdf",
+        fileType: "pdf",
+        uploadedBy: "Laboratoire VetLab",
+      },
+      {
+        id: "doc-004",
+        title: "Certificat de stérilisation",
+        type: "certificate",
+        date: "2021-03-20",
+        fileUrl: "/documents/sterilization.pdf",
+        fileType: "pdf",
+        uploadedBy: "Dr. Martinez",
+      },
+    ],
+  };
 
   const renderChart = (data: any[], title: string, color: string) => {
     const currentValue = data[data.length - 1].value;
@@ -263,60 +461,63 @@ export const UnifiedMetrics = () => {
 
       {/* Section du prochain rendez-vous */}
       <Card className="rounded-xl">
-        <CardHeader className="pb-1 pt-4">
-          <div className="flex items-center justify-between">
-            <CardTitle>Prochain rendez-vous</CardTitle>
-          </div>
+        <CardHeader className="pb-2 pt-4">
+          <CardTitle>Prochain rendez-vous</CardTitle>
         </CardHeader>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between p-2 border rounded-md">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
-                <Cat className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+        <CardContent className="px-4 pb-4 pt-0">
+          <div className="rounded-xl overflow-hidden border shadow-md bg-background/50 animate-in slide-in-from-bottom-4 duration-500">
+            {/* En-tête avec heure et statut */}
+            <div className="bg-primary/10 px-4 py-2.5 flex justify-between items-center border-b border-primary/20">
+              <div className="flex items-center">
+                <Clock className="h-3.5 w-3.5 text-primary mr-1.5 animate-in spin-in-90 duration-500 fade-in" />
+                <span className="text-primary font-medium">09:30</span>
+                <div className="mx-2 h-1 w-1 rounded-full bg-muted-foreground/30"></div>
+                <span className="text-muted-foreground text-sm">
+                  {formattedDate}
+                </span>
               </div>
-              <div>
-                <div className="font-medium text-sm">Félix</div>
-                <div className="text-xs text-muted-foreground">
-                  Consultation de routine
+              <Badge
+                variant="outline"
+                className="bg-green-50/80 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-100 dark:border-green-800 text-xs px-2 py-0.5 font-medium group relative"
+              >
+                <span>Confirmé</span>
+              </Badge>
+            </div>
+
+            {/* Contenu principal */}
+            <div className="px-4 py-3.5 bg-card">
+              <div className="flex items-center mb-3">
+                <div className="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center mr-3 shadow-sm hover:scale-110 transition-transform duration-300">
+                  <Cat className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <div className="font-medium text-card-foreground">Félix</div>
+                  <div className="text-xs text-muted-foreground">
+                    Chat européen • 4 ans • 4,2 kg
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col items-end">
-              <Badge variant="secondary" className="mb-1">
-                09:30
-              </Badge>
-              <Button variant="ghost" size="sm" className="h-6 text-xs px-2">
-                Voir fiche
-                <ChevronRight className="ml-1 h-3 w-3" />
-              </Button>
-            </div>
-          </div>
 
-          {/* État d'avancement */}
-          <div className="mt-4 space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">
-              ÉTAT D&apos;AVANCEMENT
-            </div>
-            <div className="pt-2 pb-3 space-y-1">
-              <div className="flex items-center justify-between text-sm">
-                <span>Consultations</span>
-                <span className="text-muted-foreground">2/8 terminées</span>
+              <div className="flex justify-between items-center mt-4">
+                <div className="flex items-center gap-1.5">
+                  <User className="h-3 w-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    M. Dupont
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs px-2.5 text-primary hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300 hover:translate-x-0.5"
+                  onClick={() => setAnimalDetailsOpen(true)}
+                >
+                  Fiche complète
+                  <ChevronRight className="ml-1 h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+                </Button>
               </div>
-              <Progress value={25} className="h-1.5" />
             </div>
           </div>
         </CardContent>
-        <CardFooter className="px-4 py-3 border-t bg-muted/10">
-          <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
-            <div className="flex items-center">
-              <RefreshCw className="h-3 w-3 mr-1.5" />
-              Mis à jour il y a 5 min
-            </div>
-            <Button variant="ghost" size="sm" className="h-6 text-xs px-2">
-              Rafraîchir
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
 
       {/* Modals pour les graphiques détaillés */}
@@ -324,6 +525,13 @@ export const UnifiedMetrics = () => {
       {renderChart(newPatientsData, "Nouveaux patients", "#f43f5e")}
       {renderChart(treatmentsData, "Soins réalisés", "#10b981")}
       {renderChart(satisfactionData, "Satisfaction client", "#f59e0b")}
+
+      {/* Utilisation de notre nouveau composant AnimalCredenza */}
+      <AnimalCredenza
+        isOpen={animalDetailsOpen}
+        onOpenChange={setAnimalDetailsOpen}
+        animalDetails={animalDetails}
+      />
     </div>
   );
 };

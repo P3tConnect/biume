@@ -36,6 +36,7 @@ import {
   User,
   Plus,
   ArrowLeftRight,
+  AlertCircle,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -49,11 +50,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
 import Stepper from "@/components/onboarding/components/stepper";
+import { AccountSwitchDialog } from "../account-switch-dialog";
 
 export function ClientNavbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null);
+  const [switchingPersonal, setSwitchingPersonal] = useState(false);
+  const [showPersonalDialog, setShowPersonalDialog] = useState(false);
+  const [showProfessionalDialog, setShowProfessionalDialog] = useState(false);
+  const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const isWindows =
     typeof window !== "undefined" && window.navigator.platform.includes("Win");
   const shortcutKey = isWindows ? "Ctrl" : "⌘";
@@ -64,15 +71,46 @@ export function ClientNavbar() {
   const { data: organizations } = useListOrganizations();
   const userId = session?.user?.id;
 
+  const handlePersonalAccountSwitch = async () => {
+    if (pathname?.startsWith(`/dashboard/user/${session?.user?.id}`)) return;
+
+    setSwitchingPersonal(true);
+    setIsLoading(true);
+    setShowPersonalDialog(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      router.push(`/dashboard/user/${session?.user?.id}`);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error("Erreur lors du changement de compte", {
+        description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
+      });
+      setShowPersonalDialog(false);
+    } finally {
+      setSwitchingPersonal(false);
+    }
+  };
+
   const handleOrganizationSwitch = async (orgId: string) => {
     setSwitchingOrg(orgId);
+    setActiveOrgId(orgId);
+    setIsLoading(true);
+    setShowProfessionalDialog(true);
+
     try {
-      await organization.setActive({ organizationId: orgId });
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       router.push(`/dashboard/organization/${orgId}`);
+      setIsLoading(false);
     } catch (error) {
       toast.error("Erreur lors du changement d'organisation", {
         description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
       });
+      setShowProfessionalDialog(false);
     } finally {
       setSwitchingOrg(null);
     }
@@ -183,14 +221,14 @@ export function ClientNavbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuItem
                     className={cn(
-                      "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
+                      "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
                       isPersonalDashboard
                         ? "bg-secondary/10 text-secondary dark:bg-secondary/10 dark:text-secondary-foreground font-medium shadow-sm"
                         : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                      switchingPersonal && "animate-pulse opacity-70",
                     )}
-                    onSelect={() =>
-                      router.push(`/dashboard/user/${session?.user?.id}`)
-                    }
+                    onSelect={handlePersonalAccountSwitch}
+                    disabled={switchingPersonal || switchingOrg !== null}
                   >
                     {session?.user?.image ? (
                       <div
@@ -249,7 +287,7 @@ export function ClientNavbar() {
                         <DropdownMenuItem
                           key={org.id}
                           className={cn(
-                            "flex items-center gap-3 p-2 rounded-md transition-all duration-200",
+                            "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
                             !isPersonalDashboard &&
                               activeOrganization?.id === org.id
                               ? "bg-secondary/10 text-secondary font-medium shadow-sm"
@@ -319,7 +357,7 @@ export function ClientNavbar() {
                       Devenir professionnel
                     </DropdownMenuLabel>
                     <CredenzaTrigger asChild>
-                      <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all duration-200 hover:shadow-sm">
+                      <DropdownMenuItem className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm">
                         <div className="h-8 w-8 rounded-md bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
                           <Plus className="h-4 w-4 text-secondary dark:text-secondary-foreground" />
                         </div>
@@ -403,6 +441,23 @@ export function ClientNavbar() {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
+
+      <AccountSwitchDialog
+        open={showPersonalDialog}
+        onOpenChange={setShowPersonalDialog}
+        type="personal"
+        isLoading={isLoading}
+      />
+
+      <AccountSwitchDialog
+        open={showProfessionalDialog}
+        onOpenChange={setShowProfessionalDialog}
+        type="professional"
+        organizationName={
+          organizations?.find((org) => org.id === activeOrgId)?.name
+        }
+        isLoading={isLoading}
+      />
     </header>
   );
 }

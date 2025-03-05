@@ -79,6 +79,22 @@ export const getAllOrganizations = createServerAction(
   [],
 );
 
+export const getAllOrganizationsByUserId = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const organizations = await auth.api.listOrganizations({
+      headers: await headers(),
+    });
+
+    if (!organizations) {
+      throw new ActionError("Organizations not found");
+    }
+
+    return organizations as Organization[];
+  },
+  [requireAuth],
+);
+
 export const getCompanyById = createServerAction(
   z.object({
     companyId: z.string(),

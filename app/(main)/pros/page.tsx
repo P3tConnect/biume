@@ -10,7 +10,6 @@ interface PageProps {
 }
 
 export default async function CompaniesListPage({ searchParams }: PageProps) {
-  redirect("/");
   const searchParamsPromise = await searchParams;
   const params = parseSearchParams(searchParamsPromise);
 

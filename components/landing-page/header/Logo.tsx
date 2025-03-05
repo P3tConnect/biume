@@ -15,6 +15,7 @@ export const Logo = ({ isScrolled }: HeaderProps) => {
       >
         <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
           <PawPrint
+            fill="white"
             className={isScrolled ? "w-4 h-4 text-white" : "w-5 h-5 text-white"}
           />
         </div>

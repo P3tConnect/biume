@@ -146,7 +146,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
       {isMounted && (
         <motion.div
           ref={containerRef}
-          className="w-full min-h-screen bg-background relative"
+          className="w-screen h-screen bg-background relative"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -154,7 +154,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
           {/* Header flottant avec navigation et info essentielles */}
           <motion.header
             style={{ opacity: headerOpacity, scale: headerScale }}
-            className="sticky top-2 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
+            className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
           >
             <div className="container mx-auto py-3">
               <div className="flex justify-between items-center">
