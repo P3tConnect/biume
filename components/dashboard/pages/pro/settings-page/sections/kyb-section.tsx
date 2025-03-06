@@ -1,385 +1,438 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  createKYBOnboardingLink,
-  createKYBDashboardLink,
-  getKYBStatus,
-  createKYBVerification
-} from "@/src/actions/stripe.action";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  Button,
-  Alert,
-  AlertTitle,
-  AlertDescription,
-  Progress,
-} from "@/components/ui";
-import {
-  ArrowUpRight,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
+} from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useActiveOrganization } from "@/src/lib/auth-client";
-import { safeConfig } from "@/src/lib";
+import { useState } from "react";
+import {
+  createStripeConnectOnboardingLink,
+  getStripeConnectAccountInfo,
+} from "@/src/actions/stripe.action";
+import {
+  AlertCircle,
+  CheckCircle2,
+  ExternalLink,
+  PlusCircle,
+  RefreshCw,
+  Layers,
+} from "lucide-react";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import {
+  StripeOnboardingProcess,
+  StripeOnboardingDialog,
+} from "./stripe-onboarding/OnboardingProcess";
 
-// Types pour les exigences Stripe
-interface Requirements {
-  currently_due?: string[];
-  eventually_due?: string[];
-  past_due?: string[];
-}
-
-// Type pour une personne Stripe
-interface Person {
+interface StripeConnectAccountInfo {
   id: string;
-  first_name?: string;
-  last_name?: string;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  requirements: {
+    currently_due: string[];
+    eventually_due: string[];
+    past_due: string[];
+    pending_verification: string[];
+  };
+  email: string;
+  businessProfile: {
+    name?: string;
+    url?: string;
+  };
 }
 
-const KYBSection = () => {
-  const { data: activeOrganization } = useActiveOrganization();
-  const [verificationStarted, setVerificationStarted] = useState(false);
+export default function KYBSection() {
+  const [onboardingLoading, setOnboardingLoading] = useState(false);
+  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
 
-  // Récupérer le statut KYB
-  const { data: kybStatusResult, refetch: refetchKYBStatus, isLoading: isLoadingStatus } = useQuery({
-    queryKey: ["kyb-status", activeOrganization?.id],
+  const {
+    data: accountInfo,
+    isLoading,
+    error: queryError,
+    refetch,
+  } = useQuery({
+    queryKey: ["stripeConnectAccount"],
     queryFn: async () => {
-      if (!activeOrganization?.id) return null;
-      return await getKYBStatus({ organizationId: activeOrganization.id });
+      const result = await getStripeConnectAccountInfo({});
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      return result.data as unknown as StripeConnectAccountInfo;
     },
-    enabled: !!activeOrganization?.id,
+    refetchOnWindowFocus: false,
   });
 
-  // Extraire les données du résultat de l'action
-  const kybStatus = kybStatusResult?.data;
+  const error = queryError
+    ? (queryError as Error).message ||
+      "Erreur lors de la récupération des informations du compte"
+    : null;
 
-  // Démarrer/reprendre la vérification KYB
-  const { mutateAsync: startKYBVerification, isPending: isStartingVerification } = useMutation({
-    mutationFn: async () => {
-      if (!activeOrganization?.id) throw new Error("Organisation non trouvée");
-
-      // Si le compte n'existe pas, créer d'abord un compte Stripe Connect basique
-      if (!kybStatus?.exists) {
-        await createKYBVerification({
-          organizationId: activeOrganization.id,
-          businessName: activeOrganization.name || "Mon Organisation",
-          businessType: "company",
-          country: "FR",
-          address: {
-            city: "",
-            line1: "",
-            postalCode: "",
-          },
-          phone: "",
-          email: "",
-        });
-
-        await refetchKYBStatus();
+  const startOnboarding = async () => {
+    try {
+      setOnboardingLoading(true);
+      const result = await createStripeConnectOnboardingLink({});
+      if (result.error) {
+        throw new Error(result.error);
       }
-
-      // Créer un lien d'onboarding
-      const returnUrl = `${safeConfig.NEXT_PUBLIC_APP_URL}/dashboard/organizations/${activeOrganization.id}/settings`;
-      const result = await createKYBOnboardingLink({
-        organizationId: activeOrganization.id,
-        returnUrl
+      const onboardingUrl = result.data as string;
+      window.open(onboardingUrl, "_blank");
+      toast.success("Lien d'onboarding généré", {
+        description:
+          "Une nouvelle fenêtre a été ouverte pour compléter l'onboarding Stripe.",
       });
-
-      return result;
-    },
-    onSuccess: (data) => {
-      // Rediriger vers le lien d'onboarding
-      if (data?.data?.url) {
-        window.open(data.data.url, "_blank");
-        setVerificationStarted(true);
-      }
-    },
-    onError: (error) => {
-      toast.error("Erreur lors du démarrage de la vérification", {
-        description: error.message || "Veuillez réessayer ultérieurement",
+      // Actualiser les informations après 5 secondes
+      setTimeout(() => {
+        refetch();
+      }, 5000);
+    } catch (err: any) {
+      toast.error("Erreur", {
+        description:
+          err.message || "Impossible de générer le lien d'onboarding",
       });
+    } finally {
+      setOnboardingLoading(false);
     }
-  });
-
-  // Accéder au dashboard Stripe
-  const { mutateAsync: goToDashboard, isPending: isNavigatingToDashboard } = useMutation({
-    mutationFn: async () => {
-      if (!activeOrganization?.id) throw new Error("Organisation non trouvée");
-      return await createKYBDashboardLink({ organizationId: activeOrganization.id });
-    },
-    onSuccess: (data) => {
-      if (data?.data?.url) {
-        window.open(data.data.url, "_blank");
-      }
-    },
-    onError: (error) => {
-      toast.error("Erreur lors de l'accès au dashboard", {
-        description: error.message || "Veuillez réessayer ultérieurement",
-      });
-    }
-  });
-
-  // Rafraîchir le statut après le retour de Stripe
-  useEffect(() => {
-    if (verificationStarted) {
-      const timer = setInterval(() => {
-        refetchKYBStatus();
-      }, 5000); // Vérifier toutes les 5 secondes
-
-      return () => clearInterval(timer);
-    }
-  }, [verificationStarted, refetchKYBStatus]);
-
-  // Calculer l'état d'avancement
-  const getVerificationProgress = () => {
-    if (!kybStatus) return 0;
-
-    if (!kybStatus.exists) return 0;
-    if (kybStatus.status === "verified") return 100;
-
-    // Calculer en fonction des exigences restantes
-    const requirements = kybStatus.requirements || {
-      currently_due: [],
-      eventually_due: [],
-      past_due: []
-    };
-
-    const totalReqs =
-      (requirements.currently_due?.length || 0) +
-      (requirements.eventually_due?.length || 0) +
-      (requirements.past_due?.length || 0);
-
-    if (totalReqs === 0) return 90; // Presque terminé
-
-    // Donner plus de poids aux exigences passées dues
-    const pastDueWeight = 2;
-    const weightedTotal =
-      (requirements.currently_due?.length || 0) +
-      (requirements.eventually_due?.length || 0) +
-      ((requirements.past_due?.length || 0) * pastDueWeight);
-
-    // Plafonner entre 10% et 80%
-    const progressPercent = 100 - Math.min(80, Math.max(10,
-      (weightedTotal / (totalReqs + ((requirements.past_due?.length || 0) * (pastDueWeight - 1)))) * 100
-    ));
-
-    return Math.round(progressPercent);
   };
 
-  // Afficher le statut de vérification
-  const renderVerificationStatus = () => {
-    if (!kybStatus) return null;
-
-    if (!kybStatus.exists) {
-      return (
-        <Alert variant="default" className="mb-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Vérification non commencée</AlertTitle>
-          <AlertDescription>
-            Pour recevoir des paiements en ligne, vous devez vérifier votre entreprise avec Stripe.
-          </AlertDescription>
-        </Alert>
-      );
-    }
-
-    const progress = getVerificationProgress();
-
-    if (kybStatus.status === "verified") {
-      return (
-        <Alert className="mb-4 bg-green-50 dark:bg-green-900/20">
-          <CheckCircle2 className="h-4 w-4 text-green-500" />
-          <AlertTitle>Vérification complète</AlertTitle>
-          <AlertDescription>
-            Votre compte est vérifié et vous pouvez recevoir des paiements.
-          </AlertDescription>
-        </Alert>
-      );
-    }
-
-    const hasPastDue = (kybStatus.requirements?.past_due?.length || 0) > 0;
-
-    return (
-      <Alert
-        variant={hasPastDue ? "destructive" : "default"}
-        className={`mb-4 ${hasPastDue ? "bg-red-50 dark:bg-red-900/20" : "bg-amber-50 dark:bg-amber-900/20"}`}
-      >
-        {hasPastDue ? (
-          <XCircle className="h-4 w-4 text-red-500" />
-        ) : (
-          <Clock className="h-4 w-4 text-amber-500" />
-        )}
-        <AlertTitle>
-          {hasPastDue
-            ? "Action requise immédiatement"
-            : "Vérification en cours"}
-        </AlertTitle>
-        <AlertDescription>
-          {hasPastDue
-            ? "Certaines informations sont manquantes ou nécessitent votre attention immédiate."
-            : "Votre compte est en cours de vérification par Stripe."}
-        </AlertDescription>
-
-        <div className="mt-4">
-          <div className="flex justify-between text-xs mb-1">
-            <span>Progression</span>
-            <span>{progress}%</span>
-          </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-      </Alert>
-    );
-  };
-
-  // Afficher les exigences restantes
-  const renderRequirements = () => {
-    if (!kybStatus?.requirements || kybStatus.status === "verified") return null;
-
-    const allRequirements = [
-      ...(kybStatus.requirements.past_due || []).map((req: string) => ({ req, type: "past_due" })),
-      ...(kybStatus.requirements.currently_due || []).map((req: string) => ({ req, type: "currently_due" })),
-      ...(kybStatus.requirements.eventually_due || []).map((req: string) => ({ req, type: "eventually_due" })),
-    ];
-
-    if (allRequirements.length === 0) return null;
-
-    // Formater les exigences pour l'affichage
-    const formatRequirement = (req: string) => {
-      return req.replace(/\./g, " ").replace(/_/g, " ")
-        .split(" ")
-        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+  // Fonction pour traduire les exigences de Stripe
+  const translateRequirement = (requirement: string) => {
+    const translations: Record<string, string> = {
+      external_account: "Compte bancaire",
+      "tos_acceptance.date": "Acceptation des conditions d'utilisation",
+      "tos_acceptance.ip": "Adresse IP d'acceptation",
+      "business_profile.url": "URL du site web",
+      "business_profile.mcc": "Catégorie d'activité",
+      "company.address.city": "Ville de l'entreprise",
+      "company.address.line1": "Adresse de l'entreprise",
+      "company.address.postal_code": "Code postal de l'entreprise",
+      "company.name": "Nom de l'entreprise",
+      "company.phone": "Téléphone de l'entreprise",
+      "company.tax_id": "Numéro de TVA",
+      "person.address.city": "Ville du représentant légal",
+      "person.address.line1": "Adresse du représentant légal",
+      "person.address.postal_code": "Code postal du représentant légal",
+      "person.dob.day": "Jour de naissance du représentant légal",
+      "person.dob.month": "Mois de naissance du représentant légal",
+      "person.dob.year": "Année de naissance du représentant légal",
+      "person.email": "Email du représentant légal",
+      "person.first_name": "Prénom du représentant légal",
+      "person.last_name": "Nom du représentant légal",
+      "person.phone": "Téléphone du représentant légal",
+      "person.id_number": "Numéro d'identité du représentant légal",
     };
 
-    return (
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Informations requises</CardTitle>
-          <CardDescription>
-            Complétez ces informations pour finaliser la vérification de votre compte.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {allRequirements.map(({ req, type }, index) => (
-              <li key={index} className="flex items-start gap-2">
-                {type === "past_due" ? (
-                  <XCircle className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
-                ) : type === "currently_due" ? (
-                  <AlertCircle className="h-4 w-4 mt-0.5 text-amber-500 flex-shrink-0" />
-                ) : (
-                  <Clock className="h-4 w-4 mt-0.5 text-gray-400 flex-shrink-0" />
-                )}
-                <span
-                  className={`text-sm ${type === "past_due"
-                    ? "text-red-600 dark:text-red-400"
-                    : type === "currently_due"
-                      ? "text-amber-600 dark:text-amber-400"
-                      : "text-gray-600 dark:text-gray-400"
-                    }`}
-                >
-                  {formatRequirement(req)}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-4 flex flex-col gap-2">
-            <Button
-              onClick={() => startKYBVerification()}
-              disabled={isStartingVerification}
-              className="w-full"
-            >
-              Compléter les informations
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return translations[requirement] || requirement;
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Vérification d&apos;entreprise (KYB)</CardTitle>
-          <CardDescription>
-            Vérifiez votre entreprise pour pouvoir recevoir des paiements en ligne via Stripe.
-            Ce processus est appelé KYB (Know Your Business) et est requis par la réglementation.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoadingStatus ? (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          ) : (
-            <>
-              {renderVerificationStatus()}
+    <Card className="w-full shadow-sm">
+      <CardHeader>
+        <CardTitle>Compte Stripe Connect</CardTitle>
+        <CardDescription>
+          Gérez votre compte Stripe Connect pour recevoir des paiements
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ) : error ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Erreur</AlertTitle>
+            <AlertDescription>
+              {error}
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-2"
+                onClick={() => refetch()}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" /> Réessayer
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ) : !accountInfo ? (
+          <div>
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Compte non configuré</AlertTitle>
+              <AlertDescription>
+                Vous devez configurer votre compte Stripe Connect pour recevoir
+                des paiements.
+              </AlertDescription>
+            </Alert>
 
-              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-4">
+                Choisissez votre méthode d'onboarding :
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
-                  onClick={() => startKYBVerification()}
-                  disabled={isStartingVerification || isLoadingStatus}
-                  variant={kybStatus?.exists ? "outline" : "default"}
-                  className="flex-1"
+                  variant="outline"
+                  className="h-36 flex flex-col"
+                  onClick={() => startOnboarding()}
+                  disabled={onboardingLoading}
                 >
-                  {kybStatus?.exists
-                    ? "Continuer la vérification"
-                    : "Démarrer la vérification"}
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                  {onboardingLoading ? (
+                    <RefreshCw className="w-8 h-8 mb-2 animate-spin" />
+                  ) : (
+                    <ExternalLink className="w-8 h-8 mb-2" />
+                  )}
+                  <span className="font-medium">Onboarding standard</span>
+                  <span className="text-sm text-gray-500 text-center mt-2 px-4">
+                    Utiliser le formulaire préconfiguré de Stripe pour compléter
+                    l'onboarding
+                  </span>
                 </Button>
 
-                {kybStatus?.exists && (
-                  <Button
-                    onClick={() => goToDashboard()}
-                    disabled={isNavigatingToDashboard || isLoadingStatus}
-                    variant="default"
-                    className="flex-1"
-                  >
-                    Accéder au Dashboard Stripe
-                    <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  className="h-36 flex flex-col"
+                  onClick={() => setIsOnboardingModalOpen(true)}
+                >
+                  <Layers className="w-8 h-8 mb-2" />
+                  <span className="font-medium">Onboarding personnalisé</span>
+                  <span className="text-sm text-gray-500 text-center mt-2 px-4">
+                    Compléter les informations étape par étape dans une
+                    interface intégrée
+                  </span>
+                </Button>
               </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </div>
 
-      {renderRequirements()}
+            {/* Modale d'onboarding personnalisé */}
+            <StripeOnboardingDialog
+              isOpen={isOnboardingModalOpen}
+              onOpenChange={setIsOnboardingModalOpen}
+              title="Configuration de votre compte Stripe Connect"
+              trigger={null}
+              onComplete={() => {
+                setIsOnboardingModalOpen(false);
+                refetch();
+                toast.success("Configuration du compte terminée", {
+                  description:
+                    "Votre compte Stripe Connect est maintenant configuré.",
+                });
+              }}
+            />
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-500">
+                  ID du compte
+                </h3>
+                <p className="text-sm font-mono">{accountInfo.id}</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-500">Email</h3>
+                <p className="text-sm">{accountInfo.email}</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-500">
+                  Nom commercial
+                </h3>
+                <p className="text-sm">
+                  {accountInfo.businessProfile?.name || "Non défini"}
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-500">Site web</h3>
+                <p className="text-sm">
+                  {accountInfo.businessProfile?.url ? (
+                    <Link
+                      href={accountInfo.businessProfile.url}
+                      target="_blank"
+                      className="flex items-center text-blue-600 hover:underline"
+                    >
+                      {accountInfo.businessProfile.url}
+                      <ExternalLink className="ml-1 h-3 w-3" />
+                    </Link>
+                  ) : (
+                    "Non défini"
+                  )}
+                </p>
+              </div>
+            </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">À propos de la vérification KYB</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground space-y-4">
-          <p>
-            La vérification KYB (Know Your Business) est un processus réglementaire obligatoire
-            pour toutes les entreprises qui souhaitent recevoir des paiements en ligne.
-          </p>
-          <p>
-            Ce processus inclut la vérification de l&apos;identité de l&apos;entreprise, de ses dirigeants
-            et de ses bénéficiaires effectifs. Ces informations sont requises par Stripe et les
-            régulateurs financiers pour prévenir la fraude et le blanchiment d&apos;argent.
-          </p>
-          <p>
-            Toutes les informations fournies sont sécurisées et seront utilisées uniquement
-            à des fins de vérification.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                className={
+                  accountInfo.detailsSubmitted
+                    ? "bg-green-100 text-green-800 hover:bg-green-200"
+                    : "bg-red-100 text-red-800 hover:bg-red-200"
+                }
+              >
+                {accountInfo.detailsSubmitted
+                  ? "Informations complètes"
+                  : "Informations incomplètes"}
+              </Badge>
+              <Badge
+                className={
+                  accountInfo.chargesEnabled
+                    ? "bg-green-100 text-green-800 hover:bg-green-200"
+                    : "bg-red-100 text-red-800 hover:bg-red-200"
+                }
+              >
+                {accountInfo.chargesEnabled
+                  ? "Paiements activés"
+                  : "Paiements désactivés"}
+              </Badge>
+              <Badge
+                className={
+                  accountInfo.payoutsEnabled
+                    ? "bg-green-100 text-green-800 hover:bg-green-200"
+                    : "bg-red-100 text-red-800 hover:bg-red-200"
+                }
+              >
+                {accountInfo.payoutsEnabled
+                  ? "Virements activés"
+                  : "Virements désactivés"}
+              </Badge>
+            </div>
+
+            {(accountInfo.requirements.currently_due.length > 0 ||
+              accountInfo.requirements.eventually_due.length > 0 ||
+              accountInfo.requirements.past_due.length > 0) && (
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Informations manquantes</AlertTitle>
+                <AlertDescription>
+                  <div className="mt-2 space-y-4">
+                    {accountInfo.requirements.currently_due.length > 0 && (
+                      <div>
+                        <p className="font-medium">À fournir immédiatement :</p>
+                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
+                          {accountInfo.requirements.currently_due.map((req) => (
+                            <li key={req}>{translateRequirement(req)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {accountInfo.requirements.eventually_due.length > 0 && (
+                      <div>
+                        <p className="font-medium">À fournir prochainement :</p>
+                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
+                          {accountInfo.requirements.eventually_due.map(
+                            (req) => (
+                              <li key={req}>{translateRequirement(req)}</li>
+                            ),
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                    {accountInfo.requirements.past_due.length > 0 && (
+                      <div>
+                        <p className="font-medium">En retard :</p>
+                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
+                          {accountInfo.requirements.past_due.map((req) => (
+                            <li key={req}>{translateRequirement(req)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {accountInfo.detailsSubmitted &&
+              accountInfo.chargesEnabled &&
+              accountInfo.payoutsEnabled && (
+                <Alert className="bg-green-50 border-green-200">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <AlertTitle className="text-green-800">
+                    Compte vérifié
+                  </AlertTitle>
+                  <AlertDescription className="text-green-700">
+                    Votre compte Stripe Connect est complètement configuré et
+                    prêt à recevoir des paiements.
+                  </AlertDescription>
+                </Alert>
+              )}
+          </div>
+        )}
+      </CardContent>
+      <CardFooter className="flex flex-col items-start gap-4">
+        <div className="w-full flex justify-between">
+          <div>
+            {accountInfo?.detailsSubmitted && (
+              <Badge
+                variant={
+                  accountInfo.payoutsEnabled && accountInfo.chargesEnabled
+                    ? "default"
+                    : "outline"
+                }
+                className={`mb-2 ${
+                  accountInfo.payoutsEnabled && accountInfo.chargesEnabled
+                    ? "bg-green-100 text-green-800 hover:bg-green-100"
+                    : ""
+                }`}
+              >
+                {accountInfo.payoutsEnabled && accountInfo.chargesEnabled ? (
+                  <>
+                    <CheckCircle2 className="mr-1 h-3 w-3" />
+                    Compte activé
+                  </>
+                ) : (
+                  "Configuration en cours"
+                )}
+              </Badge>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => refetch()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Actualiser
+            </Button>
+
+            {(!accountInfo?.payoutsEnabled || !accountInfo?.chargesEnabled) && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsOnboardingModalOpen(true)}
+                >
+                  <Layers className="mr-2 h-4 w-4" />
+                  Utiliser l'onboarding personnalisé
+                </Button>
+
+                <Button onClick={startOnboarding} disabled={onboardingLoading}>
+                  {onboardingLoading ? (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      Chargement...
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      {accountInfo?.detailsSubmitted
+                        ? "Mettre à jour les informations"
+                        : "Compléter l'onboarding standard"}
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
   );
-};
-
-export default KYBSection;
+}

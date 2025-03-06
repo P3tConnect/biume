@@ -10,6 +10,8 @@ import { OptionForm } from "./components/options/option-form";
 import { Loader2 } from "lucide-react";
 
 export const OptionsSection = () => {
+  const [isCreating, setIsCreating] = useState(false);
+
   const { data: options, isLoading } = useQuery({
     queryKey: ["organization-options"],
     queryFn: () => getOptionsFromOrganization({}),
@@ -23,7 +25,6 @@ export const OptionsSection = () => {
     );
   }
 
-  const [isCreating, setIsCreating] = useState(false);
   const hasOptions = options?.data && options.data.length > 0;
 
   return (

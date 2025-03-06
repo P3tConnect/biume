@@ -10,6 +10,8 @@ import { ServiceForm } from "./components/services/services-form";
 import { Loader2 } from "lucide-react";
 
 export const ServicesSection = () => {
+  const [isCreating, setIsCreating] = useState(false);
+
   const { data: services, isLoading } = useQuery({
     queryKey: ["organization-services"],
     queryFn: () => getServicesFromOrganization({}),
@@ -23,7 +25,6 @@ export const ServicesSection = () => {
     );
   }
 
-  const [isCreating, setIsCreating] = useState(false);
   const hasServices = services?.data && services.data.length > 0;
 
   return (

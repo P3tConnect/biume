@@ -40,7 +40,6 @@ import { loginSchema } from "@/src/lib";
 import { z } from "zod";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { createPaymentIntent } from "@/src/actions/stripe.action";
 
 interface BookingCardProps {
   services: Service[];
@@ -168,15 +167,15 @@ export function BookingCard({
   const params = useParams();
   const companyId = params.companyId as string;
 
-  const { mutateAsync } = useMutation({
-    mutationFn: createPaymentIntent,
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
+  // const { mutateAsync } = useMutation({
+  //   mutationFn: createPaymentIntent,
+  //   onSuccess: (data) => {
+  //     console.log(data);
+  //   },
+  //   onError: (error) => {
+  //     console.error(error);
+  //   },
+  // });
 
   const handleBooking = async () => {
     const servicePrice = selectedServiceData?.price ?? 0;
@@ -195,12 +194,6 @@ export function BookingCard({
     const amount = servicePrice + optionsPrice + homeVisitPrice;
 
     console.log(amount, "amount");
-
-    await mutateAsync({
-      organizationId: companyId,
-      amount: amount,
-      serviceId: selectedService ?? undefined,
-    });
   };
 
   // Transformer les options de l'organisation au format attendu par le composant OptionsStep

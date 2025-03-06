@@ -81,6 +81,14 @@ export function ClientNavbar() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
+      const result = await organization.setActive({
+        organizationId: "",
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
       router.push(`/dashboard/user/${session?.user?.id}`);
       setIsLoading(false);
     } catch (error) {
@@ -102,6 +110,14 @@ export function ClientNavbar() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      const result = await organization.setActive({
+        organizationId: orgId,
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
 
       router.push(`/dashboard/organization/${orgId}`);
       setIsLoading(false);

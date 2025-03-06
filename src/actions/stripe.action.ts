@@ -97,132 +97,6 @@ export const getStripeBalance = createServerAction(
   },
 );
 
-export const createPaymentIntent = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    amount: z.number(),
-    serviceId: z.string().optional(),
-    appointmentId: z.string().optional(),
-  }),
-  async (input, ctx) => {
-    try {
-      // Vérifier que l'utilisateur est connecté
-      if (!ctx.user) {
-        throw new ActionError("Utilisateur non authentifié");
-      }
-
-      // Récupérer l'organisation du professionnel
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        throw new ActionError(
-          "Organisation du professionnel non trouvée ou compte Stripe non configuré",
-        );
-      }
-
-      // Vérifier si le stripeId est un compte connecté (commence par acct_) ou un compte client (commence par cus_)
-      const isConnectedAccount = org.companyStripeId.startsWith("acct_");
-
-      // Calculer les frais de plateforme (5%)
-      const applicationFeeAmount = Math.round(input.amount * 0.05);
-
-      let session;
-
-      if (isConnectedAccount) {
-        // Créer une session de paiement avec transfert vers le professionnel
-        session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          mode: "payment",
-          line_items: [
-            {
-              price_data: {
-                currency: "eur",
-                product_data: {
-                  name: `Réservation de ${ctx.user.id} - ${ctx.user.name} à ${org.id} - ${org.name}`,
-                },
-                unit_amount: input.amount,
-              },
-              quantity: 1,
-            },
-          ],
-          success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/success?org=${org.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/failure?org=${org.id}`,
-          customer: ctx.user.stripeId || "",
-          payment_intent_data: {
-            application_fee_amount: applicationFeeAmount,
-            transfer_data: {
-              destination: org.companyStripeId,
-            },
-            metadata: {
-              userId: ctx.user.id,
-              organizationId: org.id,
-              serviceId: input.serviceId || "",
-              appointmentId: input.appointmentId || "",
-            },
-          },
-        });
-      } else {
-        // Le professionnel n'a pas de compte connecté, utiliser une session standard
-        // et gérer le transfert manuellement plus tard
-        session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          mode: "payment",
-          line_items: [
-            {
-              price_data: {
-                currency: "eur",
-                product_data: {
-                  name: `Réservation de ${ctx.user.id} - ${ctx.user.name} à ${org.id} - ${org.name}`,
-                },
-                unit_amount: input.amount,
-              },
-              quantity: 1,
-            },
-          ],
-          success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/success?org=${org.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/failure?org=${org.id}`,
-          customer: ctx.user.stripeId || "",
-          metadata: {
-            userId: ctx.user.id,
-            organizationId: org.id,
-            serviceId: input.serviceId || "",
-            appointmentId: input.appointmentId || "",
-            requiresManualTransfer: "true",
-            applicationFeeAmount: applicationFeeAmount.toString(),
-            destination: org.companyStripeId,
-          },
-        });
-      }
-
-      if (!session.url) {
-        throw new ActionError("Impossible de créer l'URL de paiement");
-      }
-
-      // Enregistrer la transaction dans la base de données
-      // Note: Nous utilisons le payment_intent qui sera créé par Checkout
-      // mais nous ne le connaissons pas encore à ce stade
-      await db.insert(transaction).values({
-        intentId: session.id, // Utiliser l'ID de session comme référence
-        amount: input.amount,
-        from: ctx.user.id,
-        to: org.id,
-        status: "pending", // La transaction est en attente jusqu'au paiement
-        createdAt: new Date(),
-      });
-
-      return session.url;
-    } catch (error) {
-      console.error("Erreur lors de la création du paiement:", error);
-      throw new ActionError(
-        "Erreur lors de la création du paiement pour le professionnel",
-      );
-    }
-  },
-  [requireAuth],
-);
-
 export const updateOrganizationPlan = createServerAction(
   z.object({ organizationId: z.string(), plan: z.string() }),
   async (input, ctx) => {
@@ -382,396 +256,63 @@ export const getInvoiceHistory = createServerAction(
   [requireAuth, requireOwner, requireFullOrganization],
 );
 
-// KYB (Know Your Business) actions
-export const createKYBVerification = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    businessName: z.string(),
-    businessType: z.string(),
-    businessNumber: z.string().optional(),
-    country: z.string(),
-    address: z.object({
-      city: z.string(),
-      line1: z.string(),
-      line2: z.string().optional(),
-      postalCode: z.string(),
-      state: z.string().optional(),
-    }),
-    phone: z.string(),
-    email: z.string().email(),
-    website: z.string().url().optional(),
-    owners: z.array(
-      z.object({
-        firstName: z.string(),
-        lastName: z.string(),
-        email: z.string().email(),
-        phone: z.string(),
-        address: z.object({
-          city: z.string(),
-          line1: z.string(),
-          line2: z.string().optional(),
-          postalCode: z.string(),
-          state: z.string().optional(),
-          country: z.string(),
-        }),
-        dateOfBirth: z.object({
-          day: z.number(),
-          month: z.number(),
-          year: z.number(),
-        }),
-        idNumber: z.string().optional(),
-        title: z.string(),
-        ownership_percentage: z.number(),
-      }),
-    ).optional(),
-  }),
+export const getStripeConnectAccountInfo = createServerAction(
+  z.object({}),
   async (input, ctx) => {
     try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org) {
-        throw new ActionError("Organisation non trouvée");
+      if (!ctx.fullOrganization?.companyStripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe Connect non configuré",
+        );
       }
 
-      // Créer ou mettre à jour le compte Connect si nécessaire
-      if (!org.companyStripeId) {
-        // Créer un compte Stripe Connect
-        const account = await stripe.accounts.create({
-          type: 'custom',
-          country: input.country,
-          email: input.email,
-          business_type: input.businessType === 'individual' ? 'individual' : 'company',
-          company: {
-            name: input.businessName,
-            phone: input.phone,
-            tax_id: input.businessNumber || undefined,
-            address: {
-              city: input.address.city,
-              line1: input.address.line1,
-              line2: input.address.line2 || undefined,
-              postal_code: input.address.postalCode,
-              state: input.address.state || undefined,
-              country: input.country,
-            },
-          },
-          capabilities: {
-            card_payments: { requested: true },
-            transfers: { requested: true },
-          },
-          business_profile: {
-            url: input.website || '',
-            mcc: '8999', // Professional Services
-          },
-          tos_acceptance: {
-            date: Math.floor(Date.now() / 1000),
-            ip: '127.0.0.1', // Valeur par défaut
-          },
-        });
-
-        // Mettre à jour l'ID Stripe dans l'organisation
-        await db.update(organization).set({
-          companyStripeId: account.id,
-        }).where(eq(organization.id, input.organizationId));
-
-        return {
-          success: true,
-          accountId: account.id,
-          message: "Compte Stripe créé avec succès",
-        };
-      } else {
-        // Mettre à jour le compte existant
-        await stripe.accounts.update(org.companyStripeId, {
-          email: input.email,
-          company: {
-            name: input.businessName,
-            phone: input.phone,
-            tax_id: input.businessNumber || undefined,
-            address: {
-              city: input.address.city,
-              line1: input.address.line1,
-              line2: input.address.line2 || undefined,
-              postal_code: input.address.postalCode,
-              state: input.address.state || undefined,
-              country: input.country,
-            },
-          },
-          business_profile: {
-            url: input.website || '',
-          },
-        });
-
-        return {
-          success: true,
-          accountId: org.companyStripeId,
-          message: "Compte Stripe mis à jour avec succès",
-        };
-      }
-    } catch (error: any) {
-      console.error("Erreur KYB:", error);
-      throw new ActionError(error.message || "Erreur lors de la vérification KYB");
-    }
-  }
-);
-
-export const addKYBPerson = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    person: z.object({
-      firstName: z.string(),
-      lastName: z.string(),
-      email: z.string().email(),
-      phone: z.string(),
-      address: z.object({
-        city: z.string(),
-        line1: z.string(),
-        line2: z.string().optional(),
-        postalCode: z.string(),
-        state: z.string().optional(),
-        country: z.string(),
-      }),
-      dateOfBirth: z.object({
-        day: z.number(),
-        month: z.number(),
-        year: z.number(),
-      }),
-      idNumber: z.string().optional(),
-      title: z.string(),
-      ownership_percentage: z.number(),
-    }),
-  }),
-  async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré");
-      }
-
-      // Créer une personne dans Stripe Connect
-      const person = await stripe.accounts.createPerson(
-        org.companyStripeId,
-        {
-          first_name: input.person.firstName,
-          last_name: input.person.lastName,
-          email: input.person.email,
-          phone: input.person.phone,
-          address: {
-            city: input.person.address.city,
-            line1: input.person.address.line1,
-            line2: input.person.address.line2 || undefined,
-            postal_code: input.person.address.postalCode,
-            state: input.person.address.state || undefined,
-            country: input.person.address.country,
-          },
-          dob: {
-            day: input.person.dateOfBirth.day,
-            month: input.person.dateOfBirth.month,
-            year: input.person.dateOfBirth.year,
-          },
-          id_number: input.person.idNumber,
-          relationship: {
-            title: input.person.title,
-            owner: input.person.ownership_percentage > 0,
-            percent_ownership: input.person.ownership_percentage,
-            representative: input.person.title === "Représentant légal",
-          },
-        }
+      const account = await stripe.accounts.retrieve(
+        ctx.fullOrganization.companyStripeId,
       );
 
       return {
-        success: true,
-        personId: person.id,
-        message: "Personne ajoutée avec succès",
-      };
-    } catch (error: any) {
-      console.error("Erreur ajout personne KYB:", error);
-      throw new ActionError(error.message || "Erreur lors de l'ajout de la personne");
-    }
-  }
-);
-
-export const getKYBStatus = createServerAction(
-  z.object({
-    organizationId: z.string(),
-  }),
-  async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        return {
-          exists: false,
-          status: "not_started",
-          requirements: null,
-          accountId: null,
-        };
-      }
-
-      // Récupérer le statut du compte
-      const account = await stripe.accounts.retrieve(org.companyStripeId);
-      const requirements = account.requirements;
-
-      // Récupérer les personnes associées
-      const persons = await stripe.accounts.listPersons(org.companyStripeId);
-
-      return {
-        exists: true,
-        status: account.charges_enabled ? "verified" : "pending",
-        requirements,
-        accountId: org.companyStripeId,
-        persons: persons.data,
+        id: account.id,
+        chargesEnabled: account.charges_enabled,
+        payoutsEnabled: account.payouts_enabled,
+        detailsSubmitted: account.details_submitted,
+        requirements: account.requirements,
+        email: account.email,
+        businessProfile: account.business_profile,
       };
     } catch (error) {
-      console.error("Erreur récupération statut KYB:", error);
-      throw new ActionError("Erreur lors de la récupération du statut KYB");
+      console.error("Erreur lors de la récupération du compte Stripe:", error);
+      throw new ActionError(
+        "Impossible de récupérer les informations du compte Stripe Connect",
+      );
     }
-  }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
 );
 
-export const uploadKYBDocument = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    documentType: z.string(),
-    file: z.any(),
-    personId: z.string().optional(),
-  }),
+export const createStripeConnectOnboardingLink = createServerAction(
+  z.object({}),
   async (input, ctx) => {
     try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré");
-      }
-
-      // Convertir le fichier en Buffer
-      const fileBuffer = Buffer.from(await input.file.arrayBuffer());
-
-      // Créer un fichier dans Stripe
-      const file = await stripe.files.create({
-        purpose: 'identity_document',
-        file: {
-          data: fileBuffer,
-          name: input.file.name,
-          type: input.file.type,
-        }
-      }, {
-        stripeAccount: org.companyStripeId,
-      });
-
-      // Associer le document selon son type
-      if (input.personId) {
-        // Document pour une personne
-        await stripe.accounts.updatePerson(
-          org.companyStripeId,
-          input.personId,
-          {
-            verification: {
-              document: {
-                front: file.id,
-              },
-            },
-          }
-        );
-      } else {
-        // Document pour l'entreprise
-        await stripe.accounts.update(
-          org.companyStripeId,
-          {
-            documents: {
-              company_license: {
-                files: [file.id],
-              },
-            },
-          }
+      if (!ctx.fullOrganization?.companyStripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe Connect non configuré",
         );
       }
 
-      return {
-        success: true,
-        fileId: file.id,
-        message: "Document téléchargé avec succès",
-      };
-    } catch (error: any) {
-      console.error("Erreur upload document KYB:", error);
-      throw new ActionError(error.message || "Erreur lors du téléchargement du document");
-    }
-  }
-);
-
-export const createKYBOnboardingLink = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    returnUrl: z.string().url(),
-  }),
-  async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré");
-      }
-
-      // Créer un lien d'onboarding
       const accountLink = await stripe.accountLinks.create({
-        account: org.companyStripeId,
-        refresh_url: input.returnUrl,
-        return_url: input.returnUrl,
-        type: 'account_onboarding',
+        account: ctx.fullOrganization.companyStripeId,
+        refresh_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        type: "account_onboarding",
       });
 
-      return {
-        success: true,
-        url: accountLink.url,
-      };
+      return accountLink.url;
     } catch (error) {
-      console.error("Erreur création lien onboarding KYB:", error);
-      throw new ActionError("Erreur lors de la création du lien d'onboarding");
-    }
-  }
-);
-
-export const createKYBDashboardLink = createServerAction(
-  z.object({
-    organizationId: z.string(),
-  }),
-  async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.organizationId),
-      });
-
-      if (!org || !org.companyStripeId) {
-        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré");
-      }
-
-      // Créer un lien vers le dashboard Stripe
-      const loginLink = await stripe.accounts.createLoginLink(
-        org.companyStripeId
+      console.error("Erreur lors de la création du lien d'onboarding:", error);
+      throw new ActionError(
+        "Impossible de créer le lien d'onboarding Stripe Connect",
       );
-
-      return {
-        success: true,
-        url: loginLink.url,
-      };
-    } catch (error) {
-      console.error("Erreur création lien dashboard KYB:", error);
-      throw new ActionError("Erreur lors de la création du lien vers le dashboard");
     }
-  }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
 );
