@@ -68,9 +68,9 @@ export const ServiceForm = ({
     mutationFn: createService,
     onSuccess: () => {
       toast.success("Service créé avec succès!");
+      queryClient.invalidateQueries({ queryKey: ["organization-services"] });
       onOpenChange(false);
       reset();
-      queryClient.invalidateQueries({ queryKey: ["services"] });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -112,8 +112,13 @@ export const ServiceForm = ({
         <div className="max-h-[calc(85vh-10rem)] overflow-y-auto pr-2 -mr-2">
           <Form {...form}>
             <form onSubmit={onSubmit} className="space-y-4">
-              <div className={cn("space-y-4", "hover:shadow-lg hover:border-primary/20", "transition-all duration-300")}>
-
+              <div
+                className={cn(
+                  "space-y-4",
+                  "hover:shadow-lg hover:border-primary/20",
+                  "transition-all duration-300",
+                )}
+              >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Image du service - première colonne */}
                   <FormField
@@ -157,11 +162,18 @@ export const ServiceForm = ({
                                   }}
                                   value={
                                     field.value
-                                      ? [{ url: field.value, name: field.value }]
+                                      ? [
+                                          {
+                                            url: field.value,
+                                            name: field.value,
+                                          },
+                                        ]
                                       : []
                                   }
                                   uploadEndpoint="imageUploader"
-                                  acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
+                                  acceptedFileTypes={
+                                    DEFAULT_ACCEPTED_IMAGE_TYPES
+                                  }
                                   placeholder={{
                                     dragActive: "Relâchez pour ajouter l'image",
                                     dragInactive: "Déposez votre image ici",

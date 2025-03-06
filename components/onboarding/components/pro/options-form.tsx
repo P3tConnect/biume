@@ -213,12 +213,14 @@ export function OptionsForm({
             type="button"
             variant="outline"
             className="rounded-xl"
+            disabled={isLoading}
             onClick={previousStep}
           >
             ← Précédent
           </Button>
           <div className="flex gap-3">
             <Button
+              disabled={isLoading}
               type="button"
               variant="ghost"
               onClick={nextStep}
@@ -226,7 +228,11 @@ export function OptionsForm({
             >
               Passer
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="rounded-xl px-6"
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />

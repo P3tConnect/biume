@@ -163,69 +163,88 @@ export const getCurrentOrganization = createServerAction(
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
-    console.log(ctx.user, "user");
-    try {
-      const data = input;
+    // try {
+    const data = input;
 
-      console.log(ctx.user, "user before create organization");
+    const result = await auth.api.createOrganization({
+      body: {
+        name: data.name as string,
+        slug: data.name?.toLowerCase().replace(/\s+/g, "-") as string,
+        logo: data.logo,
+        metadata: {},
+        userId: ctx.user?.id,
+      },
+    });
 
-      const result = await auth.api.createOrganization({
-        body: {
-          name: data.name as string,
-          slug: data.name?.toLowerCase().replace(/\s+/g, "-") as string,
-          logo: data.logo,
-          metadata: {},
-          userId: ctx.user?.id,
-        },
-      });
-
-      if (!result) {
-        throw new ActionError("Organization not created");
-      }
-
-      // Créer une progression
-      const [progression] = await db
-        .insert(progressionTable)
-        .values({
-          docs: false,
-          cancelPolicies: false,
-          reminders: false,
-          services: false,
-        })
-        .returning();
-
-      const stripeCompany = await stripe.accounts.create({
-        company: {
-          name: data.name as string,
-        },
-      });
-
-      const [organizationResult] = await db
-        .update(organizationTable)
-        .set({
-          email: data.email,
-          description: data.description,
-          progressionId: progression.id,
-          companyType: data.companyType,
-          atHome: data.atHome,
-          stripeId: stripeCompany.id,
-        })
-        .where(eq(organizationTable.id, result?.id as string))
-        .returning()
-        .execute();
-
-      await auth.api.setActiveOrganization({
-        headers: await headers(),
-        body: {
-          organizationId: result?.id,
-        },
-      });
-
-      // Retourner les données de l'organisation créée
-      return organizationResult;
-    } catch (err) {
-      throw new ActionError("Organization already exists");
+    if (!result) {
+      throw new ActionError("Organization not created");
     }
+
+    // Créer une progression
+    const [progression] = await db
+      .insert(progressionTable)
+      .values({
+        docs: false,
+        cancelPolicies: false,
+        reminders: false,
+        services: false,
+      })
+      .returning();
+
+    const stripeCompany = await stripe.accounts.create({
+      company: {
+        name: result?.name!,
+      },
+      type: "custom",
+      metadata: {
+        organizationId: result?.id!,
+        userId: ctx?.user?.id!,
+      },
+      capabilities: {
+        card_payments: {
+          requested: true,
+        },
+        transfers: {
+          requested: true,
+        },
+      },
+    });
+
+    const stripeCustomer = await stripe.customers.create({
+      name: result?.name!,
+      metadata: {
+        organizationId: result?.id!,
+        userId: ctx?.user?.id!,
+      },
+    });
+
+    const [organizationResult] = await db
+      .update(organizationTable)
+      .set({
+        email: data.email,
+        description: data.description,
+        progressionId: progression.id,
+        companyType: data.companyType,
+        atHome: data.atHome,
+        companyStripeId: stripeCompany.id,
+        customerStripeId: stripeCustomer.id,
+      })
+      .where(eq(organizationTable.id, result?.id as string))
+      .returning()
+      .execute();
+
+    await auth.api.setActiveOrganization({
+      headers: await headers(),
+      body: {
+        organizationId: result?.id,
+      },
+    });
+
+    // Retourner les données de l'organisation créée
+    return organizationResult;
+    // } catch (err) {
+    //   throw new ActionError("Organization already exists");
+    // }
   },
   [requireAuth],
 );
@@ -233,7 +252,7 @@ export const createOrganization = createServerAction(
 export const updateOrganization = createServerAction(
   organizationFormSchema,
   async (input, ctx) => {
-    const data = await db
+    const [data] = await db
       .update(organizationTable)
       .set({
         name: input.name,
@@ -255,9 +274,7 @@ export const updateOrganization = createServerAction(
       throw new ActionError("Organization not updated");
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
-
-    return data;
+    return data as Organization;
   },
   [requireAuth, requireOwner],
 );

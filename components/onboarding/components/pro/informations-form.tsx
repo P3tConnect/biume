@@ -80,10 +80,7 @@ const InformationsForm = ({
     },
   });
 
-  console.log(form.formState.errors, "errors");
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data, "data");
     await mutateAsync(data);
   });
 
@@ -356,6 +353,7 @@ const InformationsForm = ({
         {/* Footer with buttons */}
         <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
           <Button
+            disabled={isLoading}
             type="button"
             variant="outline"
             className="rounded-xl"
@@ -365,6 +363,7 @@ const InformationsForm = ({
           </Button>
           <div className="flex gap-3">
             <Button
+              disabled={isLoading}
               type="button"
               variant="ghost"
               onClick={nextStep}
@@ -372,7 +371,11 @@ const InformationsForm = ({
             >
               Passer
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="rounded-xl px-6"
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />

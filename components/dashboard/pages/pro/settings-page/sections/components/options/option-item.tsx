@@ -1,6 +1,8 @@
+"use client";
+
 import { Option } from "@/src/db";
 import { Button } from "@/components/ui/button";
-import { Euro, Pencil } from "lucide-react";
+import { Euro, Pencil, Trash } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
 interface OptionItemProps {

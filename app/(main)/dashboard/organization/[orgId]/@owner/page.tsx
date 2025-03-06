@@ -3,6 +3,7 @@ import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/pro/dashbo
 import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appointment-requests";
 import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs";
 import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics";
+import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card";
 
 export const metadata: Metadata = {
   title: "Dashboard Vétérinaire",
@@ -23,6 +24,7 @@ const DashboardHomeProPage = () => {
       <DashboardHomeHeader />
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
         <div className="space-y-4 lg:col-span-2 h-full">
+          <StripeSetupCard />
           <UnifiedMetrics />
           <AppointmentRequests />
         </div>

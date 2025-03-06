@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 import {
   Card,
@@ -81,13 +81,19 @@ export function SubscriptionStep() {
   const { data: activeOrg } = useActiveOrganization();
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
     onSuccess: (data) => {
+      setIsLoading(false);
       window.location.href = data.data!;
     },
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onError: (error: { message: string }) => {
+      setIsLoading(false);
       toast.error(error.message);
     },
   });
@@ -145,7 +151,14 @@ export function SubscriptionStep() {
                   })
                 }
               >
-                Sélectionner {plan.name}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>En cours...</span>
+                  </>
+                ) : (
+                  `Sélectionner ${plan.name}`
+                )}
               </Button>
             </CardFooter>
           </Card>

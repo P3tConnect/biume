@@ -29,6 +29,7 @@ import {
   CredenzaTitle,
 } from "@/components/ui";
 import ImagesStep from "../pro/images-step";
+import { createOrganization } from "@/src/actions/organization.action";
 
 const Stepper = () => {
   const {
@@ -50,13 +51,21 @@ const Stepper = () => {
       setIsLoading(true);
       const name = generateMigrationName();
 
-      const result = await organizationUtil.create({
+      // Créer directement avec l'API d'authentification
+      const organizationResult = await organizationUtil.create({
         name: name,
         slug: name.toLowerCase().replace(/ /g, "-"),
         logo: "",
         metadata: {},
         userId: session?.user.id,
       });
+
+      if (!organizationResult.data) {
+        throw new Error("Impossible de créer l'organisation");
+      }
+
+      const organizationId = organizationResult.data.id;
+
       // Créer une progression
       const [progression] = await db
         .insert(progressionTable)
@@ -70,29 +79,56 @@ const Stepper = () => {
 
       // Définir l'organisation comme active
       await organizationUtil.setActive({
-        organizationId: result.data?.id!,
+        organizationId: organizationId,
       });
 
-      // Marquer l'onboarding comme terminé et ajouter la progression
-      const stripeCompany = await stripe.accounts.create({
-        company: {
-          name: result.data?.name!,
-        },
-      });
+      // Créer les comptes Stripe
+      let companyStripeId = null;
+      let customerStripeId = null;
 
-      const stripeCustomer = await stripe.customers.create({
-        email: session?.user.email!,
-      });
+      try {
+        // Créer le client Stripe
+        const stripeCustomer = await stripe.customers.create({
+          email: session?.user.email!,
+          name: name,
+          metadata: {
+            organizationId: organizationId,
+            userId: session?.user.id!,
+          },
+        });
+        customerStripeId = stripeCustomer.id;
+        console.log("Client Stripe créé avec succès:", customerStripeId);
 
+        // Créer le compte Stripe Connect
+        const stripeCompany = await stripe.accounts.create({
+          type: "standard",
+          country: "FR",
+          email: session?.user.email!,
+          metadata: {
+            organizationId: organizationId,
+            userId: session?.user.id!,
+          },
+        });
+        companyStripeId = stripeCompany.id;
+        console.log("Compte Stripe Connect créé avec succès:", companyStripeId);
+      } catch (stripeError) {
+        console.error(
+          "Erreur lors de la création des comptes Stripe:",
+          stripeError,
+        );
+        // Continuer même en cas d'erreur Stripe - l'organisation a été créée
+      }
+
+      // Mettre à jour l'organisation dans la base de données
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
-          companyStripeId: stripeCompany.id,
-          customerStripeId: stripeCustomer.id,
+          companyStripeId: companyStripeId,
+          customerStripeId: customerStripeId,
         })
-        .where(eq(organizationTable.id, result.data?.id as string))
+        .where(eq(organizationTable.id, organizationId))
         .execute();
 
       // Mettre à jour l'utilisateur comme pro
@@ -107,10 +143,44 @@ const Stepper = () => {
       toast.success("Configuration rapide terminée !");
     } catch (error) {
       console.error("Erreur lors du skip:", error);
-      toast.error("Une erreur est survenue", {
-        description: "Veuillez réessayer plus tard",
-        duration: 5000,
-      });
+      // Afficher plus de détails sur l'erreur
+      if (error instanceof Error) {
+        console.error("Message d'erreur:", error.message);
+        console.error("Stack trace:", error.stack);
+
+        // Si l'erreur est liée à Stripe, proposer la page de configuration manuelle
+        if (
+          error.message.includes("Stripe") ||
+          error.message.toLowerCase().includes("stripe")
+        ) {
+          toast.error(`Erreur: ${error.message}`, {
+            description: (
+              <div>
+                <p>Veuillez réessayer plus tard ou contacter l'assistance</p>
+                <a
+                  href="/dashboard/stripe-setup"
+                  className="text-primary underline font-medium mt-2 block"
+                >
+                  Configurer Stripe manuellement
+                </a>
+              </div>
+            ),
+            duration: 15000,
+          });
+        } else {
+          toast.error(`Erreur: ${error.message}`, {
+            description:
+              "Veuillez réessayer plus tard ou contacter l'assistance",
+            duration: 10000,
+          });
+        }
+      } else {
+        toast.error("Une erreur est survenue", {
+          description: "Veuillez réessayer plus tard ou contacter l'assistance",
+          duration: 5000,
+        });
+      }
+      setIsLoading(false);
     }
   };
 

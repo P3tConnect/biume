@@ -15,13 +15,14 @@ import { Progress } from "@/components/ui/progress";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { OrganizationImage } from "@/src/db";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ImagesSectionClientProps {
-  images: OrganizationImage[]
+  images: OrganizationImage[];
 }
 
 const ImagesSectionClient = ({ images }: ImagesSectionClientProps) => {
+  const queryClient = useQueryClient();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { startUpload } = useUploadThing("documentsUploader", {
@@ -34,12 +35,14 @@ const ImagesSectionClient = ({ images }: ImagesSectionClientProps) => {
     mutationFn: addImagesToOrganization,
     onSuccess: () => {
       toast.success("Images ajoutées avec succès");
+      queryClient.invalidateQueries({
+        queryKey: ["organization-images"],
+      });
     },
     onError: (error) => {
       toast.error(error.message);
     },
-  },
-  );
+  });
 
   const { mutateAsync: deleteImage } = useMutation({
     mutationFn: deleteOrganizationImage,
@@ -125,10 +128,7 @@ const ImagesSectionClient = ({ images }: ImagesSectionClientProps) => {
       {images.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {images.map((image, index) => (
-            <div
-              key={index}
-              className="relative group aspect-square w-64 h-64"
-            >
+            <div key={index} className="relative group aspect-square w-64 h-64">
               <Image
                 src={image.imageUrl ?? ""}
                 alt={image.name ?? ""}
@@ -151,4 +151,4 @@ const ImagesSectionClient = ({ images }: ImagesSectionClientProps) => {
   );
 };
 
-export default ImagesSectionClient; 
+export default ImagesSectionClient;

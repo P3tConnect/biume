@@ -64,8 +64,6 @@ export const createOption = createServerAction(
       throw new ActionError("Option not created");
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
-
     return data;
   },
   [requireAuth, requireOwner, requireFullOrganization],
@@ -112,8 +110,6 @@ export const updateOption = createServerAction(
       throw new ActionError("Option not updated");
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
-
     return data;
   },
   [requireAuth, requireOwner, requireFullOrganization],
@@ -122,7 +118,7 @@ export const updateOption = createServerAction(
 export const deleteOption = createServerAction(
   z.string(),
   async (input, ctx) => {
-    const data = await db
+    const [data] = await db
       .delete(optionsTable)
       .where(eq(optionsTable.id, input))
       .returning()
@@ -132,9 +128,7 @@ export const deleteOption = createServerAction(
       throw new ActionError("Option not deleted");
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
-
-    return data;
+    return data as Option;
   },
   [requireAuth, requireOwner, requireFullOrganization],
 );

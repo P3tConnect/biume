@@ -294,6 +294,7 @@ const ServicesForm = ({
             type="button"
             variant="outline"
             className="rounded-xl"
+            disabled={isLoading}
             onClick={previousStep}
           >
             ← Précédent
@@ -302,12 +303,17 @@ const ServicesForm = ({
             <Button
               type="button"
               variant="ghost"
+              disabled={isLoading}
               onClick={nextStep}
               className="text-muted-foreground"
             >
               Passer
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="rounded-xl px-6"
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />

@@ -179,7 +179,11 @@ export function DocumentsForm({
               >
                 Passer
               </Button>
-              <Button type="submit" className="rounded-xl px-6">
+              <Button
+                disabled={isLoading}
+                type="submit"
+                className="rounded-xl px-6"
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />

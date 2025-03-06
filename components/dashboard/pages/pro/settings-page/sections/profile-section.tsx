@@ -11,6 +11,7 @@ import { Organization } from "@/src/db";
 import { ActionResult } from "@/src/lib";
 import { getCurrentOrganization } from "@/src/actions/organization.action";
 import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -60,10 +61,18 @@ export const organizationImagesFormSchema = z.object({
 });
 
 export const ProfileSection = () => {
-  const { data: org } = useQuery({
-    queryKey: ["organization"],
+  const { data: org, isLoading } = useQuery({
+    queryKey: ["organization-profile"],
     queryFn: () => getCurrentOrganization({}),
   });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader2 className="w-10 h-10 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
