@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   createStripeConnectOnboardingLink,
   getStripeConnectAccountInfo,
@@ -22,16 +22,13 @@ import {
   AlertCircle,
   CheckCircle2,
   ExternalLink,
-  PlusCircle,
   RefreshCw,
   Layers,
+  XCircle,
+  Clock,
 } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import {
-  StripeOnboardingProcess,
-  StripeOnboardingDialog,
-} from "./stripe-onboarding/OnboardingProcess";
 
 interface StripeConnectAccountInfo {
   id: string;
@@ -51,12 +48,76 @@ interface StripeConnectAccountInfo {
   };
 }
 
+// Ajouter ce composant pour l'indicateur de progression circulaire
+const CircularProgress = ({
+  value,
+  size = 120,
+  strokeWidth = 10,
+  className = "",
+  label,
+  color = "text-primary"
+}: {
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+  className?: string;
+  label?: string | React.ReactNode;
+  color?: string;
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const dash = (value * circumference) / 100;
+
+  return (
+    <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
+      {/* Background circle */}
+      <svg width={size} height={size} className="rotate-[-90deg]">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="transparent"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="text-gray-200 dark:text-gray-800"
+        />
+        {/* Progress circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="transparent"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference - dash}
+          className={color}
+          strokeLinecap="round"
+        />
+      </svg>
+      {/* Center content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        {typeof label !== 'undefined' ? (
+          label
+        ) : (
+          <>
+            <span className="text-2xl font-bold">{Math.round(value)}%</span>
+            <span className="text-xs text-muted-foreground">Complété</span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function KYBSection() {
   const [onboardingLoading, setOnboardingLoading] = useState(false);
-  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
+  const [accountInfo, setAccountInfo] = useState<StripeConnectAccountInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showDashboardLink, setShowDashboardLink] = useState(false);
 
   const {
-    data: accountInfo,
+    data: accountInfoData,
     isLoading,
     error: queryError,
     refetch,
@@ -72,9 +133,22 @@ export default function KYBSection() {
     refetchOnWindowFocus: false,
   });
 
+  // Mettre à jour accountInfo quand accountInfoData change
+  useEffect(() => {
+    if (accountInfoData) {
+      setAccountInfo(accountInfoData);
+      setLoading(false);
+
+      // Montrer le lien vers le dashboard si le compte est configuré
+      if (accountInfoData.detailsSubmitted) {
+        setShowDashboardLink(true);
+      }
+    }
+  }, [accountInfoData]);
+
   const error = queryError
     ? (queryError as Error).message ||
-      "Erreur lors de la récupération des informations du compte"
+    "Erreur lors de la récupération des informations du compte"
     : null;
 
   const startOnboarding = async () => {
@@ -102,6 +176,43 @@ export default function KYBSection() {
     } finally {
       setOnboardingLoading(false);
     }
+  };
+
+  // Fonction pour calculer le pourcentage de progression
+  const getVerificationProgress = () => {
+    if (!accountInfo) return 0;
+
+    if (accountInfo.chargesEnabled && accountInfo.payoutsEnabled) return 100;
+
+    // Calculer en fonction des exigences restantes
+    const requirements = accountInfo.requirements || {
+      currently_due: [],
+      eventually_due: [],
+      past_due: []
+    };
+
+    const totalReqs =
+      (requirements.currently_due?.length || 0) +
+      (requirements.eventually_due?.length || 0) +
+      (requirements.past_due?.length || 0);
+
+    if (totalReqs === 0) return 90; // Presque terminé
+
+    // Donner plus de poids aux exigences passées dues
+    const pastDueWeight = 2;
+    const weightedTotal =
+      (requirements.currently_due?.length || 0) +
+      (requirements.eventually_due?.length || 0) +
+      ((requirements.past_due?.length || 0) * pastDueWeight);
+
+    const possibleTotal = totalReqs + ((requirements.past_due?.length || 0) * (pastDueWeight - 1));
+
+    // Plafonner entre 10% et 80%
+    const progressPercent = 100 - Math.min(80, Math.max(10,
+      (weightedTotal / (possibleTotal > 0 ? possibleTotal : 1)) * 100
+    ));
+
+    return Math.round(progressPercent);
   };
 
   // Fonction pour traduire les exigences de Stripe
@@ -132,6 +243,169 @@ export default function KYBSection() {
     };
 
     return translations[requirement] || requirement;
+  };
+
+  // Afficher le statut de vérification
+  const renderVerificationStatus = () => {
+    if (!accountInfo) return null;
+
+    if (!accountInfo.detailsSubmitted) {
+      return (
+        <Alert variant="default" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Vérification non commencée</AlertTitle>
+          <AlertDescription>
+            Pour recevoir des paiements en ligne, vous devez vérifier votre entreprise avec Stripe.
+          </AlertDescription>
+        </Alert>
+      );
+    }
+
+    const progress = getVerificationProgress();
+
+    if (accountInfo.detailsSubmitted) {
+      return (
+        <div className="mb-6">
+          <Alert className="mb-4 bg-green-50 dark:bg-green-900/20">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <AlertTitle>Vérification complète</AlertTitle>
+            <AlertDescription>
+              Votre compte est vérifié et vous pouvez recevoir des paiements.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-center my-8">
+            <CircularProgress
+              value={100}
+              color="text-green-500"
+              size={150}
+              label={
+                <div className="flex flex-col items-center">
+                  <CheckCircle2 className="h-10 w-10 text-green-500 mb-1" />
+                  <span className="text-sm font-medium">Vérifié</span>
+                </div>
+              }
+            />
+          </div>
+        </div>
+      );
+    }
+
+    const hasPastDue = (accountInfo.requirements.past_due.length > 0);
+
+    // Calculer les exigences dues
+    const requirements = accountInfo.requirements;
+
+    const totalRequirements =
+      (requirements.currently_due?.length || 0) +
+      (requirements.eventually_due?.length || 0) +
+      (requirements.past_due?.length || 0);
+
+    const completedRequirements = totalRequirements === 0
+      ? 90  // Presque terminé si aucune exigence n'est en attente
+      : Math.round(progress);
+
+    // Récupérer toutes les exigences pour les afficher
+    const allPendingRequirements = [
+      ...(requirements.past_due || []).map(req => ({
+        req,
+        type: "past_due",
+        label: translateRequirement(req),
+        color: "text-red-500"
+      })),
+      ...(requirements.currently_due || []).map(req => ({
+        req,
+        type: "currently_due",
+        label: translateRequirement(req),
+        color: "text-amber-500"
+      })),
+      ...(requirements.eventually_due || []).map(req => ({
+        req,
+        type: "eventually_due",
+        label: translateRequirement(req),
+        color: "text-gray-400"
+      })),
+    ].slice(0, 3); // Limiter à 3 exigences pour l'affichage dans le cercle
+
+    return (
+      <div className="mb-6">
+        <Alert
+          variant={hasPastDue ? "destructive" : "default"}
+          className={`mb-4 ${hasPastDue ? "bg-red-50 dark:bg-red-900/20" : "bg-amber-50 dark:bg-amber-900/20"}`}
+        >
+          {hasPastDue ? (
+            <XCircle className="h-4 w-4 text-red-500" />
+          ) : (
+            <Clock className="h-4 w-4 text-amber-500" />
+          )}
+          <AlertTitle>
+            {hasPastDue
+              ? "Action requise immédiatement"
+              : "Vérification en cours"}
+          </AlertTitle>
+          <AlertDescription>
+            {hasPastDue
+              ? "Certaines informations sont manquantes ou nécessitent votre attention immédiate."
+              : "Votre compte est en cours de vérification par Stripe."}
+          </AlertDescription>
+        </Alert>
+
+        <div className="flex flex-col md:flex-row items-center gap-6 my-8 justify-center">
+          <CircularProgress
+            value={completedRequirements}
+            size={180}
+            color={hasPastDue ? "text-red-500" : "text-amber-500"}
+            label={
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-bold">{completedRequirements}%</span>
+                <span className="text-xs text-muted-foreground text-center">Remplissage du profil</span>
+              </div>
+            }
+          />
+
+          <div className="space-y-2 max-w-xs">
+            <h4 className="font-medium text-sm">Prochaines étapes :</h4>
+            {allPendingRequirements.length > 0 ? (
+              <ul className="space-y-2">
+                {allPendingRequirements.map(({ req, type, label, color }, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    {type === "past_due" ? (
+                      <XCircle className="h-4 w-4 mt-0.5 text-red-500 flex-shrink-0" />
+                    ) : type === "currently_due" ? (
+                      <AlertCircle className="h-4 w-4 mt-0.5 text-amber-500 flex-shrink-0" />
+                    ) : (
+                      <Clock className="h-4 w-4 mt-0.5 text-gray-400 flex-shrink-0" />
+                    )}
+                    <span className={`text-sm ${color}`}>{label}</span>
+                  </li>
+                ))}
+                {totalRequirements > 3 && (
+                  <li className="text-xs text-muted-foreground italic">
+                    + {totalRequirements - 3} autres informations à compléter
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Votre dossier est en cours d'examen par Stripe. Vous recevrez bientôt une notification.
+              </p>
+            )}
+
+            <div className="flex flex-col gap-2 mt-2">
+              <Button
+                onClick={() => startOnboarding()}
+                disabled={onboardingLoading}
+                className="w-full"
+                size="sm"
+              >
+                Continuer avec Stripe
+                <ExternalLink className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -199,37 +473,8 @@ export default function KYBSection() {
                     l'onboarding
                   </span>
                 </Button>
-
-                <Button
-                  variant="outline"
-                  className="h-36 flex flex-col"
-                  onClick={() => setIsOnboardingModalOpen(true)}
-                >
-                  <Layers className="w-8 h-8 mb-2" />
-                  <span className="font-medium">Onboarding personnalisé</span>
-                  <span className="text-sm text-gray-500 text-center mt-2 px-4">
-                    Compléter les informations étape par étape dans une
-                    interface intégrée
-                  </span>
-                </Button>
               </div>
             </div>
-
-            {/* Modale d'onboarding personnalisé */}
-            <StripeOnboardingDialog
-              isOpen={isOnboardingModalOpen}
-              onOpenChange={setIsOnboardingModalOpen}
-              title="Configuration de votre compte Stripe Connect"
-              trigger={null}
-              onComplete={() => {
-                setIsOnboardingModalOpen(false);
-                refetch();
-                toast.success("Configuration du compte terminée", {
-                  description:
-                    "Votre compte Stripe Connect est maintenant configuré.",
-                });
-              }}
-            />
           </div>
         ) : (
           <div className="space-y-6">
@@ -307,65 +552,7 @@ export default function KYBSection() {
               </Badge>
             </div>
 
-            {(accountInfo.requirements.currently_due.length > 0 ||
-              accountInfo.requirements.eventually_due.length > 0 ||
-              accountInfo.requirements.past_due.length > 0) && (
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Informations manquantes</AlertTitle>
-                <AlertDescription>
-                  <div className="mt-2 space-y-4">
-                    {accountInfo.requirements.currently_due.length > 0 && (
-                      <div>
-                        <p className="font-medium">À fournir immédiatement :</p>
-                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
-                          {accountInfo.requirements.currently_due.map((req) => (
-                            <li key={req}>{translateRequirement(req)}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {accountInfo.requirements.eventually_due.length > 0 && (
-                      <div>
-                        <p className="font-medium">À fournir prochainement :</p>
-                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
-                          {accountInfo.requirements.eventually_due.map(
-                            (req) => (
-                              <li key={req}>{translateRequirement(req)}</li>
-                            ),
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                    {accountInfo.requirements.past_due.length > 0 && (
-                      <div>
-                        <p className="font-medium">En retard :</p>
-                        <ul className="list-disc list-inside text-sm space-y-1 mt-1">
-                          {accountInfo.requirements.past_due.map((req) => (
-                            <li key={req}>{translateRequirement(req)}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {accountInfo.detailsSubmitted &&
-              accountInfo.chargesEnabled &&
-              accountInfo.payoutsEnabled && (
-                <Alert className="bg-green-50 border-green-200">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-800">
-                    Compte vérifié
-                  </AlertTitle>
-                  <AlertDescription className="text-green-700">
-                    Votre compte Stripe Connect est complètement configuré et
-                    prêt à recevoir des paiements.
-                  </AlertDescription>
-                </Alert>
-              )}
+            {renderVerificationStatus()}
           </div>
         )}
       </CardContent>
@@ -379,11 +566,10 @@ export default function KYBSection() {
                     ? "default"
                     : "outline"
                 }
-                className={`mb-2 ${
-                  accountInfo.payoutsEnabled && accountInfo.chargesEnabled
-                    ? "bg-green-100 text-green-800 hover:bg-green-100"
-                    : ""
-                }`}
+                className={`mb-2 ${accountInfo.payoutsEnabled && accountInfo.chargesEnabled
+                  ? "bg-green-100 text-green-800 hover:bg-green-100"
+                  : ""
+                  }`}
               >
                 {accountInfo.payoutsEnabled && accountInfo.chargesEnabled ? (
                   <>
@@ -405,14 +591,6 @@ export default function KYBSection() {
 
             {(!accountInfo?.payoutsEnabled || !accountInfo?.chargesEnabled) && (
               <>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsOnboardingModalOpen(true)}
-                >
-                  <Layers className="mr-2 h-4 w-4" />
-                  Utiliser l'onboarding personnalisé
-                </Button>
-
                 <Button onClick={startOnboarding} disabled={onboardingLoading}>
                   {onboardingLoading ? (
                     <>
