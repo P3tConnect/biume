@@ -27,6 +27,7 @@ import { OptionsSection } from "./sections/options-section";
 import ImagesSection from "./sections/images-section";
 import SlotsSection from "./sections/slots-section";
 import DocumentsSection from "./sections/documents-section";
+import KYBSection from "./sections/kyb-section";
 
 const SettingsPageComponent = () => {
   return (
@@ -77,6 +78,10 @@ const SettingsPageComponent = () => {
               <CreditCard className="h-4 w-4" />
               Facturation
             </TabsTrigger>
+            <TabsTrigger value="kyb" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              KYB
+            </TabsTrigger>
             <TabsTrigger value="team" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Équipe
@@ -109,6 +114,10 @@ const SettingsPageComponent = () => {
 
           <TabsContent value="billing">
             <BillingSection />
+          </TabsContent>
+
+          <TabsContent value="kyb">
+            <KYBSection />
           </TabsContent>
 
           <TabsContent value="team">

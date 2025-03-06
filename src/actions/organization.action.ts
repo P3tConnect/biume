@@ -192,10 +192,9 @@ export const createOrganization = createServerAction(
       .returning();
 
     const stripeCompany = await stripe.accounts.create({
-      company: {
-        name: result?.name!,
-      },
-      type: "custom",
+      type: "standard",
+      country: "FR",
+      email: ctx?.user?.email!,
       metadata: {
         organizationId: result?.id!,
         userId: ctx?.user?.id!,
