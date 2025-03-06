@@ -79,12 +79,18 @@ const Stepper = () => {
           name: result.data?.name!,
         },
       });
+
+      const stripeCustomer = await stripe.customers.create({
+        email: session?.user.email!,
+      });
+
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
-          stripeId: stripeCompany.id,
+          companyStripeId: stripeCompany.id,
+          customerStripeId: stripeCustomer.id,
         })
         .where(eq(organizationTable.id, result.data?.id as string))
         .execute();
