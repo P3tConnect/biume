@@ -25,6 +25,7 @@ export const appointmentType = pgEnum("appointment_type", [
 
 export const appointmentStatusType = pgEnum("appointment_status_type", [
   "PENDING PAYMENT",
+  "SCHEDULED",
   "PAYED",
   "CONFIRMED",
   "CANCELED",

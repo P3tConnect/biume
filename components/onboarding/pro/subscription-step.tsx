@@ -86,7 +86,7 @@ export function SubscriptionStep() {
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
     onSuccess: (data) => {
-      setIsLoading(false);
+      console.log(data, "url for stripe redirect");
       window.location.href = data.data!;
     },
     onMutate: () => {
@@ -143,6 +143,7 @@ export function SubscriptionStep() {
             <CardFooter className="mt-auto">
               <Button
                 className="w-full"
+                disabled={isLoading}
                 variant={plan.name === "Pro" ? "default" : "outline"}
                 onClick={async () =>
                   await mutateAsync({

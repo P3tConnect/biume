@@ -50,6 +50,7 @@ import {
   ArrowLeftRight,
   AlertCircle,
   Building2,
+  RefreshCw,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -229,7 +230,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                 <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                   {activeOrganization?.name || "Organisation"}
                 </span>
-                <ArrowLeftRight
+                <RefreshCw
                   className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${orgMenuOpen ? "rotate-180" : "rotate-0"}`}
                 />
               </Button>

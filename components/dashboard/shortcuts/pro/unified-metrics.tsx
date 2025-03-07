@@ -1,25 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CountAnimation } from "@/components/count-animation";
 import {
   Stethoscope,
-  Syringe,
-  ChevronRight,
   CalendarIcon,
   HeartPulseIcon,
   TrendingUpIcon,
-  Clock,
   User,
-  Cat,
   RefreshCcw,
   Loader2,
 } from "lucide-react";
@@ -103,20 +94,25 @@ export const UnifiedMetrics = () => {
   const [selectedMonths, setSelectedMonths] = useState(6); // Nombre de mois à afficher par défaut
 
   // Utiliser useQuery pour récupérer les métriques
-  const { data: metricsData, isLoading, isError, refetch } = useQuery({
-    queryKey: ['metrics', selectedMonths],
+  const {
+    data: metricsData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["metrics", selectedMonths],
     queryFn: async () => {
       try {
         const result = await getMetricsAction({ months: selectedMonths });
 
         // En cas d'erreur dans les résultats
-        if ('error' in result) {
+        if ("error" in result) {
           console.error("Erreur dans les métriques:", result.error);
           return fallbackData;
         }
 
         // Si le résultat a une propriété data, on l'utilise
-        if ('data' in result) {
+        if ("data" in result) {
           return result.data;
         }
 
@@ -164,18 +160,20 @@ export const UnifiedMetrics = () => {
     vaccinations: [],
     medicalRecords: [],
     appointments: [],
-    documents: []
+    documents: [],
   };
 
   // Vérifier si les données sont disponibles avant de les utiliser
-  const hasData = metrics &&
+  const hasData =
+    metrics &&
     metrics.appointmentsData?.length > 0 &&
     metrics.newPatientsData?.length > 0 &&
     metrics.treatmentsData?.length > 0 &&
     metrics.satisfactionData?.length > 0;
 
   const getPercentageChange = (dataArray: any[], isPositiveGood = true) => {
-    if (!dataArray || dataArray.length < 2) return { value: 0, isPositive: true };
+    if (!dataArray || dataArray.length < 2)
+      return { value: 0, isPositive: true };
 
     const current = dataArray[dataArray.length - 1].value;
     const previous = dataArray[dataArray.length - 2].value;
@@ -184,11 +182,13 @@ export const UnifiedMetrics = () => {
     if (previous === 0) return { value: 0, isPositive: true };
 
     const percentage = ((current - previous) / previous) * 100;
-    const isPositive = isPositiveGood ? current >= previous : current <= previous;
+    const isPositive = isPositiveGood
+      ? current >= previous
+      : current <= previous;
 
     return {
       value: Math.abs(percentage).toFixed(1),
-      isPositive
+      isPositive,
     };
   };
 
@@ -236,7 +236,7 @@ export const UnifiedMetrics = () => {
                 <p className="text-2xl font-bold">
                   {Math.round(
                     data.reduce((acc, curr) => acc + curr.value, 0) /
-                    data.length,
+                      data.length,
                   )}
                 </p>
               </Card>
@@ -302,7 +302,9 @@ export const UnifiedMetrics = () => {
   if (isError && !hasData) {
     return (
       <div className="p-6 border border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900 rounded-lg">
-        <h3 className="text-red-700 dark:text-red-400 font-medium mb-2">Erreur de chargement des métriques</h3>
+        <h3 className="text-red-700 dark:text-red-400 font-medium mb-2">
+          Erreur de chargement des métriques
+        </h3>
         <p className="text-sm text-red-600 dark:text-red-300">
           Impossible de récupérer les métriques. Veuillez réessayer plus tard.
         </p>
@@ -320,24 +322,7 @@ export const UnifiedMetrics = () => {
 
   return (
     <div className="space-y-6">
-      {/* En-tête avec la date et un potentiel bouton de rafraîchissement */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold capitalize">{formattedDate}</h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isLoading}
-          className="flex items-center gap-1"
-        >
-          <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>Actualiser</span>
-        </Button>
-      </div>
-
-      {/* Cartes d'aperçu des métriques */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Rendez-vous */}
         <Card className="overflow-hidden shadow-sm rounded-xl">
           <div className="p-3">
             <div className="flex items-center justify-between mb-1.5">
@@ -352,27 +337,38 @@ export const UnifiedMetrics = () => {
               </Badge>
             </div>
             <div className="text-2xl font-bold mb-0.5">
-              {hasData && (
-                <CountAnimation
-                  value={metrics.appointmentsData[metrics.appointmentsData.length - 1].value}
-                />
-              )}
+              <CountAnimation
+                value={
+                  !hasData
+                    ? 0
+                    : metrics.appointmentsData[
+                          metrics.appointmentsData.length - 1
+                        ].value > 0
+                      ? metrics.appointmentsData[
+                          metrics.appointmentsData.length - 1
+                        ].value
+                      : 0
+                }
+              />
             </div>
             <div className="text-xs text-muted-foreground">
               {hasData && metrics.appointmentsData.length > 1 && (
                 <span
-                  className={`inline-flex items-center ${getPercentageChange(metrics.appointmentsData).isPositive
+                  className={`inline-flex items-center ${
+                    getPercentageChange(metrics.appointmentsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                    }`}
+                  }`}
                 >
                   <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${!getPercentageChange(metrics.appointmentsData).isPositive
+                    className={`h-3 w-3 mr-1 ${
+                      !getPercentageChange(metrics.appointmentsData).isPositive
                         ? "rotate-180"
                         : ""
-                      }`}
+                    }`}
                   />
-                  {getPercentageChange(metrics.appointmentsData).value}% par rapport au mois précédent
+                  {getPercentageChange(metrics.appointmentsData).value}% par
+                  rapport au mois précédent
                 </span>
               )}
             </div>
@@ -391,27 +387,38 @@ export const UnifiedMetrics = () => {
               </div>
             </div>
             <div className="text-2xl font-bold mb-0.5">
-              {hasData && (
-                <CountAnimation
-                  value={metrics.newPatientsData[metrics.newPatientsData.length - 1].value}
-                />
-              )}
+              <CountAnimation
+                value={
+                  !hasData
+                    ? 0
+                    : metrics.newPatientsData[
+                          metrics.newPatientsData.length - 1
+                        ].value > 0
+                      ? metrics.newPatientsData[
+                          metrics.newPatientsData.length - 1
+                        ].value
+                      : 0
+                }
+              />
             </div>
             <div className="text-xs text-muted-foreground">
               {hasData && metrics.newPatientsData.length > 1 && (
                 <span
-                  className={`inline-flex items-center ${getPercentageChange(metrics.newPatientsData).isPositive
+                  className={`inline-flex items-center ${
+                    getPercentageChange(metrics.newPatientsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                    }`}
+                  }`}
                 >
                   <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${!getPercentageChange(metrics.newPatientsData).isPositive
+                    className={`h-3 w-3 mr-1 ${
+                      !getPercentageChange(metrics.newPatientsData).isPositive
                         ? "rotate-180"
                         : ""
-                      }`}
+                    }`}
                   />
-                  {getPercentageChange(metrics.newPatientsData).value}% par rapport au mois précédent
+                  {getPercentageChange(metrics.newPatientsData).value}% par
+                  rapport au mois précédent
                 </span>
               )}
             </div>
@@ -430,27 +437,37 @@ export const UnifiedMetrics = () => {
               </div>
             </div>
             <div className="text-2xl font-bold mb-0.5">
-              {hasData && (
-                <CountAnimation
-                  value={metrics.treatmentsData[metrics.treatmentsData.length - 1].value}
-                />
-              )}
+              <CountAnimation
+                value={
+                  !hasData
+                    ? 0
+                    : metrics.treatmentsData[metrics.treatmentsData.length - 1]
+                          ?.value > 0
+                      ? metrics.treatmentsData[
+                          metrics.treatmentsData.length - 1
+                        ].value
+                      : 0
+                }
+              />
             </div>
             <div className="text-xs text-muted-foreground">
               {hasData && metrics.treatmentsData.length > 1 && (
                 <span
-                  className={`inline-flex items-center ${getPercentageChange(metrics.treatmentsData).isPositive
+                  className={`inline-flex items-center ${
+                    getPercentageChange(metrics.treatmentsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                    }`}
+                  }`}
                 >
                   <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${!getPercentageChange(metrics.treatmentsData).isPositive
+                    className={`h-3 w-3 mr-1 ${
+                      !getPercentageChange(metrics.treatmentsData).isPositive
                         ? "rotate-180"
                         : ""
-                      }`}
+                    }`}
                   />
-                  {getPercentageChange(metrics.treatmentsData).value}% par rapport au mois précédent
+                  {getPercentageChange(metrics.treatmentsData).value}% par
+                  rapport au mois précédent
                 </span>
               )}
             </div>
@@ -469,30 +486,39 @@ export const UnifiedMetrics = () => {
               </div>
             </div>
             <div className="text-2xl font-bold mb-0.5">
-              {hasData && (
-                <>
-                  <CountAnimation
-                    value={metrics.satisfactionData[metrics.satisfactionData.length - 1].value}
-                  />
-                  <span className="text-xs font-medium ml-1">%</span>
-                </>
-              )}
+              <CountAnimation
+                value={
+                  !hasData
+                    ? 0
+                    : metrics.satisfactionData[
+                          metrics.satisfactionData.length - 1
+                        ].value > 0
+                      ? metrics.satisfactionData[
+                          metrics.satisfactionData.length - 1
+                        ].value
+                      : 0
+                }
+              />
+              <span className="text-xs font-medium ml-1">%</span>
             </div>
             <div className="text-xs text-muted-foreground">
               {hasData && metrics.satisfactionData.length > 1 && (
                 <span
-                  className={`inline-flex items-center ${getPercentageChange(metrics.satisfactionData).isPositive
+                  className={`inline-flex items-center ${
+                    getPercentageChange(metrics.satisfactionData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                    }`}
+                  }`}
                 >
                   <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${!getPercentageChange(metrics.satisfactionData).isPositive
+                    className={`h-3 w-3 mr-1 ${
+                      !getPercentageChange(metrics.satisfactionData).isPositive
                         ? "rotate-180"
                         : ""
-                      }`}
+                    }`}
                   />
-                  {getPercentageChange(metrics.satisfactionData).value}% par rapport au mois précédent
+                  {getPercentageChange(metrics.satisfactionData).value}% par
+                  rapport au mois précédent
                 </span>
               )}
             </div>
@@ -506,7 +532,11 @@ export const UnifiedMetrics = () => {
           {renderChart(metrics.appointmentsData, "Rendez-vous", "#6366f1")}
           {renderChart(metrics.newPatientsData, "Nouveaux patients", "#f43f5e")}
           {renderChart(metrics.treatmentsData, "Soins réalisés", "#10b981")}
-          {renderChart(metrics.satisfactionData, "Satisfaction client", "#f59e0b")}
+          {renderChart(
+            metrics.satisfactionData,
+            "Satisfaction client",
+            "#f59e0b",
+          )}
         </>
       )}
 

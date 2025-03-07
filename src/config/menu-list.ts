@@ -16,6 +16,7 @@ import {
   DollarSignIcon,
   Ticket,
   UsersRound,
+  NotepadText,
 } from "lucide-react";
 
 export type Submenu = {
@@ -99,14 +100,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
                 `/dashboard/organization/${companyId}/accounting/expenses`,
               icon: DollarSignIcon,
             },
-            {
-              href: `/dashboard/organization/${companyId}/accounting/reports`,
-              label: "dashboard.sidebar.financialReports",
-              active:
-                pathname ===
-                `/dashboard/organization/${companyId}/accounting/reports`,
-              icon: PieChart,
-            },
           ],
         },
         {
@@ -130,15 +123,15 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           href: `/dashboard/organization/${companyId}/reports`,
           label: "dashboard.sidebar.reports",
           active: pathname == `/dashboard/organization/${companyId}/reports`,
-          icon: LineChart,
+          icon: NotepadText,
         },
-        {
-          href: `/dashboard/organization/${companyId}/observations`,
-          label: "dashboard.sidebar.observations",
-          active:
-            pathname == `/dashboard/organization/${companyId}/observations`,
-          icon: Eye,
-        },
+        // {
+        //   href: `/dashboard/organization/${companyId}/observations`,
+        //   label: "dashboard.sidebar.observations",
+        //   active:
+        //     pathname == `/dashboard/organization/${companyId}/observations`,
+        //   icon: Eye,
+        // },
         {
           href: `/dashboard/organization/${companyId}/reminders`,
           label: "dashboard.sidebar.reminders",

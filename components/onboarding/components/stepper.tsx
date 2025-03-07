@@ -29,7 +29,6 @@ import {
   CredenzaTitle,
 } from "@/components/ui";
 import ImagesStep from "../pro/images-step";
-import { createOrganization } from "@/src/actions/organization.action";
 
 const Stepper = () => {
   const {
@@ -100,16 +99,16 @@ const Stepper = () => {
         console.log("Client Stripe créé avec succès:", customerStripeId);
 
         // Créer le compte Stripe Connect
-        const stripeCompany = await stripe.accounts.create({
-          type: "standard",
-          country: "FR",
-          email: session?.user.email!,
-          metadata: {
-            organizationId: organizationId,
-            userId: session?.user.id!,
-          },
-        });
-        companyStripeId = stripeCompany.id;
+        // const stripeCompany = await stripe.accounts.create({
+        //   type: "standard",
+        //   country: "FR",
+        //   email: session?.user.email!,
+        //   metadata: {
+        //     organizationId: organizationId,
+        //     userId: session?.user.id!,
+        //   },
+        // });
+        // companyStripeId = stripeCompany.id;
         console.log("Compte Stripe Connect créé avec succès:", companyStripeId);
       } catch (stripeError) {
         console.error(

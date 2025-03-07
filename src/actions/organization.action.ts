@@ -163,87 +163,90 @@ export const getCurrentOrganization = createServerAction(
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
-    // try {
-    const data = input;
+    try {
+      const data = input;
 
-    const result = await auth.api.createOrganization({
-      body: {
-        name: data.name as string,
-        slug: data.name?.toLowerCase().replace(/\s+/g, "-") as string,
-        logo: data.logo,
-        metadata: {},
-        userId: ctx.user?.id,
-      },
-    });
+      const result = await auth.api.createOrganization({
+        body: {
+          name: data.name as string,
+          slug: data.name?.toLowerCase().replace(/\s+/g, "-") as string,
+          logo: data.logo,
+          metadata: {},
+          userId: ctx.user?.id,
+        },
+      });
 
-    if (!result) {
-      throw new ActionError("Organization not created");
+      if (!result) {
+        throw new ActionError("Organization not created");
+      }
+
+      // Créer une progression
+      const [progression] = await db
+        .insert(progressionTable)
+        .values({
+          docs: false,
+          cancelPolicies: false,
+          reminders: false,
+          services: false,
+        })
+        .returning();
+
+      // const stripeCompany = await stripe.accounts.create({
+      //   type: "standard",
+      //   country: "FR",
+      //   email: ctx?.user?.email!,
+      //   metadata: {
+      //     organizationId: result?.id!,
+      //     userId: ctx?.user?.id!,
+      //   },
+      //   capabilities: {
+      //     card_payments: {
+      //       requested: true,
+      //     },
+      //     transfers: {
+      //       requested: true,
+      //     },
+      //   },
+      // });
+
+      const stripeCustomer = await stripe.customers.create({
+        name: result?.name!,
+        metadata: {
+          organizationId: result?.id!,
+          userId: ctx?.user?.id!,
+        },
+      });
+
+      console.log(stripeCustomer, "stripeCustomer");
+      console.log(result, "result");
+
+      const [organizationResult] = await db
+        .update(organizationTable)
+        .set({
+          email: data.email,
+          description: data.description,
+          progressionId: progression.id,
+          companyType: data.companyType,
+          atHome: data.atHome,
+          // companyStripeId: stripeCompany.id,
+          customerStripeId: stripeCustomer?.id,
+        })
+        .where(eq(organizationTable.id, result?.id as string))
+        .returning()
+        .execute();
+
+      await auth.api.setActiveOrganization({
+        headers: await headers(),
+        body: {
+          organizationId: result?.id,
+        },
+      });
+
+      // Retourner les données de l'organisation créée
+      return organizationResult;
+    } catch (err) {
+      throw new ActionError("Organization already exists");
     }
-
-    // Créer une progression
-    const [progression] = await db
-      .insert(progressionTable)
-      .values({
-        docs: false,
-        cancelPolicies: false,
-        reminders: false,
-        services: false,
-      })
-      .returning();
-
-    const stripeCompany = await stripe.accounts.create({
-      type: "standard",
-      country: "FR",
-      email: ctx?.user?.email!,
-      metadata: {
-        organizationId: result?.id!,
-        userId: ctx?.user?.id!,
-      },
-      capabilities: {
-        card_payments: {
-          requested: true,
-        },
-        transfers: {
-          requested: true,
-        },
-      },
-    });
-
-    const stripeCustomer = await stripe.customers.create({
-      name: result?.name!,
-      metadata: {
-        organizationId: result?.id!,
-        userId: ctx?.user?.id!,
-      },
-    });
-
-    const [organizationResult] = await db
-      .update(organizationTable)
-      .set({
-        email: data.email,
-        description: data.description,
-        progressionId: progression.id,
-        companyType: data.companyType,
-        atHome: data.atHome,
-        companyStripeId: stripeCompany.id,
-        customerStripeId: stripeCustomer.id,
-      })
-      .where(eq(organizationTable.id, result?.id as string))
-      .returning()
-      .execute();
-
-    await auth.api.setActiveOrganization({
-      headers: await headers(),
-      body: {
-        organizationId: result?.id,
-      },
-    });
-
-    // Retourner les données de l'organisation créée
-    return organizationResult;
-    // } catch (err) {
-    //   throw new ActionError("Organization already exists");
-    // }
   },
   [requireAuth],
 );

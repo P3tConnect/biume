@@ -37,6 +37,7 @@ import {
   Plus,
   ArrowLeftRight,
   AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -222,7 +223,7 @@ export function ClientNavbar() {
                   <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                     {isPersonalDashboard ? "Personnel" : "Pro"}
                   </span>
-                  <ArrowLeftRight
+                  <RefreshCw
                     className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${dropdownOpen ? "rotate-180" : "rotate-0"}`}
                   />
                 </Button>
