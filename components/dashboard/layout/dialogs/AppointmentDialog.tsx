@@ -11,7 +11,6 @@ import {
   Clock,
   CheckIcon,
   User,
-  PawPrint,
   Stethoscope,
   ChevronLeft,
   ChevronRight,
@@ -131,12 +130,24 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       atHome: false,
       duration: 30,
       notes: "",
+      serviceId: "",
     },
     mode: "onChange",
   });
 
   // État pour suivre si les champs de l'étape courante sont valides
   const [isStepValid, setIsStepValid] = useState(false);
+
+  // Surveillance des changements de valeurs pour le service
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "serviceId") {
+        console.log("Service ID changé:", value.serviceId);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   // Réinitialiser l'étape lorsque le dialogue s'ouvre/se ferme
   useEffect(() => {
@@ -160,9 +171,21 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
 
       // Vérifier si tous les champs de l'étape actuelle sont valides
       try {
+        // Vérifier que les valeurs ne sont pas vides avant la validation
+        const currentValues = currentFields.map(field => form.getValues(field));
+        const hasEmptyValues = currentValues.some(value =>
+          value === undefined || value === null || value === ""
+        );
+
+        if (hasEmptyValues) {
+          setIsStepValid(false);
+          return;
+        }
+
         const result = await form.trigger(currentFields as any);
         setIsStepValid(result);
       } catch (error) {
+        console.error("Erreur de validation:", error);
         setIsStepValid(false);
       }
     };
@@ -263,11 +286,10 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
             {steps.map((step, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-                    currentStep >= index
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${currentStep >= index
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                    }`}
                 >
                   {currentStep > index ? (
                     <CheckIcon className="h-4 w-4" />
@@ -276,11 +298,10 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                   )}
                 </div>
                 <span
-                  className={`text-xs mt-1 transition-colors ${
-                    currentStep >= index
-                      ? "text-primary font-medium"
-                      : "text-muted-foreground"
-                  }`}
+                  className={`text-xs mt-1 transition-colors ${currentStep >= index
+                    ? "text-primary font-medium"
+                    : "text-muted-foreground"
+                    }`}
                 >
                   Étape {index + 1}
                 </span>
@@ -363,8 +384,12 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       <FormItem>
                         <FormLabel>Service</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            // Déclencher la validation après la sélection
+                            form.trigger("serviceId");
+                          }}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -571,11 +596,21 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       <div className="space-y-1">
                         <p className="text-sm font-medium">Service</p>
                         <p className="text-sm">
-                          {form.getValues("serviceId") === "service1"
-                            ? "Consultation standard"
-                            : form.getValues("serviceId") === "service2"
-                              ? "Vaccination"
-                              : "Contrôle annuel"}
+                          {(() => {
+                            const serviceId = form.getValues("serviceId");
+                            if (!serviceId) return "Aucun service sélectionné";
+
+                            switch (serviceId) {
+                              case "service1":
+                                return "Consultation standard";
+                              case "service2":
+                                return "Vaccination";
+                              case "service3":
+                                return "Contrôle annuel";
+                              default:
+                                return "Service inconnu";
+                            }
+                          })()}
                         </p>
                       </div>
 

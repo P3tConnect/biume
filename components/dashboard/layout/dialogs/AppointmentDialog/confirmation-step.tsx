@@ -93,14 +93,14 @@ const ConfirmationStep = () => {
                     <p className="font-medium">
                       {form.watch("date")
                         ? format(form.watch("date"), "EEEE d MMMM yyyy", {
-                            locale: fr,
-                          })
+                          locale: fr,
+                        })
                         : "Date non sélectionnée"}
-                      à {form.watch("startTime") || "..."}
+                      <span> à {form.watch("startTime") || "..."}</span>
                     </p>
                     <div className="flex items-center text-xs text-muted-foreground mt-1">
                       <ClockIcon className="h-3 w-3 mr-1 inline" />
-                      {form.watch("startTime") || "..."} - {calculateEndTime()}
+                      <span>{form.watch("startTime") || "..."} - {calculateEndTime()}</span>
                       <Badge variant="secondary" className="ml-2 text-xs">
                         {form.watch("duration") || "..."} min
                       </Badge>
@@ -160,12 +160,12 @@ const ConfirmationStep = () => {
                     </span>
                     <p className="font-medium">
                       {selectedPet?.name || "Animal non sélectionné"}
-                      {selectedPet && (
-                        <Badge variant="outline" className="ml-1">
-                          {selectedPet.type}
-                        </Badge>
-                      )}
                     </p>
+                    {selectedPet && (
+                      <Badge variant="outline" className="mt-1">
+                        {selectedPet.type}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
