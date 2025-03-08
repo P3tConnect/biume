@@ -1,3 +1,7 @@
+import { FilePenLine, Share2, X } from "lucide-react"
+import Image from "next/image"
+import React from "react"
+
 import {
   Credenza,
   CredenzaClose,
@@ -5,17 +9,14 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@/components/ui";
-import Image from "next/image";
-import React from "react";
-import { Share2, FilePenLine, X } from "lucide-react";
+} from "@/components/ui"
 
 type Animal = {
-  avatar: string;
-  name: string;
-  espece: string;
-  notes: string;
-};
+  avatar: string
+  name: string
+  espece: string
+  notes: string
+}
 
 const ObservationsList = async () => {
   const animals: Animal[] = [
@@ -110,7 +111,7 @@ const ObservationsList = async () => {
       notes:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     },
-  ];
+  ]
 
   return (
     <div className="mt-10">
@@ -134,34 +135,19 @@ const ObservationsList = async () => {
             {animals.map((animal, index) => (
               <tr key={index} className="bg-white dark:bg-background">
                 <td className="px-2 py-2 flex items-center border-b border-gray-200">
-                  <Image
-                    src={animal.avatar}
-                    alt="Avatar"
-                    className="rounded-full mr-4"
-                    width={40}
-                    height={40}
-                  />
+                  <Image src={animal.avatar} alt="Avatar" className="rounded-full mr-4" width={40} height={40} />
                   {animal.name}
                 </td>
-                <td className="px-2 py-2 text-center border-b border-gray-200">
-                  {animal.espece}
-                </td>
-                <td className="px-2 py-2 border-b border-gray-200">
-                  {animal.notes}
-                </td>
+                <td className="px-2 py-2 text-center border-b border-gray-200">{animal.espece}</td>
+                <td className="px-2 py-2 border-b border-gray-200">{animal.notes}</td>
                 <td className="px-2 py-2 text-center border-b border-gray-200 flex gap-2">
                   <Credenza>
-                    <CredenzaTrigger
-                      asChild
-                      className="group hover:cursor-pointer"
-                    >
+                    <CredenzaTrigger asChild className="group hover:cursor-pointer">
                       <FilePenLine />
                     </CredenzaTrigger>
                     <CredenzaContent>
                       <CredenzaHeader>
-                        <CredenzaTitle>
-                          Modifier l&apos;observation
-                        </CredenzaTitle>
+                        <CredenzaTitle>Modifier l&apos;observation</CredenzaTitle>
                         <CredenzaClose>
                           <X />
                         </CredenzaClose>
@@ -169,17 +155,12 @@ const ObservationsList = async () => {
                     </CredenzaContent>
                   </Credenza>
                   <Credenza>
-                    <CredenzaTrigger
-                      asChild
-                      className="group hover:cursor-pointer"
-                    >
+                    <CredenzaTrigger asChild className="group hover:cursor-pointer">
                       <Share2 />
                     </CredenzaTrigger>
                     <CredenzaContent>
                       <CredenzaHeader>
-                        <CredenzaTitle>
-                          Partager l&apos;observation
-                        </CredenzaTitle>
+                        <CredenzaTitle>Partager l&apos;observation</CredenzaTitle>
                         <CredenzaClose>
                           <X />
                         </CredenzaClose>
@@ -193,7 +174,7 @@ const ObservationsList = async () => {
         </table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ObservationsList;
+export default ObservationsList

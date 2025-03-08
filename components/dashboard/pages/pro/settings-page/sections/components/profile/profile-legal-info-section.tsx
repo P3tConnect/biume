@@ -1,36 +1,23 @@
-"use client";
+"use client"
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import { updateOrganization } from "@/src/actions/organization.action";
-import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
-import { Organization } from "@/src/db/organization";
-import { organizationFormSchema } from "../../profile-section";
-import { use } from "react";
-import { ActionResult } from "@/src/lib";
-import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { updateOrganization } from "@/src/actions/organization.action"
+import { Organization } from "@/src/db/organization"
+import { useFormChangeToast } from "@/src/hooks/useFormChangeToast"
+
+import { organizationFormSchema } from "../../profile-section"
 
 interface ProfileLegalInfoSectionProps {
-  org: Organization | null | undefined;
+  org: Organization | null | undefined
 }
 
 export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) => {
@@ -49,23 +36,23 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
       siren: org?.siren || "",
       siret: org?.siret || "",
     },
-  });
+  })
 
-  const { handleSubmit } = form;
+  const { handleSubmit } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganization,
     onSuccess: () => {
-      toast.success("Modifications enregistrées avec succès !");
+      toast.success("Modifications enregistrées avec succès !")
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   useFormChangeToast({
     form,
@@ -73,7 +60,7 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
     message: "Modifications en attente",
     description: "Pensez à sauvegarder vos changements",
     position: "bottom-center",
-  });
+  })
 
   return (
     <Form {...form}>
@@ -81,9 +68,7 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
         <Card>
           <CardHeader>
             <CardTitle>Informations légales</CardTitle>
-            <CardDescription>
-              Numéros d&apos;identification de votre organisation
-            </CardDescription>
+            <CardDescription>Numéros d&apos;identification de votre organisation</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-6">
@@ -94,11 +79,7 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
                   <FormItem>
                     <FormLabel>Numéro SIREN</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="123456789"
-                        maxLength={9}
-                        {...field}
-                      />
+                      <Input placeholder="123456789" maxLength={9} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -112,11 +93,7 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
                   <FormItem>
                     <FormLabel>Numéro SIRET</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="12345678900000"
-                        maxLength={14}
-                        {...field}
-                      />
+                      <Input placeholder="12345678900000" maxLength={14} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -127,5 +104,5 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
         </Card>
       </form>
     </Form>
-  );
-}; 
+  )
+}

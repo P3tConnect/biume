@@ -1,12 +1,11 @@
-import { ActionError, createServerAction, db } from "../lib";
-import { z } from "zod";
-import { askAppointment as askAppointmentTable } from "../db/askAppointment";
-import { eq } from "drizzle-orm";
-import { requireAuth, requireFullOrganization } from "@/src/lib/action";
-import {
-  CreateAskAppointmentSchema,
-  askAppointmentOptions as askAppointmentOptionsTable,
-} from "../db";
+import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+import { requireAuth, requireFullOrganization } from "@/src/lib/action"
+
+import { askAppointmentOptions as askAppointmentOptionsTable, CreateAskAppointmentSchema } from "../db"
+import { askAppointment as askAppointmentTable } from "../db/askAppointment"
+import { ActionError, createServerAction, db } from "../lib"
 
 export const getAllAskAppointments = createServerAction(
   z.object({}),
@@ -20,16 +19,16 @@ export const getAllAskAppointments = createServerAction(
           },
         },
       },
-    });
+    })
 
     if (!appointments) {
-      throw new ActionError("No appointments found");
+      throw new ActionError("No appointments found")
     }
 
-    return appointments;
+    return appointments
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const createAskAppointment = createServerAction(
   z.object({
@@ -37,34 +36,30 @@ export const createAskAppointment = createServerAction(
     options: z.array(z.string()),
   }),
   async (input, ctx) => {
-    const [askAppointment] = await db
-      .insert(askAppointmentTable)
-      .values(input.askAppointment)
-      .returning()
-      .execute();
+    const [askAppointment] = await db.insert(askAppointmentTable).values(input.askAppointment).returning().execute()
 
     if (!askAppointment) {
-      throw new ActionError("Failed to create appointment");
+      throw new ActionError("Failed to create appointment")
     }
 
     const [askAppointmentOptions] = await db
       .insert(askAppointmentOptionsTable)
       .values(
-        input.options.map((option) => ({
+        input.options.map(option => ({
           askAppointmentId: askAppointment.id,
           optionId: option,
-        })),
+        }))
       )
       .returning()
-      .execute();
+      .execute()
 
     return {
       askAppointment,
       askAppointmentOptions,
-    };
+    }
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const getAllAskAppoitmentForOrganization = createServerAction(
   z.object({
@@ -81,17 +76,17 @@ export const getAllAskAppoitmentForOrganization = createServerAction(
             },
           },
         },
-      });
+      })
 
       if (!appointments) {
-        throw new ActionError("No appointments found");
+        throw new ActionError("No appointments found")
       }
 
-      return appointments;
+      return appointments
     } catch (error) {
-      console.error(error);
-      throw new ActionError("Failed to get appointments");
+      console.error(error)
+      throw new ActionError("Failed to get appointments")
     }
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)

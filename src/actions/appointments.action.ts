@@ -1,8 +1,10 @@
-import { eq } from "drizzle-orm";
-import { ActionError, createServerAction, db } from "../lib";
-import { z } from "zod";
-import { appointments as appointmentsTable } from "../db/appointments";
-import { requireAuth, requireFullOrganization } from "@/src/lib/action";
+import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+import { requireAuth, requireFullOrganization } from "@/src/lib/action"
+
+import { appointments as appointmentsTable } from "../db/appointments"
+import { ActionError, createServerAction, db } from "../lib"
 
 export const getAllAppointments = createServerAction(
   z.object({}),
@@ -10,13 +12,13 @@ export const getAllAppointments = createServerAction(
     const appointments = await db
       .select()
       .from(appointmentsTable)
-      .where(eq(appointmentsTable.proId, ctx.organization?.id || ""));
+      .where(eq(appointmentsTable.proId, ctx.organization?.id || ""))
 
     if (!appointments) {
-      throw new ActionError("No appointments found");
+      throw new ActionError("No appointments found")
     }
 
-    return appointments;
+    return appointments
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)

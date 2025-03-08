@@ -1,4 +1,9 @@
-"use client";
+"use client"
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 import {
   Button,
@@ -12,16 +17,11 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { CommandLoading } from "cmdk";
-import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+} from "@/components/ui"
 
 const SearchButton = () => {
-  const router = useRouter();
-  const [openCommand, setOpenCommand] = useState(false);
+  const router = useRouter()
+  const [openCommand, setOpenCommand] = useState(false)
 
   return (
     <>
@@ -50,32 +50,32 @@ const SearchButton = () => {
           <CommandGroup heading="Suggestions">
             <CommandItem
               onSelect={() => {
-                setOpenCommand(false);
-                router.push("/dashboard/timetable");
+                setOpenCommand(false)
+                router.push("/dashboard/timetable")
               }}
             >
               Sessions
             </CommandItem>
             <CommandItem
               onSelect={() => {
-                setOpenCommand(false);
-                router.push("/dashboard/clients");
+                setOpenCommand(false)
+                router.push("/dashboard/clients")
               }}
             >
               Clients
             </CommandItem>
             <CommandItem
               onSelect={() => {
-                setOpenCommand(false);
-                router.push("/dashboard/patients");
+                setOpenCommand(false)
+                router.push("/dashboard/patients")
               }}
             >
               Patients
             </CommandItem>
             <CommandItem
               onSelect={() => {
-                setOpenCommand(false);
-                router.push("/dashboard/reports");
+                setOpenCommand(false)
+                router.push("/dashboard/reports")
               }}
             >
               Reports
@@ -84,7 +84,7 @@ const SearchButton = () => {
         </CommandList>
       </CommandDialog>
     </>
-  );
-};
+  )
+}
 
-export default SearchButton;
+export default SearchButton

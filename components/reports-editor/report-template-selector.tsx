@@ -1,27 +1,13 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "../ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import {
-  Search,
-  FilePlus2,
-  Stethoscope,
-  Scissors,
-  Brain,
-  Apple,
-  BarChart
-} from "lucide-react";
-import { ReportTemplate, ReportType } from "./report-generator";
+import { Apple, BarChart, Brain, FilePlus2, Scissors, Search, Stethoscope } from "lucide-react"
+import { useState } from "react"
+
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { Input } from "../ui/input"
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs"
+import { ReportTemplate, ReportType } from "./report-generator"
 
 // Données de modèles simulées
 const MOCK_TEMPLATES: ReportTemplate[] = [
@@ -30,62 +16,62 @@ const MOCK_TEMPLATES: ReportTemplate[] = [
     name: "Bilan de santé annuel",
     type: "health",
     description: "Modèle de rapport complet pour les bilans de santé annuels des animaux",
-    thumbnail: "/health-report.jpg"
+    thumbnail: "/health-report.jpg",
   },
   {
     id: "post-surgery",
     name: "Suivi post-opératoire",
     type: "surgery",
     description: "Rapport détaillé pour le suivi des animaux après une intervention chirurgicale",
-    thumbnail: "/surgery-report.jpg"
+    thumbnail: "/surgery-report.jpg",
   },
   {
     id: "behavior-assessment",
     name: "Évaluation comportementale",
     type: "behavior",
     description: "Rapport pour l'analyse du comportement et recommandations personnalisées",
-    thumbnail: "/behavior-report.jpg"
+    thumbnail: "/behavior-report.jpg",
   },
   {
     id: "nutrition-plan",
     name: "Plan nutritionnel",
     type: "nutrition",
     description: "Modèle de rapport pour élaborer un plan alimentaire adapté",
-    thumbnail: "/nutrition-report.jpg"
+    thumbnail: "/nutrition-report.jpg",
   },
   {
     id: "clinic-stats",
     name: "Statistiques clinique",
     type: "statistics",
     description: "Rapport de statistiques et métriques pour votre clinique",
-    thumbnail: "/stats-report.jpg"
+    thumbnail: "/stats-report.jpg",
   },
   {
     id: "emergency-visit",
     name: "Visite d'urgence",
     type: "health",
     description: "Rapport détaillé pour les cas d'urgence nécessitant une intervention rapide",
-    thumbnail: "/emergency-report.jpg"
+    thumbnail: "/emergency-report.jpg",
   },
   {
     id: "dental-exam",
     name: "Examen dentaire",
     type: "health",
     description: "Rapport spécialisé pour les soins dentaires des animaux",
-    thumbnail: "/dental-report.jpg"
+    thumbnail: "/dental-report.jpg",
   },
   {
     id: "rehabilitation",
     name: "Plan de réhabilitation",
     type: "surgery",
     description: "Modèle pour les plans de réhabilitation physique post-traumatique",
-    thumbnail: "/rehab-report.jpg"
-  }
-];
+    thumbnail: "/rehab-report.jpg",
+  },
+]
 
 interface ReportTemplateCardProps {
-  template: ReportTemplate;
-  onSelect: (template: ReportTemplate) => void;
+  template: ReportTemplate
+  onSelect: (template: ReportTemplate) => void
 }
 
 const ReportTemplateCard = ({ template, onSelect }: ReportTemplateCardProps) => {
@@ -94,8 +80,8 @@ const ReportTemplateCard = ({ template, onSelect }: ReportTemplateCardProps) => 
     surgery: <Scissors className="h-8 w-8 text-red-500" />,
     behavior: <Brain className="h-8 w-8 text-purple-500" />,
     nutrition: <Apple className="h-8 w-8 text-green-500" />,
-    statistics: <BarChart className="h-8 w-8 text-amber-500" />
-  };
+    statistics: <BarChart className="h-8 w-8 text-amber-500" />,
+  }
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md cursor-pointer" onClick={() => onSelect(template)}>
@@ -110,9 +96,7 @@ const ReportTemplateCard = ({ template, onSelect }: ReportTemplateCardProps) => 
         <CardTitle className="text-xl mt-4">{template.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className="line-clamp-2 min-h-[48px]">
-          {template.description}
-        </CardDescription>
+        <CardDescription className="line-clamp-2 min-h-[48px]">{template.description}</CardDescription>
       </CardContent>
       <CardFooter className="pt-2 border-t bg-muted/30">
         <Button variant="outline" className="w-full" onClick={() => onSelect(template)}>
@@ -120,23 +104,24 @@ const ReportTemplateCard = ({ template, onSelect }: ReportTemplateCardProps) => 
         </Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}
 
 interface ReportTemplateSelectorProps {
-  onSelect: (template: ReportTemplate) => void;
+  onSelect: (template: ReportTemplate) => void
 }
 
 export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedType, setSelectedType] = useState<string>("all")
 
   const filteredTemplates = MOCK_TEMPLATES.filter(template => {
-    const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = selectedType === "all" || template.type === selectedType;
-    return matchesSearch && matchesType;
-  });
+    const matchesSearch =
+      template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesType = selectedType === "all" || template.type === selectedType
+    return matchesSearch && matchesType
+  })
 
   return (
     <div className="space-y-6">
@@ -148,7 +133,7 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
             placeholder="Rechercher un modèle..."
             className="pl-9 w-full"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
           />
         </div>
 
@@ -181,12 +166,8 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
 
       {filteredTemplates.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredTemplates.map((template) => (
-            <ReportTemplateCard
-              key={template.id}
-              template={template}
-              onSelect={onSelect}
-            />
+          {filteredTemplates.map(template => (
+            <ReportTemplateCard key={template.id} template={template} onSelect={onSelect} />
           ))}
         </div>
       ) : (
@@ -196,13 +177,12 @@ export function ReportTemplateSelector({ onSelect }: ReportTemplateSelectorProps
           </div>
           <h3 className="text-lg font-medium">Aucun modèle trouvé</h3>
           <p className="text-muted-foreground mt-1 mb-4 max-w-md">
-            Nous n&apos;avons pas trouvé de modèle correspondant à votre recherche. Essayez avec d&apos;autres termes ou créez un nouveau modèle.
+            Nous n&apos;avons pas trouvé de modèle correspondant à votre recherche. Essayez avec d&apos;autres termes ou
+            créez un nouveau modèle.
           </p>
-          <Button onClick={() => console.log("Create new template")}>
-            Créer un nouveau modèle
-          </Button>
+          <Button onClick={() => console.log("Create new template")}>Créer un nouveau modèle</Button>
         </div>
       )}
     </div>
-  );
-} 
+  )
+}

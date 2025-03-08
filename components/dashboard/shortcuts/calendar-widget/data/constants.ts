@@ -1,6 +1,6 @@
-import type { DayAppointments } from "../types";
+import type { DayAppointments } from "../types"
 
-export const CALENDAR_VIEW_MODE_KEY = "calendar-widget-view-mode";
+export const CALENDAR_VIEW_MODE_KEY = "calendar-widget-view-mode"
 
 export const appointmentColors = {
   consultation: "bg-blue-500 text-white hover:bg-blue-600",
@@ -8,7 +8,7 @@ export const appointmentColors = {
   grooming: "bg-purple-500 text-white hover:bg-purple-600",
   vaccination: "bg-green-500 text-white hover:bg-green-600",
   checkup: "bg-amber-500 text-white hover:bg-amber-600",
-} as const;
+} as const
 
 export const appointmentLabels = {
   consultation: "Consultation",
@@ -16,14 +16,14 @@ export const appointmentLabels = {
   grooming: "Toilettage",
   vaccination: "Vaccination",
   checkup: "Contrôle",
-} as const;
+} as const
 
 // Fonction utilitaire pour générer des dates
 const getDateString = (daysFromNow: number) => {
-  const date = new Date();
-  date.setDate(date.getDate() + daysFromNow);
-  return date.toDateString();
-};
+  const date = new Date()
+  date.setDate(date.getDate() + daysFromNow)
+  return date.toDateString()
+}
 
 // Exemple de données (à remplacer par vos vraies données)
 export const mockAppointments: DayAppointments = {
@@ -270,4 +270,4 @@ export const mockAppointments: DayAppointments = {
       location: "Cabinet principal - Paris 15ème",
     },
   ],
-};
+}

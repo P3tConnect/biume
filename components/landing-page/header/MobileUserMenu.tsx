@@ -1,32 +1,24 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { LogOut, Settings, User as UserIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { signOut } from "@/src/lib/auth-client";
-import { MobileUserMenuProps } from "./types";
+import { LogOut, Settings, User as UserIcon } from "lucide-react"
+import Link from "next/link"
 
-export const MobileUserMenu = ({
-  session,
-  setIsMobileMenuOpen,
-}: MobileUserMenuProps) => {
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { signOut } from "@/src/lib/auth-client"
+
+import { MobileUserMenuProps } from "./types"
+
+export const MobileUserMenu = ({ session, setIsMobileMenuOpen }: MobileUserMenuProps) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3 px-4 py-3">
         <Avatar className="h-9 w-9">
-          <AvatarImage
-            src={session.user?.image || ""}
-            alt={session.user?.name || "User"}
-          />
-          <AvatarFallback className="bg-primary/10 text-primary">
-            {session.user?.name?.[0] || "U"}
-          </AvatarFallback>
+          <AvatarImage src={session.user?.image || ""} alt={session.user?.name || "User"} />
+          <AvatarFallback className="bg-primary/10 text-primary">{session.user?.name?.[0] || "U"}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <span className="text-sm font-medium">{session.user?.name}</span>
-          <span className="text-xs text-muted-foreground">
-            {session.user?.email}
-          </span>
+          <span className="text-xs text-muted-foreground">{session.user?.email}</span>
         </div>
       </div>
 
@@ -49,8 +41,8 @@ export const MobileUserMenu = ({
         </Link>
         <button
           onClick={() => {
-            signOut();
-            setIsMobileMenuOpen(false);
+            signOut()
+            setIsMobileMenuOpen(false)
           }}
           className="flex items-center py-2 px-4 text-sm text-foreground/80 hover:text-foreground hover:bg-accent rounded-md transition-colors w-full text-left"
         >
@@ -59,5 +51,5 @@ export const MobileUserMenu = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

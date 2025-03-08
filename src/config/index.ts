@@ -1,2 +1,2 @@
-export * from "./siteConfig";
-export * from "./menu-list";
+export * from "./menu-list"
+export * from "./siteConfig"

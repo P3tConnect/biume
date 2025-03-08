@@ -1,11 +1,16 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { LayoutGrid, LogOut, Settings, User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query"
+import { motion } from "framer-motion"
+import { LayoutGrid, LogOut, Settings, User } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -17,21 +22,17 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  Badge,
-} from "@/components/ui";
-import { signOut } from "@/src/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { getUserInformations } from "@/src/actions";
+} from "@/components/ui"
+import { getUserInformations } from "@/src/actions"
+import { signOut } from "@/src/lib/auth-client"
 
 export function UserNav() {
   const { data: session, isLoading } = useQuery({
     queryKey: ["user-informations"],
     queryFn: () => getUserInformations({}),
-  });
-  const router = useRouter();
-  const userStatus = "active"; // À remplacer par une vraie logique de statut si nécessaire
+  })
+  const router = useRouter()
+  const userStatus = "active" // À remplacer par une vraie logique de statut si nécessaire
 
   // Liste des éléments du menu
   const menuItems = [
@@ -50,7 +51,7 @@ export function UserNav() {
       icon: <Settings className="w-4 h-4 text-muted-foreground" />,
       label: "Paramètres",
     },
-  ];
+  ]
 
   if (isLoading) {
     return (
@@ -67,7 +68,7 @@ export function UserNav() {
           </Avatar>
         </Button>
       </div>
-    );
+    )
   }
 
   return (
@@ -102,19 +103,11 @@ export function UserNav() {
         </Tooltip>
 
         <DropdownMenuContent className="w-56" align="end" sideOffset={6}>
-          <motion.div
-            initial={{ opacity: 0.9, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
+          <motion.div initial={{ opacity: 0.9, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">
-                  {session?.data?.user.name}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {session?.data?.user.email}
-                </p>
+                <p className="text-sm font-medium">{session?.data?.user.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{session?.data?.user.email}</p>
                 {userStatus === "active" && (
                   <Badge
                     variant="outline"
@@ -129,10 +122,7 @@ export function UserNav() {
             <DropdownMenuGroup>
               {menuItems.map((item, index) => (
                 <DropdownMenuItem key={index} asChild>
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
+                  <Link href={item.href} className="flex items-center gap-2 cursor-pointer">
                     {item.icon}
                     <span>{item.label}</span>
                   </Link>
@@ -145,7 +135,7 @@ export function UserNav() {
                 await signOut({
                   fetchOptions: {
                     onSuccess: () => {
-                      router.push("/sign-in");
+                      router.push("/sign-in")
                     },
                   },
                 })
@@ -159,5 +149,5 @@ export function UserNav() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }

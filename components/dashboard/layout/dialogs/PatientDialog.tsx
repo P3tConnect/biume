@@ -1,62 +1,32 @@
-"use client";
+"use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { CalendarIcon, Loader2, PawPrint, UserRound, ClipboardList } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/src/lib/utils";
-import { getClients } from "@/src/actions/client.action";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarIcon, ClipboardList, Loader2, PawPrint, UserRound } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { getClients } from "@/src/actions/client.action"
+import { cn } from "@/src/lib/utils"
 
 interface PatientDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const formSchema = z.object({
@@ -69,8 +39,14 @@ const formSchema = z.object({
   gender: z.enum(["Male", "Female"], {
     message: "Veuillez sélectionner un genre.",
   }),
-  weight: z.string().optional().transform(v => v === "" ? undefined : Number(v)),
-  height: z.string().optional().transform(v => v === "" ? undefined : Number(v)),
+  weight: z
+    .string()
+    .optional()
+    .transform(v => (v === "" ? undefined : Number(v))),
+  height: z
+    .string()
+    .optional()
+    .transform(v => (v === "" ? undefined : Number(v))),
   breed: z.string().optional(),
   nacType: z.string().optional(),
   birthDate: z.date({
@@ -80,37 +56,37 @@ const formSchema = z.object({
   ownerId: z.string({
     required_error: "Le propriétaire est requis.",
   }),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 // Cette fonction simule l'appel à createPet de src/actions/pet.action.ts
 const createPet = async (data: FormValues) => {
   // Simulation d'un appel API
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
-      console.log("Patient créé:", data);
-      resolve({ success: true, data });
-    }, 1000);
-  });
-};
+      console.log("Patient créé:", data)
+      resolve({ success: true, data })
+    }, 1000)
+  })
+}
 
 const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   // Récupération des clients
   const { data: clients, isLoading: isLoadingClients } = useQuery({
-    queryKey: ['clients'],
+    queryKey: ["clients"],
     queryFn: async () => {
-      const result = await getClients({ status: 'Active' });
-      if ('error' in result) {
-        throw new Error(result.error);
+      const result = await getClients({ status: "Active" })
+      if ("error" in result) {
+        throw new Error(result.error)
       }
-      return result.data || [];
+      return result.data || []
     },
     // On ne charge les clients que si le modal est ouvert
     enabled: open,
-  });
+  })
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -122,52 +98,64 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
       nacType: "",
       description: "",
     },
-  });
+  })
 
-  const selectedType = form.watch("type");
-  const selectedGender = form.watch("gender");
-  const selectedAnimalName = form.watch("name");
+  const selectedType = form.watch("type")
+  const selectedGender = form.watch("gender")
+  const selectedAnimalName = form.watch("name")
 
   const mutation = useMutation({
     mutationFn: createPet,
     onSuccess: () => {
-      toast.success("Le patient a été créé avec succès");
-      form.reset();
-      onOpenChange(false);
-      router.refresh();
+      toast.success("Le patient a été créé avec succès")
+      form.reset()
+      onOpenChange(false)
+      router.refresh()
     },
     onError: () => {
-      toast.error("Une erreur est survenue lors de la création du patient");
+      toast.error("Une erreur est survenue lors de la création du patient")
     },
-  });
+  })
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
-  };
+    mutation.mutate(values)
+  }
 
   // Fonction pour obtenir l'emoji du type d'animal
   const getAnimalEmoji = (type: string) => {
     switch (type) {
-      case "Dog": return "🐕";
-      case "Cat": return "🐈";
-      case "Bird": return "🦜";
-      case "Horse": return "🐎";
-      case "NAC": return "🦔";
-      default: return "🐾";
+      case "Dog":
+        return "🐕"
+      case "Cat":
+        return "🐈"
+      case "Bird":
+        return "🦜"
+      case "Horse":
+        return "🐎"
+      case "NAC":
+        return "🦔"
+      default:
+        return "🐾"
     }
-  };
+  }
 
   // Fonction pour obtenir le label du type d'animal en français
   const getAnimalTypeLabel = (type: string) => {
     switch (type) {
-      case "Dog": return "Chien";
-      case "Cat": return "Chat";
-      case "Bird": return "Oiseau";
-      case "Horse": return "Cheval";
-      case "NAC": return "NAC";
-      default: return type;
+      case "Dog":
+        return "Chien"
+      case "Cat":
+        return "Chat"
+      case "Bird":
+        return "Oiseau"
+      case "Horse":
+        return "Cheval"
+      case "NAC":
+        return "NAC"
+      default:
+        return type
     }
-  };
+  }
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
@@ -220,14 +208,14 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Propriétaire</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            disabled={isLoadingClients}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoadingClients}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder={isLoadingClients ? "Chargement des clients..." : "Sélectionnez un propriétaire"} />
+                                <SelectValue
+                                  placeholder={
+                                    isLoadingClients ? "Chargement des clients..." : "Sélectionnez un propriétaire"
+                                  }
+                                />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -237,15 +225,13 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                                   <span>Chargement...</span>
                                 </div>
                               ) : clients && clients.length > 0 ? (
-                                clients.map((client) => (
+                                clients.map(client => (
                                   <SelectItem key={client.id} value={client.id}>
                                     {client.name}
                                   </SelectItem>
                                 ))
                               ) : (
-                                <div className="p-2 text-center text-sm">
-                                  Aucun client disponible
-                                </div>
+                                <div className="p-2 text-center text-sm">Aucun client disponible</div>
                               )}
                             </SelectContent>
                           </Select>
@@ -278,10 +264,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Type d'animal</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Sélectionnez un type" />
@@ -306,10 +289,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Genre</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Sélectionnez un genre" />
@@ -367,10 +347,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                               <FormControl>
                                 <Button
                                   variant={"outline"}
-                                  className={cn(
-                                    "pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
+                                  className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                 >
                                   {field.value ? (
                                     format(field.value, "PPP", { locale: fr })
@@ -386,9 +363,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                                 mode="single"
                                 selected={field.value}
                                 onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() || date < new Date("1900-01-01")
-                                }
+                                disabled={date => date > new Date() || date < new Date("1900-01-01")}
                                 initialFocus
                               />
                             </PopoverContent>
@@ -454,18 +429,10 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
             </div>
 
             <div className="flex justify-end gap-3 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Annuler
               </Button>
-              <Button
-                type="submit"
-                disabled={mutation.isPending}
-                className="min-w-28"
-              >
+              <Button type="submit" disabled={mutation.isPending} className="min-w-28">
                 {mutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -480,7 +447,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
         </Form>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
-export default PatientDialog;
+export default PatientDialog

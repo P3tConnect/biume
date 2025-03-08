@@ -1,11 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from "next/image"
+import Link from "next/link"
 
 interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-  profile: string;
+  name: string
+  role: string
+  image: string
+  profile: string
 }
 
 export function TeamSection() {
@@ -21,8 +21,8 @@ export function TeamSection() {
       role: "Co-fondateur & Développeur",
       image: "/assets/images/graig-kolodziejczyk.png",
       profile: "https://www.linkedin.com/in/graig-kolodziejczyk-1482241b8/",
-    }
-  ];
+    },
+  ]
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-accent/5">
@@ -55,5 +55,5 @@ export function TeamSection() {
         </div>
       </div>
     </section>
-  );
-} 
+  )
+}

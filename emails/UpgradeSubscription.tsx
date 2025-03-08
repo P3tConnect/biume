@@ -1,40 +1,24 @@
-import React from "react";
-import { EmailLayout } from "./EmailLayout";
-import {
-  Button,
-  Container,
-  Heading,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Button, Container, Heading, Section, Text } from "@react-email/components"
+import React from "react"
 
-const UpgradeSubscription = ({
-  plan,
-  price,
-}: {
-  plan: string;
-  price: string;
-}) => {
+import { EmailLayout } from "./EmailLayout"
+
+const UpgradeSubscription = ({ plan, price }: { plan: string; price: string }) => {
   return (
     <EmailLayout preview="Your subscription has been upgraded! 🎉">
       <Container className="text-center">
         {/* Success Icon */}
         <Text className="text-5xl mb-4">🎉</Text>
 
-        <Heading className="text-2xl font-bold text-gray-800 mb-4">
-          Welcome to {plan}!
-        </Heading>
+        <Heading className="text-2xl font-bold text-gray-800 mb-4">Welcome to {plan}!</Heading>
 
         <Text className="text-gray-600 mb-6">
-          Your subscription has been successfully upgraded. Get ready to unlock
-          all the amazing features!
+          Your subscription has been successfully upgraded. Get ready to unlock all the amazing features!
         </Text>
 
         {/* Subscription Details Card */}
         <Section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-          <Text className="text-sm text-gray-500 uppercase mb-4">
-            Subscription Details
-          </Text>
+          <Text className="text-sm text-gray-500 uppercase mb-4">Subscription Details</Text>
 
           <div className="flex justify-between items-center border-b border-gray-100 pb-4 mb-4">
             <Text className="text-gray-600">Plan</Text>
@@ -59,7 +43,7 @@ const UpgradeSubscription = ({
         </Text>
       </Container>
     </EmailLayout>
-  );
-};
+  )
+}
 
-export default UpgradeSubscription;
+export default UpgradeSubscription

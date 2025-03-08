@@ -1,17 +1,13 @@
-"use client";
+"use client"
 
-import { useRef, useState } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import {
-  Star,
-  ChevronLeft,
-  ChevronRight,
-  MessageSquareQuote,
-} from "lucide-react";
-import { cn } from "@/src/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion } from "framer-motion"
+import { ChevronLeft, ChevronRight, MessageSquareQuote, Star } from "lucide-react"
+import Image from "next/image"
+import { useRef, useState } from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/src/lib/utils"
 
 // Témoignages fictifs
 const testimonials = [
@@ -65,56 +61,50 @@ const testimonials = [
     rating: 5,
     petImage: "/images/testimonials/pet-5.webp",
   },
-];
+]
 
 export function TestimonialsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStartX, setDragStartX] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
+    setActiveIndex(prev => (prev + 1) % testimonials.length)
+  }
 
   const handlePrev = () => {
-    setActiveIndex(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
-    );
-  };
+    setActiveIndex(prev => (prev - 1 + testimonials.length) % testimonials.length)
+  }
 
-  const handleDragStart = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
-  ) => {
-    setIsDragging(true);
+  const handleDragStart = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    setIsDragging(true)
     if ("clientX" in e) {
-      setDragStartX(e.clientX);
+      setDragStartX(e.clientX)
     } else {
-      setDragStartX(e.touches[0].clientX);
+      setDragStartX(e.touches[0].clientX)
     }
-  };
+  }
 
-  const handleDragMove = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
-  ) => {
-    if (!isDragging) return;
+  const handleDragMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (!isDragging) return
 
-    const currentX = "clientX" in e ? e.clientX : e.touches[0].clientX;
-    const diff = dragStartX - currentX;
+    const currentX = "clientX" in e ? e.clientX : e.touches[0].clientX
+    const diff = dragStartX - currentX
 
     if (Math.abs(diff) > 50) {
       if (diff > 0) {
-        handleNext();
+        handleNext()
       } else {
-        handlePrev();
+        handlePrev()
       }
-      setIsDragging(false);
+      setIsDragging(false)
     }
-  };
+  }
 
   const handleDragEnd = () => {
-    setIsDragging(false);
-  };
+    setIsDragging(false)
+  }
 
   return (
     <section id="testimonials" className="py-24 relative overflow-hidden">
@@ -136,13 +126,10 @@ export function TestimonialsSection() {
               <MessageSquareQuote className="w-4 h-4" />
               <span>Témoignages</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ce que nos utilisateurs disent de nous
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ce que nos utilisateurs disent de nous</h2>
             <p className="text-lg text-muted-foreground">
-              Découvrez les expériences des propriétaires d&apos;animaux qui
-              utilisent Biume au quotidien pour prendre soin de leurs
-              compagnons.
+              Découvrez les expériences des propriétaires d&apos;animaux qui utilisent Biume au quotidien pour prendre
+              soin de leurs compagnons.
             </p>
           </motion.div>
         </div>
@@ -175,51 +162,33 @@ export function TestimonialsSection() {
                             key={i}
                             className={cn(
                               "w-5 h-5",
-                              i < testimonial.rating
-                                ? "text-amber-400 fill-amber-400"
-                                : "text-muted stroke-muted",
+                              i < testimonial.rating ? "text-amber-400 fill-amber-400" : "text-muted stroke-muted"
                             )}
                           />
                         ))}
                       </div>
 
                       <p className="text-lg italic relative">
-                        <span className="absolute -left-2 -top-2 text-primary/20 text-4xl">
-                          &quot;
-                        </span>
+                        <span className="absolute -left-2 -top-2 text-primary/20 text-4xl">&quot;</span>
                         {testimonial.content}
-                        <span className="absolute -right-2 bottom-0 text-primary/20 text-4xl">
-                          &quot;
-                        </span>
+                        <span className="absolute -right-2 bottom-0 text-primary/20 text-4xl">&quot;</span>
                       </p>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <Avatar className="h-12 w-12 border-2 border-background">
-                          <AvatarImage
-                            src={testimonial.avatar}
-                            alt={testimonial.author}
-                          />
-                          <AvatarFallback>
-                            {testimonial.author.charAt(0)}
-                          </AvatarFallback>
+                          <AvatarImage src={testimonial.avatar} alt={testimonial.author} />
+                          <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
                           <h4 className="font-medium">{testimonial.author}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {testimonial.role}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                         </div>
                       </div>
 
                       <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-background">
-                        <Image
-                          src={testimonial.petImage}
-                          alt="Animal de compagnie"
-                          fill
-                          className="object-cover"
-                        />
+                        <Image src={testimonial.petImage} alt="Animal de compagnie" fill className="object-cover" />
                       </div>
                     </div>
                   </div>
@@ -230,12 +199,7 @@ export function TestimonialsSection() {
 
           {/* Contrôles de navigation */}
           <div className="flex items-center justify-center gap-6 mt-8">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10"
-              onClick={handlePrev}
-            >
+            <Button variant="outline" size="icon" className="rounded-full h-10 w-10" onClick={handlePrev}>
               <ChevronLeft className="h-5 w-5" />
               <span className="sr-only">Précédent</span>
             </Button>
@@ -247,9 +211,7 @@ export function TestimonialsSection() {
                   onClick={() => setActiveIndex(index)}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all",
-                    index === activeIndex
-                      ? "bg-primary scale-125"
-                      : "bg-primary/20 hover:bg-primary/40",
+                    index === activeIndex ? "bg-primary scale-125" : "bg-primary/20 hover:bg-primary/40"
                   )}
                 >
                   <span className="sr-only">Témoignage {index + 1}</span>
@@ -257,12 +219,7 @@ export function TestimonialsSection() {
               ))}
             </div>
 
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10"
-              onClick={handleNext}
-            >
+            <Button variant="outline" size="icon" className="rounded-full h-10 w-10" onClick={handleNext}>
               <ChevronRight className="h-5 w-5" />
               <span className="sr-only">Suivant</span>
             </Button>
@@ -270,5 +227,5 @@ export function TestimonialsSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

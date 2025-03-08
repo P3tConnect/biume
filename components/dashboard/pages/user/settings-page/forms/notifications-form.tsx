@@ -1,43 +1,32 @@
-'use client';
+"use client"
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  Switch,
-  CardDescription,
-} from '@/components/ui';
-import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
-import { clientSettingsSchema } from '../types/settings-schema';
+import { UseFormReturn } from "react-hook-form"
+import { z } from "zod"
+
+import { CardDescription, FormControl, FormField, FormItem, FormLabel, Switch } from "@/components/ui"
+
+import { clientSettingsSchema } from "../types/settings-schema"
 
 interface NotificationsFormProps {
-  form: UseFormReturn<z.infer<typeof clientSettingsSchema>>;
+  form: UseFormReturn<z.infer<typeof clientSettingsSchema>>
 }
 
 export function NotificationsForm({ form }: NotificationsFormProps) {
-  const { control } = form;
+  const { control } = form
 
   return (
-    <div className='space-y-6'>
+    <div className="space-y-6">
       <FormField
         control={control}
-        name='emailNotifications'
+        name="emailNotifications"
         render={({ field }) => (
-          <FormItem className='flex items-center justify-between rounded-lg border p-4'>
-            <div className='space-y-0.5'>
+          <FormItem className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-0.5">
               <FormLabel>Notifications par email</FormLabel>
-              <CardDescription>
-                Recevez des notifications par email pour les mises à jour
-                importantes.
-              </CardDescription>
+              <CardDescription>Recevez des notifications par email pour les mises à jour importantes.</CardDescription>
             </div>
             <FormControl>
-              <Switch
-                checked={field.value ?? false}
-                onCheckedChange={field.onChange}
-              />
+              <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
             </FormControl>
           </FormItem>
         )}
@@ -45,24 +34,19 @@ export function NotificationsForm({ form }: NotificationsFormProps) {
 
       <FormField
         control={control}
-        name='smsNotifications'
+        name="smsNotifications"
         render={({ field }) => (
-          <FormItem className='flex items-center justify-between rounded-lg border p-4'>
-            <div className='space-y-0.5'>
+          <FormItem className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-0.5">
               <FormLabel>Notifications par SMS</FormLabel>
-              <CardDescription>
-                Recevez des notifications par SMS pour les rappels importants.
-              </CardDescription>
+              <CardDescription>Recevez des notifications par SMS pour les rappels importants.</CardDescription>
             </div>
             <FormControl>
-              <Switch
-                checked={field.value ?? false}
-                onCheckedChange={field.onChange}
-              />
+              <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
             </FormControl>
           </FormItem>
         )}
       />
     </div>
-  );
+  )
 }

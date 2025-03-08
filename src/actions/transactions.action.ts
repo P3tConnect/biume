@@ -1,41 +1,32 @@
-"use server";
+"use server"
 
-import { z } from "zod";
-import { CreateTransactionSchema, transaction } from "../db";
-import {
-  db,
-  ActionError,
-  createServerAction,
-  requireAuth,
-  requireOwner,
-} from "../lib";
-import { eq } from "drizzle-orm";
+import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+import { CreateTransactionSchema, transaction } from "../db"
+import { ActionError, createServerAction, db, requireAuth, requireOwner } from "../lib"
 
 export const getTransactions = createServerAction(
   z.string(),
   async (input, ctx) => {
-    return [];
+    return []
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const createTransactions = createServerAction(
   CreateTransactionSchema,
   async (input, ctx) => {
-    const data = await db
-      .insert(transaction)
-      .values(input)
-      .returning()
-      .execute();
+    const data = await db.insert(transaction).values(input).returning().execute()
 
     if (!data) {
-      throw new ActionError("Transaction not created");
+      throw new ActionError("Transaction not created")
     }
 
-    return data;
+    return data
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const updateTransactions = createServerAction(
   CreateTransactionSchema,
@@ -45,31 +36,27 @@ export const updateTransactions = createServerAction(
       .set(input)
       .where(eq(transaction.id, input.id as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Transaction not updated");
+      throw new ActionError("Transaction not updated")
     }
 
-    return data;
+    return data
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const deleteTransaction = createServerAction(
   z.string(),
   async (input, ctx) => {
-    const data = await db
-      .delete(transaction)
-      .where(eq(transaction.id, input))
-      .returning()
-      .execute();
+    const data = await db.delete(transaction).where(eq(transaction.id, input)).returning().execute()
 
     if (!data) {
-      throw new ActionError("Transaction not deleted");
+      throw new ActionError("Transaction not deleted")
     }
 
-    return data;
+    return data
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)

@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, PlusCircle } from "lucide-react";
+import { ChevronRight } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const PlanningHeader = () => {
   return (
@@ -14,9 +15,7 @@ export const PlanningHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Planning des consultations
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Gérez vos rendez-vous et consultations
-            </p>
+            <p className="text-sm text-muted-foreground">Gérez vos rendez-vous et consultations</p>
           </div>
           <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">
             Voir plus
@@ -25,5 +24,5 @@ export const PlanningHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

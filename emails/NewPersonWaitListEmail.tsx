@@ -1,12 +1,7 @@
-import React from "react";
-import { EmailLayout } from "./EmailLayout";
-import {
-  Container,
-  Text,
-  Heading,
-  Section,
-  Link,
-} from "@react-email/components";
+import { Container, Heading, Link, Section, Text } from "@react-email/components"
+import React from "react"
+
+import { EmailLayout } from "./EmailLayout"
 
 const NewPersonWaitList = ({ subEmail }: { subEmail: string }) => {
   return (
@@ -68,13 +63,12 @@ const NewPersonWaitList = ({ subEmail }: { subEmail: string }) => {
               margin: "0",
             }}
           >
-            Remember to follow up with the subscriber and keep them updated on
-            our progress.
+            Remember to follow up with the subscriber and keep them updated on our progress.
           </Text>
         </Section>
       </Container>
     </EmailLayout>
-  );
-};
+  )
+}
 
-export default NewPersonWaitList;
+export default NewPersonWaitList

@@ -1,57 +1,49 @@
-"use client";
+"use client"
 
-import { AnimalDetails, MedicalRecord } from "./types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  HeartPulse,
-  Plus,
-  Calendar,
-  Stethoscope,
-  Pill,
-  User,
-  ClipboardList,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
-import { format, isValid } from "date-fns";
-import { fr } from "date-fns/locale";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { format, isValid } from "date-fns"
+import { fr } from "date-fns/locale"
+import { AnimatePresence, motion } from "framer-motion"
+import { ChevronDown, ClipboardList, HeartPulse, Pill, Plus, Stethoscope } from "lucide-react"
+import { useState } from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+import { AnimalDetails, MedicalRecord } from "./types"
 
 interface MedicalTabProps {
-  animal: AnimalDetails;
+  animal: AnimalDetails
 }
 
 export const MedicalTab = ({ animal }: MedicalTabProps) => {
   const [expandedRecords, setExpandedRecords] = useState<{
-    [key: string]: boolean;
-  }>({});
+    [key: string]: boolean
+  }>({})
 
   // Fonction pour basculer l'état d'expansion d'un dossier
   const toggleExpand = (recordId: string) => {
-    setExpandedRecords((prev) => ({
+    setExpandedRecords(prev => ({
       ...prev,
       [recordId]: !prev[recordId],
-    }));
-  };
+    }))
+  }
 
   // Données fictives en cas d'absence de dossier médical
-  const medicalRecords = animal.medicalRecords || [];
+  const medicalRecords = animal.medicalRecords || []
 
   // Trier les dossiers médicaux par date (du plus récent au plus ancien)
   const sortedRecords = [...medicalRecords].sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
 
   // Fonction pour formater la date
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    if (!isValid(date)) return "Date invalide";
+    const date = new Date(dateString)
+    if (!isValid(date)) return "Date invalide"
 
-    return format(date, "d MMMM yyyy", { locale: fr });
-  };
+    return format(date, "d MMMM yyyy", { locale: fr })
+  }
 
   // Fonction pour obtenir l'icône et la couleur en fonction du type de consultation
   const getTypeDetails = (type: MedicalRecord["type"]) => {
@@ -62,45 +54,33 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           label: "Consultation",
           color: "text-blue-600 bg-blue-100",
           description: "Examen clinique standard de l'animal",
-          commonProcedures: [
-            "Examen physique",
-            "Prise de sang",
-            "Auscultation",
-          ],
+          commonProcedures: ["Examen physique", "Prise de sang", "Auscultation"],
           duration: "30 minutes",
           followUpNeeded: false,
-        };
+        }
       case "surgery":
         return {
           icon: <HeartPulse className="h-4 w-4" />,
           label: "Chirurgie",
           color: "text-red-600 bg-red-100",
           description: "Intervention chirurgicale sous anesthésie",
-          commonProcedures: [
-            "Stérilisation",
-            "Extraction dentaire",
-            "Excision de masse",
-          ],
+          commonProcedures: ["Stérilisation", "Extraction dentaire", "Excision de masse"],
           duration: "1-3 heures",
           followUpNeeded: true,
           recoveryPeriod: "7-14 jours",
           requiresFasting: true,
-        };
+        }
       case "hospitalization":
         return {
           icon: <ClipboardList className="h-4 w-4" />,
           label: "Hospitalisation",
           color: "text-purple-600 bg-purple-100",
           description: "Séjour sous surveillance vétérinaire",
-          commonReasons: [
-            "Surveillance post-chirurgicale",
-            "Traitement intensif",
-            "Observation",
-          ],
+          commonReasons: ["Surveillance post-chirurgicale", "Traitement intensif", "Observation"],
           averageDuration: "1-5 jours",
           includesFeeding: true,
           monitoring: "Toutes les 4 heures",
-        };
+        }
       case "treatment":
         return {
           icon: <Pill className="h-4 w-4" />,
@@ -111,16 +91,16 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           frequency: "Variable selon prescription",
           requiresFollowUp: true,
           atHomeInstructions: "Disponibles selon le traitement",
-        };
+        }
       default:
         return {
           icon: <ClipboardList className="h-4 w-4" />,
           label: "Autre",
           color: "text-slate-600 bg-slate-100",
           description: "Autre type d'intervention médicale",
-        };
+        }
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -133,9 +113,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
       >
         <div>
           <h3 className="text-lg font-medium">Dossier médical</h3>
-          <p className="text-sm text-muted-foreground">
-            Historique des consultations
-          </p>
+          <p className="text-sm text-muted-foreground">Historique des consultations</p>
         </div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button size="sm">
@@ -147,11 +125,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
 
       {/* Dossiers médicaux avec animations */}
       {medicalRecords.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
           <Card>
             <CardContent className="pt-6 flex flex-col items-center justify-center text-center p-8">
               <motion.div
@@ -169,8 +143,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
               </motion.div>
               <h3 className="font-medium mb-2">Aucun dossier médical</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Aucun historique médical n'a encore été enregistré pour{" "}
-                {animal.name}.
+                Aucun historique médical n'a encore été enregistré pour {animal.name}.
               </p>
             </CardContent>
           </Card>
@@ -183,8 +156,8 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           transition={{ duration: 0.3 }}
         >
           {sortedRecords.map((record, index) => {
-            const typeDetails = getTypeDetails(record.type);
-            const isExpanded = expandedRecords[record.id] || false;
+            const typeDetails = getTypeDetails(record.type)
+            const isExpanded = expandedRecords[record.id] || false
 
             return (
               <motion.div
@@ -195,10 +168,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                 className="border p-4 rounded-lg hover:shadow-sm transition-shadow duration-200"
               >
                 {/* En-tête de la carte */}
-                <div
-                  className="flex items-center gap-3 cursor-pointer"
-                  onClick={() => toggleExpand(record.id)}
-                >
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleExpand(record.id)}>
                   <motion.div
                     className={`h-8 w-8 rounded-full flex items-center justify-center ${typeDetails.color}`}
                     whileHover={{ scale: 1.1 }}
@@ -207,9 +177,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                     {typeDetails.icon}
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="font-medium">
-                      {record.diagnosis || typeDetails.label}
-                    </h4>
+                    <h4 className="font-medium">{record.diagnosis || typeDetails.label}</h4>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span>{formatDate(record.date)}</span>
                       <span>•</span>
@@ -217,18 +185,13 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                     </div>
                   </div>
                   <Badge className="mr-2">{typeDetails.label}</Badge>
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </motion.div>
                 </div>
 
                 {/* Description du type d'intervention - toujours visible */}
-                <div className="text-sm my-2 text-muted-foreground">
-                  {typeDetails.description}
-                </div>
+                <div className="text-sm my-2 text-muted-foreground">{typeDetails.description}</div>
 
                 {/* Contenu extensible */}
                 <AnimatePresence>
@@ -243,57 +206,41 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
                           {/* Informations spécifiques au type d'intervention */}
                           <div className="rounded-md border p-3 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
-                            <h5 className="text-xs font-medium mb-2">
-                              Détails de l'intervention
-                            </h5>
+                            <h5 className="text-xs font-medium mb-2">Détails de l'intervention</h5>
                             {typeDetails.duration && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">
-                                  Durée :
-                                </span>
+                                <span className="text-muted-foreground">Durée :</span>
                                 <span>{typeDetails.duration}</span>
                               </div>
                             )}
                             {typeDetails.averageDuration && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">
-                                  Durée moyenne :
-                                </span>
+                                <span className="text-muted-foreground">Durée moyenne :</span>
                                 <span>{typeDetails.averageDuration}</span>
                               </div>
                             )}
                             {typeDetails.recoveryPeriod && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">
-                                  Période de récupération :
-                                </span>
+                                <span className="text-muted-foreground">Période de récupération :</span>
                                 <span>{typeDetails.recoveryPeriod}</span>
                               </div>
                             )}
                             {typeDetails.monitoring && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">
-                                  Surveillance :
-                                </span>
+                                <span className="text-muted-foreground">Surveillance :</span>
                                 <span>{typeDetails.monitoring}</span>
                               </div>
                             )}
                             {typeDetails.frequency && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">
-                                  Fréquence :
-                                </span>
+                                <span className="text-muted-foreground">Fréquence :</span>
                                 <span>{typeDetails.frequency}</span>
                               </div>
                             )}
                             {typeDetails.followUpNeeded !== undefined && (
                               <div className="flex justify-between text-xs">
-                                <span className="text-muted-foreground">
-                                  Suivi nécessaire :
-                                </span>
-                                <span>
-                                  {typeDetails.followUpNeeded ? "Oui" : "Non"}
-                                </span>
+                                <span className="text-muted-foreground">Suivi nécessaire :</span>
+                                <span>{typeDetails.followUpNeeded ? "Oui" : "Non"}</span>
                               </div>
                             )}
                           </div>
@@ -302,29 +249,18 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                           <div className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors duration-200">
                             {record.treatment && (
                               <div className="mb-2">
-                                <span className="text-xs font-medium">
-                                  Traitement :
-                                </span>
+                                <span className="text-xs font-medium">Traitement :</span>
                                 <p className="text-xs">{record.treatment}</p>
                               </div>
                             )}
 
                             {record.symptoms && record.symptoms.length > 0 && (
                               <div>
-                                <span className="text-xs font-medium">
-                                  Symptômes :
-                                </span>
+                                <span className="text-xs font-medium">Symptômes :</span>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {record.symptoms.map((symptom, i) => (
-                                    <motion.div
-                                      key={i}
-                                      whileHover={{ scale: 1.05 }}
-                                      transition={{ duration: 0.2 }}
-                                    >
-                                      <Badge
-                                        variant="outline"
-                                        className="text-xs"
-                                      >
+                                    <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+                                      <Badge variant="outline" className="text-xs">
                                         {symptom}
                                       </Badge>
                                     </motion.div>
@@ -336,9 +272,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                         </div>
 
                         {/* Procédures ou types communs */}
-                        {(typeDetails.commonProcedures ||
-                          typeDetails.commonTypes ||
-                          typeDetails.commonReasons) && (
+                        {(typeDetails.commonProcedures || typeDetails.commonTypes || typeDetails.commonReasons) && (
                           <div className="mb-3">
                             <span className="text-xs font-medium">
                               {typeDetails.commonProcedures
@@ -364,10 +298,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                                     duration: 0.2,
                                   }}
                                 >
-                                  <Badge
-                                    variant="secondary"
-                                    className="text-xs"
-                                  >
+                                  <Badge variant="secondary" className="text-xs">
                                     {item}
                                   </Badge>
                                 </motion.div>
@@ -380,9 +311,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                         {record.notes && (
                           <div className="border-t pt-2 mt-2">
                             <span className="text-xs font-medium">Notes :</span>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {record.notes}
-                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">{record.notes}</p>
                           </div>
                         )}
                       </div>
@@ -390,7 +319,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                   )}
                 </AnimatePresence>
               </motion.div>
-            );
+            )
           })}
         </motion.div>
       )}
@@ -434,5 +363,5 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
         </p>
       </motion.div>
     </div>
-  );
-};
+  )
+}

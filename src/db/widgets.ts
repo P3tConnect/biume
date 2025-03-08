@@ -1,16 +1,13 @@
-import { InferSelectModel, relations } from "drizzle-orm";
-import { integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-import { Organization, organization } from "./organization";
+import { Organization, organization } from "./organization"
 
-export const widgetsType = pgEnum("widgetsType", ["Square", "Rectangle"]);
+export const widgetsType = pgEnum("widgetsType", ["Square", "Rectangle"])
 
-export const widgetsOrientation = pgEnum("widgetsOrientation", [
-  "Horizontal",
-  "Vertical",
-]);
+export const widgetsOrientation = pgEnum("widgetsOrientation", ["Horizontal", "Vertical"])
 
 export const widgets = pgTable("widgets", {
   id: text("id")
@@ -23,22 +20,22 @@ export const widgets = pgTable("widgets", {
   organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
-});
+})
 
 export const widgetsRelations = relations(widgets, ({ one, many }) => ({
   company: one(organization, {
     fields: [widgets.organizationId],
     references: [organization.id],
   }),
-}));
+}))
 
 export type Widget = InferSelectModel<typeof widgets> & {
-  company: Organization;
-};
+  company: Organization
+}
 
-export type CreateWidget = typeof widgets.$inferInsert;
-export const WidgetsType = z.enum(widgetsType.enumValues);
-export const WidgetsOrientation = z.enum(widgetsOrientation.enumValues);
+export type CreateWidget = typeof widgets.$inferInsert
+export const WidgetsType = z.enum(widgetsType.enumValues)
+export const WidgetsOrientation = z.enum(widgetsOrientation.enumValues)
 
-export const WidgetsSchema = createSelectSchema(widgets);
-export const CreateWidgetsSchema = createInsertSchema(widgets);
+export const WidgetsSchema = createSelectSchema(widgets)
+export const CreateWidgetsSchema = createInsertSchema(widgets)

@@ -1,44 +1,32 @@
-"use client";
+"use client"
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useDropzone } from "react-dropzone";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Loader2, X } from "lucide-react";
-import { cn } from "@/src/lib/utils";
-import { useUploadThing } from "@/src/lib/uploadthing";
-import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { proDocumentsSchema } from "../../types/onboarding-schemas";
-import { createDocumentsStepAction } from "@/src/actions";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { Loader2, X } from "lucide-react"
+import { useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { createDocumentsStepAction } from "@/src/actions"
+import { useUploadThing } from "@/src/lib/uploadthing"
+import { cn } from "@/src/lib/utils"
+
+import { proDocumentsSchema } from "../../types/onboarding-schemas"
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_FILE_TYPES = {
   "application/pdf": [".pdf"],
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
-};
+}
 
-export function DocumentsForm({
-  nextStep,
-  previousStep,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-}) {
-  const [isLoading, setIsLoading] = useState(false);
+export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) {
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof proDocumentsSchema>>({
     resolver: zodResolver(proDocumentsSchema),
     defaultValues: {
@@ -46,29 +34,29 @@ export function DocumentsForm({
       siren: "",
       siret: "",
     },
-  });
+  })
 
-  const { control, setValue, handleSubmit, reset } = form;
+  const { control, setValue, handleSubmit, reset } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: createDocumentsStepAction,
     onSuccess: () => {
-      setIsLoading(false);
-      reset();
-      nextStep();
+      setIsLoading(false)
+      reset()
+      nextStep()
     },
     onMutate: () => {
-      setIsLoading(true);
+      setIsLoading(true)
     },
     onError: (error: { message: string }) => {
-      toast.error(error.message);
-      setIsLoading(false);
+      toast.error(error.message)
+      setIsLoading(false)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   return (
     <Form {...form}>
@@ -80,26 +68,18 @@ export function DocumentsForm({
             render={({ field }) => (
               <FormItem className="space-y-6">
                 <div className="space-y-2">
-                  <FormLabel className="text-lg font-semibold">
-                    Documents justificatifs
-                  </FormLabel>
+                  <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <FormDescription>
-                      Pour vérifier l&apos;identité de votre entreprise,
-                      veuillez fournir :
+                      Pour vérifier l&apos;identité de votre entreprise, veuillez fournir :
                     </FormDescription>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Un extrait Kbis récent (moins de 3 mois)</li>
-                      <li>
-                        Ou tout autre document officiel d&apos;identification
-                      </li>
+                      <li>Ou tout autre document officiel d&apos;identification</li>
                     </ul>
                   </div>
                 </div>
-                <DropzoneInput
-                  onFilesChanged={(files) => setValue("documents", files)}
-                  value={field.value ?? []}
-                />
+                <DropzoneInput onFilesChanged={files => setValue("documents", files)} value={field.value ?? []} />
                 <FormMessage />
               </FormItem>
             )}
@@ -107,9 +87,7 @@ export function DocumentsForm({
 
           <div className="grid gap-8 pt-6">
             <div className="flex flex-col space-y-6">
-              <h3 className="text-lg font-semibold">
-                Informations d&apos;identification
-              </h3>
+              <h3 className="text-lg font-semibold">Informations d&apos;identification</h3>
               <div className="grid gap-6 sm:grid-cols-2">
                 <FormField
                   control={control}
@@ -126,9 +104,7 @@ export function DocumentsForm({
                           className="font-mono"
                         />
                       </FormControl>
-                      <FormDescription>
-                        Identifiant unique à 9 chiffres
-                      </FormDescription>
+                      <FormDescription>Identifiant unique à 9 chiffres</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -149,9 +125,7 @@ export function DocumentsForm({
                           className="font-mono"
                         />
                       </FormControl>
-                      <FormDescription>
-                        SIREN + 5 chiffres pour votre établissement
-                      </FormDescription>
+                      <FormDescription>SIREN + 5 chiffres pour votre établissement</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -162,28 +136,14 @@ export function DocumentsForm({
 
           {/* Footer with buttons */}
           <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-xl"
-              onClick={previousStep}
-            >
+            <Button type="button" variant="outline" className="rounded-xl" onClick={previousStep}>
               ← Précédent
             </Button>
             <div className="flex gap-3">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={nextStep}
-                className="text-muted-foreground"
-              >
+              <Button type="button" variant="ghost" onClick={nextStep} className="text-muted-foreground">
                 Passer
               </Button>
-              <Button
-                disabled={isLoading}
-                type="submit"
-                className="rounded-xl px-6"
-              >
+              <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -198,42 +158,42 @@ export function DocumentsForm({
         </div>
       </form>
     </Form>
-  );
+  )
 }
 
 interface DropzoneInputProps {
-  onFilesChanged: (files: { url: string; name?: string }[]) => void;
-  value: { url: string; name?: string }[];
+  onFilesChanged: (files: { url: string; name?: string }[]) => void
+  value: { url: string; name?: string }[]
 }
 
 function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
   const { startUpload, isUploading } = useUploadThing("documentsUploader", {
-    onClientUploadComplete: (res) => {
-      if (!res) return;
-      const uploadedUrls = res.map((file) => ({
+    onClientUploadComplete: res => {
+      if (!res) return
+      const uploadedUrls = res.map(file => ({
         url: file.url,
         name: file.name,
-      }));
-      onFilesChanged(uploadedUrls);
-      toast.success("Documents téléchargés avec succès");
+      }))
+      onFilesChanged(uploadedUrls)
+      toast.success("Documents téléchargés avec succès")
     },
     onUploadError: (error: { message: string }) => {
-      toast.error("Erreur lors du téléchargement: " + error.message);
+      toast.error("Erreur lors du téléchargement: " + error.message)
     },
-  });
+  })
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ACCEPTED_FILE_TYPES,
     maxSize: MAX_FILE_SIZE,
-    onDrop: async (acceptedFiles) => {
-      if (acceptedFiles.length === 0) return;
-      await startUpload(acceptedFiles);
+    onDrop: async acceptedFiles => {
+      if (acceptedFiles.length === 0) return
+      await startUpload(acceptedFiles)
     },
-  });
+  })
 
   const removeFile = (fileToRemove: { url: string; name?: string }) => {
-    onFilesChanged(value.filter((file) => file.url !== fileToRemove.url));
-  };
+    onFilesChanged(value.filter(file => file.url !== fileToRemove.url))
+  }
 
   return (
     <div className="space-y-4">
@@ -242,21 +202,14 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
         className={cn(
           "border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all duration-200",
           "hover:border-primary hover:bg-primary/5",
-          isDragActive
-            ? "border-primary bg-primary/10 scale-[1.02]"
-            : "border-muted-foreground/25",
-          isUploading && "opacity-50 cursor-not-allowed",
+          isDragActive ? "border-primary bg-primary/10 scale-[1.02]" : "border-muted-foreground/25",
+          isUploading && "opacity-50 cursor-not-allowed"
         )}
       >
         <input {...getInputProps()} disabled={isUploading} />
         <div className="text-center space-y-4">
           <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <svg
-              className="w-6 h-6 text-primary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+            <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -273,9 +226,7 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
                   ? "Téléchargement en cours..."
                   : "Glissez-déposez vos fichiers ici"}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              PDF, JPEG ou PNG (max. 5MB)
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">PDF, JPEG ou PNG (max. 5MB)</p>
           </div>
         </div>
       </div>
@@ -289,12 +240,7 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
             >
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -303,9 +249,7 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
                     />
                   </svg>
                 </div>
-                <span className="text-sm font-medium">
-                  Document {index + 1}
-                </span>
+                <span className="text-sm font-medium">Document {index + 1}</span>
               </div>
               <Button
                 type="button"
@@ -322,5 +266,5 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
         </ul>
       )}
     </div>
-  );
+  )
 }

@@ -1,57 +1,33 @@
-import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import {
-  FormMessage,
-  FormLabel,
-  FormItem,
-  FormControl,
-} from "@/components/ui/form";
-import {
-  UserIcon,
-  PawPrintIcon,
-  SearchIcon,
-  PlusIcon,
-  XCircleIcon,
-  InfoIcon,
-  CheckIcon,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { AppointmentFormValues } from "./AppointmentDialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/src/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { CheckIcon, InfoIcon, PawPrintIcon, PlusIcon, SearchIcon, UserIcon, XCircleIcon } from "lucide-react"
+import React, { useState } from "react"
+import { useFormContext } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { Avatar } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/src/lib/utils"
+
+import { AppointmentFormValues } from "./AppointmentDialog"
 
 // Schéma de validation pour le nouveau client
 const newClientSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
   email: z.string().email("Email invalide").min(1, "L'email est requis"),
   phone: z.string().min(1, "Le téléphone est requis"),
-});
+})
 
-type NewClientFormValues = z.infer<typeof newClientSchema>;
+type NewClientFormValues = z.infer<typeof newClientSchema>
 
 const ClientStep = () => {
-  const form = useFormContext<AppointmentFormValues>();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showNewClientDialog, setShowNewClientDialog] = useState(false);
+  const form = useFormContext<AppointmentFormValues>()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showNewClientDialog, setShowNewClientDialog] = useState(false)
 
   // Formulaire pour nouveau client
   const clientForm = useForm<NewClientFormValues>({
@@ -61,7 +37,7 @@ const ClientStep = () => {
       email: "",
       phone: "",
     },
-  });
+  })
 
   // Clients et animaux (simulés pour l'exemple)
   const [clients, setClients] = useState([
@@ -83,7 +59,7 @@ const ClientStep = () => {
       email: "sophie@example.com",
       phone: "06 34 56 78 90",
     },
-  ]);
+  ])
 
   const [pets, setPets] = useState([
     {
@@ -107,44 +83,42 @@ const ClientStep = () => {
       race: "Canari",
       clientId: "client3",
     },
-  ]);
+  ])
 
   // Filtrer les clients en fonction de la recherche
   const filteredClients = clients.filter(
-    (client) =>
+    client =>
       client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      client.phone.includes(searchQuery),
-  );
+      client.phone.includes(searchQuery)
+  )
 
   // Filtrer les animaux en fonction du client sélectionné
-  const selectedClientPets = pets.filter(
-    (pet) => pet.clientId === form.watch("clientId"),
-  );
+  const selectedClientPets = pets.filter(pet => pet.clientId === form.watch("clientId"))
 
   // Gérer la soumission du formulaire de nouveau client
   const handleCreateClient = (data: NewClientFormValues) => {
-    const newClientId = `client${clients.length + 1}`;
+    const newClientId = `client${clients.length + 1}`
     const clientToAdd = {
       id: newClientId,
       ...data,
-    };
+    }
 
-    setClients([...clients, clientToAdd]);
-    form.setValue("clientId", newClientId);
+    setClients([...clients, clientToAdd])
+    form.setValue("clientId", newClientId)
 
     // Fermer le dialog
-    setShowNewClientDialog(false);
+    setShowNewClientDialog(false)
 
     // Réinitialiser le formulaire
-    clientForm.reset();
-  };
+    clientForm.reset()
+  }
 
   // Pour annuler la création
   const handleCancel = () => {
-    setShowNewClientDialog(false);
-    clientForm.reset();
-  };
+    setShowNewClientDialog(false)
+    clientForm.reset()
+  }
 
   return (
     <div className="space-y-5">
@@ -175,19 +149,13 @@ const ClientStep = () => {
       <div className="space-y-3">
         {/* En-têtes côte à côte */}
         <div className="grid grid-cols-2 gap-4">
-          <label
-            htmlFor="client-select"
-            className="text-sm font-medium flex items-center"
-          >
+          <label htmlFor="client-select" className="text-sm font-medium flex items-center">
             <UserIcon className="w-4 h-4 mr-2 text-primary" />
             Client
             <span className="text-destructive ml-1">*</span>
           </label>
 
-          <label
-            htmlFor="animal-select"
-            className="text-sm font-medium flex items-center"
-          >
+          <label htmlFor="animal-select" className="text-sm font-medium flex items-center">
             <PawPrintIcon className="w-4 h-4 mr-2 text-primary" />
             Animal de compagnie
             <span className="text-destructive ml-1">*</span>
@@ -199,7 +167,7 @@ const ClientStep = () => {
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="pl-9 pr-4 py-2 border-muted-foreground/20"
             placeholder="Rechercher un client..."
           />
@@ -223,14 +191,13 @@ const ClientStep = () => {
             <div className="border rounded-md h-[180px] overflow-y-auto">
               {filteredClients.length > 0 ? (
                 <div className="divide-y">
-                  {filteredClients.map((client) => (
+                  {filteredClients.map(client => (
                     <button
                       key={client.id}
                       type="button"
                       className={cn(
                         "w-full flex items-center p-2.5 text-left hover:bg-muted/50 transition-colors",
-                        form.watch("clientId") === client.id &&
-                          "bg-primary/5 hover:bg-primary/10",
+                        form.watch("clientId") === client.id && "bg-primary/5 hover:bg-primary/10"
                       )}
                       onClick={() => form.setValue("clientId", client.id)}
                     >
@@ -254,15 +221,9 @@ const ClientStep = () => {
               ) : (
                 <div className="h-full flex flex-col items-center justify-center p-4 text-center">
                   <p className="text-sm text-muted-foreground mb-2">
-                    {searchQuery
-                      ? `Aucun résultat pour "${searchQuery}"`
-                      : "Aucun client disponible"}
+                    {searchQuery ? `Aucun résultat pour "${searchQuery}"` : "Aucun client disponible"}
                   </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowNewClientDialog(true)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => setShowNewClientDialog(true)}>
                     <PlusIcon className="h-3.5 w-3.5 mr-1" />
                     {searchQuery ? "Créer ce client" : "Ajouter un client"}
                   </Button>
@@ -270,11 +231,7 @@ const ClientStep = () => {
               )}
             </div>
 
-            {form.formState.errors.clientId && (
-              <FormMessage>
-                {form.formState.errors.clientId.message}
-              </FormMessage>
-            )}
+            {form.formState.errors.clientId && <FormMessage>{form.formState.errors.clientId.message}</FormMessage>}
           </div>
 
           {/* Liste des animaux */}
@@ -283,14 +240,13 @@ const ClientStep = () => {
               {form.watch("clientId") ? (
                 selectedClientPets.length > 0 ? (
                   <div className="divide-y">
-                    {selectedClientPets.map((pet) => (
+                    {selectedClientPets.map(pet => (
                       <button
                         key={pet.id}
                         type="button"
                         className={cn(
                           "w-full flex items-center p-2.5 text-left hover:bg-muted/50 transition-colors",
-                          form.watch("patientId") === pet.id &&
-                            "bg-primary/5 hover:bg-primary/10",
+                          form.watch("patientId") === pet.id && "bg-primary/5 hover:bg-primary/10"
                         )}
                         onClick={() => form.setValue("patientId", pet.id)}
                       >
@@ -300,15 +256,10 @@ const ClientStep = () => {
                         <div className="flex-1 min-w-0">
                           <p className="font-medium truncate">{pet.name}</p>
                           <div className="flex items-center gap-1">
-                            <Badge
-                              variant="outline"
-                              className="text-xs font-normal py-0 h-4 px-1.5"
-                            >
+                            <Badge variant="outline" className="text-xs font-normal py-0 h-4 px-1.5">
                               {pet.type}
                             </Badge>
-                            <span className="text-xs text-muted-foreground truncate">
-                              {pet.race}
-                            </span>
+                            <span className="text-xs text-muted-foreground truncate">{pet.race}</span>
                           </div>
                         </div>
                         {form.watch("patientId") === pet.id && (
@@ -319,29 +270,20 @@ const ClientStep = () => {
                   </div>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-                    <p className="text-sm text-muted-foreground mb-1">
-                      Ce client n'a pas encore d'animaux
-                    </p>
+                    <p className="text-sm text-muted-foreground mb-1">Ce client n'a pas encore d'animaux</p>
                     <p className="text-xs text-muted-foreground">
-                      Le client doit créer ses animaux de compagnie dans son
-                      espace personnel.
+                      Le client doit créer ses animaux de compagnie dans son espace personnel.
                     </p>
                   </div>
                 )
               ) : (
                 <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Veuillez d'abord sélectionner un client
-                  </p>
+                  <p className="text-sm text-muted-foreground">Veuillez d'abord sélectionner un client</p>
                 </div>
               )}
             </div>
 
-            {form.formState.errors.patientId && (
-              <FormMessage>
-                {form.formState.errors.patientId.message}
-              </FormMessage>
-            )}
+            {form.formState.errors.patientId && <FormMessage>{form.formState.errors.patientId.message}</FormMessage>}
           </div>
         </div>
 
@@ -350,16 +292,12 @@ const ClientStep = () => {
           <div className="py-2 px-3 bg-muted/30 rounded-md text-xs text-muted-foreground flex items-center">
             <InfoIcon className="h-3.5 w-3.5 mr-2 text-primary" />
             <span>
-              {clients.find((c) => c.id === form.watch("clientId"))?.name}
+              {clients.find(c => c.id === form.watch("clientId"))?.name}
               {form.watch("patientId") && (
                 <>
                   {" avec "}
-                  <span className="font-medium">
-                    {pets.find((p) => p.id === form.watch("patientId"))?.name}
-                  </span>{" "}
-                  <span className="text-xs">
-                    ({pets.find((p) => p.id === form.watch("patientId"))?.type})
-                  </span>
+                  <span className="font-medium">{pets.find(p => p.id === form.watch("patientId"))?.name}</span>{" "}
+                  <span className="text-xs">({pets.find(p => p.id === form.watch("patientId"))?.type})</span>
                 </>
               )}
             </span>
@@ -370,9 +308,7 @@ const ClientStep = () => {
         {(!form.watch("clientId") || !form.watch("patientId")) && (
           <div className="mt-2 text-xs text-muted-foreground flex items-center">
             <span className="text-destructive mr-1">*</span>
-            <span>
-              Ces deux champs sont obligatoires pour passer à l'étape suivante
-            </span>
+            <span>Ces deux champs sont obligatoires pour passer à l'étape suivante</span>
           </div>
         )}
       </div>
@@ -382,59 +318,37 @@ const ClientStep = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Créer un nouveau client</DialogTitle>
-            <DialogDescription>
-              Saisissez les informations du nouveau client
-            </DialogDescription>
+            <DialogDescription>Saisissez les informations du nouveau client</DialogDescription>
           </DialogHeader>
 
-          <form
-            className="space-y-4 py-4"
-            onSubmit={clientForm.handleSubmit(handleCreateClient)}
-          >
+          <form className="space-y-4 py-4" onSubmit={clientForm.handleSubmit(handleCreateClient)}>
             <FormItem>
               <FormLabel>Nom complet</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Nom du client"
-                  {...clientForm.register("name")}
-                  autoFocus
-                />
+                <Input placeholder="Nom du client" {...clientForm.register("name")} autoFocus />
               </FormControl>
               {clientForm.formState.errors.name && (
-                <FormMessage>
-                  {clientForm.formState.errors.name.message}
-                </FormMessage>
+                <FormMessage>{clientForm.formState.errors.name.message}</FormMessage>
               )}
             </FormItem>
 
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="email@exemple.com"
-                  {...clientForm.register("email")}
-                />
+                <Input type="email" placeholder="email@exemple.com" {...clientForm.register("email")} />
               </FormControl>
               {clientForm.formState.errors.email && (
-                <FormMessage>
-                  {clientForm.formState.errors.email.message}
-                </FormMessage>
+                <FormMessage>{clientForm.formState.errors.email.message}</FormMessage>
               )}
             </FormItem>
 
             <FormItem>
               <FormLabel>Téléphone</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="06 12 34 56 78"
-                  {...clientForm.register("phone")}
-                />
+                <Input placeholder="06 12 34 56 78" {...clientForm.register("phone")} />
               </FormControl>
               {clientForm.formState.errors.phone && (
-                <FormMessage>
-                  {clientForm.formState.errors.phone.message}
-                </FormMessage>
+                <FormMessage>{clientForm.formState.errors.phone.message}</FormMessage>
               )}
             </FormItem>
 
@@ -448,7 +362,7 @@ const ClientStep = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default ClientStep;
+export default ClientStep

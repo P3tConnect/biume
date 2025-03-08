@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "db-generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db-migrate": "drizzle-kit migrate",
     "db-preview": "drizzle-kit studio",
@@ -17,7 +16,13 @@
     "email-build": "email build --packageManager=bun",
     "email-start": "email start",
     "trigger-dev": "bunx --bun trigger.dev@latest dev",
-    "trigger-deploy": "bunx --bun trigger.dev@latest deploy"
+    "trigger-deploy": "bunx --bun trigger.dev@latest deploy",
+    "type-check": "type-check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "remove-unused-imports": "remove-unused-imports 'src/**/*.{ts,tsx}' 'components/**/*.{ts,tsx}' 'app/**/*.{ts,tsx}' 'emails/**/*.{ts,tsx}'"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.0",
@@ -132,7 +137,12 @@
     "drizzle-kit": "^0.30.5",
     "eslint": "^9.21.0",
     "eslint-config-next": "15.2.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "postcss": "^8.5.3",
+    "remove-unused-imports": "^1.0.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2"
   },
@@ -145,5 +155,11 @@
     "protobufjs",
     "sharp"
   ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "remove-unused-imports"
+    ]
+  }
 }

@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { HeroSection } from "./sections/user/hero-section";
-import { FeaturesSection } from "./sections/user/features-section";
-import { TestimonialsSection } from "./sections/user/testimonials-section";
-import { CTASection } from "./sections/user/cta-section";
-import { cn } from "@/src/lib/utils";
-import { PawPrint, AlertCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import Link from "next/link";
+import { motion } from "framer-motion"
+import { AlertCircle, PawPrint } from "lucide-react"
+import Link from "next/link"
+
+import { cn } from "@/src/lib/utils"
+
+import { CTASection } from "./sections/user/cta-section"
+import { FeaturesSection } from "./sections/user/features-section"
+import { HeroSection } from "./sections/user/hero-section"
+import { TestimonialsSection } from "./sections/user/testimonials-section"
 
 export function UserLanding() {
   return (
@@ -19,13 +21,8 @@ export function UserLanding() {
             <AlertCircle className="h-4 w-4 text-primary" />
             <p>
               <span className="font-medium">Lancement prochainement !</span>{" "}
-              <span className="hidden sm:inline">
-                Notre phase bêta arrive bientôt.
-              </span>{" "}
-              <Link
-                href="#cta"
-                className="underline font-semibold hover:text-primary transition-colors"
-              >
+              <span className="hidden sm:inline">Notre phase bêta arrive bientôt.</span>{" "}
+              <Link href="#cta" className="underline font-semibold hover:text-primary transition-colors">
                 Préinscrivez-vous dès maintenant
               </Link>
             </p>
@@ -46,17 +43,12 @@ export function UserLanding() {
         <div className="container px-4 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <Link href="/" className="flex items-center gap-2 shrink-0">
-              <motion.div
-                whileHover={{ rotate: 10 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
+              <motion.div whileHover={{ rotate: 10 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                 <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
                   <PawPrint fill="white" className={"w-5 h-5 text-white"} />
                 </div>
               </motion.div>
-              <span className={cn("font-bold tracking-tight transition-all")}>
-                Biume
-              </span>
+              <span className={cn("font-bold tracking-tight transition-all")}>Biume</span>
             </Link>
 
             <div className="text-center md:text-left text-sm text-muted-foreground">
@@ -64,31 +56,29 @@ export function UserLanding() {
             </div>
 
             <div className="flex gap-6">
-              {["Roadmap", "Confidentialité", "CGU", "Contact", "Support"].map(
-                (item, i) => (
-                  <Link
-                    key={i}
-                    href={
-                      item === "Roadmap"
-                        ? "/roadmap"
-                        : item === "Confidentialité"
-                          ? "/privacy"
-                          : item === "CGU"
-                            ? "/cgu"
-                            : item === "Contact"
-                              ? "/contact"
-                              : "/"
-                    }
-                    className="text-sm hover:text-primary transition-colors"
-                  >
-                    {item}
-                  </Link>
-                ),
-              )}
+              {["Roadmap", "Confidentialité", "CGU", "Contact", "Support"].map((item, i) => (
+                <Link
+                  key={i}
+                  href={
+                    item === "Roadmap"
+                      ? "/roadmap"
+                      : item === "Confidentialité"
+                        ? "/privacy"
+                        : item === "CGU"
+                          ? "/cgu"
+                          : item === "Contact"
+                            ? "/contact"
+                            : "/"
+                  }
+                  className="text-sm hover:text-primary transition-colors"
+                >
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }

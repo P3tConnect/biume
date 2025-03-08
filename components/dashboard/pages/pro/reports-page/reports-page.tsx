@@ -1,4 +1,8 @@
-"use client";
+"use client"
+
+import { BarChart4, FileText, HeartPulse, PenSquare, Plus, Sparkles, Table } from "lucide-react"
+import { useParams, useRouter } from "next/navigation"
+import React, { useState } from "react"
 
 import {
   Button,
@@ -10,17 +14,15 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui";
-import { FileText, Plus, Table, BarChart4, Sparkles, PenSquare, HeartPulse } from "lucide-react";
-import React, { useState } from "react";
-import ReportDetailsDrawer, { type Report } from "./report-details-drawer";
-import { useParams, useRouter } from "next/navigation";
+} from "@/components/ui"
+
+import ReportDetailsDrawer, { type Report } from "./report-details-drawer"
 
 const ReportsPageComponent = () => {
-  const router = useRouter();
-  const params = useParams();
-  const orgId = params.orgId as string;
-  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const router = useRouter()
+  const params = useParams()
+  const orgId = params.orgId as string
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null)
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,9 +34,7 @@ const ReportsPageComponent = () => {
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                 Rapports
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Gérez et analysez vos rapports d&apos;activité
-              </p>
+              <p className="text-sm text-muted-foreground">Gérez et analysez vos rapports d&apos;activité</p>
             </div>
             <div className="flex gap-3">
               <Button
@@ -70,9 +70,7 @@ const ReportsPageComponent = () => {
         <TabsContent value="all">
           <Card>
             <CardContent className="p-6">
-              <p className="text-muted-foreground text-center py-8">
-                Aucun rapport disponible
-              </p>
+              <p className="text-muted-foreground text-center py-8">Aucun rapport disponible</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -80,9 +78,7 @@ const ReportsPageComponent = () => {
         <TabsContent value="recent">
           <Card>
             <CardContent className="p-6">
-              <p className="text-muted-foreground text-center py-8">
-                Aucun rapport récent
-              </p>
+              <p className="text-muted-foreground text-center py-8">Aucun rapport récent</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -90,9 +86,7 @@ const ReportsPageComponent = () => {
         <TabsContent value="archived">
           <Card>
             <CardContent className="p-6">
-              <p className="text-muted-foreground text-center py-8">
-                Aucun rapport archivé
-              </p>
+              <p className="text-muted-foreground text-center py-8">Aucun rapport archivé</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -103,8 +97,10 @@ const ReportsPageComponent = () => {
         <h2 className="text-xl font-semibold">Outils de rapports</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Générateur de Rapports */}
-          <Card className="hover:shadow-md transition-all duration-300 cursor-pointer"
-            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/generator`)}>
+          <Card
+            className="hover:shadow-md transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/generator`)}
+          >
             <CardHeader className="pb-2">
               <div className="h-2 bg-gradient-to-r from-blue-600 to-purple-600 w-full absolute top-0 left-0 right-0"></div>
               <div className="flex justify-between items-start pt-4">
@@ -120,8 +116,10 @@ const ReportsPageComponent = () => {
           </Card>
 
           {/* Éditeur de Modèles */}
-          <Card className="hover:shadow-md transition-all duration-300 cursor-pointer"
-            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/templates`)}>
+          <Card
+            className="hover:shadow-md transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/templates`)}
+          >
             <CardHeader className="pb-2">
               <div className="h-2 bg-gradient-to-r from-green-500 to-emerald-500 w-full absolute top-0 left-0 right-0"></div>
               <div className="flex justify-between items-start pt-4">
@@ -137,8 +135,10 @@ const ReportsPageComponent = () => {
           </Card>
 
           {/* Visualisation de Données */}
-          <Card className="hover:shadow-md transition-all duration-300 cursor-pointer"
-            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/analytics`)}>
+          <Card
+            className="hover:shadow-md transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/analytics`)}
+          >
             <CardHeader className="pb-2">
               <div className="h-2 bg-gradient-to-r from-amber-500 to-orange-500 w-full absolute top-0 left-0 right-0"></div>
               <div className="flex justify-between items-start pt-4">
@@ -154,8 +154,10 @@ const ReportsPageComponent = () => {
           </Card>
 
           {/* Diagrammes anatomiques */}
-          <Card className="hover:shadow-md transition-all duration-300 cursor-pointer"
-            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/diagrams`)}>
+          <Card
+            className="hover:shadow-md transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/diagrams`)}
+          >
             <CardHeader className="pb-2">
               <div className="h-2 bg-gradient-to-r from-red-500 to-rose-500 w-full absolute top-0 left-0 right-0"></div>
               <div className="flex justify-between items-start pt-4">
@@ -171,8 +173,10 @@ const ReportsPageComponent = () => {
           </Card>
 
           {/* Assistant IA */}
-          <Card className="hover:shadow-md transition-all duration-300 cursor-pointer"
-            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/ai-assistant`)}>
+          <Card
+            className="hover:shadow-md transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/organization/${orgId}/reports/ai-assistant`)}
+          >
             <CardHeader className="pb-2">
               <div className="h-2 bg-gradient-to-r from-purple-500 to-pink-500 w-full absolute top-0 left-0 right-0"></div>
               <div className="flex justify-between items-start pt-4">
@@ -194,25 +198,25 @@ const ReportsPageComponent = () => {
         report={selectedReport}
         isOpen={!!selectedReport}
         onClose={() => setSelectedReport(null)}
-        onEdit={(report) => {
+        onEdit={report => {
           // TODO: Implement edit functionality
-          console.log("Edit report:", report);
+          console.log("Edit report:", report)
         }}
-        onDelete={(report) => {
+        onDelete={report => {
           // TODO: Implement delete functionality
-          console.log("Delete report:", report);
+          console.log("Delete report:", report)
         }}
-        onDownload={(report) => {
+        onDownload={report => {
           // TODO: Implement download functionality
-          console.log("Download report:", report);
+          console.log("Download report:", report)
         }}
-        onShare={(report) => {
+        onShare={report => {
           // TODO: Implement share functionality
-          console.log("Share report:", report);
+          console.log("Share report:", report)
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ReportsPageComponent;
+export default ReportsPageComponent

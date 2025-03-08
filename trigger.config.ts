@@ -1,4 +1,4 @@
-import type { TriggerConfig } from "@trigger.dev/sdk/v3";
+import type { TriggerConfig } from "@trigger.dev/sdk/v3"
 
 export const config: TriggerConfig = {
   project: "proj_lduckgshsvswaztqyhqy",
@@ -15,9 +15,9 @@ export const config: TriggerConfig = {
     },
   },
   onFailure: async (payload, error, { ctx }) => {
-    console.log("Task failed !", ctx.task.id, "Error :", error);
+    console.log("Task failed !", ctx.task.id, "Error :", error)
   },
   onSuccess: async (payload, output, { ctx }) => {
-    console.log("Task Success !", ctx.task.id, "Output :", output);
+    console.log("Task Success !", ctx.task.id, "Output :", output)
   },
-};
+}

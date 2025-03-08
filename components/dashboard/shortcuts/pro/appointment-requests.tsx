@@ -1,24 +1,11 @@
-"use client";
+"use client"
 
-import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  CalendarDays,
-  Dog,
-  Cat,
-  AlertTriangle,
-  Calendar,
-  ChevronRight,
-  MoveRight,
-} from "lucide-react";
+import { AlertTriangle, Calendar, CalendarDays, Cat, ChevronRight, Dog, MoveRight } from "lucide-react"
+import React from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const AppointmentRequests = () => {
   return (
@@ -29,9 +16,7 @@ export const AppointmentRequests = () => {
             <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
               <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle className="text-lg font-medium">
-              Demandes de rendez-vous
-            </CardTitle>
+            <CardTitle className="text-lg font-medium">Demandes de rendez-vous</CardTitle>
           </div>
           <Badge variant="secondary" className="text-xs font-normal">
             3
@@ -55,17 +40,12 @@ export const AppointmentRequests = () => {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center">
                     <p className="text-sm font-medium truncate">Luna</p>
-                    <Badge
-                      variant="secondary"
-                      className="ml-2 text-[10px] h-4 px-1.5 py-0"
-                    >
+                    <Badge variant="secondary" className="ml-2 text-[10px] h-4 px-1.5 py-0">
                       Consultation
                     </Badge>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground mb-1">
-                  Berger australien • 4 ans
-                </div>
+                <div className="text-xs text-muted-foreground mb-1">Berger australien • 4 ans</div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1 text-amber-500" />
                   <span>Demande pour le matin</span>
@@ -79,9 +59,7 @@ export const AppointmentRequests = () => {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <div className="text-xs text-muted-foreground mt-auto">
-                  Marie Dupont
-                </div>
+                <div className="text-xs text-muted-foreground mt-auto">Marie Dupont</div>
               </div>
             </div>
           </div>
@@ -100,17 +78,12 @@ export const AppointmentRequests = () => {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center">
                     <p className="text-sm font-medium truncate">Simba</p>
-                    <Badge
-                      variant="secondary"
-                      className="ml-2 text-[10px] h-4 px-1.5 py-0"
-                    >
+                    <Badge variant="secondary" className="ml-2 text-[10px] h-4 px-1.5 py-0">
                       Vaccination
                     </Badge>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground mb-1">
-                  Maine Coon • 2 ans
-                </div>
+                <div className="text-xs text-muted-foreground mb-1">Maine Coon • 2 ans</div>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1 text-blue-500" />
                   <span>Demande pour l&apos;après-midi</span>
@@ -124,9 +97,7 @@ export const AppointmentRequests = () => {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <div className="text-xs text-muted-foreground mt-auto">
-                  Paul Martin
-                </div>
+                <div className="text-xs text-muted-foreground mt-auto">Paul Martin</div>
               </div>
             </div>
           </div>
@@ -153,9 +124,7 @@ export const AppointmentRequests = () => {
                     </Badge>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground mb-1">
-                  Jack Russell • 5 ans
-                </div>
+                <div className="text-xs text-muted-foreground mb-1">Jack Russell • 5 ans</div>
                 <div className="flex items-center text-xs text-red-500 font-medium">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   <span>Boiterie soudaine</span>
@@ -169,24 +138,18 @@ export const AppointmentRequests = () => {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <div className="text-xs text-muted-foreground mt-auto">
-                  Lucie Moreau
-                </div>
+                <div className="text-xs text-muted-foreground mt-auto">Lucie Moreau</div>
               </div>
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter className="px-4 py-3 border-t bg-muted/10">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full text-xs flex items-center justify-center gap-1.5"
-        >
+        <Button variant="ghost" size="sm" className="w-full text-xs flex items-center justify-center gap-1.5">
           <span>Voir toutes les demandes</span>
           <MoveRight className="h-3 w-3" />
         </Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}

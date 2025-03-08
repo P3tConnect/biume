@@ -1,35 +1,27 @@
-"use server";
+"use server"
 
-import {
-  ActionError,
-  createServerAction,
-  requireOwner,
-  requireAuth,
-  requireFullOrganization,
-  stripe,
-} from "../lib";
-import { auth } from "../lib/auth";
-import {
-  Organization,
-  OrganizationImage,
-  organizationImages,
-  organizationSlots,
-  organization as organizationTable,
-} from "../db";
-import { db } from "../lib";
-import { eq, desc, and, gte, lte, asc } from "drizzle-orm";
-import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas";
-import {
-  progression as progressionTable,
-  appointments as appointmentsTable,
-} from "../db";
-import { headers } from "next/headers";
-import { z } from "zod";
+import { and, asc, desc, eq, gte, lte } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
+import { z } from "zod"
+
 import {
   organizationFormSchema,
   organizationImagesFormSchema,
-} from "@/components/dashboard/pages/pro/settings-page/sections/profile-section";
-import { revalidatePath } from "next/cache";
+} from "@/components/dashboard/pages/pro/settings-page/sections/profile-section"
+import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas"
+
+import {
+  Organization,
+  organization as organizationTable,
+  OrganizationImage,
+  organizationImages,
+  organizationSlots,
+} from "../db"
+import { appointments as appointmentsTable, progression as progressionTable } from "../db"
+import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner, stripe } from "../lib"
+import { db } from "../lib"
+import { auth } from "../lib/auth"
 
 export const getAllOrganizations = createServerAction(
   z.object({}),
@@ -72,28 +64,28 @@ export const getAllOrganizations = createServerAction(
         onDemand: true,
         verified: true,
       },
-    });
+    })
 
-    return organizations as Organization[];
+    return organizations as Organization[]
   },
-  [],
-);
+  []
+)
 
 export const getAllOrganizationsByUserId = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const organizations = await auth.api.listOrganizations({
       headers: await headers(),
-    });
+    })
 
     if (!organizations) {
-      throw new ActionError("Organizations not found");
+      throw new ActionError("Organizations not found")
     }
 
-    return organizations as Organization[];
+    return organizations as Organization[]
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const getCompanyById = createServerAction(
   z.object({
@@ -135,36 +127,34 @@ export const getCompanyById = createServerAction(
           },
         },
       },
-    });
+    })
 
     if (!company) {
-      throw new ActionError("Company not found");
+      throw new ActionError("Company not found")
     }
 
-    return company as unknown as Organization;
+    return company as unknown as Organization
   },
-  [],
-);
+  []
+)
 
 export const getCurrentOrganization = createServerAction(
   z.object({}),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    return ctx.fullOrganization;
+    return ctx.fullOrganization
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
     try {
-      const data = input;
+      const data = input
 
       const result = await auth.api.createOrganization({
         body: {
@@ -174,10 +164,10 @@ export const createOrganization = createServerAction(
           metadata: {},
           userId: ctx.user?.id,
         },
-      });
+      })
 
       if (!result) {
-        throw new ActionError("Organization not created");
+        throw new ActionError("Organization not created")
       }
 
       // Créer une progression
@@ -189,7 +179,7 @@ export const createOrganization = createServerAction(
           reminders: false,
           services: false,
         })
-        .returning();
+        .returning()
 
       // const stripeCompany = await stripe.accounts.create({
       //   type: "standard",
@@ -215,10 +205,10 @@ export const createOrganization = createServerAction(
           organizationId: result?.id!,
           userId: ctx?.user?.id!,
         },
-      });
+      })
 
-      console.log(stripeCustomer, "stripeCustomer");
-      console.log(result, "result");
+      console.log(stripeCustomer, "stripeCustomer")
+      console.log(result, "result")
 
       const [organizationResult] = await db
         .update(organizationTable)
@@ -233,23 +223,23 @@ export const createOrganization = createServerAction(
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
-        .execute();
+        .execute()
 
       await auth.api.setActiveOrganization({
         headers: await headers(),
         body: {
           organizationId: result?.id,
         },
-      });
+      })
 
       // Retourner les données de l'organisation créée
-      return organizationResult;
+      return organizationResult
     } catch (err) {
-      throw new ActionError("Organization already exists");
+      throw new ActionError("Organization already exists")
     }
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const updateOrganization = createServerAction(
   organizationFormSchema,
@@ -270,16 +260,16 @@ export const updateOrganization = createServerAction(
       })
       .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Organization not updated");
+      throw new ActionError("Organization not updated")
     }
 
-    return data as Organization;
+    return data as Organization
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const updateOrganizationImages = createServerAction(
   organizationImagesFormSchema,
@@ -291,26 +281,24 @@ export const updateOrganizationImages = createServerAction(
       })
       .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Organization not updated");
+      throw new ActionError("Organization not updated")
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`)
 
-    return data;
+    return data
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const getUsersWithAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
     const usersWithAppointments = await db.query.appointments.findMany({
@@ -319,22 +307,19 @@ export const getUsersWithAppointments = createServerAction(
         client: true,
       },
       orderBy: desc(appointmentsTable.createdAt),
-    });
+    })
 
     // Get unique users from appointments
     const uniqueUsers = [
       ...usersWithAppointments
-        .map((appointment) => appointment.client)
-        .filter(
-          (user, index, self) =>
-            index === self.findIndex((u) => u?.id === user?.id),
-        ),
-    ];
+        .map(appointment => appointment.client)
+        .filter((user, index, self) => index === self.findIndex(u => u?.id === user?.id)),
+    ]
 
-    return uniqueUsers;
+    return uniqueUsers
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const addImagesToOrganization = createServerAction(
   z.object({
@@ -342,43 +327,41 @@ export const addImagesToOrganization = createServerAction(
       z.object({
         name: z.string(),
         url: z.string(),
-      }),
+      })
     ),
   }),
   async (input, ctx) => {
     const data = await db
       .insert(organizationImages)
       .values(
-        input.images.map((image) => ({
+        input.images.map(image => ({
           organizationId: ctx.organization?.id,
           name: image.name,
           imageUrl: image.url,
-        })),
+        }))
       )
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Images not added");
+      throw new ActionError("Images not added")
     }
 
-    return data;
+    return data
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const getNewClientsThisMonth = createServerAction(
   z.object({}),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    const firstDayOfMonth = new Date();
-    firstDayOfMonth.setDate(1);
-    firstDayOfMonth.setHours(0, 0, 0, 0);
+    const firstDayOfMonth = new Date()
+    firstDayOfMonth.setDate(1)
+    firstDayOfMonth.setHours(0, 0, 0, 0)
 
     const appointments = await db.query.appointments.findMany({
       where: eq(appointmentsTable.proId, ctx.organization.id),
@@ -386,85 +369,68 @@ export const getNewClientsThisMonth = createServerAction(
         client: true,
       },
       orderBy: desc(appointmentsTable.createdAt),
-    });
+    })
 
     // Filtrer pour obtenir uniquement les clients dont le premier rendez-vous est dans le mois en cours
-    const clientsFirstAppointments = new Map();
+    const clientsFirstAppointments = new Map()
 
-    appointments.forEach((appointment) => {
-      const clientId = appointment.clientId;
+    appointments.forEach(appointment => {
+      const clientId = appointment.clientId
       if (!clientsFirstAppointments.has(clientId)) {
-        clientsFirstAppointments.set(clientId, appointment.createdAt);
+        clientsFirstAppointments.set(clientId, appointment.createdAt)
       }
-    });
+    })
 
-    const newClientsThisMonth = Array.from(
-      clientsFirstAppointments.entries(),
-    ).filter(
-      ([_, firstAppointmentDate]) => firstAppointmentDate >= firstDayOfMonth,
-    ).length;
+    const newClientsThisMonth = Array.from(clientsFirstAppointments.entries()).filter(
+      ([_, firstAppointmentDate]) => firstAppointmentDate >= firstDayOfMonth
+    ).length
 
     return {
       count: newClientsThisMonth,
-    };
+    }
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const getCompletedAppointmentsThisMonth = createServerAction(
   z.object({}),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    const firstDayOfMonth = new Date();
-    firstDayOfMonth.setDate(1);
-    firstDayOfMonth.setHours(0, 0, 0, 0);
+    const firstDayOfMonth = new Date()
+    firstDayOfMonth.setDate(1)
+    firstDayOfMonth.setHours(0, 0, 0, 0)
 
-    const lastDayOfMonth = new Date(
-      firstDayOfMonth.getFullYear(),
-      firstDayOfMonth.getMonth() + 1,
-      0,
-      23,
-      59,
-      59,
-      999,
-    );
+    const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0, 23, 59, 59, 999)
 
     const appointments = await db.query.appointments.findMany({
-      where: (appointments) => {
+      where: appointments => {
         return and(
           eq(appointments.proId, ctx.organization?.id as string),
           eq(appointments.status, "PAYED"),
-          and(
-            gte(appointments.beginAt, firstDayOfMonth),
-            lte(appointments.beginAt, lastDayOfMonth),
-          ),
-        );
+          and(gte(appointments.beginAt, firstDayOfMonth), lte(appointments.beginAt, lastDayOfMonth))
+        )
       },
       with: {
         service: true,
       },
-    });
+    })
 
     return {
       count: appointments.length,
       appointments: appointments,
-    };
+    }
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const getOrganizationImages = createServerAction(
   z.object({}),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
     const images = await db.query.organizationImages.findMany({
@@ -474,12 +440,12 @@ export const getOrganizationImages = createServerAction(
         imageUrl: true,
       },
       orderBy: desc(organizationImages.createdAt),
-    });
+    })
 
-    return images as OrganizationImage[];
+    return images as OrganizationImage[]
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const deleteOrganizationImage = createServerAction(
   z.object({
@@ -487,27 +453,22 @@ export const deleteOrganizationImage = createServerAction(
   }),
   async (input, ctx) => {
     if (!ctx.organization?.id) {
-      throw new ActionError(
-        "L'identifiant de l'organisation ne peut pas être indéfini",
-      );
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
     const deletedImage = await db
       .delete(organizationImages)
       .where(
-        and(
-          eq(organizationImages.organizationId, ctx.organization.id),
-          eq(organizationImages.imageUrl, input.imageUrl),
-        ),
+        and(eq(organizationImages.organizationId, ctx.organization.id), eq(organizationImages.imageUrl, input.imageUrl))
       )
       .returning()
-      .execute();
+      .execute()
 
     if (!deletedImage || deletedImage.length === 0) {
-      throw new ActionError("Image non trouvée");
+      throw new ActionError("Image non trouvée")
     }
 
-    return deletedImage[0];
+    return deletedImage[0]
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)

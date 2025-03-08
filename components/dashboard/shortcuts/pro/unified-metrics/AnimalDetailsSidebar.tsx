@@ -1,54 +1,45 @@
-"use client";
+"use client"
 
-import { ActiveTab, AnimalDetails } from "./types";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
-import {
-  Info,
-  Shield,
-  HeartPulseIcon,
-  FileClock,
-  FileText,
-  CalendarDays,
-} from "lucide-react";
+import { formatDistanceToNow } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarDays, FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+
+import { ActiveTab, AnimalDetails } from "./types"
 
 interface AnimalDetailsSidebarProps {
-  animal: AnimalDetails;
-  activeTab: ActiveTab;
-  setActiveTab: (tab: ActiveTab) => void;
+  animal: AnimalDetails
+  activeTab: ActiveTab
+  setActiveTab: (tab: ActiveTab) => void
 }
 
-export const AnimalDetailsSidebar = ({
-  animal,
-  activeTab,
-  setActiveTab,
-}: AnimalDetailsSidebarProps) => {
+export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: AnimalDetailsSidebarProps) => {
   // Calcul de l'âge basé sur la date de naissance
   const getAge = () => {
-    if (!animal.birthDate) return "Âge inconnu";
+    if (!animal.birthDate) return "Âge inconnu"
 
     const age = formatDistanceToNow(new Date(animal.birthDate), {
       addSuffix: false,
       locale: fr,
-    });
+    })
 
-    return age;
-  };
+    return age
+  }
 
   // Formater la date au format lisible
   const formatDate = (dateString: string) => {
-    if (!dateString) return "Non défini";
+    if (!dateString) return "Non défini"
 
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return date.toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
       year: "numeric",
-    });
-  };
+    })
+  }
 
   return (
     <div className="w-full md:w-64 border-r bg-muted/10 flex flex-col">
@@ -77,8 +68,7 @@ export const AnimalDetailsSidebar = ({
 
         <div className="text-sm text-left w-full mt-3">
           <p className="flex items-center gap-1 mb-1">
-            <span className="font-medium">Propriétaire:</span>{" "}
-            {animal.ownerName}
+            <span className="font-medium">Propriétaire:</span> {animal.ownerName}
           </p>
           <p className="flex items-center gap-1">
             <span className="font-medium">Contact:</span> {animal.ownerContact}
@@ -135,15 +125,12 @@ export const AnimalDetailsSidebar = ({
           <p className="font-medium">
             {formatDate(
               animal.appointments
-                .filter((apt) => apt.status === "completed")
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime(),
-                )[0]?.date || "",
+                .filter(apt => apt.status === "completed")
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]?.date || ""
             )}
           </p>
         </div>
       )}
     </div>
-  );
-};
+  )
+}

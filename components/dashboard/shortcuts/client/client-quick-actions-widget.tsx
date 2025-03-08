@@ -1,19 +1,14 @@
-'use client';
+"use client"
 
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
-import { Calendar, PawPrint, Plus, Users, UserPlus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useSession } from '@/src/lib/auth-client';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Calendar, PawPrint, Plus, UserPlus, Users } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useSession } from "@/src/lib/auth-client"
 
 const BookingDialog = ({ userId }: { userId: string }) => {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <DialogContent className="sm:max-w-md">
@@ -32,89 +27,85 @@ const BookingDialog = ({ userId }: { userId: string }) => {
         <Button
           variant="outline"
           className="flex flex-col items-center gap-4 h-auto p-6"
-          onClick={() => router.push('/pros')}
+          onClick={() => router.push("/pros")}
         >
           <UserPlus className="h-8 w-8 text-orange-500" />
           <span className="text-sm">Nouveau rendez-vous</span>
         </Button>
       </div>
     </DialogContent>
-  );
-};
+  )
+}
 
 const ClientQuickActionsWidget = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const router = useRouter()
+  const { data: session } = useSession()
+  const userId = session?.user?.id
 
   const quickActions = [
     {
-      title: 'Nouvelle réservation',
+      title: "Nouvelle réservation",
       icon: Plus,
-      color: 'bg-blue-500/10 text-blue-500',
+      color: "bg-blue-500/10 text-blue-500",
       component: (
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              variant='ghost'
-              className='h-auto py-4 flex flex-col items-center gap-3 hover:bg-accent/50 transition-colors w-full'
+              variant="ghost"
+              className="h-auto py-4 flex flex-col items-center gap-3 hover:bg-accent/50 transition-colors w-full"
             >
               <div className={`p-3 rounded-xl bg-blue-500/10 text-blue-500`}>
-                <Plus className='size-5' />
+                <Plus className="size-5" />
               </div>
-              <span className='text-sm font-medium'>Nouvelle réservation</span>
+              <span className="text-sm font-medium">Nouvelle réservation</span>
             </Button>
           </DialogTrigger>
-          <BookingDialog userId={userId || ''} />
+          <BookingDialog userId={userId || ""} />
         </Dialog>
       ),
     },
     {
-      title: 'Mes rendez-vous',
+      title: "Mes rendez-vous",
       icon: Calendar,
-      color: 'bg-purple-500/10 text-purple-500',
+      color: "bg-purple-500/10 text-purple-500",
       onClick: () => router.push(`/dashboard/user/${userId}/reservations`),
     },
     {
-      title: 'Mes animaux',
+      title: "Mes animaux",
       icon: PawPrint,
-      color: 'bg-green-500/10 text-green-500',
+      color: "bg-green-500/10 text-green-500",
       onClick: () => router.push(`/dashboard/user/${userId}/pets`),
-    }
-  ];
+    },
+  ]
 
   return (
-    <Card className='rounded-xl'>
+    <Card className="rounded-xl">
       <CardHeader>
-        <CardTitle>
-          Actions rapides
-        </CardTitle>
+        <CardTitle>Actions rapides</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-          {quickActions.map((action, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {quickActions.map((action, index) =>
             action.component ? (
-              <div key={index}>
-                {action.component}
-              </div>
+              <div key={index}>{action.component}</div>
             ) : (
               <Button
                 key={index}
-                variant='ghost'
-                className='h-auto py-4 flex flex-col items-center gap-3 hover:bg-accent/50 transition-colors'
+                variant="ghost"
+                className="h-auto py-4 flex flex-col items-center gap-3 hover:bg-accent/50 transition-colors"
                 onClick={action.onClick}
               >
                 <div className={`p-3 rounded-xl ${action.color}`}>
-                  <action.icon className='size-5' />
+                  <action.icon className="size-5" />
                 </div>
-                <span className='text-sm font-medium'>{action.title}</span>
+                <span className="text-sm font-medium">{action.title}</span>
               </Button>
             )
-          ))}
+          )}
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ClientQuickActionsWidget; 
+export default ClientQuickActionsWidget

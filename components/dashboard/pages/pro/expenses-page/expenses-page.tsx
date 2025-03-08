@@ -1,35 +1,6 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { format } from "date-fns";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { format } from "date-fns"
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -37,13 +8,18 @@ import {
   DollarSignIcon,
   FilterIcon,
   PieChartIcon,
-  TagIcon,
-  ArrowRight,
-  PlusIcon,
-  Receipt,
-  FileText,
   Plus,
-} from "lucide-react";
+  Receipt,
+  TagIcon,
+} from "lucide-react"
+import { useState } from "react"
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 // Mock data - Replace with real data from your backend
 const mockExpenseData = [
@@ -53,7 +29,7 @@ const mockExpenseData = [
   { month: "Apr", amount: 800 },
   { month: "May", amount: 1100 },
   { month: "Jun", amount: 1300 },
-];
+]
 
 const mockTransactions = [
   {
@@ -77,13 +53,13 @@ const mockTransactions = [
     category: "Repas",
     amount: 85.0,
   },
-];
+]
 
 interface MetricsCardProps {
-  title: string;
-  value: string;
-  icon: React.ElementType;
-  trend?: number;
+  title: string
+  value: string
+  icon: React.ElementType
+  trend?: number
 }
 
 const MetricsCard = ({ title, value, icon: Icon, trend }: MetricsCardProps) => (
@@ -110,7 +86,7 @@ const MetricsCard = ({ title, value, icon: Icon, trend }: MetricsCardProps) => (
       </div>
     )}
   </Card>
-);
+)
 
 const ExpenseFilters = () => (
   <div className="flex gap-4 mb-6">
@@ -137,7 +113,7 @@ const ExpenseFilters = () => (
       Plus de filtres
     </Button>
   </div>
-);
+)
 
 const ExpenseHeader = () => {
   return (
@@ -148,9 +124,7 @@ const ExpenseHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Dépenses
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Gérez et suivez vos dépenses professionnelles
-            </p>
+            <p className="text-sm text-muted-foreground">Gérez et suivez vos dépenses professionnelles</p>
           </div>
           <div className="flex gap-3">
             <Button
@@ -168,55 +142,33 @@ const ExpenseHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-card p-3 shadow-sm">
         <p className="text-sm font-medium text-muted-foreground mb-1">{label}</p>
-        <p className="text-lg font-bold text-foreground">
-          {payload[0].value}€
-        </p>
+        <p className="text-lg font-bold text-foreground">{payload[0].value}€</p>
       </div>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
 const ExpensesPage = () => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date())
 
   return (
     <div className="space-y-4">
       <ExpenseHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <MetricsCard
-          title="Dépenses totales"
-          value="4 250€"
-          icon={DollarSignIcon}
-          trend={12}
-        />
-        <MetricsCard
-          title="Moyenne journalière"
-          value="142€"
-          icon={PieChartIcon}
-          trend={-5}
-        />
-        <MetricsCard
-          title="Catégorie principale"
-          value="Logiciel"
-          icon={TagIcon}
-          trend={8}
-        />
-        <MetricsCard
-          title="Dépenses en attente"
-          value="3"
-          icon={CalendarIcon}
-          trend={0}
-        />
+        <MetricsCard title="Dépenses totales" value="4 250€" icon={DollarSignIcon} trend={12} />
+        <MetricsCard title="Moyenne journalière" value="142€" icon={PieChartIcon} trend={-5} />
+        <MetricsCard title="Catégorie principale" value="Logiciel" icon={TagIcon} trend={8} />
+        <MetricsCard title="Dépenses en attente" value="3" icon={CalendarIcon} trend={0} />
       </div>
 
       <Card className="p-6 rounded-2xl">
@@ -246,30 +198,23 @@ const ExpensesPage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockTransactions.map((transaction) => (
-              <TableRow
-                key={transaction.id}
-                className="cursor-pointer hover:bg-muted/50"
-              >
-                <TableCell>
-                  {format(new Date(transaction.date), "dd MMM yyyy")}
-                </TableCell>
+            {mockTransactions.map(transaction => (
+              <TableRow key={transaction.id} className="cursor-pointer hover:bg-muted/50">
+                <TableCell>{format(new Date(transaction.date), "dd MMM yyyy")}</TableCell>
                 <TableCell>{transaction.description}</TableCell>
                 <TableCell>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                     {transaction.category}
                   </span>
                 </TableCell>
-                <TableCell className="text-right">
-                  {transaction.amount.toFixed(2)}€
-                </TableCell>
+                <TableCell className="text-right">{transaction.amount.toFixed(2)}€</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default ExpensesPage;
+export default ExpensesPage

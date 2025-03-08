@@ -1,65 +1,30 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import {
-  CalendarIcon,
-  Clock,
-  CheckIcon,
-  User,
-  Stethoscope,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarIcon, CheckIcon, ChevronLeft, ChevronRight, Clock, Stethoscope, User } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/src/lib/utils";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { createAppointmentAction } from "@/src/actions/create-appointment.action";
-import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { DialogFooter } from "@/components/ui/dialog"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
+import { createAppointmentAction } from "@/src/actions/create-appointment.action"
+import { cn } from "@/src/lib/utils"
 
 interface AppointmentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 // Schéma de validation pour le formulaire
@@ -86,21 +51,21 @@ const appointmentFormSchema = z.object({
     .min(15, "La durée minimum est de 15 minutes"),
   atHome: z.boolean().default(false),
   notes: z.string().optional(),
-});
+})
 
-type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
+type AppointmentFormValues = z.infer<typeof appointmentFormSchema>
 
 // Configuration des étapes
 type Step = {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  fields: (keyof AppointmentFormValues)[];
-};
+  title: string
+  description: string
+  icon: React.ReactNode
+  fields: (keyof AppointmentFormValues)[]
+}
 
 const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
   // État pour suivre l'étape courante
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0)
 
   // Configuration des étapes du stepper
   const steps: Step[] = [
@@ -122,7 +87,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       icon: <Clock className="h-5 w-5 mr-2" />,
       fields: ["atHome", "notes"],
     },
-  ];
+  ]
 
   // Initialiser le formulaire avec hook-form et validation zod
   const form = useForm<AppointmentFormValues>({
@@ -134,133 +99,127 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       serviceId: "",
     },
     mode: "onChange",
-  });
+  })
 
   // État pour suivre si les champs de l'étape courante sont valides
-  const [isStepValid, setIsStepValid] = useState(false);
+  const [isStepValid, setIsStepValid] = useState(false)
 
   // Surveillance des changements de valeurs pour le service
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === "serviceId") {
-        console.log("Service ID changé:", value.serviceId);
+        console.log("Service ID changé:", value.serviceId)
       }
-    });
+    })
 
-    return () => subscription.unsubscribe();
-  }, [form]);
+    return () => subscription.unsubscribe()
+  }, [form])
 
   // Réinitialiser l'étape lorsque le dialogue s'ouvre/se ferme
   useEffect(() => {
     if (!open) {
       setTimeout(() => {
-        setCurrentStep(0);
-      }, 300); // Attendre la fin de l'animation de fermeture
+        setCurrentStep(0)
+      }, 300) // Attendre la fin de l'animation de fermeture
     }
-  }, [open]);
+  }, [open])
 
   // Vérifier la validité des champs de l'étape actuelle
   useEffect(() => {
     const validateCurrentStep = async () => {
-      const currentFields = steps[currentStep].fields;
+      const currentFields = steps[currentStep].fields
 
       // Pour l'étape finale, on considère qu'elle est toujours valide car les champs sont optionnels
       if (currentStep === steps.length - 1) {
-        setIsStepValid(true);
-        return;
+        setIsStepValid(true)
+        return
       }
 
       // Vérifier si tous les champs de l'étape actuelle sont valides
       try {
         // Vérifier que les valeurs ne sont pas vides avant la validation
-        const currentValues = currentFields.map(field => form.getValues(field));
-        const hasEmptyValues = currentValues.some(value =>
-          value === undefined || value === null || value === ""
-        );
+        const currentValues = currentFields.map(field => form.getValues(field))
+        const hasEmptyValues = currentValues.some(value => value === undefined || value === null || value === "")
 
         if (hasEmptyValues) {
-          setIsStepValid(false);
-          return;
+          setIsStepValid(false)
+          return
         }
 
-        const result = await form.trigger(currentFields as any);
-        setIsStepValid(result);
+        const result = await form.trigger(currentFields as any)
+        setIsStepValid(result)
       } catch (error) {
-        console.error("Erreur de validation:", error);
-        setIsStepValid(false);
+        console.error("Erreur de validation:", error)
+        setIsStepValid(false)
       }
-    };
+    }
 
-    validateCurrentStep();
-  }, [currentStep, form.watch(), steps]);
+    validateCurrentStep()
+  }, [currentStep, form.watch(), steps])
 
   // Mutation pour créer un rendez-vous en utilisant l'action serveur
   const createAppointmentMutation = useMutation({
-    mutationFn: async (
-      data: AppointmentFormValues & { beginAt: Date; endAt: Date },
-    ) => {
-      const result = await createAppointmentAction(data);
-      return result;
+    mutationFn: async (data: AppointmentFormValues & { beginAt: Date; endAt: Date }) => {
+      const result = await createAppointmentAction(data)
+      return result
     },
     onSuccess: () => {
       // Réinitialiser le formulaire et fermer la modal
-      form.reset();
-      onOpenChange(false);
-      toast.success("Rendez-vous créé avec succès !");
+      form.reset()
+      onOpenChange(false)
+      toast.success("Rendez-vous créé avec succès !")
     },
-    onError: (error) => {
-      console.error("Erreur lors de la création du rendez-vous:", error);
-      toast.error(
-        "Erreur lors de la création du rendez-vous. Veuillez réessayer.",
-      );
+    onError: error => {
+      console.error("Erreur lors de la création du rendez-vous:", error)
+      toast.error("Erreur lors de la création du rendez-vous. Veuillez réessayer.")
     },
-  });
+  })
 
   // Passer à l'étape suivante
   const handleNext = async () => {
-    const currentFields = steps[currentStep].fields;
-    const isValid = await form.trigger(currentFields as any);
+    const currentFields = steps[currentStep].fields
+    const isValid = await form.trigger(currentFields as any)
 
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
     }
-  };
+  }
 
   // Revenir à l'étape précédente
   const handlePrevious = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  };
+    setCurrentStep(prev => Math.max(prev - 1, 0))
+  }
 
   // Gérer la soumission du formulaire
   const onSubmit = (data: AppointmentFormValues) => {
     // Calculer l'heure de début en ajoutant la durée à l'heure de début
-    const [hours, minutes] = data.startTime.split(":").map(Number);
-    const startDate = new Date(data.date);
-    startDate.setHours(hours, minutes);
+    const [hours, minutes] = data.startTime.split(":").map(Number)
+    const startDate = new Date(data.date)
+    startDate.setHours(hours, minutes)
 
-    const endDate = new Date(startDate);
-    endDate.setMinutes(endDate.getMinutes() + data.duration);
+    const endDate = new Date(startDate)
+    endDate.setMinutes(endDate.getMinutes() + data.duration)
 
     // Préparer les données complètes pour l'envoi
     const appointmentData = {
       ...data,
       beginAt: startDate,
       endAt: endDate,
-    };
+    }
 
     // Lancer la mutation pour créer le rendez-vous
-    createAppointmentMutation.mutate(appointmentData);
-  };
+    createAppointmentMutation.mutate(appointmentData)
+  }
 
   // Formater l'affichage de la durée
   const formatDuration = (minutes: number) => {
     if (minutes >= 60) {
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      return `${hours} heure${hours > 1 ? "s" : ""}${mins > 0 ? ` ${mins} min` : ""}`;
+      const hours = Math.floor(minutes / 60)
+      const mins = minutes % 60
+      return `${hours} heure${hours > 1 ? "s" : ""}${mins > 0 ? ` ${mins} min` : ""}`
     }
-    return `${minutes} minutes`;
-  };
+    return `${minutes} minutes`
+  }
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
@@ -270,9 +229,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
             {steps[currentStep].icon}
             {steps[currentStep].title}
           </CredenzaTitle>
-          <CredenzaDescription>
-            {steps[currentStep].description}
-          </CredenzaDescription>
+          <CredenzaDescription>{steps[currentStep].description}</CredenzaDescription>
         </CredenzaHeader>
 
         {/* Indicateur de progression */}
@@ -287,22 +244,16 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
             {steps.map((step, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${currentStep >= index
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                    }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                    currentStep >= index ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  }`}
                 >
-                  {currentStep > index ? (
-                    <CheckIcon className="h-4 w-4" />
-                  ) : (
-                    index + 1
-                  )}
+                  {currentStep > index ? <CheckIcon className="h-4 w-4" /> : index + 1}
                 </div>
                 <span
-                  className={`text-xs mt-1 transition-colors ${currentStep >= index
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground"
-                    }`}
+                  className={`text-xs mt-1 transition-colors ${
+                    currentStep >= index ? "text-primary font-medium" : "text-muted-foreground"
+                  }`}
                 >
                   Étape {index + 1}
                 </span>
@@ -323,10 +274,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Client</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Sélectionner un client" />
@@ -334,12 +282,8 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="client1">Jean Dupont</SelectItem>
-                            <SelectItem value="client2">
-                              Sophie Martin
-                            </SelectItem>
-                            <SelectItem value="client3">
-                              Pierre Durand
-                            </SelectItem>
+                            <SelectItem value="client2">Sophie Martin</SelectItem>
+                            <SelectItem value="client3">Pierre Durand</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -353,10 +297,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Patient</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Sélectionner un animal" />
@@ -385,10 +326,10 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       <FormItem>
                         <FormLabel>Service</FormLabel>
                         <Select
-                          onValueChange={(value) => {
-                            field.onChange(value);
+                          onValueChange={value => {
+                            field.onChange(value)
                             // Déclencher la validation après la sélection
-                            form.trigger("serviceId");
+                            form.trigger("serviceId")
                           }}
                           value={field.value}
                         >
@@ -398,15 +339,9 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="service1">
-                              Consultation standard
-                            </SelectItem>
-                            <SelectItem value="service2">
-                              Vaccination
-                            </SelectItem>
-                            <SelectItem value="service3">
-                              Contrôle annuel
-                            </SelectItem>
+                            <SelectItem value="service1">Consultation standard</SelectItem>
+                            <SelectItem value="service2">Vaccination</SelectItem>
+                            <SelectItem value="service3">Contrôle annuel</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -427,7 +362,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                                 variant={"outline"}
                                 className={cn(
                                   "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground",
+                                  !field.value && "text-muted-foreground"
                                 )}
                               >
                                 {field.value ? (
@@ -445,7 +380,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                               selected={field.value}
                               onSelect={field.onChange}
                               locale={fr}
-                              disabled={(date) => date < new Date()}
+                              disabled={date => date < new Date()}
                             />
                           </PopoverContent>
                         </Popover>
@@ -461,10 +396,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Heure de début</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Heure" />
@@ -498,9 +430,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                         <FormItem>
                           <FormLabel>Durée</FormLabel>
                           <Select
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value, 10))
-                            }
+                            onValueChange={value => field.onChange(parseInt(value, 10))}
                             defaultValue={field.value?.toString()}
                           >
                             <FormControl>
@@ -535,15 +465,10 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                         <div className="space-y-0.5">
                           <FormLabel>Consultation à domicile</FormLabel>
-                          <FormDescription>
-                            Ce rendez-vous se fera-t-il au domicile du client ?
-                          </FormDescription>
+                          <FormDescription>Ce rendez-vous se fera-t-il au domicile du client ?</FormDescription>
                         </div>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -598,18 +523,18 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                         <p className="text-sm font-medium">Service</p>
                         <p className="text-sm">
                           {(() => {
-                            const serviceId = form.getValues("serviceId");
-                            if (!serviceId) return "Aucun service sélectionné";
+                            const serviceId = form.getValues("serviceId")
+                            if (!serviceId) return "Aucun service sélectionné"
 
                             switch (serviceId) {
                               case "service1":
-                                return "Consultation standard";
+                                return "Consultation standard"
                               case "service2":
-                                return "Vaccination";
+                                return "Vaccination"
                               case "service3":
-                                return "Contrôle annuel";
+                                return "Contrôle annuel"
                               default:
-                                return "Service inconnu";
+                                return "Service inconnu"
                             }
                           })()}
                         </p>
@@ -627,9 +552,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
 
                       <div className="space-y-1">
                         <p className="text-sm font-medium">Durée</p>
-                        <p className="text-sm">
-                          {formatDuration(form.getValues("duration"))}
-                        </p>
+                        <p className="text-sm">{formatDuration(form.getValues("duration"))}</p>
                       </div>
 
                       {form.getValues("atHome") && (
@@ -643,9 +566,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                     {form.getValues("notes") && (
                       <div className="space-y-1 col-span-2 pt-2 border-t">
                         <p className="text-sm font-medium">Notes</p>
-                        <p className="text-sm whitespace-pre-wrap">
-                          {form.getValues("notes")}
-                        </p>
+                        <p className="text-sm whitespace-pre-wrap">{form.getValues("notes")}</p>
                       </div>
                     )}
                   </div>
@@ -658,9 +579,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={
-                  currentStep === 0 ? () => onOpenChange(false) : handlePrevious
-                }
+                onClick={currentStep === 0 ? () => onOpenChange(false) : handlePrevious}
                 className="flex items-center"
               >
                 {currentStep === 0 ? (
@@ -674,21 +593,12 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
               </Button>
 
               {currentStep < steps.length - 1 ? (
-                <Button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={!isStepValid}
-                  className="flex items-center"
-                >
+                <Button type="button" onClick={handleNext} disabled={!isStepValid} className="flex items-center">
                   Suivant
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               ) : (
-                <Button
-                  type="submit"
-                  disabled={createAppointmentMutation.isPending}
-                  className="flex items-center"
-                >
+                <Button type="submit" disabled={createAppointmentMutation.isPending} className="flex items-center">
                   {createAppointmentMutation.isPending ? (
                     <span className="flex items-center">
                       <svg
@@ -726,7 +636,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
         </Form>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
-export default AppointmentDialog;
+export default AppointmentDialog

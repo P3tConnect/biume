@@ -1,17 +1,12 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Heart,
-  Bell,
-  CalendarClock,
-  Sparkles,
-  Medal,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { WaitlistModal } from "../../waitlist-modal";
+import { motion } from "framer-motion"
+import { ArrowRight, Bell, CalendarClock, Heart, Medal, Sparkles } from "lucide-react"
+import Image from "next/image"
+
+import { Button } from "@/components/ui/button"
+
+import { WaitlistModal } from "../../waitlist-modal"
 
 export function CTASection() {
   return (
@@ -47,15 +42,12 @@ export function CTASection() {
                   </div>
 
                   <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                    Prenez soin de votre{" "}
-                    <span className="text-primary">animal chéri</span> sans
-                    soucis
+                    Prenez soin de votre <span className="text-primary">animal chéri</span> sans soucis
                   </h2>
 
                   <p className="text-lg mb-8">
-                    Accédez facilement aux soins, suivez la santé de votre
-                    animal et recevez des rappels pour ses besoins importants,
-                    le tout dans une seule application.
+                    Accédez facilement aux soins, suivez la santé de votre animal et recevez des rappels pour ses
+                    besoins importants, le tout dans une seule application.
                   </p>
 
                   <div className="space-y-4 mb-8">
@@ -130,9 +122,7 @@ export function CTASection() {
                       </div>
                       <div>
                         <p className="text-sm font-medium">Prochain vaccin</p>
-                        <p className="text-xs text-muted-foreground">
-                          Rappel dans 2 semaines
-                        </p>
+                        <p className="text-xs text-muted-foreground">Rappel dans 2 semaines</p>
                       </div>
                     </div>
                   </motion.div>
@@ -150,9 +140,7 @@ export function CTASection() {
                         <Medal className="w-5 h-5" />
                       </div>
                       <p className="text-sm font-medium">99% satisfaits</p>
-                      <p className="text-xs text-muted-foreground">
-                        des propriétaires
-                      </p>
+                      <p className="text-xs text-muted-foreground">des propriétaires</p>
                     </div>
                   </motion.div>
                 </div>
@@ -162,5 +150,5 @@ export function CTASection() {
         </div>
       </section>
     </>
-  );
+  )
 }

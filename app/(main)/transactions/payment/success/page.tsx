@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CheckCircle2, Download, Mail, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { ArrowLeft, CheckCircle2, Download, Mail } from "lucide-react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 export default function PaymentSuccess() {
-  const searchParams = useSearchParams();
-  const amount = searchParams.get("amount") || "0";
-  const professionalName =
-    searchParams.get("professionalName") || "le professionnel";
+  const searchParams = useSearchParams()
+  const amount = searchParams.get("amount") || "0"
+  const professionalName = searchParams.get("professionalName") || "le professionnel"
 
   return (
     <div className="h-screen w-screen bg-gradient-to-b from-background to-emerald-50/30 flex items-center justify-center p-6">
@@ -24,21 +24,15 @@ export default function PaymentSuccess() {
               <div className="relative">
                 <div className="absolute inset-0 animate-ping bg-emerald-100 rounded-full opacity-75" />
                 <div className="relative rounded-full bg-emerald-100 p-4">
-                  <CheckCircle2
-                    className="w-12 h-12 text-emerald-600"
-                    strokeWidth={2.5}
-                  />
+                  <CheckCircle2 className="w-12 h-12 text-emerald-600" strokeWidth={2.5} />
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-3xl font-bold text-foreground">
-                  Paiement confirmé
-                </h1>
+                <h1 className="text-3xl font-bold text-foreground">Paiement confirmé</h1>
                 <p className="text-muted-foreground max-w-md mx-auto text-base">
-                  Votre paiement de{" "}
-                  <span className="font-medium text-foreground">{amount}€</span>{" "}
-                  à {professionalName} a été traité avec succès.
+                  Votre paiement de <span className="font-medium text-foreground">{amount}€</span> à {professionalName}{" "}
+                  a été traité avec succès.
                 </p>
               </div>
             </div>
@@ -74,5 +68,5 @@ export default function PaymentSuccess() {
         </div>
       </Card>
     </div>
-  );
+  )
 }

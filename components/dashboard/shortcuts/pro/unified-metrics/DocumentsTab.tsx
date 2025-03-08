@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FileText, Shield, ArrowRightCircle } from "lucide-react";
-import { AnimalDetails } from "./types";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
+import { ArrowRightCircle, FileText, Shield } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+
+import { AnimalDetails } from "./types"
 
 interface DocumentsTabProps {
-  animal: AnimalDetails;
+  animal: AnimalDetails
 }
 
 export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
@@ -37,7 +39,7 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
       date: "22/05/2021",
       icon: "Shield",
     },
-  ];
+  ]
 
   return (
     <div className="p-6 space-y-6">
@@ -58,9 +60,7 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
           </motion.div>
           <h3 className="text-lg font-medium">Documents</h3>
         </div>
-        <p className="text-sm text-muted-foreground">
-          Documents médicaux et administratifs de {animal.name}.
-        </p>
+        <p className="text-sm text-muted-foreground">Documents médicaux et administratifs de {animal.name}.</p>
       </motion.div>
 
       <motion.div
@@ -135,14 +135,8 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
                 <div>
                   <div className="font-medium">{doc.title}</div>
                   <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Badge
-                        variant="outline"
-                        className="text-xs px-1 py-0 h-4"
-                      >
+                    <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
+                      <Badge variant="outline" className="text-xs px-1 py-0 h-4">
                         {doc.type}
                       </Badge>
                     </motion.div>
@@ -151,10 +145,7 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
                   </div>
                 </div>
               </div>
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 10 }}
-                transition={{ duration: 0.2 }}
-              >
+              <motion.div whileHover={{ scale: 1.1, rotate: 10 }} transition={{ duration: 0.2 }}>
                 <Button variant="ghost" size="icon" className="h-7 w-7">
                   <ArrowRightCircle className="h-4 w-4" />
                 </Button>
@@ -164,5 +155,5 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
         ))}
       </motion.div>
     </div>
-  );
-};
+  )
+}

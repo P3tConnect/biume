@@ -1,24 +1,17 @@
-"use client";
+"use client"
 
-import { useActiveOrganization } from "@/src/lib/auth-client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Button,
-} from "@/components/ui";
-import { AlertTriangle, CheckCircle } from "lucide-react";
-import Link from "next/link";
+import { AlertTriangle, CheckCircle } from "lucide-react"
+import Link from "next/link"
+
+import { Button, Card } from "@/components/ui"
+import { useActiveOrganization } from "@/src/lib/auth-client"
 
 export function StripeSetupCard() {
-  const { data: activeOrg } = useActiveOrganization();
+  const { data: activeOrg } = useActiveOrganization()
 
   // Si l'organisation n'est pas chargée ou si les deux ID Stripe sont présents, ne pas afficher la carte
   if (!activeOrg || (activeOrg.customerStripeId && activeOrg.companyStripeId)) {
-    return null;
+    return null
   }
 
   return (
@@ -30,8 +23,7 @@ export function StripeSetupCard() {
         </div>
 
         <div className="text-sm text-muted-foreground mb-3">
-          Complétez votre configuration Stripe pour accéder à toutes les
-          fonctionnalités.
+          Complétez votre configuration Stripe pour accéder à toutes les fonctionnalités.
         </div>
 
         <div className="flex gap-4">
@@ -56,12 +48,10 @@ export function StripeSetupCard() {
 
         {(!activeOrg.customerStripeId || !activeOrg.companyStripeId) && (
           <Button size="sm" variant="outline" className="mt-3 text-xs h-8">
-            <Link href="/dashboard/settings/billing">
-              Compléter la configuration
-            </Link>
+            <Link href="/dashboard/settings/billing">Compléter la configuration</Link>
           </Button>
         )}
       </div>
     </Card>
-  );
+  )
 }

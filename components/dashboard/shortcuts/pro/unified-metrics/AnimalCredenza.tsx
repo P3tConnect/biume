@@ -1,30 +1,28 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { CredenzaContent, CredenzaClose, CredenzaTitle } from "@/components/ui";
-import { Credenza } from "@/components/ui";
-import { Button } from "@/components/ui/button";
-import { AnimalDetailsSidebar } from "./AnimalDetailsSidebar";
-import { InfoTab } from "./InfoTab";
-import { MedicalTab } from "./MedicalTab";
-import { AppointmentsTab } from "./AppointmentsTab";
-import { DocumentsTab } from "./DocumentsTab";
-import { ActiveTab, AnimalDetails } from "./types";
-import { Info, HeartPulseIcon, FileClock, FileText } from "lucide-react";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
+import { useState } from "react"
+
+import { CredenzaClose, CredenzaContent, CredenzaTitle } from "@/components/ui"
+import { Credenza } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+
+import { AnimalDetailsSidebar } from "./AnimalDetailsSidebar"
+import { AppointmentsTab } from "./AppointmentsTab"
+import { DocumentsTab } from "./DocumentsTab"
+import { InfoTab } from "./InfoTab"
+import { MedicalTab } from "./MedicalTab"
+import { ActiveTab, AnimalDetails } from "./types"
 
 interface AnimalCredenzaProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  animalDetails: AnimalDetails;
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  animalDetails: AnimalDetails
 }
 
-export const AnimalCredenza = ({
-  isOpen,
-  onOpenChange,
-  animalDetails,
-}: AnimalCredenzaProps) => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("info");
+export const AnimalCredenza = ({ isOpen, onOpenChange, animalDetails }: AnimalCredenzaProps) => {
+  const [activeTab, setActiveTab] = useState<ActiveTab>("info")
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
@@ -35,11 +33,7 @@ export const AnimalCredenza = ({
         {/* Interface à deux panneaux avec navigation latérale */}
         <div className="flex flex-col md:flex-row h-[80vh] max-h-[700px]">
           {/* Sidebar avec photo et navigation */}
-          <AnimalDetailsSidebar
-            animal={animalDetails}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
+          <AnimalDetailsSidebar animal={animalDetails} activeTab={activeTab} setActiveTab={setActiveTab} />
 
           {/* Contenu principal */}
           <div className="flex-1 overflow-y-auto">
@@ -78,19 +72,13 @@ export const AnimalCredenza = ({
             </div>
 
             {/* Contenu dynamique en fonction de l'onglet actif */}
-            {activeTab === "info" && (
-              <InfoTab animal={animalDetails} setActiveTab={setActiveTab} />
-            )}
+            {activeTab === "info" && <InfoTab animal={animalDetails} setActiveTab={setActiveTab} />}
             {activeTab === "medical" && <MedicalTab animal={animalDetails} />}
-            {activeTab === "appointments" && (
-              <AppointmentsTab animal={animalDetails} />
-            )}
-            {activeTab === "documents" && (
-              <DocumentsTab animal={animalDetails} />
-            )}
+            {activeTab === "appointments" && <AppointmentsTab animal={animalDetails} />}
+            {activeTab === "documents" && <DocumentsTab animal={animalDetails} />}
           </div>
         </div>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}

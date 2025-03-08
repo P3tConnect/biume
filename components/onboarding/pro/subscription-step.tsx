@@ -1,24 +1,17 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Check, Loader2 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query"
+import { Check, Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import { updateOrganizationPlan } from "@/src/actions";
-import { useActiveOrganization } from "@/src/lib/auth-client";
-import { safeConfig } from "@/src/lib";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { updateOrganizationPlan } from "@/src/actions"
+import { safeConfig } from "@/src/lib"
+import { useActiveOrganization } from "@/src/lib/auth-client"
+import { cn } from "@/src/lib/utils"
 
 const plans = [
   {
@@ -75,36 +68,34 @@ const plans = [
     ],
     priceId: safeConfig.STRIPE_ULTIMATE_PLAN_ID,
   },
-];
+]
 
 export function SubscriptionStep() {
-  const { data: activeOrg } = useActiveOrganization();
-  const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: activeOrg } = useActiveOrganization()
+  const router = useRouter()
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
-    onSuccess: (data) => {
-      console.log(data, "url for stripe redirect");
-      window.location.href = data.data!;
+    onSuccess: data => {
+      console.log(data, "url for stripe redirect")
+      window.location.href = data.data!
     },
     onMutate: () => {
-      setIsLoading(true);
+      setIsLoading(true)
     },
     onError: (error: { message: string }) => {
-      setIsLoading(false);
-      toast.error(error.message);
+      setIsLoading(false)
+      toast.error(error.message)
     },
-  });
+  })
 
   return (
     <div className="container mx-auto">
       <div className="mb-8 text-center">
         <h2 className="text-3xl font-bold">Choisissez votre plan</h2>
-        <p className="mt-2 text-muted-foreground">
-          Sélectionnez le plan qui correspond le mieux à vos besoins
-        </p>
+        <p className="mt-2 text-muted-foreground">Sélectionnez le plan qui correspond le mieux à vos besoins</p>
       </div>
       <div className="grid gap-8 md:grid-cols-3">
         {plans.map((plan, index) => (
@@ -113,7 +104,7 @@ export function SubscriptionStep() {
             className={cn(
               "relative cursor-pointer transition-all hover:shadow-lg rounded-2xl flex flex-col h-full",
               selectedPlan === plan.name && "border-primary shadow-lg",
-              plan.name === "Pro" && "scale-105 border-primary",
+              plan.name === "Pro" && "scale-105 border-primary"
             )}
             onClick={() => setSelectedPlan(plan.name)}
           >
@@ -166,5 +157,5 @@ export function SubscriptionStep() {
         ))}
       </div>
     </div>
-  );
+  )
 }

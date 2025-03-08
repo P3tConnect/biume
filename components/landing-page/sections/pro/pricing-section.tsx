@@ -1,55 +1,36 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Check,
-  CreditCard,
-  X,
-  Sparkles,
-  Shield,
-  Clock,
-  Zap,
-  Info,
-} from "lucide-react";
-import { cn } from "@/src/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import Link from "next/link";
+import { motion } from "framer-motion"
+import { Check, Clock, CreditCard, Info, Shield, Sparkles, X, Zap } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/src/lib/utils"
 
 type PricingPlan = {
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   price: {
-    monthly: number;
-    annually: number;
-  };
+    monthly: number
+    annually: number
+  }
   features: {
-    text: string;
-    included: boolean;
-    explanation?: string;
-  }[];
-  cta: string;
-  isPopular?: boolean;
-  badge?: string;
-  icon: React.ElementType;
-};
+    text: string
+    included: boolean
+    explanation?: string
+  }[]
+  cta: string
+  isPopular?: boolean
+  badge?: string
+  icon: React.ElementType
+}
 
 const pricingPlans: PricingPlan[] = [
   {
@@ -154,19 +135,19 @@ const pricingPlans: PricingPlan[] = [
     cta: "Démarrer l'essai gratuit",
     icon: Shield,
   },
-];
+]
 
 export function PricingSection() {
-  const [isAnnual, setIsAnnual] = useState(true);
-  const [showPromotion, setShowPromotion] = useState(true);
-  const [remainingSpots] = useState(500);
+  const [isAnnual, setIsAnnual] = useState(true)
+  const [showPromotion, setShowPromotion] = useState(true)
+  const [remainingSpots] = useState(500)
 
   const calculateDiscountedPrice = (price: number) => {
     if (showPromotion) {
-      return (price * 0.8).toFixed(2);
+      return (price * 0.8).toFixed(2)
     }
-    return price.toFixed(2);
-  };
+    return price.toFixed(2)
+  }
 
   return (
     <section id="pricing" className="py-24 relative">
@@ -187,9 +168,7 @@ export function PricingSection() {
             <CreditCard className="w-4 h-4" />
             <span>Tarifs transparents</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Des forfaits adaptés à tous les professionnels
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Des forfaits adaptés à tous les professionnels</h2>
 
           {/* Bannière de promotion */}
           <motion.div
@@ -201,14 +180,10 @@ export function PricingSection() {
           >
             <div className="absolute top-0 right-0 w-24 h-24 -mt-8 -mr-8 bg-amber-500/20 rounded-full blur-xl"></div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Badge className="bg-amber-500 text-white hover:bg-amber-600">
-                Offre spéciale
-              </Badge>
+              <Badge className="bg-amber-500 text-white hover:bg-amber-600">Offre spéciale</Badge>
               <p className="text-base font-medium">
-                <span className="text-amber-700 dark:text-amber-400 font-bold">
-                  -20% supplémentaires
-                </span>{" "}
-                pour les 500 premiers inscrits !
+                <span className="text-amber-700 dark:text-amber-400 font-bold">-20% supplémentaires</span> pour les 500
+                premiers inscrits !
               </p>
             </div>
             <div className="mt-2 text-sm text-center text-amber-700 dark:text-amber-400 font-medium">
@@ -216,8 +191,7 @@ export function PricingSection() {
                 <Clock className="w-3.5 h-3.5 mr-1" />
                 Il ne reste que
                 <br />
-                <span className="font-bold mx-1">{remainingSpots}</span> places
-                !
+                <span className="font-bold mx-1">{remainingSpots}</span> places !
               </span>
             </div>
           </motion.div>
@@ -231,22 +205,11 @@ export function PricingSection() {
 
           {/* Sélecteur mensuel/annuel */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <span
-              className={cn(
-                "text-sm",
-                !isAnnual
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground",
-              )}
-            >
+            <span className={cn("text-sm", !isAnnual ? "font-medium text-foreground" : "text-muted-foreground")}>
               Mensuel
             </span>
             <div className="flex items-center space-x-2">
-              <Switch
-                id="billing-toggle"
-                checked={isAnnual}
-                onCheckedChange={setIsAnnual}
-              />
+              <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
               <Label htmlFor="billing-toggle" className="sr-only">
                 Facturation annuelle
               </Label>
@@ -254,9 +217,7 @@ export function PricingSection() {
             <span
               className={cn(
                 "text-sm flex items-center gap-1.5",
-                isAnnual
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground",
+                isAnnual ? "font-medium text-foreground" : "text-muted-foreground"
               )}
             >
               Annuel
@@ -282,39 +243,26 @@ export function PricingSection() {
               <Card
                 className={cn(
                   "relative h-full flex flex-col transition-shadow duration-200",
-                  plan.isPopular
-                    ? "shadow-lg border-primary/50"
-                    : "hover:shadow-md",
+                  plan.isPopular ? "shadow-lg border-primary/50" : "hover:shadow-md"
                 )}
               >
                 {plan.isPopular && (
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">
-                      {plan.badge}
-                    </Badge>
+                    <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">{plan.badge}</Badge>
                   </div>
                 )}
 
-                <CardHeader
-                  className={cn(
-                    "flex flex-col items-center text-center",
-                    plan.isPopular ? "pb-0" : "",
-                  )}
-                >
+                <CardHeader className={cn("flex flex-col items-center text-center", plan.isPopular ? "pb-0" : "")}>
                   <div
                     className={cn(
                       "w-12 h-12 rounded-full flex items-center justify-center mb-4",
-                      plan.isPopular
-                        ? "bg-primary/20 text-primary"
-                        : "bg-muted text-muted-foreground",
+                      plan.isPopular ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
                     )}
                   >
                     <plan.icon className="w-6 h-6" />
                   </div>
                   <CardTitle className="text-xl">{plan.name}</CardTitle>
-                  <CardDescription className="text-sm">
-                    {plan.description}
-                  </CardDescription>
+                  <CardDescription className="text-sm">{plan.description}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="flex-1">
@@ -326,18 +274,13 @@ export function PricingSection() {
                           : calculateDiscountedPrice(plan.price.monthly)}
                         €
                       </span>
-                      <span className="text-muted-foreground text-sm">
-                        /mois
-                      </span>
+                      <span className="text-muted-foreground text-sm">/mois</span>
                     </div>
 
                     {showPromotion && (
                       <div className="flex items-center justify-center gap-2 mt-2">
                         <span className="text-xs line-through text-muted-foreground">
-                          {isAnnual
-                            ? plan.price.annually.toFixed(2)
-                            : plan.price.monthly.toFixed(2)}
-                          €
+                          {isAnnual ? plan.price.annually.toFixed(2) : plan.price.monthly.toFixed(2)}€
                         </span>
                         <Badge
                           variant="outline"
@@ -351,11 +294,7 @@ export function PricingSection() {
                     {isAnnual && (
                       <p className="text-xs text-muted-foreground mt-1">
                         Facturé annuellement (
-                        {(
-                          parseFloat(
-                            calculateDiscountedPrice(plan.price.annually),
-                          ) * 12
-                        ).toFixed(2)}
+                        {(parseFloat(calculateDiscountedPrice(plan.price.annually)) * 12).toFixed(2)}
                         €)
                       </p>
                     )}
@@ -377,19 +316,15 @@ export function PricingSection() {
                             "flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5",
                             feature.included
                               ? "text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400"
-                              : "text-muted-foreground/70 bg-muted",
+                              : "text-muted-foreground/70 bg-muted"
                           )}
                         >
-                          {feature.included ? (
-                            <Check className="w-3 h-3" />
-                          ) : (
-                            <X className="w-3 h-3" />
-                          )}
+                          {feature.included ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                         </div>
                         <span
                           className={cn(
                             "text-sm flex items-center gap-1.5",
-                            !feature.included && "text-muted-foreground/70",
+                            !feature.included && "text-muted-foreground/70"
                           )}
                         >
                           {feature.text}
@@ -400,9 +335,7 @@ export function PricingSection() {
                                   <Info className="w-3.5 h-3.5 text-muted-foreground/80" />
                                 </span>
                               </TooltipTrigger>
-                              <TooltipContent side="top">
-                                {feature.explanation}
-                              </TooltipContent>
+                              <TooltipContent side="top">{feature.explanation}</TooltipContent>
                             </Tooltip>
                           )}
                         </span>
@@ -417,7 +350,7 @@ export function PricingSection() {
                       "w-full",
                       plan.isPopular
                         ? "bg-primary hover:bg-primary/90"
-                        : "bg-primary/10 text-primary hover:bg-primary/20",
+                        : "bg-primary/10 text-primary hover:bg-primary/20"
                     )}
                     size="lg"
                   >
@@ -443,12 +376,10 @@ export function PricingSection() {
                 <Zap className="w-6 h-6 text-primary" />
               </div>
             </div>
-            <h3 className="text-2xl font-bold mb-4">
-              Besoin d&apos;une solution personnalisée ?
-            </h3>
+            <h3 className="text-2xl font-bold mb-4">Besoin d&apos;une solution personnalisée ?</h3>
             <p className="text-muted-foreground mb-8">
-              Nous proposons également des solutions sur mesure pour les grandes
-              structures avec des besoins spécifiques.
+              Nous proposons également des solutions sur mesure pour les grandes structures avec des besoins
+              spécifiques.
             </p>
             <Button variant="outline" size="lg">
               Demander un devis personnalisé
@@ -457,5 +388,5 @@ export function PricingSection() {
         </Link>
       </div>
     </section>
-  );
+  )
 }
