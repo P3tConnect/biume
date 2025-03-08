@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui';
-import { Sparkles } from 'lucide-react';
+import { Sparkles } from "lucide-react"
+import React from "react"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui"
 
 const AIAssistantPage = () => {
   return (
@@ -12,7 +13,8 @@ const AIAssistantPage = () => {
             <div>
               <CardTitle>Assistant IA pour Rapports</CardTitle>
               <CardDescription>
-                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
+                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou
+                observations
               </CardDescription>
             </div>
           </div>
@@ -24,7 +26,8 @@ const AIAssistantPage = () => {
             </div>
             <h2 className="text-2xl font-bold mb-2">Fonctionnalité en développement</h2>
             <p className="text-muted-foreground max-w-md mb-4">
-              Notre équipe travaille actuellement sur cette fonctionnalité innovante qui vous permettra de générer des rapports complets à partir de vos observations ou notes cliniques.
+              Notre équipe travaille actuellement sur cette fonctionnalité innovante qui vous permettra de générer des
+              rapports complets à partir de vos observations ou notes cliniques.
             </p>
             <div className="px-4 py-2 bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300 rounded-full text-sm font-medium">
               Disponible prochainement
@@ -33,7 +36,7 @@ const AIAssistantPage = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default AIAssistantPage; 
+export default AIAssistantPage

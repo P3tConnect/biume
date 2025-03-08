@@ -1,23 +1,14 @@
-"use client";
+"use client"
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { UseFormReturn } from "react-hook-form"
+import { z } from "zod"
 
-import { Checkbox } from "@/components/ui";
-import { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { clientOnBoardingSchema } from "../stepper-client";
+import { Checkbox } from "@/components/ui"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 
-const ClientNotificationForm = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>>;
-}) => {
+import { clientOnBoardingSchema } from "../stepper-client"
+
+const ClientNotificationForm = ({ form }: { form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>> }) => {
   return (
     <Form {...form}>
       <form className="space-y-6">
@@ -30,14 +21,10 @@ const ClientNotificationForm = ({
                 <FormControl>
                   <Checkbox
                     checked={field?.value ?? undefined}
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked === true)
-                    }
+                    onCheckedChange={checked => field.onChange(checked === true)}
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-semibold">
-                  Choisir de recevoir les notifications par SMS
-                </FormLabel>
+                <FormLabel className="text-sm font-semibold">Choisir de recevoir les notifications par SMS</FormLabel>
               </div>
             </FormItem>
           )}
@@ -52,21 +39,17 @@ const ClientNotificationForm = ({
                 <FormControl>
                   <Checkbox
                     checked={field?.value ?? undefined}
-                    onCheckedChange={(checked) =>
-                      field.onChange(checked === true)
-                    }
+                    onCheckedChange={checked => field.onChange(checked === true)}
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-semibold">
-                  Choisir de recevoir les notifications par email
-                </FormLabel>
+                <FormLabel className="text-sm font-semibold">Choisir de recevoir les notifications par email</FormLabel>
               </div>
             </FormItem>
           )}
         />
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default ClientNotificationForm;
+export default ClientNotificationForm

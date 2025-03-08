@@ -1,20 +1,17 @@
-"use client";
+"use client"
 
-import { useSearchParams } from "next/navigation";
-import { useQuotesSearchParams } from "@/src/hooks/use-quotes-search-params";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { QuotesDataTable } from "./components/quotes-data-table";
-import { QuotesFilters } from "./components/quotes-filters";
-import {
-  CredenzaDescription,
-  CredenzaTitle,
-  CredenzaHeader,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
-import { CredenzaContent } from "@/components/ui/credenza";
-import { Credenza } from "@/components/ui/credenza";
+import { Plus } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { CredenzaDescription, CredenzaHeader, CredenzaTitle, CredenzaTrigger } from "@/components/ui/credenza"
+import { CredenzaContent } from "@/components/ui/credenza"
+import { Credenza } from "@/components/ui/credenza"
+import { useQuotesSearchParams } from "@/src/hooks/use-quotes-search-params"
+
+import { QuotesDataTable } from "./components/quotes-data-table"
+import { QuotesFilters } from "./components/quotes-filters"
 
 const NewQuoteDialog = () => {
   return (
@@ -28,15 +25,13 @@ const NewQuoteDialog = () => {
       <CredenzaContent className="sm:max-w-[600px]">
         <CredenzaHeader>
           <CredenzaTitle>Créer un nouveau devis</CredenzaTitle>
-          <CredenzaDescription>
-            Remplissez les informations ci-dessous pour créer un nouveau devis.
-          </CredenzaDescription>
+          <CredenzaDescription>Remplissez les informations ci-dessous pour créer un nouveau devis.</CredenzaDescription>
         </CredenzaHeader>
         {/* TODO: Ajouter le formulaire de création de devis ici */}
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
 const EstimatesHeader = () => {
   return (
@@ -47,21 +42,18 @@ const EstimatesHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Devis
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Gérez vos devis et convertissez-les en factures
-            </p>
+            <p className="text-sm text-muted-foreground">Gérez vos devis et convertissez-les en factures</p>
           </div>
           <NewQuoteDialog />
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}
 
 export function DashboardEstimatesComponent() {
-  const searchParams = useSearchParams();
-  const { page, perPage, sort, status, search, dateRange, updateSearchParams } =
-    useQuotesSearchParams();
+  const searchParams = useSearchParams()
+  const { page, perPage, sort, status, search, dateRange, updateSearchParams } = useQuotesSearchParams()
 
   return (
     <div className="space-y-4">
@@ -73,5 +65,5 @@ export function DashboardEstimatesComponent() {
         <QuotesDataTable />
       </Card>
     </div>
-  );
+  )
 }

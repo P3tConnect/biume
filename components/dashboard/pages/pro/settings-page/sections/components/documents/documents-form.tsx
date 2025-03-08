@@ -1,22 +1,11 @@
-"use client";
+"use client"
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DropzoneInput } from "@/components/ui/dropzone-input";
-import {
-  deleteCompanyDocument,
-  updateCompanyDocuments,
-} from "@/src/actions/companyDocuments.action";
-import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { ExternalLink, FileText, Trash2 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,89 +16,81 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { ExternalLink, FileText, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import { documentsSchema, DocumentsFormData } from "./types";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { getDocumentName } from "@/src/lib/utils";
-import { OrganizationDocuments } from "@/src/db";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { DropzoneInput } from "@/components/ui/dropzone-input"
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { deleteCompanyDocument, updateCompanyDocuments } from "@/src/actions/companyDocuments.action"
+import { OrganizationDocuments } from "@/src/db"
+import { useFormChangeToast } from "@/src/hooks/useFormChangeToast"
+import { getDocumentName } from "@/src/lib/utils"
 
-export const DocumentsForm = ({
-  documents,
-}: {
-  documents: OrganizationDocuments[];
-}) => {
-  const queryClient = useQueryClient();
+import { DocumentsFormData, documentsSchema } from "./types"
+
+export const DocumentsForm = ({ documents }: { documents: OrganizationDocuments[] }) => {
+  const queryClient = useQueryClient()
   const { mutateAsync: updateDocuments } = useMutation({
     mutationFn: updateCompanyDocuments,
     onSuccess: () => {
-      toast.success("Documents mis à jour avec succès!");
+      toast.success("Documents mis à jour avec succès!")
       queryClient.invalidateQueries({
         queryKey: ["organization-documents"],
-      });
+      })
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
   const form = useForm<DocumentsFormData>({
     resolver: zodResolver(documentsSchema),
     values: {
       documents:
-        documents?.map((document) => ({
+        documents?.map(document => ({
           url: document.file,
-          name:
-            document.name ||
-            getDocumentName({ url: document.file, name: document.name }, 0),
+          name: document.name || getDocumentName({ url: document.file, name: document.name }, 0),
         })) || [],
     },
-  });
+  })
 
-  const { control, setValue, handleSubmit, watch } = form;
-  const currentDocuments = watch("documents") || [];
+  const { control, setValue, handleSubmit, watch } = form
+  const currentDocuments = watch("documents") || []
 
   const { mutateAsync: deleteDocument } = useMutation({
     mutationFn: deleteCompanyDocument,
     onSuccess: () => {
-      toast.success("Document supprimé avec succès!");
+      toast.success("Document supprimé avec succès!")
       queryClient.invalidateQueries({
         queryKey: ["organization-documents"],
-      });
+      })
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     await updateDocuments({
       ...data,
       documents:
-        data.documents?.map((doc) => ({
+        data.documents?.map(doc => ({
           url: doc.url,
           name: doc.name || getDocumentName(doc, 0),
         })) || [],
-    });
-  });
+    })
+  })
 
   const handleDeleteDocument = async (index: number) => {
-    await deleteDocument({ id: currentDocuments[index].url });
-  };
+    await deleteDocument({ id: currentDocuments[index].url })
+  }
 
   useFormChangeToast({
     form,
     onSubmit,
     message: "Modifications en attente",
     description: "Pensez à sauvegarder vos changements",
-  });
+  })
 
   return (
     <Form {...form}>
@@ -120,15 +101,12 @@ export const DocumentsForm = ({
           render={({ field }) => (
             <FormItem>
               <DropzoneInput
-                onFilesChanged={(files) =>
-                  setValue("documents", files, { shouldDirty: true })
-                }
+                onFilesChanged={files => setValue("documents", files, { shouldDirty: true })}
                 value={field.value ?? []}
                 uploadEndpoint="documentsUploader"
                 placeholder={{
                   dragActive: "Déposez vos documents ici",
-                  dragInactive:
-                    "Glissez-déposez vos documents ici, ou cliquez pour sélectionner",
+                  dragInactive: "Glissez-déposez vos documents ici, ou cliquez pour sélectionner",
                   fileTypes: "PDF, JPEG, PNG - 5MB max",
                 }}
               />
@@ -146,9 +124,7 @@ export const DocumentsForm = ({
               >
                 <div className="flex items-center space-x-2">
                   <FileText className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">
-                    {getDocumentName(doc, index)}
-                  </span>
+                  <span className="text-sm font-medium">{getDocumentName(doc, index)}</span>
                 </div>
                 <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <TooltipProvider>
@@ -174,11 +150,7 @@ export const DocumentsForm = ({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                            >
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                               <Trash2 className="h-4 w-4 text-destructive hover:text-destructive/80" />
                             </Button>
                           </AlertDialogTrigger>
@@ -190,20 +162,15 @@ export const DocumentsForm = ({
                     </TooltipProvider>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Supprimer le document
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>Supprimer le document</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Êtes-vous sûr de vouloir supprimer ce document ? Cette
-                          action est irréversible.
+                          Êtes-vous sûr de vouloir supprimer ce document ? Cette action est irréversible.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Annuler</AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={async () =>
-                            await handleDeleteDocument(index)
-                          }
+                          onClick={async () => await handleDeleteDocument(index)}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
                           Supprimer
@@ -218,5 +185,5 @@ export const DocumentsForm = ({
         )}
       </div>
     </Form>
-  );
-};
+  )
+}

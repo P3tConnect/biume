@@ -1,14 +1,10 @@
-import { InferSelectModel, relations } from "drizzle-orm";
-import { boolean, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { User, user } from "./user";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { boolean, pgEnum, pgTable, text } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
-export const notificationType = pgEnum("notificationType", [
-  "rate",
-  "newClient",
-  "newReport",
-  "newAskReservation",
-]);
+import { User, user } from "./user"
+
+export const notificationType = pgEnum("notificationType", ["rate", "newClient", "newReport", "newAskReservation"])
 
 export const notification = pgTable("notification", {
   id: text("id")
@@ -23,19 +19,19 @@ export const notification = pgTable("notification", {
   new: boolean("new").default(true),
   createdAt: text("createdAt").notNull(),
   updatedAt: text("updatedAt").notNull(),
-});
+})
 
 export const notificationRelations = relations(notification, ({ one }) => ({
   user: one(user, {
     fields: [notification.userId],
     references: [user.id],
   }),
-}));
+}))
 
 export type Notification = InferSelectModel<typeof notification> & {
-  user: User;
-};
-export type CreateNotification = typeof notification.$inferInsert;
+  user: User
+}
+export type CreateNotification = typeof notification.$inferInsert
 
-export const CreateNotificationSchema = createInsertSchema(notification);
-export const SelectNotificationSchema = createSelectSchema(notification);
+export const CreateNotificationSchema = createInsertSchema(notification)
+export const SelectNotificationSchema = createSelectSchema(notification)

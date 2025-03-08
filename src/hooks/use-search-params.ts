@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { useQueryState } from "nuqs";
+import { useQueryState } from "nuqs"
 
 export function useSearchParams() {
-  const [search, setSearch] = useQueryState("search");
-  const [location, setLocation] = useQueryState("location");
+  const [search, setSearch] = useQueryState("search")
+  const [location, setLocation] = useQueryState("location")
   const [categories, setCategories] = useQueryState<string[]>("categories", {
-    serialize: (value) => value.join(","),
-    parse: (value) => (value ? value.split(",") : []),
-  });
+    serialize: value => value.join(","),
+    parse: value => (value ? value.split(",") : []),
+  })
   const [availableToday, setAvailableToday] = useQueryState<boolean>("availableToday", {
-    serialize: (value) => value.toString(),
-    parse: (value) => value === "true",
-  });
+    serialize: value => value.toString(),
+    parse: value => value === "true",
+  })
   const [instantBooking, setInstantBooking] = useQueryState<boolean>("instantBooking", {
-    serialize: (value) => value.toString(),
-    parse: (value) => value === "true",
-  });
-  const [sortBy, setSortBy] = useQueryState("sortBy");
-  const [page, setPage] = useQueryState("page");
+    serialize: value => value.toString(),
+    parse: value => value === "true",
+  })
+  const [sortBy, setSortBy] = useQueryState("sortBy")
+  const [page, setPage] = useQueryState("page")
 
   return {
     search: {
@@ -49,5 +49,5 @@ export function useSearchParams() {
       value: page ?? "1",
       set: setPage,
     },
-  };
-} 
+  }
+}

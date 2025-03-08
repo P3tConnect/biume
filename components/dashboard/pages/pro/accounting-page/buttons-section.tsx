@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui";
-import React from "react";
+import React from "react"
+
+import { Button } from "@/components/ui"
 
 const ButtonsSection = () => {
   return (
@@ -17,7 +18,7 @@ const ButtonsSection = () => {
         <Button className="rounded-2xl">Créer une facture</Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ButtonsSection;
+export default ButtonsSection

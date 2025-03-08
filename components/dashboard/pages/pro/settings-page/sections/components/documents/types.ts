@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const documentsSchema = z.object({
   documents: z
     .array(
       z.object({
         url: z.string().url(),
-        name: z.string()
+        name: z.string(),
       })
     )
     .min(1, "Veuillez télécharger au moins un document")
@@ -22,6 +22,6 @@ export const documentsSchema = z.object({
     .max(14, "Le numéro SIRET doit contenir 14 chiffres")
     .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
     .optional(),
-});
+})
 
-export type DocumentsFormData = z.infer<typeof documentsSchema>; 
+export type DocumentsFormData = z.infer<typeof documentsSchema>

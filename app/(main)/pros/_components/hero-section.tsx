@@ -1,28 +1,29 @@
-"use client";
+"use client"
 
-import { Search, MapPin } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useSearchParams } from "@/src/hooks/use-search-params";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { MapPin, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useSearchParams } from "@/src/hooks/use-search-params"
 
 export function HeroSection() {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const { search, location } = useSearchParams();
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const { search, location } = useSearchParams()
 
   const handleSearch = () => {
     startTransition(() => {
-      router.push(`/pros?search=${search.value}&location=${location.value}`);
-    });
-  };
+      router.push(`/pros?search=${search.value}&location=${location.value}`)
+    })
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleSearch();
+      handleSearch()
     }
-  };
+  }
 
   return (
     <div className="relative w-full border-b border-border overflow-hidden bg-background">
@@ -47,7 +48,7 @@ export function HeroSection() {
               placeholder="Quel type de soin recherchez-vous ?"
               className="pl-9 pr-4 h-12"
               value={search.value}
-              onChange={(e) => search.set(e.target.value)}
+              onChange={e => search.set(e.target.value)}
               onKeyPress={handleKeyPress}
             />
           </div>
@@ -57,19 +58,15 @@ export function HeroSection() {
               placeholder="Où ?"
               className="pl-9 pr-4 h-12"
               value={location.value}
-              onChange={(e) => location.set(e.target.value)}
+              onChange={e => location.set(e.target.value)}
               onKeyPress={handleKeyPress}
             />
           </div>
-          <Button
-            className="h-12 px-6 custom-button"
-            onClick={handleSearch}
-            disabled={isPending}
-          >
+          <Button className="h-12 px-6 custom-button" onClick={handleSearch} disabled={isPending}>
             {isPending ? "Recherche..." : "Rechercher"}
           </Button>
         </div>
       </div>
     </div>
-  );
-} 
+  )
+}

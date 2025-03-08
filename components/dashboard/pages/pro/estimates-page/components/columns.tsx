@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Quote } from "@/types/quote";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { ColumnDef } from "@tanstack/react-table"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header"
+import { Quote } from "@/types/quote"
+
+import { DataTableRowActions } from "./data-table-row-actions"
 
 export const columns: ColumnDef<Quote>[] = [
   {
@@ -15,7 +17,7 @@ export const columns: ColumnDef<Quote>[] = [
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Tout sélectionner"
         className="translate-y-[2px]"
       />
@@ -23,7 +25,7 @@ export const columns: ColumnDef<Quote>[] = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label="Sélectionner la ligne"
         className="translate-y-[2px]"
       />
@@ -33,45 +35,33 @@ export const columns: ColumnDef<Quote>[] = [
   },
   {
     accessorKey: "number",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Numéro" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Numéro" />,
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("number")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "client",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Client" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Client" />,
     cell: ({ row }) => {
-      const client = row.getValue("client") as { name: string };
-      return <div className="flex space-x-2">{client.name}</div>;
+      const client = row.getValue("client") as { name: string }
+      return <div className="flex space-x-2">{client.name}</div>
     },
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
     cell: ({ row }) => {
-      return (
-        <div>
-          {format(new Date(row.getValue("date")), "dd/MM/yyyy", { locale: fr })}
-        </div>
-      );
+      return <div>{format(new Date(row.getValue("date")), "dd/MM/yyyy", { locale: fr })}</div>
     },
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Montant" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Montant" />,
     cell: ({ row }) => {
       return (
         <div>
@@ -80,18 +70,16 @@ export const columns: ColumnDef<Quote>[] = [
             currency: "EUR",
           }).format(row.getValue("amount"))}
         </div>
-      );
+      )
     },
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Statut" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+      const status = row.getValue("status") as string
       return (
         <Badge
           variant={
@@ -116,7 +104,7 @@ export const columns: ColumnDef<Quote>[] = [
                   ? "Refusé"
                   : "Expiré"}
         </Badge>
-      );
+      )
     },
     enableSorting: true,
     enableHiding: true,
@@ -125,4 +113,4 @@ export const columns: ColumnDef<Quote>[] = [
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
-];
+]

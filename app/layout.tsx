@@ -1,26 +1,27 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.css"
 
-import Providers from "@/src/context/providers";
-import { cn } from "@/src/lib/utils";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages, getTranslations } from "next-intl/server";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { GeistSans } from "geist/font/sans";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
-import { ourFileRouter } from "@/app/api/uploadthing/core";
-import { NuqsAdapter } from "nuqs/adapters/next";
-import { safeConfig } from "@/src/lib/env";
-import NextTopLoader from "nextjs-toploader";
-const geist = GeistSans;
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
+import { GeistSans } from "geist/font/sans"
+import type { Metadata } from "next"
+import { cookies } from "next/headers"
+import { NextIntlClientProvider } from "next-intl"
+import { getLocale, getMessages, getTranslations } from "next-intl/server"
+import NextTopLoader from "nextjs-toploader"
+import { NuqsAdapter } from "nuqs/adapters/next"
+import { extractRouterConfig } from "uploadthing/server"
+
+import { ourFileRouter } from "@/app/api/uploadthing/core"
+import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import Providers from "@/src/context/providers"
+import { safeConfig } from "@/src/lib/env"
+import { cn } from "@/src/lib/utils"
+const geist = GeistSans
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
+  const locale = await getLocale()
 
-  const t = await getTranslations({ namespace: "metadata" });
+  const t = await getTranslations({ namespace: "metadata" })
 
   return {
     title: "Biume",
@@ -54,9 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Biume",
       description: t("description"),
-      images: [
-        `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
-      ],
+      images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`],
     },
     applicationName: "Biume",
     authors: [
@@ -109,38 +108,30 @@ export async function generateMetadata(): Promise<Metadata> {
       t("keywords.keyword29"),
       t("keywords.keyword30"),
     ],
-  };
+  }
 }
 
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  const locale = await getLocale();
+  const locale = await getLocale()
 
-  const messages = await getMessages({ locale: locale });
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+  const messages = await getMessages({ locale: locale })
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
   return (
     <html suppressHydrationWarning lang={locale}>
-      <body
-        className={cn("min-h-screen font-sans antialiased", geist.className)}
-      >
+      <body className={cn("min-h-screen font-sans antialiased", geist.className)}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <SidebarProvider defaultOpen={defaultOpen}>
               <div vaul-drawer-wrapper="">
-                <NextSSRPlugin
-                  routerConfig={extractRouterConfig(ourFileRouter)}
-                />
+                <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
                 <NuqsAdapter>
-                  <NextTopLoader
-                    height={3}
-                    color="#A594FF"
-                    showSpinner={false}
-                  />
+                  <NextTopLoader height={3} color="#A594FF" showSpinner={false} />
                   {children}
                 </NuqsAdapter>
               </div>
@@ -150,5 +141,5 @@ export default async function RootLayout({
         </NextIntlClientProvider>
       </body>
     </html>
-  );
+  )
 }

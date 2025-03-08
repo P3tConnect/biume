@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react"
 
 const DashboardOrganizationMemberTimeTablePage = () => {
-  return (
-    <div>DashboardOrganizationMemberTimeTablePage</div>
-  )
+  return <div>DashboardOrganizationMemberTimeTablePage</div>
 }
 
 export default DashboardOrganizationMemberTimeTablePage

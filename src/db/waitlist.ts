@@ -1,8 +1,10 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const waitlist = pgTable("waitlist", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   firstName: text("firstname").notNull(),
   email: text("email").notNull().unique(),
@@ -10,10 +12,10 @@ export const waitlist = pgTable("waitlist", {
   isPro: boolean("is_pro").notNull().default(false),
   comment: text("comment"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+})
 
-export type WaitList = typeof waitlist.$inferSelect;
-export type NewWaitList = typeof waitlist.$inferInsert;
+export type WaitList = typeof waitlist.$inferSelect
+export type NewWaitList = typeof waitlist.$inferInsert
 
-export const waitlistSelectSchema = createSelectSchema(waitlist);
-export const waitlistInsertSchema = createInsertSchema(waitlist);
+export const waitlistSelectSchema = createSelectSchema(waitlist)
+export const waitlistInsertSchema = createInsertSchema(waitlist)

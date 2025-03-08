@@ -1,17 +1,15 @@
-import { motion } from "framer-motion";
-import { cn } from "@/src/lib/utils";
-import { Star, Home } from "lucide-react";
-import { Badge } from "@/components/ui";
+import { motion } from "framer-motion"
+import { Home, Star } from "lucide-react"
+
+import { Badge } from "@/components/ui"
+import { cn } from "@/src/lib/utils"
 
 interface ConsultationTypeStepProps {
-  isHomeVisit: boolean;
-  onSelectType: (isHomeVisit: boolean) => void;
+  isHomeVisit: boolean
+  onSelectType: (isHomeVisit: boolean) => void
 }
 
-export function ConsultationTypeStep({
-  isHomeVisit,
-  onSelectType,
-}: ConsultationTypeStepProps) {
+export function ConsultationTypeStep({ isHomeVisit, onSelectType }: ConsultationTypeStepProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -26,9 +24,7 @@ export function ConsultationTypeStep({
           onClick={() => onSelectType(false)}
           className={cn(
             "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
-            !isHomeVisit
-              ? "border-primary bg-primary/5"
-              : "hover:border-primary/50",
+            !isHomeVisit ? "border-primary bg-primary/5" : "hover:border-primary/50"
           )}
         >
           <div className="flex flex-col items-center text-center gap-4">
@@ -37,9 +33,7 @@ export function ConsultationTypeStep({
             </div>
             <div>
               <h4 className="font-medium">Au cabinet</h4>
-              <p className="text-sm text-muted-foreground">
-                Consultation classique au cabinet vétérinaire
-              </p>
+              <p className="text-sm text-muted-foreground">Consultation classique au cabinet vétérinaire</p>
             </div>
             <Badge variant="secondary">Tarif standard</Badge>
           </div>
@@ -51,9 +45,7 @@ export function ConsultationTypeStep({
           onClick={() => onSelectType(true)}
           className={cn(
             "relative cursor-pointer rounded-xl border-2 p-6 transition-all",
-            isHomeVisit
-              ? "border-primary bg-primary/5"
-              : "hover:border-primary/50",
+            isHomeVisit ? "border-primary bg-primary/5" : "hover:border-primary/50"
           )}
         >
           <div className="flex flex-col items-center text-center gap-4">
@@ -62,14 +54,12 @@ export function ConsultationTypeStep({
             </div>
             <div>
               <h4 className="font-medium">À domicile</h4>
-              <p className="text-sm text-muted-foreground">
-                Le vétérinaire se déplace chez vous
-              </p>
+              <p className="text-sm text-muted-foreground">Le vétérinaire se déplace chez vous</p>
             </div>
             <Badge variant="secondary">Frais supplémentaires</Badge>
           </div>
         </motion.div>
       </div>
     </motion.div>
-  );
+  )
 }

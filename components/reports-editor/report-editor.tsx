@@ -1,39 +1,27 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import { Switch } from "../ui/switch";
-import { Separator } from "../ui/separator";
-import {
-  Image as ImageIcon,
-  Table2,
-  FileText,
-  Paperclip,
-  FileImage,
-  Edit
-} from "lucide-react";
-import { ReportTemplate } from "./report-generator";
+import { Edit, FileImage, FileText, Image as ImageIcon, Paperclip, Table2 } from "lucide-react"
+import { useState } from "react"
+
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { Separator } from "../ui/separator"
+import { Switch } from "../ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { Textarea } from "../ui/textarea"
+import { ReportTemplate } from "./report-generator"
 
 interface AnimalData {
-  id: string;
-  name: string;
-  species: string;
-  breed: string;
-  age: string;
-  weight: string;
-  sex: string;
-  owner: string;
+  id: string
+  name: string
+  species: string
+  breed: string
+  age: string
+  weight: string
+  sex: string
+  owner: string
 }
 
 // Données simulées pour les exemples
@@ -45,41 +33,41 @@ const MOCK_ANIMAL: AnimalData = {
   age: "5 ans",
   weight: "32 kg",
   sex: "Mâle",
-  owner: "Jean Dupont"
-};
+  owner: "Jean Dupont",
+}
 
 interface ReportEditorProps {
-  template: ReportTemplate;
-  reportData: Record<string, any>;
-  setReportData: (data: Record<string, any>) => void;
+  template: ReportTemplate
+  reportData: Record<string, any>
+  setReportData: (data: Record<string, any>) => void
 }
 
 export function ReportEditor({ template, reportData, setReportData }: ReportEditorProps) {
-  const [activeTab, setActiveTab] = useState("content");
-  const [animalData, setAnimalData] = useState<AnimalData>(MOCK_ANIMAL);
-  const [title, setTitle] = useState(template.name);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [includeHeader, setIncludeHeader] = useState(true);
-  const [includeFooter, setIncludeFooter] = useState(true);
-  const [includeSignature, setIncludeSignature] = useState(true);
+  const [activeTab, setActiveTab] = useState("content")
+  const [animalData, setAnimalData] = useState<AnimalData>(MOCK_ANIMAL)
+  const [title, setTitle] = useState(template.name)
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+  const [includeHeader, setIncludeHeader] = useState(true)
+  const [includeFooter, setIncludeFooter] = useState(true)
+  const [includeSignature, setIncludeSignature] = useState(true)
 
   // Édition du contenu basé sur le type de rapport
   const renderContentEditor = () => {
     switch (template.type) {
       case "health":
-        return <HealthReportEditor />;
+        return <HealthReportEditor />
       case "surgery":
-        return <SurgeryReportEditor />;
+        return <SurgeryReportEditor />
       case "behavior":
-        return <BehaviorReportEditor />;
+        return <BehaviorReportEditor />
       case "nutrition":
-        return <NutritionReportEditor />;
+        return <NutritionReportEditor />
       case "statistics":
-        return <StatisticsReportEditor />;
+        return <StatisticsReportEditor />
       default:
-        return <GenericReportEditor />;
+        return <GenericReportEditor />
     }
-  };
+  }
 
   // Mettre à jour les données du rapport lorsque les champs changent
   const updateReportData = () => {
@@ -90,9 +78,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
       animalData,
       includeHeader,
       includeFooter,
-      includeSignature
-    });
-  };
+      includeSignature,
+    })
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -155,9 +143,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
               <Input
                 id="title"
                 value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                  updateReportData();
+                onChange={e => {
+                  setTitle(e.target.value)
+                  updateReportData()
                 }}
               />
             </div>
@@ -168,9 +156,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
                 id="date"
                 type="date"
                 value={date}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                  updateReportData();
+                onChange={e => {
+                  setDate(e.target.value)
+                  updateReportData()
                 }}
               />
             </div>
@@ -232,9 +220,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
                 <Switch
                   id="include-header"
                   checked={includeHeader}
-                  onCheckedChange={(checked) => {
-                    setIncludeHeader(checked);
-                    updateReportData();
+                  onCheckedChange={checked => {
+                    setIncludeHeader(checked)
+                    updateReportData()
                   }}
                 />
               </div>
@@ -244,9 +232,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
                 <Switch
                   id="include-footer"
                   checked={includeFooter}
-                  onCheckedChange={(checked) => {
-                    setIncludeFooter(checked);
-                    updateReportData();
+                  onCheckedChange={checked => {
+                    setIncludeFooter(checked)
+                    updateReportData()
                   }}
                 />
               </div>
@@ -256,9 +244,9 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
                 <Switch
                   id="include-signature"
                   checked={includeSignature}
-                  onCheckedChange={(checked) => {
-                    setIncludeSignature(checked);
-                    updateReportData();
+                  onCheckedChange={checked => {
+                    setIncludeSignature(checked)
+                    updateReportData()
                   }}
                 />
               </div>
@@ -282,7 +270,7 @@ export function ReportEditor({ template, reportData, setReportData }: ReportEdit
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 // Composants spécifiques pour les différents types de rapports
@@ -314,7 +302,7 @@ function HealthReportEditor() {
         <Textarea id="follow-up" placeholder="Recommandations de suivi..." className="min-h-[100px]" />
       </div>
     </div>
-  );
+  )
 }
 
 function SurgeryReportEditor() {
@@ -342,10 +330,14 @@ function SurgeryReportEditor() {
 
       <div className="space-y-2">
         <Label htmlFor="post-op">Soins post-opératoires</Label>
-        <Textarea id="post-op" placeholder="Instructions pour les soins post-opératoires..." className="min-h-[100px]" />
+        <Textarea
+          id="post-op"
+          placeholder="Instructions pour les soins post-opératoires..."
+          className="min-h-[100px]"
+        />
       </div>
     </div>
-  );
+  )
 }
 
 function BehaviorReportEditor() {
@@ -368,10 +360,14 @@ function BehaviorReportEditor() {
 
       <div className="space-y-2">
         <Label htmlFor="recommendations">Recommandations</Label>
-        <Textarea id="recommendations" placeholder="Recommandations pour l'amélioration du comportement..." className="min-h-[100px]" />
+        <Textarea
+          id="recommendations"
+          placeholder="Recommandations pour l'amélioration du comportement..."
+          className="min-h-[100px]"
+        />
       </div>
     </div>
-  );
+  )
 }
 
 function NutritionReportEditor() {
@@ -384,7 +380,11 @@ function NutritionReportEditor() {
 
       <div className="space-y-2">
         <Label htmlFor="nutritional-assessment">Évaluation nutritionnelle</Label>
-        <Textarea id="nutritional-assessment" placeholder="Évaluation de l'état nutritionnel..." className="min-h-[100px]" />
+        <Textarea
+          id="nutritional-assessment"
+          placeholder="Évaluation de l'état nutritionnel..."
+          className="min-h-[100px]"
+        />
       </div>
 
       <div className="space-y-2">
@@ -394,10 +394,14 @@ function NutritionReportEditor() {
 
       <div className="space-y-2">
         <Label htmlFor="feeding-schedule">Programme d&apos;alimentation</Label>
-        <Textarea id="feeding-schedule" placeholder="Détails sur les horaires et quantités..." className="min-h-[100px]" />
+        <Textarea
+          id="feeding-schedule"
+          placeholder="Détails sur les horaires et quantités..."
+          className="min-h-[100px]"
+        />
       </div>
     </div>
-  );
+  )
 }
 
 function StatisticsReportEditor() {
@@ -431,7 +435,7 @@ function StatisticsReportEditor() {
         <Textarea id="conclusions" placeholder="Conclusions basées sur les données..." className="min-h-[100px]" />
       </div>
     </div>
-  );
+  )
 }
 
 function GenericReportEditor() {
@@ -442,7 +446,7 @@ function GenericReportEditor() {
         <Textarea id="content" placeholder="Contenu du rapport..." className="min-h-[300px]" />
       </div>
     </div>
-  );
+  )
 }
 
 // Composants supplémentaires pour l'édition du rapport
@@ -452,17 +456,13 @@ function ImageUploader() {
       <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center">
         <FileImage className="h-10 w-10 text-muted-foreground mb-2" />
         <h3 className="font-medium mb-1">Déposez vos images ici</h3>
-        <p className="text-sm text-muted-foreground text-center mb-3">
-          PNG, JPG ou GIF jusqu&apos;à 10 MB
-        </p>
+        <p className="text-sm text-muted-foreground text-center mb-3">PNG, JPG ou GIF jusqu&apos;à 10 MB</p>
         <Button variant="secondary">Sélectionner des fichiers</Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {/* Espace pour afficher les images téléchargées */}
-      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">{/* Espace pour afficher les images téléchargées */}</div>
     </div>
-  );
+  )
 }
 
 function DataTableEditor() {
@@ -485,7 +485,7 @@ function DataTableEditor() {
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 function AttachmentsEditor() {
@@ -508,5 +508,5 @@ function AttachmentsEditor() {
         </p>
       </div>
     </div>
-  );
-} 
+  )
+}

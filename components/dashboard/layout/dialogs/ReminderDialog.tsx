@@ -1,62 +1,31 @@
-"use client";
+"use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { CalendarIcon, Clock, Loader2, Bell, BellRing, Info, CheckCircle2 } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/src/lib/utils";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Switch } from "@/components/ui/switch";
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Bell, BellRing, CalendarIcon, CheckCircle2, Clock, Info, Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/src/lib/utils"
 
 interface ReminderDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 // Définir le schéma du formulaire
@@ -74,30 +43,34 @@ const formSchema = z.object({
   priority: z.enum(["low", "medium", "high"], {
     required_error: "La priorité est requise.",
   }),
-  status: z.enum(["pending", "completed"], {
-    required_error: "Le statut est requis.",
-  }).default("pending"),
+  status: z
+    .enum(["pending", "completed"], {
+      required_error: "Le statut est requis.",
+    })
+    .default("pending"),
   notifyBefore: z.number().min(0).default(15),
-  repeat: z.enum(["none", "daily", "weekly", "monthly"], {
-    required_error: "La répétition est requise.",
-  }).default("none"),
-});
+  repeat: z
+    .enum(["none", "daily", "weekly", "monthly"], {
+      required_error: "La répétition est requise.",
+    })
+    .default("none"),
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 // Fonction simulée pour créer un rappel
 const createReminder = async (data: FormValues) => {
   // Simulation d'un appel API
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
-      console.log("Rappel créé:", data);
-      resolve({ success: true, data });
-    }, 1000);
-  });
-};
+      console.log("Rappel créé:", data)
+      resolve({ success: true, data })
+    }, 1000)
+  })
+}
 
 const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -110,60 +83,72 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
       repeat: "none",
       time: "09:00",
     },
-  });
+  })
 
-  const selectedTitle = form.watch("title");
-  const selectedPriority = form.watch("priority");
-  const selectedDate = form.watch("date");
-  const selectedTime = form.watch("time");
-  const selectedStatus = form.watch("status");
+  const selectedTitle = form.watch("title")
+  const selectedPriority = form.watch("priority")
+  const selectedDate = form.watch("date")
+  const selectedTime = form.watch("time")
+  const selectedStatus = form.watch("status")
 
   const mutation = useMutation({
     mutationFn: createReminder,
     onSuccess: () => {
-      toast.success("Le rappel a été créé avec succès");
-      form.reset();
-      onOpenChange(false);
-      router.refresh();
+      toast.success("Le rappel a été créé avec succès")
+      form.reset()
+      onOpenChange(false)
+      router.refresh()
     },
     onError: () => {
-      toast.error("Une erreur est survenue lors de la création du rappel");
+      toast.error("Une erreur est survenue lors de la création du rappel")
     },
-  });
+  })
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
-  };
+    mutation.mutate(values)
+  }
 
   // Fonction pour obtenir la couleur en fonction de la priorité
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "text-rose-500";
-      case "medium": return "text-amber-500";
-      case "low": return "text-emerald-500";
-      default: return "text-slate-500";
+      case "high":
+        return "text-rose-500"
+      case "medium":
+        return "text-amber-500"
+      case "low":
+        return "text-emerald-500"
+      default:
+        return "text-slate-500"
     }
-  };
+  }
 
   // Fonction pour obtenir le libellé de la priorité en français
   const getPriorityLabel = (priority: string) => {
     switch (priority) {
-      case "high": return "Haute";
-      case "medium": return "Moyenne";
-      case "low": return "Basse";
-      default: return "Non définie";
+      case "high":
+        return "Haute"
+      case "medium":
+        return "Moyenne"
+      case "low":
+        return "Basse"
+      default:
+        return "Non définie"
     }
-  };
+  }
 
   // Fonction pour obtenir l'icône en fonction de la priorité
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case "high": return <BellRing className="h-4 w-4" />;
-      case "medium": return <Bell className="h-4 w-4" />;
-      case "low": return <Bell className="h-4 w-4 opacity-70" />;
-      default: return <Bell className="h-4 w-4" />;
+      case "high":
+        return <BellRing className="h-4 w-4" />
+      case "medium":
+        return <Bell className="h-4 w-4" />
+      case "low":
+        return <Bell className="h-4 w-4 opacity-70" />
+      default:
+        return <Bell className="h-4 w-4" />
     }
-  };
+  }
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
@@ -178,28 +163,40 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
               {/* Prévisualisation du rappel */}
               <Card className="md:w-1/3 p-4 flex flex-col space-y-4 border-dashed">
                 <div className="flex items-center justify-center">
-                  <Avatar className={cn("h-14 w-14",
-                    selectedPriority === "high" ? "bg-rose-100" :
-                      selectedPriority === "medium" ? "bg-amber-100" :
-                        selectedPriority === "low" ? "bg-emerald-100" : "bg-slate-100"
-                  )}>
-                    <AvatarFallback className={cn("text-xl",
-                      selectedPriority === "high" ? "text-rose-600" :
-                        selectedPriority === "medium" ? "text-amber-600" :
-                          selectedPriority === "low" ? "text-emerald-600" : "text-slate-600"
-                    )}>
+                  <Avatar
+                    className={cn(
+                      "h-14 w-14",
+                      selectedPriority === "high"
+                        ? "bg-rose-100"
+                        : selectedPriority === "medium"
+                          ? "bg-amber-100"
+                          : selectedPriority === "low"
+                            ? "bg-emerald-100"
+                            : "bg-slate-100"
+                    )}
+                  >
+                    <AvatarFallback
+                      className={cn(
+                        "text-xl",
+                        selectedPriority === "high"
+                          ? "text-rose-600"
+                          : selectedPriority === "medium"
+                            ? "text-amber-600"
+                            : selectedPriority === "low"
+                              ? "text-emerald-600"
+                              : "text-slate-600"
+                      )}
+                    >
                       {getPriorityIcon(selectedPriority)}
                     </AvatarFallback>
                   </Avatar>
                 </div>
 
                 <div className="text-center space-y-1">
-                  <h3 className="font-medium text-lg truncate">
-                    {selectedTitle || "Titre du rappel"}
-                  </h3>
-                  <p className={cn("text-sm flex items-center justify-center gap-1",
-                    getPriorityColor(selectedPriority)
-                  )}>
+                  <h3 className="font-medium text-lg truncate">{selectedTitle || "Titre du rappel"}</h3>
+                  <p
+                    className={cn("text-sm flex items-center justify-center gap-1", getPriorityColor(selectedPriority))}
+                  >
                     {getPriorityIcon(selectedPriority)}
                     <span>{getPriorityLabel(selectedPriority)}</span>
                   </p>
@@ -282,12 +279,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
                                 </FormControl>
                               </PopoverTrigger>
                               <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  initialFocus
-                                />
+                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                               </PopoverContent>
                             </Popover>
                             <FormMessage />
@@ -317,10 +309,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Priorité</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Sélectionnez une priorité" />
@@ -343,10 +332,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Statut</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Sélectionnez un statut" />
@@ -395,7 +381,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
                               type="number"
                               placeholder="15"
                               {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                              onChange={e => field.onChange(parseInt(e.target.value) || 0)}
                             />
                           </FormControl>
                           <FormMessage />
@@ -409,10 +395,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Répétition</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Sélectionnez une répétition" />
@@ -435,18 +418,10 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
             </div>
 
             <div className="flex justify-end gap-3 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Annuler
               </Button>
-              <Button
-                type="submit"
-                disabled={mutation.isPending}
-                className="min-w-28"
-              >
+              <Button type="submit" disabled={mutation.isPending} className="min-w-28">
                 {mutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -461,7 +436,7 @@ const ReminderDialog = ({ open, onOpenChange }: ReminderDialogProps) => {
         </Form>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
-export default ReminderDialog;
+export default ReminderDialog

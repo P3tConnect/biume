@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 interface ServicesHeaderProps {
-  onCreateNew: () => void;
+  onCreateNew: () => void
 }
 
 export const ServicesHeader = ({ onCreateNew }: ServicesHeaderProps) => {
@@ -19,5 +20,5 @@ export const ServicesHeader = ({ onCreateNew }: ServicesHeaderProps) => {
         Nouveau Service
       </Button>
     </div>
-  );
-}; 
+  )
+}

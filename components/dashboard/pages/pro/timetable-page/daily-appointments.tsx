@@ -1,30 +1,28 @@
-"use client";
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/src/lib/utils";
-import { Clock, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Clock } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/src/lib/utils"
 
 interface Appointment {
-  id: string;
-  clientName: string;
-  time: string;
-  duration: number;
-  status: "pending" | "confirmed" | "cancelled";
-  avatar?: string;
-  notes?: string;
+  id: string
+  clientName: string
+  time: string
+  duration: number
+  status: "pending" | "confirmed" | "cancelled"
+  avatar?: string
+  notes?: string
 }
 
 interface DailyAppointmentsProps {
-  appointments: Appointment[];
-  selectedDate?: Date;
+  appointments: Appointment[]
+  selectedDate?: Date
 }
 
-export function DailyAppointments({
-  appointments,
-  selectedDate,
-}: DailyAppointmentsProps) {
+export function DailyAppointments({ appointments, selectedDate }: DailyAppointmentsProps) {
   const statusConfig = {
     pending: {
       label: "En attente",
@@ -38,7 +36,7 @@ export function DailyAppointments({
       label: "Annulé",
       className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
     },
-  };
+  }
 
   return (
     <ScrollArea className="h-[calc(100vh-7rem)]">
@@ -48,14 +46,12 @@ export function DailyAppointments({
             <CalendarIcon className="h-10 w-10 text-muted-foreground/50" />
             <p className="mt-3 text-sm text-muted-foreground">
               Aucun rendez-vous prévu pour{" "}
-              {selectedDate
-                ? new Intl.DateTimeFormat("fr-FR").format(selectedDate)
-                : "aujourd'hui"}
+              {selectedDate ? new Intl.DateTimeFormat("fr-FR").format(selectedDate) : "aujourd'hui"}
             </p>
           </div>
         ) : (
           <div className="space-y-3">
-            {appointments.map((appointment) => (
+            {appointments.map(appointment => (
               <div
                 key={appointment.id}
                 className="group relative flex flex-col space-y-2 rounded-lg border p-3 hover:bg-muted/50 transition-colors"
@@ -67,14 +63,12 @@ export function DailyAppointments({
                       <AvatarFallback className="bg-primary/10">
                         {appointment.clientName
                           .split(" ")
-                          .map((n) => n[0])
+                          .map(n => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium leading-none">
-                        {appointment.clientName}
-                      </p>
+                      <p className="text-sm font-medium leading-none">{appointment.clientName}</p>
                       <div className="mt-1.5 flex items-center text-xs text-muted-foreground">
                         <Clock className="mr-1 h-3 w-3" />
                         <span>
@@ -88,9 +82,7 @@ export function DailyAppointments({
                   </Badge>
                 </div>
                 {appointment.notes && (
-                  <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
-                    {appointment.notes}
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">{appointment.notes}</p>
                 )}
                 <div className="absolute right-3 top-3 flex opacity-0 group-hover:opacity-100 transition-opacity">
                   {/* Actions buttons could be added here */}
@@ -101,5 +93,5 @@ export function DailyAppointments({
         )}
       </div>
     </ScrollArea>
-  );
+  )
 }

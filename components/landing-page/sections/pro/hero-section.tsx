@@ -1,50 +1,42 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import Link from "next/link";
-import Image from "next/image";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { motion } from "framer-motion"
+import { ArrowRight, CheckCircle } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+
+import { Button } from "@/components/ui/button"
 
 export function HeroSection() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isMounted, setIsMounted] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
+    setIsMounted(true)
 
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove)
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+      window.removeEventListener("mousemove", handleMouseMove)
+    }
+  }, [])
 
   // Animation de déplacement parallaxe des éléments de fond
   const calculateTransform = (factor: number) => {
-    if (!isMounted) return { x: 0, y: 0 };
+    if (!isMounted) return { x: 0, y: 0 }
 
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth
+    const windowHeight = window.innerHeight
 
-    const moveX =
-      ((mousePosition.x - windowWidth / 2) / (windowWidth / 2)) * factor;
-    const moveY =
-      ((mousePosition.y - windowHeight / 2) / (windowHeight / 2)) * factor;
+    const moveX = ((mousePosition.x - windowWidth / 2) / (windowWidth / 2)) * factor
+    const moveY = ((mousePosition.y - windowHeight / 2) / (windowHeight / 2)) * factor
 
-    return { x: moveX, y: moveY };
-  };
+    return { x: moveX, y: moveY }
+  }
 
   return (
     <section className="relative overflow-hidden pt-32 pb-24 md:pt-42 md:pb-32">
@@ -77,24 +69,18 @@ export function HeroSection() {
 
       <div className="container px-4 mx-auto">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium rounded-full bg-primary/10 text-primary">
               <span>Une solution complète pour les professionnels</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-              Gérez votre activité animale{" "}
-              <span className="text-primary">simplement</span>
+              Gérez votre activité animale <span className="text-primary">simplement</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Biume Pro simplifie la gestion de votre activité animale, de la
-              prise de rendez-vous à la facturation, en passant par le suivi des
-              dossiers médicaux.
+              Biume Pro simplifie la gestion de votre activité animale, de la prise de rendez-vous à la facturation, en
+              passant par le suivi des dossiers médicaux.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -113,20 +99,14 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="flex flex-wrap justify-center gap-3 mb-12"
           >
-            {[
-              "Gestion des rendez-vous",
-              "Dossiers médicaux",
-              "Facturation intégrée",
-              "Support client dédié",
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-sm"
-              >
-                <CheckCircle className="w-3.5 h-3.5 text-primary" />
-                <span>{feature}</span>
-              </div>
-            ))}
+            {["Gestion des rendez-vous", "Dossiers médicaux", "Facturation intégrée", "Support client dédié"].map(
+              (feature, index) => (
+                <div key={index} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-sm">
+                  <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                  <span>{feature}</span>
+                </div>
+              )
+            )}
           </motion.div>
         </div>
 
@@ -163,25 +143,13 @@ export function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-2 rounded-full">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <div>
                 <p className="text-sm font-semibold">+42%</p>
-                <p className="text-xs text-muted-foreground">
-                  d&apos;efficacité
-                </p>
+                <p className="text-xs text-muted-foreground">d&apos;efficacité</p>
               </div>
             </div>
           </motion.div>
@@ -194,12 +162,7 @@ export function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 p-2 rounded-full">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -210,14 +173,12 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="text-sm font-semibold">250+</p>
-                <p className="text-xs text-muted-foreground">
-                  nouveaux clients
-                </p>
+                <p className="text-xs text-muted-foreground">nouveaux clients</p>
               </div>
             </div>
           </motion.div>
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

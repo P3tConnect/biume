@@ -1,6 +1,7 @@
-import { CreateOptionSchema } from "@/src/db/options";
-import { CompanyTypeEnum, CreateServiceSchema } from "@/src/db";
-import { z } from "zod";
+import { z } from "zod"
+
+import { CompanyTypeEnum, CreateServiceSchema } from "@/src/db"
+import { CreateOptionSchema } from "@/src/db/options"
 
 export const proInformationsSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -9,19 +10,15 @@ export const proInformationsSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   companyType: CompanyTypeEnum,
   atHome: z.boolean(),
-});
+})
 
 export const proServicesSchema = z.object({
-  services: z
-    .array(CreateServiceSchema)
-    .min(1, { message: "Services are required" }),
-});
+  services: z.array(CreateServiceSchema).min(1, { message: "Services are required" }),
+})
 
 export const proOptionsSchema = z.object({
-  options: z
-    .array(CreateOptionSchema)
-    .min(1, { message: "Options are required" }),
-});
+  options: z.array(CreateOptionSchema).min(1, { message: "Options are required" }),
+})
 
 export const proDocumentsSchema = z.object({
   siren: z
@@ -41,11 +38,11 @@ export const proDocumentsSchema = z.object({
       z.object({
         url: z.string().url(),
         name: z.string().optional(),
-      }),
+      })
     )
     .min(1, "Veuillez télécharger au moins un document")
     .optional(),
-});
+})
 
 export const onboardingSchema = z.object({
   name: z.string().optional(),
@@ -65,8 +62,5 @@ export const onboardingSchema = z.object({
     .max(14, "Le numéro SIRET doit contenir 14 chiffres")
     .regex(/^\d+$/, "Le numéro doit contenir uniquement des chiffres")
     .optional(),
-  documents: z
-    .array(z.string().url())
-    .min(1, "Veuillez télécharger au moins un document")
-    .optional(),
-});
+  documents: z.array(z.string().url()).min(1, "Veuillez télécharger au moins un document").optional(),
+})

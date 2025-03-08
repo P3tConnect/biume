@@ -1,9 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
-import { Member } from "@/src/db";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui"
+import { Member } from "@/src/db"
 
 interface CompanyTeamProps {
-  professionals: Member[];
+  professionals: Member[]
 }
 
 export function CompanyTeam({ professionals }: CompanyTeamProps) {
@@ -32,10 +33,10 @@ export function CompanyTeam({ professionals }: CompanyTeamProps) {
               <AvatarFallback className="bg-primary/10 text-primary">
                 {pro.user.name
                   ? pro.user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()
+                      .split(" ")
+                      .map(n => n[0])
+                      .join("")
+                      .toUpperCase()
                   : "??"}
               </AvatarFallback>
             </Avatar>
@@ -43,13 +44,11 @@ export function CompanyTeam({ professionals }: CompanyTeamProps) {
               <p className="font-medium text-foreground group-hover:text-primary transition-colors">
                 {pro.user.name || "Membre de l'équipe"}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {pro.role === "owner" ? "Propriétaire" : "Praticien"}
-              </p>
+              <p className="text-sm text-muted-foreground">{pro.role === "owner" ? "Propriétaire" : "Praticien"}</p>
             </div>
           </motion.div>
         ))}
       </motion.div>
     </div>
-  );
+  )
 }

@@ -1,37 +1,38 @@
-"use client";
+"use client"
 
-import { useDropzone } from "react-dropzone";
-import { cn } from "@/src/lib/utils";
-import { useUploadThing } from "@/src/lib/uploadthing";
-import { toast } from "sonner";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon } from "lucide-react"
+import { useDropzone } from "react-dropzone"
+import { toast } from "sonner"
 
-export type AcceptedFileTypes = Record<string, Array<string>>;
+import { useUploadThing } from "@/src/lib/uploadthing"
+import { cn } from "@/src/lib/utils"
+
+export type AcceptedFileTypes = Record<string, Array<string>>
 
 interface DropzoneInputProps {
-  onFilesChanged: (files: Array<{ url: string; name: string }>) => void;
-  value: Array<{ url: string; name: string }>;
-  maxFileSize?: number;
-  acceptedFileTypes?: AcceptedFileTypes;
-  uploadEndpoint: "documentsUploader" | "imageUploader";
+  onFilesChanged: (files: Array<{ url: string; name: string }>) => void
+  value: Array<{ url: string; name: string }>
+  maxFileSize?: number
+  acceptedFileTypes?: AcceptedFileTypes
+  uploadEndpoint: "documentsUploader" | "imageUploader"
   placeholder?: {
-    dragActive?: string;
-    dragInactive?: string;
-    fileTypes?: string;
-  };
+    dragActive?: string
+    dragInactive?: string
+    fileTypes?: string
+  }
 }
 
-export const DEFAULT_MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+export const DEFAULT_MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 export const DEFAULT_ACCEPTED_IMAGE_TYPES: AcceptedFileTypes = {
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
-};
+}
 
 export const DEFAULT_ACCEPTED_DOCUMENT_TYPES: AcceptedFileTypes = {
   "application/pdf": [".pdf"],
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
-};
+}
 
 export const DropzoneInput = ({
   onFilesChanged,
@@ -41,45 +42,41 @@ export const DropzoneInput = ({
   uploadEndpoint = "documentsUploader",
   placeholder = {
     dragActive: "Déposez vos fichiers ici",
-    dragInactive:
-      "Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner",
+    dragInactive: "Glissez-déposez vos fichiers ici, ou cliquez pour sélectionner",
     fileTypes: "PDF, JPEG, PNG - 5MB max",
   },
 }: DropzoneInputProps) => {
-  const { startUpload } = useUploadThing(
-    uploadEndpoint as "documentsUploader",
-    {
-      onClientUploadComplete: (res) => {
-        if (res) {
-          const newFiles = res.map((file) => ({
-            url: file.url,
-            name: file.name,
-          }));
-          onFilesChanged([...value, ...newFiles]);
-          toast.success("Fichiers téléchargés avec succès!");
-        }
-      },
-      onUploadError: (error) => {
-        toast.error(`Erreur: ${error.message}`);
-      },
+  const { startUpload } = useUploadThing(uploadEndpoint as "documentsUploader", {
+    onClientUploadComplete: res => {
+      if (res) {
+        const newFiles = res.map(file => ({
+          url: file.url,
+          name: file.name,
+        }))
+        onFilesChanged([...value, ...newFiles])
+        toast.success("Fichiers téléchargés avec succès!")
+      }
     },
-  );
+    onUploadError: error => {
+      toast.error(`Erreur: ${error.message}`)
+    },
+  })
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: acceptedFileTypes,
     maxSize: maxFileSize,
-    onDrop: async (acceptedFiles) => {
+    onDrop: async acceptedFiles => {
       if (acceptedFiles.length > 0) {
-        await startUpload(acceptedFiles);
+        await startUpload(acceptedFiles)
       }
     },
-  });
+  })
 
   const removeFile = (index: number) => {
-    const newFiles = [...value];
-    newFiles.splice(index, 1);
-    onFilesChanged(newFiles);
-  };
+    const newFiles = [...value]
+    newFiles.splice(index, 1)
+    onFilesChanged(newFiles)
+  }
 
   return (
     <div className="space-y-4 h-full">
@@ -91,7 +88,7 @@ export const DropzoneInput = ({
           isDragActive
             ? "border-primary bg-primary/5 backdrop-blur-[2px]"
             : "border-gray-200 dark:border-gray-800 hover:border-primary/50 dark:hover:border-primary/50",
-          "bg-gray-50 dark:bg-gray-900/50",
+          "bg-gray-50 dark:bg-gray-900/50"
         )}
       >
         <input {...getInputProps()} />
@@ -100,15 +97,11 @@ export const DropzoneInput = ({
             <ImageIcon className="h-8 w-8 text-primary" />
           </div>
           <div className="space-y-2 max-w-xs">
-            <p className="text-sm font-medium">
-              {isDragActive ? placeholder.dragActive : placeholder.dragInactive}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {placeholder.fileTypes}
-            </p>
+            <p className="text-sm font-medium">{isDragActive ? placeholder.dragActive : placeholder.dragInactive}</p>
+            <p className="text-xs text-muted-foreground">{placeholder.fileTypes}</p>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

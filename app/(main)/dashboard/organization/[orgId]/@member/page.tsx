@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react"
 
 const DashboardOrganizationMemberHomePage = () => {
-  return (
-    <div>DashboardOrganizationMemberHomePage</div>
-  )
+  return <div>DashboardOrganizationMemberHomePage</div>
 }
 
 export default DashboardOrganizationMemberHomePage

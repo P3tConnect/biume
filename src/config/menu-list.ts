@@ -1,43 +1,37 @@
 import {
   Calendar,
   Contact2,
-  Eye,
+  DollarSignIcon,
+  FileText,
   FolderOpen,
   LayoutGrid,
-  LineChart,
   LucideIcon,
-  LucideMessageCircleQuestion,
+  NotepadText,
   PawPrint,
+  Receipt,
   Settings,
   Timer,
-  FileText,
-  Receipt,
-  PieChart,
-  DollarSignIcon,
-  Ticket,
-  UsersRound,
-  NotepadText,
-} from "lucide-react";
+} from "lucide-react"
 
 export type Submenu = {
-  href: string;
-  label: string;
-  active: boolean;
-  icon: LucideIcon;
-};
+  href: string
+  label: string
+  active: boolean
+  icon: LucideIcon
+}
 
 export type Menu = {
-  href: string;
-  label: string;
-  active: boolean;
-  icon: LucideIcon;
-  submenus?: Submenu[];
-};
+  href: string
+  label: string
+  active: boolean
+  icon: LucideIcon
+  submenus?: Submenu[]
+}
 
 export type Group = {
-  groupLabel: string;
-  menus: Menu[];
-};
+  groupLabel: string
+  menus: Menu[]
+}
 
 export function proMenuList(pathname: string, companyId: string): Group[] {
   return [
@@ -64,40 +58,31 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
         {
           href: `/dashboard/organization/${companyId}/accounting`,
           label: "dashboard.sidebar.accounting",
-          active: pathname.startsWith(
-            `/dashboard/organization/${companyId}/accounting`,
-          ),
+          active: pathname.startsWith(`/dashboard/organization/${companyId}/accounting`),
           icon: FolderOpen,
           submenus: [
             {
               href: `/dashboard/organization/${companyId}/accounting`,
               label: "dashboard.sidebar.home",
-              active:
-                pathname === `/dashboard/organization/${companyId}/accounting`,
+              active: pathname === `/dashboard/organization/${companyId}/accounting`,
               icon: Contact2,
             },
             {
               href: `/dashboard/organization/${companyId}/accounting/estimates`,
               label: "dashboard.sidebar.estimates",
-              active:
-                pathname ===
-                `/dashboard/organization/${companyId}/accounting/estimates`,
+              active: pathname === `/dashboard/organization/${companyId}/accounting/estimates`,
               icon: FileText,
             },
             {
               href: `/dashboard/organization/${companyId}/accounting/invoices`,
               label: "dashboard.sidebar.invoices",
-              active:
-                pathname ===
-                `/dashboard/organization/${companyId}/accounting/invoices`,
+              active: pathname === `/dashboard/organization/${companyId}/accounting/invoices`,
               icon: Receipt,
             },
             {
               href: `/dashboard/organization/${companyId}/accounting/expenses`,
               label: "dashboard.sidebar.expenses",
-              active:
-                pathname ===
-                `/dashboard/organization/${companyId}/accounting/expenses`,
+              active: pathname === `/dashboard/organization/${companyId}/accounting/expenses`,
               icon: DollarSignIcon,
             },
           ],
@@ -146,12 +131,10 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
         {
           href: `/dashboard/organization/${companyId}/settings`,
           label: "Paramètres",
-          active: pathname.includes(
-            `/dashboard/organization/${companyId}/settings`,
-          ),
+          active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
           icon: Settings,
         },
       ],
     },
-  ];
+  ]
 }

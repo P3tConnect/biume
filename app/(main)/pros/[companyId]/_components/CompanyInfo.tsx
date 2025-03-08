@@ -1,17 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
 
 interface CompanyInfoProps {
   company: {
-    description: string;
-    address: string;
-    phone: string;
+    description: string
+    address: string
+    phone: string
     openingHours: {
-      monday: string;
-      saturday: string;
-      sunday: string;
-    };
-  };
+      monday: string
+      saturday: string
+      sunday: string
+    }
+  }
 }
 
 export function CompanyInfo({ company }: CompanyInfoProps) {
@@ -21,9 +22,7 @@ export function CompanyInfo({ company }: CompanyInfoProps) {
         <CardTitle className="text-lg">À propos</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <p className="text-sm text-muted-foreground">
-          {company.description}
-        </p>
+        <p className="text-sm text-muted-foreground">{company.description}</p>
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <MapPin className="h-5 w-5 text-primary" />
@@ -53,5 +52,5 @@ export function CompanyInfo({ company }: CompanyInfoProps) {
         </div>
       </CardContent>
     </Card>
-  );
-} 
+  )
+}

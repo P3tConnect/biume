@@ -1,45 +1,26 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Calendar,
-  Mail,
-  MapPin,
-  Phone,
-  Star,
-  Clock,
-  FileText,
-  PawPrint,
-} from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Calendar, Clock, FileText, Mail, MapPin, PawPrint, Phone, Star } from "lucide-react"
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type ClientDetailsProps = {
   client: {
-    id: string;
-    name: string;
-    email: string;
-    phoneNumber: string;
-    city: string;
-    country: string;
-    createdAt: string;
-    status: "Active" | "Inactive";
-  };
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-};
+    id: string
+    name: string
+    email: string
+    phoneNumber: string
+    city: string
+    country: string
+    createdAt: string
+    status: "Active" | "Inactive"
+  }
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+}
 
 const appointments = [
   {
@@ -63,7 +44,7 @@ const appointments = [
     service: "Checkup",
     status: "completed",
   },
-];
+]
 
 const pets = [
   {
@@ -80,13 +61,9 @@ const pets = [
     breed: "Siamese",
     age: 2,
   },
-];
+]
 
-export function ClientDetails({
-  client,
-  isOpen,
-  onOpenChange,
-}: ClientDetailsProps) {
+export function ClientDetails({ client, isOpen, onOpenChange }: ClientDetailsProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="w-full h-full sm:max-w-3xl">
@@ -97,28 +74,18 @@ export function ClientDetails({
                 <AvatarFallback className="text-lg">
                   {client.name
                     .split(" ")
-                    .map((n) => n[0])
+                    .map(n => n[0])
                     .join("")}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <SheetTitle className="text-2xl font-bold">
-                  {client.name}
-                </SheetTitle>
+                <SheetTitle className="text-2xl font-bold">{client.name}</SheetTitle>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Badge
-                    variant={
-                      client.status === "Active" ? "default" : "destructive"
-                    }
-                    className="rounded-full"
-                  >
+                  <Badge variant={client.status === "Active" ? "default" : "destructive"} className="rounded-full">
                     {client.status}
                   </Badge>
                   <span>•</span>
-                  <span>
-                    Client depuis{" "}
-                    {new Date(client.createdAt).toLocaleDateString()}
-                  </span>
+                  <span>Client depuis {new Date(client.createdAt).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
@@ -201,39 +168,23 @@ export function ClientDetails({
               <Card>
                 <CardHeader>
                   <CardTitle>Historique des rendez-vous</CardTitle>
-                  <CardDescription>
-                    Liste de tous les rendez-vous passés et à venir
-                  </CardDescription>
+                  <CardDescription>Liste de tous les rendez-vous passés et à venir</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {appointments.map((appointment) => (
-                      <div
-                        key={appointment.id}
-                        className="flex items-center justify-between rounded-lg border p-4"
-                      >
+                    {appointments.map(appointment => (
+                      <div key={appointment.id} className="flex items-center justify-between rounded-lg border p-4">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-muted-foreground" />
                             <span className="font-medium">
-                              {new Date(appointment.date).toLocaleDateString()}{" "}
-                              à {appointment.time}
+                              {new Date(appointment.date).toLocaleDateString()} à {appointment.time}
                             </span>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            {appointment.service}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{appointment.service}</p>
                         </div>
-                        <Badge
-                          variant={
-                            appointment.status === "upcoming"
-                              ? "default"
-                              : "secondary"
-                          }
-                        >
-                          {appointment.status === "upcoming"
-                            ? "À venir"
-                            : "Terminé"}
+                        <Badge variant={appointment.status === "upcoming" ? "default" : "secondary"}>
+                          {appointment.status === "upcoming" ? "À venir" : "Terminé"}
                         </Badge>
                       </div>
                     ))}
@@ -249,11 +200,8 @@ export function ClientDetails({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {pets.map((pet) => (
-                      <div
-                        key={pet.id}
-                        className="flex items-center justify-between rounded-lg border p-4"
-                      >
+                    {pets.map(pet => (
+                      <div key={pet.id} className="flex items-center justify-between rounded-lg border p-4">
                         <div className="space-y-1">
                           <p className="font-medium">{pet.name}</p>
                           <p className="text-sm text-muted-foreground">
@@ -271,9 +219,7 @@ export function ClientDetails({
               <Card>
                 <CardHeader>
                   <CardTitle>Documents</CardTitle>
-                  <CardDescription>
-                    Tous les documents liés au client
-                  </CardDescription>
+                  <CardDescription>Tous les documents liés au client</CardDescription>
                 </CardHeader>
                 <CardContent>{/* Documents content */}</CardContent>
               </Card>
@@ -282,9 +228,7 @@ export function ClientDetails({
               <Card>
                 <CardHeader>
                   <CardTitle>Facturation</CardTitle>
-                  <CardDescription>
-                    Historique des paiements et factures
-                  </CardDescription>
+                  <CardDescription>Historique des paiements et factures</CardDescription>
                 </CardHeader>
                 <CardContent>{/* Billing content */}</CardContent>
               </Card>
@@ -293,5 +237,5 @@ export function ClientDetails({
         </div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

@@ -1,35 +1,36 @@
-"use client";
+"use client"
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/src/lib/utils";
-import { Stethoscope, User2Icon, ChevronDown } from "lucide-react";
-import { useIsMobile } from "@/src/hooks/use-mobile";
-import { useMediaQuery } from "@/src/hooks";
+import { motion } from "framer-motion"
+import { ChevronDown, Stethoscope, User2Icon } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+
+import { useMediaQuery } from "@/src/hooks"
+import { useIsMobile } from "@/src/hooks/use-mobile"
+import { cn } from "@/src/lib/utils"
 
 export const PageSwitch = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const currentVersion = searchParams.get("version") || "user";
-  const [mounted, setMounted] = useState(false);
-  const isMobile = useIsMobile();
-  const isSmallMobile = useMediaQuery("(max-width: 640px)");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const currentVersion = searchParams.get("version") || "user"
+  const [mounted, setMounted] = useState(false)
+  const isMobile = useIsMobile()
+  const isSmallMobile = useMediaQuery("(max-width: 640px)")
+  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   const handleSwitch = (newVersion: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("version", newVersion);
-    router.push(`${pathname}?${params.toString()}`);
-    setDropdownOpen(false);
-  };
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("version", newVersion)
+    router.push(`${pathname}?${params.toString()}`)
+    setDropdownOpen(false)
+  }
 
-  if (!mounted) return null;
+  if (!mounted) return null
 
   // Version mobile avec dropdown
   if (isSmallMobile) {
@@ -52,19 +53,14 @@ export const PageSwitch = () => {
               </>
             )}
           </span>
-          <ChevronDown
-            className={cn(
-              "w-4 h-4 transition-transform",
-              dropdownOpen && "transform rotate-180",
-            )}
-          />
+          <ChevronDown className={cn("w-4 h-4 transition-transform", dropdownOpen && "transform rotate-180")} />
         </button>
 
         {dropdownOpen && (
           <div className="absolute top-full left-0 mt-1 bg-background rounded-lg border border-border shadow-lg w-full z-20">
-            {["user", "pro"].map((version) => {
-              const isActive = currentVersion === version;
-              if (isActive) return null;
+            {["user", "pro"].map(version => {
+              const isActive = currentVersion === version
+              if (isActive) return null
 
               return (
                 <button
@@ -84,19 +80,19 @@ export const PageSwitch = () => {
                     </>
                   )}
                 </button>
-              );
+              )
             })}
           </div>
         )}
       </div>
-    );
+    )
   }
 
   // Version desktop avec tabs
   return (
     <div className="relative inline-flex p-1 rounded-full bg-muted/50 backdrop-blur-sm border border-border">
-      {["user", "pro"].map((version) => {
-        const isActive = currentVersion === version;
+      {["user", "pro"].map(version => {
+        const isActive = currentVersion === version
 
         return (
           <button
@@ -104,9 +100,7 @@ export const PageSwitch = () => {
             onClick={() => handleSwitch(version)}
             className={cn(
               "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 z-10",
-              isActive
-                ? "text-background"
-                : "text-foreground/70 hover:text-foreground",
+              isActive ? "text-background" : "text-foreground/70 hover:text-foreground"
             )}
           >
             {isActive && (
@@ -130,8 +124,8 @@ export const PageSwitch = () => {
               )}
             </span>
           </button>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}

@@ -1,14 +1,9 @@
-import {
-  boolean,
-  integer,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
-import { Organization, organization } from "./organization";
-import { User, user } from "./user";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Organization, organization } from "./organization"
+import { User, user } from "./user"
 
 export const ratings = pgTable("ratings", {
   id: text("id")
@@ -25,7 +20,7 @@ export const ratings = pgTable("ratings", {
   isRecommanded: boolean("isRecommanded").default(false).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const ratingsRelations = relations(ratings, ({ one }) => ({
   for: one(organization, {
@@ -36,12 +31,12 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     fields: [ratings.writerId],
     references: [user.id],
   }),
-}));
+}))
 
 export type Rating = InferSelectModel<typeof ratings> & {
-  writer: User;
-  for: Organization;
-};
-export type CreateRating = typeof ratings.$inferInsert;
+  writer: User
+  for: Organization
+}
+export type CreateRating = typeof ratings.$inferInsert
 
-export const CreateRatingSchema = createInsertSchema(ratings);
+export const CreateRatingSchema = createInsertSchema(ratings)

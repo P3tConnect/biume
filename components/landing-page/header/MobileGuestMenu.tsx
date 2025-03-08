@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { MobileGuestMenuProps } from "./types";
+import Link from "next/link"
 
-export const MobileGuestMenu = ({
-  setIsMobileMenuOpen,
-}: MobileGuestMenuProps) => {
+import { Button } from "@/components/ui/button"
+
+import { MobileGuestMenuProps } from "./types"
+
+export const MobileGuestMenu = ({ setIsMobileMenuOpen }: MobileGuestMenuProps) => {
   return (
     <div className="px-4 space-y-3">
       <Button asChild className="w-full" variant="default">
@@ -23,5 +23,5 @@ export const MobileGuestMenu = ({
         Participez à notre questionnaire
       </div>
     </div>
-  );
-};
+  )
+}

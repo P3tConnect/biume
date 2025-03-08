@@ -1,9 +1,10 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { InvoiceOption, invoiceOptions } from "./invoiceOptions";
-import { AppointmentOption, appointmentOptions } from "./appointmentOptions";
-import { createInsertSchema } from "drizzle-zod";
-import { Organization, organization } from "./organization";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { AppointmentOption, appointmentOptions } from "./appointmentOptions"
+import { InvoiceOption, invoiceOptions } from "./invoiceOptions"
+import { Organization, organization } from "./organization"
 
 export const options = pgTable("options", {
   id: text("id")
@@ -15,11 +16,9 @@ export const options = pgTable("options", {
   organizationId: text("organizationId").references(() => organization.id, {
     onDelete: "cascade",
   }),
-  createdAt: timestamp("createdAt", { mode: "date" })
-    .default(new Date())
-    .notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const optionsRelations = relations(options, ({ one, many }) => ({
   invoicesOptions: many(invoiceOptions),
@@ -28,13 +27,13 @@ export const optionsRelations = relations(options, ({ one, many }) => ({
     fields: [options.organizationId],
     references: [organization.id],
   }),
-}));
+}))
 
 export type Option = InferSelectModel<typeof options> & {
-  organization: Organization;
-  invoicesOptions: InvoiceOption[];
-  appointmentsOptions: AppointmentOption[];
-};
-export type CreateOption = typeof options.$inferInsert;
+  organization: Organization
+  invoicesOptions: InvoiceOption[]
+  appointmentsOptions: AppointmentOption[]
+}
+export type CreateOption = typeof options.$inferInsert
 
-export const CreateOptionSchema = createInsertSchema(options);
+export const CreateOptionSchema = createInsertSchema(options)

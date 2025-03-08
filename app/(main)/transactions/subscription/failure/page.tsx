@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { XCircle, ArrowLeft, RefreshCw } from "lucide-react";
-import Link from "next/link";
+import { ArrowLeft, RefreshCw, XCircle } from "lucide-react"
+import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 export default function OrganizationSubscriptionFailure() {
   return (
@@ -23,14 +24,11 @@ export default function OrganizationSubscriptionFailure() {
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-3xl font-bold text-foreground">
-                  Échec du paiement
-                </h1>
+                <h1 className="text-3xl font-bold text-foreground">Échec du paiement</h1>
 
                 <p className="text-muted-foreground max-w-md mx-auto text-base">
-                  Une erreur est survenue lors du traitement de votre paiement.
-                  Aucun montant n&apos;a été débité. Veuillez réessayer ou
-                  contacter notre support si le problème persiste.
+                  Une erreur est survenue lors du traitement de votre paiement. Aucun montant n&apos;a été débité.
+                  Veuillez réessayer ou contacter notre support si le problème persiste.
                 </p>
               </div>
             </div>
@@ -43,15 +41,8 @@ export default function OrganizationSubscriptionFailure() {
                 </Button>
               </Link>
 
-              <Link
-                href={`/dashboard/organization//subscription`}
-                className="w-full"
-              >
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="w-full bg-red-600 hover:bg-red-700"
-                >
+              <Link href={`/dashboard/organization//subscription`} className="w-full">
+                <Button variant="default" size="lg" className="w-full bg-red-600 hover:bg-red-700">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Réessayer le paiement
                 </Button>
@@ -59,10 +50,7 @@ export default function OrganizationSubscriptionFailure() {
             </div>
 
             <div className="text-center pt-2">
-              <Link
-                href="/support"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link href="/support" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Besoin d&apos;aide ? Contactez notre support
               </Link>
             </div>
@@ -70,5 +58,5 @@ export default function OrganizationSubscriptionFailure() {
         </div>
       </Card>
     </div>
-  );
+  )
 }

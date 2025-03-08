@@ -10,12 +10,11 @@ export function HeroSection() {
             <span className="block mt-2 text-gradient">feuille de route</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground">
-            Découvrez les prochaines étapes de développement de Biume et comment
-            nous prévoyons d&apos;améliorer continuellement notre plateforme
-            pour mieux servir les professionnels de santé animale.
+            Découvrez les prochaines étapes de développement de Biume et comment nous prévoyons d&apos;améliorer
+            continuellement notre plateforme pour mieux servir les professionnels de santé animale.
           </p>
         </div>
       </div>
     </section>
-  );
+  )
 }

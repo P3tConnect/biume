@@ -1,38 +1,35 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import {
-  EyeIcon,
-  MessageCircleIcon,
-  Clock3Icon,
-  UserIcon,
-  PawPrintIcon,
-  ChevronRightIcon,
-  StethoscopeIcon,
   CheckCircleIcon,
-} from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+  ChevronRightIcon,
+  Clock3Icon,
+  EyeIcon,
+  PawPrintIcon,
+  StethoscopeIcon,
+  UserIcon,
+} from "lucide-react"
+import React from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetDescription,
   SheetTrigger,
-  SheetClose,
-  SheetFooter,
-} from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/sheet"
+import { Textarea } from "@/components/ui/textarea"
 
 const ObservationsWidget = () => {
-  const [selectedObservation, setSelectedObservation] = React.useState<
-    (typeof observations)[0] | null
-  >(null);
+  const [selectedObservation, setSelectedObservation] = React.useState<(typeof observations)[0] | null>(null)
 
   // Exemple de données (à remplacer par vos vraies données)
   const observations = [
@@ -78,18 +75,18 @@ const ObservationsWidget = () => {
         "Le patient évite de poser la patte arrière droite. Pas de gonflement visible mais douleur à la palpation selon la propriétaire.",
       imageUrl: "/pets/dog2.jpg",
     },
-  ];
+  ]
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "urgent":
-        return "text-red-500 bg-red-100 dark:bg-red-900/30";
+        return "text-red-500 bg-red-100 dark:bg-red-900/30"
       case "pending":
-        return "text-amber-500 bg-amber-100 dark:bg-amber-900/30";
+        return "text-amber-500 bg-amber-100 dark:bg-amber-900/30"
       default:
-        return "text-green-500 bg-green-100 dark:bg-green-900/30";
+        return "text-green-500 bg-green-100 dark:bg-green-900/30"
     }
-  };
+  }
 
   return (
     <Card className="border rounded-lg shadow-sm">
@@ -109,7 +106,7 @@ const ObservationsWidget = () => {
       <CardContent className="p-3">
         <ScrollArea className="h-[280px] pr-4">
           <div className="space-y-2">
-            {observations.map((observation) => (
+            {observations.map(observation => (
               <Sheet key={observation.id}>
                 <SheetTrigger asChild>
                   <div
@@ -118,31 +115,22 @@ const ObservationsWidget = () => {
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 border-2 border-background">
-                        <AvatarImage
-                          src={observation.imageUrl}
-                          alt={observation.petName}
-                        />
+                        <AvatarImage src={observation.imageUrl} alt={observation.petName} />
                         <AvatarFallback className="bg-indigo-600">
                           <PawPrintIcon className="w-4 h-4 text-white" />
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">
-                            {observation.petName}
-                          </span>
+                          <span className="font-medium">{observation.petName}</span>
                           <Badge
                             variant="outline"
                             className={`text-xs px-1.5 py-0 rounded-sm ${getStatusColor(observation.status)}`}
                           >
-                            {observation.status === "urgent"
-                              ? "Urgent"
-                              : "En attente"}
+                            {observation.status === "urgent" ? "Urgent" : "En attente"}
                           </Badge>
                         </div>
-                        <div className="text-xs text-muted-foreground line-clamp-1">
-                          {observation.symptoms}
-                        </div>
+                        <div className="text-xs text-muted-foreground line-clamp-1">{observation.symptoms}</div>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <UserIcon className="w-3 h-3" />
@@ -168,38 +156,26 @@ const ObservationsWidget = () => {
                         </div>
                         Détails de l&apos;observation
                       </SheetTitle>
-                      <Badge
-                        variant="outline"
-                        className={`${getStatusColor(observation.status)}`}
-                      >
-                        {observation.status === "urgent"
-                          ? "Urgent"
-                          : "En attente"}
+                      <Badge variant="outline" className={`${getStatusColor(observation.status)}`}>
+                        {observation.status === "urgent" ? "Urgent" : "En attente"}
                       </Badge>
                     </div>
 
                     <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-md">
                       <Avatar className="h-14 w-14 border-2 border-background">
-                        <AvatarImage
-                          src={observation.imageUrl}
-                          alt={observation.petName}
-                        />
+                        <AvatarImage src={observation.imageUrl} alt={observation.petName} />
                         <AvatarFallback className="bg-indigo-600">
                           <PawPrintIcon className="w-6 h-6 text-white" />
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-lg">
-                            {observation.petName}
-                          </h3>
+                          <h3 className="font-semibold text-lg">{observation.petName}</h3>
                           <Badge variant="outline" className="text-xs">
                             {observation.petType}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          {observation.breed}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{observation.breed}</p>
                         <div className="flex items-center gap-2 mt-1 text-sm">
                           <UserIcon className="w-3.5 h-3.5" />
                           <span>{observation.ownerName}</span>
@@ -210,26 +186,18 @@ const ObservationsWidget = () => {
 
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
-                        Symptômes observés
-                      </h4>
+                      <h4 className="text-sm font-medium mb-2">Symptômes observés</h4>
                       <div className="bg-muted/30 p-3 rounded-md">
                         <div className="flex items-center gap-2 mb-2">
                           <StethoscopeIcon className="w-5 h-5 text-indigo-600" />
-                          <span className="font-medium">
-                            {observation.symptoms}
-                          </span>
+                          <span className="font-medium">{observation.symptoms}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          {observation.notes}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{observation.notes}</p>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
-                        Informations supplémentaires
-                      </h4>
+                      <h4 className="text-sm font-medium mb-2">Informations supplémentaires</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
                           <div className="flex items-center gap-2">
@@ -237,21 +205,15 @@ const ObservationsWidget = () => {
                             <span className="text-sm">Date signalée</span>
                           </div>
                           <span className="text-sm font-medium">
-                            {observation.dateReported} à{" "}
-                            {observation.timeReported}
+                            {observation.dateReported} à {observation.timeReported}
                           </span>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
-                        Ajouter une note
-                      </h4>
-                      <Textarea
-                        placeholder="Entrez vos observations ici..."
-                        className="resize-none min-h-[100px]"
-                      />
+                      <h4 className="text-sm font-medium mb-2">Ajouter une note</h4>
+                      <Textarea placeholder="Entrez vos observations ici..." className="resize-none min-h-[100px]" />
                     </div>
                   </div>
 
@@ -263,9 +225,7 @@ const ObservationsWidget = () => {
                         Fermer
                       </Button>
                     </SheetClose>
-                    <Button className="flex-1 bg-indigo-600 hover:bg-indigo-700">
-                      Traiter maintenant
-                    </Button>
+                    <Button className="flex-1 bg-indigo-600 hover:bg-indigo-700">Traiter maintenant</Button>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>
@@ -276,19 +236,15 @@ const ObservationsWidget = () => {
                 <div className="p-2 bg-indigo-100 dark:bg-indigo-900/20 rounded-full mb-3">
                   <CheckCircleIcon className="w-6 h-6 text-indigo-600" />
                 </div>
-                <p className="text-muted-foreground mb-1">
-                  Aucune observation récente
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Toutes les observations ont été traitées
-                </p>
+                <p className="text-muted-foreground mb-1">Aucune observation récente</p>
+                <p className="text-sm text-muted-foreground">Toutes les observations ont été traitées</p>
               </div>
             )}
           </div>
         </ScrollArea>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ObservationsWidget;
+export default ObservationsWidget

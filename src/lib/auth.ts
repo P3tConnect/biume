@@ -1,4 +1,12 @@
-import OrganizationInvitation from "@/emails/OrganizationInvitation";
+import { betterAuth } from "better-auth"
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { nextCookies } from "better-auth/next-js"
+import { organization, twoFactor, username } from "better-auth/plugins"
+import { createAccessControl } from "better-auth/plugins/access"
+import { eq } from "drizzle-orm"
+
+import OrganizationInvitation from "@/emails/OrganizationInvitation"
+
 import {
   account,
   invitation,
@@ -7,68 +15,62 @@ import {
   session,
   twoFactor as twoFactorSchema,
   verification,
-} from "../db";
-import { organization, twoFactor, username } from "better-auth/plugins";
-import { betterAuth } from "better-auth";
-import { createAccessControl } from "better-auth/plugins/access";
-import { db } from "./db";
-import { user as dbUser } from "../db";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { eq } from "drizzle-orm";
-import { nextCookies } from "better-auth/next-js";
-import { stripe } from "./stripe";
-import { resend } from "./resend";
-import { safeConfig } from "./env";
+} from "../db"
+import { user as dbUser } from "../db"
+import { db } from "./db"
+import { safeConfig } from "./env"
+import { resend } from "./resend"
+import { stripe } from "./stripe"
 
 const statement = {
   project: ["create", "share", "update", "delete"],
-} as const;
+} as const
 
-export const ac = createAccessControl(statement);
+export const ac = createAccessControl(statement)
 
 export const member = ac.newRole({
   project: ["create"],
-});
+})
 
 export const admin = ac.newRole({
   project: ["create", "share", "update"],
-});
+})
 
 export const owner = ac.newRole({
   project: ["create", "share", "update", "delete"],
-});
+})
 
 // Define base types
 export type BaseUser = {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string
+  createdAt: Date
+  updatedAt: Date
+}
 
 export type BaseMember = {
-  id: string;
-  role: string;
-  userId: string;
-  organizationId: string;
-};
+  id: string
+  role: string
+  userId: string
+  organizationId: string
+}
 
 export type BaseInvitation = {
-  id: string;
-  email: string;
-  role: string;
-  organizationId: string;
-};
+  id: string
+  email: string
+  role: string
+  organizationId: string
+}
 
 export type BaseOrganization = {
-  id: string;
-  name: string;
-  members: BaseMember[];
-  invitations: BaseInvitation[];
-};
+  id: string
+  name: string
+  members: BaseMember[]
+  invitations: BaseInvitation[]
+}
 
 export const auth = betterAuth({
   appName: "Biume",
@@ -152,27 +154,21 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        after: async (user) => {
-          const username = user.name;
-          const email = user.email;
+        after: async user => {
+          const username = user.name
+          const email = user.email
 
           const customer = await stripe.customers.create({
             name: username,
             email,
-          });
+          })
 
-          await db
-            .update(dbUser)
-            .set({ stripeId: customer.id })
-            .where(eq(dbUser.id, user.id));
+          await db.update(dbUser).set({ stripeId: customer.id }).where(eq(dbUser.id, user.id))
         },
       },
       update: {
-        after: async (user) => {
-          await db
-            .update(dbUser)
-            .set({ updatedAt: new Date() })
-            .where(eq(dbUser.id, user.id));
+        after: async user => {
+          await db.update(dbUser).set({ updatedAt: new Date() }).where(eq(dbUser.id, user.id))
         },
       },
     },
@@ -189,8 +185,8 @@ export const auth = betterAuth({
         owner,
       },
       sendInvitationEmail: async (data, request) => {
-        console.log(data, request);
-        const { email, inviter, role, organization } = data;
+        console.log(data, request)
+        const { email, inviter, role, organization } = data
 
         await resend.emails.send({
           from: "PawThera <onboarding@pawthera.com>",
@@ -201,14 +197,14 @@ export const auth = betterAuth({
             organizationName: organization.name,
             inviteLink: `${process.env.NEXT_PUBLIC_APP_URL}/invite/${data.id}`,
           }),
-        });
+        })
       },
       membershipLimit: 10,
     }),
   ],
-});
+})
 
 // Export inferred types
-export type User = BaseUser & typeof auth.$Infer.Session.user;
-export type Session = typeof auth.$Infer.Session;
-export type Organization = BaseOrganization & typeof auth.$Infer.Organization;
+export type User = BaseUser & typeof auth.$Infer.Session.user
+export type Session = typeof auth.$Infer.Session
+export type Organization = BaseOrganization & typeof auth.$Infer.Organization

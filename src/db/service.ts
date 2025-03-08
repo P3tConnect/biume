@@ -1,9 +1,10 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
-import { Appointment, appointments } from "./appointments";
-import { Organization, organization } from "./organization";
-import { OrganizationSlots, organizationSlots } from "./organizationSlots";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Appointment, appointments } from "./appointments"
+import { Organization, organization } from "./organization"
+import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 
 export const service = pgTable("service", {
   id: text("id")
@@ -19,7 +20,7 @@ export const service = pgTable("service", {
   duration: integer("duration"), // in minutes
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const servicesRelations = relations(service, ({ one, many }) => ({
   organization: one(organization, {
@@ -28,13 +29,13 @@ export const servicesRelations = relations(service, ({ one, many }) => ({
   }),
   appointments: many(appointments),
   organizationSlots: many(organizationSlots),
-}));
+}))
 
 export type Service = InferSelectModel<typeof service> & {
-  organization: Organization;
-  appointments: Appointment[];
-  organizationSlots: OrganizationSlots[];
-};
-export type CreateService = typeof service.$inferInsert;
+  organization: Organization
+  appointments: Appointment[]
+  organizationSlots: OrganizationSlots[]
+}
+export type CreateService = typeof service.$inferInsert
 
-export const CreateServiceSchema = createInsertSchema(service);
+export const CreateServiceSchema = createInsertSchema(service)

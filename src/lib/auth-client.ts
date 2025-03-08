@@ -1,12 +1,8 @@
-import { createAuthClient } from 'better-auth/react';
-import {
-  inferAdditionalFields,
-  organizationClient,
-  twoFactorClient,
-  usernameClient,
-} from 'better-auth/client/plugins';
-import { safeConfig } from './env';
-import { ac, admin, member, owner } from './auth';
+import { inferAdditionalFields, organizationClient, twoFactorClient, usernameClient } from "better-auth/client/plugins"
+import { createAuthClient } from "better-auth/react"
+
+import { ac, admin, member, owner } from "./auth"
+import { safeConfig } from "./env"
 
 export const {
   signIn,
@@ -41,55 +37,55 @@ export const {
     inferAdditionalFields({
       user: {
         stripeId: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
         },
         isPro: {
-          type: 'boolean',
+          type: "boolean",
           defaultValue: false,
           required: false,
         },
         onBoardingComplete: {
-          type: 'boolean',
+          type: "boolean",
           defaultValue: false,
           required: false,
         },
         address: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
           required: false,
         },
         zipCode: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
           required: false,
         },
         country: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
           required: false,
         },
         city: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
           required: false,
         },
         phoneNumber: {
-          type: 'string',
-          defaultValue: '',
+          type: "string",
+          defaultValue: "",
           required: false,
         },
         smsNotifications: {
-          type: 'boolean',
+          type: "boolean",
           defaultValue: false,
           required: false,
         },
         emailNotifications: {
-          type: 'boolean',
+          type: "boolean",
           defaultValue: false,
           required: false,
         },
       },
     }),
   ],
-});
+})

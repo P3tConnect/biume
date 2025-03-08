@@ -1,8 +1,9 @@
-import ClientDashboardReservationsComponent from '@/components/dashboard/pages/user/reservations-page/reservations-page';
-import React from 'react';
+import React from "react"
+
+import ClientDashboardReservationsComponent from "@/components/dashboard/pages/user/reservations-page/reservations-page"
 
 const ClientDashboardReservations = () => {
-  return <ClientDashboardReservationsComponent />;
-};
+  return <ClientDashboardReservationsComponent />
+}
 
-export default ClientDashboardReservations;
+export default ClientDashboardReservations

@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import { FiltersBar } from "./filters-bar";
-import { MainContent } from "./main-content";
-import { Organization } from "@/src/db";
+import { Organization } from "@/src/db"
+
+import { FiltersBar } from "./filters-bar"
+import { MainContent } from "./main-content"
 
 interface SearchResultsProps {
-  organizations: Organization[];
+  organizations: Organization[]
 }
 
 export function SearchResults({ organizations }: SearchResultsProps) {
@@ -14,5 +15,5 @@ export function SearchResults({ organizations }: SearchResultsProps) {
       <FiltersBar />
       <MainContent organizations={organizations} />
     </>
-  );
-} 
+  )
+}

@@ -1,14 +1,16 @@
-"use client";
+"use client"
 
-import { HeroSection } from "./sections/pro/hero-section";
-import { FeaturesSection } from "./sections/pro/features-section";
-import { TestimonialsSection } from "./sections/pro/testimonials-section";
-import { PricingSection } from "./sections/pro/pricing-section";
-import { CTASection } from "./sections/pro/cta-section";
-import { cn } from "@/src/lib/utils";
-import Link from "next/dist/client/link";
-import { motion } from "framer-motion";
-import { PawPrint, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion"
+import { AlertCircle, PawPrint } from "lucide-react"
+import Link from "next/dist/client/link"
+
+import { cn } from "@/src/lib/utils"
+
+import { CTASection } from "./sections/pro/cta-section"
+import { FeaturesSection } from "./sections/pro/features-section"
+import { HeroSection } from "./sections/pro/hero-section"
+import { PricingSection } from "./sections/pro/pricing-section"
+import { TestimonialsSection } from "./sections/pro/testimonials-section"
 
 export function ProLanding() {
   return (
@@ -20,13 +22,8 @@ export function ProLanding() {
             <AlertCircle className="h-4 w-4 text-primary" />
             <p>
               <span className="font-medium">Lancement imminent !</span>{" "}
-              <span className="hidden sm:inline">
-                Notre phase bêta arrive bientôt.
-              </span>{" "}
-              <Link
-                href="#cta"
-                className="underline font-semibold hover:text-primary transition-colors"
-              >
+              <span className="hidden sm:inline">Notre phase bêta arrive bientôt.</span>{" "}
+              <Link href="#cta" className="underline font-semibold hover:text-primary transition-colors">
                 Préinscrivez-vous dès maintenant
               </Link>
             </p>
@@ -48,17 +45,12 @@ export function ProLanding() {
         <div className="container px-4 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <Link href="/" className="flex items-center gap-2 shrink-0">
-              <motion.div
-                whileHover={{ rotate: 10 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
+              <motion.div whileHover={{ rotate: 10 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                 <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md">
                   <PawPrint fill="white" className={"w-5 h-5 text-white"} />
                 </div>
               </motion.div>
-              <span className={cn("font-bold tracking-tight transition-all")}>
-                Biume Pro
-              </span>
+              <span className={cn("font-bold tracking-tight transition-all")}>Biume Pro</span>
             </Link>
 
             <div className="text-center md:text-left text-sm text-muted-foreground">
@@ -66,31 +58,29 @@ export function ProLanding() {
             </div>
 
             <div className="flex gap-6">
-              {["Roadmap", "Confidentialité", "CGU", "Contact", "Support"].map(
-                (item, i) => (
-                  <Link
-                    key={i}
-                    href={
-                      item === "Confidentialité"
-                        ? "/privacy"
-                        : item === "CGU"
-                          ? "/cgu"
-                          : item === "Contact"
-                            ? "/contact"
-                            : item === "Roadmap"
-                              ? "/roadmap"
-                              : "/"
-                    }
-                    className="text-sm hover:text-primary transition-colors"
-                  >
-                    {item}
-                  </Link>
-                ),
-              )}
+              {["Roadmap", "Confidentialité", "CGU", "Contact", "Support"].map((item, i) => (
+                <Link
+                  key={i}
+                  href={
+                    item === "Confidentialité"
+                      ? "/privacy"
+                      : item === "CGU"
+                        ? "/cgu"
+                        : item === "Contact"
+                          ? "/contact"
+                          : item === "Roadmap"
+                            ? "/roadmap"
+                            : "/"
+                  }
+                  className="text-sm hover:text-primary transition-colors"
+                >
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }

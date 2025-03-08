@@ -1,70 +1,59 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import {
-  CredenzaFooter,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { X, Plus, Clock, Euro, Loader2 } from "lucide-react";
-import { UploadButton } from "@/src/lib/uploadthing";
-import Image from "next/image";
-import { proServicesSchema } from "../../types/onboarding-schemas";
-import { createServicesStepAction } from "@/src/actions";
-import { toast } from "sonner";
-import { cn } from "@/src/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { Clock, Euro, Loader2, Plus, X } from "lucide-react"
+import Image from "next/image"
+import React, { useState } from "react"
+import { useFieldArray, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-const ServicesForm = ({
-  nextStep,
-  previousStep,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { createServicesStepAction } from "@/src/actions"
+import { UploadButton } from "@/src/lib/uploadthing"
+import { cn } from "@/src/lib/utils"
+
+import { proServicesSchema } from "../../types/onboarding-schemas"
+
+const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof proServicesSchema>>({
     resolver: zodResolver(proServicesSchema),
     defaultValues: {
       services: [],
     },
-  });
+  })
 
-  const { control, handleSubmit, reset } = form;
+  const { control, handleSubmit, reset } = form
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "services",
-  });
+  })
 
   const { mutateAsync } = useMutation({
     mutationFn: createServicesStepAction,
     onSuccess: () => {
-      setIsLoading(false);
-      reset();
-      nextStep();
+      setIsLoading(false)
+      reset()
+      nextStep()
     },
-    onError: (error) => {
-      toast.error(error.message);
-      setIsLoading(false);
+    onError: error => {
+      toast.error(error.message)
+      setIsLoading(false)
     },
     onMutate: () => {
-      setIsLoading(true);
+      setIsLoading(true)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   return (
     <Form {...form}>
@@ -98,7 +87,7 @@ const ServicesForm = ({
                 className={cn(
                   "group relative rounded-2xl border bg-card transition-all duration-300",
                   "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-                  "dark:bg-gray-950/50 dark:backdrop-blur-xl",
+                  "dark:bg-gray-950/50 dark:backdrop-blur-xl"
                 )}
               >
                 <FormField
@@ -108,12 +97,7 @@ const ServicesForm = ({
                     <div className="relative w-full h-48 rounded-t-2xl overflow-hidden bg-gray-100 dark:bg-gray-900">
                       {imageField.value ? (
                         <>
-                          <Image
-                            src={imageField.value}
-                            alt="Aperçu du service"
-                            fill
-                            className="object-cover"
-                          />
+                          <Image src={imageField.value} alt="Aperçu du service" fill className="object-cover" />
                           <button
                             type="button"
                             className="absolute top-2 right-2 p-2 bg-red-500/80 backdrop-blur-sm text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
@@ -126,13 +110,13 @@ const ServicesForm = ({
                         <div className="w-full h-full flex items-center justify-center">
                           <UploadButton
                             endpoint="documentsUploader"
-                            onClientUploadComplete={(res) => {
+                            onClientUploadComplete={res => {
                               if (res?.[0]) {
-                                imageField.onChange(res[0].url);
+                                imageField.onChange(res[0].url)
                               }
                             }}
                             onUploadError={(error: Error) => {
-                              console.error(error);
+                              console.error(error)
                             }}
                           />
                         </div>
@@ -195,18 +179,10 @@ const ServicesForm = ({
                                 className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
                                 {...field}
                                 value={field.value ?? ""}
-                                onChange={(e) =>
-                                  field.onChange(
-                                    e.target.value
-                                      ? parseFloat(e.target.value)
-                                      : null,
-                                  )
-                                }
+                                onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">
-                              min
-                            </span>
+                            <span className="text-sm text-gray-500 mr-1">min</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -227,18 +203,10 @@ const ServicesForm = ({
                                 className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
                                 {...field}
                                 value={field.value ?? ""}
-                                onChange={(e) =>
-                                  field.onChange(
-                                    e.target.value
-                                      ? parseFloat(e.target.value)
-                                      : null,
-                                  )
-                                }
+                                onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
                               />
                             </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">
-                              €
-                            </span>
+                            <span className="text-sm text-gray-500 mr-1">€</span>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -277,7 +245,7 @@ const ServicesForm = ({
                   "flex flex-col items-center justify-center gap-4 p-8",
                   "rounded-2xl border-2 border-dashed",
                   "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200",
+                  "transition-colors duration-200"
                 )}
               >
                 <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
@@ -290,13 +258,7 @@ const ServicesForm = ({
         </div>
 
         <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-xl"
-            disabled={isLoading}
-            onClick={previousStep}
-          >
+          <Button type="button" variant="outline" className="rounded-xl" disabled={isLoading} onClick={previousStep}>
             ← Précédent
           </Button>
           <div className="flex gap-3">
@@ -309,11 +271,7 @@ const ServicesForm = ({
             >
               Passer
             </Button>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              className="rounded-xl px-6"
-            >
+            <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -327,7 +285,7 @@ const ServicesForm = ({
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default ServicesForm;
+export default ServicesForm

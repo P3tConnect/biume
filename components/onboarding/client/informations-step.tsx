@@ -1,17 +1,15 @@
-'use client';
+"use client"
 
-import ClientInformationForm from '@/components/onboarding/components/client/information-form';
-import React from 'react';
-import { clientOnBoardingSchema } from '../components/stepper-client';
-import { z } from 'zod';
-import { UseFormReturn } from 'react-hook-form';
+import React from "react"
+import { UseFormReturn } from "react-hook-form"
+import { z } from "zod"
 
-const ClientInformationsStep = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>>;
-}) => {
-  return <ClientInformationForm form={form} />;
-};
+import ClientInformationForm from "@/components/onboarding/components/client/information-form"
 
-export default ClientInformationsStep;
+import { clientOnBoardingSchema } from "../components/stepper-client"
+
+const ClientInformationsStep = ({ form }: { form: UseFormReturn<z.infer<typeof clientOnBoardingSchema>> }) => {
+  return <ClientInformationForm form={form} />
+}
+
+export default ClientInformationsStep

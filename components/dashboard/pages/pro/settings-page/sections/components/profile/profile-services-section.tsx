@@ -1,37 +1,24 @@
-"use client";
+"use client"
 
-import React, { use } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import { updateOrganization } from "@/src/actions/organization.action";
-import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
-import { Organization } from "@/src/db/organization";
-import { organizationFormSchema } from "../../profile-section";
-import { ActionResult } from "@/src/lib";
-import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
+import { updateOrganization } from "@/src/actions/organization.action"
+import { Organization } from "@/src/db/organization"
+import { useFormChangeToast } from "@/src/hooks/useFormChangeToast"
+
+import { organizationFormSchema } from "../../profile-section"
 
 interface ProfileServicesSectionProps {
-  org: Organization | null | undefined;
+  org: Organization | null | undefined
 }
 
 export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => {
@@ -50,23 +37,23 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
       siren: org?.siren || "",
       siret: org?.siret || "",
     },
-  });
+  })
 
-  const { handleSubmit } = form;
+  const { handleSubmit } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganization,
     onSuccess: () => {
-      toast.success("Modifications enregistrées avec succès !");
+      toast.success("Modifications enregistrées avec succès !")
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   useFormChangeToast({
     form,
@@ -74,7 +61,7 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
     message: "Modifications en attente",
     description: "Pensez à sauvegarder vos changements",
     position: "bottom-center",
-  });
+  })
 
   return (
     <Form {...form}>
@@ -91,18 +78,12 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1">
-                    <FormLabel className="text-sm font-medium leading-none">
-                      Consultations à domicile
-                    </FormLabel>
+                    <FormLabel className="text-sm font-medium leading-none">Consultations à domicile</FormLabel>
                     <FormDescription className="text-xs">
-                      Activez cette option si vous proposez des consultations à
-                      domicile
+                      Activez cette option si vous proposez des consultations à domicile
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -119,8 +100,7 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
                     <Input placeholder="Listez les NAC acceptés" {...field} />
                   </FormControl>
                   <FormDescription className="text-xs">
-                    Listez les types de NAC que vous acceptez (ex: rongeurs,
-                    reptiles, oiseaux)
+                    Listez les types de NAC que vous acceptez (ex: rongeurs, reptiles, oiseaux)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -130,5 +110,5 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
         </Card>
       </form>
     </Form>
-  );
-}; 
+  )
+}

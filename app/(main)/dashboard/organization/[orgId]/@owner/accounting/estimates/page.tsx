@@ -1,8 +1,9 @@
-import { DashboardEstimatesComponent } from "@/components/dashboard/pages/pro/estimates-page/estimates-page";
-import React from "react";
+import React from "react"
+
+import { DashboardEstimatesComponent } from "@/components/dashboard/pages/pro/estimates-page/estimates-page"
 
 const ProDashboardEstimatesPage = () => {
-  return <DashboardEstimatesComponent />;
-};
+  return <DashboardEstimatesComponent />
+}
 
-export default ProDashboardEstimatesPage;
+export default ProDashboardEstimatesPage

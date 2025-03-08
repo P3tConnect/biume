@@ -1,24 +1,25 @@
-"use client";
+"use client"
 
-import { cn } from "@/src/lib";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useId } from "react";
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useId } from "react"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/src/lib"
 
 export function DatePicker({
   label,
   date,
   onSelect,
 }: {
-  label: string;
-  date: Date | undefined;
-  onSelect: (date: Date | undefined) => void;
+  label: string
+  date: Date | undefined
+  onSelect: (date: Date | undefined) => void
 }) {
-  const id = useId();
+  const id = useId()
 
   return (
     <div>
@@ -31,7 +32,7 @@ export function DatePicker({
               variant={"outline"}
               className={cn(
                 "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
-                !date && "text-muted-foreground",
+                !date && "text-muted-foreground"
               )}
             >
               <span className={cn("truncate", !date && "text-muted-foreground")}>
@@ -50,5 +51,5 @@ export function DatePicker({
         </Popover>
       </div>
     </div>
-  );
+  )
 }

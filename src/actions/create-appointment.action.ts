@@ -1,10 +1,11 @@
-"use server";
+"use server"
 
-import { z } from "zod";
-import { createServerAction } from "../lib";
-import { requireAuth, requireFullOrganization } from "../lib/action";
-import { db } from "../lib";
-import { appointments } from "../db/appointments";
+import { z } from "zod"
+
+import { appointments } from "../db/appointments"
+import { createServerAction } from "../lib"
+import { db } from "../lib"
+import { requireAuth, requireFullOrganization } from "../lib/action"
 
 // Schéma de validation pour la création d'un rendez-vous
 const createAppointmentSchema = z.object({
@@ -18,7 +19,7 @@ const createAppointmentSchema = z.object({
   notes: z.string().optional(),
   beginAt: z.date(),
   endAt: z.date(),
-});
+})
 
 // Action serveur pour créer un rendez-vous
 export const createAppointmentAction = createServerAction(
@@ -38,22 +39,20 @@ export const createAppointmentAction = createServerAction(
           atHome: input.atHome,
           status: "PENDING PAYMENT",
         })
-        .returning();
+        .returning()
 
       if (!appointment || appointment.length === 0) {
-        throw new Error("Échec lors de la création du rendez-vous");
+        throw new Error("Échec lors de la création du rendez-vous")
       }
 
       return {
         success: true,
         data: appointment[0],
-      };
+      }
     } catch (error) {
-      console.error("Erreur lors de la création du rendez-vous:", error);
-      throw new Error(
-        "Une erreur est survenue lors de la création du rendez-vous",
-      );
+      console.error("Erreur lors de la création du rendez-vous:", error)
+      throw new Error("Une erreur est survenue lors de la création du rendez-vous")
     }
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)

@@ -1,23 +1,13 @@
-import { date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { z } from "zod";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { Organization, organization } from "./organization";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 
-export const bgJobsStatus = pgEnum("jobStatus", [
-  "pending",
-  "in_progress",
-  "completed",
-  "failed",
-]);
+import { Organization, organization } from "./organization"
 
-export const bgJobsType = pgEnum("jobType", [
-  "reminder",
-  "newsletter",
-  "payout",
-  "refund",
-  "none",
-]);
+export const bgJobsStatus = pgEnum("jobStatus", ["pending", "in_progress", "completed", "failed"])
+
+export const bgJobsType = pgEnum("jobType", ["reminder", "newsletter", "payout", "refund", "none"])
 
 export const bgJobs = pgTable("bg_jobs", {
   id: text("id")
@@ -32,22 +22,22 @@ export const bgJobs = pgTable("bg_jobs", {
   status: bgJobsStatus("status").default("pending"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const jobsRelations = relations(bgJobs, ({ one }) => ({
   organization: one(organization, {
     fields: [bgJobs.from],
     references: [organization.id],
   }),
-}));
+}))
 
 export type BgJobs = InferSelectModel<typeof bgJobs> & {
-  organization: Organization;
-};
-export type BgJobsInsert = typeof bgJobs.$inferInsert;
+  organization: Organization
+}
+export type BgJobsInsert = typeof bgJobs.$inferInsert
 
-export const bgJobsTypeEnum = z.enum(bgJobsType.enumValues);
-export const bgJobsStatusEnum = z.enum(bgJobsStatus.enumValues);
+export const bgJobsTypeEnum = z.enum(bgJobsType.enumValues)
+export const bgJobsStatusEnum = z.enum(bgJobsStatus.enumValues)
 
-export const SelectBgJobsSchema = createSelectSchema(bgJobs);
-export const CreateBgJobsSchema = createInsertSchema(bgJobs);
+export const SelectBgJobsSchema = createSelectSchema(bgJobs)
+export const CreateBgJobsSchema = createInsertSchema(bgJobs)

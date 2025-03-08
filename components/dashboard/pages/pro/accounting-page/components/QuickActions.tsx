@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Euro, PieChart } from "lucide-react";
+import { Euro, FileText, PieChart } from "lucide-react"
+import React from "react"
+
+import { Card, CardContent } from "@/components/ui/card"
 
 export const QuickActions = () => {
   return (
@@ -13,9 +14,7 @@ export const QuickActions = () => {
             <FileText className="size-6 text-blue-700 dark:text-blue-400 group-hover:scale-110 transition-transform duration-200" />
           </div>
           <h3 className="text-lg font-medium">Gérer les devis</h3>
-          <p className="text-sm text-muted-foreground text-center">
-            Voir et créer des devis
-          </p>
+          <p className="text-sm text-muted-foreground text-center">Voir et créer des devis</p>
         </CardContent>
       </Card>
 
@@ -25,9 +24,7 @@ export const QuickActions = () => {
             <Euro className="size-6 text-purple-700 dark:text-purple-400 group-hover:scale-110 transition-transform duration-200" />
           </div>
           <h3 className="text-lg font-medium">Gérer les factures</h3>
-          <p className="text-sm text-muted-foreground text-center">
-            Voir et créer des factures
-          </p>
+          <p className="text-sm text-muted-foreground text-center">Voir et créer des factures</p>
         </CardContent>
       </Card>
 
@@ -37,11 +34,9 @@ export const QuickActions = () => {
             <PieChart className="size-6 text-green-700 dark:text-green-400 group-hover:scale-110 transition-transform duration-200" />
           </div>
           <h3 className="text-lg font-medium">Rapports financiers</h3>
-          <p className="text-sm text-muted-foreground text-center">
-            Générer des rapports détaillés
-          </p>
+          <p className="text-sm text-muted-foreground text-center">Générer des rapports détaillés</p>
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}

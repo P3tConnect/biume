@@ -1,7 +1,7 @@
-import { Service } from "@/src/db";
+import { Service } from "@/src/db"
 
 interface CompanyServicesProps {
-  services: Service[];
+  services: Service[]
 }
 
 export function CompanyServices({ services }: CompanyServicesProps) {
@@ -9,13 +9,11 @@ export function CompanyServices({ services }: CompanyServicesProps) {
     <div>
       {services.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-muted-foreground">
-            Aucun service disponible pour le moment.
-          </p>
+          <p className="text-muted-foreground">Aucun service disponible pour le moment.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {services.map((service) => (
+          {services.map(service => (
             <div
               key={service.id}
               className="p-4 rounded-xl border hover:border-primary/50 cursor-pointer transition-all"
@@ -36,5 +34,5 @@ export function CompanyServices({ services }: CompanyServicesProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

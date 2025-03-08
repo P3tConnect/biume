@@ -1,18 +1,14 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
-import { Event, DayEvents } from "@/src/lib/schemas";
-import { cn } from "@/src/lib/utils";
-import { useSidebar } from "@/components/ui/sidebar";
-import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils";
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import React, { useState } from "react"
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
+
+import { Button } from "@/components/ui/button"
+import { useSidebar } from "@/components/ui/sidebar"
+import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
+import { DayEvents } from "@/src/lib/schemas"
+import { cn } from "@/src/lib/utils"
 
 const eventColors = {
   work: "bg-blue-500 text-white",
@@ -22,72 +18,49 @@ const eventColors = {
   hobbies: "bg-purple-500 text-white",
   health: "bg-red-500 text-white",
   finance: "bg-yellow-400 text-black",
-};
-
-interface CalendarProps {
-  selectedDate: Date;
-  onDayClick: (date: Date) => void;
-  onEventDrop: (result: DropResult) => void;
-  events: DayEvents;
 }
 
-const Calendar = ({
-  selectedDate,
-  onDayClick,
-  onEventDrop,
-  events,
-}: CalendarProps) => {
-  const { isMobile, state: sidebarState } = useSidebar();
-  const [currentDate, setCurrentDate] = useState(new Date());
+interface CalendarProps {
+  selectedDate: Date
+  onDayClick: (date: Date) => void
+  onEventDrop: (result: DropResult) => void
+  events: DayEvents
+}
 
-  const daysInMonth = getDaysInMonth(currentDate);
-  const firstDayOfMonth = getFirstDayOfMonth(currentDate);
+const Calendar = ({ selectedDate, onDayClick, onEventDrop, events }: CalendarProps) => {
+  const { isMobile, state: sidebarState } = useSidebar()
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  const daysInMonth = getDaysInMonth(currentDate)
+  const firstDayOfMonth = getFirstDayOfMonth(currentDate)
 
   const handlePrevMonth = () => {
-    setCurrentDate(
-      (prevDate) =>
-        new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1),
-    );
-  };
+    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1))
+  }
 
   const handleNextMonth = () => {
-    setCurrentDate(
-      (prevDate) =>
-        new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1),
-    );
-  };
+    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1))
+  }
 
   const isToday = (day: number) => {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    return date.toDateString() === new Date().toDateString();
-  };
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    return date.toDateString() === new Date().toDateString()
+  }
 
   const isSelected = (day: number) => {
-    if (!selectedDate || day === 0) return false;
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    return date.toDateString() === selectedDate.toDateString();
-  };
+    if (!selectedDate || day === 0) return false
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    return date.toDateString() === selectedDate.toDateString()
+  }
 
   const isWeekend = (dayIndex: number) => {
-    return dayIndex === 0 || dayIndex === 6;
-  };
+    return dayIndex === 0 || dayIndex === 6
+  }
 
   const renderEvents = (day: number) => {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    const dateString = date.toDateString();
-    const dayEvents = events[dateString] || [];
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    const dateString = date.toDateString()
+    const dayEvents = events[dateString] || []
 
     return dayEvents.map((event, index) => (
       <Draggable key={event.id} draggableId={event.id} index={index}>
@@ -101,61 +74,50 @@ const Calendar = ({
               eventColors[event.category],
               "transition-all duration-200",
               "hover:ring-2 hover:ring-secondary/20",
-              snapshot.isDragging &&
-                "ring-2 ring-secondary opacity-70 rotate-2 scale-105",
+              snapshot.isDragging && "ring-2 ring-secondary opacity-70 rotate-2 scale-105"
             )}
           >
             {event.title}
           </div>
         )}
       </Draggable>
-    ));
-  };
+    ))
+  }
 
   const getWeeksInMonth = () => {
-    const weeks: number[][] = [];
-    let currentWeek: number[] = [];
+    const weeks: number[][] = []
+    let currentWeek: number[] = []
 
     // Fill empty days at the start
     for (let i = 0; i < firstDayOfMonth; i++) {
-      currentWeek.push(0);
+      currentWeek.push(0)
     }
 
     // Fill days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      currentWeek.push(day);
+      currentWeek.push(day)
 
       if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
+        weeks.push(currentWeek)
+        currentWeek = []
       }
     }
 
     // Fill empty days at the end
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
-        currentWeek.push(0);
+        currentWeek.push(0)
       }
-      weeks.push(currentWeek);
+      weeks.push(currentWeek)
     }
 
-    return weeks;
-  };
+    return weeks
+  }
 
   return (
     <div className="h-full flex flex-col">
-      <div
-        className={cn(
-          "flex justify-between items-center px-2 py-3",
-          isMobile ? "flex-col gap-3" : "flex-row",
-        )}
-      >
-        <h2
-          className={cn(
-            "font-bold text-gray-800 dark:text-white",
-            isMobile ? "text-lg" : "text-xl md:text-2xl",
-          )}
-        >
+      <div className={cn("flex justify-between items-center px-2 py-3", isMobile ? "flex-col gap-3" : "flex-row")}>
+        <h2 className={cn("font-bold text-gray-800 dark:text-white", isMobile ? "text-lg" : "text-xl md:text-2xl")}>
           {currentDate
             .toLocaleString("fr-FR", {
               month: "long",
@@ -185,20 +147,13 @@ const Calendar = ({
 
       <DragDropContext onDragEnd={onEventDrop}>
         <div className="flex-1 overflow-auto p-4">
-          <div
-            className={cn(
-              "grid grid-cols-7 gap-2 mb-2",
-              sidebarState === "expanded" ? "text-xs" : "text-sm",
-            )}
-          >
-            {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
+          <div className={cn("grid grid-cols-7 gap-2 mb-2", sidebarState === "expanded" ? "text-xs" : "text-sm")}>
+            {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map(day => (
               <div
                 key={day}
                 className={cn(
                   "text-center font-medium p-1",
-                  day === "Dim" || day === "Sam"
-                    ? "text-red-500"
-                    : "text-gray-600 dark:text-gray-300",
+                  day === "Dim" || day === "Sam" ? "text-red-500" : "text-gray-600 dark:text-gray-300"
                 )}
               >
                 {day}
@@ -215,11 +170,7 @@ const Calendar = ({
                     droppableId={
                       day === 0
                         ? `empty-${weekIndex}-${dayIndex}`
-                        : new Date(
-                            currentDate.getFullYear(),
-                            currentDate.getMonth(),
-                            day,
-                          ).toDateString()
+                        : new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toDateString()
                     }
                     isDropDisabled={day === 0}
                     isCombineEnabled
@@ -238,27 +189,18 @@ const Calendar = ({
                                 "rounded-xl border-[1.5px] border-border/60 hover:border-border",
                                 "dark:border-gray-700 dark:hover:border-gray-600",
                                 "[&:has(>div)]:hover:ring-2 [&:has(>div)]:hover:ring-secondary/20",
-                                isToday(day) &&
-                                  "bg-primary/5 ring-2 ring-primary border-primary/50",
-                                isSelected(day) &&
-                                  "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
+                                isToday(day) && "bg-primary/5 ring-2 ring-primary border-primary/50",
+                                isSelected(day) && "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
                                 isWeekend(dayIndex) &&
                                   "bg-muted/80 border-muted/80 dark:bg-muted/60 dark:border-muted/60",
-                                snapshot.isDraggingOver &&
-                                  "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
+                                snapshot.isDraggingOver && "bg-secondary/20 ring-2 ring-secondary border-secondary/50",
                                 "backdrop-blur-[2px]",
-                                "group cursor-pointer shadow-sm",
-                              ),
+                                "group cursor-pointer shadow-sm"
+                              )
                         )}
                         onClick={() => {
                           if (day !== 0) {
-                            onDayClick(
-                              new Date(
-                                currentDate.getFullYear(),
-                                currentDate.getMonth(),
-                                day,
-                              ),
-                            );
+                            onDayClick(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))
                           }
                         }}
                       >
@@ -270,7 +212,7 @@ const Calendar = ({
                                 "group-hover:text-secondary",
                                 isToday(day) && "text-primary",
                                 isSelected(day) && "text-secondary",
-                                isWeekend(dayIndex) && "text-foreground/70",
+                                isWeekend(dayIndex) && "text-foreground/70"
                               )}
                             >
                               {day}
@@ -289,7 +231,7 @@ const Calendar = ({
         </div>
       </DragDropContext>
     </div>
-  );
-};
+  )
+}
 
-export default Calendar;
+export default Calendar

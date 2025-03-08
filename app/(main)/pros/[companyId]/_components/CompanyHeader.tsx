@@ -1,31 +1,24 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui";
-import { Organization, Rating, Option, Service } from "@/src/db";
-import {
-  Heart,
-  MapPin,
-  Share2,
-  Star,
-  ChevronLeft,
-  Calendar,
-  Phone,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion"
+import { Calendar, ChevronLeft, Heart, MapPin, Phone, Share2, Star } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+
+import { Button } from "@/components/ui"
+import { Organization } from "@/src/db"
 
 interface CompanyHeaderProps {
-  company: Organization;
+  company: Organization
 }
 
 export function CompanyHeader({ company }: CompanyHeaderProps) {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   const defaultImages = [
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
@@ -33,16 +26,13 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
     "https://images.unsplash.com/photo-1472851294608-062f824d29cc",
     "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6",
     "https://images.unsplash.com/photo-1486299267070-83823f5448dd",
-  ];
+  ]
 
-  const displayImages = defaultImages;
+  const displayImages = defaultImages
   const averageRating =
     company.ratings && company.ratings.length > 0
-      ? (
-          company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          company.ratings.length
-        ).toFixed(1)
-      : "4.8";
+      ? (company.ratings.reduce((acc, curr) => acc + curr.rate, 0) / company.ratings.length).toFixed(1)
+      : "4.8"
 
   return (
     <div className="space-y-6 relative">
@@ -63,19 +53,11 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
               Retour aux résultats
             </Link>
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
+              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                 <Phone className="h-4 w-4" />
                 Contacter
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
+              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                 <Heart className="h-4 w-4" />
                 Enregistrer
               </Button>
@@ -154,9 +136,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
                   <div className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full">
                     <Star className="h-4 w-4 fill-primary text-primary" />
                     <span className="font-medium">{averageRating}</span>
-                    <span className="text-primary/70">
-                      ({company.ratings?.length || 24})
-                    </span>
+                    <span className="text-primary/70">({company.ratings?.length || 24})</span>
                   </div>
 
                   <div className="flex items-center gap-1 bg-muted/50 px-3 py-1 rounded-full">
@@ -168,9 +148,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
 
                   <div className="flex items-center gap-1 bg-muted/50 px-3 py-1 rounded-full">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">
-                      Ouvert aujourd&apos;hui · 9:00 - 19:00
-                    </span>
+                    <span className="text-muted-foreground">Ouvert aujourd&apos;hui · 9:00 - 19:00</span>
                   </div>
                 </div>
               </motion.div>
@@ -195,5 +173,5 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
         </AnimatePresence>
       </div>
     </div>
-  );
+  )
 }

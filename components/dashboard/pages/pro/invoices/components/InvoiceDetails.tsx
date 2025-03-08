@@ -1,31 +1,33 @@
-"use client";
+"use client"
 
-import React from "react";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Download, Mail } from "lucide-react"
+import React from "react"
+
 import {
+  Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  Badge,
-  Button,
-  Separator,
   ScrollArea,
+  Separator,
   SheetTitle,
-} from "@/components/ui";
-import { Invoice } from "../invoices-page";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Download, Mail, Printer } from "lucide-react";
+} from "@/components/ui"
+
+import { Invoice } from "../invoices-page"
 
 interface InvoiceDetailsProps {
-  invoice: Invoice;
+  invoice: Invoice
 }
 
 const statusMap = {
   paid: { label: "Payée", variant: "default" as const },
   pending: { label: "En attente", variant: "secondary" as const },
   overdue: { label: "En retard", variant: "destructive" as const },
-};
+}
 
 export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
   return (
@@ -56,21 +58,15 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">
-                Informations générales
-              </CardTitle>
+              <CardTitle className="text-base">Informations générales</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">
-                  Numéro de facture
-                </p>
+                <p className="text-sm text-muted-foreground">Numéro de facture</p>
                 <p className="font-medium">{invoice.number}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">
-                  Date de création
-                </p>
+                <p className="text-sm text-muted-foreground">Date de création</p>
                 <p className="font-medium">
                   {format(new Date(invoice.createdAt), "d MMMM yyyy", {
                     locale: fr,
@@ -87,10 +83,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Statut</p>
-                <Badge
-                  variant={statusMap[invoice.status].variant}
-                  className="mt-1 rounded-full"
-                >
+                <Badge variant={statusMap[invoice.status].variant} className="mt-1 rounded-full">
                   {statusMap[invoice.status].label}
                 </Badge>
               </div>
@@ -108,9 +101,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Montant total</p>
-                <p className="text-2xl font-bold text-primary">
-                  {invoice.amount}€
-                </p>
+                <p className="text-2xl font-bold text-primary">{invoice.amount}€</p>
               </div>
             </CardContent>
           </Card>
@@ -132,9 +123,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
                 <div className="grid grid-cols-12 gap-4 p-4">
                   <div className="col-span-6">
                     <p className="font-medium">Consultation standard</p>
-                    <p className="text-sm text-muted-foreground">
-                      Séance de 1 heure
-                    </p>
+                    <p className="text-sm text-muted-foreground">Séance de 1 heure</p>
                   </div>
                   <div className="col-span-2 text-right">1</div>
                   <div className="col-span-2 text-right">75€</div>
@@ -143,9 +132,7 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
                 <div className="grid grid-cols-12 gap-4 p-4">
                   <div className="col-span-6">
                     <p className="font-medium">Traitement spécifique</p>
-                    <p className="text-sm text-muted-foreground">
-                      Thérapie ciblée
-                    </p>
+                    <p className="text-sm text-muted-foreground">Thérapie ciblée</p>
                   </div>
                   <div className="col-span-2 text-right">2</div>
                   <div className="col-span-2 text-right">150€</div>
@@ -175,5 +162,5 @@ export const InvoiceDetails = ({ invoice }: InvoiceDetailsProps) => {
         </Card>
       </ScrollArea>
     </div>
-  );
-};
+  )
+}

@@ -1,24 +1,25 @@
-import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import { DateStepSchema, ServiceStepSchema } from "./appointmentDialogStepper";
-import { CalendarIcon, ClockIcon, CheckIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { fr } from "date-fns/locale";
-import { format, addDays, addMonths, isSameDay } from "date-fns";
-import { cn } from "@/src/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { FormMessage } from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { AppointmentFormValues } from "./AppointmentDialog";
+import { addDays, addMonths, format, isSameDay } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarIcon, CheckIcon, ClockIcon } from "lucide-react"
+import React, { useState } from "react"
+import { useFormContext } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card, CardContent } from "@/components/ui/card"
+import { FormMessage } from "@/components/ui/form"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/src/lib/utils"
+
+import { AppointmentFormValues } from "./AppointmentDialog"
 
 const DateStep = () => {
-  const form = useFormContext<AppointmentFormValues>();
-  const [activeTab, setActiveTab] = useState<string>("calendar");
+  const form = useFormContext<AppointmentFormValues>()
+  const [activeTab, setActiveTab] = useState<string>("calendar")
 
   // Récupérer la durée définie à l'étape précédente
-  const duration = form.watch("duration");
+  const duration = form.watch("duration")
 
   // Créneaux horaires disponibles (simulés pour l'exemple)
   const timeSlots = [
@@ -37,7 +38,7 @@ const DateStep = () => {
     { time: "17:00", available: true },
     { time: "17:30", available: false },
     { time: "18:00", available: true },
-  ];
+  ]
 
   // Jours où des créneaux sont disponibles (simulés pour l'exemple)
   const availableDates = [
@@ -49,17 +50,17 @@ const DateStep = () => {
     addDays(new Date(), 8),
     addDays(new Date(), 12),
     addDays(new Date(), 15),
-  ];
+  ]
 
   // Fonctions utilitaires
   const isSuggestedDate = (date: Date) => {
-    return availableDates.some((d) => isSameDay(d, date));
-  };
+    return availableDates.some(d => isSameDay(d, date))
+  }
 
   const dateHasTimeSlots = (date: Date) => {
     // Simulation: certains jours ont des créneaux disponibles
-    return isSuggestedDate(date);
-  };
+    return isSuggestedDate(date)
+  }
 
   // Raccourcis pour sélectionner rapidement une date
   const quickDateOptions = [
@@ -83,15 +84,11 @@ const DateStep = () => {
       date: addMonths(new Date(), 1),
       available: dateHasTimeSlots(addMonths(new Date(), 1)),
     },
-  ];
+  ]
 
   return (
     <div className="space-y-6">
-      <Tabs
-        defaultValue="calendar"
-        className="w-full"
-        onValueChange={setActiveTab}
-      >
+      <Tabs defaultValue="calendar" className="w-full" onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-2 mb-4">
           <TabsTrigger value="calendar" className="flex items-center">
             <CalendarIcon className="h-4 w-4 mr-2" />
@@ -115,16 +112,14 @@ const DateStep = () => {
                 <Calendar
                   mode="single"
                   selected={form.watch("date")}
-                  onSelect={(date) => {
-                    if (date) form.setValue("date", date);
+                  onSelect={date => {
+                    if (date) form.setValue("date", date)
                   }}
                   locale={fr}
                   className="mx-auto"
-                  disabled={(date) =>
-                    date < new Date() || !dateHasTimeSlots(date)
-                  }
+                  disabled={date => date < new Date() || !dateHasTimeSlots(date)}
                   modifiers={{
-                    suggested: (date) => isSuggestedDate(date),
+                    suggested: date => isSuggestedDate(date),
                   }}
                   modifiersClassNames={{
                     suggested: "border border-primary ring-1 ring-primary/20",
@@ -144,7 +139,7 @@ const DateStep = () => {
                 </h3>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {timeSlots.map((slot) => (
+                  {timeSlots.map(slot => (
                     <Button
                       key={slot.time}
                       type="button"
@@ -152,25 +147,20 @@ const DateStep = () => {
                       className={cn(
                         "h-12",
                         !slot.available && "opacity-50 cursor-not-allowed",
-                        form.watch("startTime") === slot.time &&
-                          "border-primary bg-primary/5",
+                        form.watch("startTime") === slot.time && "border-primary bg-primary/5"
                       )}
                       disabled={!slot.available}
                       onClick={() => form.setValue("startTime", slot.time)}
                     >
                       {slot.time}
-                      {form.watch("startTime") === slot.time && (
-                        <CheckIcon className="h-4 w-4 ml-2 text-primary" />
-                      )}
+                      {form.watch("startTime") === slot.time && <CheckIcon className="h-4 w-4 ml-2 text-primary" />}
                     </Button>
                   ))}
                 </div>
 
                 {form.watch("startTime") && (
                   <div className="mt-4 p-3 bg-primary/5 border border-primary/10 rounded-lg">
-                    <h4 className="text-sm font-medium mb-1">
-                      Horaire sélectionné
-                    </h4>
+                    <h4 className="text-sm font-medium mb-1">Horaire sélectionné</h4>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">
                         {format(form.watch("date"), "EEEE d MMMM", {
@@ -201,15 +191,14 @@ const DateStep = () => {
                   className={cn(
                     "cursor-pointer transition-all hover:bg-muted/50",
                     !option.available && "opacity-50 cursor-not-allowed",
-                    form.watch("date") &&
-                      isSameDay(form.watch("date"), option.date)
+                    form.watch("date") && isSameDay(form.watch("date"), option.date)
                       ? "border-primary"
-                      : "border-border",
+                      : "border-border"
                   )}
                   onClick={() => {
                     if (option.available) {
-                      form.setValue("date", option.date);
-                      setActiveTab("calendar");
+                      form.setValue("date", option.date)
+                      setActiveTab("calendar")
                     }
                   }}
                 >
@@ -222,17 +211,11 @@ const DateStep = () => {
                     </div>
 
                     {option.available ? (
-                      <Badge
-                        variant="outline"
-                        className="bg-green-50 text-green-600 border-green-200"
-                      >
+                      <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
                         Disponible
                       </Badge>
                     ) : (
-                      <Badge
-                        variant="outline"
-                        className="bg-red-50 text-red-600 border-red-200"
-                      >
+                      <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
                         Indisponible
                       </Badge>
                     )}
@@ -244,13 +227,9 @@ const DateStep = () => {
         </TabsContent>
       </Tabs>
 
-      {form.formState.errors.date && (
-        <FormMessage>{form.formState.errors.date.message}</FormMessage>
-      )}
+      {form.formState.errors.date && <FormMessage>{form.formState.errors.date.message}</FormMessage>}
 
-      {form.formState.errors.startTime && (
-        <FormMessage>{form.formState.errors.startTime.message}</FormMessage>
-      )}
+      {form.formState.errors.startTime && <FormMessage>{form.formState.errors.startTime.message}</FormMessage>}
 
       {form.watch("date") && form.watch("startTime") && (
         <div className="mt-4 p-4 bg-primary/5 border border-primary/10 rounded-lg">
@@ -261,22 +240,16 @@ const DateStep = () => {
               <span className="font-medium text-foreground">
                 {format(form.watch("date"), "EEEE d MMMM", { locale: fr })}
               </span>{" "}
-              à{" "}
-              <span className="font-medium text-foreground">
-                {form.watch("startTime")}
-              </span>
+              à <span className="font-medium text-foreground">{form.watch("startTime")}</span>
             </p>
             <p>
-              Durée prévue:{" "}
-              <span className="font-medium text-foreground">
-                {duration} minutes
-              </span>
+              Durée prévue: <span className="font-medium text-foreground">{duration} minutes</span>
             </p>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default DateStep;
+export default DateStep

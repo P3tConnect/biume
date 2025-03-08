@@ -1,20 +1,15 @@
-import { Organization } from "@/src/db";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, Star } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import moment from "moment";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import React from "react";
+import { Calendar, Clock, MapPin, Star } from "lucide-react"
+import moment from "moment"
+import Image from "next/image"
+import Link from "next/link"
+import React from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { Organization } from "@/src/db"
 
 interface OrganizationCardProps {
-  organization: Organization;
+  organization: Organization
 }
 
 export function OrganizationCard({ organization }: OrganizationCardProps) {
@@ -27,7 +22,7 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
             <CarouselContent>
               {organization.images && organization.images.length > 0 ? (
                 organization.images.map(
-                  (image) =>
+                  image =>
                     image.imageUrl && (
                       <CarouselItem key={image.id}>
                         <div className="relative w-full h-[220px]">
@@ -42,14 +37,12 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 rounded-t-lg" />
                         </div>
                       </CarouselItem>
-                    ),
+                    )
                 )
               ) : (
                 <CarouselItem>
                   <div className="relative w-full h-[220px] bg-muted rounded-t-lg flex items-center justify-center">
-                    <span className="text-muted-foreground">
-                      Aucune image disponible
-                    </span>
+                    <span className="text-muted-foreground">Aucune image disponible</span>
                   </div>
                 </CarouselItem>
               )}
@@ -62,14 +55,9 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
             )}
           </Carousel>
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-            <Badge className="bg-primary text-primary-foreground">
-              Disponible aujourd&apos;hui
-            </Badge>
+            <Badge className="bg-primary text-primary-foreground">Disponible aujourd&apos;hui</Badge>
           </div>
-          <Badge
-            variant="outline"
-            className="absolute bottom-3 right-3 z-10 bg-black/70 text-white border-0"
-          >
+          <Badge variant="outline" className="absolute bottom-3 right-3 z-10 bg-black/70 text-white border-0">
             À partir de 35€
           </Badge>
         </div>
@@ -97,9 +85,7 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
             {organization.address && (
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" />
-                <span className="line-clamp-1">
-                  {organization.address.postalAddress}
-                </span>
+                <span className="line-clamp-1">{organization.address.postalAddress}</span>
               </div>
             )}
 
@@ -111,26 +97,17 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {!organization.slots || organization.slots.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">
-                    Plus de disponibilités pour aujourd&apos;hui
-                  </p>
+                  <p className="text-xs text-muted-foreground">Plus de disponibilités pour aujourd&apos;hui</p>
                 ) : (
-                  organization.slots.slice(0, 3).map((slot) => (
-                    <Badge
-                      key={slot.id}
-                      variant="outline"
-                      className="text-xs font-normal px-2 py-0.5"
-                    >
+                  organization.slots.slice(0, 3).map(slot => (
+                    <Badge key={slot.id} variant="outline" className="text-xs font-normal px-2 py-0.5">
                       <Clock className="h-3 w-3 mr-1 text-primary" />
                       {moment(slot.start).format("HH:mm")}
                     </Badge>
                   ))
                 )}
                 {organization.slots && organization.slots.length > 3 && (
-                  <Badge
-                    variant="secondary"
-                    className="text-xs whitespace-nowrap"
-                  >
+                  <Badge variant="secondary" className="text-xs whitespace-nowrap">
                     +{organization.slots.length - 3} créneaux
                   </Badge>
                 )}
@@ -140,5 +117,5 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
         </Link>
       </div>
     </div>
-  );
+  )
 }

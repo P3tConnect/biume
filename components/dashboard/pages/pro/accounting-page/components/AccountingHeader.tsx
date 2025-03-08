@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui";
-import { Euro, FileText } from "lucide-react";
+import { Euro, FileText } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const AccountingHeader = () => {
   return (
@@ -14,9 +15,7 @@ export const AccountingHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Comptabilité
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Aperçu de vos finances
-            </p>
+            <p className="text-sm text-muted-foreground">Aperçu de vos finances</p>
           </div>
           <div className="flex gap-3">
             <Button
@@ -34,5 +33,5 @@ export const AccountingHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

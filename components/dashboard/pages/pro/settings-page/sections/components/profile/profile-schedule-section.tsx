@@ -1,35 +1,23 @@
-"use client";
+"use client"
 
-import React, { use } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import { updateOrganization } from "@/src/actions/organization.action";
-import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
-import { Organization } from "@/src/db/organization";
-import { organizationFormSchema } from "../../profile-section";
-import { ActionResult } from "@/src/lib";
-import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { updateOrganization } from "@/src/actions/organization.action"
+import { Organization } from "@/src/db/organization"
+import { useFormChangeToast } from "@/src/hooks/useFormChangeToast"
+
+import { organizationFormSchema } from "../../profile-section"
 
 interface ProfileScheduleSectionProps {
-  org: Organization | null | undefined;
+  org: Organization | null | undefined
 }
 
 export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => {
@@ -48,23 +36,23 @@ export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => 
       siren: org?.siren || "",
       siret: org?.siret || "",
     },
-  });
+  })
 
-  const { handleSubmit } = form;
+  const { handleSubmit } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganization,
     onSuccess: () => {
-      toast.success("Modifications enregistrées avec succès !");
+      toast.success("Modifications enregistrées avec succès !")
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   useFormChangeToast({
     form,
@@ -72,7 +60,7 @@ export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => 
     message: "Modifications en attente",
     description: "Pensez à sauvegarder vos changements",
     position: "bottom-center",
-  });
+  })
 
   return (
     <Form {...form}>
@@ -80,9 +68,7 @@ export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => 
         <Card>
           <CardHeader>
             <CardTitle>Horaires d&apos;ouverture</CardTitle>
-            <CardDescription>
-              Définissez vos heures d&apos;ouverture
-            </CardDescription>
+            <CardDescription>Définissez vos heures d&apos;ouverture</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -116,5 +102,5 @@ export const ProfileScheduleSection = ({ org }: ProfileScheduleSectionProps) => 
         </Card>
       </form>
     </Form>
-  );
-}; 
+  )
+}

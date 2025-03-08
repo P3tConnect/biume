@@ -1,7 +1,7 @@
-export type Locale = (typeof locales)[number];
+export type Locale = (typeof locales)[number]
 
-export const locales = ["en", "fr"] as const;
-export const defaultLocale: Locale = "en";
+export const locales = ["en", "fr"] as const
+export const defaultLocale: Locale = "en"
 
 export enum Error {
   Configuration = "Configuration",

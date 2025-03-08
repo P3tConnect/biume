@@ -1,9 +1,7 @@
-import PetsPage from '@/components/dashboard/pages/user/pets-page/pets-page';
+import PetsPage from "@/components/dashboard/pages/user/pets-page/pets-page"
 
 const ClientDashboardPetsPage = () => {
-  return (
-    <PetsPage />
-  );
-};
+  return <PetsPage />
+}
 
-export default ClientDashboardPetsPage;
+export default ClientDashboardPetsPage

@@ -1,22 +1,17 @@
-"use client";
+"use client"
 
-import { Card } from "@/components/ui/card";
-import { Quote } from "@/types/quote";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Eye, MoreVertical } from "lucide-react";
-import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Eye, MoreVertical } from "lucide-react"
+import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Quote } from "@/types/quote"
 
 interface QuoteCardProps {
-  quote: Quote;
+  quote: Quote
 }
 
 export function QuoteCard({ quote }: QuoteCardProps) {
@@ -32,10 +27,7 @@ export function QuoteCard({ quote }: QuoteCardProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link
-                href={`/dashboard/quotes/${quote.id}`}
-                className="flex items-center"
-              >
+              <Link href={`/dashboard/quotes/${quote.id}`} className="flex items-center">
                 <Eye className="mr-2 h-4 w-4" />
                 Voir
               </Link>
@@ -44,10 +36,7 @@ export function QuoteCard({ quote }: QuoteCardProps) {
         </DropdownMenu>
       </div>
 
-      <Link
-        href={`/dashboard/quotes/${quote.id}`}
-        className="block p-4 hover:bg-muted/50"
-      >
+      <Link href={`/dashboard/quotes/${quote.id}`} className="block p-4 hover:bg-muted/50">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">{quote.number}</span>
@@ -67,5 +56,5 @@ export function QuoteCard({ quote }: QuoteCardProps) {
         </div>
       </Link>
     </Card>
-  );
-} 
+  )
+}

@@ -1,19 +1,20 @@
-import { FormControl, FormMessage } from "@/components/ui/form";
-import { Form, FormItem } from "@/components/ui/form";
-import { FormField } from "@/components/ui/form";
-import { Option, CreateOption } from "@/src/db";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Euro, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { createOption, deleteOption, updateOption } from "@/src/actions";
-import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
-import { CredenzaContent } from "@/components/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Euro } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Credenza, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { CredenzaContent } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { FormControl, FormMessage } from "@/components/ui/form"
+import { Form, FormItem } from "@/components/ui/form"
+import { FormField } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { createOption, updateOption } from "@/src/actions"
+import { Option } from "@/src/db"
 
 const optionSchema = z.object({
   id: z.string().optional(),
@@ -21,16 +22,16 @@ const optionSchema = z.object({
   description: z.string().nullable().optional(),
   price: z.number().min(0, "Le prix est requis"),
   organizationId: z.string().optional(),
-});
+})
 
 interface OptionFormProps {
-  option: Partial<Option> | Option;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  option: Partial<Option> | Option
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof optionSchema>>({
     resolver: zodResolver(optionSchema),
     defaultValues: {
@@ -40,49 +41,47 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
       price: option.price || 0,
       organizationId: option.organizationId ?? undefined,
     },
-  });
+  })
 
-  const isCreating = !option.id;
+  const isCreating = !option.id
 
   const { mutateAsync: createMutation } = useMutation({
     mutationFn: createOption,
     onSuccess: () => {
-      toast.success("Option créée avec succès!");
-      onOpenChange(false);
-      queryClient.invalidateQueries({ queryKey: ["organization-options"] });
+      toast.success("Option créée avec succès!")
+      onOpenChange(false)
+      queryClient.invalidateQueries({ queryKey: ["organization-options"] })
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
   const { mutateAsync: updateMutation } = useMutation({
     mutationFn: updateOption,
     onSuccess: () => {
-      toast.success("Option mise à jour avec succès!");
-      onOpenChange(false);
-      queryClient.invalidateQueries({ queryKey: ["organization-options"] });
+      toast.success("Option mise à jour avec succès!")
+      onOpenChange(false)
+      queryClient.invalidateQueries({ queryKey: ["organization-options"] })
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = form.handleSubmit(async (data) => {
+  const onSubmit = form.handleSubmit(async data => {
     if (isCreating) {
-      await createMutation(data);
+      await createMutation(data)
     } else {
-      await updateMutation(data);
+      await updateMutation(data)
     }
-  });
+  })
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>
-            {isCreating ? "Créer une option" : "Modifier l'option"}
-          </CredenzaTitle>
+          <CredenzaTitle>{isCreating ? "Créer une option" : "Modifier l'option"}</CredenzaTitle>
         </CredenzaHeader>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-6">
@@ -130,9 +129,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
                           placeholder="Prix"
                           className="pl-9"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
+                          onChange={e => field.onChange(Number(e.target.value))}
                         />
                         <Euro className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                       </div>
@@ -144,13 +141,11 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit">
-                {isCreating ? "Créer" : "Enregistrer"}
-              </Button>
+              <Button type="submit">{isCreating ? "Créer" : "Enregistrer"}</Button>
             </div>
           </form>
         </Form>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}

@@ -1,4 +1,14 @@
-"use client";
+"use client"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { ImageIcon, Loader2, PenBox, Trash2 } from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
 import {
   Button,
@@ -8,44 +18,30 @@ import {
   FormItem,
   FormLabel,
   Input,
-  Textarea,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
   Switch,
-} from "@/components/ui";
-import { ImageIcon, Loader2, PenBox, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import Image from "next/image";
-import { toast } from "sonner";
-import { useDropzone } from "react-dropzone";
-import { useUploadThing } from "@/src/lib/uploadthing";
-import { cn } from "@/src/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createOrganization } from "@/src/actions/organization.action";
-import { proInformationsSchema } from "../../types/onboarding-schemas";
-import { useMutation } from "@tanstack/react-query";
+  Textarea,
+} from "@/components/ui"
+import { createOrganization } from "@/src/actions/organization.action"
+import { useUploadThing } from "@/src/lib/uploadthing"
+import { cn } from "@/src/lib/utils"
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+import { proInformationsSchema } from "../../types/onboarding-schemas"
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_IMAGE_TYPES = {
   "image/jpeg": [".jpg", ".jpeg"],
   "image/png": [".png"],
-};
+}
 
-const InformationsForm = ({
-  nextStep,
-  previousStep,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-}) => {
-  const [logoUploadProgress, setLogoUploadProgress] = useState(0);
-  const [logoIsUploading, setLogoIsUploading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) => {
+  const [logoUploadProgress, setLogoUploadProgress] = useState(0)
+  const [logoIsUploading, setLogoIsUploading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof proInformationsSchema>>({
     resolver: zodResolver(proInformationsSchema),
@@ -57,49 +53,49 @@ const InformationsForm = ({
       companyType: "OTHER",
       atHome: false,
     },
-  });
+  })
 
-  const { control, setValue, handleSubmit, reset, getValues } = form;
+  const { control, setValue, handleSubmit, reset, getValues } = form
 
-  console.log(getValues(), "values");
+  console.log(getValues(), "values")
 
   const { mutateAsync } = useMutation({
     mutationFn: createOrganization,
     onSuccess: () => {
-      setIsLoading(false);
-      toast.success("Entreprise créée avec succès!");
-      nextStep();
-      reset();
+      setIsLoading(false)
+      toast.success("Entreprise créée avec succès!")
+      nextStep()
+      reset()
     },
     onMutate: () => {
-      setIsLoading(true);
+      setIsLoading(true)
     },
-    onError: (error) => {
-      toast.error(error.message);
-      setIsLoading(false);
+    onError: error => {
+      toast.error(error.message)
+      setIsLoading(false)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   const { startUpload: startLogoUpload } = useUploadThing("documentsUploader", {
-    onClientUploadComplete: (res) => {
+    onClientUploadComplete: res => {
       if (res && res[0]) {
-        setValue("logo", res[0].url);
-        toast.success("Logo téléchargé avec succès!");
-        setLogoIsUploading(false);
+        setValue("logo", res[0].url)
+        toast.success("Logo téléchargé avec succès!")
+        setLogoIsUploading(false)
       }
     },
     onUploadProgress(p) {
-      setLogoUploadProgress(p);
+      setLogoUploadProgress(p)
     },
-    onUploadError: (error) => {
-      toast.error(`Erreur: ${error.message}`);
-      setLogoIsUploading(false);
+    onUploadError: error => {
+      toast.error(`Erreur: ${error.message}`)
+      setLogoIsUploading(false)
     },
-  });
+  })
 
   const {
     getRootProps: getLogoRootProps,
@@ -109,15 +105,15 @@ const InformationsForm = ({
     accept: ACCEPTED_IMAGE_TYPES,
     maxSize: MAX_FILE_SIZE,
     multiple: false,
-    onDrop: async (acceptedFiles) => {
+    onDrop: async acceptedFiles => {
       if (acceptedFiles.length > 0) {
-        setLogoIsUploading(true);
-        toast.info("Téléchargement du logo en cours...");
-        await startLogoUpload(acceptedFiles);
-        setLogoIsUploading(false);
+        setLogoIsUploading(true)
+        toast.info("Téléchargement du logo en cours...")
+        await startLogoUpload(acceptedFiles)
+        setLogoIsUploading(false)
       }
     },
-  });
+  })
 
   return (
     <Form {...form}>
@@ -130,9 +126,7 @@ const InformationsForm = ({
               <div className="flex-shrink-0">
                 <div className="mb-1.5">
                   <FormLabel className="text-sm font-medium">Logo</FormLabel>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    PNG, JPG (max 5MB)
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">PNG, JPG (max 5MB)</p>
                 </div>
                 <div className="w-[140px]">
                   {form.getValues("logo") === "" && !logoIsUploading ? (
@@ -141,7 +135,7 @@ const InformationsForm = ({
                       className={cn(
                         "w-[140px] h-[140px] border border-dashed border-border hover:border-primary/50 rounded-lg transition-all bg-muted/30 hover:bg-muted/50",
                         isLogoDragActive && "border-primary bg-primary/5",
-                        form.formState.errors.logo && "border-destructive",
+                        form.formState.errors.logo && "border-destructive"
                       )}
                     >
                       <input {...getLogoInputProps()} />
@@ -149,12 +143,10 @@ const InformationsForm = ({
                         <ImageIcon
                           className={cn(
                             "h-5 w-5 text-muted-foreground",
-                            form.formState.errors.logo && "text-destructive",
+                            form.formState.errors.logo && "text-destructive"
                           )}
                         />
-                        <p className="text-xs text-muted-foreground text-center px-2">
-                          Glissez ou cliquez
-                        </p>
+                        <p className="text-xs text-muted-foreground text-center px-2">Glissez ou cliquez</p>
                       </div>
                     </div>
                   ) : logoIsUploading ? (
@@ -170,23 +162,11 @@ const InformationsForm = ({
                     </div>
                   ) : (
                     <div className="group relative w-[140px] h-[140px] rounded-lg overflow-hidden border bg-muted/30">
-                      <Image
-                        src={form.getValues("logo") ?? ""}
-                        alt="logo"
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={form.getValues("logo") ?? ""} alt="logo" fill className="object-cover" />
                       <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div
-                          {...getLogoRootProps()}
-                          className="w-full h-full absolute inset-0"
-                        >
+                        <div {...getLogoRootProps()} className="w-full h-full absolute inset-0">
                           <input {...getLogoInputProps()} />
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 text-white hover:text-white"
-                          >
+                          <Button variant="ghost" size="icon" className="h-6 w-6 text-white hover:text-white">
                             <PenBox size={12} />
                           </Button>
                         </div>
@@ -195,8 +175,8 @@ const InformationsForm = ({
                           size="icon"
                           className="h-6 w-6 text-white hover:text-white"
                           onClick={() => {
-                            form.setValue("logo", "");
-                            setLogoIsUploading(false);
+                            form.setValue("logo", "")
+                            setLogoIsUploading(false)
                           }}
                         >
                           <Trash2 size={12} />
@@ -215,20 +195,14 @@ const InformationsForm = ({
                     name="name"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel className="text-sm font-medium">
-                          Nom de votre entreprise
-                        </FormLabel>
+                        <FormLabel className="text-sm font-medium">Nom de votre entreprise</FormLabel>
                         <FormControl>
                           <Input
                             type="string"
                             placeholder="Biume Inc."
                             {...field}
                             value={field.value ?? ""}
-                            className={cn(
-                              "h-9",
-                              form.formState.errors.name &&
-                                "border-destructive",
-                            )}
+                            className={cn("h-9", form.formState.errors.name && "border-destructive")}
                           />
                         </FormControl>
                       </FormItem>
@@ -240,20 +214,14 @@ const InformationsForm = ({
                     name="email"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel className="text-sm font-medium">
-                          Email de contact
-                        </FormLabel>
+                        <FormLabel className="text-sm font-medium">Email de contact</FormLabel>
                         <FormControl>
                           <Input
                             type="email"
                             placeholder="contact@biume.com"
                             {...field}
                             value={field.value ?? ""}
-                            className={cn(
-                              "h-9",
-                              form.formState.errors.email &&
-                                "border-destructive",
-                            )}
+                            className={cn("h-9", form.formState.errors.email && "border-destructive")}
                           />
                         </FormControl>
                       </FormItem>
@@ -267,22 +235,15 @@ const InformationsForm = ({
                     name="companyType"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel className="text-sm font-medium">
-                          Type d&apos;entreprise
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value ?? "NONE"}
-                        >
+                        <FormLabel className="text-sm font-medium">Type d&apos;entreprise</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value ?? "NONE"}>
                           <FormControl>
                             <SelectTrigger className="h-9">
                               <SelectValue placeholder="Sélectionnez" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="AUTO-ENTREPRENEUR">
-                              Auto-entrepreneur
-                            </SelectItem>
+                            <SelectItem value="AUTO-ENTREPRENEUR">Auto-entrepreneur</SelectItem>
                             <SelectItem value="SARL">SARL</SelectItem>
                             <SelectItem value="SAS">SAS</SelectItem>
                             <SelectItem value="EIRL">EIRL</SelectItem>
@@ -301,18 +262,11 @@ const InformationsForm = ({
                     render={({ field }) => (
                       <FormItem className="flex-1 flex flex-row items-center justify-between rounded-lg border p-2.5 bg-muted/30">
                         <div>
-                          <FormLabel className="text-sm font-medium">
-                            Prestations à domicile
-                          </FormLabel>
-                          <p className="text-xs text-muted-foreground">
-                            Proposez-vous des prestations à domicile ?
-                          </p>
+                          <FormLabel className="text-sm font-medium">Prestations à domicile</FormLabel>
+                          <p className="text-xs text-muted-foreground">Proposez-vous des prestations à domicile ?</p>
                         </div>
                         <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -328,15 +282,12 @@ const InformationsForm = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem className="flex-1 flex flex-col">
-                    <FormLabel className="text-sm font-medium">
-                      Description de votre entreprise
-                    </FormLabel>
+                    <FormLabel className="text-sm font-medium">Description de votre entreprise</FormLabel>
                     <FormControl className="flex-1">
                       <Textarea
                         className={cn(
                           "flex-1 min-h-[120px] resize-none text-base",
-                          form.formState.errors.description &&
-                            "border-destructive",
+                          form.formState.errors.description && "border-destructive"
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}
@@ -352,13 +303,7 @@ const InformationsForm = ({
 
         {/* Footer with buttons */}
         <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
-          <Button
-            disabled={isLoading}
-            type="button"
-            variant="outline"
-            className="rounded-xl"
-            onClick={previousStep}
-          >
+          <Button disabled={isLoading} type="button" variant="outline" className="rounded-xl" onClick={previousStep}>
             ← Précédent
           </Button>
           <div className="flex gap-3">
@@ -371,11 +316,7 @@ const InformationsForm = ({
             >
               Passer
             </Button>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              className="rounded-xl px-6"
-            >
+            <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -389,7 +330,7 @@ const InformationsForm = ({
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default InformationsForm;
+export default InformationsForm

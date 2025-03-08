@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { PenSquare, Filter } from "lucide-react";
+import { Filter, PenSquare } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const MessagesHeader = () => {
   return (
@@ -14,9 +15,7 @@ export const MessagesHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Communications
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Gérez vos messages et communications avec les propriétaires
-            </p>
+            <p className="text-sm text-muted-foreground">Gérez vos messages et communications avec les propriétaires</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">
@@ -31,5 +30,5 @@ export const MessagesHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

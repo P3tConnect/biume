@@ -1,8 +1,7 @@
-import { getTranslations } from "next-intl/server";
-import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-
-import Image from "next/image";
-import Link from "next/link";
+import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons"
+import Image from "next/image"
+import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 
 const footerSocials = [
   {
@@ -15,10 +14,10 @@ const footerSocials = [
     name: "Instagram",
     icon: <InstagramLogoIcon className="h-4 w-4" />,
   },
-];
+]
 
 export async function SiteFooter() {
-  const t = await getTranslations("footer");
+  const t = await getTranslations("footer")
 
   return (
     <footer>
@@ -33,9 +32,7 @@ export async function SiteFooter() {
                 width={50}
                 height={50}
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Biume
-              </span>
+              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Biume</span>
             </Link>
             <p className="max-w-xs">{t("slogan")}</p>
           </div>
@@ -43,7 +40,7 @@ export async function SiteFooter() {
 
         <div className="flex flex-col sm:flex-row sm:flex sm:items-center sm:justify-between border-t xl:border rounded-md border-dashed border-neutral-700/20 py-4 px-8 gap-2">
           <div className="flex space-x-5 sm:justify-center sm:mt-0">
-            {footerSocials.map((social) => (
+            {footerSocials.map(social => (
               <Link
                 key={social.name}
                 href={social.href}
@@ -65,5 +62,5 @@ export async function SiteFooter() {
       </div>
       {/*   <SiteBanner /> */}
     </footer>
-  );
+  )
 }

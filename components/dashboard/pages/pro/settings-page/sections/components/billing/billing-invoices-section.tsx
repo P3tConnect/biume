@@ -1,32 +1,16 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Receipt, Download } from "lucide-react";
-import { ActionResult, cn } from "@/src/lib";
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaHeader,
-  CredenzaTitle,
-} from "@/components/ui";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { StripeInvoice } from "@/types/stripe-invoice";
+import { Download, Receipt } from "lucide-react"
+import React from "react"
 
-export const BillingInvoicesSection = ({
-  invoices,
-}: {
-  invoices: ActionResult<StripeInvoice[]> | undefined;
-}) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ActionResult, cn } from "@/src/lib"
+import { StripeInvoice } from "@/types/stripe-invoice"
+
+export const BillingInvoicesSection = ({ invoices }: { invoices: ActionResult<StripeInvoice[]> | undefined }) => {
+  const [isOpen, setIsOpen] = React.useState(false)
 
   return (
     <>
@@ -37,9 +21,7 @@ export const BillingInvoicesSection = ({
           </div>
           <div>
             <h3 className="text-lg font-medium">Factures</h3>
-            <p className="text-sm text-muted-foreground">
-              Consultez vos factures et paiements
-            </p>
+            <p className="text-sm text-muted-foreground">Consultez vos factures et paiements</p>
           </div>
         </div>
         <Button variant="outline" onClick={() => setIsOpen(true)}>
@@ -51,9 +33,7 @@ export const BillingInvoicesSection = ({
         <CredenzaContent>
           <CredenzaHeader className="pb-6">
             <CredenzaTitle>Historique des factures</CredenzaTitle>
-            <CredenzaDescription>
-              Consultez et téléchargez vos factures des 12 derniers mois
-            </CredenzaDescription>
+            <CredenzaDescription>Consultez et téléchargez vos factures des 12 derniers mois</CredenzaDescription>
           </CredenzaHeader>
           {invoices?.data && invoices?.data.length > 0 ? (
             <Table>
@@ -67,24 +47,18 @@ export const BillingInvoicesSection = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {invoices?.data?.map((invoice) => (
+                {invoices?.data?.map(invoice => (
                   <TableRow key={invoice.id}>
                     <TableCell>{invoice.number}</TableCell>
                     <TableCell>{invoice.date}</TableCell>
                     <TableCell>{invoice.amount}</TableCell>
                     <TableCell>
                       <span
-                        className={cn(
-                          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-                          {
-                            "bg-green-50 text-green-700":
-                              invoice.status === "paid",
-                            "bg-yellow-50 text-yellow-700":
-                              invoice.status === "open",
-                            "bg-red-50 text-red-700":
-                              invoice.status === "uncollectible",
-                          },
-                        )}
+                        className={cn("inline-flex items-center rounded-full px-2 py-1 text-xs font-medium", {
+                          "bg-green-50 text-green-700": invoice.status === "paid",
+                          "bg-yellow-50 text-yellow-700": invoice.status === "open",
+                          "bg-red-50 text-red-700": invoice.status === "uncollectible",
+                        })}
                       >
                         {invoice.status === "paid" && "Payée"}
                         {invoice.status === "open" && "En attente"}
@@ -109,12 +83,10 @@ export const BillingInvoicesSection = ({
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              Aucune facture disponible
-            </div>
+            <div className="text-center py-6 text-muted-foreground">Aucune facture disponible</div>
           )}
         </CredenzaContent>
       </Credenza>
     </>
-  );
-};
+  )
+}

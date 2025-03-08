@@ -1,41 +1,36 @@
-'use client';
+"use client"
 
-import React, { useState, useEffect } from 'react';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  Button,
-} from '@/components/ui';
-import { petSchema } from '../schema/pet-schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Tag, TagInput } from 'emblor';
-import { toast } from 'sonner';
-import { usePetContext } from '../context/pet-context';
-import { useSession } from '@/src/lib/auth-client';
-import { updatePetAllergies } from '@/src/actions';
-import { useMutation } from '@tanstack/react-query';
-import { Pet } from '@/src/db/pets';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { Tag, TagInput } from "emblor"
+import React, { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Button, Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui"
+import { updatePetAllergies } from "@/src/actions"
+import { Pet } from "@/src/db/pets"
+import { useSession } from "@/src/lib/auth-client"
+
+import { usePetContext } from "../context/pet-context"
+import { petSchema } from "../schema/pet-schema"
 
 // Liste des allergies communes chez les animaux comme exemple
 const commonAllergies = [
-  { id: '1', text: 'Pollen' },
-  { id: '2', text: 'Acariens' },
-  { id: '3', text: 'Protéines de viande' },
-  { id: '4', text: 'Céréales' },
-  { id: '5', text: 'Produits laitiers' },
-];
+  { id: "1", text: "Pollen" },
+  { id: "2", text: "Acariens" },
+  { id: "3", text: "Protéines de viande" },
+  { id: "4", text: "Céréales" },
+  { id: "5", text: "Produits laitiers" },
+]
 
 interface InformationsPetAllergiesFormProps {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-  petData?: Pet | null;
-  isUpdate?: boolean;
+  nextStep: () => void
+  previousStep: () => void
+  isPending: boolean
+  petData?: Pet | null
+  isUpdate?: boolean
 }
 
 const InformationsPetAllergiesForm = ({
@@ -45,76 +40,74 @@ const InformationsPetAllergiesForm = ({
   petData,
   isUpdate = false,
 }: InformationsPetAllergiesFormProps) => {
-  const { petId } = usePetContext();
-  const { data: session } = useSession();
-  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+  const { petId } = usePetContext()
+  const { data: session } = useSession()
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([])
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
     defaultValues: {
       allergies: [],
     },
-  });
+  })
 
   const { mutateAsync } = useMutation({
     mutationFn: updatePetAllergies,
     onSuccess: () => {
-      toast.success('Allergies enregistrées avec succès!');
-      nextStep();
+      toast.success("Allergies enregistrées avec succès!")
+      nextStep()
     },
-    onError: (error) => {
-      toast.error(
-        `Erreur lors de l'enregistrement des allergies: ${error.message}`
-      );
+    onError: error => {
+      toast.error(`Erreur lors de l'enregistrement des allergies: ${error.message}`)
     },
-  });
+  })
 
   useEffect(() => {
     if (isUpdate && petData && petData.allergies) {
-      const existingAllergies = petData.allergies as string[];
-      setSelectedAllergies(existingAllergies);
+      const existingAllergies = petData.allergies as string[]
+      setSelectedAllergies(existingAllergies)
     }
-  }, [isUpdate, petData]);
+  }, [isUpdate, petData])
 
   useEffect(() => {
-    form.setValue('allergies', selectedAllergies);
-  }, [selectedAllergies, form]);
+    form.setValue("allergies", selectedAllergies)
+  }, [selectedAllergies, form])
 
   const handleAllergySelection = (allergyText: string) => {
-    setSelectedAllergies((current) => {
+    setSelectedAllergies(current => {
       if (current.includes(allergyText)) {
-        return current;
+        return current
       }
-      return [...current, allergyText];
-    });
-  };
+      return [...current, allergyText]
+    })
+  }
 
   const handleSubmit = async () => {
     if (!petId) {
-      toast.error("Erreur : ID de l'animal non trouvé");
-      return;
+      toast.error("Erreur : ID de l'animal non trouvé")
+      return
     }
 
     if (!session) {
-      toast.error('Erreur : Session non trouvée');
-      return;
+      toast.error("Erreur : Session non trouvée")
+      return
     }
 
     await mutateAsync({
       allergies: selectedAllergies,
       petId: petId,
-    });
-  };
+    })
+  }
 
   return (
     <Form {...form}>
-      <div className='space-y-6'>
+      <div className="space-y-6">
         <FormField
           control={form.control}
-          name='allergies'
+          name="allergies"
           render={({ field }) => (
-            <FormItem className='flex flex-col'>
+            <FormItem className="flex flex-col">
               <FormLabel>Sélectionnez les allergies</FormLabel>
               <FormControl>
                 <TagInput
@@ -124,42 +117,40 @@ const InformationsPetAllergiesForm = ({
                       text: allergy,
                     })) || []
                   }
-                  setTags={(newTagsOrSetter) => {
-                    const tagsArray = Array.isArray(newTagsOrSetter)
-                      ? newTagsOrSetter
-                      : newTagsOrSetter([]);
+                  setTags={newTagsOrSetter => {
+                    const tagsArray = Array.isArray(newTagsOrSetter) ? newTagsOrSetter : newTagsOrSetter([])
 
-                    const newAllergies = tagsArray.map((tag: Tag) => tag.text);
-                    setSelectedAllergies(newAllergies);
+                    const newAllergies = tagsArray.map((tag: Tag) => tag.text)
+                    setSelectedAllergies(newAllergies)
                   }}
-                  placeholder='Ajouter une allergie'
+                  placeholder="Ajouter une allergie"
                   styleClasses={{
                     tagList: {
-                      container: 'gap-1',
+                      container: "gap-1",
                     },
                     input:
-                      'rounded-md transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
+                      "rounded-md transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
                     tag: {
-                      body: 'relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7',
+                      body: "relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7",
                       closeButton:
-                        'absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-md flex size-7 transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] text-muted-foreground/80 hover:text-foreground',
+                        "absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-md flex size-7 transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] text-muted-foreground/80 hover:text-foreground",
                     },
                   }}
                   activeTagIndex={activeTagIndex}
                   setActiveTagIndex={setActiveTagIndex}
                   inlineTags={false}
-                  inputFieldPosition='top'
+                  inputFieldPosition="top"
                 />
               </FormControl>
-              <div className='flex flex-wrap gap-1 mt-2'>
-                {commonAllergies.map((allergy) => (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {commonAllergies.map(allergy => (
                   <Button
                     key={allergy.id}
-                    type='button'
-                    variant='outline'
-                    size='sm'
+                    type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={() => handleAllergySelection(allergy.text)}
-                    className='text-xs'
+                    className="text-xs"
                   >
                     {allergy.text}
                   </Button>
@@ -168,17 +159,17 @@ const InformationsPetAllergiesForm = ({
             </FormItem>
           )}
         />
-        <div className='flex justify-end gap-2'>
-          <Button variant='outline' onClick={previousStep} type='button'>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={previousStep} type="button">
             Retour
           </Button>
-          <Button type='button' onClick={handleSubmit} disabled={isPending}>
-            {isPending ? 'Enregistrement...' : 'Suivant'}
+          <Button type="button" onClick={handleSubmit} disabled={isPending}>
+            {isPending ? "Enregistrement..." : "Suivant"}
           </Button>
         </div>
       </div>
     </Form>
-  );
-};
+  )
+}
 
-export default InformationsPetAllergiesForm;
+export default InformationsPetAllergiesForm

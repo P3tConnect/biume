@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import React from "react";
-import { DocumentsForm } from "./documents-form";
-import { ActionResult } from "@/src/lib";
-import { OrganizationDocuments } from "@/src/db";
+import React from "react"
+
+import { OrganizationDocuments } from "@/src/db"
+
+import { DocumentsForm } from "./documents-form"
 
 interface DocumentsSectionClientProps {
-  documents: OrganizationDocuments[];
+  documents: OrganizationDocuments[]
 }
 
 const DocumentsSectionClient = ({ documents }: DocumentsSectionClientProps) => {
@@ -14,7 +15,7 @@ const DocumentsSectionClient = ({ documents }: DocumentsSectionClientProps) => {
     <div className="space-y-6">
       <DocumentsForm documents={documents} />
     </div>
-  );
-};
+  )
+}
 
-export default DocumentsSectionClient; 
+export default DocumentsSectionClient

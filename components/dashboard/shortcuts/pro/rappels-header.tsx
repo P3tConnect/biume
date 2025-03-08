@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BellRing, Plus, Calendar, Filter } from "lucide-react";
+import { Calendar, Filter, Plus } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const RappelsHeader = () => {
   return (
@@ -15,8 +16,7 @@ export const RappelsHeader = () => {
               Rappels et notifications
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Gérez les rappels pour les propriétaires et les échéances
-              importantes
+              Gérez les rappels pour les propriétaires et les échéances importantes
             </p>
           </div>
           <div className="flex gap-2">
@@ -36,5 +36,5 @@ export const RappelsHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

@@ -1,37 +1,35 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import {
-  FileTextIcon,
-  ClockIcon,
-  PawPrintIcon,
-  ChevronRightIcon,
-  UserIcon,
-  StethoscopeIcon,
-  XIcon,
   AlertCircleIcon,
   CheckCircleIcon,
-} from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+  ChevronRightIcon,
+  ClockIcon,
+  FileTextIcon,
+  PawPrintIcon,
+  StethoscopeIcon,
+  UserIcon,
+} from "lucide-react"
+import React from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/sheet"
 
 const PendingReportsWidget = () => {
-  const [selectedReport, setSelectedReport] = React.useState<
-    (typeof pendingReports)[0] | null
-  >(null);
+  const [selectedReport, setSelectedReport] = React.useState<(typeof pendingReports)[0] | null>(null)
 
   // Exemple de données (à remplacer par vos vraies données)
   const pendingReports = [
@@ -74,18 +72,18 @@ const PendingReportsWidget = () => {
       status: "pending",
       imageUrl: "/pets/dog2.jpg",
     },
-  ];
+  ]
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "text-red-500 bg-red-100 dark:bg-red-900/30";
+        return "text-red-500 bg-red-100 dark:bg-red-900/30"
       case "medium":
-        return "text-orange-500 bg-orange-100 dark:bg-orange-900/30";
+        return "text-orange-500 bg-orange-100 dark:bg-orange-900/30"
       default:
-        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30";
+        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30"
     }
-  };
+  }
 
   return (
     <Card className="border rounded-lg shadow-sm">
@@ -95,9 +93,7 @@ const PendingReportsWidget = () => {
             <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-md">
               <FileTextIcon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             </div>
-            <CardTitle className="text-xl font-semibold">
-              Rapports à rédiger
-            </CardTitle>
+            <CardTitle className="text-xl font-semibold">Rapports à rédiger</CardTitle>
           </div>
           <Badge variant="secondary" className="px-2 py-0.5">
             {pendingReports.length}
@@ -107,7 +103,7 @@ const PendingReportsWidget = () => {
       <CardContent className="p-3">
         <ScrollArea className="h-[280px] pr-4">
           <div className="space-y-2">
-            {pendingReports.map((report) => (
+            {pendingReports.map(report => (
               <Sheet key={report.id}>
                 <SheetTrigger asChild>
                   <div
@@ -116,10 +112,7 @@ const PendingReportsWidget = () => {
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 border-2 border-background">
-                        <AvatarImage
-                          src={report.imageUrl}
-                          alt={report.petName}
-                        />
+                        <AvatarImage src={report.imageUrl} alt={report.petName} />
                         <AvatarFallback className="bg-purple-600">
                           <PawPrintIcon className="w-4 h-4 text-white" />
                         </AvatarFallback>
@@ -159,36 +152,26 @@ const PendingReportsWidget = () => {
                         </div>
                         Détails du rapport
                       </SheetTitle>
-                      <Badge
-                        variant="outline"
-                        className={`${getPriorityColor(report.priority)}`}
-                      >
+                      <Badge variant="outline" className={`${getPriorityColor(report.priority)}`}>
                         {report.type}
                       </Badge>
                     </div>
 
                     <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-md">
                       <Avatar className="h-14 w-14 border-2 border-background">
-                        <AvatarImage
-                          src={report.imageUrl}
-                          alt={report.petName}
-                        />
+                        <AvatarImage src={report.imageUrl} alt={report.petName} />
                         <AvatarFallback className="bg-purple-600">
                           <PawPrintIcon className="w-6 h-6 text-white" />
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-lg">
-                            {report.petName}
-                          </h3>
+                          <h3 className="font-semibold text-lg">{report.petName}</h3>
                           <Badge variant="outline" className="text-xs">
                             {report.petType}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          {report.breed}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{report.breed}</p>
                         <div className="flex items-center gap-2 mt-1 text-sm">
                           <UserIcon className="w-3.5 h-3.5" />
                           <span>{report.ownerName}</span>
@@ -199,51 +182,36 @@ const PendingReportsWidget = () => {
 
                   <div className="space-y-6 mt-6">
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
-                        Détails de la procédure
-                      </h4>
+                      <h4 className="text-sm font-medium mb-2">Détails de la procédure</h4>
                       <div className="bg-muted/30 p-3 rounded-md">
                         <div className="flex items-center gap-2 mb-2">
                           <StethoscopeIcon className="w-5 h-5 text-purple-600" />
-                          <span className="font-medium">
-                            {report.procedure}
-                          </span>
+                          <span className="font-medium">{report.procedure}</span>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Ce rapport concerne {report.procedure.toLowerCase()}{" "}
-                          effectué sur {report.petName}. Il est important de le
-                          compléter avant le {report.dueDate}.
+                          Ce rapport concerne {report.procedure.toLowerCase()} effectué sur {report.petName}. Il est
+                          important de le compléter avant le {report.dueDate}.
                         </p>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="text-sm font-medium mb-2">
-                        Informations supplémentaires
-                      </h4>
+                      <h4 className="text-sm font-medium mb-2">Informations supplémentaires</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
                           <div className="flex items-center gap-2">
                             <ClockIcon className="w-4 h-4 text-muted-foreground" />
                             <span className="text-sm">Date limite</span>
                           </div>
-                          <span className="text-sm font-medium">
-                            {report.dueDate}
-                          </span>
+                          <span className="text-sm font-medium">{report.dueDate}</span>
                         </div>
                         <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
                           <div className="flex items-center gap-2">
                             <AlertCircleIcon className="w-4 h-4 text-muted-foreground" />
                             <span className="text-sm">Priorité</span>
                           </div>
-                          <Badge
-                            className={`${getPriorityColor(report.priority)}`}
-                          >
-                            {report.priority === "high"
-                              ? "Haute"
-                              : report.priority === "medium"
-                                ? "Moyenne"
-                                : "Basse"}
+                          <Badge className={`${getPriorityColor(report.priority)}`}>
+                            {report.priority === "high" ? "Haute" : report.priority === "medium" ? "Moyenne" : "Basse"}
                           </Badge>
                         </div>
                       </div>
@@ -258,9 +226,7 @@ const PendingReportsWidget = () => {
                         Annuler
                       </Button>
                     </SheetClose>
-                    <Button className="flex-1 bg-purple-600 hover:bg-purple-700">
-                      Rédiger maintenant
-                    </Button>
+                    <Button className="flex-1 bg-purple-600 hover:bg-purple-700">Rédiger maintenant</Button>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>
@@ -271,9 +237,7 @@ const PendingReportsWidget = () => {
                 <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-3">
                   <CheckCircleIcon className="w-6 h-6 text-purple-600" />
                 </div>
-                <p className="text-muted-foreground mb-1">
-                  Tous les rapports sont à jour
-                </p>
+                <p className="text-muted-foreground mb-1">Tous les rapports sont à jour</p>
                 <p className="text-sm text-muted-foreground">
                   Vous n&apos;avez pas de rapports en attente pour le moment
                 </p>
@@ -283,7 +247,7 @@ const PendingReportsWidget = () => {
         </ScrollArea>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default PendingReportsWidget;
+export default PendingReportsWidget

@@ -1,3 +1,7 @@
+import { MoreHorizontal, MoreVertical } from "lucide-react"
+import Link from "next/link"
+import { Dispatch, SetStateAction } from "react"
+
 import {
   Button,
   DropdownMenu,
@@ -10,18 +14,14 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui";
-import { Dispatch, SetStateAction } from "react";
-import { MoreHorizontal, MoreVertical } from "lucide-react";
-
-import Link from "next/link";
+} from "@/components/ui"
 
 const CalendarDropdown = ({
   viewMode,
   setViewMode,
 }: {
-  viewMode: string;
-  setViewMode: Dispatch<SetStateAction<string>>;
+  viewMode: string
+  setViewMode: Dispatch<SetStateAction<string>>
 }) => {
   return (
     <DropdownMenu>
@@ -47,22 +47,13 @@ const CalendarDropdown = ({
             ) : null}
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuCheckboxItem
-              checked={viewMode === "week"}
-              onCheckedChange={() => setViewMode("week")}
-            >
+            <DropdownMenuCheckboxItem checked={viewMode === "week"} onCheckedChange={() => setViewMode("week")}>
               <p>Semaine</p>
             </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={viewMode === "month"}
-              onCheckedChange={() => setViewMode("month")}
-            >
+            <DropdownMenuCheckboxItem checked={viewMode === "month"} onCheckedChange={() => setViewMode("month")}>
               <p>Mois</p>
             </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem
-              checked={viewMode === "year"}
-              onCheckedChange={() => setViewMode("year")}
-            >
+            <DropdownMenuCheckboxItem checked={viewMode === "year"} onCheckedChange={() => setViewMode("year")}>
               <p>Année</p>
             </DropdownMenuCheckboxItem>
           </DropdownMenuSubContent>
@@ -76,7 +67,7 @@ const CalendarDropdown = ({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
 
-export default CalendarDropdown;
+export default CalendarDropdown

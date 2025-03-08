@@ -1,10 +1,12 @@
-import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
-import { OrganizationsGrid } from "./organizations-grid";
-import { Organization } from "@/src/db";
+import { Loader2 } from "lucide-react"
+import { Suspense } from "react"
+
+import { Organization } from "@/src/db"
+
+import { OrganizationsGrid } from "./organizations-grid"
 
 interface MainContentProps {
-  organizations: Organization[];
+  organizations: Organization[]
 }
 
 export function MainContent({ organizations }: MainContentProps) {
@@ -20,5 +22,5 @@ export function MainContent({ organizations }: MainContentProps) {
         <OrganizationsGrid organizations={organizations} />
       </Suspense>
     </div>
-  );
-} 
+  )
+}

@@ -1,67 +1,48 @@
-"use client";
+"use client"
 
-import { cn } from "@/src/lib/utils";
-import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils";
-import { AppointmentCalendarItem } from "./appointment-calendar-item";
-import type { DayAppointments } from "../types";
+import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
+import { cn } from "@/src/lib/utils"
+
+import type { DayAppointments } from "../types"
+import { AppointmentCalendarItem } from "./appointment-calendar-item"
 
 interface CalendarGridProps {
-  currentDate: Date;
-  selectedDate: Date | null;
-  appointments: DayAppointments;
-  onDayClick: (day: number) => void;
+  currentDate: Date
+  selectedDate: Date | null
+  appointments: DayAppointments
+  onDayClick: (day: number) => void
 }
 
-export function CalendarGrid({
-  currentDate,
-  selectedDate,
-  appointments,
-  onDayClick,
-}: CalendarGridProps) {
-  const daysInMonth = getDaysInMonth(currentDate);
-  const firstDayOfMonth = getFirstDayOfMonth(currentDate);
+export function CalendarGrid({ currentDate, selectedDate, appointments, onDayClick }: CalendarGridProps) {
+  const daysInMonth = getDaysInMonth(currentDate)
+  const firstDayOfMonth = getFirstDayOfMonth(currentDate)
 
   const isToday = (day: number) => {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    return date.toDateString() === new Date().toDateString();
-  };
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    return date.toDateString() === new Date().toDateString()
+  }
 
   const isSelected = (day: number) => {
-    if (!selectedDate || day === 0) return false;
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    return date.toDateString() === selectedDate.toDateString();
-  };
+    if (!selectedDate || day === 0) return false
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    return date.toDateString() === selectedDate.toDateString()
+  }
 
   const isWeekend = (dayIndex: number) => {
-    return dayIndex === 0 || dayIndex === 6;
-  };
+    return dayIndex === 0 || dayIndex === 6
+  }
 
   const renderAppointments = (day: number) => {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    );
-    const dateString = date.toDateString();
-    const dayAppointments = appointments[dateString] || [];
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    const dateString = date.toDateString()
+    const dayAppointments = appointments[dateString] || []
 
-    if (dayAppointments.length === 0) return null;
+    if (dayAppointments.length === 0) return null
 
     return (
       <>
-        {dayAppointments.slice(0, 1).map((appointment) => (
-          <AppointmentCalendarItem
-            key={appointment.id}
-            appointment={appointment}
-          />
+        {dayAppointments.slice(0, 1).map(appointment => (
+          <AppointmentCalendarItem key={appointment.id} appointment={appointment} />
         ))}
         {dayAppointments.length > 1 && (
           <div className="flex justify-end">
@@ -71,50 +52,48 @@ export function CalendarGrid({
           </div>
         )}
       </>
-    );
-  };
+    )
+  }
 
   const getWeeksInMonth = () => {
-    const weeks: number[][] = [];
-    let currentWeek: number[] = [];
+    const weeks: number[][] = []
+    let currentWeek: number[] = []
 
     // Remplir les jours vides du début
     for (let i = 0; i < firstDayOfMonth; i++) {
-      currentWeek.push(0);
+      currentWeek.push(0)
     }
 
     // Remplir les jours du mois
     for (let day = 1; day <= daysInMonth; day++) {
-      currentWeek.push(day);
+      currentWeek.push(day)
 
       if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
+        weeks.push(currentWeek)
+        currentWeek = []
       }
     }
 
     // Remplir les jours vides de fin
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
-        currentWeek.push(0);
+        currentWeek.push(0)
       }
-      weeks.push(currentWeek);
+      weeks.push(currentWeek)
     }
 
-    return weeks;
-  };
+    return weeks
+  }
 
   return (
     <div className="space-y-1 mb-1">
       <div className="grid grid-cols-7 gap-1 mb-1">
-        {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
+        {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map(day => (
           <div
             key={day}
             className={cn(
               "text-center text-xs font-medium",
-              day === "Dim" || day === "Sam"
-                ? "text-red-500"
-                : "text-gray-600 dark:text-gray-300",
+              day === "Dim" || day === "Sam" ? "text-red-500" : "text-gray-600 dark:text-gray-300"
             )}
           >
             {day}
@@ -138,8 +117,8 @@ export function CalendarGrid({
                       isToday(day) && "bg-primary/5 ring-2 ring-primary",
                       isSelected(day) && "bg-secondary/5 ring-2 ring-secondary",
                       isWeekend(dayIndex) && "bg-muted/50",
-                      "cursor-pointer",
-                    ),
+                      "cursor-pointer"
+                    )
               )}
               onClick={() => day !== 0 && onDayClick(day)}
             >
@@ -149,7 +128,7 @@ export function CalendarGrid({
                     className={cn(
                       "text-sm font-medium mb-1.5",
                       isToday(day) && "text-primary",
-                      isSelected(day) && "text-secondary",
+                      isSelected(day) && "text-secondary"
                     )}
                   >
                     {day}
@@ -162,5 +141,5 @@ export function CalendarGrid({
         </div>
       ))}
     </div>
-  );
+  )
 }

@@ -1,42 +1,39 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import {
   CalendarDays,
+  ChevronDown,
   ChevronLeft,
+  Clipboard,
   Clock,
   Heart,
   MapPin,
+  MessageSquare,
   Phone,
+  Settings,
   Share2,
   Star,
   Users,
-  Clipboard,
-  Settings,
-  MessageSquare,
-  ChevronDown,
-} from "lucide-react";
-import { Organization } from "@/src/db";
-import { ActionResult } from "@/src/lib";
-import { Button } from "@/components/ui";
-import { CompanyTeam } from "./CompanyTeam";
-import { CompanyServices } from "./CompanyServices";
-import { CompanyOptions } from "./CompanyOptions";
-import { CompanyReviews } from "./CompanyReviews";
-import { BookingCard } from "./BookingCard";
-import { cn } from "@/src/lib/utils";
+} from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useRef, useState } from "react"
+
+import { Button } from "@/components/ui"
+import { Organization } from "@/src/db"
+import { ActionResult } from "@/src/lib"
+import { cn } from "@/src/lib/utils"
+
+import { BookingCard } from "./BookingCard"
+import { CompanyOptions } from "./CompanyOptions"
+import { CompanyReviews } from "./CompanyReviews"
+import { CompanyServices } from "./CompanyServices"
+import { CompanyTeam } from "./CompanyTeam"
 
 // Types et constantes
 interface CompanyDetailsProps {
-  data: ActionResult<Organization>;
+  data: ActionResult<Organization>
 }
 
 // Sections pour la navigation
@@ -46,73 +43,73 @@ const sections = [
   { id: "services", name: "Services", icon: <Settings className="w-5 h-5" /> },
   { id: "options", name: "Options", icon: <Settings className="w-5 h-5" /> },
   { id: "reviews", name: "Avis", icon: <MessageSquare className="w-5 h-5" /> },
-];
+]
 
 export function CompanyDetails({ data }: CompanyDetailsProps) {
-  const companyResult = data;
-  const [isMounted, setIsMounted] = useState(false);
-  const [activeSection, setActiveSection] = useState("about");
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [selectedPro, setSelectedPro] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [isBookingExpanded, setIsBookingExpanded] = useState(false);
+  const companyResult = data
+  const [isMounted, setIsMounted] = useState(false)
+  const [activeSection, setActiveSection] = useState("about")
+  const [selectedService, setSelectedService] = useState<string | null>(null)
+  const [selectedPro, setSelectedPro] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [isBookingExpanded, setIsBookingExpanded] = useState(false)
 
   // Refs pour le défilement
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const containerRef = useRef<HTMLDivElement>(null)
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   // Traitement du défilement
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
-  });
+  })
 
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.9]);
-  const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.98]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.9])
+  const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.98])
 
   // Effet pour le montage du composant
   useEffect(() => {
-    setIsMounted(true);
+    setIsMounted(true)
 
     // Observer pour détecter la section active au défilement
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const id = entry.target.id;
-            if (id) setActiveSection(id);
+            const id = entry.target.id
+            if (id) setActiveSection(id)
           }
-        });
+        })
       },
-      { threshold: 0.5, rootMargin: "-20% 0px -30% 0px" },
-    );
+      { threshold: 0.5, rootMargin: "-20% 0px -30% 0px" }
+    )
 
     // Observer chaque section
     Object.entries(sectionRefs.current).forEach(([_, ref]) => {
-      if (ref) observer.observe(ref);
-    });
+      if (ref) observer.observe(ref)
+    })
 
     return () => {
       Object.entries(sectionRefs.current).forEach(([_, ref]) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, [isMounted]);
+        if (ref) observer.unobserve(ref)
+      })
+    }
+  }, [isMounted])
 
   // Fonction pour défiler vers une section
   const scrollToSection = (sectionId: string) => {
-    const section = sectionRefs.current[sectionId];
+    const section = sectionRefs.current[sectionId]
     if (section) {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      section.scrollIntoView({ behavior: "smooth", block: "start" })
     }
-    setActiveSection(sectionId);
-  };
+    setActiveSection(sectionId)
+  }
 
   // Fonction pour enregistrer une référence de section
   const setSectionRef = (id: string, el: HTMLElement | null) => {
-    sectionRefs.current[id] = el as HTMLDivElement | null;
-  };
+    sectionRefs.current[id] = el as HTMLDivElement | null
+  }
 
   // Gestion du cas où les données ne sont pas disponibles
   if (!companyResult?.data) {
@@ -120,7 +117,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
       <div className="flex items-center justify-center min-h-[60vh]">
         <p className="text-muted-foreground">Aucune information disponible</p>
       </div>
-    );
+    )
   }
 
   // Images par défaut pour la galerie
@@ -130,16 +127,15 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
     "https://images.unsplash.com/photo-1472851294608-062f824d29cc",
     "https://images.unsplash.com/photo-1470075801209-17f9ec0cada6",
     "https://images.unsplash.com/photo-1486299267070-83823f5448dd",
-  ];
+  ]
 
   // Calcul de la note moyenne
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          companyResult.data.ratings.length
+          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length
         ).toFixed(1)
-      : "4.8";
+      : "4.8"
 
   return (
     <AnimatePresence>
@@ -174,31 +170,19 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     exit={{ opacity: 0, y: 10 }}
                     className="flex items-center gap-2"
                   >
-                    <h1 className="text-lg font-bold truncate max-w-[200px] md:max-w-md">
-                      {companyResult.data.name}
-                    </h1>
+                    <h1 className="text-lg font-bold truncate max-w-[200px] md:max-w-md">{companyResult.data.name}</h1>
                     <div className="flex items-center bg-primary/10 text-primary px-2 py-1 rounded-full">
                       <Star className="h-3 w-3 fill-primary text-primary mr-1" />
-                      <span className="text-xs font-medium">
-                        {averageRating}
-                      </span>
+                      <span className="text-xs font-medium">{averageRating}</span>
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                     <Heart className="h-5 w-5" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
+                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                     <Share2 className="h-5 w-5" />
                   </Button>
                 </div>
@@ -208,15 +192,13 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
             {/* Navigation par sections avec indicateur animé */}
             <div className="container mx-auto overflow-x-auto pb-2 hide-scrollbar">
               <div className="flex gap-2 md:gap-4 relative">
-                {sections.map((section) => (
+                {sections.map(section => (
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
                     className={cn(
                       "py-2 px-3 md:px-4 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-colors relative",
-                      activeSection === section.id
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-foreground",
+                      activeSection === section.id ? "text-primary" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {section.icon}
@@ -264,9 +246,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                   <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full">
                     <Star className="h-4 w-4 fill-yellow-300 text-yellow-300" />
                     <span className="font-medium">{averageRating}</span>
-                    <span className="text-white/80">
-                      ({companyResult.data.ratings?.length || 24})
-                    </span>
+                    <span className="text-white/80">({companyResult.data.ratings?.length || 24})</span>
                   </div>
 
                   <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full">
@@ -308,7 +288,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                 {/* Section À propos */}
                 <motion.section
                   id="about"
-                  ref={(el) => setSectionRef("about", el)}
+                  ref={el => setSectionRef("about", el)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
@@ -331,27 +311,19 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                   </div>
 
                   <div className="prose prose-neutral dark:prose-invert max-w-none">
-                    <p className="text-foreground/90 leading-relaxed">
-                      {companyResult.data?.description || ""}
-                    </p>
+                    <p className="text-foreground/90 leading-relaxed">{companyResult.data?.description || ""}</p>
                     <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
                         <p className="text-lg font-medium">10+</p>
-                        <p className="text-sm text-muted-foreground">
-                          Années d&apos;expérience
-                        </p>
+                        <p className="text-sm text-muted-foreground">Années d&apos;expérience</p>
                       </div>
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
                         <p className="text-lg font-medium">98%</p>
-                        <p className="text-sm text-muted-foreground">
-                          Clients satisfaits
-                        </p>
+                        <p className="text-sm text-muted-foreground">Clients satisfaits</p>
                       </div>
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">
                         <p className="text-lg font-medium">24/7</p>
-                        <p className="text-sm text-muted-foreground">
-                          Support d&apos;urgence
-                        </p>
+                        <p className="text-sm text-muted-foreground">Support d&apos;urgence</p>
                       </div>
                     </div>
                   </div>
@@ -374,7 +346,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                 {/* Section Équipe */}
                 <motion.section
                   id="team"
-                  ref={(el) => setSectionRef("team", el)}
+                  ref={el => setSectionRef("team", el)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
@@ -387,9 +359,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     <h2 className="text-2xl font-semibold">Notre équipe</h2>
                   </div>
 
-                  {companyResult.data?.members && (
-                    <CompanyTeam professionals={companyResult.data.members} />
-                  )}
+                  {companyResult.data?.members && <CompanyTeam professionals={companyResult.data.members} />}
 
                   {/* Élément décoratif animé */}
                   <motion.div
@@ -409,7 +379,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                 {/* Section Services */}
                 <motion.section
                   id="services"
-                  ref={(el) => setSectionRef("services", el)}
+                  ref={el => setSectionRef("services", el)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
@@ -422,9 +392,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     <h2 className="text-2xl font-semibold">Nos services</h2>
                   </div>
 
-                  {companyResult.data?.services && (
-                    <CompanyServices services={companyResult.data.services} />
-                  )}
+                  {companyResult.data?.services && <CompanyServices services={companyResult.data.services} />}
 
                   {/* Élément décoratif animé */}
                   <motion.div
@@ -444,7 +412,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                 {/* Section Options */}
                 <motion.section
                   id="options"
-                  ref={(el) => setSectionRef("options", el)}
+                  ref={el => setSectionRef("options", el)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
@@ -457,15 +425,13 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     <h2 className="text-2xl font-semibold">Nos options</h2>
                   </div>
 
-                  {companyResult.data?.options && (
-                    <CompanyOptions options={companyResult.data.options} />
-                  )}
+                  {companyResult.data?.options && <CompanyOptions options={companyResult.data.options} />}
                 </motion.section>
 
                 {/* Section Avis */}
                 <motion.section
                   id="reviews"
-                  ref={(el) => setSectionRef("reviews", el)}
+                  ref={el => setSectionRef("reviews", el)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
@@ -478,9 +444,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     <h2 className="text-2xl font-semibold">Avis clients</h2>
                   </div>
 
-                  {companyResult.data?.ratings && (
-                    <CompanyReviews reviews={companyResult.data.ratings} />
-                  )}
+                  {companyResult.data?.ratings && <CompanyReviews reviews={companyResult.data.ratings} />}
                 </motion.section>
               </div>
 
@@ -501,9 +465,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         >
                           <div className="flex items-center gap-3">
                             <CalendarDays className="h-5 w-5" />
-                            <span className="font-medium">
-                              Prendre rendez-vous
-                            </span>
+                            <span className="font-medium">Prendre rendez-vous</span>
                           </div>
                           <ChevronDown className="h-5 w-5" />
                         </motion.button>
@@ -517,18 +479,10 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         >
                           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 flex items-center justify-between">
                             <div>
-                              <h2 className="text-xl font-semibold">
-                                Prendre rendez-vous
-                              </h2>
-                              <p className="text-muted-foreground text-sm">
-                                Sélectionnez un service et un praticien
-                              </p>
+                              <h2 className="text-xl font-semibold">Prendre rendez-vous</h2>
+                              <p className="text-muted-foreground text-sm">Sélectionnez un service et un praticien</p>
                             </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => setIsBookingExpanded(false)}
-                            >
+                            <Button variant="ghost" size="icon" onClick={() => setIsBookingExpanded(false)}>
                               <ChevronDown className="h-5 w-5" />
                             </Button>
                           </div>
@@ -557,12 +511,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                       transition={{ duration: 0.5, delay: 0.3 }}
                     >
                       <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 p-6">
-                        <h2 className="text-2xl font-semibold">
-                          Prendre rendez-vous
-                        </h2>
-                        <p className="text-muted-foreground">
-                          Réservez rapidement et facilement
-                        </p>
+                        <h2 className="text-2xl font-semibold">Prendre rendez-vous</h2>
+                        <p className="text-muted-foreground">Réservez rapidement et facilement</p>
                       </div>
                       <BookingCard
                         services={companyResult.data?.services || []}
@@ -582,12 +532,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         <div className="flex items-center gap-4 text-muted-foreground">
                           <Clock className="h-5 w-5" />
                           <div>
-                            <p className="font-medium text-foreground">
-                              Disponibilité rapide
-                            </p>
-                            <p className="text-sm">
-                              Premier rendez-vous disponible demain
-                            </p>
+                            <p className="font-medium text-foreground">Disponibilité rapide</p>
+                            <p className="text-sm">Premier rendez-vous disponible demain</p>
                           </div>
                         </div>
                       </div>
@@ -605,9 +551,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                       <Phone className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-medium">Besoin d&apos;aide ?</p>
-                        <p className="text-sm text-muted-foreground">
-                          Contactez-nous directement
-                        </p>
+                        <p className="text-sm text-muted-foreground">Contactez-nous directement</p>
                       </div>
                       <Button variant="outline" size="sm" className="ml-auto">
                         Appeler
@@ -640,20 +584,13 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
             <div className="container mx-auto px-4">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p className="text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} {companyResult.data.name} · Tous
-                  droits réservés
+                  © {new Date().getFullYear()} {companyResult.data.name} · Tous droits réservés
                 </p>
                 <div className="flex gap-4">
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
+                  <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                     Mentions légales
                   </a>
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground"
-                  >
+                  <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                     Politique de confidentialité
                   </a>
                 </div>
@@ -663,5 +600,5 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }

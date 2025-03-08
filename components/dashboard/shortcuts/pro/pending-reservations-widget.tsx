@@ -1,74 +1,56 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  ClockIcon,
-  CalendarIcon,
-  PawPrintIcon,
-  UserIcon,
-  PhoneIcon,
-  ChevronRightIcon,
   ActivityIcon,
-  TrendingUpIcon,
-  ShieldIcon,
-  AlertCircleIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  InfoIcon,
-  TimerIcon,
-  MessageSquareIcon,
-  MapPinIcon,
   CalendarCheck,
-} from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import {
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  Credenza,
-} from "@/components/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+  CalendarIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  InfoIcon,
+  MapPinIcon,
+  MessageSquareIcon,
+  PawPrintIcon,
+  PhoneIcon,
+  ShieldIcon,
+  TimerIcon,
+  TrendingUpIcon,
+  UserIcon,
+  XCircleIcon,
+} from "lucide-react"
+import React, { useState } from "react"
+
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Reservation = {
-  id: string;
-  petName: string;
-  petType: string;
-  petBreed: string;
-  ownerName: string;
-  ownerPhone: string;
-  service: string;
-  date: string;
-  time: string;
-  duration: string;
-  status: "pending" | "confirmed" | "cancelled";
-  notes?: string;
-  conflicts?: Reservation[];
-};
+  id: string
+  petName: string
+  petType: string
+  petBreed: string
+  ownerName: string
+  ownerPhone: string
+  service: string
+  date: string
+  time: string
+  duration: string
+  status: "pending" | "confirmed" | "cancelled"
+  notes?: string
+  conflicts?: Reservation[]
+}
 
 const PendingReservationsWidget = () => {
-  const [selectedReservation, setSelectedReservation] =
-    useState<Reservation | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false)
 
   // Exemple de données (à remplacer par vos vraies données)
   const reservations: Reservation[] = [
@@ -113,7 +95,7 @@ const PendingReservationsWidget = () => {
       duration: "15 min",
       status: "pending",
     },
-  ];
+  ]
 
   // Fonction pour formater la date au format français
   const formatDate = (dateString: string) => {
@@ -121,22 +103,20 @@ const PendingReservationsWidget = () => {
       day: "numeric",
       month: "long",
       year: "numeric",
-    };
-    return new Date(dateString).toLocaleDateString("fr-FR", options);
-  };
+    }
+    return new Date(dateString).toLocaleDateString("fr-FR", options)
+  }
 
   const handleAction = (action: string) => {
     // Implémentation des actions (confirmer, reporter, annuler)
-    console.log(
-      `Action: ${action} pour la réservation ${selectedReservation?.id}`,
-    );
-    setIsDrawerOpen(false);
-  };
+    console.log(`Action: ${action} pour la réservation ${selectedReservation?.id}`)
+    setIsDrawerOpen(false)
+  }
 
   const openDrawer = (reservation: Reservation) => {
-    setSelectedReservation(reservation);
-    setIsDrawerOpen(true);
-  };
+    setSelectedReservation(reservation)
+    setIsDrawerOpen(true)
+  }
 
   return (
     <>
@@ -147,9 +127,7 @@ const PendingReservationsWidget = () => {
               <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
                 <CalendarCheck className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
-              <CardTitle className="text-7xl">
-                Demandes de rendez-vous
-              </CardTitle>
+              <CardTitle className="text-7xl">Demandes de rendez-vous</CardTitle>
             </div>
             <Badge variant="secondary" className="px-2 py-0.5">
               {reservations.length}
@@ -159,21 +137,16 @@ const PendingReservationsWidget = () => {
         <CardContent className="p-3">
           <ScrollArea className="h-[280px] pr-4">
             <div className="space-y-2">
-              {reservations.map((reservation) => (
+              {reservations.map(reservation => (
                 <div
                   key={reservation.id}
                   className={`flex items-center gap-3 p-3 bg-muted/50 border border-muted hover:border-muted hover:bg-muted transition-colors rounded-md cursor-pointer ${
-                    reservation.conflicts
-                      ? "border-l-2 border-l-destructive"
-                      : ""
+                    reservation.conflicts ? "border-l-2 border-l-destructive" : ""
                   }`}
                   onClick={() => openDrawer(reservation)}
                 >
                   <Avatar className="h-9 w-9 border-2 border-background">
-                    <AvatarImage
-                      src={`/pets/${reservation.id}.jpg`}
-                      alt={reservation.petName}
-                    />
+                    <AvatarImage src={`/pets/${reservation.id}.jpg`} alt={reservation.petName} />
                     <AvatarFallback className="bg-green-600">
                       <PawPrintIcon className="w-4 h-4 text-white" />
                     </AvatarFallback>
@@ -182,27 +155,18 @@ const PendingReservationsWidget = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">
-                          {reservation.petName}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {reservation.petBreed}
-                        </span>
+                        <span className="font-medium">{reservation.petName}</span>
+                        <span className="text-xs text-muted-foreground">{reservation.petBreed}</span>
 
                         {reservation.conflicts && (
-                          <Badge
-                            variant="destructive"
-                            className="text-xs px-1.5 py-0"
-                          >
+                          <Badge variant="destructive" className="text-xs px-1.5 py-0">
                             Conflit
                           </Badge>
                         )}
                       </div>
                     </div>
 
-                    <div className="text-xs font-medium mb-1 truncate">
-                      {reservation.service}
-                    </div>
+                    <div className="text-xs font-medium mb-1 truncate">{reservation.service}</div>
 
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1">
@@ -220,9 +184,7 @@ const PendingReservationsWidget = () => {
 
                   <div className="flex flex-col items-end">
                     <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {reservation.ownerName}
-                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">{reservation.ownerName}</div>
                   </div>
                 </div>
               ))}
@@ -232,12 +194,8 @@ const PendingReservationsWidget = () => {
                   <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
                     <CheckCircleIcon className="w-6 h-6 text-green-600" />
                   </div>
-                  <p className="text-muted-foreground mb-1">
-                    Aucune demande en attente
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Toutes les réservations ont été traitées.
-                  </p>
+                  <p className="text-muted-foreground mb-1">Aucune demande en attente</p>
+                  <p className="text-sm text-muted-foreground">Toutes les réservations ont été traitées.</p>
                 </div>
               )}
             </div>
@@ -252,9 +210,7 @@ const PendingReservationsWidget = () => {
               <div className="sticky top-0 z-10 bg-background border-b p-6">
                 <SheetHeader className="text-left space-y-1">
                   <div className="flex items-center justify-between">
-                    <SheetTitle className="text-xl">
-                      Détails de la réservation
-                    </SheetTitle>
+                    <SheetTitle className="text-xl">Détails de la réservation</SheetTitle>
                     <Badge className="bg-amber-500/20 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 font-normal border-none">
                       En attente
                     </Badge>
@@ -272,29 +228,21 @@ const PendingReservationsWidget = () => {
                     <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
                       <ActivityIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
-                    <h3 className="font-semibold text-lg">
-                      {selectedReservation.service}
-                    </h3>
+                    <h3 className="font-semibold text-lg">{selectedReservation.service}</h3>
                   </div>
 
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
                       <CalendarIcon className="h-4 w-4 text-muted-foreground mb-1" />
-                      <span className="text-sm font-medium">
-                        {formatDate(selectedReservation.date)}
-                      </span>
+                      <span className="text-sm font-medium">{formatDate(selectedReservation.date)}</span>
                     </div>
                     <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
                       <ClockIcon className="h-4 w-4 text-muted-foreground mb-1" />
-                      <span className="text-sm font-medium">
-                        {selectedReservation.time}
-                      </span>
+                      <span className="text-sm font-medium">{selectedReservation.time}</span>
                     </div>
                     <div className="bg-background/60 rounded-lg p-3 flex flex-col items-center justify-center text-center">
                       <TimerIcon className="h-4 w-4 text-muted-foreground mb-1" />
-                      <span className="text-sm font-medium">
-                        {selectedReservation.duration}
-                      </span>
+                      <span className="text-sm font-medium">{selectedReservation.duration}</span>
                     </div>
                   </div>
 
@@ -304,9 +252,7 @@ const PendingReservationsWidget = () => {
                         <InfoIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
                         <div>
                           <h4 className="text-sm font-medium mb-1">Note</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {selectedReservation.notes}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{selectedReservation.notes}</p>
                         </div>
                       </div>
                     </div>
@@ -337,35 +283,23 @@ const PendingReservationsWidget = () => {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-semibold text-xl">
-                                {selectedReservation.petName}
-                              </h3>
-                              <Badge variant="secondary">
-                                {selectedReservation.petType}
-                              </Badge>
+                              <h3 className="font-semibold text-xl">{selectedReservation.petName}</h3>
+                              <Badge variant="secondary">{selectedReservation.petType}</Badge>
                             </div>
 
-                            <p className="text-sm text-muted-foreground mb-3">
-                              {selectedReservation.petBreed}
-                            </p>
+                            <p className="text-sm text-muted-foreground mb-3">{selectedReservation.petBreed}</p>
 
                             <div className="grid grid-cols-3 gap-3">
                               <div className="bg-background/80 rounded-lg p-2 text-center">
-                                <span className="text-xs text-muted-foreground">
-                                  Âge
-                                </span>
+                                <span className="text-xs text-muted-foreground">Âge</span>
                                 <div className="font-medium">2 ans</div>
                               </div>
                               <div className="bg-background/80 rounded-lg p-2 text-center">
-                                <span className="text-xs text-muted-foreground">
-                                  Poids
-                                </span>
+                                <span className="text-xs text-muted-foreground">Poids</span>
                                 <div className="font-medium">12 kg</div>
                               </div>
                               <div className="bg-background/80 rounded-lg p-2 text-center">
-                                <span className="text-xs text-muted-foreground">
-                                  Visites
-                                </span>
+                                <span className="text-xs text-muted-foreground">Visites</span>
                                 <div className="font-medium">5</div>
                               </div>
                             </div>
@@ -400,9 +334,7 @@ const PendingReservationsWidget = () => {
 
                   <TabsContent value="history" className="mt-0 space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">
-                        Consultations récentes
-                      </h3>
+                      <h3 className="text-sm font-medium">Consultations récentes</h3>
                       <Badge variant="outline" className="text-xs">
                         5 visites
                       </Badge>
@@ -416,23 +348,17 @@ const PendingReservationsWidget = () => {
                             15 Mars 2024
                           </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Rappel vaccins CHPPIL + rage
-                        </div>
+                        <div className="text-sm text-muted-foreground">Rappel vaccins CHPPIL + rage</div>
                       </div>
 
                       <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="font-medium">
-                            Consultation de routine
-                          </div>
+                          <div className="font-medium">Consultation de routine</div>
                           <Badge variant="secondary" className="text-xs">
                             1 Fév 2024
                           </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Examen général, tout est normal
-                        </div>
+                        <div className="text-sm text-muted-foreground">Examen général, tout est normal</div>
                       </div>
 
                       <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
@@ -442,9 +368,7 @@ const PendingReservationsWidget = () => {
                             15 Déc 2023
                           </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Traitement antiparasitaire interne
-                        </div>
+                        <div className="text-sm text-muted-foreground">Traitement antiparasitaire interne</div>
                       </div>
                     </div>
                   </TabsContent>
@@ -452,12 +376,8 @@ const PendingReservationsWidget = () => {
                   <TabsContent value="health" className="mt-0 space-y-4">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <div className="text-sm font-medium">
-                          État de santé général
-                        </div>
-                        <span className="text-sm text-green-500 font-medium">
-                          Excellent
-                        </span>
+                        <div className="text-sm font-medium">État de santé général</div>
+                        <span className="text-sm text-green-500 font-medium">Excellent</span>
                       </div>
                       <Progress value={90} className="h-2 bg-muted" />
                     </div>
@@ -487,9 +407,7 @@ const PendingReservationsWidget = () => {
                       </div>
 
                       <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
-                        <h4 className="text-sm font-medium mb-2">
-                          Antiparasites
-                        </h4>
+                        <h4 className="text-sm font-medium mb-2">Antiparasites</h4>
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Externe</span>
                           <Badge
@@ -513,9 +431,7 @@ const PendingReservationsWidget = () => {
                     </div>
 
                     <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
-                      <h4 className="text-sm font-medium mb-2">
-                        Allergies et conditions
-                      </h4>
+                      <h4 className="text-sm font-medium mb-2">Allergies et conditions</h4>
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="outline" className="bg-background">
                           Aucune allergie connue
@@ -542,12 +458,8 @@ const PendingReservationsWidget = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-semibold text-lg">
-                              {selectedReservation.ownerName}
-                            </h3>
-                            <div className="text-sm text-muted-foreground">
-                              Client régulier
-                            </div>
+                            <h3 className="font-semibold text-lg">{selectedReservation.ownerName}</h3>
+                            <div className="text-sm text-muted-foreground">Client régulier</div>
                           </div>
                           <Button
                             variant="ghost"
@@ -576,19 +488,11 @@ const PendingReservationsWidget = () => {
               </div>
 
               <SheetFooter className="sticky bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-sm border-t flex flex-col sm:flex-row gap-3">
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-2"
-                  onClick={() => handleAction("cancel")}
-                >
+                <Button variant="outline" className="flex-1 gap-2" onClick={() => handleAction("cancel")}>
                   <XCircleIcon className="h-4 w-4" />
                   Refuser
                 </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-2"
-                  onClick={() => handleAction("reschedule")}
-                >
+                <Button variant="outline" className="flex-1 gap-2" onClick={() => handleAction("reschedule")}>
                   <CalendarIcon className="h-4 w-4" />
                   Proposer autre horaire
                 </Button>
@@ -617,19 +521,14 @@ const PendingReservationsWidget = () => {
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <Avatar className="h-20 w-20 border-4 border-background">
-                    <AvatarImage
-                      src={`/avatars/${selectedReservation.id}.jpg`}
-                      alt={selectedReservation.ownerName}
-                    />
+                    <AvatarImage src={`/avatars/${selectedReservation.id}.jpg`} alt={selectedReservation.ownerName} />
                     <AvatarFallback className="bg-green-600">
                       <UserIcon className="h-8 w-8 text-white" />
                     </AvatarFallback>
                   </Avatar>
 
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">
-                      {selectedReservation.ownerName}
-                    </h3>
+                    <h3 className="text-xl font-semibold">{selectedReservation.ownerName}</h3>
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2 text-muted-foreground text-sm">
                         <PhoneIcon className="h-4 w-4" />
@@ -644,9 +543,7 @@ const PendingReservationsWidget = () => {
                         <span>Préfère être contacté par SMS</span>
                       </div>
                     </div>
-                    <Badge className="bg-green-600/20 text-green-700 hover:bg-green-600/30 mt-2">
-                      Client VIP
-                    </Badge>
+                    <Badge className="bg-green-600/20 text-green-700 hover:bg-green-600/30 mt-2">Client VIP</Badge>
                   </div>
                 </div>
               </div>
@@ -657,27 +554,17 @@ const PendingReservationsWidget = () => {
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
-                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Animaux
-                  </h4>
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">Animaux</h4>
                   <div className="font-semibold text-2xl">3</div>
-                  <div className="text-xs text-muted-foreground">
-                    Enregistrés
-                  </div>
+                  <div className="text-xs text-muted-foreground">Enregistrés</div>
                 </div>
                 <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
-                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Visites
-                  </h4>
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">Visites</h4>
                   <div className="font-semibold text-2xl">12</div>
-                  <div className="text-xs text-muted-foreground">
-                    Cette année
-                  </div>
+                  <div className="text-xs text-muted-foreground">Cette année</div>
                 </div>
                 <div className="bg-muted/30 p-4 rounded-xl text-center space-y-1">
-                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">
-                    Fidélité
-                  </h4>
+                  <h4 className="text-xs text-muted-foreground uppercase tracking-wider">Fidélité</h4>
                   <div className="font-semibold text-2xl">2</div>
                   <div className="text-xs text-muted-foreground">Années</div>
                 </div>
@@ -697,9 +584,7 @@ const PendingReservationsWidget = () => {
                       <AvatarFallback>LU</AvatarFallback>
                     </Avatar>
                     <div className="font-medium text-sm">Luna</div>
-                    <div className="text-xs text-muted-foreground">
-                      Golden Retriever
-                    </div>
+                    <div className="text-xs text-muted-foreground">Golden Retriever</div>
                   </div>
                   <div className="min-w-[120px] bg-muted/30 rounded-xl p-3 flex flex-col items-center text-center border border-border/50">
                     <Avatar className="h-12 w-12 mb-2">
@@ -727,18 +612,14 @@ const PendingReservationsWidget = () => {
                     <div className="font-medium">Consultation vétérinaire</div>
                     <Badge variant="outline">15 Mars 2024</Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Luna - Vaccins annuels
-                  </div>
+                  <div className="text-sm text-muted-foreground">Luna - Vaccins annuels</div>
                 </div>
                 <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
                   <div className="flex items-center justify-between mb-2">
                     <div className="font-medium">Toilettage</div>
                     <Badge variant="outline">1 Mars 2024</Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Max - Toilettage complet
-                  </div>
+                  <div className="text-sm text-muted-foreground">Max - Toilettage complet</div>
                 </div>
               </div>
 
@@ -746,19 +627,15 @@ const PendingReservationsWidget = () => {
                 <h4 className="font-medium">Notes</h4>
                 <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
                   <p className="text-sm text-muted-foreground">
-                    Client fidèle depuis 2022. Préfère les rendez-vous en
-                    matinée. Toujours ponctuel et attentif aux recommandations.
-                    Très attaché à ses animaux et prêt à suivre toutes les
-                    recommandations pour leur bien-être.
+                    Client fidèle depuis 2022. Préfère les rendez-vous en matinée. Toujours ponctuel et attentif aux
+                    recommandations. Très attaché à ses animaux et prêt à suivre toutes les recommandations pour leur
+                    bien-être.
                   </p>
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsOwnerModalOpen(false)}
-                >
+                <Button variant="outline" onClick={() => setIsOwnerModalOpen(false)}>
                   Fermer
                 </Button>
               </div>
@@ -767,7 +644,7 @@ const PendingReservationsWidget = () => {
         </CredenzaContent>
       </Credenza>
     </>
-  );
-};
+  )
+}
 
-export default PendingReservationsWidget;
+export default PendingReservationsWidget

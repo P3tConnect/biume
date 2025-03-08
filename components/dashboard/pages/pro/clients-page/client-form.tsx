@@ -1,16 +1,10 @@
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -28,7 +22,7 @@ const formSchema = z.object({
   country: z.string().min(2, {
     message: "Le pays doit contenir au moins 2 caractères.",
   }),
-});
+})
 
 export function ClientForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,11 +34,11 @@ export function ClientForm() {
       city: "",
       country: "",
     },
-  });
+  })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Submit form data
-    console.log(values);
+    console.log(values)
   }
 
   return (
@@ -120,5 +114,5 @@ export function ClientForm() {
         </div>
       </form>
     </Form>
-  );
+  )
 }

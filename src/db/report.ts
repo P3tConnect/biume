@@ -1,8 +1,9 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { Appointment, appointments } from "./appointments";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { ReportTopic, reportTopic } from "./reportTopics";
-import { createInsertSchema } from "drizzle-zod";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Appointment, appointments } from "./appointments"
+import { ReportTopic, reportTopic } from "./reportTopics"
 
 export const report = pgTable("report", {
   id: text("id")
@@ -13,17 +14,17 @@ export const report = pgTable("report", {
   description: text("description"),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const reportRelations = relations(report, ({ one, many }) => ({
   appointments: one(appointments),
   topics: many(reportTopic),
-}));
+}))
 
 export type Report = InferSelectModel<typeof report> & {
-  appointments: Appointment;
-  topics: ReportTopic[];
-};
-export type CreateReport = typeof report.$inferInsert;
+  appointments: Appointment
+  topics: ReportTopic[]
+}
+export type CreateReport = typeof report.$inferInsert
 
-export const CreateReportSchema = createInsertSchema(report);
+export const CreateReportSchema = createInsertSchema(report)

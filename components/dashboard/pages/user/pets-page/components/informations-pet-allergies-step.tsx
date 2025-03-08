@@ -1,14 +1,15 @@
-'use client';
+"use client"
 
-import InformationsPetAllergiesForm from '../forms/informations-pet-allergies-form';
-import { Pet } from '@/src/db/pets';
+import { Pet } from "@/src/db/pets"
+
+import InformationsPetAllergiesForm from "../forms/informations-pet-allergies-form"
 
 interface InformationsPetAllergiesStepProps {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-  petData?: Pet | null;
-  isUpdate?: boolean;
+  nextStep: () => void
+  previousStep: () => void
+  isPending: boolean
+  petData?: Pet | null
+  isUpdate?: boolean
 }
 
 const InformationsPetAllergiesStep = ({
@@ -26,7 +27,7 @@ const InformationsPetAllergiesStep = ({
       petData={petData}
       isUpdate={isUpdate}
     />
-  );
-};
+  )
+}
 
-export default InformationsPetAllergiesStep;
+export default InformationsPetAllergiesStep

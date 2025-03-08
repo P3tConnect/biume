@@ -1,61 +1,45 @@
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
 import {
-  FormControl,
-  FormDescription,
-  FormMessage,
-  FormField,
-  FormLabel,
-  FormItem,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { fr } from "date-fns/locale";
-import { format } from "date-fns";
-import React, { useMemo } from "react";
-import { useFormContext } from "react-hook-form";
-import { ConfirmationStepSchema } from "./appointmentDialogStepper";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  HomeIcon,
-  MessageSquareIcon,
   CalendarIcon,
   ClockIcon,
+  HomeIcon,
+  MessageSquareIcon,
+  PawPrintIcon,
   StethoscopeIcon,
   UserIcon,
-  PawPrintIcon,
-} from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/src/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { AppointmentFormValues } from "./AppointmentDialog";
+} from "lucide-react"
+import React, { useMemo } from "react"
+import { useFormContext } from "react-hook-form"
+
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { FormMessage } from "@/components/ui/form"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
+
+import { AppointmentFormValues } from "./AppointmentDialog"
 
 const ConfirmationStep = () => {
-  const form = useFormContext<AppointmentFormValues>();
+  const form = useFormContext<AppointmentFormValues>()
 
   // Récupérer les valeurs du formulaire une seule fois pour réduire les rendus
-  const {
-    clientId,
-    patientId,
-    serviceId,
-    date,
-    startTime,
-    duration,
-    atHome,
-    notes
-  } = form.watch();
+  const { clientId, patientId, serviceId, date, startTime, duration, atHome, notes } = form.watch()
 
   // Simulation de données pour l'exemple
   const clients = [
     { id: "client1", name: "Marie Dupont", email: "marie@example.com" },
     { id: "client2", name: "Jean Martin", email: "jean@example.com" },
     { id: "client3", name: "Sophie Laurent", email: "sophie@example.com" },
-  ];
+  ]
 
   const pets = [
     { id: "pet1", name: "Rex", type: "Chien", clientId: "client1" },
     { id: "pet2", name: "Félix", type: "Chat", clientId: "client2" },
     { id: "pet3", name: "Titi", type: "Oiseau", clientId: "client3" },
-  ];
+  ]
 
   const services = [
     { id: "service1", name: "Consultation générale", duration: 30 },
@@ -63,50 +47,47 @@ const ConfirmationStep = () => {
     { id: "service3", name: "Chirurgie", duration: 60 },
     { id: "service4", name: "Contrôle annuel", duration: 45 },
     { id: "service5", name: "Toilettage", duration: 90 },
-  ];
+  ]
 
   // Récupérer les informations avec useMemo pour éviter des recalculs inutiles
-  const selectedClient = useMemo(() =>
-    clients.find((c) => c.id === clientId),
-    [clientId]
-  );
+  const selectedClient = useMemo(() => clients.find(c => c.id === clientId), [clientId])
 
-  const selectedPet = useMemo(() =>
-    pets.find((p) => p.id === patientId),
-    [patientId]
-  );
+  const selectedPet = useMemo(() => pets.find(p => p.id === patientId), [patientId])
 
-  const selectedService = useMemo(() =>
-    services.find((s) => s.id === serviceId),
-    [serviceId]
-  );
+  const selectedService = useMemo(() => services.find(s => s.id === serviceId), [serviceId])
 
   // Mémoriser l'heure de fin calculée
   const endTime = useMemo(() => {
-    if (!startTime || !duration) return "...";
+    if (!startTime || !duration) return "..."
 
-    const [hours, minutes] = startTime.split(":").map(Number);
-    let endHours = hours + Math.floor((minutes + duration) / 60);
-    let endMinutes = (minutes + duration) % 60;
+    const [hours, minutes] = startTime.split(":").map(Number)
+    const endHours = hours + Math.floor((minutes + duration) / 60)
+    const endMinutes = (minutes + duration) % 60
 
-    return `${endHours.toString().padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
-  }, [startTime, duration]);
+    return `${endHours.toString().padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`
+  }, [startTime, duration])
 
   // Mémoriser le format de date pour éviter les recalculs
   const formattedDate = useMemo(() => {
-    if (!date) return "Date non sélectionnée";
-    return format(date, "EEEE d MMMM yyyy", { locale: fr });
-  }, [date]);
+    if (!date) return "Date non sélectionnée"
+    return format(date, "EEEE d MMMM yyyy", { locale: fr })
+  }, [date])
 
   // Gestionnaire pour le switch, sans recréer la fonction à chaque rendu
-  const handleAtHomeChange = React.useCallback((checked: boolean) => {
-    form.setValue("atHome", checked);
-  }, [form]);
+  const handleAtHomeChange = React.useCallback(
+    (checked: boolean) => {
+      form.setValue("atHome", checked)
+    },
+    [form]
+  )
 
   // Gestionnaire pour les notes, sans recréer la fonction à chaque rendu
-  const handleNotesChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    form.setValue("notes", e.target.value);
-  }, [form]);
+  const handleNotesChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      form.setValue("notes", e.target.value)
+    },
+    [form]
+  )
 
   return (
     <div className="space-y-6">
@@ -114,9 +95,7 @@ const ConfirmationStep = () => {
         <Card className="border-muted h-full">
           <CardContent className="p-6 space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-3">
-                Récapitulatif du rendez-vous
-              </h3>
+              <h3 className="text-lg font-medium mb-3">Récapitulatif du rendez-vous</h3>
 
               <div className="grid gap-3">
                 <div className="flex items-start">
@@ -124,16 +103,16 @@ const ConfirmationStep = () => {
                     <CalendarIcon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <span className="text-sm text-muted-foreground">
-                      Date et heure
-                    </span>
+                    <span className="text-sm text-muted-foreground">Date et heure</span>
                     <p className="font-medium">
                       <span>{formattedDate}</span>
                       <span> à {startTime || "..."}</span>
                     </p>
                     <div className="flex items-center text-xs text-muted-foreground mt-1">
                       <ClockIcon className="h-3 w-3 mr-1 inline" />
-                      <span>{startTime || "..."} - {endTime}</span>
+                      <span>
+                        {startTime || "..."} - {endTime}
+                      </span>
                       <Badge variant="secondary" className="ml-2 text-xs">
                         {duration || "..."} min
                       </Badge>
@@ -148,12 +127,8 @@ const ConfirmationStep = () => {
                     <StethoscopeIcon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <span className="text-sm text-muted-foreground">
-                      Service
-                    </span>
-                    <p className="font-medium">
-                      {selectedService?.name || "Service non sélectionné"}
-                    </p>
+                    <span className="text-sm text-muted-foreground">Service</span>
+                    <p className="font-medium">{selectedService?.name || "Service non sélectionné"}</p>
                     <p className="text-xs text-muted-foreground">
                       Durée fixe: {selectedService?.duration || "..."} minutes
                     </p>
@@ -167,17 +142,9 @@ const ConfirmationStep = () => {
                     <UserIcon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <span className="text-sm text-muted-foreground">
-                      Client
-                    </span>
-                    <p className="font-medium">
-                      {selectedClient?.name || "Client non sélectionné"}
-                    </p>
-                    {selectedClient?.email && (
-                      <p className="text-xs text-muted-foreground">
-                        {selectedClient.email}
-                      </p>
-                    )}
+                    <span className="text-sm text-muted-foreground">Client</span>
+                    <p className="font-medium">{selectedClient?.name || "Client non sélectionné"}</p>
+                    {selectedClient?.email && <p className="text-xs text-muted-foreground">{selectedClient.email}</p>}
                   </div>
                 </div>
 
@@ -188,12 +155,8 @@ const ConfirmationStep = () => {
                     <PawPrintIcon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <span className="text-sm text-muted-foreground">
-                      Patient
-                    </span>
-                    <p className="font-medium">
-                      {selectedPet?.name || "Animal non sélectionné"}
-                    </p>
+                    <span className="text-sm text-muted-foreground">Patient</span>
+                    <p className="font-medium">{selectedPet?.name || "Animal non sélectionné"}</p>
                     {selectedPet && (
                       <Badge variant="outline" className="mt-1">
                         {selectedPet.type}
@@ -213,29 +176,17 @@ const ConfirmationStep = () => {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label
-                    htmlFor="atHome"
-                    className="flex items-center text-base font-medium"
-                  >
+                  <Label htmlFor="atHome" className="flex items-center text-base font-medium">
                     <HomeIcon className="h-4 w-4 mr-2 text-primary" />
                     Rendez-vous à domicile
                   </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Le vétérinaire se déplacera au domicile du client
-                  </p>
+                  <p className="text-sm text-muted-foreground">Le vétérinaire se déplacera au domicile du client</p>
                 </div>
-                <Switch
-                  id="atHome"
-                  checked={atHome}
-                  onCheckedChange={handleAtHomeChange}
-                />
+                <Switch id="atHome" checked={atHome} onCheckedChange={handleAtHomeChange} />
               </div>
 
               <div className="space-y-2 pt-4">
-                <Label
-                  htmlFor="notes"
-                  className="flex items-center text-base font-medium"
-                >
+                <Label htmlFor="notes" className="flex items-center text-base font-medium">
                   <MessageSquareIcon className="h-4 w-4 mr-2 text-primary" />
                   Notes et informations complémentaires
                 </Label>
@@ -252,15 +203,11 @@ const ConfirmationStep = () => {
         </Card>
       </div>
 
-      {form.formState.errors.atHome && (
-        <FormMessage>{form.formState.errors.atHome.message}</FormMessage>
-      )}
+      {form.formState.errors.atHome && <FormMessage>{form.formState.errors.atHome.message}</FormMessage>}
 
-      {form.formState.errors.notes && (
-        <FormMessage>{form.formState.errors.notes.message}</FormMessage>
-      )}
+      {form.formState.errors.notes && <FormMessage>{form.formState.errors.notes.message}</FormMessage>}
     </div>
-  );
-};
+  )
+}
 
-export default ConfirmationStep;
+export default ConfirmationStep

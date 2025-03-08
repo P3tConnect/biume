@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import { appointmentColors, appointmentLabels } from "../data/constants";
-import type { Appointment } from "../types";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/src/lib/utils"
+
+import { appointmentColors, appointmentLabels } from "../data/constants"
+import type { Appointment } from "../types"
 
 interface AppointmentDetailsProps {
-  appointment: Appointment;
+  appointment: Appointment
 }
 
 export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
@@ -18,27 +19,20 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
           <div className="flex items-center gap-2">
             <h3 className="font-medium text-lg">{appointment.petName}</h3>
             <Badge
-              variant={
-                appointment.status === "confirmed" ? "default" : "secondary"
-              }
+              variant={appointment.status === "confirmed" ? "default" : "secondary"}
               className="capitalize text-sm px-2.5 py-0.5"
             >
               {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
             </Badge>
           </div>
-          <p className="text-base text-muted-foreground">
-            {appointment.ownerName}
-          </p>
+          <p className="text-base text-muted-foreground">{appointment.ownerName}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-2 text-base">
         <Badge
           variant="outline"
-          className={cn(
-            "text-sm px-2.5 py-0.5",
-            appointmentColors[appointment.type].replace("bg-", "border-"),
-          )}
+          className={cn("text-sm px-2.5 py-0.5", appointmentColors[appointment.type].replace("bg-", "border-"))}
         >
           {appointmentLabels[appointment.type]}
         </Badge>
@@ -58,5 +52,5 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
         </Button>
       </div>
     </div>
-  );
+  )
 }

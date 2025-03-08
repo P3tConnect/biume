@@ -1,22 +1,13 @@
-import { InferSelectModel, relations } from "drizzle-orm";
-import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { Organization, organization } from "./organization";
-import { User, user } from "./user";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
-export const reminderStatus = pgEnum("reminderStatus", [
-  "pending",
-  "completed",
-  "cancelled",
-]);
+import { Organization, organization } from "./organization"
+import { User, user } from "./user"
 
-export const reminderType = pgEnum("reminderType", [
-  "appointment",
-  "followup",
-  "vaccination",
-  "medication",
-  "other",
-]);
+export const reminderStatus = pgEnum("reminderStatus", ["pending", "completed", "cancelled"])
+
+export const reminderType = pgEnum("reminderType", ["appointment", "followup", "vaccination", "medication", "other"])
 
 export const reminder = pgTable("reminder", {
   id: text("id")
@@ -35,7 +26,7 @@ export const reminder = pgTable("reminder", {
   }),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const reminderRelations = relations(reminder, ({ one }) => ({
   organization: one(organization, {
@@ -46,13 +37,13 @@ export const reminderRelations = relations(reminder, ({ one }) => ({
     fields: [reminder.userId],
     references: [user.id],
   }),
-}));
+}))
 
 export type Reminder = InferSelectModel<typeof reminder> & {
-  organization: Organization;
-  user: User;
-};
-export type CreateReminder = typeof reminder.$inferInsert;
+  organization: Organization
+  user: User
+}
+export type CreateReminder = typeof reminder.$inferInsert
 
-export const ReminderSchema = createSelectSchema(reminder);
-export const CreateReminderSchema = createInsertSchema(reminder);
+export const ReminderSchema = createSelectSchema(reminder)
+export const CreateReminderSchema = createInsertSchema(reminder)

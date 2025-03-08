@@ -1,31 +1,27 @@
-"use server";
+"use server"
 
-import { z } from "zod";
-import {
-  db,
-  ActionError,
-  createServerAction,
-  requireAuth,
-  requireFullOrganization,
-} from "../lib";
-import { CreateServiceSchema, Service, service } from "../db";
-import { eq } from "drizzle-orm";
-import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas";
-import { auth } from "../lib/auth";
-import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
+import { z } from "zod"
+
+import { proServicesSchema } from "@/components/onboarding/types/onboarding-schemas"
+
+import { CreateServiceSchema, Service, service } from "../db"
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
+import { auth } from "../lib/auth"
 
 export const getServices = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const services = await db.query.service.findMany({
       where: eq(service.organizationId, ctx.organization?.id as string),
-    });
+    })
 
-    return services;
+    return services
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const getServicesFromOrganization = createServerAction(
   z.object({}),
@@ -40,25 +36,25 @@ export const getServicesFromOrganization = createServerAction(
         description: true,
         duration: true,
       },
-    });
+    })
 
     if (!services) {
-      throw new ActionError("Services not found");
+      throw new ActionError("Services not found")
     }
 
-    return services as unknown as Service[];
+    return services as unknown as Service[]
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const createService = createServerAction(
   CreateServiceSchema,
   async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
-    });
+    })
     if (!organization) {
-      throw new ActionError("Organization not found");
+      throw new ActionError("Organization not found")
     }
 
     const result = await db
@@ -68,48 +64,48 @@ export const createService = createServerAction(
         organizationId: organization.id,
       })
       .returning()
-      .execute();
+      .execute()
 
     if (!result) {
-      throw new ActionError("Service not created");
+      throw new ActionError("Service not created")
     }
 
     // Revalidate the services page
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`)
 
-    return result[0];
+    return result[0]
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const createServicesStepAction = createServerAction(
   proServicesSchema,
   async (input, ctx) => {
     const organization = await auth.api.getFullOrganization({
       headers: await headers(),
-    });
-    if (!organization) return;
-    const services = input.services;
+    })
+    if (!organization) return
+    const services = input.services
 
     const result = await db
       .insert(service)
       .values(
-        services.map((service) => ({
+        services.map(service => ({
           ...service,
           organizationId: organization.id,
-        })),
+        }))
       )
       .returning()
-      .execute();
+      .execute()
 
     if (!result) {
-      throw new ActionError("Services not created");
+      throw new ActionError("Services not created")
     }
 
-    return result;
+    return result
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const updateService = createServerAction(
   CreateServiceSchema,
@@ -119,35 +115,31 @@ export const updateService = createServerAction(
       .set(input)
       .where(eq(service.id, input.id as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Service not updated");
+      throw new ActionError("Service not updated")
     }
 
     // Revalidate the services page
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`)
 
-    return data;
+    return data
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)
 
 export const deleteService = createServerAction(
   z.string(),
   async (input, ctx) => {
-    const data = await db
-      .delete(service)
-      .where(eq(service.id, input))
-      .returning()
-      .execute();
+    const data = await db.delete(service).where(eq(service.id, input)).returning().execute()
 
     if (!data) {
-      throw new ActionError("Service not deleted");
+      throw new ActionError("Service not deleted")
     }
 
     // Revalidate the services page
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
+    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`)
   },
-  [requireAuth, requireFullOrganization],
-);
+  [requireAuth, requireFullOrganization]
+)

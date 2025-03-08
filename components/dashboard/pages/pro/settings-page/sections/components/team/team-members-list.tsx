@@ -1,30 +1,8 @@
-"use client";
+"use client"
 
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { MoreHorizontal, Shield, Trash2 } from "lucide-react"
+import React from "react"
+
 import {
   Credenza,
   CredenzaContent,
@@ -32,25 +10,30 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@/components/ui";
-import { MoreHorizontal, Shield, Trash2 } from "lucide-react";
-import { Organization } from "@/src/db/organization";
-import { organization as organizationUtil } from "@/src/lib/auth-client";
+} from "@/components/ui"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Organization } from "@/src/db/organization"
+import { organization as organizationUtil } from "@/src/lib/auth-client"
 
-type Role = "admin" | "member" | "owner";
+type Role = "admin" | "member" | "owner"
 
 interface TeamMembersListProps {
-  organization: Organization;
+  organization: Organization
 }
 
 export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
   const [selectedMember, setSelectedMember] = React.useState<{
-    id: string;
-    role: Role;
-    name?: string;
-  } | null>(null);
-  const [isChangingRole, setIsChangingRole] = React.useState(false);
-  const [isConfirmingRemove, setIsConfirmingRemove] = React.useState(false);
+    id: string
+    role: Role
+    name?: string
+  } | null>(null)
+  const [isChangingRole, setIsChangingRole] = React.useState(false)
+  const [isConfirmingRemove, setIsConfirmingRemove] = React.useState(false)
 
   return (
     <div className="space-y-4">
@@ -63,7 +46,7 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {organization.members.map((member) => (
+          {organization.members.map(member => (
             <TableRow key={member.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
@@ -72,15 +55,13 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
                     <AvatarFallback>
                       {member.user.name
                         .split(" ")
-                        .map((n) => n[0])
+                        .map(n => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <div className="font-medium">{member.user.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {member.user.email}
-                    </div>
+                    <div className="text-sm text-muted-foreground">{member.user.email}</div>
                   </div>
                 </div>
               </TableCell>
@@ -90,11 +71,7 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
                   className="flex w-fit items-center gap-1"
                 >
                   <Shield className="h-3 w-3" />
-                  {member.role === "owner"
-                    ? "Propriétaire"
-                    : member.role === "admin"
-                      ? "Administrateur"
-                      : "Membre"}
+                  {member.role === "owner" ? "Propriétaire" : member.role === "admin" ? "Administrateur" : "Membre"}
                 </Badge>
               </TableCell>
               <TableCell>
@@ -111,8 +88,8 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
                         setSelectedMember({
                           id: member.id,
                           role: member.role as Role,
-                        });
-                        setIsChangingRole(true);
+                        })
+                        setIsChangingRole(true)
                       }}
                     >
                       <Shield className="h-4 w-4" />
@@ -125,8 +102,8 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
                           id: member.id,
                           role: member.role as Role,
                           name: member.user.name,
-                        });
-                        setIsConfirmingRemove(true);
+                        })
+                        setIsConfirmingRemove(true)
                       }}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -144,9 +121,7 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
         <CredenzaContent>
           <CredenzaHeader>
             <CredenzaTitle>Changer le rôle</CredenzaTitle>
-            <CredenzaDescription>
-              Sélectionnez le nouveau rôle pour ce membre.
-            </CredenzaDescription>
+            <CredenzaDescription>Sélectionnez le nouveau rôle pour ce membre.</CredenzaDescription>
           </CredenzaHeader>
           <div className="space-y-4 py-4">
             <Select
@@ -154,17 +129,17 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
               onValueChange={async (value: Role) => {
                 try {
                   if (!selectedMember) {
-                    throw new Error("Données manquantes");
+                    throw new Error("Données manquantes")
                   }
                   await organizationUtil.updateMemberRole({
                     memberId: selectedMember.id,
                     organizationId: organization.id,
                     role: value,
-                  });
-                  setIsChangingRole(false);
-                  setSelectedMember(null);
+                  })
+                  setIsChangingRole(false)
+                  setSelectedMember(null)
                 } catch (error) {
-                  console.error(error);
+                  console.error(error)
                 }
               }}
             >
@@ -183,8 +158,8 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
               type="button"
               variant="outline"
               onClick={() => {
-                setIsChangingRole(false);
-                setSelectedMember(null);
+                setIsChangingRole(false)
+                setSelectedMember(null)
               }}
             >
               Annuler
@@ -198,8 +173,7 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
           <CredenzaHeader>
             <CredenzaTitle>Confirmer la suppression</CredenzaTitle>
             <CredenzaDescription>
-              Êtes-vous sûr de vouloir retirer {selectedMember?.name} de
-              l&apos;équipe ? Cette action est irréversible.
+              Êtes-vous sûr de vouloir retirer {selectedMember?.name} de l&apos;équipe ? Cette action est irréversible.
             </CredenzaDescription>
           </CredenzaHeader>
           <CredenzaFooter>
@@ -207,8 +181,8 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
               type="button"
               variant="outline"
               onClick={() => {
-                setIsConfirmingRemove(false);
-                setSelectedMember(null);
+                setIsConfirmingRemove(false)
+                setSelectedMember(null)
               }}
             >
               Annuler
@@ -219,16 +193,16 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
               onClick={async () => {
                 try {
                   if (!selectedMember) {
-                    throw new Error("Données manquantes");
+                    throw new Error("Données manquantes")
                   }
                   await organizationUtil.removeMember({
                     memberIdOrEmail: selectedMember.id,
                     organizationId: organization.id,
-                  });
-                  setIsConfirmingRemove(false);
-                  setSelectedMember(null);
+                  })
+                  setIsConfirmingRemove(false)
+                  setSelectedMember(null)
                 } catch (error) {
-                  console.error(error);
+                  console.error(error)
                 }
               }}
             >
@@ -238,5 +212,5 @@ export const TeamMembersList = ({ organization }: TeamMembersListProps) => {
         </CredenzaContent>
       </Credenza>
     </div>
-  );
-}; 
+  )
+}

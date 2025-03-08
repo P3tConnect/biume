@@ -1,66 +1,47 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import { Switch } from "../ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import {
-  Plus,
-  Pencil,
-  Copy,
-  Trash2,
-  MoveDown,
-  MoveUp,
-  Layout,
-  Save,
-  FileText,
-  CheckCircle
-} from "lucide-react";
+import { CheckCircle, FileText, Layout, MoveDown, MoveUp, Pencil, Plus, Save, Trash2 } from "lucide-react"
+import { useState } from "react"
 
-import { ReportType } from "./report-generator";
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { Switch } from "../ui/switch"
+import { Textarea } from "../ui/textarea"
+import { ReportType } from "./report-generator"
 
 interface TemplateElement {
-  id: string;
-  type: "text" | "textarea" | "image" | "table" | "checkbox" | "date";
-  label: string;
-  placeholder?: string;
-  required: boolean;
-  options?: string[];
+  id: string
+  type: "text" | "textarea" | "image" | "table" | "checkbox" | "date"
+  label: string
+  placeholder?: string
+  required: boolean
+  options?: string[]
 }
 
 interface TemplateSection {
-  id: string;
-  title: string;
-  elements: TemplateElement[];
+  id: string
+  title: string
+  elements: TemplateElement[]
 }
 
 export function TemplateBuilder() {
-  const [templateName, setTemplateName] = useState("");
-  const [templateDescription, setTemplateDescription] = useState("");
-  const [templateType, setTemplateType] = useState<ReportType>("health");
+  const [templateName, setTemplateName] = useState("")
+  const [templateDescription, setTemplateDescription] = useState("")
+  const [templateType, setTemplateType] = useState<ReportType>("health")
   const [sections, setSections] = useState<TemplateSection[]>([
     {
       id: "section-1",
       title: "Nouvelle section",
-      elements: []
-    }
-  ]);
-  const [activeSection, setActiveSection] = useState(0);
-  const [showElementEditor, setShowElementEditor] = useState(false);
-  const [currentElement, setCurrentElement] = useState<TemplateElement | null>(null);
-  const [currentElementIndex, setCurrentElementIndex] = useState<number | null>(null);
+      elements: [],
+    },
+  ])
+  const [activeSection, setActiveSection] = useState(0)
+  const [showElementEditor, setShowElementEditor] = useState(false)
+  const [currentElement, setCurrentElement] = useState<TemplateElement | null>(null)
+  const [currentElementIndex, setCurrentElementIndex] = useState<number | null>(null)
 
   // Ajouter une nouvelle section
   const addSection = () => {
@@ -69,31 +50,31 @@ export function TemplateBuilder() {
       {
         id: `section-${sections.length + 1}`,
         title: `Nouvelle section ${sections.length + 1}`,
-        elements: []
-      }
-    ]);
-    setActiveSection(sections.length);
-  };
+        elements: [],
+      },
+    ])
+    setActiveSection(sections.length)
+  }
 
   // Supprimer une section
   const deleteSection = (index: number) => {
-    if (sections.length === 1) return;
+    if (sections.length === 1) return
 
-    const newSections = [...sections];
-    newSections.splice(index, 1);
-    setSections(newSections);
+    const newSections = [...sections]
+    newSections.splice(index, 1)
+    setSections(newSections)
 
     if (activeSection >= newSections.length) {
-      setActiveSection(newSections.length - 1);
+      setActiveSection(newSections.length - 1)
     }
-  };
+  }
 
   // Mettre à jour le titre d'une section
   const updateSectionTitle = (index: number, title: string) => {
-    const newSections = [...sections];
-    newSections[index].title = title;
-    setSections(newSections);
-  };
+    const newSections = [...sections]
+    newSections[index].title = title
+    setSections(newSections)
+  }
 
   // Ajouter un nouvel élément dans la section active
   const addElement = (type: TemplateElement["type"]) => {
@@ -103,69 +84,69 @@ export function TemplateBuilder() {
       label: `Nouvel élément ${type}`,
       placeholder: "",
       required: false,
-      options: type === "checkbox" ? ["Option 1", "Option 2"] : undefined
-    };
+      options: type === "checkbox" ? ["Option 1", "Option 2"] : undefined,
+    }
 
-    setCurrentElement(newElement);
-    setCurrentElementIndex(null);
-    setShowElementEditor(true);
-  };
+    setCurrentElement(newElement)
+    setCurrentElementIndex(null)
+    setShowElementEditor(true)
+  }
 
   // Éditer un élément existant
   const editElement = (element: TemplateElement, index: number) => {
-    setCurrentElement({ ...element });
-    setCurrentElementIndex(index);
-    setShowElementEditor(true);
-  };
+    setCurrentElement({ ...element })
+    setCurrentElementIndex(index)
+    setShowElementEditor(true)
+  }
 
   // Sauvegarder l'élément en cours d'édition
   const saveElement = () => {
-    if (!currentElement) return;
+    if (!currentElement) return
 
-    const newSections = [...sections];
+    const newSections = [...sections]
 
     if (currentElementIndex !== null) {
       // Mise à jour d'un élément existant
-      newSections[activeSection].elements[currentElementIndex] = currentElement;
+      newSections[activeSection].elements[currentElementIndex] = currentElement
     } else {
       // Ajout d'un nouvel élément
-      newSections[activeSection].elements.push(currentElement);
+      newSections[activeSection].elements.push(currentElement)
     }
 
-    setSections(newSections);
-    setShowElementEditor(false);
-    setCurrentElement(null);
-    setCurrentElementIndex(null);
-  };
+    setSections(newSections)
+    setShowElementEditor(false)
+    setCurrentElement(null)
+    setCurrentElementIndex(null)
+  }
 
   // Supprimer un élément
   const deleteElement = (index: number) => {
-    const newSections = [...sections];
-    newSections[activeSection].elements.splice(index, 1);
-    setSections(newSections);
-  };
+    const newSections = [...sections]
+    newSections[activeSection].elements.splice(index, 1)
+    setSections(newSections)
+  }
 
   // Déplacer un élément vers le haut
   const moveElementUp = (index: number) => {
-    if (index === 0) return;
+    if (index === 0) return
 
-    const newSections = [...sections];
-    const element = newSections[activeSection].elements[index];
-    newSections[activeSection].elements.splice(index, 1);
-    newSections[activeSection].elements.splice(index - 1, 0, element);
-    setSections(newSections);
-  };
+    const newSections = [...sections]
+    const element = newSections[activeSection].elements[index]
+    newSections[activeSection].elements.splice(index, 1)
+    newSections[activeSection].elements.splice(index - 1, 0, element)
+    setSections(newSections)
+  }
 
   // Déplacer un élément vers le bas
   const moveElementDown = (index: number) => {
-    if (index === sections[activeSection].elements.length - 1) return;
+    if (index === sections[activeSection].elements.length - 1) return
 
-    const newSections = [...sections];
-    const element = newSections[activeSection].elements[index];
-    newSections[activeSection].elements.splice(index, 1);
-    newSections[activeSection].elements.splice(index + 1, 0, element);
-    setSections(newSections);
-  };
+    const newSections = [...sections]
+    const element = newSections[activeSection].elements[index]
+    newSections[activeSection].elements.splice(index, 1)
+    newSections[activeSection].elements.splice(index + 1, 0, element)
+    setSections(newSections)
+  }
 
   // Enregistrer le modèle
   const saveTemplate = () => {
@@ -173,12 +154,12 @@ export function TemplateBuilder() {
       name: templateName,
       description: templateDescription,
       type: templateType,
-      sections
-    };
+      sections,
+    }
 
-    console.log("Modèle sauvegardé:", template);
+    console.log("Modèle sauvegardé:", template)
     // Ici vous pourriez appeler une API pour sauvegarder le modèle
-  };
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -186,9 +167,7 @@ export function TemplateBuilder() {
         <Card>
           <CardHeader>
             <CardTitle>Informations du modèle</CardTitle>
-            <CardDescription>
-              Définissez les détails de base de votre modèle de rapport
-            </CardDescription>
+            <CardDescription>Définissez les détails de base de votre modèle de rapport</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -197,7 +176,7 @@ export function TemplateBuilder() {
                 id="template-name"
                 placeholder="Ex: Bilan de santé annuel"
                 value={templateName}
-                onChange={(e) => setTemplateName(e.target.value)}
+                onChange={e => setTemplateName(e.target.value)}
               />
             </div>
 
@@ -208,7 +187,7 @@ export function TemplateBuilder() {
                 placeholder="Décrivez l'utilisation de ce modèle..."
                 className="min-h-[100px]"
                 value={templateDescription}
-                onChange={(e) => setTemplateDescription(e.target.value)}
+                onChange={e => setTemplateDescription(e.target.value)}
               />
             </div>
 
@@ -217,7 +196,7 @@ export function TemplateBuilder() {
               <RadioGroup
                 defaultValue="health"
                 value={templateType}
-                onValueChange={(value) => setTemplateType(value as ReportType)}
+                onValueChange={value => setTemplateType(value as ReportType)}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="health" id="health" />
@@ -247,9 +226,7 @@ export function TemplateBuilder() {
         <Card>
           <CardHeader>
             <CardTitle>Structure du modèle</CardTitle>
-            <CardDescription>
-              Organisez vos sections et ajoutez des éléments
-            </CardDescription>
+            <CardDescription>Organisez vos sections et ajoutez des éléments</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -273,7 +250,12 @@ export function TemplateBuilder() {
                     <span>{section.title}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => deleteSection(index)} disabled={sections.length === 1}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => deleteSection(index)}
+                      disabled={sections.length === 1}
+                    >
                       <Trash2 className="h-4 w-4 text-muted-foreground" />
                     </Button>
                   </div>
@@ -296,9 +278,7 @@ export function TemplateBuilder() {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>Édition de la section</CardTitle>
-                <CardDescription>
-                  Personnalisez votre section et ajoutez des éléments
-                </CardDescription>
+                <CardDescription>Personnalisez votre section et ajoutez des éléments</CardDescription>
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => addElement("text")}>
@@ -322,7 +302,7 @@ export function TemplateBuilder() {
               <Input
                 id="section-title"
                 value={sections[activeSection].title}
-                onChange={(e) => updateSectionTitle(activeSection, e.target.value)}
+                onChange={e => updateSectionTitle(activeSection, e.target.value)}
               />
             </div>
 
@@ -362,7 +342,12 @@ export function TemplateBuilder() {
                         <Button variant="ghost" size="icon" onClick={() => moveElementUp(index)} disabled={index === 0}>
                           <MoveUp className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => moveElementDown(index)} disabled={index === sections[activeSection].elements.length - 1}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => moveElementDown(index)}
+                          disabled={index === sections[activeSection].elements.length - 1}
+                        >
                           <MoveDown className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => editElement(element, index)}>
@@ -384,9 +369,7 @@ export function TemplateBuilder() {
           <Card>
             <CardHeader>
               <CardTitle>Édition de l&apos;élément</CardTitle>
-              <CardDescription>
-                Personnalisez les propriétés de cet élément
-              </CardDescription>
+              <CardDescription>Personnalisez les propriétés de cet élément</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -394,7 +377,7 @@ export function TemplateBuilder() {
                 <Input
                   id="element-label"
                   value={currentElement.label}
-                  onChange={(e) => setCurrentElement({ ...currentElement, label: e.target.value })}
+                  onChange={e => setCurrentElement({ ...currentElement, label: e.target.value })}
                 />
               </div>
 
@@ -404,7 +387,7 @@ export function TemplateBuilder() {
                   <Input
                     id="element-placeholder"
                     value={currentElement.placeholder || ""}
-                    onChange={(e) => setCurrentElement({ ...currentElement, placeholder: e.target.value })}
+                    onChange={e => setCurrentElement({ ...currentElement, placeholder: e.target.value })}
                   />
                 </div>
               )}
@@ -413,7 +396,7 @@ export function TemplateBuilder() {
                 <Switch
                   id="required"
                   checked={currentElement.required}
-                  onCheckedChange={(checked) => setCurrentElement({ ...currentElement, required: checked })}
+                  onCheckedChange={checked => setCurrentElement({ ...currentElement, required: checked })}
                 />
                 <Label htmlFor="required">Champ obligatoire</Label>
               </div>
@@ -425,19 +408,19 @@ export function TemplateBuilder() {
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={option}
-                        onChange={(e) => {
-                          const newOptions = [...currentElement.options!];
-                          newOptions[index] = e.target.value;
-                          setCurrentElement({ ...currentElement, options: newOptions });
+                        onChange={e => {
+                          const newOptions = [...currentElement.options!]
+                          newOptions[index] = e.target.value
+                          setCurrentElement({ ...currentElement, options: newOptions })
                         }}
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => {
-                          const newOptions = [...currentElement.options!];
-                          newOptions.splice(index, 1);
-                          setCurrentElement({ ...currentElement, options: newOptions });
+                          const newOptions = [...currentElement.options!]
+                          newOptions.splice(index, 1)
+                          setCurrentElement({ ...currentElement, options: newOptions })
                         }}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -448,8 +431,8 @@ export function TemplateBuilder() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const newOptions = [...currentElement.options!, `Option ${currentElement.options!.length + 1}`];
-                      setCurrentElement({ ...currentElement, options: newOptions });
+                      const newOptions = [...currentElement.options!, `Option ${currentElement.options!.length + 1}`]
+                      setCurrentElement({ ...currentElement, options: newOptions })
                     }}
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -471,5 +454,5 @@ export function TemplateBuilder() {
         )}
       </div>
     </div>
-  );
-} 
+  )
+}

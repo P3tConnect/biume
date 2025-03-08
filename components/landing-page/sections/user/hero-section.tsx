@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { CalendarClock, Badge, Heart, Shield } from "lucide-react";
-import Image from "next/image";
-import SearchInput from "./search-input";
+import { motion } from "framer-motion"
+import { Badge, CalendarClock, Heart, Shield } from "lucide-react"
+import Image from "next/image"
+import { useEffect, useState } from "react"
+
+import SearchInput from "./search-input"
 
 export function HeroSection() {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   return (
     <section className="relative pt-24 pb-24 md:pt-36 md:pb-32 overflow-hidden">
@@ -70,13 +71,12 @@ export function HeroSection() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Prenez soin de vos{" "}
-              <span className="text-primary">compagnons</span> à quatre pattes
+              Prenez soin de vos <span className="text-primary">compagnons</span> à quatre pattes
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8">
-              Biume vous aide à gérer les soins, les rendez-vous et le bien-être
-              de vos animaux de compagnie en un seul endroit pratique.
+              Biume vous aide à gérer les soins, les rendez-vous et le bien-être de vos animaux de compagnie en un seul
+              endroit pratique.
             </p>
 
             {/* Barre de recherche */}
@@ -119,9 +119,7 @@ export function HeroSection() {
                   </div>
                   <div>
                     <h3 className="font-medium mb-1">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {feature.desc}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{feature.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -173,9 +171,7 @@ export function HeroSection() {
                 </div>
                 <div>
                   <div className="text-sm font-medium">Prochain vaccin</div>
-                  <div className="text-xs text-muted-foreground">
-                    Dans 3 semaines
-                  </div>
+                  <div className="text-xs text-muted-foreground">Dans 3 semaines</div>
                 </div>
               </div>
             </motion.div>
@@ -188,27 +184,13 @@ export function HeroSection() {
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-medium">
-                    Rendez-vous confirmé
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    Dr. Martin - 14 Mai
-                  </div>
+                  <div className="text-sm font-medium">Rendez-vous confirmé</div>
+                  <div className="text-xs text-muted-foreground">Dr. Martin - 14 Mai</div>
                 </div>
               </div>
             </motion.div>
@@ -216,5 +198,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

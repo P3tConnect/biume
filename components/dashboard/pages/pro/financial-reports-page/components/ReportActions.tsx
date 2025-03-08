@@ -1,27 +1,11 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Download,
-  FileSpreadsheet,
-  Filter,
-  Printer,
-  Share2,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Download, FileSpreadsheet, Filter, Printer, Share2 } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export const ReportActions = () => {
   return (
@@ -64,5 +48,5 @@ export const ReportActions = () => {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
-}; 
+  )
+}

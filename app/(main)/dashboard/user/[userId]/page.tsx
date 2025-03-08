@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import React from "react";
-import { useSession } from "@/src/lib/auth-client";
-import StepperClient from "@/components/onboarding/components/stepper-client";
-import { Card, CardHeader, CardTitle } from "@/components/ui";
-import ClientQuickActionsWidget from "@/components/dashboard/shortcuts/client/client-quick-actions-widget";
-import ClientUpcomingAppointmentsWidget from "@/components/dashboard/shortcuts/client/client-upcoming-appointments-widget";
-import ClientPetHealthWidget from "@/components/dashboard/shortcuts/client/client-pet-health-widget";
-import ClientPetsWidgetSimple from "@/components/dashboard/shortcuts/client/client-pets-widget-simple";
-import ClientExpensesWidget from "@/components/dashboard/shortcuts/client/client-expenses-widget";
+import React from "react"
+
+import ClientExpensesWidget from "@/components/dashboard/shortcuts/client/client-expenses-widget"
+import ClientPetHealthWidget from "@/components/dashboard/shortcuts/client/client-pet-health-widget"
+import ClientPetsWidgetSimple from "@/components/dashboard/shortcuts/client/client-pets-widget-simple"
+import ClientQuickActionsWidget from "@/components/dashboard/shortcuts/client/client-quick-actions-widget"
+import ClientUpcomingAppointmentsWidget from "@/components/dashboard/shortcuts/client/client-upcoming-appointments-widget"
+import StepperClient from "@/components/onboarding/components/stepper-client"
+import { Card, CardHeader, CardTitle } from "@/components/ui"
+import { useSession } from "@/src/lib/auth-client"
 
 const ClientDashboardHomePage = () => {
-  const { data: session } = useSession();
-  const showModal = session?.user.onBoardingComplete === false;
+  const { data: session } = useSession()
+  const showModal = session?.user.onBoardingComplete === false
 
   return (
     <div className="space-y-4">
@@ -27,8 +28,7 @@ const ClientDashboardHomePage = () => {
             <span className="text-3xl">👋</span>
           </CardTitle>
           <p className="text-sm text-gray-400 mt-2">
-            Gérez vos animaux de compagnie et vos réservations en toute
-            simplicité
+            Gérez vos animaux de compagnie et vos réservations en toute simplicité
           </p>
         </CardHeader>
       </Card>
@@ -46,7 +46,7 @@ const ClientDashboardHomePage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ClientDashboardHomePage;
+export default ClientDashboardHomePage

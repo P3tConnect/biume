@@ -1,29 +1,24 @@
-import {
-  FormControl,
-  FormMessage,
-  FormLabel,
-  FormDescription,
-} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Clock, Euro, X } from "lucide-react"
+import Image from "next/image"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-import { Form, FormItem } from "@/components/ui/form";
-import { FormField } from "@/components/ui/form";
-import { Service, CreateService } from "@/src/db";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Clock, Euro, X, ImageIcon } from "lucide-react";
-import { DropzoneInput } from "@/components/ui/dropzone-input";
-import { DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { createService, updateService } from "@/src/actions";
-import Image from "next/image";
-import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
-import { CredenzaContent } from "@/components/ui";
-import { cn } from "@/src/lib";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Credenza, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { CredenzaContent } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { DropzoneInput } from "@/components/ui/dropzone-input"
+import { DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input"
+import { FormControl, FormDescription, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormItem } from "@/components/ui/form"
+import { FormField } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { createService, updateService } from "@/src/actions"
+import { Service } from "@/src/db"
+import { cn } from "@/src/lib"
 
 const servicesSchema = z.object({
   id: z.string().optional(),
@@ -33,20 +28,16 @@ const servicesSchema = z.object({
   price: z.number().min(0, "Le prix est requis"),
   image: z.string().nullable().optional(),
   organizationId: z.string().optional(),
-});
+})
 
 interface ServiceFormProps {
-  service: Partial<Service> | Service;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  service: Partial<Service> | Service
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export const ServiceForm = ({
-  service,
-  open,
-  onOpenChange,
-}: ServiceFormProps) => {
-  const queryClient = useQueryClient();
+export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) => {
+  const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof servicesSchema>>({
     resolver: zodResolver(servicesSchema),
     defaultValues: {
@@ -58,43 +49,43 @@ export const ServiceForm = ({
       image: service.image ?? undefined,
       organizationId: service.organizationId ?? undefined,
     },
-  });
+  })
 
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset } = form
 
-  const isCreating = !service.id;
+  const isCreating = !service.id
 
   const { mutateAsync: createMutation } = useMutation({
     mutationFn: createService,
     onSuccess: () => {
-      toast.success("Service créé avec succès!");
-      queryClient.invalidateQueries({ queryKey: ["organization-services"] });
-      onOpenChange(false);
-      reset();
+      toast.success("Service créé avec succès!")
+      queryClient.invalidateQueries({ queryKey: ["organization-services"] })
+      onOpenChange(false)
+      reset()
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
   const { mutateAsync: updateMutation } = useMutation({
     mutationFn: updateService,
     onSuccess: () => {
-      toast.success("Service mis à jour avec succès!");
-      onOpenChange(false);
+      toast.success("Service mis à jour avec succès!")
+      onOpenChange(false)
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     if (isCreating) {
-      await createMutation(data);
+      await createMutation(data)
     } else {
-      await updateMutation(data);
+      await updateMutation(data)
     }
-  });
+  })
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
@@ -104,8 +95,7 @@ export const ServiceForm = ({
             {isCreating ? "Créer un service" : "Modifier le service"}
           </CredenzaTitle>
           <p className="text-muted-foreground text-sm">
-            Remplissez les informations ci-dessous pour{" "}
-            {isCreating ? "créer" : "modifier"} votre service.
+            Remplissez les informations ci-dessous pour {isCreating ? "créer" : "modifier"} votre service.
           </p>
         </CredenzaHeader>
 
@@ -113,11 +103,7 @@ export const ServiceForm = ({
           <Form {...form}>
             <form onSubmit={onSubmit} className="space-y-4">
               <div
-                className={cn(
-                  "space-y-4",
-                  "hover:shadow-lg hover:border-primary/20",
-                  "transition-all duration-300",
-                )}
+                className={cn("space-y-4", "hover:shadow-lg hover:border-primary/20", "transition-all duration-300")}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Image du service - première colonne */}
@@ -126,9 +112,7 @@ export const ServiceForm = ({
                     name="image"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-semibold">
-                          Image du service
-                        </FormLabel>
+                        <FormLabel className="text-sm font-semibold">Image du service</FormLabel>
                         <FormControl>
                           <div className="relative h-40 w-full rounded-xl overflow-hidden">
                             {field.value ? (
@@ -155,9 +139,9 @@ export const ServiceForm = ({
                             ) : (
                               <div className="group relative h-full w-full">
                                 <DropzoneInput
-                                  onFilesChanged={(files) => {
+                                  onFilesChanged={files => {
                                     if (files.length > 0) {
-                                      field.onChange(files[0]);
+                                      field.onChange(files[0])
                                     }
                                   }}
                                   value={
@@ -171,9 +155,7 @@ export const ServiceForm = ({
                                       : []
                                   }
                                   uploadEndpoint="imageUploader"
-                                  acceptedFileTypes={
-                                    DEFAULT_ACCEPTED_IMAGE_TYPES
-                                  }
+                                  acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
                                   placeholder={{
                                     dragActive: "Relâchez pour ajouter l'image",
                                     dragInactive: "Déposez votre image ici",
@@ -198,9 +180,7 @@ export const ServiceForm = ({
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-semibold">
-                            Nom du service
-                          </FormLabel>
+                          <FormLabel className="text-sm font-semibold">Nom du service</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="ex: Consultation vétérinaire"
@@ -219,9 +199,7 @@ export const ServiceForm = ({
                         name="duration"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-semibold">
-                              Durée (min)
-                            </FormLabel>
+                            <FormLabel className="text-sm font-semibold">Durée (min)</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Input
@@ -229,9 +207,7 @@ export const ServiceForm = ({
                                   placeholder="30"
                                   className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
                                   {...field}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
+                                  onChange={e => field.onChange(Number(e.target.value))}
                                 />
                                 <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                               </div>
@@ -246,9 +222,7 @@ export const ServiceForm = ({
                         name="price"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-semibold">
-                              Prix (€)
-                            </FormLabel>
+                            <FormLabel className="text-sm font-semibold">Prix (€)</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Input
@@ -256,9 +230,7 @@ export const ServiceForm = ({
                                   placeholder="50"
                                   className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
                                   {...field}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
+                                  onChange={e => field.onChange(Number(e.target.value))}
                                 />
                                 <Euro className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                               </div>
@@ -277,9 +249,7 @@ export const ServiceForm = ({
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold">
-                        Description
-                      </FormLabel>
+                      <FormLabel className="text-sm font-semibold">Description</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Détaillez votre service..."
@@ -302,10 +272,7 @@ export const ServiceForm = ({
                 >
                   Annuler
                 </Button>
-                <Button
-                  type="submit"
-                  className="min-w-[120px] bg-primary/90 hover:bg-primary"
-                >
+                <Button type="submit" className="min-w-[120px] bg-primary/90 hover:bg-primary">
                   {isCreating ? "Créer" : "Enregistrer"}
                 </Button>
               </div>
@@ -314,5 +281,5 @@ export const ServiceForm = ({
         </div>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}

@@ -1,8 +1,9 @@
-import { InferSelectModel, relations } from "drizzle-orm";
-import { pgTable, text } from "drizzle-orm/pg-core";
-import { Topic, topic } from "./topic";
-import { Report, report } from "./report";
-import { createInsertSchema } from "drizzle-zod";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { pgTable, text } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Report, report } from "./report"
+import { Topic, topic } from "./topic"
 
 export const reportTopic = pgTable("report_topic", {
   reportId: text("reportId").references(() => report.id, {
@@ -11,7 +12,7 @@ export const reportTopic = pgTable("report_topic", {
   topicId: text("topicId").references(() => topic.id, {
     onDelete: "cascade",
   }),
-});
+})
 
 export const reportTopicRelations = relations(reportTopic, ({ one }) => ({
   report: one(report, {
@@ -22,12 +23,12 @@ export const reportTopicRelations = relations(reportTopic, ({ one }) => ({
     fields: [reportTopic.topicId],
     references: [topic.id],
   }),
-}));
+}))
 
 export type ReportTopic = InferSelectModel<typeof reportTopic> & {
-  report: Report;
-  topic: Topic;
-};
-export type CreateReportTopic = typeof reportTopic.$inferInsert;
+  report: Report
+  topic: Topic
+}
+export type CreateReportTopic = typeof reportTopic.$inferInsert
 
-export const CreateReportTopicSchema = createInsertSchema(reportTopic);
+export const CreateReportTopicSchema = createInsertSchema(reportTopic)

@@ -1,43 +1,35 @@
-"use server";
+"use server"
 
-import {
-  db,
-  ActionError,
-  createServerAction,
-  requireAuth,
-  requireOwner,
-} from "../lib";
-import {
-  organization,
-  OrganizationDocuments,
-  organizationDocuments,
-} from "../db";
-import { eq } from "drizzle-orm";
-import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas";
-import { organization as organizationTable } from "../db";
-import { progression as progressionTable } from "../db";
-import { z } from "zod";
+import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+import { proDocumentsSchema } from "@/components/onboarding/types/onboarding-schemas"
+
+import { organization, OrganizationDocuments, organizationDocuments } from "../db"
+import { organization as organizationTable } from "../db"
+import { progression as progressionTable } from "../db"
+import { ActionError, createServerAction, db, requireAuth, requireOwner } from "../lib"
 
 export const createDocumentsStepAction = createServerAction(
   proDocumentsSchema,
   async (input, ctx) => {
-    if (!ctx.organization) return;
-    const documents = input.documents;
-    if (!documents || !ctx.organization.id) return;
+    if (!ctx.organization) return
+    const documents = input.documents
+    if (!documents || !ctx.organization.id) return
     const documentsResult = await db
       .insert(organizationDocuments)
       .values(
-        documents.map((file) => ({
+        documents.map(file => ({
           file: file.url ?? "",
           name: file.name ?? "",
           organizationId: ctx.organization?.id ?? "",
-        })),
+        }))
       )
       .returning()
-      .execute();
+      .execute()
 
     if (!documentsResult) {
-      throw new ActionError("Documents not created");
+      throw new ActionError("Documents not created")
     }
 
     const organizationResult = await db
@@ -48,17 +40,13 @@ export const createDocumentsStepAction = createServerAction(
       })
       .where(eq(organizationTable.id, organization.id))
       .returning()
-      .execute();
+      .execute()
 
     if (!organizationResult) {
-      throw new ActionError("Organization not updated");
+      throw new ActionError("Organization not updated")
     }
 
-    const [org] = await db
-      .select()
-      .from(organizationTable)
-      .where(eq(organizationTable.id, organization.id))
-      .execute();
+    const [org] = await db.select().from(organizationTable).where(eq(organizationTable.id, organization.id)).execute()
 
     const progressionResult = await db
       .update(progressionTable)
@@ -67,19 +55,19 @@ export const createDocumentsStepAction = createServerAction(
       })
       .where(eq(progressionTable.id, org.progressionId as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!progressionResult) {
-      throw new ActionError("Progression not updated");
+      throw new ActionError("Progression not updated")
     }
 
     return {
       organization: organizationResult,
       progression: progressionResult,
-    };
+    }
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const getCompanyDocuments = createServerAction(
   z.object({}),
@@ -92,17 +80,16 @@ export const getCompanyDocuments = createServerAction(
         name: true,
         valid: true,
       },
-    });
-
+    })
 
     if (!documents) {
-      throw new ActionError("Documents not found");
+      throw new ActionError("Documents not found")
     }
 
-    return documents as unknown as OrganizationDocuments[];
+    return documents as unknown as OrganizationDocuments[]
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const createCompanyDocument = createServerAction(
   z.object({
@@ -116,66 +103,63 @@ export const createCompanyDocument = createServerAction(
         organizationId: ctx.organization?.id ?? "",
       })
       .returning()
-      .execute();
+      .execute()
 
     if (!document) {
-      throw new ActionError("Document not created");
+      throw new ActionError("Document not created")
     }
 
-    return document;
+    return document
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 export const updateCompanyDocuments = createServerAction(
   proDocumentsSchema,
   async (input, ctx) => {
     if (!ctx.organization) {
-      throw new ActionError("Organization not found");
+      throw new ActionError("Organization not found")
     }
 
-    const documents = input.documents;
+    const documents = input.documents
     if (!documents) {
-      throw new ActionError("Documents are required");
+      throw new ActionError("Documents are required")
     }
 
     // Insérer les nouveaux documents
     const documentsResult = await db
       .insert(organizationDocuments)
       .values(
-        documents.map((file) => ({
+        documents.map(file => ({
           file: file.url ?? "",
           name: file.name ?? "",
           organizationId: ctx.organization?.id ?? "",
           valid: true,
-        })),
+        }))
       )
       .returning()
-      .execute();
+      .execute()
 
     if (!documentsResult) {
-      throw new ActionError("Documents not created");
+      throw new ActionError("Documents not created")
     }
 
-    return documentsResult;
+    return documentsResult
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)
 
 export const deleteCompanyDocument = createServerAction(
   z.object({
     id: z.string(),
   }),
   async (input, ctx) => {
-    const document = await db
-      .delete(organizationDocuments)
-      .where(eq(organizationDocuments.id, input.id))
-      .execute();
+    const document = await db.delete(organizationDocuments).where(eq(organizationDocuments.id, input.id)).execute()
 
     if (!document) {
-      throw new ActionError("Document not deleted");
+      throw new ActionError("Document not deleted")
     }
 
-    return document;
+    return document
   },
-  [requireAuth, requireOwner],
-);
+  [requireAuth, requireOwner]
+)

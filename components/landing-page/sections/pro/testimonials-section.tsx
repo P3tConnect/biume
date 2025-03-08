@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Star, Quote, ArrowLeft, ArrowRight } from "lucide-react";
-import { cn } from "@/src/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion"
+import { ArrowLeft, ArrowRight, Quote, Star } from "lucide-react"
+import { useRef, useState } from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/src/lib/utils"
 
 // Données de témoignages fictifs de professionnels
 const testimonials = [
@@ -51,8 +52,7 @@ const testimonials = [
   },
   {
     id: 4,
-    content:
-      "Biume AI m'a permis de gagner beaucoup de temps et de prendre plus de temps avec mes patients.",
+    content: "Biume AI m'a permis de gagner beaucoup de temps et de prendre plus de temps avec mes patients.",
     author: "Alexandre M.",
     role: "Comportementaliste",
     clinic: "Comport'Animal",
@@ -62,29 +62,24 @@ const testimonials = [
     specialty: "Comportement animal",
     usingBiumeSince: "6 mois",
   },
-];
+]
 
 export function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const testimonialRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const testimonialRef = useRef<HTMLDivElement>(null)
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+    setCurrentIndex(prev => (prev + 1) % testimonials.length)
+  }
 
   const handlePrev = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
-    );
-  };
+    setCurrentIndex(prev => (prev - 1 + testimonials.length) % testimonials.length)
+  }
 
-  const currentTestimonial = testimonials[currentIndex];
+  const currentTestimonial = testimonials[currentIndex]
 
   return (
-    <section
-      id="testimonials"
-      className="py-24 relative overflow-hidden bg-muted/30"
-    >
+    <section id="testimonials" className="py-24 relative overflow-hidden bg-muted/30">
       {/* Élément décoratif */}
       <div className="absolute left-0 top-0 w-full h-full -z-10 overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
@@ -103,20 +98,14 @@ export function TestimonialsSection() {
             <Quote className="w-4 h-4" />
             <span>Témoignages de professionnels</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ce que nos professionnels disent
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ce que nos professionnels disent</h2>
           <p className="text-lg text-muted-foreground">
-            Découvrez comment Biume aide les professionnels de la santé animale
-            à améliorer leur pratique quotidienne.
+            Découvrez comment Biume aide les professionnels de la santé animale à améliorer leur pratique quotidienne.
           </p>
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
-          <div
-            ref={testimonialRef}
-            className="relative overflow-hidden px-4 py-8"
-          >
+          <div ref={testimonialRef} className="relative overflow-hidden px-4 py-8">
             <motion.div
               key={currentIndex}
               initial={{ opacity: 0, y: 20 }}
@@ -130,21 +119,12 @@ export function TestimonialsSection() {
                 <div className="md:col-span-2 bg-muted/30 p-6 md:p-8 flex flex-col items-center md:items-start">
                   <div className="mb-6 flex flex-col items-center md:items-start">
                     <Avatar className="h-20 w-20 mb-4 border-4 border-background">
-                      <AvatarImage
-                        src={currentTestimonial.avatar}
-                        alt={currentTestimonial.author}
-                      />
-                      <AvatarFallback>
-                        {currentTestimonial.author.charAt(0)}
-                      </AvatarFallback>
+                      <AvatarImage src={currentTestimonial.avatar} alt={currentTestimonial.author} />
+                      <AvatarFallback>{currentTestimonial.author.charAt(0)}</AvatarFallback>
                     </Avatar>
 
-                    <h3 className="text-xl font-semibold mb-1">
-                      {currentTestimonial.author}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {currentTestimonial.role}
-                    </p>
+                    <h3 className="text-xl font-semibold mb-1">{currentTestimonial.author}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{currentTestimonial.role}</p>
 
                     <Badge variant="outline" className="mb-2">
                       {currentTestimonial.specialty}
@@ -154,15 +134,11 @@ export function TestimonialsSection() {
                   <div className="space-y-3 text-sm w-full">
                     <div className="flex items-center justify-between gap-2 pb-2 border-b">
                       <span className="font-medium">Clinique</span>
-                      <span className="text-muted-foreground">
-                        {currentTestimonial.clinic}
-                      </span>
+                      <span className="text-muted-foreground">{currentTestimonial.clinic}</span>
                     </div>
                     <div className="flex items-center justify-between gap-2 pb-2 border-b">
                       <span className="font-medium">Expérience</span>
-                      <span className="text-muted-foreground">
-                        {currentTestimonial.years}
-                      </span>
+                      <span className="text-muted-foreground">{currentTestimonial.years}</span>
                     </div>
                   </div>
 
@@ -172,9 +148,7 @@ export function TestimonialsSection() {
                         key={i}
                         className={cn(
                           "w-4 h-4",
-                          i < currentTestimonial.rating
-                            ? "text-amber-400 fill-amber-400"
-                            : "text-muted stroke-muted",
+                          i < currentTestimonial.rating ? "text-amber-400 fill-amber-400" : "text-muted stroke-muted"
                         )}
                       />
                     ))}
@@ -185,37 +159,24 @@ export function TestimonialsSection() {
                 <div className="md:col-span-3 p-6 md:p-8 flex flex-col justify-between">
                   <div>
                     <Quote className="w-10 h-10 text-primary/20 mb-4" />
-                    <p className="text-lg italic mb-6">
-                      {currentTestimonial.content}
-                    </p>
+                    <p className="text-lg italic mb-6">{currentTestimonial.content}</p>
                   </div>
 
                   <div className="mt-auto">
                     <div className="flex items-center justify-between gap-4">
                       <div className="text-sm text-muted-foreground">
-                        Utilisateur de Biume depuis{" "}
-                        {currentTestimonial.usingBiumeSince}
+                        Utilisateur de Biume depuis {currentTestimonial.usingBiumeSince}
                       </div>
 
                       <div className="flex gap-1 items-center">
                         <span className="text-sm mr-2">
                           {currentIndex + 1}/{testimonials.length}
                         </span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={handlePrev}
-                        >
+                        <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={handlePrev}>
                           <ArrowLeft className="h-4 w-4" />
                           <span className="sr-only">Précédent</span>
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={handleNext}
-                        >
+                        <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={handleNext}>
                           <ArrowRight className="h-4 w-4" />
                           <span className="sr-only">Suivant</span>
                         </Button>
@@ -235,9 +196,7 @@ export function TestimonialsSection() {
                 onClick={() => setCurrentIndex(index)}
                 className={cn(
                   "w-2.5 h-2.5 rounded-full transition-all",
-                  index === currentIndex
-                    ? "bg-primary scale-125"
-                    : "bg-primary/20 hover:bg-primary/40",
+                  index === currentIndex ? "bg-primary scale-125" : "bg-primary/20 hover:bg-primary/40"
                 )}
               >
                 <span className="sr-only">Témoignage {index + 1}</span>
@@ -277,5 +236,5 @@ export function TestimonialsSection() {
         </motion.div> */}
       </div>
     </section>
-  );
+  )
 }

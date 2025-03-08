@@ -1,27 +1,17 @@
-"use client";
+"use client"
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/src/lib/utils";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Calendar as CalendarIcon, X } from "lucide-react";
-import { useQuotesSearchParams } from "@/src/hooks/use-quotes-search-params";
-import { QuoteStatus } from "@/types/quote";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Calendar as CalendarIcon, X } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useQuotesSearchParams } from "@/src/hooks/use-quotes-search-params"
+import { QuoteStatus } from "@/types/quote"
 
 const statuses: { value: QuoteStatus; label: string }[] = [
   { value: "draft", label: "Brouillon" },
@@ -29,13 +19,12 @@ const statuses: { value: QuoteStatus; label: string }[] = [
   { value: "accepted", label: "Accepté" },
   { value: "rejected", label: "Refusé" },
   { value: "expired", label: "Expiré" },
-];
+]
 
 export function QuotesFilters() {
-  const { status, setStatus, search, setSearch, dateRange, setDateRange } =
-    useQuotesSearchParams();
+  const { status, setStatus, search, setSearch, dateRange, setDateRange } = useQuotesSearchParams()
 
-  const selectedStatus = statuses.find((s) => s.value === status);
+  const selectedStatus = statuses.find(s => s.value === status)
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,7 +62,7 @@ export function QuotesFilters() {
           <Input
             placeholder="Rechercher par numéro ou client..."
             value={search ?? ""}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={event => setSearch(event.target.value)}
             className="w-full"
           />
         </div>
@@ -82,20 +71,14 @@ export function QuotesFilters() {
           <PopoverTrigger asChild>
             <Button variant="outline">
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {dateRange ? (
-                format(new Date(dateRange), "dd/MM/yyyy", { locale: fr })
-              ) : (
-                "Choisir une date"
-              )}
+              {dateRange ? format(new Date(dateRange), "dd/MM/yyyy", { locale: fr }) : "Choisir une date"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
               selected={dateRange ? new Date(dateRange) : undefined}
-              onSelect={(date) =>
-                setDateRange(date ? date.toISOString() : null)
-              }
+              onSelect={date => setDateRange(date ? date.toISOString() : null)}
               initialFocus
             />
           </PopoverContent>
@@ -103,20 +86,15 @@ export function QuotesFilters() {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
-              {selectedStatus?.label ?? "Statut"}
-            </Button>
+            <Button variant="outline">{selectedStatus?.label ?? "Statut"}</Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
             <Command>
               <CommandInput placeholder="Rechercher un statut..." />
               <CommandEmpty>Aucun statut trouvé.</CommandEmpty>
               <CommandGroup>
-                {statuses.map((status) => (
-                  <CommandItem
-                    key={status.value}
-                    onSelect={() => setStatus(status.value)}
-                  >
+                {statuses.map(status => (
+                  <CommandItem key={status.value} onSelect={() => setStatus(status.value)}>
                     {status.label}
                   </CommandItem>
                 ))}
@@ -126,5 +104,5 @@ export function QuotesFilters() {
         </Popover>
       </div>
     </div>
-  );
-} 
+  )
+}

@@ -1,8 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import NewShortcut from "../../layout/new-shortcut";
+import React from "react"
+
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+import NewShortcut from "../../layout/new-shortcut"
 
 export const DashboardHomeHeader = () => {
   return (
@@ -23,5 +25,5 @@ export const DashboardHomeHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

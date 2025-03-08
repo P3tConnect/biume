@@ -1,10 +1,12 @@
-"use server";
+"use server"
 
-import NewPersonWaitList from "@/emails/NewPersonWaitListEmail";
-import { resend } from "../lib/resend";
-import { redirect } from "next/navigation";
-import { ActionError, createServerAction } from "../lib";
-import { emailSchema } from "../lib/schemas";
+import { redirect } from "next/navigation"
+
+import NewPersonWaitList from "@/emails/NewPersonWaitListEmail"
+
+import { ActionError, createServerAction } from "../lib"
+import { resend } from "../lib/resend"
+import { emailSchema } from "../lib/schemas"
 
 export const newSubWaitList = createServerAction(
   emailSchema,
@@ -14,14 +16,14 @@ export const newSubWaitList = createServerAction(
       subject: "New person in the WaitList",
       to: ["mathieu.chambaud@pawthera.com", "graig.kolodziejczyk@pawthera.com"],
       react: NewPersonWaitList({ subEmail: input.email }),
-    });
+    })
 
     if (mail.error) {
-      console.log(mail.error.message);
-      throw new ActionError(mail.error.message);
+      console.log(mail.error.message)
+      throw new ActionError(mail.error.message)
     } else {
-      redirect("/waitlist");
+      redirect("/waitlist")
     }
   },
-  [],
-);
+  []
+)

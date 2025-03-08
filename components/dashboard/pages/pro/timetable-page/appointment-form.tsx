@@ -1,87 +1,60 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
-import { fr } from "date-fns/locale";
-import { cn } from "@/src/lib/utils";
-import { CalendarIcon, Clock, User2, FileText } from "lucide-react";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import {
-  Credenza,
-  CredenzaFooter,
-  CredenzaTitle,
-  CredenzaHeader,
-  CredenzaContent,
-} from "@/components/ui";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarIcon, Clock, FileText, User2 } from "lucide-react"
+import { useState } from "react"
+
+import { Credenza, CredenzaContent, CredenzaFooter, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/src/lib/utils"
 
 interface AppointmentFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: AppointmentFormData) => void;
-  initialData?: Partial<AppointmentFormData>;
-  isEditing?: boolean;
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: AppointmentFormData) => void
+  initialData?: Partial<AppointmentFormData>
+  isEditing?: boolean
 }
 
 export interface AppointmentFormData {
-  clientName: string;
-  date: Date;
-  time: string;
-  duration: number;
-  status: "pending" | "confirmed" | "cancelled";
-  notes?: string;
+  clientName: string
+  date: Date
+  time: string
+  duration: number
+  status: "pending" | "confirmed" | "cancelled"
+  notes?: string
 }
 
 const statusConfig = {
   pending: { label: "En attente", color: "bg-yellow-500/10 text-yellow-500" },
   confirmed: { label: "Confirmé", color: "bg-green-500/10 text-green-500" },
   cancelled: { label: "Annulé", color: "bg-red-500/10 text-red-500" },
-};
+}
 
-export function AppointmentForm({
-  isOpen,
-  onClose,
-  onSubmit,
-  initialData,
-  isEditing = false,
-}: AppointmentFormProps) {
+export function AppointmentForm({ isOpen, onClose, onSubmit, initialData, isEditing = false }: AppointmentFormProps) {
   const [formData, setFormData] = useState<Partial<AppointmentFormData>>(
     initialData || {
       status: "pending",
       duration: 30,
-    },
-  );
+    }
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      formData.clientName &&
-      formData.date &&
-      formData.time &&
-      formData.duration &&
-      formData.status
-    ) {
-      onSubmit(formData as AppointmentFormData);
-      onClose();
+    e.preventDefault()
+    if (formData.clientName && formData.date && formData.time && formData.duration && formData.status) {
+      onSubmit(formData as AppointmentFormData)
+      onClose()
     }
-  };
+  }
 
   return (
     <Credenza open={isOpen} onOpenChange={onClose}>
@@ -100,10 +73,7 @@ export function AppointmentForm({
           </CredenzaTitle>
         </CredenzaHeader>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex-1 overflow-y-auto space-y-8 px-6 py-4"
-        >
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-8 px-6 py-4">
           {/* Client Information Section */}
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4 text-lg font-medium">
@@ -116,9 +86,7 @@ export function AppointmentForm({
                 <Input
                   id="clientName"
                   value={formData.clientName || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, clientName: e.target.value })
-                  }
+                  onChange={e => setFormData({ ...formData, clientName: e.target.value })}
                   className="max-w-md"
                   placeholder="Entrez le nom du client"
                   required
@@ -142,7 +110,7 @@ export function AppointmentForm({
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !formData.date && "text-muted-foreground",
+                        !formData.date && "text-muted-foreground"
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -157,7 +125,7 @@ export function AppointmentForm({
                     <Calendar
                       mode="single"
                       selected={formData.date}
-                      onSelect={(date) => setFormData({ ...formData, date })}
+                      onSelect={date => setFormData({ ...formData, date })}
                       initialFocus
                       locale={fr}
                     />
@@ -172,9 +140,7 @@ export function AppointmentForm({
                     id="time"
                     type="time"
                     value={formData.time || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, time: e.target.value })
-                    }
+                    onChange={e => setFormData({ ...formData, time: e.target.value })}
                     className="pl-10"
                     required
                   />
@@ -186,9 +152,7 @@ export function AppointmentForm({
                 <Label htmlFor="duration">Durée</Label>
                 <Select
                   value={String(formData.duration)}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, duration: Number(value) })
-                  }
+                  onValueChange={value => setFormData({ ...formData, duration: Number(value) })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Sélectionner une durée" />
@@ -208,21 +172,15 @@ export function AppointmentForm({
                 <Label htmlFor="status">Statut</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(
-                    value: "pending" | "confirmed" | "cancelled",
-                  ) => setFormData({ ...formData, status: value })}
+                  onValueChange={(value: "pending" | "confirmed" | "cancelled") =>
+                    setFormData({ ...formData, status: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Sélectionner un statut">
                       {formData.status && (
                         <div className="flex items-center gap-2">
-                          <Badge
-                            variant="secondary"
-                            className={cn(
-                              "rounded-md",
-                              statusConfig[formData.status].color,
-                            )}
-                          >
+                          <Badge variant="secondary" className={cn("rounded-md", statusConfig[formData.status].color)}>
                             {statusConfig[formData.status].label}
                           </Badge>
                         </div>
@@ -231,26 +189,17 @@ export function AppointmentForm({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pending">
-                      <Badge
-                        variant="secondary"
-                        className="bg-yellow-500/10 text-yellow-500"
-                      >
+                      <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-500">
                         En attente
                       </Badge>
                     </SelectItem>
                     <SelectItem value="confirmed">
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-500/10 text-green-500"
-                      >
+                      <Badge variant="secondary" className="bg-green-500/10 text-green-500">
                         Confirmé
                       </Badge>
                     </SelectItem>
                     <SelectItem value="cancelled">
-                      <Badge
-                        variant="secondary"
-                        className="bg-red-500/10 text-red-500"
-                      >
+                      <Badge variant="secondary" className="bg-red-500/10 text-red-500">
                         Annulé
                       </Badge>
                     </SelectItem>
@@ -270,9 +219,7 @@ export function AppointmentForm({
               <Textarea
                 id="notes"
                 value={formData.notes || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, notes: e.target.value })
-                }
+                onChange={e => setFormData({ ...formData, notes: e.target.value })}
                 placeholder="Ajouter des notes supplémentaires..."
                 className="min-h-[120px]"
               />
@@ -290,5 +237,5 @@ export function AppointmentForm({
         </CredenzaFooter>
       </CredenzaContent>
     </Credenza>
-  );
+  )
 }
