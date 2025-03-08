@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useStepper, utils } from "../hooks/useStepper";
-import ProInformationsStep from "../pro/informations-step";
-import ProServicesStep from "../pro/services-step";
-import ProOptionsStep from "../pro/options-step";
-import ProDocumentsStep from "../pro/documents-step";
-import StepIndicator from "./step-indicator";
-import IntroStep from "../pro/intro-step";
+import React, { useState } from 'react';
+import { useStepper, utils } from '../hooks/useStepper';
+import ProInformationsStep from '../pro/informations-step';
+import ProServicesStep from '../pro/services-step';
+import ProOptionsStep from '../pro/options-step';
+import ProDocumentsStep from '../pro/documents-step';
+import StepIndicator from './step-indicator';
+import IntroStep from '../pro/intro-step';
 import {
   organization as organizationUtil,
   updateUser,
   useSession,
-} from "@/src/lib/auth-client";
+} from '@/src/lib/auth-client';
 import {
   organization as organizationTable,
   progression as progressionTable,
-} from "@/src/db";
-import { db, stripe } from "@/src/lib";
-import { eq } from "drizzle-orm";
-import { toast } from "sonner";
-import { SubscriptionStep } from "../pro/subscription-step";
-import { generateMigrationName } from "@/src/lib/business-names";
+} from '@/src/db';
+import { db, stripe } from '@/src/lib';
+import { eq } from 'drizzle-orm';
+import { toast } from 'sonner';
+import { SubscriptionStep } from '../pro/subscription-step';
+import { generateMigrationName } from '@/src/lib/business-names';
 import {
   CredenzaContent,
   CredenzaHeader,
   CredenzaDescription,
   CredenzaTitle,
-} from "@/components/ui";
-import ImagesStep from "../pro/images-step";
+} from '@/components/ui';
+import ImagesStep from '../pro/images-step';
 
 const Stepper = () => {
   const {
@@ -53,8 +53,8 @@ const Stepper = () => {
       // Créer directement avec l'API d'authentification
       const organizationResult = await organizationUtil.create({
         name: name,
-        slug: name.toLowerCase().replace(/ /g, "-"),
-        logo: "",
+        slug: name.toLowerCase().replace(/ /g, '-'),
+        logo: '',
         metadata: {},
         userId: session?.user.id,
       });
@@ -96,7 +96,7 @@ const Stepper = () => {
           },
         });
         customerStripeId = stripeCustomer.id;
-        console.log("Client Stripe créé avec succès:", customerStripeId);
+        console.log('Client Stripe créé avec succès:', customerStripeId);
 
         // Créer le compte Stripe Connect
         // const stripeCompany = await stripe.accounts.create({
@@ -109,11 +109,11 @@ const Stepper = () => {
         //   },
         // });
         // companyStripeId = stripeCompany.id;
-        console.log("Compte Stripe Connect créé avec succès:", companyStripeId);
+        console.log('Compte Stripe Connect créé avec succès:', companyStripeId);
       } catch (stripeError) {
         console.error(
-          "Erreur lors de la création des comptes Stripe:",
-          stripeError,
+          'Erreur lors de la création des comptes Stripe:',
+          stripeError
         );
         // Continuer même en cas d'erreur Stripe - l'organisation a été créée
       }
@@ -138,27 +138,29 @@ const Stepper = () => {
       setIsLoading(false);
 
       // Rediriger vers le dashboard
-      goTo("subscription");
-      toast.success("Configuration rapide terminée !");
+      goTo('subscription');
+      toast.success('Configuration rapide terminée !');
     } catch (error) {
-      console.error("Erreur lors du skip:", error);
+      console.error('Erreur lors du skip:', error);
       // Afficher plus de détails sur l'erreur
       if (error instanceof Error) {
         console.error("Message d'erreur:", error.message);
-        console.error("Stack trace:", error.stack);
+        console.error('Stack trace:', error.stack);
 
         // Si l'erreur est liée à Stripe, proposer la page de configuration manuelle
         if (
-          error.message.includes("Stripe") ||
-          error.message.toLowerCase().includes("stripe")
+          error.message.includes('Stripe') ||
+          error.message.toLowerCase().includes('stripe')
         ) {
           toast.error(`Erreur: ${error.message}`, {
             description: (
               <div>
-                <p>Veuillez réessayer plus tard ou contacter l'assistance</p>
+                <p>
+                  Veuillez réessayer plus tard ou contacter l&apos;assistance
+                </p>
                 <a
-                  href="/dashboard/stripe-setup"
-                  className="text-primary underline font-medium mt-2 block"
+                  href='/dashboard/stripe-setup'
+                  className='text-primary underline font-medium mt-2 block'
                 >
                   Configurer Stripe manuellement
                 </a>
@@ -174,7 +176,7 @@ const Stepper = () => {
           });
         }
       } else {
-        toast.error("Une erreur est survenue", {
+        toast.error('Une erreur est survenue', {
           description: "Veuillez réessayer plus tard ou contacter l'assistance",
           duration: 5000,
         });
@@ -185,23 +187,23 @@ const Stepper = () => {
 
   return (
     <CredenzaContent>
-      <CredenzaHeader className="flex flex-row items-center space-x-4">
+      <CredenzaHeader className='flex flex-row items-center space-x-4'>
         <StepIndicator
           currentStep={currentStep + 1}
           totalSteps={all.length}
           isLast={isLast}
         />
-        <div className="space-y-1 flex flex-col">
-          <CredenzaTitle className="text-xl font-bold">
+        <div className='space-y-1 flex flex-col'>
+          <CredenzaTitle className='text-xl font-bold'>
             {current.title}
           </CredenzaTitle>
-          <CredenzaDescription className="text-muted-foreground text-md">
+          <CredenzaDescription className='text-muted-foreground text-md'>
             {current.description}
           </CredenzaDescription>
         </div>
       </CredenzaHeader>
 
-      <div className="max-h-[700px] overflow-y-auto">
+      <div className='max-h-[700px] overflow-y-auto'>
         {switchStep({
           start: () => (
             <IntroStep
