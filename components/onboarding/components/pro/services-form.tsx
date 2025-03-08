@@ -11,11 +11,11 @@ import {
 } from "@/components/ui";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { X, Plus, Clock, Euro } from "lucide-react";
+import { X, Plus, Clock, Euro, Loader2 } from "lucide-react";
 import { UploadButton } from "@/src/lib/uploadthing";
 import Image from "next/image";
 import { proServicesSchema } from "../../types/onboarding-schemas";
@@ -31,6 +31,7 @@ const ServicesForm = ({
   nextStep: () => void;
   previousStep: () => void;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof proServicesSchema>>({
     resolver: zodResolver(proServicesSchema),
     defaultValues: {
@@ -48,11 +49,16 @@ const ServicesForm = ({
   const { mutateAsync } = useMutation({
     mutationFn: createServicesStepAction,
     onSuccess: () => {
+      setIsLoading(false);
       reset();
       nextStep();
     },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
+    },
+    onMutate: () => {
+      setIsLoading(true);
     },
   });
 
@@ -288,6 +294,7 @@ const ServicesForm = ({
             type="button"
             variant="outline"
             className="rounded-xl"
+            disabled={isLoading}
             onClick={previousStep}
           >
             ← Précédent
@@ -296,13 +303,25 @@ const ServicesForm = ({
             <Button
               type="button"
               variant="ghost"
+              disabled={isLoading}
               onClick={nextStep}
               className="text-muted-foreground"
             >
               Passer
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
-              Suivant →
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="rounded-xl px-6"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>En cours...</span>
+                </>
+              ) : (
+                "Suivant →"
+              )}
             </Button>
           </div>
         </div>

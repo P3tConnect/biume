@@ -12,7 +12,6 @@ import Link from "next/link";
 import {
   CalendarDays,
   ChevronLeft,
-  ChevronRight,
   Clock,
   Heart,
   MapPin,
@@ -23,7 +22,6 @@ import {
   Clipboard,
   Settings,
   MessageSquare,
-  ArrowRight,
   ChevronDown,
 } from "lucide-react";
 import { Organization } from "@/src/db";
@@ -138,9 +136,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-        companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-        companyResult.data.ratings.length
-      ).toFixed(1)
+          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+          companyResult.data.ratings.length
+        ).toFixed(1)
       : "4.8";
 
   return (
@@ -148,7 +146,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
       {isMounted && (
         <motion.div
           ref={containerRef}
-          className="w-full min-h-screen bg-background relative"
+          className="w-screen h-screen bg-background relative"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -156,7 +154,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
           {/* Header flottant avec navigation et info essentielles */}
           <motion.header
             style={{ opacity: headerOpacity, scale: headerScale }}
-            className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm"
+            className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
           >
             <div className="container mx-auto py-3">
               <div className="flex justify-between items-center">
@@ -202,10 +200,6 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <Share2 className="h-5 w-5" />
-                  </Button>
-                  <Button size="sm" className="gap-1 hidden md:flex">
-                    <CalendarDays className="h-4 w-4" />
-                    <span>Rendez-vous</span>
                   </Button>
                 </div>
               </div>
@@ -338,8 +332,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
 
                   <div className="prose prose-neutral dark:prose-invert max-w-none">
                     <p className="text-foreground/90 leading-relaxed">
-                      {companyResult.data?.description ||
-                        "Notre clinique offre des soins vétérinaires de qualité, avec une équipe de professionnels dévoués au bien-être de vos animaux. Nous proposons des consultations, des vaccinations, et des traitements adaptés à chaque animal."}
+                      {companyResult.data?.description || ""}
                     </p>
                     <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div className="bg-background/50 backdrop-blur-sm p-4 rounded-xl">

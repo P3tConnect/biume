@@ -52,7 +52,16 @@ export const getAllOrganizations = createServerAction(
             start: true,
             end: true,
             isAvailable: true,
-          }
+          },
+        },
+        address: {
+          columns: {
+            postalAddress: true,
+            lat: true,
+            lng: true,
+            cntryCode: true,
+            zip: true,
+          },
         },
       },
       columns: {
@@ -68,6 +77,22 @@ export const getAllOrganizations = createServerAction(
     return organizations as Organization[];
   },
   [],
+);
+
+export const getAllOrganizationsByUserId = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const organizations = await auth.api.listOrganizations({
+      headers: await headers(),
+    });
+
+    if (!organizations) {
+      throw new ActionError("Organizations not found");
+    }
+
+    return organizations as Organization[];
+  },
+  [requireAuth],
 );
 
 export const getCompanyById = createServerAction(
@@ -132,17 +157,14 @@ export const getCurrentOrganization = createServerAction(
 
     return ctx.fullOrganization;
   },
-  [requireAuth, requireOwner, requireFullOrganization],
+  [requireAuth, requireFullOrganization],
 );
 
 export const createOrganization = createServerAction(
   proInformationsSchema,
   async (input, ctx) => {
-    console.log(ctx.user, "user");
     try {
       const data = input;
-
-      console.log(ctx.user, "user before create organization");
 
       const result = await auth.api.createOrganization({
         body: {
@@ -169,13 +191,34 @@ export const createOrganization = createServerAction(
         })
         .returning();
 
+      // const stripeCompany = await stripe.accounts.create({
+      //   type: "standard",
+      //   country: "FR",
+      //   email: ctx?.user?.email!,
+      //   metadata: {
+      //     organizationId: result?.id!,
+      //     userId: ctx?.user?.id!,
+      //   },
+      //   capabilities: {
+      //     card_payments: {
+      //       requested: true,
+      //     },
+      //     transfers: {
+      //       requested: true,
+      //     },
+      //   },
+      // });
+
       const stripeCustomer = await stripe.customers.create({
-        name: data.name as string,
-        email: data.email as string,
+        name: result?.name!,
         metadata: {
-          organizationId: result?.id,
+          organizationId: result?.id!,
+          userId: ctx?.user?.id!,
         },
       });
+
+      console.log(stripeCustomer, "stripeCustomer");
+      console.log(result, "result");
 
       const [organizationResult] = await db
         .update(organizationTable)
@@ -185,7 +228,8 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
-          stripeId: stripeCustomer.id,
+          // companyStripeId: stripeCompany.id,
+          customerStripeId: stripeCustomer?.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
@@ -210,7 +254,7 @@ export const createOrganization = createServerAction(
 export const updateOrganization = createServerAction(
   organizationFormSchema,
   async (input, ctx) => {
-    const data = await db
+    const [data] = await db
       .update(organizationTable)
       .set({
         name: input.name,
@@ -232,9 +276,7 @@ export const updateOrganization = createServerAction(
       throw new ActionError("Organization not updated");
     }
 
-    revalidatePath(`/dashboard/organization/${ctx.organization?.id}/settings`);
-
-    return data;
+    return data as Organization;
   },
   [requireAuth, requireOwner],
 );
@@ -396,10 +438,10 @@ export const getCompletedAppointmentsThisMonth = createServerAction(
       where: (appointments) => {
         return and(
           eq(appointments.proId, ctx.organization?.id as string),
-          eq(appointments.status, "CLIENT ACCEPTED"),
+          eq(appointments.status, "PAYED"),
           and(
-            gte(appointments.beginAt, firstDayOfMonth.toISOString()),
-            lte(appointments.beginAt, lastDayOfMonth.toISOString()),
+            gte(appointments.beginAt, firstDayOfMonth),
+            lte(appointments.beginAt, lastDayOfMonth),
           ),
         );
       },

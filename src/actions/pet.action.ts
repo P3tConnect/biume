@@ -166,3 +166,56 @@ export const deletePet = createServerAction(
   },
   [requireAuth]
 );
+
+export const getPetById = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    return pet as Pet;
+  },
+  [requireAuth]
+);
+
+export const updatePet = createServerAction(
+  CreatePetSchema.extend({
+    id: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) => and(eq(p.id, input.id), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    const { id, ...petData } = input;
+
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        ...petData,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, id))
+      .returning()
+      .execute();
+
+    if (!updatedPet[0]) {
+      throw new Error("Erreur lors de la mise à jour de l'animal");
+    }
+
+    return updatedPet[0];
+  },
+  [requireAuth]
+);

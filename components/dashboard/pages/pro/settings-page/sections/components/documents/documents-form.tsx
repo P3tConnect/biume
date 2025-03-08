@@ -39,17 +39,21 @@ import {
 } from "@/components/ui/tooltip";
 import { getDocumentName } from "@/src/lib/utils";
 import { OrganizationDocuments } from "@/src/db";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const DocumentsForm = ({
   documents,
 }: {
   documents: OrganizationDocuments[];
 }) => {
+  const queryClient = useQueryClient();
   const { mutateAsync: updateDocuments } = useMutation({
     mutationFn: updateCompanyDocuments,
     onSuccess: () => {
       toast.success("Documents mis à jour avec succès!");
+      queryClient.invalidateQueries({
+        queryKey: ["organization-documents"],
+      });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -76,6 +80,9 @@ export const DocumentsForm = ({
     mutationFn: deleteCompanyDocument,
     onSuccess: () => {
       toast.success("Document supprimé avec succès!");
+      queryClient.invalidateQueries({
+        queryKey: ["organization-documents"],
+      });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -105,121 +112,111 @@ export const DocumentsForm = ({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Documents justificatifs</CardTitle>
-        <CardDescription>
-          Gérez les documents justificatifs de votre entreprise
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <div className="space-y-6">
-            <FormField
-              control={control}
-              name="documents"
-              render={({ field }) => (
-                <FormItem>
-                  <DropzoneInput
-                    onFilesChanged={(files) =>
-                      setValue("documents", files, { shouldDirty: true })
-                    }
-                    value={field.value ?? []}
-                    uploadEndpoint="documentsUploader"
-                    placeholder={{
-                      dragActive: "Déposez vos documents ici",
-                      dragInactive:
-                        "Glissez-déposez vos documents ici, ou cliquez pour sélectionner",
-                      fileTypes: "PDF, JPEG, PNG - 5MB max",
-                    }}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <Form {...form}>
+      <div className="space-y-6">
+        <FormField
+          control={control}
+          name="documents"
+          render={({ field }) => (
+            <FormItem>
+              <DropzoneInput
+                onFilesChanged={(files) =>
+                  setValue("documents", files, { shouldDirty: true })
+                }
+                value={field.value ?? []}
+                uploadEndpoint="documentsUploader"
+                placeholder={{
+                  dragActive: "Déposez vos documents ici",
+                  dragInactive:
+                    "Glissez-déposez vos documents ici, ou cliquez pour sélectionner",
+                  fileTypes: "PDF, JPEG, PNG - 5MB max",
+                }}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            {currentDocuments.length > 0 && (
-              <div className="space-y-2">
-                {currentDocuments.map((doc, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-2 px-2 group rounded-md hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">
-                        {getDocumentName(doc, index)}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
+        {currentDocuments.length > 0 && (
+          <div className="space-y-2">
+            {currentDocuments.map((doc, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between py-2 px-2 group rounded-md hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center space-x-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">
+                    {getDocumentName(doc, index)}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => window.open(doc.url, "_blank")}
+                        >
+                          <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Voir le document</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <AlertDialog>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <AlertDialogTrigger asChild>
                             <Button
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 p-0"
-                              onClick={() => window.open(doc.url, "_blank")}
                             >
-                              <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                              <Trash2 className="h-4 w-4 text-destructive hover:text-destructive/80" />
                             </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Voir le document</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-
-                      <AlertDialog>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <Trash2 className="h-4 w-4 text-destructive hover:text-destructive/80" />
-                                </Button>
-                              </AlertDialogTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Supprimer le document</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Supprimer le document
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Êtes-vous sûr de vouloir supprimer ce document ?
-                              Cette action est irréversible.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={async () =>
-                                await handleDeleteDocument(index)
-                              }
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Supprimer
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                ))}
+                          </AlertDialogTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer le document</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Supprimer le document
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Êtes-vous sûr de vouloir supprimer ce document ? Cette
+                          action est irréversible.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={async () =>
+                            await handleDeleteDocument(index)
+                          }
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Supprimer
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
-            )}
+            ))}
           </div>
-        </Form>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </Form>
   );
 };

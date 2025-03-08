@@ -14,7 +14,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { useUploadThing } from "@/src/lib/uploadthing";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { proDocumentsSchema } from "../../types/onboarding-schemas";
 import { createDocumentsStepAction } from "@/src/actions";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_FILE_TYPES = {
@@ -37,6 +38,7 @@ export function DocumentsForm({
   nextStep: () => void;
   previousStep: () => void;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof proDocumentsSchema>>({
     resolver: zodResolver(proDocumentsSchema),
     defaultValues: {
@@ -51,11 +53,16 @@ export function DocumentsForm({
   const { mutateAsync } = useMutation({
     mutationFn: createDocumentsStepAction,
     onSuccess: () => {
+      setIsLoading(false);
       reset();
       nextStep();
     },
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onError: (error: { message: string }) => {
       toast.error(error.message);
+      setIsLoading(false);
     },
   });
 
@@ -172,8 +179,19 @@ export function DocumentsForm({
               >
                 Passer
               </Button>
-              <Button type="submit" className="rounded-xl px-6">
-                Suivant →
+              <Button
+                disabled={isLoading}
+                type="submit"
+                className="rounded-xl px-6"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>En cours...</span>
+                  </>
+                ) : (
+                  "Suivant →"
+                )}
               </Button>
             </div>
           </div>
@@ -192,7 +210,10 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
   const { startUpload, isUploading } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
       if (!res) return;
-      const uploadedUrls = res.map((file) => ({ url: file.url, name: file.name }));
+      const uploadedUrls = res.map((file) => ({
+        url: file.url,
+        name: file.name,
+      }));
       onFilesChanged(uploadedUrls);
       toast.success("Documents téléchargés avec succès");
     },

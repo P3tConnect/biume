@@ -19,6 +19,7 @@ import { usePetContext } from '../context/pet-context';
 import { useSession } from '@/src/lib/auth-client';
 import { updatePetAllergies } from '@/src/actions';
 import { useMutation } from '@tanstack/react-query';
+import { Pet } from '@/src/db/pets';
 
 // Liste des allergies communes chez les animaux comme exemple
 const commonAllergies = [
@@ -29,15 +30,21 @@ const commonAllergies = [
   { id: '5', text: 'Produits laitiers' },
 ];
 
+interface InformationsPetAllergiesFormProps {
+  nextStep: () => void;
+  previousStep: () => void;
+  isPending: boolean;
+  petData?: Pet | null;
+  isUpdate?: boolean;
+}
+
 const InformationsPetAllergiesForm = ({
   nextStep,
   previousStep,
   isPending,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-}) => {
+  petData,
+  isUpdate = false,
+}: InformationsPetAllergiesFormProps) => {
   const { petId } = usePetContext();
   const { data: session } = useSession();
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
@@ -62,6 +69,13 @@ const InformationsPetAllergiesForm = ({
       );
     },
   });
+
+  useEffect(() => {
+    if (isUpdate && petData && petData.allergies) {
+      const existingAllergies = petData.allergies as string[];
+      setSelectedAllergies(existingAllergies);
+    }
+  }, [isUpdate, petData]);
 
   useEffect(() => {
     form.setValue('allergies', selectedAllergies);

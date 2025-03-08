@@ -41,7 +41,7 @@ export function ConsultationTypeStep({
                 Consultation classique au cabinet vétérinaire
               </p>
             </div>
-            <Badge variant="secondary">Prix standard</Badge>
+            <Badge variant="secondary">Tarif standard</Badge>
           </div>
         </motion.div>
 
@@ -66,7 +66,7 @@ export function ConsultationTypeStep({
                 Le vétérinaire se déplace chez vous
               </p>
             </div>
-            <Badge variant="secondary">+10€</Badge>
+            <Badge variant="secondary">Frais supplémentaires</Badge>
           </div>
         </motion.div>
       </div>

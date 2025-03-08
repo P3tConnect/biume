@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui";
+import { Avatar, AvatarFallback } from "@/components/ui";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -18,14 +10,14 @@ interface CompanyReviewsProps {
 
 export function CompanyReviews({ reviews }: CompanyReviewsProps) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Avis clients</CardTitle>
-        <Button variant="ghost" size="sm">
-          Voir tout
-        </Button>
-      </CardHeader>
-      <CardContent>
+    <div>
+      {reviews.length === 0 ? (
+        <div className="text-center py-4">
+          <p className="text-muted-foreground">
+            Aucun avis client disponible pour le moment.
+          </p>
+        </div>
+      ) : (
         <div className="space-y-6">
           {reviews.map((review) => (
             <div key={review.id} className="space-y-2">
@@ -56,7 +48,7 @@ export function CompanyReviews({ reviews }: CompanyReviewsProps) {
             </div>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 }

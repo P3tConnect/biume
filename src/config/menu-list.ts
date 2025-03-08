@@ -16,6 +16,7 @@ import {
   DollarSignIcon,
   Ticket,
   UsersRound,
+  NotepadText,
 } from "lucide-react";
 
 export type Submenu = {
@@ -55,7 +56,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active: pathname == `/dashboard/organization/${companyId}/timetable`,
           icon: Calendar,
         },
-        
       ],
     },
     {
@@ -100,14 +100,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
                 `/dashboard/organization/${companyId}/accounting/expenses`,
               icon: DollarSignIcon,
             },
-            {
-              href: `/dashboard/organization/${companyId}/accounting/reports`,
-              label: "dashboard.sidebar.financialReports",
-              active:
-                pathname ===
-                `/dashboard/organization/${companyId}/accounting/reports`,
-              icon: PieChart,
-            },
           ],
         },
         {
@@ -131,15 +123,15 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           href: `/dashboard/organization/${companyId}/reports`,
           label: "dashboard.sidebar.reports",
           active: pathname == `/dashboard/organization/${companyId}/reports`,
-          icon: LineChart,
+          icon: NotepadText,
         },
-        {
-          href: `/dashboard/organization/${companyId}/observations`,
-          label: "dashboard.sidebar.observations",
-          active:
-            pathname == `/dashboard/organization/${companyId}/observations`,
-          icon: Eye,
-        },
+        // {
+        //   href: `/dashboard/organization/${companyId}/observations`,
+        //   label: "dashboard.sidebar.observations",
+        //   active:
+        //     pathname == `/dashboard/organization/${companyId}/observations`,
+        //   icon: Eye,
+        // },
         {
           href: `/dashboard/organization/${companyId}/reminders`,
           label: "dashboard.sidebar.reminders",
@@ -154,53 +146,10 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
         {
           href: `/dashboard/organization/${companyId}/settings`,
           label: "Paramètres",
-          active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
+          active: pathname.includes(
+            `/dashboard/organization/${companyId}/settings`,
+          ),
           icon: Settings,
-        },
-      ],
-    },
-  ];
-}
-
-export function clientMenuList(pathname: string, userId: string) {
-  return [
-    {
-      groupLabel: "",
-      menus: [
-        {
-          href: `/dashboard/user/${userId}`,
-          label: "dashboard",
-          active: pathname == `/dashboard/user/${userId}`,
-          icon: LayoutGrid,
-        },
-        {
-          href: `/dashboard/user/${userId}/timetable`,
-          label: "calendrier",
-          active: pathname == `/dashboard/user/${userId}/timetable`,
-          icon: Calendar,
-        },
-      ],
-    },
-    {
-      groupLabel: "compte",
-      menus: [
-        {
-          href: `/dashboard/user/${userId}/reservations`,
-          label: "reservations",
-          active: pathname == `/dashboard/user/${userId}/reservations`,
-          icon: Ticket,
-        },
-        {
-          href: `/dashboard/user/${userId}/pets`,
-          label: "animaux",
-          active: pathname == `/dashboard/user/${userId}/pets`,
-          icon: PawPrint,
-        },
-        {
-          href: `/dashboard/user/${userId}/settings`,
-          label: "paramètres",
-          active: pathname == `/dashboard/user/${userId}/settings`,
-          icon: UsersRound,
         },
       ],
     },

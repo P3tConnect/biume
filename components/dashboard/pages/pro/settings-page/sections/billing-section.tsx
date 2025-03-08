@@ -13,6 +13,7 @@ import { BillingInvoicesSection } from "./components/billing/billing-invoices-se
 import { getInvoiceHistory } from "@/src/actions/stripe.action";
 import { getBillingInfo } from "@/src/actions/stripe.action";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const plans = [
   {
@@ -62,7 +63,10 @@ export const plans = [
 ];
 
 export const BillingSection = () => {
-  const [billingInfo, invoices] = useQueries({
+  const [
+    { data: billingInfo, isLoading: isBillingLoading },
+    { data: invoices, isLoading: isInvoicesLoading },
+  ] = useQueries({
     queries: [
       {
         queryKey: ["billing-info"],
@@ -74,6 +78,8 @@ export const BillingSection = () => {
       },
     ],
   });
+
+  const isLoading = isBillingLoading || isInvoicesLoading;
 
   return (
     <Card className="overflow-hidden">
@@ -87,11 +93,33 @@ export const BillingSection = () => {
       </CardHeader>
       <CardContent className="p-8">
         <div className="space-y-8">
-          <BillingPlanSection plans={plans} billingInfo={billingInfo?.data} />
-          <div className="h-px bg-border" />
-          <BillingPaymentSection billingInfo={billingInfo?.data} />
-          <div className="h-px bg-border" />
-          <BillingInvoicesSection invoices={invoices?.data} />
+          {isLoading ? (
+            <>
+              <div className="space-y-3">
+                <Skeleton className="h-10 w-[250px]" />
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-10 w-[200px]" />
+              </div>
+              <div className="h-px bg-border" />
+              <div className="space-y-3">
+                <Skeleton className="h-10 w-[250px]" />
+                <Skeleton className="h-16 w-full" />
+              </div>
+              <div className="h-px bg-border" />
+              <div className="space-y-3">
+                <Skeleton className="h-10 w-[250px]" />
+                <Skeleton className="h-20 w-full" />
+              </div>
+            </>
+          ) : (
+            <>
+              <BillingPlanSection plans={plans} billingInfo={billingInfo} />
+              <div className="h-px bg-border" />
+              <BillingPaymentSection billingInfo={billingInfo} />
+              <div className="h-px bg-border" />
+              <BillingInvoicesSection invoices={invoices} />
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

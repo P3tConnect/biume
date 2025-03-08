@@ -152,60 +152,67 @@ const StepperClient = ({ open }: { open: boolean }) => {
             ),
             complete: () => <ClientCompleteStep />,
           })}
-        <div className='space-y-4'>
-          {!stepper.isLast ? (
-            <div className='flex justify-end gap-4'>
-              {stepper.isFirst ? (
-                <CredenzaClose asChild>
-                  <Button variant='outline' className='rounded-xl'>
-                    Fermer
+        {stepper.current.id === 'pet' ||
+        stepper.current.id === 'petDeseases' ||
+        stepper.current.id === 'petIntolerances' ||
+        stepper.current.id === 'petAllergies' ? (
+          <></>
+        ) : (
+          <div className='space-y-4'>
+            {!stepper.isLast ? (
+              <div className='flex justify-end gap-4'>
+                {stepper.isFirst ? (
+                  <CredenzaClose asChild>
+                    <Button variant='outline' className='rounded-xl'>
+                      Fermer
+                    </Button>
+                  </CredenzaClose>
+                ) : (
+                  <Button
+                    variant='outline'
+                    className='rounded-xl'
+                    onClick={stepper.prev}
+                    disabled={stepper.isFirst}
+                  >
+                    Retour
                   </Button>
-                </CredenzaClose>
-              ) : (
+                )}
                 <Button
+                  onClick={async () => await onSubmit(form.getValues())}
+                  className='rounded-xl'
+                  disabled={
+                    stepper.current.id === 'informations' &&
+                    (!form.getValues().address ||
+                      !form.getValues().city ||
+                      !form.getValues().country ||
+                      !form.getValues().zipCode ||
+                      !form.getValues().phoneNumber)
+                  }
+                >
+                  Suivant
+                </Button>
+              </div>
+            ) : (
+              <div className='flex flex-row justify-end gap-2'>
+                <Button
+                  onClick={stepper.prev}
                   variant='outline'
                   className='rounded-xl'
-                  onClick={stepper.prev}
-                  disabled={stepper.isFirst}
                 >
                   Retour
                 </Button>
-              )}
-              <Button
-                onClick={async () => await onSubmit(form.getValues())}
-                className='rounded-xl'
-                disabled={
-                  stepper.current.id === 'informations' &&
-                  (!form.getValues().address ||
-                    !form.getValues().city ||
-                    !form.getValues().country ||
-                    !form.getValues().zipCode ||
-                    !form.getValues().phoneNumber)
-                }
-              >
-                Suivant
-              </Button>
-            </div>
-          ) : (
-            <div className='flex flex-row justify-end gap-2'>
-              <Button
-                onClick={stepper.prev}
-                variant='outline'
-                className='rounded-xl'
-              >
-                Retour
-              </Button>
-              <CredenzaClose asChild>
-                <Button
-                  className='rounded-xl'
-                  onClick={async () => await onSubmit(form.getValues())}
-                >
-                  Terminer
-                </Button>
-              </CredenzaClose>
-            </div>
-          )}
-        </div>
+                <CredenzaClose asChild>
+                  <Button
+                    className='rounded-xl'
+                    onClick={async () => await onSubmit(form.getValues())}
+                  >
+                    Terminer
+                  </Button>
+                </CredenzaClose>
+              </div>
+            )}
+          </div>
+        )}
       </CredenzaContent>
     </Credenza>
   );

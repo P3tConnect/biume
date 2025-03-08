@@ -2,8 +2,6 @@
 
 import { Button, Input } from "@/components/ui";
 import React, { useState } from "react";
-
-import { ErrorContext } from "@better-fetch/fetch";
 import Image from "next/image";
 import Link from "next/link";
 import { registerSchema } from "@/src/lib";
@@ -13,34 +11,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Définition du type de réponse pour l'authentification
-type AuthResponseContext = {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      // autres propriétés de l'utilisateur
-      [key: string]: any;
-    };
-    // autres données potentielles dans la réponse
-    [key: string]: any;
-  };
-  // autres propriétés du contexte
-  [key: string]: any;
-};
-
-// Définition du type d'erreur pour l'authentification
-type AuthErrorContext = {
-  error: {
-    message: string;
-    // autres propriétés potentielles de l'erreur
-    [key: string]: any;
-  };
-  // autres propriétés du contexte d'erreur
-  [key: string]: any;
-};
 
 const RegisterClientPage = () => {
   const [loading, setLoading] = useState(false);
@@ -68,11 +38,11 @@ const RegisterClientPage = () => {
         onRequest: () => {
           setLoading(true);
         },
-        onSuccess: (ctx: AuthResponseContext) => {
+        onSuccess: (ctx) => {
           toast.success("Inscription réussie ! Vous allez être redirigé ...");
           router.push(`/dashboard/user/${ctx.data.user.id}`);
         },
-        onError: (error: AuthErrorContext) => {
+        onError: (error) => {
           setLoading(false);
           console.log(error, "error");
           toast.error(`Error : ${error.error.message}`);
@@ -87,7 +57,7 @@ const RegisterClientPage = () => {
         <h1 className="text-4xl font-bold text-primary">Inscription</h1>
         <p className="text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14">
           Ceci est du texte de description pour justifier de l&apos;utilité de
-          s&apos;inscrire sur notre plateforme PawThera
+          s&apos;inscrire sur notre plateforme Biume
         </p>
         <form
           onSubmit={onSubmit}

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Card,
@@ -10,22 +12,34 @@ import {
   CredenzaTitle,
   CredenzaDescription,
   CredenzaFooter,
+  Input,
 } from "@/components/ui";
 import { ChevronRight } from "lucide-react";
 import { fr } from "date-fns/locale";
-import { Dispatch, SetStateAction, useState, useMemo } from "react";
-import { format, isSameDay } from "date-fns";
+import { Dispatch, SetStateAction, useState } from "react";
+import { format } from "date-fns";
 import { cn } from "@/src/lib/utils";
 import { Service, Member } from "@/src/db";
 import { getPets } from "@/src/actions";
 import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action";
+import { getOptionsFromOrganization } from "@/src/actions/options.action";
 import { steps, useStepper } from "./hooks/useBookingStepper";
 import { PetStep } from "./steps/PetStep";
 import { ConsultationTypeStep } from "./steps/ConsultationTypeStep";
+import { OptionsStep, Option } from "./steps/OptionsStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import Avvvatars from "avvvatars-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import AppointmentPicker from "@/components/ui/appointment-picker";
+import { useSession, signIn } from "@/src/lib/auth-client";
+import { toast } from "sonner";
+import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/src/lib";
+import { z } from "zod";
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 interface BookingCardProps {
   services: Service[];
@@ -52,7 +66,13 @@ export function BookingCard({
   setSelectedDate,
   setSelectedTime,
 }: BookingCardProps) {
+  const { data: session } = useSession();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const { data: userPets } = useQuery({
     queryKey: ["user-pets"],
@@ -67,6 +87,15 @@ export function BookingCard({
       return getOrganizationSlotsByService({ serviceId: selectedService });
     },
     enabled: !!selectedService,
+  });
+
+  // Récupération des options de l'organisation
+  const { data: organizationOptions, isLoading: isLoadingOptions } = useQuery({
+    queryKey: ["organization-options"],
+    queryFn: async () => {
+      const options = await getOptionsFromOrganization({});
+      return options;
+    },
   });
 
   const {
@@ -100,51 +129,82 @@ export function BookingCard({
     setSelectedTime(time);
   };
 
-  const handleBooking = () => {
-    // TODO: Implémenter la logique de réservation
-    console.log({
-      service: selectedServiceData,
-      professional: selectedProData,
-      date: selectedDate,
-      time: selectedTime,
-      additionalInfo: metadata?.summary?.additionalInfo,
-      pet: selectedPet,
-      isHomeVisit: metadata?.consultationType?.isHomeVisit,
-    });
-    setIsConfirmModalOpen(false);
+  const handleOpenBookingModal = () => {
+    if (!session) {
+      // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion
+      setIsLoginModalOpen(true);
+    } else {
+      // Si l'utilisateur est connecté, ouvrir la modale de réservation
+      setIsConfirmModalOpen(true);
+    }
   };
 
-  const stepContent = {
-    pet: (
-      <PetStep
-        userPets={userPets?.data ?? []}
-        selectedPetId={metadata?.pet?.petId ?? ""}
-        onSelectPet={(petId) => setMetadata("pet", { petId })}
-      />
-    ),
-    consultationType: (
-      <ConsultationTypeStep
-        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-        onSelectType={(isHomeVisit) =>
-          setMetadata("consultationType", { isHomeVisit })
-        }
-      />
-    ),
-    summary: (
-      <SummaryStep
-        selectedPet={selectedPet}
-        selectedService={selectedServiceData}
-        selectedPro={selectedProData}
-        selectedDate={selectedDate}
-        selectedTime={selectedTime}
-        isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-        additionalInfo={metadata?.summary?.additionalInfo ?? ""}
-        onAdditionalInfoChange={(value) =>
-          setMetadata("summary", { additionalInfo: value })
-        }
-      />
-    ),
+  const onLoginSubmit = handleSubmit(async (data) => {
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
+      },
+      {
+        onRequest: () => {
+          setLoginLoading(true);
+        },
+        onSuccess: () => {
+          setLoginLoading(false);
+          toast.success("Connexion réussie !");
+          setIsLoginModalOpen(false);
+          setIsConfirmModalOpen(true); // Ouvrir la modale de réservation après connexion
+        },
+        onError: (error) => {
+          setLoginLoading(false);
+          toast.error(`Erreur : ${error.error.message}`);
+        },
+      },
+    );
+  });
+
+  const params = useParams();
+  const companyId = params.companyId as string;
+
+  // const { mutateAsync } = useMutation({
+  //   mutationFn: createPaymentIntent,
+  //   onSuccess: (data) => {
+  //     console.log(data);
+  //   },
+  //   onError: (error) => {
+  //     console.error(error);
+  //   },
+  // });
+
+  const handleBooking = async () => {
+    const servicePrice = selectedServiceData?.price ?? 0;
+    const optionsPrice = metadata?.options?.selectedOptions.reduce(
+      (acc: number, optionId: string) => {
+        const option = organizationOptions?.data?.find(
+          (o) => o.id === optionId,
+        );
+        return acc + (option?.price ?? 0);
+      },
+      0,
+    );
+
+    const homeVisitPrice = metadata?.consultationType?.isHomeVisit ? 10 : 0;
+
+    const amount = servicePrice + optionsPrice + homeVisitPrice;
+
+    console.log(amount, "amount");
   };
+
+  // Transformer les options de l'organisation au format attendu par le composant OptionsStep
+  const adaptedOptions: Option[] = (organizationOptions?.data || []).map(
+    (option) => ({
+      id: option.id,
+      name: option.title,
+      description: option.description || "",
+      price: option.price || 0,
+    }),
+  );
 
   return (
     <Card className="border-2">
@@ -257,16 +317,88 @@ export function BookingCard({
           disabled={!selectedTime}
           className="w-full"
           size="lg"
-          onClick={() => setIsConfirmModalOpen(true)}
+          onClick={handleOpenBookingModal}
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-              locale: fr,
-            })} à ${selectedTime}`
+                locale: fr,
+              })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
 
+      {/* Modale de connexion */}
+      <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+        <CredenzaContent className="sm:max-w-[450px]">
+          <CredenzaHeader>
+            <CredenzaTitle>Connexion requise</CredenzaTitle>
+            <CredenzaDescription>
+              Veuillez vous connecter pour continuer votre réservation
+            </CredenzaDescription>
+          </CredenzaHeader>
+
+          <form onSubmit={onLoginSubmit} className="py-4 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="votre@email.com"
+                {...register("email")}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Mot de passe
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="********"
+                {...register("password")}
+              />
+            </div>
+
+            <CredenzaFooter className="px-0 pt-2">
+              <div className="flex w-full justify-between">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsLoginModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={loginLoading}>
+                  {loginLoading ? "Connexion..." : "Se connecter"}
+                </Button>
+              </div>
+              <div className="w-full text-center mt-4">
+                <p className="text-sm text-muted-foreground">
+                  Vous n&apos;avez pas de compte ?{" "}
+                  <Link
+                    href="/sign-up"
+                    className="text-primary hover:underline"
+                  >
+                    Inscrivez-vous
+                  </Link>
+                </p>
+              </div>
+            </CredenzaFooter>
+          </form>
+        </CredenzaContent>
+      </Credenza>
+
+      {/* Modale de réservation */}
       <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
@@ -279,9 +411,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                          Object.values(steps).findIndex(
-                            (s) => s.id === current.id,
-                          )
+                            Object.values(steps).findIndex(
+                              (s) => s.id === current.id,
+                            )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
@@ -320,6 +452,28 @@ export function BookingCard({
                   }
                 />
               ),
+              options: () =>
+                isLoadingOptions ? (
+                  <div className="flex flex-col items-center justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                    <p className="text-muted-foreground">
+                      Chargement des options...
+                    </p>
+                  </div>
+                ) : (
+                  <OptionsStep
+                    availableOptions={adaptedOptions}
+                    selectedOptions={metadata?.options?.selectedOptions ?? []}
+                    onToggleOption={(optionId: string) => {
+                      const currentOptions =
+                        metadata?.options?.selectedOptions ?? [];
+                      const newOptions = currentOptions.includes(optionId)
+                        ? currentOptions.filter((id: string) => id !== optionId)
+                        : [...currentOptions, optionId];
+                      setMetadata("options", { selectedOptions: newOptions });
+                    }}
+                  />
+                ),
               summary: () => (
                 <SummaryStep
                   selectedPet={selectedPet}
@@ -331,6 +485,14 @@ export function BookingCard({
                   additionalInfo={metadata?.summary?.additionalInfo ?? ""}
                   onAdditionalInfoChange={(value) =>
                     setMetadata("summary", { additionalInfo: value })
+                  }
+                  selectedOptions={
+                    metadata?.options?.selectedOptions
+                      ? metadata.options.selectedOptions.map(
+                          (id: string) =>
+                            adaptedOptions.find((o) => o.id === id)!,
+                        )
+                      : []
                   }
                 />
               ),

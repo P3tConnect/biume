@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CompanyDetails } from "./_components/CompanyDetails";
 import { getCompanyById } from "@/src/actions/organization.action";

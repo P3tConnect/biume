@@ -1,7 +1,14 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
-"use client";
+'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger, Card, CardHeader, CardTitle } from "@/components/ui";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Card,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui';
 import {
   Building2,
   CreditCard,
@@ -15,53 +22,12 @@ import {
 import { ProfileSection } from './sections/profile-section';
 import { BillingSection } from './sections/billing-section';
 import { TeamSection } from './sections/team-section';
-import { DocumentsSection } from './sections/documents-section';
 import { ServicesSection } from './sections/services-section';
 import { OptionsSection } from './sections/options-section';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import ImagesSection from './sections/images-section';
-import SlotsSection from './sections/slotsSection';
-import { getOrganizationImages } from '@/src/actions/organization.action';
-import { getCurrentOrganization } from '@/src/actions/organization.action';
-import {
-  getBillingInfo,
-  getCompanyDocuments,
-  getInvoiceHistory,
-  getOptionsFromOrganization,
-  getOrganizationSlots,
-} from '@/src/actions';
-import { getServicesFromOrganization } from '@/src/actions';
-import { Suspense } from 'react';
-} from "lucide-react";
-import { ProfileSection } from "./sections/profile-section";
-import { BillingSection } from "./sections/billing-section";
-import { TeamSection } from "./sections/team-section";
-import { ServicesSection } from "./sections/services-section";
-import { OptionsSection } from "./sections/options-section";
-import ImagesSection from "./sections/images-section";
-import SlotsSection from "./sections/slots-section";
-import DocumentsSection from "./sections/documents-section";
-
-const SettingsPageComponent = async () => {
-  const [
-    profile,
-    images,
-    services,
-    options,
-    documents,
-    billing,
-    invoices,
-    slots,
-  ] = await Promise.all([
-    getCurrentOrganization({}),
-    getOrganizationImages({}),
-    getServicesFromOrganization({}),
-    getOptionsFromOrganization({}),
-    getCompanyDocuments({}),
-    getBillingInfo({}),
-    getInvoiceHistory({}),
-    getOrganizationSlots({}),
-  ]);
+import SlotsSection from './sections/slots-section';
+import DocumentsSection from './sections/documents-section';
+import KYBSection from './sections/kyb-section';
 
 const SettingsPageComponent = () => {
   return (
@@ -88,8 +54,8 @@ const SettingsPageComponent = () => {
               <Building2 className='h-4 w-4' />
               Profil
             </TabsTrigger>
-            <TabsTrigger value="images" className="flex items-center gap-2">
-              <ImageIcon className="h-4 w-4" />
+            <TabsTrigger value='images' className='flex items-center gap-2'>
+              <ImageIcon className='h-4 w-4' />
               Images
             </TabsTrigger>
             <TabsTrigger value='services' className='flex items-center gap-2'>
@@ -102,7 +68,7 @@ const SettingsPageComponent = () => {
             </TabsTrigger>
             <TabsTrigger value='slots' className='flex items-center gap-2'>
               <Clock className='h-4 w-4' />
-              Slots
+              Créneaux
             </TabsTrigger>
             <TabsTrigger value='documents' className='flex items-center gap-2'>
               <FileText className='h-4 w-4' />
@@ -112,6 +78,10 @@ const SettingsPageComponent = () => {
               <CreditCard className='h-4 w-4' />
               Facturation
             </TabsTrigger>
+            <TabsTrigger value='kyb' className='flex items-center gap-2'>
+              <CreditCard className='h-4 w-4' />
+              KYB
+            </TabsTrigger>
             <TabsTrigger value='team' className='flex items-center gap-2'>
               <Users className='h-4 w-4' />
               Équipe
@@ -119,66 +89,38 @@ const SettingsPageComponent = () => {
           </TabsList>
 
           <TabsContent value='profile'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ProfileSection org={profile} />
-            </Suspense>
-          <TabsContent value="profile">
             <ProfileSection />
           </TabsContent>
 
           <TabsContent value='images'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ImagesSection images={images} />
-            </Suspense>
-          <TabsContent value="images">
             <ImagesSection />
           </TabsContent>
 
           <TabsContent value='services'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <ServicesSection services={services} />
-            </Suspense>
-          <TabsContent value="services">
             <ServicesSection />
           </TabsContent>
 
           <TabsContent value='options'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <OptionsSection options={options} />
-            </Suspense>
-          <TabsContent value="options">
             <OptionsSection />
           </TabsContent>
 
           <TabsContent value='slots'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <SlotsSection slots={slots.data ?? []} />
-            </Suspense>
-          <TabsContent value="slots">
             <SlotsSection />
           </TabsContent>
 
           <TabsContent value='documents'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <DocumentsSection documents={documents} />
-            </Suspense>
-          <TabsContent value="documents">
             <DocumentsSection />
           </TabsContent>
 
           <TabsContent value='billing'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <BillingSection billingInfo={billing} invoices={invoices} />
-            </Suspense>
-          <TabsContent value="billing">
             <BillingSection />
           </TabsContent>
 
+          <TabsContent value='kyb'>
+            <KYBSection />
+          </TabsContent>
+
           <TabsContent value='team'>
-            <Suspense fallback={<div>Chargement...</div>}>
-              <TeamSection />
-            </Suspense>
-          <TabsContent value="team">
             <TeamSection />
           </TabsContent>
         </Tabs>

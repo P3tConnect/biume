@@ -27,10 +27,13 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: `${process.env.NEXT_PUBLIC_VERCEL_URL}/assets/images/Icone.png`,
+      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
     },
     appleWebApp: {
       title: "Biume",
+      startupImage: {
+        url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
+      },
     },
     openGraph: {
       type: "website",
@@ -40,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Biume",
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`,
+          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
           width: 1200,
           height: 630,
           alt: "Biume",
@@ -51,7 +54,9 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Biume",
       description: t("description"),
-      images: [`${process.env.NEXT_PUBLIC_VERCEL_URL}/PawThera.jpeg`],
+      images: [
+        `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/images/biume-logo.png`,
+      ],
     },
     applicationName: "Biume",
     authors: [

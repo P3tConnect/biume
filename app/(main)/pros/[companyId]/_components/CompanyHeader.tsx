@@ -39,9 +39,9 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
   const averageRating =
     company.ratings && company.ratings.length > 0
       ? (
-        company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-        company.ratings.length
-      ).toFixed(1)
+          company.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+          company.ratings.length
+        ).toFixed(1)
       : "4.8";
 
   return (

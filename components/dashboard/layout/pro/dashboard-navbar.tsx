@@ -47,12 +47,14 @@ import {
   ChevronDown,
   Search,
   Menu,
+  ArrowLeftRight,
+  AlertCircle,
+  Building2,
+  RefreshCw,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  useSession,
   useActiveOrganization,
-  useListOrganizations,
   organization,
   getSession,
 } from "@/src/lib/auth-client";
@@ -62,26 +64,54 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaDescription,
+  CredenzaBody,
+} from "@/components/ui";
+import Stepper from "@/components/onboarding/components/stepper";
+import { AccountSwitchDialog } from "../account-switch-dialog";
+import { getAllOrganizationsByUserId } from "@/src/actions/organization.action";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [orgMenuOpen, setOrgMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isWindows =
-    typeof window !== "undefined" && window.navigator.platform.includes("Win");
-  const shortcutKey = isWindows ? "Ctrl" : "⌘";
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
-  const { data: session } = useQuery({
-    queryKey: ["user-informations"],
-    queryFn: () => getSession(),
-  });
-  const { data: activeOrganization } = useActiveOrganization();
-  const { data: organizations } = useListOrganizations();
-  const menuGroups = proMenuList(pathname || "", companyId);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [orgMenuOpen, setOrgMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null);
+  const [switchingPersonal, setSwitchingPersonal] = useState(false);
+  const [showCreateOrgCredenza, setShowCreateOrgCredenza] = useState(false);
+  const [showPersonalDialog, setShowPersonalDialog] = useState(false);
+  const [showProfessionalDialog, setShowProfessionalDialog] = useState(false);
+  const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: activeOrganization } = useActiveOrganization();
+
+  const isWindows =
+    typeof window !== "undefined" && window.navigator.platform.includes("Win");
+  const shortcutKey = isWindows ? "Ctrl" : "⌘";
+
+  const [{ data: session }, { data: organizations }] = useQueries({
+    queries: [
+      {
+        queryKey: ["user-informations"],
+        queryFn: () => getSession(),
+      },
+      {
+        queryKey: ["user-organizations"],
+        queryFn: () => getAllOrganizationsByUserId({}),
+      },
+    ],
+  });
+
+  const menuGroups = proMenuList(pathname || "", companyId);
 
   // Fonction pour obtenir l'icône pour chaque groupe de menu
   const getGroupIcon = (groupLabel: string) => {
@@ -102,15 +132,54 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
     return Book;
   };
 
+  const handlePersonalAccountSwitch = async () => {
+    // Ne pas déclencher si déjà sur le compte personnel
+    if (pathname?.startsWith(`/dashboard/user/${session?.data?.user.id}`))
+      return;
+
+    setSwitchingPersonal(true);
+    setIsLoading(true);
+    setShowPersonalDialog(true);
+
+    try {
+      // Attendre 3 secondes avant la redirection
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Redirection après le délai
+      router.push(`/dashboard/user/${session?.data?.user.id}`);
+      setIsLoading(false);
+    } catch (error) {
+      // Notification d'erreur en cas d'échec
+      toast.error("Erreur lors du changement de compte", {
+        description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
+      });
+      setShowPersonalDialog(false);
+    } finally {
+      setSwitchingPersonal(false);
+    }
+  };
+
   const handleOrganizationSwitch = async (orgId: string) => {
     setSwitchingOrg(orgId);
+    setActiveOrgId(orgId);
+    setIsLoading(true);
+    setShowProfessionalDialog(true);
+
     try {
+      // Attendre 3 secondes avant la redirection
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       await organization.setActive({ organizationId: orgId });
+
       router.push(`/dashboard/organization/${orgId}`);
+      setIsLoading(false);
     } catch (error) {
       toast.error("Erreur lors du changement d'organisation", {
         description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
       });
+      setShowProfessionalDialog(false);
     } finally {
       setSwitchingOrg(null);
     }
@@ -128,155 +197,201 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  // Classes communes pour la navigation
-  const navIconClass = "h-4 w-4";
-
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-14 items-center justify-between px-4">
         {/* Logo et sélecteur d'organisation */}
         <div className="flex items-center">
           <DropdownMenu open={orgMenuOpen} onOpenChange={setOrgMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="flex items-center gap-2 mr-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-secondary/10 group"
+                className={cn(
+                  "flex items-center gap-2 text-xs mr-4 shadow-sm transition-all duration-300 group hover:shadow-md",
+                  "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
+                )}
               >
                 {activeOrganization?.logo ? (
-                  <div className="h-7 w-7 overflow-hidden rounded-lg ring-1 ring-secondary/30 shadow-sm transition-all duration-300 group-hover:ring-secondary/50 group-hover:shadow-md">
+                  <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
                     <Image
                       src={activeOrganization.logo}
                       alt={activeOrganization.name}
-                      width={28}
-                      height={28}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      width={20}
+                      height={20}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 ) : (
-                  <div className="h-7 w-7 rounded-lg bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
-                    <Building className="h-4 w-4 text-secondary" />
+                  <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
+                    <Building className="h-3 w-3 text-primary" />
                   </div>
                 )}
-                <span className="hidden md:inline-block font-medium">
+                <span className="hidden md:inline-block font-medium relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 group-hover:after:w-full after:transition-all after:duration-300 after:bg-current">
                   {activeOrganization?.name || "Organisation"}
                 </span>
-                <ChevronDown className="h-3.5 w-3.5 text-secondary/70 transition-transform duration-300 group-hover:text-secondary" />
+                <RefreshCw
+                  className={`h-3.5 w-3.5 ml-1 opacity-70 transition-transform duration-300 ${orgMenuOpen ? "rotate-180" : "rotate-0"}`}
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="w-72 p-2 rounded-xl border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
+              className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
             >
-              {organizations && organizations.length > 0 && (
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1.5 text-muted-foreground/80 mb-2">
-                    Comptes professionnels
-                  </DropdownMenuLabel>
-                  <div className="max-h-[240px] overflow-y-auto mb-2 rounded-lg space-y-1 pr-1">
-                    {organizations.map((org) => (
-                      <DropdownMenuItem
-                        key={org.id}
-                        className={cn(
-                          "flex items-center gap-3 p-2.5 rounded-lg transition-all duration-200",
-                          companyId === org.id
-                            ? "bg-secondary/10 text-secondary font-medium shadow-sm"
-                            : "hover:bg-accent hover:pl-1 hover:shadow-sm",
-                          switchingOrg === org.id && "animate-pulse opacity-70",
-                        )}
-                        onSelect={() => handleOrganizationSwitch(org.id)}
-                        disabled={switchingOrg !== null}
-                      >
-                        {org.logo ? (
-                          <div
-                            className={cn(
-                              "h-10 w-10 overflow-hidden rounded-lg shadow-sm flex-shrink-0 transition-all duration-300",
-                              companyId === org.id
-                                ? "ring-2 ring-secondary/30"
-                                : "ring-1 ring-border/50 hover:ring-secondary/20",
-                            )}
-                          >
-                            <Image
-                              src={org.logo}
-                              alt={org.name}
-                              width={40}
-                              height={40}
-                              className={cn(
-                                "h-full w-full object-cover transition-transform duration-300",
-                                companyId !== org.id && "hover:scale-110",
-                              )}
-                            />
-                          </div>
-                        ) : (
-                          <div
-                            className={cn(
-                              "h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                              companyId === org.id
-                                ? "bg-secondary/20"
-                                : "bg-secondary/10 hover:bg-secondary/15",
-                            )}
-                          >
-                            <Building className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
-                          </div>
-                        )}
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium leading-none">
-                            {org.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground mt-1">
-                            Compte professionnel
-                          </span>
-                        </div>
-                        {companyId === org.id && (
-                          <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
-                        )}
-                      </DropdownMenuItem>
-                    ))}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                  Compte personnel
+                </DropdownMenuLabel>
+                <DropdownMenuItem
+                  className={cn(
+                    "group flex items-center gap-3 p-2 rounded-md transition-all duration-200 hover:bg-accent hover:translate-x-1 hover:shadow-sm cursor-pointer",
+                    switchingPersonal && "animate-pulse opacity-70",
+                  )}
+                  onSelect={handlePersonalAccountSwitch}
+                  disabled={switchingPersonal || switchingOrg !== null}
+                >
+                  {session?.data?.user?.image ? (
+                    <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
+                      <Image
+                        src={session.data.user.image}
+                        alt={session.data.user.name || ""}
+                        width={32}
+                        height={32}
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium leading-none">
+                      {session?.data?.user?.name || "Personnel"}
+                    </span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      Compte personnel
+                    </span>
                   </div>
-                </DropdownMenuGroup>
-              )}
-              <DropdownMenuSeparator className="my-2" />
-              <DropdownMenuItem
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
-                onSelect={() =>
-                  router.push(`/dashboard/user/${session?.data?.user.id}`)
-                }
-              >
-                <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
-                  <User className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">
-                    Espace personnel
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Accéder à votre compte
-                  </span>
-                </div>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
 
-              <DropdownMenuSeparator className="my-2" />
-              <DropdownMenuLabel className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1.5 text-muted-foreground/80">
-                Gérer les entreprises
-              </DropdownMenuLabel>
-              <DropdownMenuItem
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-accent hover:pl-1 transition-all duration-200 hover:shadow-sm"
-                onSelect={() => router.push("/dashboard/create-organization")}
-              >
-                <div className="h-10 w-10 rounded-lg bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
-                  <Plus className="h-5 w-5 text-secondary dark:text-secondary-foreground" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium leading-none">
-                    Créer une organisation
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Ajouter une nouvelle entreprise
-                  </span>
-                </div>
-              </DropdownMenuItem>
+              {organizations &&
+                organizations.data &&
+                organizations.data.length > 0 && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuSeparator className="my-2" />
+                    <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                      Comptes professionnels
+                    </DropdownMenuLabel>
+                    <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                      {organizations.data.map((org) => (
+                        <DropdownMenuItem
+                          key={org.id}
+                          className={cn(
+                            "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                            companyId === org.id
+                              ? "bg-primary/10 text-primary font-medium shadow-sm"
+                              : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                            switchingOrg === org.id &&
+                              "animate-pulse opacity-70",
+                          )}
+                          onSelect={() => handleOrganizationSwitch(org.id)}
+                          disabled={switchingOrg !== null}
+                        >
+                          {org.logo ? (
+                            <div
+                              className={cn(
+                                "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                companyId === org.id
+                                  ? "ring-2 ring-primary/30"
+                                  : "ring-1 ring-border/50 hover:ring-primary/20",
+                              )}
+                            >
+                              <Image
+                                src={org.logo}
+                                alt={org.name}
+                                width={32}
+                                height={32}
+                                className={cn(
+                                  "h-full w-full object-cover transition-transform duration-300",
+                                  companyId !== org.id && "hover:scale-110",
+                                )}
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className={cn(
+                                "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                companyId === org.id
+                                  ? "bg-primary/20"
+                                  : "bg-primary/10 hover:bg-primary/15",
+                              )}
+                            >
+                              <Building className="h-4 w-4 text-primary" />
+                            </div>
+                          )}
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium leading-none">
+                              {org.name}
+                            </span>
+                            <span className="text-xs text-muted-foreground mt-1">
+                              Compte professionnel
+                            </span>
+                          </div>
+                          {companyId === org.id && (
+                            <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </DropdownMenuGroup>
+                )}
+
+              <DropdownMenuGroup>
+                <DropdownMenuSeparator className="my-2" />
+                <DropdownMenuItem
+                  className="flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all duration-200 hover:shadow-sm"
+                  onSelect={() => {
+                    setOrgMenuOpen(false);
+                    // Ouvrir la Credenza pour créer une nouvelle entreprise
+                    setShowCreateOrgCredenza(true);
+                  }}
+                >
+                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                    <Plus className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium leading-none">
+                      Créer une entreprise
+                    </span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      Configurer un nouveau compte
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Credenza pour le Stepper de création d'entreprise */}
+          <Credenza
+            open={showCreateOrgCredenza}
+            onOpenChange={setShowCreateOrgCredenza}
+          >
+            <CredenzaContent className="max-w-4xl">
+              <CredenzaHeader>
+                <CredenzaTitle>Créer une nouvelle entreprise</CredenzaTitle>
+                <CredenzaDescription>
+                  Configurez votre entreprise en quelques étapes simples
+                </CredenzaDescription>
+              </CredenzaHeader>
+              <CredenzaBody>
+                <Stepper />
+              </CredenzaBody>
+            </CredenzaContent>
+          </Credenza>
 
           {/* Bouton Menu Mobile */}
           <Button
@@ -700,6 +815,24 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
           </div>
         </div>
       </CommandDialog>
+
+      {/* Dialogues de changement de compte */}
+      <AccountSwitchDialog
+        open={showPersonalDialog}
+        onOpenChange={setShowPersonalDialog}
+        type="personal"
+        isLoading={isLoading}
+      />
+
+      <AccountSwitchDialog
+        open={showProfessionalDialog}
+        onOpenChange={setShowProfessionalDialog}
+        type="professional"
+        organizationName={
+          organizations?.data?.find((org) => org.id === activeOrgId)?.name
+        }
+        isLoading={isLoading}
+      />
     </header>
   );
 }

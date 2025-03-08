@@ -38,7 +38,7 @@ export const { steps, useStepper, utils } = defineStepper(
     description: 'Ajoutez votre premier animal de compagnie (optionnel)',
     schema: z.object({
       name: z.string(),
-      image: z.string(),
+      image: z.string().optional(),
       breed: z.string(),
       birthDate: z.string(),
       gender: z.string(),
@@ -46,8 +46,6 @@ export const { steps, useStepper, utils } = defineStepper(
       weight: z.number(),
       height: z.number(),
       description: z.string().optional(),
-      furColor: z.string(),
-      eyeColor: z.string(),
     }),
   },
   {

@@ -9,8 +9,11 @@ import { useSearchParams } from "next/navigation";
 export default function PaymentFailure() {
   const searchParams = useSearchParams();
   const amount = searchParams.get("amount") || "0";
-  const professionalName = searchParams.get("professionalName") || "le professionnel";
-  const error = searchParams.get("error") || "Une erreur est survenue lors du traitement de votre paiement";
+  const professionalName =
+    searchParams.get("professionalName") || "le professionnel";
+  const error =
+    searchParams.get("error") ||
+    "Une erreur est survenue lors du traitement de votre paiement";
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-background">
@@ -25,7 +28,8 @@ export default function PaymentFailure() {
           </h1>
 
           <p className="text-muted-foreground">
-            Le paiement de {amount}€ à {professionalName} n&apos;a pas pu être effectué.
+            Le paiement de {amount}€ à {professionalName} n&apos;a pas pu être
+            effectué.
           </p>
 
           <div className="w-full p-4 rounded-lg bg-red-50 border border-red-100">

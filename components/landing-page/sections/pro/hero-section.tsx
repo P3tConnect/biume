@@ -4,9 +4,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import Image from "next/image";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -93,37 +99,11 @@ export function HeroSection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Button asChild size="lg" className="h-12 px-6 group">
-                <Link href="/register/pro">
-                  Commencer gratuitement
+                <Link href="#cta">
+                  Je m&apos;inscrit à la phase bêta
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 px-6 flex items-center gap-2"
-                  >
-                    <Play className="w-4 h-4 fill-current" />
-                    Voir la démo
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl p-1 bg-background/95 backdrop-blur-sm">
-                  <div className="aspect-video w-full rounded-lg overflow-hidden">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=example"
-                      title="Démonstration Biume Pro"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </DialogContent>
-              </Dialog>
             </div>
           </motion.div>
 
@@ -179,7 +159,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="absolute -bottom-5 md:bottom-6 left-10 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+            className="absolute -bottom-5 left-10 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
           >
             <div className="flex items-center gap-3">
               <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-2 rounded-full">
@@ -199,7 +179,9 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="text-sm font-semibold">+42%</p>
-                <p className="text-xs text-muted-foreground">d&apos;efficacité</p>
+                <p className="text-xs text-muted-foreground">
+                  d&apos;efficacité
+                </p>
               </div>
             </div>
           </motion.div>
@@ -208,7 +190,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.1 }}
-            className="absolute -top-5 md:top-6 right-10 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm"
+            className="absolute -top-5 right-10 bg-card rounded-xl p-4 shadow-lg border backdrop-blur-sm z-10"
           >
             <div className="flex items-center gap-3">
               <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 p-2 rounded-full">

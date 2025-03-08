@@ -19,6 +19,7 @@ import { usePetContext } from '../context/pet-context';
 import { useSession } from '@/src/lib/auth-client';
 import { updatePetIntolerences } from '@/src/actions';
 import { useMutation } from '@tanstack/react-query';
+import { Pet } from '@/src/db/pets';
 
 // Liste des intolérances communes chez les animaux
 const commonIntolerances = [
@@ -29,15 +30,21 @@ const commonIntolerances = [
   { id: '5', text: 'Poisson' },
 ];
 
+interface InformationsPetIntolerancesFormProps {
+  nextStep: () => void;
+  previousStep: () => void;
+  isPending: boolean;
+  petData?: Pet | null;
+  isUpdate?: boolean;
+}
+
 const InformationsPetIntolerancesForm = ({
   nextStep,
   previousStep,
   isPending,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-}) => {
+  petData,
+  isUpdate = false,
+}: InformationsPetIntolerancesFormProps) => {
   const { petId } = usePetContext();
   const { data: session } = useSession();
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
@@ -64,6 +71,13 @@ const InformationsPetIntolerancesForm = ({
       );
     },
   });
+
+  useEffect(() => {
+    if (isUpdate && petData && petData.intolerences) {
+      const existingIntolerances = petData.intolerences as string[];
+      setSelectedIntolerances(existingIntolerances);
+    }
+  }, [isUpdate, petData]);
 
   useEffect(() => {
     form.setValue('intolerences', selectedIntolerances);

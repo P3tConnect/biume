@@ -29,7 +29,8 @@ export default function OrganizationSubscriptionFailure() {
 
                 <p className="text-muted-foreground max-w-md mx-auto text-base">
                   Une erreur est survenue lors du traitement de votre paiement.
-                  Aucun montant n&apos;a été débité. Veuillez réessayer ou contacter notre support si le problème persiste.
+                  Aucun montant n&apos;a été débité. Veuillez réessayer ou
+                  contacter notre support si le problème persiste.
                 </p>
               </div>
             </div>
@@ -42,8 +43,15 @@ export default function OrganizationSubscriptionFailure() {
                 </Button>
               </Link>
 
-              <Link href={`/dashboard/organization//subscription`} className="w-full">
-                <Button variant="default" size="lg" className="w-full bg-red-600 hover:bg-red-700">
+              <Link
+                href={`/dashboard/organization//subscription`}
+                className="w-full"
+              >
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="w-full bg-red-600 hover:bg-red-700"
+                >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Réessayer le paiement
                 </Button>

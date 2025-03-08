@@ -36,7 +36,7 @@ const NewPersonWaitList = ({ subEmail }: { subEmail: string }) => {
               textAlign: "center",
             }}
           >
-            Great news! A new person has joined the PawThera waitlist.
+            Great news! A new person has joined the Biume waitlist.
           </Text>
 
           <Text

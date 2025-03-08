@@ -11,35 +11,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { ErrorContext } from '@better-fetch/fetch';
-
-// Définition du type de réponse pour l'authentification
-type AuthResponseContext = {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      // autres propriétés de l'utilisateur
-      [key: string]: any;
-    };
-    // autres données potentielles dans la réponse
-    [key: string]: any;
-  };
-  // autres propriétés du contexte
-  [key: string]: any;
-};
-
-// Définition du type d'erreur pour l'authentification
-type AuthErrorContext = {
-  error: {
-    message: string;
-    // autres propriétés potentielles de l'erreur
-    [key: string]: any;
-  };
-  // autres propriétés du contexte d'erreur
-  [key: string]: any;
-};
 
 const LoginPage = () => {
   const router = useRouter();
@@ -79,7 +50,7 @@ const LoginPage = () => {
         <h1 className='text-4xl font-bold text-primary'>Connexion</h1>
         <p className='text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14'>
           Ceci est du texte de description pour justifier de l&apos;utilité de
-          s&apos;inscrire sur notre plateforme PawThera
+          s&apos;inscrire sur notre plateforme Biume
         </p>
         <form
           className='flex flex-col items-center justify-center w-1/2 space-y-4'

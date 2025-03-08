@@ -1,6 +1,4 @@
 export * from './addresses';
-export * from './askAppointment';
-export * from './askAppointmentOptions';
 export * from './bgJobs';
 export * from './cancelPolicies';
 export * from './organizationAddress';

@@ -70,7 +70,7 @@ const SubscriptionReceiptEmail: React.FC<SubscriptionReceiptEmailProps> = ({
 
       <Section className="mt-6">
         <Text className="text-xs text-gray-500">
-          This receipt was automatically generated and sent by PawThera. Please
+          This receipt was automatically generated and sent by Biume. Please
           keep this for your records.
         </Text>
       </Section>

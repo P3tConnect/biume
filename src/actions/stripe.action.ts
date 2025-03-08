@@ -11,11 +11,10 @@ import {
   requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
-import { Invoice, organization } from "../db";
+import { organization, transaction } from "../db";
 import { eq } from "drizzle-orm";
 import { BillingInfo } from "@/types/billing-info";
 import { StripeInvoice } from "@/types/stripe-invoice";
-import { redirect } from "next/navigation";
 
 export const createBalancePayout = createServerAction(
   z.object({
@@ -25,13 +24,11 @@ export const createBalancePayout = createServerAction(
   async (input, ctx) => {
     try {
       // Récupérer l'organisation
-      const org = await db
-        .select()
-        .from(organization)
-        .where(eq(organization.id, input.organizationId))
-        .execute();
+      const org = await db.query.organization.findFirst({
+        where: eq(organization.id, input.organizationId),
+      });
 
-      if (!org[0] || !org[0].stripeId) {
+      if (!org || !org.companyStripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
@@ -40,7 +37,7 @@ export const createBalancePayout = createServerAction(
       // Récupérer le solde disponible si aucun montant n'est spécifié
       if (!input.amount) {
         const balance = await stripe.balance.retrieve({
-          stripeAccount: org[0].stripeId,
+          stripeAccount: org.companyStripeId,
         });
 
         input.amount = balance.available.reduce(
@@ -60,7 +57,7 @@ export const createBalancePayout = createServerAction(
           currency: "eur",
         },
         {
-          stripeAccount: org[0].stripeId,
+          stripeAccount: org.companyStripeId,
         },
       );
 
@@ -78,13 +75,11 @@ export const getStripeBalance = createServerAction(
   async (input, ctx) => {
     try {
       // Récupérer l'organisation
-      const org = await db
-        .select()
-        .from(organization)
-        .where(eq(organization.id, input.organizationId))
-        .execute();
+      const org = await db.query.organization.findFirst({
+        where: eq(organization.id, input.organizationId),
+      });
 
-      if (!org[0] || !org[0].stripeId) {
+      if (!org || !org.companyStripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
@@ -92,71 +87,12 @@ export const getStripeBalance = createServerAction(
 
       // Récupérer le solde du compte
       const balance = await stripe.balance.retrieve({
-        stripeAccount: org[0].stripeId,
+        stripeAccount: org.companyStripeId,
       });
 
       return balance;
     } catch (error) {
       throw new ActionError("Erreur lors de la récupération du solde");
-    }
-  },
-);
-
-export const createPaymentSession = createServerAction(
-  z.object({
-    organizationId: z.string(),
-    amount: z.number(),
-    description: z.string(),
-    successUrl: z.string(),
-    cancelUrl: z.string(),
-    metadata: z.record(z.any()).optional(),
-    customerEmail: z.string().email(),
-  }),
-  async (input, ctx) => {
-    try {
-      // Récupérer l'organisation
-      const org = await db
-        .select()
-        .from(organization)
-        .where(eq(organization.id, input.organizationId))
-        .execute();
-
-      if (!org[0] || !org[0].stripeId) {
-        throw new ActionError(
-          "Organisation non trouvée ou compte Stripe non configuré",
-        );
-      }
-
-      // Créer la session de paiement
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "eur",
-              product_data: {
-                name: input.description,
-              },
-              unit_amount: input.amount, // Le montant doit être en centimes
-            },
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: input.successUrl,
-        cancel_url: input.cancelUrl,
-        customer_email: input.customerEmail,
-        metadata: {
-          ...input.metadata,
-          userId: ctx.user?.id ?? null, // L'utilisateur est toujours défini avec authedAction
-        },
-      });
-
-      return session;
-    } catch (error) {
-      throw new ActionError(
-        "Erreur lors de la création de la session de paiement",
-      );
     }
   },
 );
@@ -172,11 +108,11 @@ export const updateOrganizationPlan = createServerAction(
       throw new ActionError("Organisation non trouvée");
     }
 
-    if (!org.stripeId) {
+    if (!org.customerStripeId) {
       throw new ActionError("Compte Stripe non configuré");
     }
 
-    const stripeCustomer = org.stripeId;
+    const stripeCustomer = org.customerStripeId;
 
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomer ?? "",
@@ -208,23 +144,23 @@ export const getBillingInfo = createServerAction(
       const org = await db.query.organization.findFirst({
         where: eq(organization.id, ctx.organization?.id ?? ""),
         columns: {
-          stripeId: true,
+          customerStripeId: true,
         },
       });
 
-      if (!org || !org.stripeId) {
+      if (!org || !org.customerStripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
 
-      const customer = await stripe.customers.retrieve(org.stripeId);
+      const customer = await stripe.customers.retrieve(org.customerStripeId);
       const subscriptions = await stripe.subscriptions.list({
-        customer: org.stripeId,
+        customer: org.customerStripeId,
         limit: 1,
       });
       const paymentMethods = await stripe.paymentMethods.list({
-        customer: org.stripeId,
+        customer: org.customerStripeId,
         type: "card",
       });
 
@@ -262,14 +198,14 @@ export const createPaymentMethodUpdateSession = createServerAction(
   }),
   async (input, ctx) => {
     try {
-      if (!ctx.fullOrganization?.stripeId) {
+      if (!ctx.fullOrganization?.customerStripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
 
       const session = await stripe.checkout.sessions.create({
-        customer: ctx.fullOrganization.stripeId,
+        customer: ctx.fullOrganization.customerStripeId,
         payment_method_types: ["card"],
         mode: "setup",
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
@@ -291,14 +227,14 @@ export const getInvoiceHistory = createServerAction(
   z.object({}),
   async (input, ctx) => {
     try {
-      if (!ctx.fullOrganization?.stripeId) {
+      if (!ctx.fullOrganization?.customerStripeId) {
         throw new ActionError(
           "Organisation non trouvée ou compte Stripe non configuré",
         );
       }
 
       const invoices = await stripe.invoices.list({
-        customer: ctx.fullOrganization.stripeId,
+        customer: ctx.fullOrganization.customerStripeId,
         limit: 12, // Derniers 12 mois
       });
 
@@ -314,6 +250,67 @@ export const getInvoiceHistory = createServerAction(
       console.error("Erreur lors de la récupération des factures:", error);
       throw new ActionError(
         "Impossible de récupérer l'historique des factures",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const getStripeConnectAccountInfo = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.companyStripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe Connect non configuré",
+        );
+      }
+
+      const account = await stripe.accounts.retrieve(
+        ctx.fullOrganization.companyStripeId,
+      );
+
+      return {
+        id: account.id,
+        chargesEnabled: account.charges_enabled,
+        payoutsEnabled: account.payouts_enabled,
+        detailsSubmitted: account.details_submitted,
+        requirements: account.requirements,
+        email: account.email,
+        businessProfile: account.business_profile,
+      };
+    } catch (error) {
+      console.error("Erreur lors de la récupération du compte Stripe:", error);
+      throw new ActionError(
+        "Impossible de récupérer les informations du compte Stripe Connect",
+      );
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization],
+);
+
+export const createStripeConnectOnboardingLink = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    try {
+      if (!ctx.fullOrganization?.companyStripeId) {
+        throw new ActionError(
+          "Organisation non trouvée ou compte Stripe Connect non configuré",
+        );
+      }
+
+      const accountLink = await stripe.accountLinks.create({
+        account: ctx.fullOrganization.companyStripeId,
+        refresh_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
+        type: "account_onboarding",
+      });
+
+      return accountLink.url;
+    } catch (error) {
+      console.error("Erreur lors de la création du lien d'onboarding:", error);
+      throw new ActionError(
+        "Impossible de créer le lien d'onboarding Stripe Connect",
       );
     }
   },

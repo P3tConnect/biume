@@ -27,6 +27,7 @@ export default function ImagesForm({ onSuccess, onBack }: ImagesFormProps) {
   const [images, setImages] = useState<ImagesProps[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const { startUpload } = useUploadThing("documentsUploader", {
     onUploadProgress: (progress) => {
       setUploadProgress(progress);
@@ -73,11 +74,16 @@ export default function ImagesForm({ onSuccess, onBack }: ImagesFormProps) {
   const { mutateAsync } = useMutation({
     mutationFn: addImagesToOrganization,
     onSuccess: () => {
+      setIsLoading(false);
       toast.success("Images ajoutées avec succès.");
       onSuccess();
     },
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
     },
   });
 
@@ -148,6 +154,7 @@ export default function ImagesForm({ onSuccess, onBack }: ImagesFormProps) {
           type="button"
           variant="outline"
           className="rounded-xl"
+          disabled={isLoading}
           onClick={onBack}
         >
           ← Précédent
@@ -156,13 +163,25 @@ export default function ImagesForm({ onSuccess, onBack }: ImagesFormProps) {
           <Button
             type="button"
             variant="ghost"
+            disabled={isLoading}
             onClick={onSuccess}
             className="text-muted-foreground"
           >
             Passer
           </Button>
-          <Button onClick={handleSubmit} className="rounded-xl px-6">
-            Suivant →
+          <Button
+            disabled={isLoading}
+            onClick={handleSubmit}
+            className="rounded-xl px-6"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>En cours...</span>
+              </>
+            ) : (
+              "Suivant →"
+            )}
           </Button>
         </div>
       </div>

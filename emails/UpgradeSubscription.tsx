@@ -48,7 +48,7 @@ const UpgradeSubscription = ({
         </Section>
 
         <Button
-          href="https://pawthera.com/dashboard"
+          href="https://biume.com/dashboard"
           className="bg-indigo-600 text-white px-6 py-3 rounded-full font-medium text-sm hover:bg-indigo-700 transition-colors"
         >
           Go to Dashboard

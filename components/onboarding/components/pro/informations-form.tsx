@@ -16,7 +16,7 @@ import {
   SelectValue,
   Switch,
 } from "@/components/ui";
-import { ImageIcon, PenBox, Trash2 } from "lucide-react";
+import { ImageIcon, Loader2, PenBox, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,6 +45,7 @@ const InformationsForm = ({
 }) => {
   const [logoUploadProgress, setLogoUploadProgress] = useState(0);
   const [logoIsUploading, setLogoIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof proInformationsSchema>>({
     resolver: zodResolver(proInformationsSchema),
@@ -65,19 +66,21 @@ const InformationsForm = ({
   const { mutateAsync } = useMutation({
     mutationFn: createOrganization,
     onSuccess: () => {
+      setIsLoading(false);
       toast.success("Entreprise créée avec succès!");
       nextStep();
       reset();
     },
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
     },
   });
 
-  console.log(form.formState.errors, "errors");
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data, "data");
     await mutateAsync(data);
   });
 
@@ -218,13 +221,13 @@ const InformationsForm = ({
                         <FormControl>
                           <Input
                             type="string"
-                            placeholder="PawThera Inc."
+                            placeholder="Biume Inc."
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
                               "h-9",
                               form.formState.errors.name &&
-                              "border-destructive",
+                                "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -243,13 +246,13 @@ const InformationsForm = ({
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="contact@pawthera.com"
+                            placeholder="contact@biume.com"
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
                               "h-9",
                               form.formState.errors.email &&
-                              "border-destructive",
+                                "border-destructive",
                             )}
                           />
                         </FormControl>
@@ -333,7 +336,7 @@ const InformationsForm = ({
                         className={cn(
                           "flex-1 min-h-[120px] resize-none text-base",
                           form.formState.errors.description &&
-                          "border-destructive",
+                            "border-destructive",
                         )}
                         placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
                         {...field}
@@ -350,6 +353,7 @@ const InformationsForm = ({
         {/* Footer with buttons */}
         <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
           <Button
+            disabled={isLoading}
             type="button"
             variant="outline"
             className="rounded-xl"
@@ -359,6 +363,7 @@ const InformationsForm = ({
           </Button>
           <div className="flex gap-3">
             <Button
+              disabled={isLoading}
               type="button"
               variant="ghost"
               onClick={nextStep}
@@ -366,8 +371,19 @@ const InformationsForm = ({
             >
               Passer
             </Button>
-            <Button type="submit" className="rounded-xl px-6">
-              Suivant →
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="rounded-xl px-6"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>En cours...</span>
+                </>
+              ) : (
+                "Suivant →"
+              )}
             </Button>
           </div>
         </div>

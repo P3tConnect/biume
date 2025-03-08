@@ -24,9 +24,9 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/src/lib';
 import { ImageIcon, PenBox, Trash2 } from 'lucide-react';
-import { CreatePetSchema } from '@/src/db/pets';
+import { CreatePetSchema, Pet } from '@/src/db/pets';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createPet } from '@/src/actions';
+import { createPet, updatePet } from '@/src/actions/pet.action';
 import Image from 'next/image';
 import { useMutation } from '@tanstack/react-query';
 import { usePetContext } from '../context/pet-context';
@@ -37,13 +37,19 @@ const ACCEPTED_IMAGE_TYPES = {
   'image/png': ['.png'],
 };
 
+interface InformationsPetFormProps {
+  nextStep: () => void;
+  previousStep: () => void;
+  petData?: Pet | null;
+  isUpdate?: boolean;
+}
+
 const InformationsPetForm = ({
   nextStep,
   previousStep,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-}) => {
+  petData,
+  isUpdate = false,
+}: InformationsPetFormProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { setPetId } = usePetContext();
@@ -51,82 +57,105 @@ const InformationsPetForm = ({
   const form = useForm<z.infer<typeof CreatePetSchema>>({
     resolver: zodResolver(CreatePetSchema),
     defaultValues: {
-      name: '',
-      type: 'Dog',
-      gender: 'Male',
-      breed: '',
-      image: '',
-      birthDate: new Date(),
-      description: '',
-      weight: 0,
-      height: 0,
+      name: petData?.name || '',
+      type: petData?.type || 'Dog',
+      gender: petData?.gender || 'Male',
+      breed: petData?.breed || '',
+      image: petData?.image || '',
+      birthDate: petData?.birthDate ? new Date(petData.birthDate) : new Date(),
+      description: petData?.description || '',
+      weight: petData?.weight || 0,
+      height: petData?.height || 0,
     },
   });
 
   const { handleSubmit } = form;
 
-  const { mutateAsync } = useMutation({
+  // Mutation pour créer un animal
+  const createMutation = useMutation({
     mutationFn: createPet,
-    onSuccess: (data) => {
-      if (!data) {
-        toast.error('Erreur: Données de création invalides');
-        return;
-      }
-
-      let animalId = null;
-
-      try {
-        if (typeof data === 'string') {
-          animalId = data;
-        } else if (Array.isArray(data)) {
-          if (data.length > 0 && data[0]?.id) {
-            animalId = data[0].id;
-          } else {
-          }
-        } else if (typeof data === 'object') {
-          if ('id' in data) {
-            animalId = data.id;
-          } else {
-            const findId = (obj: any): string | null => {
-              for (const key in obj) {
-                if (key === 'id' && typeof obj[key] === 'string') {
-                  return obj[key];
-                } else if (typeof obj[key] === 'object') {
-                  const found = findId(obj[key]);
-                  if (found) return found;
-                }
-              }
-              return null;
-            };
-            animalId = findId(data);
-          }
-        }
-
-        if (!animalId) {
-          toast.error("Erreur: Impossible de récupérer l'ID de l'animal");
-          return;
-        }
-
-        setPetId(animalId);
-
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('currentPetId', animalId);
-        }
-
-        toast.success('Animal créé avec succès!');
-        nextStep();
-      } catch (error) {
-        toast.error('Erreur lors du traitement de la réponse');
-      }
-    },
+    onSuccess: handleMutationSuccess,
     onError: (error) => {
       toast.error(`Erreur lors de la création de l'animal: ${error.message}`);
     },
   });
 
+  // Mutation pour mettre à jour un animal
+  const updateMutation = useMutation({
+    mutationFn: updatePet,
+    onSuccess: handleMutationSuccess,
+    onError: (error) => {
+      toast.error(
+        `Erreur lors de la mise à jour de l'animal: ${error.message}`
+      );
+    },
+  });
+
+  // Fonction pour gérer le succès des mutations
+  function handleMutationSuccess(data: any) {
+    if (!data) {
+      toast.error('Erreur: Données invalides');
+      return;
+    }
+
+    let animalId = null;
+
+    try {
+      if (typeof data === 'string') {
+        animalId = data;
+      } else if (Array.isArray(data)) {
+        if (data.length > 0 && data[0]?.id) {
+          animalId = data[0].id;
+        }
+      } else if (typeof data === 'object') {
+        if ('id' in data) {
+          animalId = data.id;
+        } else {
+          const findId = (obj: any): string | null => {
+            for (const key in obj) {
+              if (key === 'id' && typeof obj[key] === 'string') {
+                return obj[key];
+              } else if (typeof obj[key] === 'object') {
+                const found = findId(obj[key]);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+          animalId = findId(data);
+        }
+      }
+
+      if (!animalId) {
+        toast.error("Erreur: Impossible de récupérer l'ID de l'animal");
+        return;
+      }
+
+      setPetId(animalId);
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('currentPetId', animalId);
+      }
+
+      toast.success(
+        isUpdate ? 'Animal mis à jour avec succès!' : 'Animal créé avec succès!'
+      );
+      nextStep();
+    } catch (error) {
+      toast.error('Erreur lors du traitement de la réponse');
+    }
+  }
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const result = await mutateAsync(data);
+      if (isUpdate && petData) {
+        await updateMutation.mutateAsync({
+          ...data,
+          id: petData.id,
+        });
+      } else {
+        await createMutation.mutateAsync(data);
+      }
     } catch (error) {
       toast.error('Erreur lors de la soumission:');
     }
@@ -456,7 +485,7 @@ const InformationsPetForm = ({
         </div>
 
         <div className='flex justify-end pt-2'>
-          <Button type='submit'>Enregistrer</Button>
+          <Button type='submit'>Suivant</Button>
         </div>
       </form>
     </Form>

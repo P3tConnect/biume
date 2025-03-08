@@ -19,6 +19,7 @@ import { usePetContext } from '../context/pet-context';
 import { useSession } from '@/src/lib/auth-client';
 import { updatePetDeseases } from '@/src/actions';
 import { useMutation } from '@tanstack/react-query';
+import { Pet } from '@/src/db/pets';
 
 // Liste des maladies communes chez les animaux comme exemple
 const commonDeseases = [
@@ -29,19 +30,26 @@ const commonDeseases = [
   { id: '5', text: 'Problèmes dentaires' },
 ];
 
+interface InformationsPetDeseasesFormProps {
+  nextStep: () => void;
+  previousStep: () => void;
+  isPending: boolean;
+  petData?: Pet | null;
+  isUpdate?: boolean;
+}
+
 const InformationsPetDeseasesForm = ({
   nextStep,
   previousStep,
   isPending,
-}: {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-}) => {
+  petData,
+  isUpdate = false,
+}: InformationsPetDeseasesFormProps) => {
   const { petId } = usePetContext();
   const { data: session } = useSession();
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [selectedDeseases, setSelectedDeseases] = useState<string[]>([]);
+  const [deseasesValue, setDeseasesValue] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -66,6 +74,14 @@ const InformationsPetDeseasesForm = ({
   useEffect(() => {
     form.setValue('deseases', selectedDeseases);
   }, [selectedDeseases, form]);
+
+  useEffect(() => {
+    if (isUpdate && petData && petData.deseases) {
+      const existingDeseases = petData.deseases as string[];
+      setDeseasesValue(existingDeseases);
+      setSelectedDeseases(existingDeseases);
+    }
+  }, [isUpdate, petData]);
 
   const handleDiseaseSelection = (diseaseText: string) => {
     setSelectedDeseases((current) => {

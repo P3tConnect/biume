@@ -17,7 +17,7 @@ const features = [
     icon: CalendarDays,
     title: "Prise de rendez-vous simplifiée",
     description:
-      "Réservez facilement des consultations avec les vétérinaires disponibles près de chez vous en quelques clics.",
+      "Réservez facilement des consultations avec les soignants disponibles près de chez vous en quelques clics.",
     color: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
   },
   {
@@ -112,7 +112,7 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        <motion.div
+        {/* <motion.div
           className="mt-20 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export function FeaturesSection() {
             <div className="flex flex-col items-center">
               <span className="text-4xl font-bold text-primary">500+</span>
               <span className="text-sm text-muted-foreground">
-                Vétérinaires partenaires
+                Professionnels partenaires
               </span>
             </div>
             <div className="h-12 w-px bg-border"></div>
@@ -145,7 +145,7 @@ export function FeaturesSection() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

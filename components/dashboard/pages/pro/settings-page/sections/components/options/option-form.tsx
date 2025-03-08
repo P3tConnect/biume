@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Euro, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createOption, updateOption } from "@/src/actions";
+import { createOption, deleteOption, updateOption } from "@/src/actions";
 import { Credenza, CredenzaTitle, CredenzaHeader } from "@/components/ui";
 import { CredenzaContent } from "@/components/ui";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const optionSchema = z.object({
   id: z.string().optional(),
@@ -29,11 +29,8 @@ interface OptionFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const OptionForm = ({
-  option,
-  open,
-  onOpenChange,
-}: OptionFormProps) => {
+export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof optionSchema>>({
     resolver: zodResolver(optionSchema),
     defaultValues: {
@@ -52,6 +49,7 @@ export const OptionForm = ({
     onSuccess: () => {
       toast.success("Option créée avec succès!");
       onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ["organization-options"] });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -63,6 +61,7 @@ export const OptionForm = ({
     onSuccess: () => {
       toast.success("Option mise à jour avec succès!");
       onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ["organization-options"] });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -154,4 +153,4 @@ export const OptionForm = ({
       </CredenzaContent>
     </Credenza>
   );
-}; 
+};

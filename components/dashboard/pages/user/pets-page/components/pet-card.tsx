@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button, Badge, Skeleton } from '@/components/ui';
-import { PawPrint, Trash2, Calendar, Weight } from 'lucide-react';
+import { PawPrint, Trash2, Calendar, Weight, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { Pet } from '@/src/db/pets'; // Assurez-vous que ce type existe
 import Image from 'next/image';
@@ -9,6 +9,10 @@ import { cn } from '@/src/lib';
 import { useMutation } from '@tanstack/react-query';
 import { deletePet } from '@/src/actions';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui';
+import StepperAnimal from './stepper-animal';
+import { PetProvider } from '../context/pet-context';
+import { useRouter } from 'next/navigation';
 
 interface PetCardProps {
   pet: Pet;
@@ -19,6 +23,7 @@ interface PetCardProps {
 export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const router = useRouter();
 
   const getAge = (birthDate: string) => {
     const today = new Date();
@@ -34,16 +39,6 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
     }
 
     return age;
-  };
-
-  const handleEdit = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const handleEditSubmit = (values: any) => {
-    if (onEdit) {
-      onEdit(pet.id);
-    }
   };
 
   const deletePetMutation = useMutation({
@@ -63,6 +58,23 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
 
   const handleDelete = (petId: string) => {
     deletePetMutation.mutate({ petId });
+  };
+
+  const handleOpenEditModal = () => {
+    // Stocke l'ID de l'animal dans le localStorage pour que le StepperAnimal puisse y accéder
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('currentPetId', pet.id);
+    }
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    router.refresh(); // Rafraîchir la page pour afficher les modifications
+
+    if (onEdit) {
+      onEdit(pet.id);
+    }
   };
 
   return (
@@ -95,6 +107,15 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
           <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent' />
 
           <div className='absolute right-4 top-4 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+            <Button
+              size='icon'
+              variant='default'
+              className='h-8 w-8 rounded-full bg-green-500 hover:bg-green-600'
+              onClick={handleOpenEditModal}
+            >
+              <Pencil className='h-4 w-4 text-white' />
+            </Button>
+
             {onDelete && (
               <Button
                 size='icon'
@@ -150,6 +171,17 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
           </div>
         </div>
       </Card>
+
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className='max-h-[90vh] w-full max-w-[900px] overflow-y-auto'>
+          <DialogTitle className='sr-only'>Modifier l'animal</DialogTitle>
+          <div className='p-6'>
+            <PetProvider>
+              <StepperAnimal onComplete={handleCloseEditModal} petId={pet.id} />
+            </PetProvider>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

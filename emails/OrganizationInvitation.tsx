@@ -19,19 +19,19 @@ interface OrganizationInvitationProps {
 
 const OrganizationInvitation = ({
   inviterName = "Team Member",
-  organizationName = "PawThera",
-  inviteLink = "https://app.pawthera.com/invite",
+  organizationName = "Biume",
+  inviteLink = "https://biume.com/invite",
 }: OrganizationInvitationProps) => {
   return (
     <EmailLayout>
-      <Preview>Join {organizationName} on PawThera</Preview>
+      <Preview>Join {organizationName} on Biume</Preview>
 
       <Section style={main}>
         <Container style={container}>
           <Text style={paragraph}>Hello,</Text>
           <Text style={paragraph}>
             {inviterName} has invited you to join their organization{" "}
-            <strong>{organizationName}</strong> on PawThera. Join their team to
+            <strong>{organizationName}</strong> on Biume. Join their team to
             start collaborating and managing your veterinary practice together.
           </Text>
 
@@ -48,8 +48,8 @@ const OrganizationInvitation = ({
           <Hr style={hr} />
 
           <Text style={footer}>
-            This invitation was sent from PawThera. If you were not expecting
-            this invitation, you can ignore this email.
+            This invitation was sent from Biume. If you were not expecting this
+            invitation, you can ignore this email.
           </Text>
         </Container>
       </Section>

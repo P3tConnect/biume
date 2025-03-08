@@ -7,21 +7,33 @@ import { getServicesFromOrganization } from "@/src/actions";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ServiceForm } from "./components/services/services-form";
+import { Loader2 } from "lucide-react";
 
 export const ServicesSection = () => {
-  const { data: services } = useQuery({
-    queryKey: ["services"],
+  const [isCreating, setIsCreating] = useState(false);
+
+  const { data: services, isLoading } = useQuery({
+    queryKey: ["organization-services"],
     queryFn: () => getServicesFromOrganization({}),
   });
 
-  const [isCreating, setIsCreating] = useState(false);
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <Loader2 className="w-10 h-10 animate-spin" />
+      </div>
+    );
+  }
+
   const hasServices = services?.data && services.data.length > 0;
 
   return (
     <Card className="p-6">
       <div className="space-y-8">
         <div className="space-y-4">
-          {hasServices && <ServicesHeader onCreateNew={() => setIsCreating(true)} />}
+          {hasServices && (
+            <ServicesHeader onCreateNew={() => setIsCreating(true)} />
+          )}
           <ServicesGrid
             services={services?.data || []}
             onAddFirstService={() => setIsCreating(true)}
