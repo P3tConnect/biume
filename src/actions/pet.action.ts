@@ -1,10 +1,9 @@
-"use server";
+'use server';
 
-import { CreatePetSchema, Pet, pets } from "@/src/db/pets";
-import { createServerAction, db, requireAuth } from "../lib";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { CreatePetSchema, Pet, pets } from '@/src/db/pets';
+import { createServerAction, db, requireAuth } from '../lib';
+import { eq, and } from 'drizzle-orm';
+import { z } from 'zod';
 
 export const createPet = createServerAction(
   CreatePetSchema,
@@ -13,7 +12,7 @@ export const createPet = createServerAction(
       .insert(pets)
       .values({
         ...input,
-        ownerId: ctx.user?.id ?? "",
+        ownerId: ctx.user?.id ?? '',
       })
       .returning()
       .execute();
@@ -22,34 +21,201 @@ export const createPet = createServerAction(
       throw new Error("Erreur lors de la création de l'animal");
     }
 
-    revalidatePath(`/dashboard/user/${ctx.user?.id}/pets`);
-
     return pet;
   },
-  [requireAuth],
+  [requireAuth]
 );
 
 export const getPets = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const userPets = await db.query.pets.findMany({
-      where: eq(pets.ownerId, ctx.user?.id ?? ""),
-      columns: {
-        id: true,
-        image: true,
-        name: true,
-        gender: true,
-        type: true,
-        height: true,
-        weight: true,
-      },
+      where: eq(pets.ownerId, ctx.user?.id ?? ''),
     });
 
     if (!userPets) {
-      throw new Error("Aucun animal trouvé");
+      throw new Error('Aucun animal trouvé');
     }
 
     return userPets as Pet[];
   },
-  [requireAuth],
+  [requireAuth]
+);
+
+export const updatePetDeseases = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+    deseases: z.array(z.string()),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        deseases: input.deseases,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
+      .returning()
+      .execute();
+
+    if (!updatedPet[0]) {
+      throw new Error("Erreur lors de la mise à jour des maladies de l'animal");
+    }
+
+    return updatedPet[0];
+  },
+  [requireAuth]
+);
+
+export const updatePetAllergies = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+    allergies: z.array(z.string()),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        allergies: input.allergies,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
+      .returning()
+      .execute();
+
+    if (!updatedPet[0]) {
+      throw new Error(
+        "Erreur lors de la mise à jour des allergies de l'animal"
+      );
+    }
+
+    return updatedPet[0];
+  },
+  [requireAuth]
+);
+
+export const updatePetIntolerences = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+    intolerences: z.array(z.string()),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        intolerences: input.intolerences,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, input.petId))
+      .returning()
+      .execute();
+
+    if (!updatedPet[0]) {
+      throw new Error(
+        "Erreur lors de la mise à jour des intolerences de l'animal"
+      );
+    }
+
+    return updatedPet[0];
+  },
+  [requireAuth]
+);
+
+export const deletePet = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    await db.delete(pets).where(eq(pets.id, input.petId));
+  },
+  [requireAuth]
+);
+
+export const getPetById = createServerAction(
+  z.object({
+    petId: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) =>
+        and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    return pet as Pet;
+  },
+  [requireAuth]
+);
+
+export const updatePet = createServerAction(
+  CreatePetSchema.extend({
+    id: z.string().uuid(),
+  }),
+  async (input, ctx) => {
+    const pet = await db.query.pets.findFirst({
+      where: (p) => and(eq(p.id, input.id), eq(p.ownerId, ctx.user?.id ?? '')),
+    });
+
+    if (!pet) {
+      throw new Error("L'animal n'existe pas ou ne vous appartient pas");
+    }
+
+    const { id, ...petData } = input;
+
+    const updatedPet = await db
+      .update(pets)
+      .set({
+        ...petData,
+        updatedAt: new Date(),
+      })
+      .where(eq(pets.id, id))
+      .returning()
+      .execute();
+
+    if (!updatedPet[0]) {
+      throw new Error("Erreur lors de la mise à jour de l'animal");
+    }
+
+    return updatedPet[0];
+  },
+  [requireAuth]
 );

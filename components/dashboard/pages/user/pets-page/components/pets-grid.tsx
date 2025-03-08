@@ -2,11 +2,20 @@
 
 import { Pet } from '@/src/db';
 import { ActionResult } from '@/src/lib';
-import React, { use } from 'react';
+import React, { use, useTransition } from 'react';
 import { PetCard } from './pet-card';
+import { useRouter } from 'next/navigation';
 
 const PetsGrid = ({ pets }: { pets: Promise<ActionResult<Pet[]>> }) => {
   const petsResult = use(pets);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const refreshData = () => {
+    startTransition(() => {
+      router.refresh();
+    });
+  };
 
   return (
     <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -21,8 +30,8 @@ const PetsGrid = ({ pets }: { pets: Promise<ActionResult<Pet[]>> }) => {
           <PetCard
             key={pet.id}
             pet={pet}
-            onDelete={async () => {
-              // await fetchPets();
+            onDelete={() => {
+              refreshData();
             }}
           />
         ))
