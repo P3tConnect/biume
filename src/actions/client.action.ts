@@ -1,29 +1,11 @@
 "use server";
 
 import { createServerAction, db, requireAuth } from "../lib";
-import { user, User } from "@/src/db/user";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq, desc } from "drizzle-orm";
 import { z } from "zod";
-
-// Type pour les clients
-export type Client = {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  city: string;
-  country: string;
-  createdAt: string;
-  status: "Active" | "Inactive";
-};
-
-// Schema pour filtrer les clients
-export const ClientFilterSchema = z.object({
-  organizationId: z.string().optional(),
-  status: z.enum(["Active", "Inactive", "all"]).optional(),
-  search: z.string().optional(),
-});
+import { appointments } from "@/src/db/appointments";
+import { user, User } from "@/src/db/user";
+import { ClientFilterSchema, ClientMetrics } from "../types/client";
 
 // Action pour récupérer tous les clients d'une organisation
 export const getClients = createServerAction(
@@ -36,72 +18,76 @@ export const getClients = createServerAction(
       );
     }
 
-    // Récupérer l'ID de l'organisation de l'utilisateur
-    const organizationId = input.organizationId;
+    try {
+      // Récupérer l'ID de l'organisation
+      const organizationId = ctx.organization?.id;
+      
+      if (!organizationId) {
+        throw new Error("ID d'organisation non trouvé");
+      }
 
-    // Simuler la récupération des clients pour l'instant
-    // Dans une vraie implémentation, cela devrait interroger une table de clients
-    // ou filtrer les utilisateurs qui sont clients de cette organisation
+      // Récupérer les utilisateurs qui ont pris des rendez-vous avec cette organisation
+      const clientsWithAppointments = await db.query.appointments.findMany({
+        where: eq(appointments.proId, organizationId),
+        with: {
+          client: true
+        },
+        orderBy: (appointments, { desc }) => [desc(appointments.createdAt)]
+      });
 
-    // Pour cette démo, nous allons créer des clients fictifs comme dans le composant d'origine
-    const clients: Client[] = [
-      {
-        id: "1",
-        name: "Sophie Martin",
-        email: "sophie.martin@email.com",
-        phoneNumber: "+33 6 12 34 56 78",
-        city: "Paris",
-        country: "France",
-        createdAt: "2023-12-01",
-        status: "Active",
-      },
-      {
-        id: "2",
-        name: "Jean Dupont",
-        email: "jean.dupont@email.com",
-        phoneNumber: "+33 6 98 76 54 32",
-        city: "Lyon",
-        country: "France",
-        createdAt: "2023-12-05",
-        status: "Active",
-      },
-      // Ajoutez plus de clients si nécessaire
-    ];
+      // Extraire les utilisateurs uniques (éliminer les doublons)
+      const uniqueClients = Array.from(
+        new Map(
+          clientsWithAppointments
+            .filter(appointment => appointment.client !== null) // Filtrer les rendez-vous sans client
+            .map(appointment => [appointment.client!.id, appointment.client!])
+        ).values()
+      ) as User[];
 
-    // Filtrage par statut si spécifié
-    let filteredClients = clients;
-    if (input.status && input.status !== "all") {
-      filteredClients = clients.filter(
-        (client) => client.status === input.status,
+      // Déterminer si un client est actif (a des rendez-vous à venir)
+      const now = new Date();
+      const activeClientIds = new Set(
+        clientsWithAppointments
+          .filter(appointment => new Date(appointment.beginAt) > now)
+          .map(appointment => appointment.clientId)
       );
-    }
 
-    // Filtrage par recherche si spécifié
-    if (input.search) {
-      const searchLower = input.search.toLowerCase();
-      filteredClients = filteredClients.filter(
-        (client) =>
-          client.name.toLowerCase().includes(searchLower) ||
-          client.email.toLowerCase().includes(searchLower),
-      );
-    }
+      // Ajouter une propriété temporaire de statut aux utilisateurs
+      const clientsWithStatus = uniqueClients.map(client => ({
+        ...client,
+        status: activeClientIds.has(client.id) ? "Active" : "Inactive"
+      }));
 
-    return filteredClients;
+      // Filtrage par recherche si spécifié
+      let filteredClients = clientsWithStatus;
+      if (input.search) {
+        const searchLower = input.search.toLowerCase();
+        filteredClients = filteredClients.filter(
+          client => 
+            client.name.toLowerCase().includes(searchLower) ||
+            client.email.toLowerCase().includes(searchLower) ||
+            (client.phoneNumber && client.phoneNumber.includes(input.search || '')) ||
+            (client.city && client.city?.toLowerCase().includes(searchLower))
+        );
+      }
+
+      // Filtrage par statut si spécifié
+      if (input.status && input.status !== "all") {
+        filteredClients = filteredClients.filter(client => client.status === input.status);
+      }
+
+      return filteredClients;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des clients:", error);
+      throw new Error("Impossible de récupérer les clients de l'organisation");
+    }
   },
   [requireAuth],
 );
 
-// Type pour les métriques des clients
-export type ClientMetrics = {
-  totalClients: number;
-  activeClients: number;
-  appointments: number;
-  averageRating: number;
-};
-
 // Action pour récupérer les métriques des clients
 export const getClientMetrics = createServerAction(
-  z.object({ organizationId: z.string().optional() }),
+  z.object({}),
   async (input, ctx) => {
     // Vérifier que l'utilisateur est un professionnel
     if (!ctx.user?.isPro) {
@@ -110,27 +96,60 @@ export const getClientMetrics = createServerAction(
       );
     }
 
-    // Dans une vraie implémentation, récupérer les clients de la base de données
-    const clientsResult = await getClients({
-      organizationId: input.organizationId,
-    });
+    try {
+      // Récupérer l'ID de l'organisation
+      const organizationId = ctx.organization?.id;
+      
+      if (!organizationId) {
+        throw new Error("ID d'organisation non trouvé");
+      }
 
-    // Gérer les erreurs potentielles
-    if ("error" in clientsResult) {
-      throw new Error(clientsResult.error);
+      // Récupérer les utilisateurs qui ont pris des rendez-vous avec cette organisation
+      const clientsWithAppointments = await db.query.appointments.findMany({
+        where: eq(appointments.proId, organizationId),
+        with: {
+          client: true
+        },
+        orderBy: (appointments, { desc }) => [desc(appointments.createdAt)]
+      });
+
+      // Extraire les utilisateurs uniques (éliminer les doublons)
+      const uniqueClients = Array.from(
+        new Map(
+          clientsWithAppointments
+            .filter(appointment => appointment.client !== null) // Filtrer les rendez-vous sans client
+            .map(appointment => [appointment.client!.id, appointment.client])
+        ).values()
+      );
+
+      // Déterminer les clients actifs (ceux qui ont des rendez-vous à venir)
+      const now = new Date();
+      const activeClients = clientsWithAppointments.filter(
+        appointment => new Date(appointment.beginAt) > now
+      );
+      
+      // Récupérer le nombre unique de clients actifs
+      const uniqueActiveClientsCount = new Set(
+        activeClients.map(appointment => appointment.clientId)
+      ).size;
+
+      // Calculer le nombre total de rendez-vous
+      const totalAppointments = clientsWithAppointments.length;
+
+      // Dans un cas réel, on pourrait récupérer la notation moyenne depuis la table ratings
+      // Pour l'instant on garde la valeur fictive
+      const averageRating = 4.8; // Valeur fictive
+
+      return {
+        totalClients: uniqueClients.length,
+        activeClients: uniqueActiveClientsCount,
+        appointments: totalAppointments,
+        averageRating: averageRating
+      };
+    } catch (error) {
+      console.error("Erreur lors de la récupération des métriques client:", error);
+      throw new Error("Impossible de récupérer les métriques des clients");
     }
-
-    const clients = clientsResult.data || [];
-    const activeClients = clients.filter(
-      (client) => client.status === "Active",
-    );
-
-    return {
-      totalClients: clients.length,
-      activeClients: activeClients.length,
-      appointments: 156, // Valeur fictive comme dans le composant d'origine
-      averageRating: 4.8, // Valeur fictive comme dans le composant d'origine
-    };
   },
   [requireAuth],
 );

@@ -55,6 +55,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createAppointmentAction } from "@/src/actions/create-appointment.action";
+import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui";
 
 interface AppointmentDialogProps {
   open: boolean;
@@ -262,17 +263,17 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md md:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="flex items-center">
+    <Credenza open={open} onOpenChange={onOpenChange}>
+      <CredenzaContent className="sm:max-w-md md:max-w-lg">
+        <CredenzaHeader>
+          <CredenzaTitle className="flex items-center">
             {steps[currentStep].icon}
             {steps[currentStep].title}
-          </DialogTitle>
-          <DialogDescription>
+          </CredenzaTitle>
+          <CredenzaDescription>
             {steps[currentStep].description}
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
 
         {/* Indicateur de progression */}
         <div className="relative mb-6">
@@ -723,8 +724,8 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
             </DialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 };
 

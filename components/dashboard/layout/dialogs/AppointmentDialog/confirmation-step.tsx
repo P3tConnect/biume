@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { fr } from "date-fns/locale";
 import { format } from "date-fns";
-import React from "react";
+import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { ConfirmationStepSchema } from "./appointmentDialogStepper";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,6 +31,18 @@ import { AppointmentFormValues } from "./AppointmentDialog";
 
 const ConfirmationStep = () => {
   const form = useFormContext<AppointmentFormValues>();
+
+  // Récupérer les valeurs du formulaire une seule fois pour réduire les rendus
+  const {
+    clientId,
+    patientId,
+    serviceId,
+    date,
+    startTime,
+    duration,
+    atHome,
+    notes
+  } = form.watch();
 
   // Simulation de données pour l'exemple
   const clients = [
@@ -53,23 +65,48 @@ const ConfirmationStep = () => {
     { id: "service5", name: "Toilettage", duration: 90 },
   ];
 
-  // Récupérer les informations
-  const selectedClient = clients.find((c) => c.id === form.watch("clientId"));
-  const selectedPet = pets.find((p) => p.id === form.watch("patientId"));
-  const selectedService = services.find(
-    (s) => s.id === form.watch("serviceId"),
+  // Récupérer les informations avec useMemo pour éviter des recalculs inutiles
+  const selectedClient = useMemo(() =>
+    clients.find((c) => c.id === clientId),
+    [clientId]
   );
 
-  // Calculer l'heure de fin estimée
-  const calculateEndTime = () => {
-    if (!form.watch("startTime") || !form.watch("duration")) return "...";
+  const selectedPet = useMemo(() =>
+    pets.find((p) => p.id === patientId),
+    [patientId]
+  );
 
-    const [hours, minutes] = form.watch("startTime").split(":").map(Number);
-    let endHours = hours + Math.floor((minutes + form.watch("duration")) / 60);
-    let endMinutes = (minutes + form.watch("duration")) % 60;
+  const selectedService = useMemo(() =>
+    services.find((s) => s.id === serviceId),
+    [serviceId]
+  );
+
+  // Mémoriser l'heure de fin calculée
+  const endTime = useMemo(() => {
+    if (!startTime || !duration) return "...";
+
+    const [hours, minutes] = startTime.split(":").map(Number);
+    let endHours = hours + Math.floor((minutes + duration) / 60);
+    let endMinutes = (minutes + duration) % 60;
 
     return `${endHours.toString().padStart(2, "0")}:${endMinutes.toString().padStart(2, "0")}`;
-  };
+  }, [startTime, duration]);
+
+  // Mémoriser le format de date pour éviter les recalculs
+  const formattedDate = useMemo(() => {
+    if (!date) return "Date non sélectionnée";
+    return format(date, "EEEE d MMMM yyyy", { locale: fr });
+  }, [date]);
+
+  // Gestionnaire pour le switch, sans recréer la fonction à chaque rendu
+  const handleAtHomeChange = React.useCallback((checked: boolean) => {
+    form.setValue("atHome", checked);
+  }, [form]);
+
+  // Gestionnaire pour les notes, sans recréer la fonction à chaque rendu
+  const handleNotesChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    form.setValue("notes", e.target.value);
+  }, [form]);
 
   return (
     <div className="space-y-6">
@@ -91,18 +128,14 @@ const ConfirmationStep = () => {
                       Date et heure
                     </span>
                     <p className="font-medium">
-                      {form.watch("date")
-                        ? format(form.watch("date"), "EEEE d MMMM yyyy", {
-                          locale: fr,
-                        })
-                        : "Date non sélectionnée"}
-                      <span> à {form.watch("startTime") || "..."}</span>
+                      <span>{formattedDate}</span>
+                      <span> à {startTime || "..."}</span>
                     </p>
                     <div className="flex items-center text-xs text-muted-foreground mt-1">
                       <ClockIcon className="h-3 w-3 mr-1 inline" />
-                      <span>{form.watch("startTime") || "..."} - {calculateEndTime()}</span>
+                      <span>{startTime || "..."} - {endTime}</span>
                       <Badge variant="secondary" className="ml-2 text-xs">
-                        {form.watch("duration") || "..."} min
+                        {duration || "..."} min
                       </Badge>
                     </div>
                   </div>
@@ -193,10 +226,8 @@ const ConfirmationStep = () => {
                 </div>
                 <Switch
                   id="atHome"
-                  checked={form.watch("atHome")}
-                  onCheckedChange={(checked) =>
-                    form.setValue("atHome", checked)
-                  }
+                  checked={atHome}
+                  onCheckedChange={handleAtHomeChange}
                 />
               </div>
 
@@ -212,8 +243,8 @@ const ConfirmationStep = () => {
                   id="notes"
                   placeholder="Ajoutez des informations spécifiques pour ce rendez-vous..."
                   className="min-h-[180px] resize-none"
-                  value={form.watch("notes") || ""}
-                  onChange={(e) => form.setValue("notes", e.target.value)}
+                  value={notes || ""}
+                  onChange={handleNotesChange}
                 />
               </div>
             </div>
