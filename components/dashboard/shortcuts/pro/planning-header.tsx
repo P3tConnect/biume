@@ -3,9 +3,14 @@
 import React from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, PlusCircle } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { useActiveOrganization } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export const PlanningHeader = () => {
+  const { data: activeOrganization } = useActiveOrganization();
+  const router = useRouter();
+
   return (
     <Card className="overflow-hidden rounded-2xl">
       <CardHeader className="border-b border-gray-100 dark:border-gray-800">
@@ -18,7 +23,7 @@ export const PlanningHeader = () => {
               Gérez vos rendez-vous et consultations
             </p>
           </div>
-          <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">
+          <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5" onClick={() => router.push(`/dashboard/organization/${activeOrganization?.id}/timetable`)}>
             Voir plus
             <ChevronRight className="h-3.5 w-3.5" />
           </Button>

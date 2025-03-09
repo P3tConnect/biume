@@ -40,6 +40,8 @@ import { loginSchema } from "@/src/lib";
 import { z } from "zod";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { createBookingCheckoutSession } from "@/src/actions/booking-payment.action";
+import { getCompanyById } from "@/src/actions/organization.action";
 
 interface BookingCardProps {
   services: Service[];
@@ -167,17 +169,39 @@ export function BookingCard({
   const params = useParams();
   const companyId = params.companyId as string;
 
-  // const { mutateAsync } = useMutation({
-  //   mutationFn: createPaymentIntent,
-  //   onSuccess: (data) => {
-  //     console.log(data);
-  //   },
-  //   onError: (error) => {
-  //     console.error(error);
-  //   },
-  // });
+  const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation({
+    mutationFn: createBookingCheckoutSession,
+    onSuccess: async (response) => {
+      // Vérifier si la réponse contient une erreur
+      if ('error' in response) {
+        toast.error(`Erreur: ${response.error}`);
+        return;
+      }
+
+      // À ce stade, nous savons que response.data existe
+      const data = response.data;
+
+      if (!data || !data.sessionUrl) {
+        toast.error("Erreur lors du paiement, veuillez réessayer");
+        return;
+      }
+
+      // Rediriger vers la page de paiement Stripe
+      window.location.href = data.sessionUrl;
+    },
+    onError: (error: any) => {
+      console.error("Erreur de paiement:", error);
+      toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`);
+    },
+  });
 
   const handleBooking = async () => {
+    if (!selectedService || !selectedPro || !selectedDate || !selectedTime) {
+      toast.error("Veuillez sélectionner tous les éléments nécessaires");
+      return;
+    }
+
+    // Récupérer le service sélectionné
     const servicePrice = selectedServiceData?.price ?? 0;
     const optionsPrice = metadata?.options?.selectedOptions.reduce(
       (acc: number, optionId: string) => {
@@ -190,10 +214,45 @@ export function BookingCard({
     );
 
     const homeVisitPrice = metadata?.consultationType?.isHomeVisit ? 10 : 0;
-
     const amount = servicePrice + optionsPrice + homeVisitPrice;
 
-    console.log(amount, "amount");
+    if (!amount || amount <= 0) {
+      toast.error("Le montant du paiement est invalide");
+      return;
+    }
+
+    try {
+      const petId = selectedPet?.id;
+      if (!petId) {
+        toast.error("Veuillez sélectionner un animal");
+        return;
+      }
+
+      // Si l'utilisateur n'est pas connecté, demander l'email
+      if (!session?.user) {
+        setIsLoginModalOpen(true);
+        return;
+      }
+
+      // Notes additionnelles si présentes dans les métadonnées
+      const additionalNotes = metadata?.summary?.notes || "";
+
+      await bookPayment({
+        serviceId: selectedService,
+        professionalId: selectedPro,
+        date: selectedDate.toISOString().split("T")[0],
+        time: selectedTime,
+        petId,
+        isHomeVisit: !!metadata?.consultationType?.isHomeVisit,
+        additionalInfo: additionalNotes,
+        selectedOptions: metadata?.options?.selectedOptions || [],
+        amount,
+        companyId: companyId,
+      });
+    } catch (error) {
+      console.error("Erreur de paiement:", error);
+      toast.error("Erreur lors du paiement, veuillez réessayer");
+    }
   };
 
   // Transformer les options de l'organisation au format attendu par le composant OptionsStep
@@ -321,8 +380,8 @@ export function BookingCard({
         >
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-                locale: fr,
-              })} à ${selectedTime}`
+              locale: fr,
+            })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -411,9 +470,9 @@ export function BookingCard({
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index <
-                            Object.values(steps).findIndex(
-                              (s) => s.id === current.id,
-                            )
+                          Object.values(steps).findIndex(
+                            (s) => s.id === current.id,
+                          )
                           ? "border-primary bg-primary text-white"
                           : "border-muted-foreground text-muted-foreground",
                     )}
@@ -489,9 +548,9 @@ export function BookingCard({
                   selectedOptions={
                     metadata?.options?.selectedOptions
                       ? metadata.options.selectedOptions.map(
-                          (id: string) =>
-                            adaptedOptions.find((o) => o.id === id)!,
-                        )
+                        (id: string) =>
+                          adaptedOptions.find((o) => o.id === id)!,
+                      )
                       : []
                   }
                 />
@@ -526,7 +585,9 @@ export function BookingCard({
                   (isLast && !metadata?.pet?.petId)
                 }
               >
-                {isLast ? "Confirmer" : "Suivant"}
+                {isLast ? (
+                  isPaymentLoading ? "Redirection..." : "Confirmer et payer"
+                ) : "Suivant"}
               </Button>
             </div>
           </CredenzaFooter>

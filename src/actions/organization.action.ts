@@ -45,7 +45,7 @@ export const getAllOrganizations = createServerAction(
         },
         slots: {
           where: eq(organizationSlots.isAvailable, true),
-          limit: 4,
+          limit: 3,
           orderBy: asc(organizationSlots.start),
           columns: {
             id: true,
@@ -191,35 +191,6 @@ export const createOrganization = createServerAction(
         })
         .returning();
 
-      // const stripeCompany = await stripe.accounts.create({
-      //   type: "standard",
-      //   country: "FR",
-      //   email: ctx?.user?.email!,
-      //   metadata: {
-      //     organizationId: result?.id!,
-      //     userId: ctx?.user?.id!,
-      //   },
-      //   capabilities: {
-      //     card_payments: {
-      //       requested: true,
-      //     },
-      //     transfers: {
-      //       requested: true,
-      //     },
-      //   },
-      // });
-
-      const stripeCustomer = await stripe.customers.create({
-        name: result?.name!,
-        metadata: {
-          organizationId: result?.id!,
-          userId: ctx?.user?.id!,
-        },
-      });
-
-      console.log(stripeCustomer, "stripeCustomer");
-      console.log(result, "result");
-
       const [organizationResult] = await db
         .update(organizationTable)
         .set({
@@ -228,8 +199,6 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
-          // companyStripeId: stripeCompany.id,
-          customerStripeId: stripeCustomer?.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()

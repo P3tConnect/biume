@@ -2,7 +2,6 @@
 
 import { ModeToggle } from "../mode-toggle";
 import { UserNav } from "../user-nav";
-import SearchButton from "../search-button";
 import Notifications from "../notifications";
 import {
   Button,
@@ -310,7 +309,7 @@ export function ClientNavbar() {
                               ? "bg-secondary/10 text-secondary font-medium shadow-sm"
                               : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                             switchingOrg === org.id &&
-                              "animate-pulse opacity-70",
+                            "animate-pulse opacity-70",
                           )}
                           onSelect={() => handleOrganizationSwitch(org.id)}
                           disabled={switchingOrg !== null}
@@ -334,7 +333,7 @@ export function ClientNavbar() {
                                   "h-full w-full object-cover transition-transform duration-300",
                                   (isPersonalDashboard ||
                                     activeOrganization?.id !== org.id) &&
-                                    "hover:scale-110",
+                                  "hover:scale-110",
                                 )}
                               />
                             </div>

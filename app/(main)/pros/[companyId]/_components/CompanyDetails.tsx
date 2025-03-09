@@ -24,7 +24,7 @@ import {
   MessageSquare,
   ChevronDown,
 } from "lucide-react";
-import { Organization } from "@/src/db";
+import { Organization, Pet } from "@/src/db";
 import { ActionResult } from "@/src/lib";
 import { Button } from "@/components/ui";
 import { CompanyTeam } from "./CompanyTeam";
@@ -56,6 +56,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const [selectedPro, setSelectedPro] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [isBookingExpanded, setIsBookingExpanded] = useState(false);
 
   // Refs pour le défilement
@@ -136,9 +137,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          companyResult.data.ratings.length
-        ).toFixed(1)
+        companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+        companyResult.data.ratings.length
+      ).toFixed(1)
       : "4.8";
 
   return (

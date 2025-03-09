@@ -17,9 +17,6 @@ import {
 } from "lucide-react";
 import {
   ScrollArea,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -105,9 +102,6 @@ const CalendarWidget = () => {
               <p className="text-sm text-muted-foreground">
                 {dayAppointments.length} rendez-vous
               </p>
-              <Button variant="outline" size="sm">
-                + Nouveau rendez-vous
-              </Button>
             </div>
             <div className="space-y-2">
               {dayAppointments.map((appointment) => (
@@ -206,7 +200,7 @@ const CalendarWidget = () => {
       </div>
 
       {viewMode === "calendar" ? (
-        <div className="flex-1 overflow-auto pt-1 rounded-md bg-muted/10">
+        <div className="flex-1 overflow-auto pt-1 px-1 rounded-md bg-muted/10">
           <CalendarGrid
             currentDate={currentDate}
             selectedDate={selectedDate}

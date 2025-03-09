@@ -6,13 +6,6 @@ import Notifications from "../notifications";
 import React from "react";
 import {
   Button,
-  CommandDialog,
-  DialogTitle,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -26,7 +19,6 @@ import {
   DropdownMenuPortal,
 } from "@/components/ui";
 import { useEffect, useState } from "react";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   Home,
   Calendar,
@@ -76,6 +68,7 @@ import {
 import Stepper from "@/components/onboarding/components/stepper";
 import { AccountSwitchDialog } from "../account-switch-dialog";
 import { getAllOrganizationsByUserId } from "@/src/actions/organization.action";
+import { CommandDialog } from "@/components/command/command-dialog";
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
   const pathname = usePathname();
@@ -295,7 +288,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                               ? "bg-primary/10 text-primary font-medium shadow-sm"
                               : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                             switchingOrg === org.id &&
-                              "animate-pulse opacity-70",
+                            "animate-pulse opacity-70",
                           )}
                           onSelect={() => handleOrganizationSwitch(org.id)}
                           disabled={switchingOrg !== null}
@@ -699,122 +692,12 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
         </div>
       </div>
 
-      {/* Redesigned Command Dialog with neutral colors */}
-      <CommandDialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <VisuallyHidden>
-          <DialogTitle>Recherche</DialogTitle>
-        </VisuallyHidden>
-        <CommandInput
-          placeholder="Que recherchez-vous ?"
-          className="h-14 w-full bg-transparent px-0 py-3 text-base outline-none placeholder:text-muted-foreground/70 focus:ring-0 focus:outline-none border-0"
-        />
-        <CommandList className="max-h-[60vh] overflow-y-auto py-2 px-1">
-          <CommandEmpty>
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <div className="rounded-full bg-muted/30 p-3 mb-3">
-                <Search className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <p className="text-sm text-muted-foreground mb-1">
-                Aucun résultat trouvé.
-              </p>
-              <p className="text-xs text-muted-foreground/70">
-                Essayez avec des termes différents.
-              </p>
-            </div>
-          </CommandEmpty>
-
-          <CommandGroup
-            heading={
-              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
-                Suggestions
-              </div>
-            }
-          >
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Users className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Clients</span>
-                <span className="text-xs text-muted-foreground/70">
-                  Gérer vos clients
-                </span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Calendar className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">
-                  Gérer votre agenda
-                </span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <ClipboardList className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Rapports</span>
-                <span className="text-xs text-muted-foreground/70">
-                  Consulter vos statistiques
-                </span>
-              </div>
-            </CommandItem>
-          </CommandGroup>
-
-          <CommandGroup
-            heading={
-              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 mt-2">
-                Actions Rapides
-              </div>
-            }
-          >
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Plus className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Nouveau client</span>
-                <span className="text-xs text-muted-foreground/70">
-                  Ajouter un nouveau client
-                </span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Calendar className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Nouveau rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">
-                  Planifier un rendez-vous
-                </span>
-              </div>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-
-        <div className="flex items-center justify-between border-t border-border/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Parcourir</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↑
-            </span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↓
-            </span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Sélectionner</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↵
-            </span>
-          </div>
-        </div>
-      </CommandDialog>
+      {/* Nouveau CommandDialog */}
+      <CommandDialog
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        companyId={companyId}
+      />
 
       {/* Dialogues de changement de compte */}
       <AccountSwitchDialog

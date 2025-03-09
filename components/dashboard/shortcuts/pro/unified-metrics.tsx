@@ -236,7 +236,7 @@ export const UnifiedMetrics = () => {
                 <p className="text-2xl font-bold">
                   {Math.round(
                     data.reduce((acc, curr) => acc + curr.value, 0) /
-                      data.length,
+                    data.length,
                   )}
                 </p>
               </Card>
@@ -323,203 +323,161 @@ export const UnifiedMetrics = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="overflow-hidden shadow-sm rounded-xl">
+        {/* Rendez-vous */}
+        <Card className="border rounded-xl shadow-none">
           <div className="p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-1.5">
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-1.5 rounded-md">
-                  <CalendarIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <span className="text-sm font-medium">Rendez-vous</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Rendez-vous</span>
+                <CalendarIcon className="w-4 h-4 text-indigo-500" />
               </div>
-              <Badge variant="outline" className="text-xs px-1.5 py-0">
-                {formattedDate}
-              </Badge>
-            </div>
-            <div className="text-2xl font-bold mb-0.5">
-              <CountAnimation
-                value={
-                  !hasData
-                    ? 0
-                    : metrics.appointmentsData[
-                          metrics.appointmentsData.length - 1
-                        ].value > 0
-                      ? metrics.appointmentsData[
+              <div className="text-2xl font-semibold">
+                <CountAnimation
+                  value={
+                    !hasData
+                      ? 0
+                      : metrics.appointmentsData[
+                        metrics.appointmentsData.length - 1
+                      ].value > 0
+                        ? metrics.appointmentsData[
                           metrics.appointmentsData.length - 1
                         ].value
-                      : 0
-                }
-              />
-            </div>
-            <div className="text-xs text-muted-foreground">
+                        : 0
+                  }
+                />
+              </div>
               {hasData && metrics.appointmentsData.length > 1 && (
-                <span
-                  className={`inline-flex items-center ${
-                    getPercentageChange(metrics.appointmentsData).isPositive
+                <div className="text-xs mt-1">
+                  <span
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                  }`}
-                >
-                  <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${
-                      !getPercentageChange(metrics.appointmentsData).isPositive
-                        ? "rotate-180"
-                        : ""
-                    }`}
-                  />
-                  {getPercentageChange(metrics.appointmentsData).value}% par
-                  rapport au mois précédent
-                </span>
+                      }`}
+                  >
+                    {getPercentageChange(metrics.appointmentsData).value}%
+                  </span>
+                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                </div>
               )}
             </div>
           </div>
         </Card>
 
         {/* Nouveaux patients */}
-        <Card className="overflow-hidden shadow-sm rounded-xl">
+        <Card className="border rounded-xl shadow-none">
           <div className="p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-1.5">
-                <div className="bg-rose-100 dark:bg-rose-900/30 p-1.5 rounded-md">
-                  <User className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-                </div>
-                <span className="text-sm font-medium">Nouveaux patients</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Nouveaux patients</span>
+                <User className="w-4 h-4 text-rose-500" />
               </div>
-            </div>
-            <div className="text-2xl font-bold mb-0.5">
-              <CountAnimation
-                value={
-                  !hasData
-                    ? 0
-                    : metrics.newPatientsData[
-                          metrics.newPatientsData.length - 1
-                        ].value > 0
-                      ? metrics.newPatientsData[
+              <div className="text-2xl font-semibold">
+                <CountAnimation
+                  value={
+                    !hasData
+                      ? 0
+                      : metrics.newPatientsData[
+                        metrics.newPatientsData.length - 1
+                      ].value > 0
+                        ? metrics.newPatientsData[
                           metrics.newPatientsData.length - 1
                         ].value
-                      : 0
-                }
-              />
-            </div>
-            <div className="text-xs text-muted-foreground">
+                        : 0
+                  }
+                />
+              </div>
               {hasData && metrics.newPatientsData.length > 1 && (
-                <span
-                  className={`inline-flex items-center ${
-                    getPercentageChange(metrics.newPatientsData).isPositive
+                <div className="text-xs mt-1">
+                  <span
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                  }`}
-                >
-                  <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${
-                      !getPercentageChange(metrics.newPatientsData).isPositive
-                        ? "rotate-180"
-                        : ""
-                    }`}
-                  />
-                  {getPercentageChange(metrics.newPatientsData).value}% par
-                  rapport au mois précédent
-                </span>
+                      }`}
+                  >
+                    {getPercentageChange(metrics.newPatientsData).value}%
+                  </span>
+                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                </div>
               )}
             </div>
           </div>
         </Card>
 
         {/* Soins réalisés */}
-        <Card className="overflow-hidden shadow-sm rounded-xl">
+        <Card className="border rounded-xl shadow-none">
           <div className="p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-1.5">
-                <div className="bg-emerald-100 dark:bg-emerald-900/30 p-1.5 rounded-md">
-                  <Stethoscope className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                </div>
-                <span className="text-sm font-medium">Soins réalisés</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Soins réalisés</span>
+                <Stethoscope className="w-4 h-4 text-emerald-500" />
               </div>
-            </div>
-            <div className="text-2xl font-bold mb-0.5">
-              <CountAnimation
-                value={
-                  !hasData
-                    ? 0
-                    : metrics.treatmentsData[metrics.treatmentsData.length - 1]
-                          ?.value > 0
-                      ? metrics.treatmentsData[
+              <div className="text-2xl font-semibold">
+                <CountAnimation
+                  value={
+                    !hasData
+                      ? 0
+                      : metrics.treatmentsData[metrics.treatmentsData.length - 1]
+                        ?.value > 0
+                        ? metrics.treatmentsData[
                           metrics.treatmentsData.length - 1
                         ].value
-                      : 0
-                }
-              />
-            </div>
-            <div className="text-xs text-muted-foreground">
+                        : 0
+                  }
+                />
+              </div>
               {hasData && metrics.treatmentsData.length > 1 && (
-                <span
-                  className={`inline-flex items-center ${
-                    getPercentageChange(metrics.treatmentsData).isPositive
+                <div className="text-xs mt-1">
+                  <span
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                  }`}
-                >
-                  <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${
-                      !getPercentageChange(metrics.treatmentsData).isPositive
-                        ? "rotate-180"
-                        : ""
-                    }`}
-                  />
-                  {getPercentageChange(metrics.treatmentsData).value}% par
-                  rapport au mois précédent
-                </span>
+                      }`}
+                  >
+                    {getPercentageChange(metrics.treatmentsData).value}%
+                  </span>
+                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                </div>
               )}
             </div>
           </div>
         </Card>
 
         {/* Satisfaction client */}
-        <Card className="overflow-hidden shadow-sm rounded-xl">
+        <Card className="border rounded-xl shadow-none">
           <div className="p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-1.5">
-                <div className="bg-amber-100 dark:bg-amber-900/30 p-1.5 rounded-md">
-                  <HeartPulseIcon className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <span className="text-sm font-medium">Satisfaction</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Satisfaction</span>
+                <HeartPulseIcon className="w-4 h-4 text-amber-500" />
               </div>
-            </div>
-            <div className="text-2xl font-bold mb-0.5">
-              <CountAnimation
-                value={
-                  !hasData
-                    ? 0
-                    : metrics.satisfactionData[
-                          metrics.satisfactionData.length - 1
-                        ].value > 0
-                      ? metrics.satisfactionData[
+              <div className="text-2xl font-semibold">
+                <CountAnimation
+                  value={
+                    !hasData
+                      ? 0
+                      : metrics.satisfactionData[
+                        metrics.satisfactionData.length - 1
+                      ].value > 0
+                        ? metrics.satisfactionData[
                           metrics.satisfactionData.length - 1
                         ].value
-                      : 0
-                }
-              />
-              <span className="text-xs font-medium ml-1">%</span>
-            </div>
-            <div className="text-xs text-muted-foreground">
+                        : 0
+                  }
+                />
+                <span className="text-sm font-medium ml-1">%</span>
+              </div>
               {hasData && metrics.satisfactionData.length > 1 && (
-                <span
-                  className={`inline-flex items-center ${
-                    getPercentageChange(metrics.satisfactionData).isPositive
+                <div className="text-xs mt-1">
+                  <span
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive
                       ? "text-green-600"
                       : "text-red-600"
-                  }`}
-                >
-                  <TrendingUpIcon
-                    className={`h-3 w-3 mr-1 ${
-                      !getPercentageChange(metrics.satisfactionData).isPositive
-                        ? "rotate-180"
-                        : ""
-                    }`}
-                  />
-                  {getPercentageChange(metrics.satisfactionData).value}% par
-                  rapport au mois précédent
-                </span>
+                      }`}
+                  >
+                    {getPercentageChange(metrics.satisfactionData).value}%
+                  </span>
+                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                </div>
               )}
             </div>
           </div>

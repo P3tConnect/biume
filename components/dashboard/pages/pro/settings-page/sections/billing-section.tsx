@@ -12,7 +12,7 @@ import { BillingPaymentSection } from "./components/billing/billing-payment-sect
 import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
 import { getInvoiceHistory } from "@/src/actions/stripe.action";
 import { getBillingInfo } from "@/src/actions/stripe.action";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const plans = [
@@ -30,7 +30,8 @@ export const plans = [
       "Paiement en ligne",
       "Réservation client",
     ],
-    priceId: safeConfig.STRIPE_BASIC_PLAN_ID,
+    monthlyPriceId: safeConfig.STRIPE_BASIC_PLAN_MONTHLY_ID,
+    yearlyPriceId: safeConfig.STRIPE_BASIC_PLAN_YEARLY_ID,
   },
   {
     name: "Pro",
@@ -45,7 +46,8 @@ export const plans = [
       "Preview Biume AI",
       "Jusqu'à 5 employés",
     ],
-    priceId: safeConfig.STRIPE_PRO_PLAN_ID,
+    monthlyPriceId: safeConfig.STRIPE_PRO_PLAN_MONTHLY_ID,
+    yearlyPriceId: safeConfig.STRIPE_PRO_PLAN_YEARLY_ID,
   },
   {
     name: "Ultimate",
@@ -58,7 +60,8 @@ export const plans = [
       "Communication centralisée",
       "Jusqu'à 10 employés",
     ],
-    priceId: safeConfig.STRIPE_ULTIMATE_PLAN_ID,
+    monthlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_MONTHLY_ID,
+    yearlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_YEARLY_ID,
   },
 ];
 
@@ -113,7 +116,11 @@ export const BillingSection = () => {
             </>
           ) : (
             <>
-              <BillingPlanSection plans={plans} billingInfo={billingInfo} />
+              <BillingPlanSection
+                plans={plans}
+                billingInfo={billingInfo}
+                isLoading={isLoading}
+              />
               <div className="h-px bg-border" />
               <BillingPaymentSection billingInfo={billingInfo} />
               <div className="h-px bg-border" />

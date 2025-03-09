@@ -29,7 +29,8 @@ interface Plan {
   description: string;
   price: string;
   features: string[];
-  priceId: string;
+  monthlyPriceId: string;
+  yearlyPriceId: string;
   icon?: React.ElementType;
   isPopular?: boolean;
   badge?: string;
@@ -38,11 +39,13 @@ interface Plan {
 interface BillingPlanSectionProps {
   plans: Plan[];
   billingInfo: ActionResult<BillingInfo> | undefined;
+  isLoading: boolean;
 }
 
 export const BillingPlanSection = ({
   plans,
   billingInfo,
+  isLoading,
 }: BillingPlanSectionProps) => {
   const params = useParams();
   const orgId = params.orgId as string;
@@ -289,7 +292,7 @@ export const BillingPlanSection = ({
                           : "bg-primary/10 text-primary hover:bg-primary/20",
                       )}
                       size="lg"
-                      onClick={() => handleChangePlan(plan.priceId)}
+                      onClick={() => handleChangePlan(isAnnual ? plan.yearlyPriceId : plan.monthlyPriceId)}
                     >
                       Sélectionner {plan.name}
                     </Button>

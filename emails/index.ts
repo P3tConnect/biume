@@ -9,4 +9,5 @@ export * from "./RateEmail";
 export * from "./ReminderEmail";
 export * from "./ReservationCancelledEmail";
 export * from "./SubscriptionReceiptEmail";
-export * from "./WelcomePawTheraEmail";
+export * from "./WelcomeBiumeEmail";
+export * from "./TrialEndingOrg";

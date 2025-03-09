@@ -11,7 +11,7 @@ import {
   requireFullOrganization,
 } from "../lib";
 import { stripe } from "../lib/stripe";
-import { organization, transaction } from "../db";
+import { organization } from "../db";
 import { eq } from "drizzle-orm";
 import { BillingInfo } from "@/types/billing-info";
 import { StripeInvoice } from "@/types/stripe-invoice";

@@ -152,7 +152,7 @@ export default function KYBSection() {
 
   const error = queryError
     ? (queryError as Error).message ||
-      'Erreur lors de la récupération des informations du compte'
+    'Erreur lors de la récupération des informations du compte'
     : null;
 
   const startOnboarding = async () => {
@@ -444,19 +444,21 @@ export default function KYBSection() {
             <Skeleton className='h-10 w-full' />
           </div>
         ) : error ? (
-          <Alert variant='destructive'>
-            <AlertCircle className='h-4 w-4' />
-            <AlertTitle>Erreur</AlertTitle>
-            <AlertDescription>
-              {error}
-              <Button
-                variant='outline'
-                size='sm'
-                className='ml-2'
-                onClick={() => refetch()}
-              >
-                <RefreshCw className='mr-2 h-4 w-4' /> Réessayer
-              </Button>
+          <Alert variant='destructive' className="bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+            <AlertCircle className='h-4 w-4 text-red-500' />
+            <AlertTitle className="text-red-700 dark:text-red-300">Erreur</AlertTitle>
+            <AlertDescription className="flex flex-col gap-2 text-red-600 dark:text-red-300">
+              <div>{error}</div>
+              <div className="flex items-center justify-between">
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => refetch()}
+                >
+                  <RefreshCw className='mr-2 h-4 w-4' /> Réessayer
+                </Button>
+                <span className="text-xs italic">Si cette erreur persiste, veuillez contacter Biume pour résoudre le problème.</span>
+              </div>
             </AlertDescription>
           </Alert>
         ) : !accountInfo ? (
@@ -586,11 +588,10 @@ export default function KYBSection() {
                     ? 'default'
                     : 'outline'
                 }
-                className={`mb-2 ${
-                  accountInfo.payoutsEnabled && accountInfo.chargesEnabled
-                    ? 'bg-green-100 text-green-800 hover:bg-green-100'
-                    : ''
-                }`}
+                className={`mb-2 ${accountInfo.payoutsEnabled && accountInfo.chargesEnabled
+                  ? 'bg-green-100 text-green-800 hover:bg-green-100'
+                  : ''
+                  }`}
               >
                 {accountInfo.payoutsEnabled && accountInfo.chargesEnabled ? (
                   <>

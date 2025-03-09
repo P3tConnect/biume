@@ -1,6 +1,5 @@
 import {
   boolean,
-  date,
   pgEnum,
   pgTable,
   text,
@@ -24,10 +23,13 @@ export const appointmentType = pgEnum("appointment_type", [
 ]);
 
 export const appointmentStatusType = pgEnum("appointment_status_type", [
+  "CREATED",
+  "DRAFT",
   "PENDING PAYMENT",
   "SCHEDULED",
   "PAYED",
   "CONFIRMED",
+  "DENIED",
   "CANCELED",
   "POSTPONED",
 ]);
