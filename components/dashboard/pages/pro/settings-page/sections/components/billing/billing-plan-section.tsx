@@ -130,7 +130,7 @@ export const BillingPlanSection = ({
               Choisissez le plan qui vous convient
             </h2>
             <p className="text-muted-foreground mb-6">
-              Tous nos forfaits incluent l'accès à toutes les fonctionnalités
+              Tous nos forfaits incluent l&apos;accès à toutes les fonctionnalités
               essentielles
             </p>
 

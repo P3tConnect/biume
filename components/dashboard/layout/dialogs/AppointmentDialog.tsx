@@ -192,7 +192,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
     };
 
     validateCurrentStep();
-  }, [currentStep, form.watch(), steps]);
+  }, [currentStep, form, steps]);
 
   // Mutation pour créer un rendez-vous en utilisant l'action serveur
   const createAppointmentMutation = useMutation({

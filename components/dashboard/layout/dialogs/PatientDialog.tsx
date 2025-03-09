@@ -314,7 +314,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                         name='type'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Type d'animal</FormLabel>
+                            <FormLabel>Type d&apos;animal</FormLabel>
                             <Select
                               onValueChange={field.onChange}
                               defaultValue={field.value}

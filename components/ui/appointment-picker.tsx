@@ -79,7 +79,7 @@ export default function AppointmentPicker({
       daysWithSlots,
       disabledDays: unavailableDates,
     };
-  }, [timeSlots]);
+  }, [timeSlots, today]);
 
   // Fonction pour désactiver les dates
   const isDayDisabled = useMemo(() => {

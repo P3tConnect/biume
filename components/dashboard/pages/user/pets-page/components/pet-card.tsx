@@ -174,7 +174,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
 
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className='max-h-[90vh] w-full max-w-[900px] overflow-y-auto'>
-          <DialogTitle className='sr-only'>Modifier l'animal</DialogTitle>
+          <DialogTitle className='sr-only'>Modifier l&apos;animal</DialogTitle>
           <div className='p-6'>
             <PetProvider>
               <StepperAnimal onComplete={handleCloseEditModal} petId={pet.id} />

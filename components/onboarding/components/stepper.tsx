@@ -81,51 +81,12 @@ const Stepper = () => {
         organizationId: organizationId,
       });
 
-      // Créer les comptes Stripe
-      let companyStripeId = null;
-      let customerStripeId = null;
-
-      try {
-        // Créer le client Stripe
-        const stripeCustomer = await stripe.customers.create({
-          email: session?.user.email!,
-          name: name,
-          metadata: {
-            organizationId: organizationId,
-            userId: session?.user.id!,
-          },
-        });
-        customerStripeId = stripeCustomer.id;
-        console.log('Client Stripe créé avec succès:', customerStripeId);
-
-        // Créer le compte Stripe Connect
-        // const stripeCompany = await stripe.accounts.create({
-        //   type: "standard",
-        //   country: "FR",
-        //   email: session?.user.email!,
-        //   metadata: {
-        //     organizationId: organizationId,
-        //     userId: session?.user.id!,
-        //   },
-        // });
-        // companyStripeId = stripeCompany.id;
-        console.log('Compte Stripe Connect créé avec succès:', companyStripeId);
-      } catch (stripeError) {
-        console.error(
-          'Erreur lors de la création des comptes Stripe:',
-          stripeError
-        );
-        // Continuer même en cas d'erreur Stripe - l'organisation a été créée
-      }
-
       // Mettre à jour l'organisation dans la base de données
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
-          companyStripeId: companyStripeId,
-          customerStripeId: customerStripeId,
         })
         .where(eq(organizationTable.id, organizationId))
         .execute();

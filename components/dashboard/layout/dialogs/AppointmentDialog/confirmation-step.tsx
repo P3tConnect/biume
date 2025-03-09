@@ -59,17 +59,17 @@ const ConfirmationStep = () => {
   // Récupérer les informations avec useMemo pour éviter des recalculs inutiles
   const selectedClient = useMemo(
     () => clients.find((c) => c.id === clientId),
-    [clientId]
+    [clientId, clients]
   );
 
   const selectedPet = useMemo(
     () => pets.find((p) => p.id === patientId),
-    [patientId]
+    [patientId, pets]
   );
 
   const selectedService = useMemo(
     () => services.find((s) => s.id === serviceId),
-    [serviceId]
+    [serviceId, services]
   );
 
   // Mémoriser l'heure de fin calculée
