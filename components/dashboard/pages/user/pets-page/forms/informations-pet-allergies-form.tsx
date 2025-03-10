@@ -1,20 +1,19 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { Tag, TagInput } from "emblor"
-import React, { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import { Button, Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui"
-import { updatePetAllergies } from "@/src/actions"
-import { Pet } from "@/src/db/pets"
-import { useSession } from "@/src/lib/auth-client"
+import React, { useState } from "react"
+import { Tag, TagInput } from "emblor"
+import { getPetById, updatePetAllergies } from "@/src/actions"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
-import { usePetContext } from "../context/pet-context"
+import { Pet } from "@/src/db/pets"
 import { petSchema } from "../schema/pet-schema"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { usePetContext } from "../context/pet-context"
+import { useSession } from "@/src/lib/auth-client"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 // Liste des allergies communes chez les animaux comme exemple
 const commonAllergies = [
@@ -37,13 +36,21 @@ const InformationsPetAllergiesForm = ({
   nextStep,
   previousStep,
   isPending,
-  petData,
+  petData: initialPetData,
   isUpdate = false,
 }: InformationsPetAllergiesFormProps) => {
   const { petId } = usePetContext()
   const { data: session } = useSession()
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
-  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([])
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>((initialPetData?.allergies as string[]) || [])
+
+  const { data: fetchedPetData, isLoading } = useQuery({
+    queryKey: ["pet", petId],
+    queryFn: () => getPetById({ petId: petId as string }),
+    enabled: !!petId && isUpdate && !initialPetData,
+  })
+
+  const petData = initialPetData || (fetchedPetData && "data" in fetchedPetData ? fetchedPetData.data : null)
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -62,17 +69,6 @@ const InformationsPetAllergiesForm = ({
       toast.error(`Erreur lors de l'enregistrement des allergies: ${error.message}`)
     },
   })
-
-  useEffect(() => {
-    if (isUpdate && petData && petData.allergies) {
-      const existingAllergies = petData.allergies as string[]
-      setSelectedAllergies(existingAllergies)
-    }
-  }, [isUpdate, petData])
-
-  useEffect(() => {
-    form.setValue("allergies", selectedAllergies)
-  }, [selectedAllergies, form])
 
   const handleAllergySelection = (allergyText: string) => {
     setSelectedAllergies(current => {
@@ -131,7 +127,7 @@ const InformationsPetAllergiesForm = ({
                     input:
                       "rounded-md transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
                     tag: {
-                      body: "relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7",
+                      body: "text-black relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7 dark:text-white",
                       closeButton:
                         "absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-md flex size-7 transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] text-muted-foreground/80 hover:text-foreground",
                     },

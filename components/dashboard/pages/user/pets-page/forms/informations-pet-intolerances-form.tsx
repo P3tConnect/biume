@@ -1,20 +1,19 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { Tag, TagInput } from "emblor"
-import React, { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import { Button, Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui"
-import { updatePetIntolerences } from "@/src/actions"
-import { Pet } from "@/src/db/pets"
-import { useSession } from "@/src/lib/auth-client"
+import React, { useState } from "react"
+import { Tag, TagInput } from "emblor"
+import { getPetById, updatePetIntolerences } from "@/src/actions"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
-import { usePetContext } from "../context/pet-context"
+import { Pet } from "@/src/db/pets"
 import { petSchema } from "../schema/pet-schema"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { usePetContext } from "../context/pet-context"
+import { useSession } from "@/src/lib/auth-client"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 // Liste des intolérances communes chez les animaux
 const commonIntolerances = [
@@ -37,13 +36,23 @@ const InformationsPetIntolerancesForm = ({
   nextStep,
   previousStep,
   isPending,
-  petData,
+  petData: initialPetData,
   isUpdate = false,
 }: InformationsPetIntolerancesFormProps) => {
   const { petId } = usePetContext()
   const { data: session } = useSession()
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
-  const [selectedIntolerances, setSelectedIntolerances] = useState<string[]>([])
+  const [selectedIntolerances, setSelectedIntolerances] = useState<string[]>(
+    (initialPetData?.intolerences as string[]) || []
+  )
+
+  const { data: fetchedPetData, isLoading } = useQuery({
+    queryKey: ["pet", petId],
+    queryFn: () => getPetById({ petId: petId as string }),
+    enabled: !!petId && isUpdate && !initialPetData,
+  })
+
+  const petData = initialPetData || (fetchedPetData && "data" in fetchedPetData ? fetchedPetData.data : null)
 
   const form = useForm<z.infer<typeof petSchema>>({
     resolver: zodResolver(petSchema),
@@ -62,17 +71,6 @@ const InformationsPetIntolerancesForm = ({
       toast.error(`Erreur lors de l'enregistrement des intolérances: ${error.message}`)
     },
   })
-
-  useEffect(() => {
-    if (isUpdate && petData && petData.intolerences) {
-      const existingIntolerances = petData.intolerences as string[]
-      setSelectedIntolerances(existingIntolerances)
-    }
-  }, [isUpdate, petData])
-
-  useEffect(() => {
-    form.setValue("intolerences", selectedIntolerances)
-  }, [selectedIntolerances, form])
 
   const handleIntoleranceSelection = (intoleranceText: string) => {
     setSelectedIntolerances(current => {
@@ -131,7 +129,7 @@ const InformationsPetIntolerancesForm = ({
                     input:
                       "rounded-md transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
                     tag: {
-                      body: "relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7",
+                      body: "text-black relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7 dark:text-white",
                       closeButton:
                         "absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-md flex size-7 transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] text-muted-foreground/80 hover:text-foreground",
                     },
