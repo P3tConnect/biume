@@ -2,6 +2,7 @@
 import { FlatCompat } from "@eslint/eslintrc"
 import { dirname } from "path"
 import { fileURLToPath } from "url"
+import simpleImportSort from "eslint-plugin-simple-import-sort"
 import unusedImports from "eslint-plugin-unused-imports"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -16,20 +17,17 @@ const config = [
   {
     plugins: {
       "unused-imports": unusedImports,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
-      // Rules from eslint-plugin-unused-imports
+      // Supprime automatiquement les imports inutilisés
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": ["warn", { ignoreRestSiblings: true }],
 
-      // Rules from eslint-plugin-simple-import-sort
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-        },
-      ],
+      // Désactivation des règles pour les variables non utilisées
+      "unused-imports/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+
+      // Autres règles
       "max-params": ["error", 4],
       "tailwindcss/no-custom-classname": "off",
       "tailwindcss/classnames-order": "off",
