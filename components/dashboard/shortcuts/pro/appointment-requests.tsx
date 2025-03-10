@@ -148,7 +148,7 @@ export const AppointmentRequests = () => {
                     </div>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                       <CalendarIcon className="h-4 w-4" />
-                      <span>Aujourd'hui</span>
+                      <span>Aujourd&apos;hui</span>
                     </div>
                   </div>
                 </div>

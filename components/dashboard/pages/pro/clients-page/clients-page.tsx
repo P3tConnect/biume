@@ -1,23 +1,17 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
+import { ArrowUpDown, Calendar, Loader2, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
 import {
   ColumnDef,
   ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, Calendar, Loader2, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
-import React from "react"
-
-import { CountAnimation } from "@/components/count-animation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,16 +20,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Client, getClientMetrics, getClients } from "@/src/actions/client.action"
-import { ClientMetrics as ClientMetricsType } from "@/src/actions/client.action"
+import { getClientMetrics, getClients } from "@/src/actions/client.action"
 
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Client } from "@/src/types/client"
 import { ClientDetails } from "./client-details"
 import { ClientForm } from "./client-form"
+import { ClientMetrics } from "@/src/types/client"
 import ClientsHeader from "./clients-header"
+import { CountAnimation } from "@/components/count-animation"
+import { Input } from "@/components/ui/input"
+import React from "react"
+import { useQuery } from "@tanstack/react-query"
 
 // Type pour nos données client
 // type Client = {
@@ -58,7 +58,7 @@ const ClientMetricsComponent = () => {
     data: metrics,
     isLoading,
     error,
-  } = useQuery<ClientMetricsType>({
+  } = useQuery<ClientMetrics>({
     queryKey: ["clientMetrics"],
     queryFn: async () => {
       const result = await getClientMetrics({})
@@ -207,8 +207,8 @@ const ClientsPageComponent = () => {
   const {
     data: clients = [],
     isLoading,
-    error,
-  } = useQuery<Client[]>({
+    isError,
+  } = useQuery<any>({
     queryKey: ["clients", { search: globalFilter, status }],
     queryFn: async () => {
       const result = await getClients({
@@ -311,7 +311,7 @@ const ClientsPageComponent = () => {
   ]
 
   const table = useReactTable({
-    data: clients,
+    data: clients as Client[],
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -346,7 +346,7 @@ const ClientsPageComponent = () => {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <span className="ml-2">Chargement des clients...</span>
             </div>
-          ) : error ? (
+          ) : isError ? (
             <div className="text-center text-red-500 py-8">Erreur lors du chargement des clients</div>
           ) : (
             <Table>
@@ -385,7 +385,7 @@ const ClientsPageComponent = () => {
 
       {selectedClient && (
         <ClientDetails
-          client={selectedClient}
+          client={selectedClient as any}
           isOpen={!!selectedClient}
           onOpenChange={open => !open && setSelectedClient(null)}
         />

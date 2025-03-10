@@ -1,9 +1,8 @@
 "use client"
 
-import { Upload } from "lucide-react"
-import React from "react"
-
 import { Button } from "@/components/ui/button"
+import React from "react"
+import { Upload } from "lucide-react"
 
 interface UploadDropzoneProps {
   endpoint: string

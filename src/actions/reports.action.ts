@@ -1,11 +1,11 @@
-import { eq } from "drizzle-orm"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-import { z } from "zod"
+import { createServerAction, requireAuth, requireMember } from "@/src/lib"
 
+import { db } from "@/src/lib"
+import { eq } from "drizzle-orm"
 import { pets } from "@/src/db/pets"
 import { report } from "@/src/db/report"
-import { createServerAction, requireAuth, requireMember } from "@/src/lib"
-import { db } from "@/src/lib"
+import { z } from "zod"
 
 // Définition des schémas pour les animaux (utilisant les pets existants)
 export const animalSchemaTypeEnum = z.enum(["DOG", "CAT", "HORSE", "BIRD", "NAC"])
@@ -128,6 +128,10 @@ export const createAnimalSchemaAction = createServerAction(
                   : "NAC",
         image: input.imageUrl,
         birthDate: new Date(), // Requis pour un pet
+        weight: 0, // Ajoutez une valeur par défaut ou modifiez selon vos besoins
+        height: 0, // Ajoutez une valeur par défaut ou modifiez selon vos besoins
+        breed: "Inconnu", // Ajoutez une valeur par défaut ou modifiez selon vos besoins
+        gender: "Male", // Utilise la valeur par défaut définie dans le schéma
       })
       .returning()
 

@@ -8,7 +8,6 @@ import React, { useState } from "react"
 
 import { AnimalCredenza } from "./unified-metrics/AnimalCredenza"
 import { AnimalDetails } from "./unified-metrics/types"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { CountAnimation } from "@/components/count-animation"

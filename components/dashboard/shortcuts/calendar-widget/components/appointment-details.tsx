@@ -10,26 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Calendar, Clock, Edit, MapPin, Trash, Users } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Credenza,
   CredenzaBody,
-  CredenzaClose,
   CredenzaContent,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import React, { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { appointmentColors, appointmentLabels } from "../data/constants"
-import { useEffect, useState } from "react"
 
 import type { Appointment } from "../types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Clock } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -261,7 +258,7 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                       <div className="space-y-4">
                         <div>
                           <Label htmlFor="petName" className="text-base">
-                            Nom de l'animal
+                            Nom de l&apos;animal
                           </Label>
                           <Input
                             id="petName"

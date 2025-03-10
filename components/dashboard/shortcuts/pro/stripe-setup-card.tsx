@@ -1,7 +1,7 @@
 "use client"
 
 import { AlertTriangle, CheckCircle, ExternalLink, RefreshCw } from "lucide-react"
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui"
+import { Button, Card } from "@/components/ui"
 
 import Link from "next/link"
 import { getStripeConnectAccountInfo } from "@/src/actions/stripe.action"

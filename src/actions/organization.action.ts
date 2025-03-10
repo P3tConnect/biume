@@ -1,6 +1,6 @@
 "use server"
 
-import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner, stripe } from "../lib"
+import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner } from "../lib"
 import {
   Organization,
   OrganizationImage,

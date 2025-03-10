@@ -1,10 +1,10 @@
-import { eq } from "drizzle-orm"
-import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
-import Stripe from "stripe"
-
-import { organization } from "@/src/db"
 import { db, stripe } from "@/src/lib"
+
+import Stripe from "stripe"
+import { eq } from "drizzle-orm"
+import { organization } from "@/src/db"
+import { redirect } from "next/navigation"
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing customerId" }, { status: 400 })
     }
     const [org] = await db.query.organization.findMany({
-      where: eq(organization.stripeId, customerId.toString()),
+      where: eq(organization.customerStripeId, customerId.toString()),
     })
 
     if (!org) {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "ULTIMATE",
       })
-      .where(eq(organization.stripeId, customerId.toString()))
+      .where(eq(organization.customerStripeId, customerId.toString()))
 
     redirect(`/dashboard/organization/${org.id}`)
   } else if (event.type === "customer.subscription.updated") {
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     const [org] = await db.query.organization.findMany({
-      where: eq(organization.stripeId, customerId.toString()),
+      where: eq(organization.customerStripeId, customerId.toString()),
     })
 
     if (!org) {
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "ULTIMATE",
       })
-      .where(eq(organization.stripeId, customerId.toString()))
+      .where(eq(organization.customerStripeId, customerId.toString()))
 
     return NextResponse.json({ message: "Organization updated" }, { status: 200 })
   } else if (event.type === "customer.subscription.deleted") {
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "NONE",
       })
-      .where(eq(organization.stripeId, customerId.toString()))
+      .where(eq(organization.customerStripeId, customerId.toString()))
 
     return NextResponse.json({ message: "Organization updated" }, { status: 200 })
   }

@@ -1,9 +1,9 @@
-import { eq } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server"
-
-import { organization } from "@/src/db"
 import { db, stripe } from "@/src/lib"
+
 import { auth } from "@/src/lib/auth"
+import { eq } from "drizzle-orm"
+import { organization } from "@/src/db"
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     })
 
     // Créer ou récupérer le client Stripe
-    let stripeCustomerId = org?.stripeId
+    let stripeCustomerId = org?.customerStripeId
 
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       stripeCustomerId = customer.id
 
       // Mettre à jour l'organisation avec l'ID du client Stripe
-      await db.update(organization).set({ stripeId: customer.id }).where(eq(organization.id, activeOrg.id))
+      await db.update(organization).set({ customerStripeId: customer.id }).where(eq(organization.id, activeOrg.id))
     }
 
     // Créer la session de paiement

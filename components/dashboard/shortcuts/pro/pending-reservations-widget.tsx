@@ -18,7 +18,21 @@ import {
   UserIcon,
   XCircleIcon,
 } from "lucide-react"
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Credenza,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui"
+import React, { useState } from "react"
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
