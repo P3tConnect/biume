@@ -15,8 +15,9 @@ import {
   Separator,
 } from "@/components/ui"
 import { Dispatch, SetStateAction, useState } from "react"
-import { Member, Service } from "@/src/db"
+import { Member, OrganizationSlots, Service } from "@/src/db"
 import { Option, OptionsStep } from "./steps/OptionsStep"
+import { PaymentMethodStep } from "./steps/PaymentMethodStep"
 import { signIn, useSession } from "@/src/lib/auth-client"
 import { steps, useStepper } from "./hooks/useBookingStepper"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -35,7 +36,7 @@ import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { getOptionsFromOrganization } from "@/src/actions/options.action"
 import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action"
-import { getPets } from "@/src/actions"
+import { getPets, createBooking } from "@/src/actions"
 import { loginSchema } from "@/src/lib"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
@@ -50,10 +51,12 @@ interface BookingCardProps {
   selectedPro: string | null
   selectedDate: Date | undefined
   selectedTime: string | null
+  selectedSlot: OrganizationSlots | null
   setSelectedService: Dispatch<SetStateAction<string | null>>
   setSelectedPro: Dispatch<SetStateAction<string | null>>
   setSelectedDate: Dispatch<SetStateAction<Date | undefined>>
   setSelectedTime: Dispatch<SetStateAction<string | null>>
+  setSelectedSlot: Dispatch<SetStateAction<OrganizationSlots | null>>
 }
 
 export function BookingCard({
@@ -63,10 +66,12 @@ export function BookingCard({
   selectedPro,
   selectedDate,
   selectedTime,
+  selectedSlot,
   setSelectedService,
   setSelectedPro,
   setSelectedDate,
   setSelectedTime,
+  setSelectedSlot,
 }: BookingCardProps) {
   const { data: session } = useSession()
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
@@ -120,9 +125,10 @@ export function BookingCard({
   const selectedPet = userPets?.data?.find(p => p.id === metadata?.pet?.petId)
 
   // Fonction de callback pour AppointmentPicker
-  const handleDateTimeSelect = (date: Date, time: string | null) => {
+  const handleDateTimeSelect = (date: Date, time: string | null, slotId: OrganizationSlots | null) => {
     setSelectedDate(date)
     setSelectedTime(time)
+    setSelectedSlot(slotId)
   }
 
   const handleOpenBookingModal = () => {
@@ -224,19 +230,45 @@ export function BookingCard({
       }
 
       // Notes additionnelles si présentes dans les métadonnées
-      const additionalNotes = metadata?.summary?.notes || ""
+      const additionalNotes = metadata?.summary?.additionalInfo ?? ""
 
+      // Si le mode de paiement est en personne, créer directement le rendez-vous sans passer par Stripe
+      if (metadata?.paymentMethod?.method === "inPerson") {
+        const result = await createBooking({
+          serviceId: selectedService,
+          professionalId: selectedPro,
+          petId,
+          isHomeVisit: !!metadata?.consultationType?.isHomeVisit,
+          additionalInfo: additionalNotes,
+          selectedOptions: metadata?.options?.selectedOptions || [],
+          amount,
+          companyId: companyId,
+          status: "SCHEDULED", // Status SCHEDULED pour paiement sur place
+          isPaid: false,
+          slotId: selectedSlot?.id ?? undefined,
+        })
+
+        if (result.error) {
+          toast.error(`Erreur: ${result.error}`)
+          return
+        }
+
+        toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
+        setIsConfirmModalOpen(false)
+        return
+      }
+
+      // Pour le paiement en ligne, utiliser Stripe comme avant
       await bookPayment({
         serviceId: selectedService,
         professionalId: selectedPro,
-        date: selectedDate.toISOString().split("T")[0],
-        time: selectedTime,
         petId,
         isHomeVisit: !!metadata?.consultationType?.isHomeVisit,
         additionalInfo: additionalNotes,
         selectedOptions: metadata?.options?.selectedOptions || [],
         amount,
         companyId: companyId,
+        slot: selectedSlot!,
       })
     } catch (error) {
       console.error("Erreur de paiement:", error)
@@ -400,17 +432,17 @@ export function BookingCard({
       <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
         <CredenzaContent className="sm:max-w-[600px]">
           <CredenzaHeader>
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
               {Object.values(steps).map((stepItem, index) => (
-                <div key={stepItem.id} className="flex items-center">
+                <div key={stepItem.id} className="flex items-center shrink-0">
                   <div
                     className={cn(
-                      "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
+                      "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index < Object.values(steps).findIndex(s => s.id === current.id)
                           ? "border-primary bg-primary text-white"
-                          : "border-muted-foreground text-muted-foreground"
+                          : "border-muted-foreground/30 text-muted-foreground/50"
                     )}
                     onClick={() => {
                       // stepper.switch(stepItem.id);
@@ -421,13 +453,13 @@ export function BookingCard({
                     {index + 1}
                   </div>
                   {index < Object.values(steps).length - 1 && (
-                    <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
+                    <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
                   )}
                 </div>
               ))}
             </div>
-            <CredenzaTitle>{current.title}</CredenzaTitle>
-            <CredenzaDescription>{current.description}</CredenzaDescription>
+            <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
+            <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
           </CredenzaHeader>
 
           <div className="py-4">
@@ -464,13 +496,18 @@ export function BookingCard({
                     }}
                   />
                 ),
+              paymentMethod: () => (
+                <PaymentMethodStep
+                  paymentMethod={metadata?.paymentMethod?.method ?? null}
+                  onSelectPaymentMethod={method => setMetadata("paymentMethod", { method })}
+                />
+              ),
               summary: () => (
                 <SummaryStep
                   selectedPet={selectedPet}
                   selectedService={selectedServiceData}
                   selectedPro={selectedProData}
-                  selectedDate={selectedDate}
-                  selectedTime={selectedTime}
+                  selectedSlot={selectedSlot}
                   isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
                   additionalInfo={metadata?.summary?.additionalInfo ?? ""}
                   onAdditionalInfoChange={value => setMetadata("summary", { additionalInfo: value })}
@@ -479,6 +516,7 @@ export function BookingCard({
                       ? metadata.options.selectedOptions.map((id: string) => adaptedOptions.find(o => o.id === id)!)
                       : []
                   }
+                  paymentMethod={metadata?.paymentMethod?.method ?? null}
                 />
               ),
             })}
@@ -508,7 +546,13 @@ export function BookingCard({
                 }}
                 disabled={(current.id === "pet" && !metadata?.pet?.petId) || (isLast && !metadata?.pet?.petId)}
               >
-                {isLast ? (isPaymentLoading ? "Redirection..." : "Confirmer et payer") : "Suivant"}
+                {isLast
+                  ? isPaymentLoading
+                    ? "Redirection..."
+                    : metadata?.paymentMethod?.method === "inPerson"
+                      ? "Confirmer le rendez-vous"
+                      : "Confirmer et payer"
+                  : "Suivant"}
               </Button>
             </div>
           </CredenzaFooter>

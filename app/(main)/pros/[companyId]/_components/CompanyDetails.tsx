@@ -16,7 +16,7 @@ import {
   Star,
   Users,
 } from "lucide-react"
-import { Organization, Pet } from "@/src/db"
+import { Organization, OrganizationSlots, Pet } from "@/src/db"
 import { useEffect, useRef, useState } from "react"
 
 import { ActionResult } from "@/src/lib"
@@ -52,7 +52,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const [selectedPro, setSelectedPro] = useState<string | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
-  const [selectedPet, setSelectedPet] = useState<Pet | null>(null)
+  const [selectedSlot, setSelectedSlot] = useState<OrganizationSlots | null>(null)
   const [isBookingExpanded, setIsBookingExpanded] = useState(false)
 
   // Refs pour le défilement
@@ -494,10 +494,12 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                             selectedPro={selectedPro}
                             selectedDate={selectedDate}
                             selectedTime={selectedTime}
+                            selectedSlot={selectedSlot}
                             setSelectedService={setSelectedService}
                             setSelectedPro={setSelectedPro}
                             setSelectedDate={setSelectedDate}
                             setSelectedTime={setSelectedTime}
+                            setSelectedSlot={setSelectedSlot}
                           />
                         </motion.div>
                       )}
@@ -522,10 +524,12 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         selectedPro={selectedPro}
                         selectedDate={selectedDate}
                         selectedTime={selectedTime}
+                        selectedSlot={selectedSlot}
                         setSelectedService={setSelectedService}
                         setSelectedPro={setSelectedPro}
                         setSelectedDate={setSelectedDate}
                         setSelectedTime={setSelectedTime}
+                        setSelectedSlot={setSelectedSlot}
                       />
 
                       {/* Info complémentaire */}

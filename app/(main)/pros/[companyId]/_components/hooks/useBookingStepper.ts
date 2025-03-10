@@ -13,30 +13,40 @@ const optionsSchema = z.object({
   selectedOptions: z.array(z.string()).default([]),
 })
 
+const paymentMethodSchema = z.object({
+  method: z.enum(["online", "inPerson"]),
+})
+
 const summarySchema = z.object({
   additionalInfo: z.string().optional(),
 })
 
-export type StepId = "pet" | "consultationType" | "options" | "summary"
+export type StepId = "pet" | "consultationType" | "options" | "paymentMethod" | "summary"
 
 export const { steps, useStepper, utils } = defineStepper(
   {
     id: "pet" as const,
     title: "Animal",
-    description: "Choisissez l'animal pour la consultation",
+    description: "Sélectionnez votre animal",
     schema: petSchema,
   },
   {
     id: "consultationType" as const,
-    title: "Type de consultation",
-    description: "Choisissez le type de consultation",
+    title: "Type",
+    description: "Cabinet ou domicile",
     schema: consultationTypeSchema,
   },
   {
     id: "options" as const,
     title: "Options",
-    description: "Sélectionnez des options supplémentaires",
+    description: "Services additionnels",
     schema: optionsSchema,
+  },
+  {
+    id: "paymentMethod" as const,
+    title: "Paiement",
+    description: "Choisissez votre mode de paiement",
+    schema: paymentMethodSchema,
   },
   {
     id: "summary" as const,

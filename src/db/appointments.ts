@@ -51,8 +51,8 @@ export const appointments = pgTable("appointments", {
   slotId: text("slotId").references(() => organizationSlots.id, {
     onDelete: "cascade",
   }),
-  beginAt: timestamp("beginAt").notNull(),
-  endAt: timestamp("endAt").notNull(),
+  beginAt: timestamp("beginAt"),
+  endAt: timestamp("endAt"),
   status: appointmentStatusType("status").default("PENDING PAYMENT").notNull(),
   atHome: boolean("atHome").default(false).notNull(),
   type: appointmentType("type").default("oneToOne").notNull(),

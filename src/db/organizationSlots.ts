@@ -1,6 +1,6 @@
 import { InferSelectModel, relations } from "drizzle-orm"
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
 import { Organization, organization } from "./organization"
@@ -46,3 +46,4 @@ export type OrganizationSlots = InferSelectModel<typeof organizationSlots> & {
 }
 
 export const CreateOrganizationSlotsSchema = createInsertSchema(organizationSlots)
+export const SelectOrganizationSlotsSchema = createSelectSchema(organizationSlots)

@@ -2,11 +2,11 @@ import Avvvatars from "avvvatars-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { motion } from "framer-motion"
-import { Bird, Cat, Dog, Home, PawPrint, Star } from "lucide-react"
+import { Bird, Cat, CreditCard, Dog, Home, PawPrint, Star, Wallet } from "lucide-react"
 import Image from "next/image"
 
 import { Avatar, AvatarFallback, AvatarImage, Label, Separator, Textarea } from "@/components/ui"
-import { Member, Pet, Service } from "@/src/db"
+import { Member, OrganizationSlots, Pet, Service } from "@/src/db"
 
 import { Option } from "./OptionsStep"
 
@@ -14,24 +14,24 @@ interface SummaryStepProps {
   selectedPet: Pet | undefined
   selectedService: Service | null
   selectedPro: Member | null
-  selectedDate: Date | undefined
-  selectedTime: string | null
+  selectedSlot: OrganizationSlots | null
   isHomeVisit: boolean
   additionalInfo: string
   onAdditionalInfoChange: (value: string) => void
   selectedOptions: Option[]
+  paymentMethod: "online" | "inPerson" | null
 }
 
 export function SummaryStep({
   selectedPet,
   selectedService,
   selectedPro,
-  selectedDate,
-  selectedTime,
+  selectedSlot,
   isHomeVisit,
   additionalInfo,
   onAdditionalInfoChange,
   selectedOptions,
+  paymentMethod,
 }: SummaryStepProps) {
   const getPetIcon = (type: string) => {
     switch (type) {
@@ -62,44 +62,44 @@ export function SummaryStep({
       exit={{ opacity: 0, x: -20 }}
       className="space-y-6"
     >
-      <div className="rounded-xl border bg-muted/50 p-6 space-y-4">
-        <div className="flex items-center gap-4">
+      <div className="rounded-xl border bg-muted/50 p-4 space-y-3">
+        <div className="flex items-center gap-3">
           {selectedPet?.image ? (
-            <div className="relative h-20 w-20 overflow-hidden rounded-lg">
+            <div className="relative h-16 w-16 overflow-hidden rounded-lg shrink-0">
               <Image
-                width={80}
-                height={80}
+                width={64}
+                height={64}
                 src={selectedPet.image}
                 alt="Animal"
                 className="h-full w-full object-cover"
               />
             </div>
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-muted">
-              <PawPrint className="h-8 w-8 text-muted-foreground" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-muted shrink-0">
+              <PawPrint className="h-6 w-6 text-muted-foreground" />
             </div>
           )}
-          <div>
-            <h4 className="font-medium">{selectedPet?.name}</h4>
+          <div className="min-w-0">
+            <h4 className="font-medium truncate">{selectedPet?.name}</h4>
             <div className="flex items-center gap-1 text-muted-foreground">
               {getPetIcon(selectedPet?.type || "")}
-              <span>{selectedPet?.type}</span>
+              <span className="truncate">{selectedPet?.type}</span>
             </div>
           </div>
         </div>
 
         <Separator />
 
-        <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Service</span>
-            <span className="font-medium">{selectedService?.name}</span>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Service</span>
+            <span className="font-medium text-sm text-right truncate">{selectedService?.name}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Professionnel</span>
-            <div className="flex items-center gap-2">
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Professionnel</span>
+            <div className="flex items-center gap-2 min-w-0 justify-end">
               {selectedPro?.user.image ? (
-                <Avatar className="h-6 w-6">
+                <Avatar className="h-5 w-5 shrink-0">
                   <AvatarImage src={selectedPro.user.image} />
                   <AvatarFallback>
                     {selectedPro.user.name
@@ -109,35 +109,37 @@ export function SummaryStep({
                   </AvatarFallback>
                 </Avatar>
               ) : (
-                <div className="h-6 w-6 rounded-full overflow-hidden">
-                  <Avvvatars value={selectedPro?.user.name || ""} style="shape" size={24} />
+                <div className="h-5 w-5 rounded-full overflow-hidden shrink-0">
+                  <Avvvatars value={selectedPro?.user.name || ""} style="shape" size={20} />
                 </div>
               )}
-              <span className="font-medium">{selectedPro?.user.name}</span>
+              <span className="font-medium text-sm truncate">{selectedPro?.user.name}</span>
             </div>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Date et heure</span>
-            <span className="font-medium">
-              {selectedDate && selectedTime
-                ? `${format(selectedDate, "d MMMM yyyy", {
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Date et heure</span>
+            <span className="font-medium text-sm text-right truncate">
+              {selectedSlot
+                ? `${format(selectedSlot.start, "d MMM yyyy", {
                     locale: fr,
-                  })} à ${selectedTime}`
+                  })} à ${format(selectedSlot.start, "HH:mm", {
+                    locale: fr,
+                  })}`
                 : "Non spécifié"}
             </span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Type de consultation</span>
-            <div className="flex items-center gap-2">
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Type</span>
+            <div className="flex items-center gap-2 justify-end">
               {isHomeVisit ? (
                 <>
-                  <Home className="h-4 w-4" />
-                  <span className="font-medium">À domicile</span>
+                  <Home className="h-4 w-4 shrink-0" />
+                  <span className="font-medium text-sm">À domicile</span>
                 </>
               ) : (
                 <>
-                  <Star className="h-4 w-4" />
-                  <span className="font-medium">Au cabinet</span>
+                  <Star className="h-4 w-4 shrink-0" />
+                  <span className="font-medium text-sm">Au cabinet</span>
                 </>
               )}
             </div>
@@ -148,12 +150,12 @@ export function SummaryStep({
             <>
               <Separator />
               <div>
-                <span className="text-muted-foreground">Options</span>
+                <span className="text-muted-foreground text-sm">Options</span>
                 <div className="mt-2 space-y-2">
                   {selectedOptions.map(option => (
                     <div key={option.id} className="flex justify-between items-center">
-                      <span className="text-sm">{option.name}</span>
-                      <span className="font-medium">+{option.price}€</span>
+                      <span className="text-xs truncate max-w-[70%]">{option.name}</span>
+                      <span className="font-medium text-xs shrink-0">+{option.price}€</span>
                     </div>
                   ))}
                 </div>
@@ -162,22 +164,43 @@ export function SummaryStep({
           )}
 
           <Separator />
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Prix total</span>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-semibold">{calculateTotalPrice()}€</span>
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Prix total</span>
+            <div className="flex items-center">
+              <span className="text-lg font-semibold">{calculateTotalPrice()}€</span>
+            </div>
+          </div>
+
+          {/* Méthode de paiement */}
+          <Separator />
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-muted-foreground text-sm shrink-0">Paiement</span>
+            <div className="flex items-center gap-2 justify-end">
+              {paymentMethod === "online" ? (
+                <>
+                  <CreditCard className="h-4 w-4 shrink-0" />
+                  <span className="font-medium text-sm">En ligne</span>
+                </>
+              ) : paymentMethod === "inPerson" ? (
+                <>
+                  <Wallet className="h-4 w-4 shrink-0" />
+                  <span className="font-medium text-sm">Sur place</span>
+                </>
+              ) : (
+                <span className="font-medium text-sm">Non spécifié</span>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>Informations complémentaires</Label>
+        <Label className="text-sm">Informations complémentaires</Label>
         <Textarea
           placeholder="Ajoutez des informations utiles pour le professionnel..."
           value={additionalInfo}
           onChange={e => onAdditionalInfoChange(e.target.value)}
-          className="min-h-[100px] resize-none"
+          className="min-h-[80px] resize-none text-sm"
         />
       </div>
     </motion.div>

@@ -4,21 +4,20 @@ import { z } from "zod"
 import { createServerAction, ActionError, requireAuth } from "../lib"
 import { stripe } from "../lib/stripe"
 import { db } from "../lib"
-import { transaction, service, options, organization, appointments } from "../db"
+import { transaction, service, options, organization, appointments, SelectOrganizationSlotsSchema } from "../db"
 import { eq, inArray } from "drizzle-orm"
 
 // Schéma de validation pour la création d'une Checkout Session
 const createBookingPaymentSchema = z.object({
   serviceId: z.string(),
   professionalId: z.string(),
-  date: z.string(),
-  time: z.string(),
   petId: z.string(),
   isHomeVisit: z.boolean().default(false),
   additionalInfo: z.string().optional(),
   selectedOptions: z.array(z.string()).optional(),
   amount: z.number(),
   companyId: z.string(),
+  slot: SelectOrganizationSlotsSchema,
 })
 
 /**
@@ -29,7 +28,7 @@ export const createBookingCheckoutSession = createServerAction(
   async (input, ctx) => {
     try {
       // Utiliser directement le customerId fourni
-      const stripeCustomerId = ctx.user?.stripeId
+      const stripeCustomerId = ctx.user?.stripeId || ""
 
       // Générer un Intent ID unique pour Stripe
       const stripeIntentId = `cs_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
@@ -74,7 +73,7 @@ export const createBookingCheckoutSession = createServerAction(
           currency: "eur",
           product_data: {
             name: `Service: ${serviceResult.name}`,
-            description: `Rendez-vous le ${input.date} à ${input.time}`,
+            description: `Rendez-vous le ${input.slot.start} à ${input.slot.end}`,
           },
           unit_amount: (serviceResult.price || 0) * 100, // Conversion en centimes, avec fallback à 0 si null
         },
@@ -138,48 +137,45 @@ export const createBookingCheckoutSession = createServerAction(
         throw new ActionError("Service non trouvé")
       }
 
-      // Calculer l'heure de début et de fin
-      const beginAt = new Date(`${input.date}T${input.time}`)
-      const endAt = new Date(beginAt)
-      // Ajouter la durée du service en minutes à l'heure de début
-      endAt.setMinutes(endAt.getMinutes() + (selectedService.duration || 30))
-
-      await db.insert(appointments).values({
-        serviceId: input.serviceId,
-        proId: input.companyId,
-        patientId: input.petId,
-        beginAt,
-        endAt,
-        status: "PENDING PAYMENT",
-        atHome: input.isHomeVisit,
-        type: "oneToOne",
-      })
+      const [appointment] = await db
+        .insert(appointments)
+        .values({
+          serviceId: input.serviceId,
+          proId: input.companyId,
+          patientId: input.petId,
+          status: "PENDING PAYMENT",
+          atHome: input.isHomeVisit,
+          type: "oneToOne",
+          slotId: input.slot.id,
+        })
+        .returning({ id: appointments.id })
+        .execute()
 
       // Créer la session Checkout avec Stripe
       const session = await stripe.checkout.sessions.create({
-        customer: stripeCustomerId || "",
-        payment_method_types: ["card"],
-        mode: "payment",
+        customer: stripeCustomerId || undefined,
         line_items: lineItems,
-        payment_intent_data: {
-          transfer_data: {
-            destination: org?.companyStripeId || "",
-          },
-        },
+        mode: "payment",
+        payment_method_types: ["card"],
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/canceled?session_id={CHECKOUT_SESSION_ID}`,
         metadata: {
           transactionId,
+          appointmentId: appointment.id,
+          slotId: input.slot.id,
           serviceId: input.serviceId,
           professionalId: input.professionalId,
-          date: input.date,
-          time: input.time,
           petId: input.petId,
           isHomeVisit: input.isHomeVisit.toString(),
           additionalInfo: input.additionalInfo || "",
           selectedOptions: selectedOptionsJson,
           companyId: input.companyId,
         },
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/canceled?session_id={CHECKOUT_SESSION_ID}`,
+        payment_intent_data: {
+          transfer_data: {
+            destination: org?.companyStripeId || "",
+          },
+        },
       })
 
       if (!session.url) {
