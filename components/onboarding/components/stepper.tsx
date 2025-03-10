@@ -1,24 +1,23 @@
 "use client"
 
-import { eq } from "drizzle-orm"
-import React, { useState } from "react"
-import { toast } from "sonner"
-
 import { CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import React, { useState } from "react"
 import { organization as organizationTable, progression as progressionTable } from "@/src/db"
-import { db, stripe } from "@/src/lib"
 import { organization as organizationUtil, updateUser, useSession } from "@/src/lib/auth-client"
-import { generateMigrationName } from "@/src/lib/business-names"
-
 import { useStepper, utils } from "../hooks/useStepper"
-import ProDocumentsStep from "../pro/documents-step"
+
 import ImagesStep from "../pro/images-step"
-import ProInformationsStep from "../pro/informations-step"
 import IntroStep from "../pro/intro-step"
+import ProDocumentsStep from "../pro/documents-step"
+import ProInformationsStep from "../pro/informations-step"
 import ProOptionsStep from "../pro/options-step"
 import ProServicesStep from "../pro/services-step"
-import { SubscriptionStep } from "../pro/subscription-step"
 import StepIndicator from "./step-indicator"
+import { SubscriptionStep } from "../pro/subscription-step"
+import { db } from "@/src/lib"
+import { eq } from "drizzle-orm"
+import { generateMigrationName } from "@/src/lib/business-names"
+import { toast } from "sonner"
 
 const Stepper = () => {
   const { next, prev, current, goTo, all, isLast, switch: switchStep } = useStepper()
@@ -63,48 +62,12 @@ const Stepper = () => {
         organizationId: organizationId,
       })
 
-      // Créer les comptes Stripe
-      const companyStripeId = null
-      let customerStripeId = null
-
-      try {
-        // Créer le client Stripe
-        const stripeCustomer = await stripe.customers.create({
-          email: session?.user.email!,
-          name: name,
-          metadata: {
-            organizationId: organizationId,
-            userId: session?.user.id!,
-          },
-        })
-        customerStripeId = stripeCustomer.id
-        console.log("Client Stripe créé avec succès:", customerStripeId)
-
-        // Créer le compte Stripe Connect
-        // const stripeCompany = await stripe.accounts.create({
-        //   type: "standard",
-        //   country: "FR",
-        //   email: session?.user.email!,
-        //   metadata: {
-        //     organizationId: organizationId,
-        //     userId: session?.user.id!,
-        //   },
-        // });
-        // companyStripeId = stripeCompany.id;
-        console.log("Compte Stripe Connect créé avec succès:", companyStripeId)
-      } catch (stripeError) {
-        console.error("Erreur lors de la création des comptes Stripe:", stripeError)
-        // Continuer même en cas d'erreur Stripe - l'organisation a été créée
-      }
-
       // Mettre à jour l'organisation dans la base de données
       await db
         .update(organizationTable)
         .set({
           onBoardingComplete: true,
           progressionId: progression.id,
-          companyStripeId: companyStripeId,
-          customerStripeId: customerStripeId,
         })
         .where(eq(organizationTable.id, organizationId))
         .execute()
@@ -121,6 +84,7 @@ const Stepper = () => {
       toast.success("Configuration rapide terminée !")
     } catch (error) {
       console.error("Erreur lors du skip:", error)
+
       // Afficher plus de détails sur l'erreur
       if (error instanceof Error) {
         console.error("Message d'erreur:", error.message)
@@ -131,7 +95,7 @@ const Stepper = () => {
           toast.error(`Erreur: ${error.message}`, {
             description: (
               <div>
-                <p>Veuillez réessayer plus tard ou contacter l'assistance</p>
+                <p>Veuillez réessayer plus tard ou contacter l&apos;assistance</p>
                 <a href="/dashboard/stripe-setup" className="text-primary underline font-medium mt-2 block">
                   Configurer Stripe manuellement
                 </a>

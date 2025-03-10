@@ -1,9 +1,9 @@
-import { eq, sql } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server"
-import Stripe from "stripe"
-
-import { transaction } from "@/src/db"
+import { appointmentOptions, appointments, service, transaction } from "@/src/db"
 import { db, stripe } from "@/src/lib"
+
+import Stripe from "stripe"
+import { eq } from "drizzle-orm"
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -58,39 +58,53 @@ export async function POST(req: NextRequest) {
       beginAt.setHours(hours, minutes, 0, 0)
 
       // Récupérer la durée du service pour calculer l'heure de fin
-      const serviceQuery = await db.execute(sql`SELECT duration FROM service WHERE id = ${serviceId}`)
 
+      const serviceQuery = await db.query.service.findFirst({
+        where: eq(service.id, serviceId),
+      })
+
+      if (!serviceQuery) {
+        return NextResponse.json({ error: "Service non trouvé" }, { status: 400 })
+      }
       // S'assurer que serviceDuration est un nombre
-      const serviceDuration = parseInt(String(serviceQuery.rows[0]?.duration)) || 60
+      const serviceDuration = serviceQuery.duration || 60
 
       const endAt = new Date(beginAt)
       endAt.setMinutes(beginAt.getMinutes() + serviceDuration)
 
       // Créer le rendez-vous dans la base de données avec une requête SQL brute
       try {
-        const appointmentQuery = await db.execute(
-          sql`INSERT INTO appointments 
-              (id, "proId", "clientId", "patientId", "serviceId", "beginAt", "endAt", status, "atHome", type, "createdAt") 
-              VALUES 
-              (gen_random_uuid(), ${professionalId}, ${clientId}, ${petId}, ${serviceId}, ${beginAt.toISOString()}, ${endAt.toISOString()}, 'PAYED', ${isHomeVisit}, 'oneToOne', NOW()) 
-              RETURNING id`
-        )
+        const [appointmentQuery] = await db
+          .insert(appointments)
+          .values({
+            proId: professionalId,
+            clientId,
+            patientId: petId,
+            serviceId,
+            beginAt,
+            endAt,
+            status: "PAYED",
+            atHome: isHomeVisit,
+            type: "oneToOne",
+          })
+          .returning({ id: appointments.id })
+          .execute()
 
-        const appointmentId = appointmentQuery.rows[0]?.id
+        const appointmentId = appointmentQuery?.id
 
         // Si des options ont été sélectionnées, les ajouter à la réservation
         if (metadata.selectedOptions && appointmentId) {
           const selectedOptions = JSON.parse(metadata.selectedOptions)
 
           if (selectedOptions.length > 0) {
-            for (const optionId of selectedOptions) {
-              await db.execute(
-                sql`INSERT INTO appointment_options 
-                    ("appointmentId", "optionId") 
-                    VALUES 
-                    (${appointmentId}, ${optionId})`
-              )
-            }
+            await Promise.all(
+              selectedOptions.map(async (optionId: string) => {
+                await db.insert(appointmentOptions).values({
+                  appointmentId,
+                  optionId,
+                })
+              })
+            )
           }
         }
 
@@ -102,8 +116,6 @@ export async function POST(req: NextRequest) {
       // TODO: Envoyer un email de confirmation au client et au professionnel
     } catch (error) {
       console.error("Erreur lors de la création du rendez-vous:", error)
-      // Nous ne voulons pas échouer le webhook si l'enregistrement du rendez-vous échoue
-      // La transaction a été marquée comme complétée, ce qui est le plus important
     }
 
     return NextResponse.json({ message: "Payment processed successfully" }, { status: 200 })

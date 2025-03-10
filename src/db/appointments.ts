@@ -1,24 +1,27 @@
-import { InferSelectModel, relations } from "drizzle-orm"
-import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-
 import { AppointmentOption, appointmentOptions } from "./appointmentOptions"
+import { InferSelectModel, relations } from "drizzle-orm"
 import { Invoice, invoice } from "./invoice"
 import { Observation, observation } from "./observation"
 import { Organization, organization } from "./organization"
-import { organizationSlots } from "./organizationSlots"
 import { Pet, pets } from "./pets"
-import { report } from "./report"
 import { Service, service } from "./service"
+import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+
+import { organizationSlots } from "./organizationSlots"
+import { report } from "./report"
 import { user } from "./user"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
 export const appointmentStatusType = pgEnum("appointment_status_type", [
+  "CREATED",
+  "DRAFT",
   "PENDING PAYMENT",
   "SCHEDULED",
   "PAYED",
   "CONFIRMED",
+  "DENIED",
   "CANCELED",
   "POSTPONED",
 ])

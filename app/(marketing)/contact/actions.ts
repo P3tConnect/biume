@@ -22,7 +22,7 @@ export async function sendContactEmail(formData: ContactFormData) {
 
     // Envoi de l'email
     const { data, error } = await resend.emails.send({
-      from: "PawThera <contact@pawthera.com>",
+      from: "Biume <contact@biume.com>",
       to: ["mathchambaud@icloud.com", "graig.kolodziejczyk@icloud.com"], // Remplacez par l'adresse email de destination
       subject: `Nouveau contact : ${validatedData.subject}`,
       react: ContactEmail({

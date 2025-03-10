@@ -1,29 +1,30 @@
 "use client"
 
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { useMutation } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import { Check, CreditCard, Package2, Sparkles } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
-import React from "react"
-import { toast } from "sonner"
-
-import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { updateOrganizationPlan } from "@/src/actions/stripe.action"
 import { ActionResult, cn } from "@/src/lib"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Check, CreditCard, Package2, Sparkles } from "lucide-react"
+import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui"
+import { useParams, useRouter } from "next/navigation"
+
+import { Badge } from "@/components/ui/badge"
 import { BillingInfo } from "@/types/billing-info"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import React from "react"
+import { Switch } from "@/components/ui/switch"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { motion } from "framer-motion"
+import { toast } from "sonner"
+import { updateOrganizationPlan } from "@/src/actions/stripe.action"
+import { useMutation } from "@tanstack/react-query"
 
 interface Plan {
   name: string
   description: string
   price: string
   features: string[]
-  priceId: string
+  monthlyPriceId: string
+  yearlyPriceId: string
   icon?: React.ElementType
   isPopular?: boolean
   badge?: string
@@ -32,9 +33,10 @@ interface Plan {
 interface BillingPlanSectionProps {
   plans: Plan[]
   billingInfo: ActionResult<BillingInfo> | undefined
+  isLoading: boolean
 }
 
-export const BillingPlanSection = ({ plans, billingInfo }: BillingPlanSectionProps) => {
+export const BillingPlanSection = ({ plans, billingInfo, isLoading }: BillingPlanSectionProps) => {
   const params = useParams()
   const orgId = params.orgId as string
   const router = useRouter()
@@ -109,7 +111,7 @@ export const BillingPlanSection = ({ plans, billingInfo }: BillingPlanSectionPro
             </div>
             <h2 className="text-2xl md:text-3xl font-bold mb-4">Choisissez le plan qui vous convient</h2>
             <p className="text-muted-foreground mb-6">
-              Tous nos forfaits incluent l'accès à toutes les fonctionnalités essentielles
+              Tous nos forfaits incluent l&apos;accès à toutes les fonctionnalités essentielles
             </p>
 
             {/* Sélecteur mensuel/annuel */}
@@ -233,7 +235,7 @@ export const BillingPlanSection = ({ plans, billingInfo }: BillingPlanSectionPro
                           : "bg-primary/10 text-primary hover:bg-primary/20"
                       )}
                       size="lg"
-                      onClick={() => handleChangePlan(plan.priceId)}
+                      onClick={() => handleChangePlan(isAnnual ? plan.yearlyPriceId : plan.monthlyPriceId)}
                     >
                       Sélectionner {plan.name}
                     </Button>

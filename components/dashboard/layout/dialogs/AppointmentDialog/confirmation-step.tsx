@@ -1,5 +1,3 @@
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
 import {
   CalendarIcon,
   ClockIcon,
@@ -9,18 +7,19 @@ import {
   StethoscopeIcon,
   UserIcon,
 } from "lucide-react"
-import React, { useMemo } from "react"
-import { useFormContext } from "react-hook-form"
-
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import React, { useMemo } from "react"
+
+import { AppointmentFormValues } from "./AppointmentDialog"
+import { Badge } from "@/components/ui/badge"
 import { FormMessage } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-
-import { AppointmentFormValues } from "./AppointmentDialog"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { useFormContext } from "react-hook-form"
 
 const ConfirmationStep = () => {
   const form = useFormContext<AppointmentFormValues>()
@@ -50,11 +49,11 @@ const ConfirmationStep = () => {
   ]
 
   // Récupérer les informations avec useMemo pour éviter des recalculs inutiles
-  const selectedClient = useMemo(() => clients.find(c => c.id === clientId), [clientId])
+  const selectedClient = useMemo(() => clients.find(c => c.id === clientId), [clientId, clients])
 
-  const selectedPet = useMemo(() => pets.find(p => p.id === patientId), [patientId])
+  const selectedPet = useMemo(() => pets.find(p => p.id === patientId), [patientId, pets])
 
-  const selectedService = useMemo(() => services.find(s => s.id === serviceId), [serviceId])
+  const selectedService = useMemo(() => services.find(s => s.id === serviceId), [serviceId, services])
 
   // Mémoriser l'heure de fin calculée
   const endTime = useMemo(() => {

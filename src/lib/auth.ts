@@ -178,6 +178,64 @@ export const auth = betterAuth({
     username(),
     twoFactor(),
     organization({
+      organizationCreation: {
+        afterCreate: async (data, request) => {
+          const { organization, user } = data
+
+          try {
+            const customer = await stripe.customers.create({
+              name: organization.name,
+              email: organization.email,
+            })
+
+            const stripeCompany = await stripe.accounts.create({
+              type: "standard",
+              country: "FR",
+              email: user.email,
+              metadata: {
+                organizationId: organization.id,
+                userId: user.id,
+                customerStripeId: customer.id,
+              },
+            })
+
+            await db
+              .update(organizationSchema)
+              .set({
+                customerStripeId: customer.id,
+                companyStripeId: stripeCompany.id,
+              })
+              .where(eq(organizationSchema.id, organization.id))
+          } catch (error) {
+            console.error(error)
+          }
+        },
+      },
+      organizationDeletion: {
+        beforeDelete: async (data, request) => {
+          const { organization } = data
+
+          try {
+            const org = await db.query.organization.findFirst({
+              where: eq(organizationSchema.id, organization.id),
+            })
+
+            if (!org) {
+              throw new Error("Organization not found")
+            }
+
+            if (org.customerStripeId) {
+              await stripe.customers.del(org.customerStripeId)
+            }
+
+            if (org.companyStripeId) {
+              await stripe.accounts.del(org.companyStripeId)
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        },
+      },
       ac: ac,
       roles: {
         member,
@@ -189,7 +247,7 @@ export const auth = betterAuth({
         const { email, inviter, role, organization } = data
 
         await resend.emails.send({
-          from: "PawThera <onboarding@pawthera.com>",
+          from: "Biume <onboarding@biume.com>",
           to: email,
           subject: "Invitation à rejoindre l'organisation",
           react: OrganizationInvitation({

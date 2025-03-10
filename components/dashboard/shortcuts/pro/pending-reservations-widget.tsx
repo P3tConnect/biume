@@ -18,18 +18,14 @@ import {
   UserIcon,
   XCircleIcon,
 } from "lucide-react"
-import React, { useState } from "react"
-
 import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Reservation = {
   id: string
@@ -140,62 +136,117 @@ const PendingReservationsWidget = () => {
               {reservations.map(reservation => (
                 <div
                   key={reservation.id}
-                  className={`flex items-center gap-3 p-3 bg-muted/50 border border-muted hover:border-muted hover:bg-muted transition-colors rounded-md cursor-pointer ${
-                    reservation.conflicts ? "border-l-2 border-l-destructive" : ""
+                  className={`relative overflow-hidden group p-4 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl border-l-4 ${
+                    reservation.conflicts ? "border-l-destructive" : "border-l-green-500"
                   }`}
                   onClick={() => openDrawer(reservation)}
                 >
-                  <Avatar className="h-9 w-9 border-2 border-background">
-                    <AvatarImage src={`/pets/${reservation.id}.jpg`} alt={reservation.petName} />
-                    <AvatarFallback className="bg-green-600">
-                      <PawPrintIcon className="w-4 h-4 text-white" />
-                    </AvatarFallback>
-                  </Avatar>
+                  {/* Indicateur de conflit */}
+                  {reservation.conflicts && (
+                    <div className="absolute top-2 right-2">
+                      <Badge variant="destructive" className="text-[10px] px-1.5 py-0 font-medium">
+                        Conflit horaire
+                      </Badge>
+                    </div>
+                  )}
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{reservation.petName}</span>
-                        <span className="text-xs text-muted-foreground">{reservation.petBreed}</span>
+                  <div className="flex items-start gap-3">
+                    {/* Avatar et détails de l'animal */}
+                    <div className="flex flex-col items-center space-y-1">
+                      <Avatar className="h-14 w-14 border-2 border-background shadow">
+                        <AvatarImage src={`/pets/${reservation.id}.jpg`} alt={reservation.petName} />
+                        <AvatarFallback className="bg-gradient-to-br from-green-400 to-green-600">
+                          <PawPrintIcon className="w-5 h-5 text-white" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs font-semibold text-center">{reservation.petName}</span>
+                      <span className="text-[10px] bg-muted rounded-full px-2 py-0.5 text-muted-foreground">
+                        {reservation.petType}
+                      </span>
+                    </div>
 
-                        {reservation.conflicts && (
-                          <Badge variant="destructive" className="text-xs px-1.5 py-0">
-                            Conflit
-                          </Badge>
-                        )}
+                    {/* Détails de la réservation */}
+                    <div className="flex-1 min-w-0">
+                      <div className="mb-2">
+                        <div className="font-medium text-sm">{reservation.service}</div>
+                        <div className="text-xs text-muted-foreground">{reservation.petBreed}</div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 mb-2">
+                        <div className="bg-muted/40 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
+                          <CalendarIcon className="h-3 w-3 text-muted-foreground mb-0.5" />
+                          <span className="text-[10px] font-medium">{formatDate(reservation.date)}</span>
+                        </div>
+                        <div className="bg-muted/40 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
+                          <ClockIcon className="h-3 w-3 text-muted-foreground mb-0.5" />
+                          <span className="text-[10px] font-medium">{reservation.time}</span>
+                        </div>
+                        <div className="bg-muted/40 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
+                          <TimerIcon className="h-3 w-3 text-muted-foreground mb-0.5" />
+                          <span className="text-[10px] font-medium">{reservation.duration}</span>
+                        </div>
+                      </div>
+
+                      {/* Informations du propriétaire */}
+                      <div className="flex items-center justify-between mt-1">
+                        <div className="flex items-center gap-1.5">
+                          <UserIcon className="w-3 h-3 text-muted-foreground" />
+                          <div className="text-xs">{reservation.ownerName}</div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <PhoneIcon className="w-3 h-3 text-muted-foreground" />
+                          <div className="text-xs">{reservation.ownerPhone}</div>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="text-xs font-medium mb-1 truncate">{reservation.service}</div>
-
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <CalendarIcon className="w-3 h-3" />
-                        <span>{formatDate(reservation.date)}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <ClockIcon className="w-3 h-3" />
-                        <span>
-                          {reservation.time} ({reservation.duration})
-                        </span>
+                    {/* Actions rapides */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-0 top-0 bottom-0 flex flex-col justify-center pr-3 pl-6 bg-gradient-to-l from-background to-transparent dark:from-slate-800 dark:to-transparent">
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 rounded-full bg-background dark:bg-slate-700"
+                          onClick={e => {
+                            e.stopPropagation()
+                            handleAction("confirm")
+                          }}
+                        >
+                          <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 rounded-full bg-background dark:bg-slate-700"
+                          onClick={e => {
+                            e.stopPropagation()
+                            handleAction("cancel")
+                          }}
+                        >
+                          <XCircleIcon className="h-4 w-4 text-destructive" />
+                        </Button>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-end">
-                    <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
-                    <div className="text-xs text-muted-foreground mt-1">{reservation.ownerName}</div>
-                  </div>
+                  {/* Indicateur de notes */}
+                  {reservation.notes && (
+                    <div className="absolute bottom-1 right-1">
+                      <MessageSquareIcon className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  )}
                 </div>
               ))}
 
               {reservations.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
-                  <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
-                    <CheckCircleIcon className="w-6 h-6 text-green-600" />
+                  <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
+                    <CheckCircleIcon className="w-7 h-7 text-green-600" />
                   </div>
-                  <p className="text-muted-foreground mb-1">Aucune demande en attente</p>
-                  <p className="text-sm text-muted-foreground">Toutes les réservations ont été traitées.</p>
+                  <p className="text-lg font-medium mb-1">Toutes à jour !</p>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    Aucune demande de rendez-vous en attente pour le moment.
+                  </p>
                 </div>
               )}
             </div>

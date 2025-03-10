@@ -31,7 +31,7 @@ export const addToWaitList = createServerAction(
     }
 
     const mail = await resend.emails.send({
-      from: "PawThera<contact@pawthera.com>",
+      from: "Biume <contact@biume.com>",
       subject: "New person in the WaitList",
       to: ["mathchambaud@icloud.com", "graig.kolodziejczyk@icloud.com"],
       react: NewPersonWaitList({ subEmail: input.email }),

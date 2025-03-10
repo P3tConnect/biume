@@ -16,20 +16,19 @@ import {
   Star,
   Users,
 } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { Organization, Pet } from "@/src/db"
 import { useEffect, useRef, useState } from "react"
 
-import { Button } from "@/components/ui"
-import { Organization } from "@/src/db"
 import { ActionResult } from "@/src/lib"
-import { cn } from "@/src/lib/utils"
-
 import { BookingCard } from "./BookingCard"
+import { Button } from "@/components/ui"
 import { CompanyOptions } from "./CompanyOptions"
 import { CompanyReviews } from "./CompanyReviews"
 import { CompanyServices } from "./CompanyServices"
 import { CompanyTeam } from "./CompanyTeam"
+import Image from "next/image"
+import Link from "next/link"
+import { cn } from "@/src/lib/utils"
 
 // Types et constantes
 interface CompanyDetailsProps {
@@ -53,6 +52,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const [selectedPro, setSelectedPro] = useState<string | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null)
   const [isBookingExpanded, setIsBookingExpanded] = useState(false)
 
   // Refs pour le défilement
@@ -77,7 +77,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const id = entry.target.id
+            // Trouver l'ID de la section active
+            const id = Object.entries(sectionRefs.current).find(([_, el]) => el === entry.target)?.[0]
             if (id) setActiveSection(id)
           }
         })
@@ -87,12 +88,12 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
 
     // Observer chaque section
     Object.entries(sectionRefs.current).forEach(([_, ref]) => {
-      if (ref) observer.observe(ref)
+      if (ref instanceof HTMLElement) observer.observe(ref)
     })
 
     return () => {
       Object.entries(sectionRefs.current).forEach(([_, ref]) => {
-        if (ref) observer.unobserve(ref)
+        if (ref instanceof HTMLElement) observer.unobserve(ref)
       })
     }
   }, [isMounted])
@@ -129,12 +130,12 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
     "https://images.unsplash.com/photo-1486299267070-83823f5448dd",
   ]
 
-  // Calcul de la note moyenne
+  // Calcul de la note moyenne si disponible
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
-      ? (
-          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length
-        ).toFixed(1)
+      ? (companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length)
+          .toString()
+          .substring(0, 3)
       : "4.8"
 
   return (

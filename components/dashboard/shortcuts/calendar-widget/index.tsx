@@ -7,17 +7,16 @@
 // - En-tête simplifié
 // - Structure visuelle optimisée pour un affichage compact
 
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { Calendar as CalendarIcon, CalendarDays, ChevronLeft, ChevronRight, List } from "lucide-react"
-import React, { useEffect, useState } from "react"
-
 import { Button, ScrollArea, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui"
+import { CALENDAR_VIEW_MODE_KEY, mockAppointments } from "./data/constants"
+import { CalendarDays, Calendar as CalendarIcon, ChevronLeft, ChevronRight, List } from "lucide-react"
+import React, { useEffect, useState } from "react"
 
 import { AppointmentDetails } from "./components/appointment-details"
 import { AppointmentListItem } from "./components/appointment-list-item"
 import { CalendarGrid } from "./components/calendar-grid"
-import { CALENDAR_VIEW_MODE_KEY, mockAppointments } from "./data/constants"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
 
 const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -74,9 +73,6 @@ const CalendarWidget = () => {
           <>
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">{dayAppointments.length} rendez-vous</p>
-              <Button variant="outline" size="sm">
-                + Nouveau rendez-vous
-              </Button>
             </div>
             <div className="space-y-2">
               {dayAppointments.map(appointment => (
@@ -156,7 +152,7 @@ const CalendarWidget = () => {
       </div>
 
       {viewMode === "calendar" ? (
-        <div className="flex-1 overflow-auto pt-1 rounded-md bg-muted/10">
+        <div className="flex-1 overflow-auto pt-1 px-1 rounded-md bg-muted/10">
           <CalendarGrid
             currentDate={currentDate}
             selectedDate={selectedDate}

@@ -1,15 +1,6 @@
 "use client"
 
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { AlertCircle, Building, Check, Dog, Home, Plus, RefreshCw, Settings, Ticket, User } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { toast } from "sonner"
-
-import Stepper from "@/components/onboarding/components/stepper"
 import {
   Button,
   CommandDialog,
@@ -29,13 +20,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui"
+import React, { useEffect, useState } from "react"
 import { organization, useActiveOrganization, useListOrganizations, useSession } from "@/src/lib/auth-client"
-import { cn } from "@/src/lib/utils"
+import { usePathname, useRouter } from "next/navigation"
 
 import { AccountSwitchDialog } from "../account-switch-dialog"
+import Image from "next/image"
+import Link from "next/link"
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { ModeToggle } from "../mode-toggle"
 import Notifications from "../notifications"
 import { UserNav } from "../user-nav"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { cn } from "@/src/lib/utils"
+import { toast } from "sonner"
 
 export function ClientNavbar() {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -306,7 +304,7 @@ export function ClientNavbar() {
                                 height={32}
                                 className={cn(
                                   "h-full w-full object-cover transition-transform duration-300",
-                                  (isPersonalDashboard || activeOrganization?.id !== org.id) && "hover:scale-110"
+                                  isPersonalDashboard || activeOrganization?.id !== org.id ? "hover:scale-110" : ""
                                 )}
                               />
                             </div>
@@ -354,7 +352,6 @@ export function ClientNavbar() {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Stepper />
           </Credenza>
         </div>
 

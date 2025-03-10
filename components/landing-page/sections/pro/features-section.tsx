@@ -1,10 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { BarChart3, Calendar, Clock, FileText, MessageSquare, Settings, Stethoscope, Users } from "lucide-react"
-import Image from "next/image"
 
+import Image from "next/image"
 import { cn } from "@/src/lib/utils"
+import { motion } from "framer-motion"
 
 type FeatureProps = {
   icon: React.ElementType
@@ -26,7 +26,7 @@ const Feature = ({ icon: Icon, title, description, colorClass, delay }: FeatureP
       <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center mb-4", colorClass)}>
         <Icon className="w-6 h-6" />
       </div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h4 className="text-xl font-semibold mb-2">{title}</h4>
       <p className="text-muted-foreground">{description}</p>
     </motion.div>
   )
@@ -115,10 +115,10 @@ export function FeaturesSection() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Tout ce dont vous avez besoin pour gérer votre activité
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <h3 className="text-lg text-muted-foreground">
             Biume regroupe tous les outils essentiels aux professionnels de la santé animale dans une interface moderne
             et intuitive.
-          </p>
+          </h3>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,28 +1,29 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { CalendarIcon, ClipboardList, Loader2, PawPrint, UserRound } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import * as z from "zod"
 
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card } from "@/components/ui/card"
+import { CalendarIcon, ClipboardList, Loader2, PawPrint, UserRound } from "lucide-react"
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useMutation, useQuery } from "@tanstack/react-query"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { getClients } from "@/src/actions/client.action"
 import { cn } from "@/src/lib/utils"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { getClients } from "@/src/actions/client.action"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface PatientDialogProps {
   open: boolean
@@ -263,7 +264,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
                         name="type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Type d'animal</FormLabel>
+                            <FormLabel>Type d&apos;animal</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>

@@ -1,27 +1,26 @@
 "use server"
 
+import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner, stripe } from "../lib"
+import {
+  Organization,
+  OrganizationImage,
+  organizationImages,
+  organizationSlots,
+  organization as organizationTable,
+} from "../db"
 import { and, asc, desc, eq, gte, lte } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
-import { headers } from "next/headers"
-import { z } from "zod"
-
+import { appointments as appointmentsTable, progression as progressionTable } from "../db"
 import {
   organizationFormSchema,
   organizationImagesFormSchema,
 } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section"
-import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas"
 
-import {
-  Organization,
-  organization as organizationTable,
-  OrganizationImage,
-  organizationImages,
-  organizationSlots,
-} from "../db"
-import { appointments as appointmentsTable, progression as progressionTable } from "../db"
-import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner, stripe } from "../lib"
-import { db } from "../lib"
 import { auth } from "../lib/auth"
+import { db } from "../lib"
+import { headers } from "next/headers"
+import { proInformationsSchema } from "@/components/onboarding/types/onboarding-schemas"
+import { revalidatePath } from "next/cache"
+import { z } from "zod"
 
 export const getAllOrganizations = createServerAction(
   z.object({}),
@@ -37,7 +36,7 @@ export const getAllOrganizations = createServerAction(
         },
         slots: {
           where: eq(organizationSlots.isAvailable, true),
-          limit: 4,
+          limit: 3,
           orderBy: asc(organizationSlots.start),
           columns: {
             id: true,
@@ -181,35 +180,6 @@ export const createOrganization = createServerAction(
         })
         .returning()
 
-      // const stripeCompany = await stripe.accounts.create({
-      //   type: "standard",
-      //   country: "FR",
-      //   email: ctx?.user?.email!,
-      //   metadata: {
-      //     organizationId: result?.id!,
-      //     userId: ctx?.user?.id!,
-      //   },
-      //   capabilities: {
-      //     card_payments: {
-      //       requested: true,
-      //     },
-      //     transfers: {
-      //       requested: true,
-      //     },
-      //   },
-      // });
-
-      const stripeCustomer = await stripe.customers.create({
-        name: result?.name!,
-        metadata: {
-          organizationId: result?.id!,
-          userId: ctx?.user?.id!,
-        },
-      })
-
-      console.log(stripeCustomer, "stripeCustomer")
-      console.log(result, "result")
-
       const [organizationResult] = await db
         .update(organizationTable)
         .set({
@@ -218,8 +188,6 @@ export const createOrganization = createServerAction(
           progressionId: progression.id,
           companyType: data.companyType,
           atHome: data.atHome,
-          // companyStripeId: stripeCompany.id,
-          customerStripeId: stripeCustomer?.id,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()

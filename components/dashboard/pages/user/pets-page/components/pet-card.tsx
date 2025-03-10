@@ -1,20 +1,19 @@
 "use client"
 
-import { useMutation } from "@tanstack/react-query"
-import { Calendar, PawPrint, Pencil, Trash2, Weight } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { toast } from "sonner"
-
 import { Badge, Button, Card, Skeleton } from "@/components/ui"
+import { Calendar, PawPrint, Pencil, Trash2, Weight } from "lucide-react"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui"
-import { deletePet } from "@/src/actions"
-import { Pet } from "@/src/db/pets" // Assurez-vous que ce type existe
-import { cn } from "@/src/lib"
 
+import Image from "next/image"
+import { Pet } from "@/src/db/pets" // Assurez-vous que ce type existe
 import { PetProvider } from "../context/pet-context"
 import StepperAnimal from "./stepper-animal"
+import { cn } from "@/src/lib"
+import { deletePet } from "@/src/actions"
+import { toast } from "sonner"
+import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface PetCardProps {
   pet: Pet
@@ -167,7 +166,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
 
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="max-h-[90vh] w-full max-w-[900px] overflow-y-auto">
-          <DialogTitle className="sr-only">Modifier l'animal</DialogTitle>
+          <DialogTitle className="sr-only">Modifier l&apos;animal</DialogTitle>
           <div className="p-6">
             <PetProvider>
               <StepperAnimal onComplete={handleCloseEditModal} petId={pet.id} />

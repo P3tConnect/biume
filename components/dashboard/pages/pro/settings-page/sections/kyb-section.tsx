@@ -1,17 +1,17 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
-import { AlertCircle, CheckCircle2, Clock, ExternalLink, RefreshCw, XCircle } from "lucide-react"
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { toast } from "sonner"
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle, CheckCircle2, Clock, ExternalLink, RefreshCw, XCircle } from "lucide-react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { createStripeConnectOnboardingLink, getStripeConnectAccountInfo } from "@/src/actions/stripe.action"
+import { useEffect, useState } from "react"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
-import { createStripeConnectOnboardingLink, getStripeConnectAccountInfo } from "@/src/actions/stripe.action"
+import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
 
 interface StripeConnectAccountInfo {
   id: string
@@ -149,9 +149,10 @@ export default function KYBSection() {
       setTimeout(() => {
         refetch()
       }, 5000)
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur inconnue"
       toast.error("Erreur", {
-        description: err.message || "Impossible de générer le lien d'onboarding",
+        description: errorMessage || "Impossible de générer le lien d'onboarding",
       })
     } finally {
       setOnboardingLoading(false)
@@ -357,7 +358,7 @@ export default function KYBSection() {
               </ul>
             ) : (
               <p className="text-sm text-muted-foreground">
-                Votre dossier est en cours d'examen par Stripe. Vous recevrez bientôt une notification.
+                Votre dossier est en cours d&apos;examen par Stripe. Vous recevrez bientôt une notification.
               </p>
             )}
 
@@ -387,14 +388,22 @@ export default function KYBSection() {
             <Skeleton className="h-10 w-full" />
           </div>
         ) : error ? (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Erreur</AlertTitle>
-            <AlertDescription>
-              {error}
-              <Button variant="outline" size="sm" className="ml-2" onClick={() => refetch()}>
-                <RefreshCw className="mr-2 h-4 w-4" /> Réessayer
-              </Button>
+          <Alert
+            variant="destructive"
+            className="bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"
+          >
+            <AlertCircle className="h-4 w-4 text-red-500" />
+            <AlertTitle className="text-red-700 dark:text-red-300">Erreur</AlertTitle>
+            <AlertDescription className="flex flex-col gap-2 text-red-600 dark:text-red-300">
+              <div>{error}</div>
+              <div className="flex items-center justify-between">
+                <Button variant="outline" size="sm" onClick={() => refetch()}>
+                  <RefreshCw className="mr-2 h-4 w-4" /> Réessayer
+                </Button>
+                <span className="text-xs italic">
+                  Si cette erreur persiste, veuillez contacter Biume pour résoudre le problème.
+                </span>
+              </div>
             </AlertDescription>
           </Alert>
         ) : !accountInfo ? (
@@ -408,7 +417,7 @@ export default function KYBSection() {
             </Alert>
 
             <div className="mt-6">
-              <h3 className="text-lg font-medium mb-4">Choisissez votre méthode d'onboarding :</h3>
+              <h3 className="text-lg font-medium mb-4">Choisissez votre méthode d&apos;onboarding :</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
@@ -424,7 +433,7 @@ export default function KYBSection() {
                   )}
                   <span className="font-medium">Onboarding standard</span>
                   <span className="text-sm text-gray-500 text-center mt-2 px-4">
-                    Utiliser le formulaire préconfiguré de Stripe pour compléter l'onboarding
+                    Utiliser le formulaire préconfiguré de Stripe pour compléter l&apos;onboarding
                   </span>
                 </Button>
               </div>

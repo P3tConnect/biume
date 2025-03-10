@@ -1,13 +1,13 @@
 "use client"
 
 import { format, isSameDay, parseISO } from "date-fns"
-import { fr } from "date-fns/locale"
 import { useEffect, useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { OrganizationSlots } from "@/src/db"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { fr } from "date-fns/locale"
 
 // Interfaces pour les différents types de créneaux
 interface SimpleTimeSlot {
@@ -76,7 +76,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
       daysWithSlots,
       disabledDays: unavailableDates,
     }
-  }, [timeSlots])
+  }, [timeSlots, today])
 
   // Fonction pour désactiver les dates
   const isDayDisabled = useMemo(() => {

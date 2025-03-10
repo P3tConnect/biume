@@ -1,16 +1,15 @@
 "use client"
 
-import { format, isValid } from "date-fns"
-import { fr } from "date-fns/locale"
+import { AnimalDetails, MedicalRecord } from "./types"
 import { AnimatePresence, motion } from "framer-motion"
+import { Card, CardContent } from "@/components/ui/card"
 import { ChevronDown, ClipboardList, HeartPulse, Pill, Plus, Stethoscope } from "lucide-react"
-import { useState } from "react"
+import { format, isValid } from "date-fns"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-
-import { AnimalDetails, MedicalRecord } from "./types"
+import { fr } from "date-fns/locale"
+import { useState } from "react"
 
 interface MedicalTabProps {
   animal: AnimalDetails
@@ -143,7 +142,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
               </motion.div>
               <h3 className="font-medium mb-2">Aucun dossier médical</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Aucun historique médical n'a encore été enregistré pour {animal.name}.
+                Aucun historique médical n&apos;a encore été enregistré pour {animal.name}.
               </p>
             </CardContent>
           </Card>
@@ -206,7 +205,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
                           {/* Informations spécifiques au type d'intervention */}
                           <div className="rounded-md border p-3 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
-                            <h5 className="text-xs font-medium mb-2">Détails de l'intervention</h5>
+                            <h5 className="text-xs font-medium mb-2">Détails de l&apos;intervention</h5>
                             {typeDetails.duration && (
                               <div className="flex justify-between text-xs mb-1">
                                 <span className="text-muted-foreground">Durée :</span>
@@ -280,7 +279,6 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                                 : typeDetails.commonReasons
                                   ? "Raisons courantes"
                                   : "Types courants"}{" "}
-                              :
                             </span>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {(
@@ -359,7 +357,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           Allergies et informations importantes
         </h4>
         <p className="text-sm text-muted-foreground">
-          Aucune allergie connue ou information critique n'a été enregistrée.
+          Aucune allergie connue ou information critique n&apos;a été enregistrée.
         </p>
       </motion.div>
     </div>

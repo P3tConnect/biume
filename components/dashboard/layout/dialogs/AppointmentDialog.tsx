@@ -1,26 +1,26 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
 import { CalendarIcon, CheckIcon, ChevronLeft, ChevronRight, Clock, Stethoscope, User } from "lucide-react"
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { DialogFooter } from "@/components/ui/dialog"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState } from "react"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { DialogFooter } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createAppointmentAction } from "@/src/actions/create-appointment.action"
 import { cn } from "@/src/lib/utils"
+import { createAppointmentAction } from "@/src/actions/create-appointment.action"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface AppointmentDialogProps {
   open: boolean
@@ -146,7 +146,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
           return
         }
 
-        const result = await form.trigger(currentFields as any)
+        const result = await form.trigger(currentFields as Array<keyof AppointmentFormValues>)
         setIsStepValid(result)
       } catch (error) {
         console.error("Erreur de validation:", error)
@@ -155,7 +155,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
     }
 
     validateCurrentStep()
-  }, [currentStep, form.watch(), steps])
+  }, [currentStep, form, steps])
 
   // Mutation pour créer un rendez-vous en utilisant l'action serveur
   const createAppointmentMutation = useMutation({
@@ -178,16 +178,16 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
   // Passer à l'étape suivante
   const handleNext = async () => {
     const currentFields = steps[currentStep].fields
-    const isValid = await form.trigger(currentFields as any)
+    const isValid = await form.trigger(currentFields as Array<keyof AppointmentFormValues>)
 
     if (isValid) {
-      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
+      setCurrentStep((prev: number) => Math.min(prev + 1, steps.length - 1))
     }
   }
 
   // Revenir à l'étape précédente
   const handlePrevious = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 0))
+    setCurrentStep((prev: number) => Math.max(prev - 1, 0))
   }
 
   // Gérer la soumission du formulaire

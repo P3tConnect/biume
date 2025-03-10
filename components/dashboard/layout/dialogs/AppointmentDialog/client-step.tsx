@@ -1,19 +1,18 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckIcon, InfoIcon, PawPrintIcon, PlusIcon, SearchIcon, UserIcon, XCircleIcon } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import React, { useState } from "react"
-import { useFormContext } from "react-hook-form"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
 
+import { AppointmentFormValues } from "./AppointmentDialog"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/src/lib/utils"
-
-import { AppointmentFormValues } from "./AppointmentDialog"
+import { useForm } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 // Schéma de validation pour le nouveau client
 const newClientSchema = z.object({
@@ -127,7 +126,7 @@ const ClientStep = () => {
         <div className="space-y-2">
           <h3 className="text-lg font-medium">Détails du rendez-vous</h3>
           <p className="text-sm text-muted-foreground">
-            Sélectionnez le client et l'animal concernés par ce rendez-vous
+            Sélectionnez le client et l&apos;animal concernés par ce rendez-vous
           </p>
         </div>
         <Button
@@ -270,7 +269,7 @@ const ClientStep = () => {
                   </div>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Ce client n'a pas encore d'animaux</p>
+                    <p className="text-sm text-muted-foreground mb-1">Ce client n&apos;a pas encore d&apos;animaux</p>
                     <p className="text-xs text-muted-foreground">
                       Le client doit créer ses animaux de compagnie dans son espace personnel.
                     </p>
@@ -278,7 +277,7 @@ const ClientStep = () => {
                 )
               ) : (
                 <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-                  <p className="text-sm text-muted-foreground">Veuillez d'abord sélectionner un client</p>
+                  <p className="text-sm text-muted-foreground">Veuillez d&apos;abord sélectionner un client</p>
                 </div>
               )}
             </div>
@@ -308,7 +307,7 @@ const ClientStep = () => {
         {(!form.watch("clientId") || !form.watch("patientId")) && (
           <div className="mt-2 text-xs text-muted-foreground flex items-center">
             <span className="text-destructive mr-1">*</span>
-            <span>Ces deux champs sont obligatoires pour passer à l'étape suivante</span>
+            <span>Ces deux champs sont obligatoires pour passer à l&apos;étape suivante</span>
           </div>
         )}
       </div>

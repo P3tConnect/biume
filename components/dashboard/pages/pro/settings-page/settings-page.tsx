@@ -1,7 +1,6 @@
 "use client"
 
 import { Briefcase, Building2, Clock, CreditCard, FileText, Image as ImageIcon, Settings, Users } from "lucide-react"
-
 import { Card, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui"
 
 import { BillingSection } from "./sections/billing-section"
@@ -13,8 +12,12 @@ import { ProfileSection } from "./sections/profile-section"
 import { ServicesSection } from "./sections/services-section"
 import SlotsSection from "./sections/slots-section"
 import { TeamSection } from "./sections/team-section"
+import { useSearchParams } from "next/navigation"
 
 const SettingsPageComponent = () => {
+  const query = useSearchParams()
+  const tab = query.get("tab")
+
   return (
     <div>
       <Card className="overflow-hidden rounded-2xl mb-4">
@@ -33,7 +36,7 @@ const SettingsPageComponent = () => {
       </Card>
 
       <div className="px-1">
-        <Tabs defaultValue="profile" className="space-y-4">
+        <Tabs defaultValue={tab || "profile"} className="space-y-4">
           <TabsList>
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <Building2 className="h-4 w-4" />

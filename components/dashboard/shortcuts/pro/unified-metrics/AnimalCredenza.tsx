@@ -1,19 +1,18 @@
 "use client"
 
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
-import { useState } from "react"
-
+import { ActiveTab, AnimalDetails } from "./types"
 import { CredenzaClose, CredenzaContent, CredenzaTitle } from "@/components/ui"
-import { Credenza } from "@/components/ui"
-import { Button } from "@/components/ui/button"
+import { FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
 
 import { AnimalDetailsSidebar } from "./AnimalDetailsSidebar"
 import { AppointmentsTab } from "./AppointmentsTab"
+import { Button } from "@/components/ui/button"
+import { Credenza } from "@/components/ui"
 import { DocumentsTab } from "./DocumentsTab"
 import { InfoTab } from "./InfoTab"
 import { MedicalTab } from "./MedicalTab"
-import { ActiveTab, AnimalDetails } from "./types"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { useState } from "react"
 
 interface AnimalCredenzaProps {
   isOpen: boolean
@@ -27,7 +26,7 @@ export const AnimalCredenza = ({ isOpen, onOpenChange, animalDetails }: AnimalCr
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
       <VisuallyHidden asChild>
-        <CredenzaTitle>Fiche de l'animal</CredenzaTitle>
+        <CredenzaTitle>Fiche de l&apos;animal</CredenzaTitle>
       </VisuallyHidden>
       <CredenzaContent className="sm:max-w-[900px] p-0 overflow-hidden">
         {/* Interface à deux panneaux avec navigation latérale */}
