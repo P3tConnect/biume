@@ -1,7 +1,5 @@
 "use client"
 
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { useQueries } from "@tanstack/react-query"
 import {
   Activity,
   AlertCircle,
@@ -25,17 +23,22 @@ import {
   User,
   Users,
 } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useTranslations } from "next-intl"
-import React from "react"
-import { useEffect, useState } from "react"
-import { toast } from "sonner"
-
-import Stepper from "@/components/onboarding/components/stepper"
 import {
   Button,
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -46,58 +49,26 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
+  DropdownMenuTrigger,
 } from "@/components/ui"
-import { useEffect, useState } from "react"
-import {
-  Home,
-  Calendar,
-  Building,
-  Check,
-  User,
-  Plus,
-  Users,
-  DollarSign as DollarSignIcon,
-  Briefcase,
-  ClipboardList,
-  Info,
-  Book,
-  Bell,
-  Headphones,
-  Cog,
-  Activity,
-  ChevronDown,
-  Search,
-  Menu,
-  ArrowLeftRight,
-  AlertCircle,
-  Building2,
-  RefreshCw,
-} from "lucide-react"
+import React, { useEffect, useState } from "react"
+import { getSession, organization, useActiveOrganization } from "@/src/lib/auth-client"
 import { usePathname, useRouter } from "next/navigation"
-import { useActiveOrganization, organization, getSession } from "@/src/lib/auth-client"
-import { cn } from "@/src/lib/utils"
-import Link from "next/link"
-import Image from "next/image"
-import { toast } from "sonner"
-import { proMenuList } from "@/src/config/menu-list"
-import { useTranslations } from "next-intl"
-import { useQueries } from "@tanstack/react-query"
-import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaDescription,
-  CredenzaBody,
-} from "@/components/ui"
-import Stepper from "@/components/onboarding/components/stepper"
+
 import { AccountSwitchDialog } from "../account-switch-dialog"
+import Image from "next/image"
+import Link from "next/link"
+import { ModeToggle } from "@/components/mode-toggle"
+import Notifications from "../notifications"
+import Stepper from "@/components/onboarding/components/stepper"
+import { UserNav } from "../user-nav"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { cn } from "@/src/lib/utils"
 import { getAllOrganizationsByUserId } from "@/src/actions/organization.action"
-import { CommandDialog } from "@/components/command/command-dialog"
+import { proMenuList } from "@/src/config/menu-list"
+import { toast } from "sonner"
+import { useQueries } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
   const pathname = usePathname()
@@ -712,108 +683,110 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
 
       {/* Redesigned Command Dialog with neutral colors */}
       <CommandDialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <VisuallyHidden>
-          <DialogTitle>Recherche</DialogTitle>
-        </VisuallyHidden>
-        <CommandInput
-          placeholder="Que recherchez-vous ?"
-          className="h-14 w-full bg-transparent px-0 py-3 text-base outline-none placeholder:text-muted-foreground/70 focus:ring-0 focus:outline-none border-0"
-        />
-        <CommandList className="max-h-[60vh] overflow-y-auto py-2 px-1">
-          <CommandEmpty>
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <div className="rounded-full bg-muted/30 p-3 mb-3">
-                <Search className="h-6 w-6 text-muted-foreground" />
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+          <VisuallyHidden>
+            <DialogTitle>Recherche</DialogTitle>
+          </VisuallyHidden>
+          <CommandInput
+            placeholder="Que recherchez-vous ?"
+            className="h-14 w-full bg-transparent px-0 py-3 text-base outline-none placeholder:text-muted-foreground/70 focus:ring-0 focus:outline-none border-0"
+          />
+          <CommandList className="max-h-[60vh] overflow-y-auto py-2 px-1">
+            <CommandEmpty>
+              <div className="flex flex-col items-center justify-center py-6 text-center">
+                <div className="rounded-full bg-muted/30 p-3 mb-3">
+                  <Search className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground mb-1">Aucun résultat trouvé.</p>
+                <p className="text-xs text-muted-foreground/70">Essayez avec des termes différents.</p>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">Aucun résultat trouvé.</p>
-              <p className="text-xs text-muted-foreground/70">Essayez avec des termes différents.</p>
+            </CommandEmpty>
+
+            <CommandGroup
+              heading={
+                <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                  Pages principales
+                </div>
+              }
+            >
+              <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
+                  <Users className="h-4 w-4 text-foreground/80" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Clients</span>
+                  <span className="text-xs text-muted-foreground/70">Gérer vos clients</span>
+                </div>
+              </CommandItem>
+              <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
+                  <Calendar className="h-4 w-4 text-foreground/80" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Rendez-vous</span>
+                  <span className="text-xs text-muted-foreground/70">Gérer votre agenda</span>
+                </div>
+              </CommandItem>
+              <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
+                  <ClipboardList className="h-4 w-4 text-foreground/80" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Rapports</span>
+                  <span className="text-xs text-muted-foreground/70">Consulter vos statistiques</span>
+                </div>
+              </CommandItem>
+            </CommandGroup>
+
+            <CommandGroup
+              heading={
+                <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 mt-2">
+                  Actions Rapides
+                </div>
+              }
+            >
+              <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
+                  <Plus className="h-4 w-4 text-foreground/80" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Nouveau client</span>
+                  <span className="text-xs text-muted-foreground/70">Ajouter un nouveau client</span>
+                </div>
+              </CommandItem>
+              <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
+                  <Calendar className="h-4 w-4 text-foreground/80" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Nouveau rendez-vous</span>
+                  <span className="text-xs text-muted-foreground/70">Planifier un rendez-vous</span>
+                </div>
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+
+          <div className="flex items-center justify-between border-t border-border/30 px-4 py-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Parcourir</span>
+              <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+                ↑
+              </span>
+              <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+                ↓
+              </span>
             </div>
-          </CommandEmpty>
-
-          <CommandGroup
-            heading={
-              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
-                Suggestions
-              </div>
-            }
-          >
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Users className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Clients</span>
-                <span className="text-xs text-muted-foreground/70">Gérer vos clients</span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Calendar className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">Gérer votre agenda</span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <ClipboardList className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Rapports</span>
-                <span className="text-xs text-muted-foreground/70">Consulter vos statistiques</span>
-              </div>
-            </CommandItem>
-          </CommandGroup>
-
-          <CommandGroup
-            heading={
-              <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 mt-2">
-                Actions Rapides
-              </div>
-            }
-          >
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Plus className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Nouveau client</span>
-                <span className="text-xs text-muted-foreground/70">Ajouter un nouveau client</span>
-              </div>
-            </CommandItem>
-            <CommandItem className="rounded-lg py-2.5 px-2 flex items-center gap-3 text-sm transition-colors duration-200 hover:bg-accent/50 data-[selected=true]:bg-accent/50">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border/40 bg-background shadow-sm">
-                <Calendar className="h-4 w-4 text-foreground/80" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Nouveau rendez-vous</span>
-                <span className="text-xs text-muted-foreground/70">Planifier un rendez-vous</span>
-              </div>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-
-        <div className="flex items-center justify-between border-t border-border/30 px-4 py-3">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Parcourir</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↑
-            </span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↓
-            </span>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Sélectionner</span>
+              <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
+                ↵
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Sélectionner</span>
-            <span className="flex items-center justify-center rounded-sm border border-border/40 bg-muted/30 h-5 w-5 text-center">
-              ↵
-            </span>
-          </div>
-        </div>
+        </Command>
       </CommandDialog>
       {/* Nouveau CommandDialog */}
-      <CommandDialog open={searchOpen} onOpenChange={setSearchOpen} companyId={companyId} />
+      <CommandDialog open={searchOpen} onOpenChange={setSearchOpen} />
 
       {/* Dialogues de changement de compte */}
       <AccountSwitchDialog

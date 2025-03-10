@@ -56,3 +56,6 @@ bun.lockb
 # prettier
 .prettierrc
 .prettierignore
+
+# cursor
+.cursor
