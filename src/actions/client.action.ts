@@ -30,7 +30,20 @@ export const getClients = createServerAction(
       const clientsWithAppointments = await db.query.appointments.findMany({
         where: eq(appointments.proId, organizationId),
         with: {
-          client: true,
+          client: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              phoneNumber: true,
+              city: true,
+            },
+          },
+          slot: {
+            columns: {
+              start: true,
+            },
+          },
         },
         orderBy: (appointments, { desc }) => [desc(appointments.createdAt)],
       })
@@ -48,7 +61,7 @@ export const getClients = createServerAction(
       const now = new Date()
       const activeClientIds = new Set(
         clientsWithAppointments
-          .filter(appointment => new Date(appointment.beginAt) > now)
+          .filter(appointment => new Date(appointment.slot!.start) > now)
           .map(appointment => appointment.clientId)
       )
 
@@ -106,7 +119,20 @@ export const getClientMetrics = createServerAction(
       const clientsWithAppointments = await db.query.appointments.findMany({
         where: eq(appointments.proId, organizationId),
         with: {
-          client: true,
+          client: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              phoneNumber: true,
+              city: true,
+            },
+          },
+          slot: {
+            columns: {
+              start: true,
+            },
+          },
         },
         orderBy: (appointments, { desc }) => [desc(appointments.createdAt)],
       })
@@ -122,7 +148,7 @@ export const getClientMetrics = createServerAction(
 
       // Déterminer les clients actifs (ceux qui ont des rendez-vous à venir)
       const now = new Date()
-      const activeClients = clientsWithAppointments.filter(appointment => new Date(appointment.beginAt) > now)
+      const activeClients = clientsWithAppointments.filter(appointment => new Date(appointment.slot!.start) > now)
 
       // Récupérer le nombre unique de clients actifs
       const uniqueActiveClientsCount = new Set(activeClients.map(appointment => appointment.clientId)).size
