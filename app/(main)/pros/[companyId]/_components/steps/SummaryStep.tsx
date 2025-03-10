@@ -121,10 +121,10 @@ export function SummaryStep({
             <span className="font-medium text-sm text-right truncate">
               {selectedSlot
                 ? `${format(selectedSlot.start, "d MMM yyyy", {
-                    locale: fr,
-                  })} à ${format(selectedSlot.start, "HH:mm", {
-                    locale: fr,
-                  })}`
+                  locale: fr,
+                })} à ${format(selectedSlot.start, "HH:mm", {
+                  locale: fr,
+                })}`
                 : "Non spécifié"}
             </span>
           </div>

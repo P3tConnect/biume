@@ -58,21 +58,22 @@ export const createBooking = createServerAction(
       }
 
       // Créer le rendez-vous avec le statut spécifié (SCHEDULED par défaut)
-      const appointment = await db
+      const [appointment] = await db
         .insert(appointments)
         .values({
           serviceId: input.serviceId,
           proId: input.companyId,
           patientId: input.petId,
+          clientId: ctx.user?.id ?? "",
           slotId: input.slotId,
           status: input.status,
           atHome: input.isHomeVisit,
           type: "oneToOne",
-          // Pas de champ 'notes' dans le schéma
         })
         .returning()
+        .execute();
 
-      if (!appointment || appointment.length === 0) {
+      if (!appointment) {
         throw new ActionError("Impossible de créer le rendez-vous")
       }
 
@@ -84,7 +85,7 @@ export const createBooking = createServerAction(
 
       return {
         success: true,
-        appointmentId: appointment[0].id,
+        appointmentId: appointment.id,
         transactionId: newTransaction[0].id,
       }
     } catch (error) {

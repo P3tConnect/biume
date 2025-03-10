@@ -14,7 +14,7 @@ import {
   Input,
   Separator,
 } from "@/components/ui"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState, useEffect } from "react"
 import { Member, OrganizationSlots, Service } from "@/src/db"
 import { Option, OptionsStep } from "./steps/OptionsStep"
 import { PaymentMethodStep } from "./steps/PaymentMethodStep"
@@ -119,10 +119,37 @@ export function BookingCard({
   })
 
   const selectedServiceData = selectedService ? (services.find(s => s.id === selectedService) ?? null) : null
-
   const selectedProData = selectedPro ? (professionals.find(p => p.id === selectedPro) ?? null) : null
-
   const selectedPet = userPets?.data?.find(p => p.id === metadata?.pet?.petId)
+
+  const params = useParams()
+  const companyId = params.companyId as string
+
+  const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation({
+    mutationFn: createBookingCheckoutSession,
+    onSuccess: async response => {
+      // Vérifier si la réponse contient une erreur
+      if ("error" in response) {
+        toast.error(`Erreur: ${response.error}`)
+        return
+      }
+
+      // À ce stade, nous savons que response.data existe
+      const data = response.data
+
+      if (!data || !data.sessionUrl) {
+        toast.error("Erreur lors du paiement, veuillez réessayer")
+        return
+      }
+
+      // Rediriger vers la page de paiement Stripe
+      window.location.href = data.sessionUrl
+    },
+    onError: (error: Error) => {
+      console.error("Erreur de paiement:", error)
+      toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
+    },
+  })
 
   // Fonction de callback pour AppointmentPicker
   const handleDateTimeSelect = (date: Date, time: string | null, slotId: OrganizationSlots | null) => {
@@ -164,35 +191,6 @@ export function BookingCard({
         },
       }
     )
-  })
-
-  const params = useParams()
-  const companyId = params.companyId as string
-
-  const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation({
-    mutationFn: createBookingCheckoutSession,
-    onSuccess: async response => {
-      // Vérifier si la réponse contient une erreur
-      if ("error" in response) {
-        toast.error(`Erreur: ${response.error}`)
-        return
-      }
-
-      // À ce stade, nous savons que response.data existe
-      const data = response.data
-
-      if (!data || !data.sessionUrl) {
-        toast.error("Erreur lors du paiement, veuillez réessayer")
-        return
-      }
-
-      // Rediriger vers la page de paiement Stripe
-      window.location.href = data.sessionUrl
-    },
-    onError: (error: Error) => {
-      console.error("Erreur de paiement:", error)
-      toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
-    },
   })
 
   const handleBooking = async () => {
@@ -243,7 +241,7 @@ export function BookingCard({
           selectedOptions: metadata?.options?.selectedOptions || [],
           amount,
           companyId: companyId,
-          status: "SCHEDULED", // Status SCHEDULED pour paiement sur place
+          status: "SCHEDULED",
           isPaid: false,
           slotId: selectedSlot?.id ?? undefined,
         })
@@ -258,7 +256,7 @@ export function BookingCard({
         return
       }
 
-      // Pour le paiement en ligne, utiliser Stripe comme avant
+      // Pour le paiement en ligne, utiliser Stripe Checkout
       await bookPayment({
         serviceId: selectedService,
         professionalId: selectedPro,
@@ -372,8 +370,8 @@ export function BookingCard({
         <Button disabled={!selectedTime} className="w-full" size="lg" onClick={handleOpenBookingModal}>
           {selectedTime && selectedDate
             ? `Réserver pour ${format(selectedDate, "d MMMM", {
-                locale: fr,
-              })} à ${selectedTime}`
+              locale: fr,
+            })} à ${selectedTime}`
             : "Sélectionnez un créneau"}
         </Button>
       </CardFooter>
@@ -544,7 +542,7 @@ export function BookingCard({
                     next()
                   }
                 }}
-                disabled={(current.id === "pet" && !metadata?.pet?.petId) || (isLast && !metadata?.pet?.petId)}
+                disabled={(current.id === "pet" && !metadata?.pet?.petId) || (isLast && !metadata?.pet?.petId) || (isLast && isPaymentLoading)}
               >
                 {isLast
                   ? isPaymentLoading

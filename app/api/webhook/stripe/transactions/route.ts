@@ -23,9 +23,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Gérer les événements de paiement
-  if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object as Stripe.PaymentIntent
+  if (event.type === "checkout.session.completed") {
+    const paymentIntent = event.data.object as Stripe.Checkout.Session
     const metadata = paymentIntent.metadata
+
+    console.log(metadata, "paymentIntent")
 
     if (!metadata?.transactionId) {
       return NextResponse.json({ error: "Missing transactionId in metadata" }, { status: 400 })

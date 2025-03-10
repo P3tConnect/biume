@@ -116,6 +116,8 @@ export default function KYBSection() {
     refetchOnWindowFocus: false,
   })
 
+  console.log(accountInfoData, "accountInfoData");
+
   // Mettre à jour accountInfo quand accountInfoData change
   useEffect(() => {
     if (accountInfoData) {
@@ -163,14 +165,21 @@ export default function KYBSection() {
   const getVerificationProgress = () => {
     if (!accountInfo) return 0
 
-    if (accountInfo.chargesEnabled && accountInfo.payoutsEnabled) return 100
-
-    // Calculer en fonction des exigences restantes
+    // Vérifier s'il reste des exigences à satisfaire
     const requirements = accountInfo.requirements || {
       currently_due: [],
       eventually_due: [],
       past_due: [],
     }
+
+    const hasRequirements = (
+      (requirements.currently_due?.length > 0) ||
+      (requirements.eventually_due?.length > 0) ||
+      (requirements.past_due?.length > 0)
+    )
+
+    // Ne retourner 100% que si toutes les exigences sont satisfaites ET que les paiements sont activés
+    if (accountInfo.chargesEnabled && accountInfo.payoutsEnabled && !hasRequirements) return 100
 
     const totalReqs =
       (requirements.currently_due?.length || 0) +
@@ -220,6 +229,7 @@ export default function KYBSection() {
       "person.last_name": "Nom du représentant légal",
       "person.phone": "Téléphone du représentant légal",
       "person.id_number": "Numéro d'identité du représentant légal",
+      "individual.verification.document": "Document d'identité à vérifier",
     }
 
     return translations[requirement] || requirement
@@ -243,7 +253,20 @@ export default function KYBSection() {
 
     const progress = getVerificationProgress()
 
-    if (accountInfo.detailsSubmitted) {
+    // Vérifier s'il reste des exigences à satisfaire
+    const requirements = accountInfo.requirements || {
+      currently_due: [],
+      eventually_due: [],
+      past_due: [],
+    }
+
+    const hasRequirements = (
+      (requirements.currently_due?.length > 0) ||
+      (requirements.eventually_due?.length > 0) ||
+      (requirements.past_due?.length > 0)
+    )
+
+    if (accountInfo.detailsSubmitted && !hasRequirements && accountInfo.chargesEnabled && accountInfo.payoutsEnabled) {
       return (
         <div className="mb-6">
           <Alert className="mb-4 bg-green-50 dark:bg-green-900/20">
@@ -272,8 +295,6 @@ export default function KYBSection() {
     const hasPastDue = accountInfo.requirements.past_due.length > 0
 
     // Calculer les exigences dues
-    const requirements = accountInfo.requirements
-
     const totalRequirements =
       (requirements.currently_due?.length || 0) +
       (requirements.eventually_due?.length || 0) +
@@ -304,7 +325,7 @@ export default function KYBSection() {
         label: translateRequirement(req),
         color: "text-gray-400",
       })),
-    ].slice(0, 3) // Limiter à 3 exigences pour l'affichage dans le cercle
+    ] // Afficher toutes les exigences sans limitation
 
     return (
       <div className="mb-6">
@@ -350,11 +371,6 @@ export default function KYBSection() {
                     <span className={`text-sm ${color}`}>{label}</span>
                   </li>
                 ))}
-                {totalRequirements > 3 && (
-                  <li className="text-xs text-muted-foreground italic">
-                    + {totalRequirements - 3} autres informations à compléter
-                  </li>
-                )}
               </ul>
             ) : (
               <p className="text-sm text-muted-foreground">
@@ -512,14 +528,26 @@ export default function KYBSection() {
           <div>
             {accountInfo?.detailsSubmitted && (
               <Badge
-                variant={accountInfo.payoutsEnabled && accountInfo.chargesEnabled ? "default" : "outline"}
-                className={`mb-2 ${
-                  accountInfo.payoutsEnabled && accountInfo.chargesEnabled
-                    ? "bg-green-100 text-green-800 hover:bg-green-100"
-                    : ""
-                }`}
+                variant={
+                  (accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
+                    !(accountInfo.requirements.currently_due?.length > 0 ||
+                      accountInfo.requirements.eventually_due?.length > 0 ||
+                      accountInfo.requirements.past_due?.length > 0))
+                    ? "default"
+                    : "outline"
+                }
+                className={`mb-2 ${(accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
+                  !(accountInfo.requirements.currently_due?.length > 0 ||
+                    accountInfo.requirements.eventually_due?.length > 0 ||
+                    accountInfo.requirements.past_due?.length > 0))
+                  ? "bg-green-100 text-green-800 hover:bg-green-100"
+                  : ""
+                  }`}
               >
-                {accountInfo.payoutsEnabled && accountInfo.chargesEnabled ? (
+                {(accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
+                  !(accountInfo.requirements.currently_due?.length > 0 ||
+                    accountInfo.requirements.eventually_due?.length > 0 ||
+                    accountInfo.requirements.past_due?.length > 0)) ? (
                   <>
                     <CheckCircle2 className="mr-1 h-3 w-3" />
                     Compte activé
