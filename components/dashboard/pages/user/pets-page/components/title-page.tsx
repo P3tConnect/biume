@@ -1,14 +1,13 @@
 "use client"
 
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { Plus } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Button, Card, CardHeader, CardTitle, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui"
 import React, { useState, useTransition } from "react"
 
-import { Button, Card, CardHeader, CardTitle, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui"
-
+import CreatePetStepper from "./create-pet-stepper"
 import { PetProvider } from "../context/pet-context"
-import StepperAnimal from "./stepper-animal"
+import { Plus } from "lucide-react"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { useRouter } from "next/navigation"
 
 const TitlePage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -66,7 +65,7 @@ const TitlePage = () => {
         </VisuallyHidden>
         <div className="p-6">
           <PetProvider>
-            <StepperAnimal onComplete={handleComplete} />
+            <CreatePetStepper onComplete={handleComplete} />
           </PetProvider>
         </div>
       </DialogContent>

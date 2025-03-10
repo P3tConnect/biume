@@ -1,51 +1,40 @@
 "use client"
 
 import { CredenzaDescription, CredenzaTitle } from "@/components/ui"
-import React, { useRef } from "react"
 import { useStepper, utils } from "../hooks/useStepperAnimal"
 
 import InformationsPetAllergiesStep from "./informations-pet-allergies-step"
 import InformationsPetDeseasesStep from "./informations-pet-deseases-step"
 import InformationsPetIntolerancesStep from "./informations-pet-intolerances-step"
 import InformationsPetStep from "./informations-pet-step"
+import { Pet } from "@/src/db/pets"
 import PetCompleteStep from "../forms/pet-complete-step"
+import React from "react"
 import StepIndicator from "@/components/onboarding/components/step-indicator"
 import { getPetById } from "@/src/actions/pet.action"
-import { usePetContext } from "../context/pet-context"
 import { useQuery } from "@tanstack/react-query"
 
-interface StepperAnimalProps {
+interface EditPetStepperProps {
   onComplete?: () => void
-  petId?: string
+  petId: string
 }
 
-const StepperAnimal = ({ onComplete, petId }: StepperAnimalProps) => {
-  const { setPetId, petId: contextPetId } = usePetContext()
-  const initializedRef = useRef(false)
-
-  // Mise à jour du contexte avec petId une seule fois
-  if (petId && !initializedRef.current && petId !== contextPetId) {
-    initializedRef.current = true
-    // Planifier la mise à jour après le rendu
-    setTimeout(() => setPetId(petId), 0)
-  }
-
+const EditPetStepper = ({ onComplete, petId }: EditPetStepperProps) => {
   const { next, prev, current, all, isLast, switch: switchStep } = useStepper()
   const currentIndex = utils.getIndex(current.id)
 
   // Utilisation de useQuery pour charger les données de l'animal
   const { data: petData, isLoading } = useQuery({
-    queryKey: ["pet", petId || contextPetId],
+    queryKey: ["pet", petId],
     queryFn: async () => {
-      const idToUse = petId || contextPetId
-      if (!idToUse) return null
-      return await getPetById({ petId: idToUse })
+      return await getPetById({ petId })
     },
-    enabled: !!(petId || contextPetId),
+    // L'ID est obligatoire, donc enabled est toujours true
+    enabled: true,
   })
 
   // Extraire les données du résultat de la requête
-  const pet = petData && "data" in petData ? petData.data : null
+  const pet = petData && typeof petData === "object" && "data" in petData ? (petData.data as Pet) : null
 
   return (
     <div className="space-y-6">
@@ -69,21 +58,14 @@ const StepperAnimal = ({ onComplete, petId }: StepperAnimalProps) => {
         </div>
       ) : (
         switchStep({
-          pet: () => (
-            <InformationsPetStep
-              nextStep={next}
-              previousStep={prev}
-              petData={pet}
-              isUpdate={!!(petId || contextPetId)}
-            />
-          ),
+          pet: () => <InformationsPetStep nextStep={next} petData={pet} isUpdate={true} />,
           petDeseases: () => (
             <InformationsPetDeseasesStep
               nextStep={next}
               previousStep={prev}
               isPending={false}
               petData={pet}
-              isUpdate={!!(petId || contextPetId)}
+              isUpdate={true}
             />
           ),
           petIntolerences: () => (
@@ -92,7 +74,7 @@ const StepperAnimal = ({ onComplete, petId }: StepperAnimalProps) => {
               previousStep={prev}
               isPending={false}
               petData={pet}
-              isUpdate={!!(petId || contextPetId)}
+              isUpdate={true}
             />
           ),
           petAllergies: () => (
@@ -101,14 +83,14 @@ const StepperAnimal = ({ onComplete, petId }: StepperAnimalProps) => {
               previousStep={prev}
               isPending={false}
               petData={pet}
-              isUpdate={!!(petId || contextPetId)}
+              isUpdate={true}
             />
           ),
-          complete: () => <PetCompleteStep onComplete={onComplete} isUpdate={!!(petId || contextPetId)} />,
+          complete: () => <PetCompleteStep onComplete={onComplete} isUpdate={true} />,
         })
       )}
     </div>
   )
 }
 
-export default StepperAnimal
+export default EditPetStepper

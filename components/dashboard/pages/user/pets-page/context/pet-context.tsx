@@ -39,7 +39,12 @@ export const PetProvider = ({ children }: { children: React.ReactNode }) => {
   }, [petId])
 
   const handleSetPetId = (id: string) => {
+    // Si l'ID est vide, on le supprime du localStorage et on met à null dans le state
     if (!id || id.trim() === "") {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("currentPetId")
+      }
+      setPetId(null)
       return
     }
 
