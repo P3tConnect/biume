@@ -1,15 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import React from "react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import InformationsPetAllergiesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-allergies-step"
-import InformationsPetDeseasesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-deseases-step"
-import InformationsPetIntolerancesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-intolerances-step"
-import { PetProvider } from "@/components/dashboard/pages/user/pets-page/context/pet-context"
-import InformationsPetForm from "@/components/dashboard/pages/user/pets-page/forms/informations-pet-form"
 import {
   Button,
   Credenza,
@@ -20,13 +10,22 @@ import {
   CredenzaTitle,
 } from "@/components/ui"
 import { updateUser, useSession } from "@/src/lib/auth-client"
+import { useStepper, utils } from "../hooks/useStepperClient"
 
 import ClientCompleteStep from "../client/client-complete-step"
-import ClientIntroStep from "../client/client-intro-step"
 import ClientInformationsStep from "../client/informations-step"
+import ClientIntroStep from "../client/client-intro-step"
 import ClientNotificationStep from "../client/notifications-step"
-import { useStepper, utils } from "../hooks/useStepperClient"
+import InformationsPetAllergiesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-allergies-step"
+import InformationsPetDeseasesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-deseases-step"
+import InformationsPetForm from "@/components/dashboard/pages/user/pets-page/forms/informations-pet-form"
+import InformationsPetIntolerancesStep from "@/components/dashboard/pages/user/pets-page/components/informations-pet-intolerances-step"
+import { PetProvider } from "@/components/dashboard/pages/user/pets-page/context/pet-context"
+import React from "react"
 import StepIndicator from "./step-indicator"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 const StepperClient = ({ open }: { open: boolean }) => {
   const { data: session } = useSession()
@@ -111,7 +110,7 @@ const StepperClient = ({ open }: { open: boolean }) => {
             notifications: () => <ClientNotificationStep form={form} />,
             pet: () => (
               <PetProvider>
-                <InformationsPetForm nextStep={() => stepper.next()} previousStep={() => stepper.prev()} />
+                <InformationsPetForm nextStep={() => stepper.next()} />
               </PetProvider>
             ),
             petDeseases: () => (

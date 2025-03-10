@@ -1,10 +1,5 @@
 "use client"
 
-import { Calendar, ChevronRight, PawPrint, Plus, Weight } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-
 import {
   Badge,
   Button,
@@ -18,42 +13,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui"
-import { cn } from "@/src/lib"
-import { useSession } from "@/src/lib/auth-client"
+import { Calendar, ChevronRight, PawPrint, Plus, Weight } from "lucide-react"
 
-// Données de test (version réduite)
-const pets = [
-  {
-    id: "1",
-    name: "Luna",
-    image: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec",
-    type: "Chat",
-    breed: "Persan",
-    birthDate: "2023-02-03",
-    weight: 3.5,
-    gender: "female" as const,
-  },
-  {
-    id: "2",
-    name: "Max",
-    image: "https://images.unsplash.com/photo-1605897472359-85e4b94d685d",
-    type: "Chien",
-    breed: "Berger Allemand",
-    birthDate: "2019-02-03",
-    weight: 32,
-    gender: "male" as const,
-  },
-  {
-    id: "3",
-    name: "Milo",
-    image: "https://images.unsplash.com/photo-1513245543132-31f507417b26",
-    type: "Chat",
-    breed: "Maine Coon",
-    birthDate: "2022-05-15",
-    weight: 7.2,
-    gender: "male" as const,
-  },
-]
+import Image from "next/image"
+import { cn } from "@/src/lib"
+import { getPets } from "@/src/actions"
+import { useQuery } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useSession } from "@/src/lib/auth-client"
+import { useState } from "react"
 
 const getAge = (birthDate: string) => {
   const today = new Date()
@@ -72,7 +40,18 @@ const ClientPetsWidgetSimple = () => {
   const router = useRouter()
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const [selectedPet, setSelectedPet] = useState<(typeof pets)[0] | null>(null)
+
+  // Utilisation de useQuery pour récupérer les animaux dynamiquement
+  const { data: petsData, isLoading } = useQuery({
+    queryKey: ["pets"],
+    queryFn: async () => {
+      const result = await getPets({})
+      return result.data
+    },
+    enabled: !!userId,
+  })
+
+  const [selectedPet, setSelectedPet] = useState<any>(null)
 
   return (
     <>
@@ -102,42 +81,63 @@ const ClientPetsWidgetSimple = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-2">
-            {pets.map(pet => (
-              <div
-                key={pet.id}
-                className="group relative overflow-hidden rounded-lg cursor-pointer"
-                onClick={() => setSelectedPet(pet)}
-              >
-                <div className="relative aspect-square">
-                  {pet.image ? (
-                    <Image fill src={pet.image} alt={pet.name} className="object-cover" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-muted">
-                      <PawPrint className="h-8 w-8 text-muted-foreground/20" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0" />
-                  <div className="absolute bottom-0 left-0 right-0 p-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-white truncate">{pet.name}</span>
-                      <div
-                        className={cn(
-                          "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold bg-white/90",
-                          pet.gender === "female" ? "text-pink-500" : "text-blue-500"
-                        )}
-                      >
-                        {pet.gender === "female" ? "♀" : "♂"}
+          {isLoading ? (
+            <div className="grid grid-cols-2 gap-2 h-[160px]">
+              {[1, 2].map(i => (
+                <div key={i} className="relative overflow-hidden rounded-lg bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : petsData && petsData.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2">
+              {petsData.map(pet => (
+                <div
+                  key={pet.id}
+                  className="group relative overflow-hidden rounded-lg cursor-pointer"
+                  onClick={() => setSelectedPet(pet)}
+                >
+                  <div className="relative aspect-square">
+                    {pet.image ? (
+                      <Image fill src={pet.image} alt={pet.name} className="object-cover" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-muted">
+                        <PawPrint className="h-8 w-8 text-muted-foreground/20" />
                       </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0" />
+                    <div className="absolute bottom-0 left-0 right-0 p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-white truncate">{pet.name}</span>
+                        <div
+                          className={cn(
+                            "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold bg-white/90",
+                            pet.gender === "Female" ? "text-pink-500" : "text-blue-500"
+                          )}
+                        >
+                          {pet.gender === "Female" ? "♀" : "♂"}
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="mt-1 bg-white/10 text-white text-xs">
+                        {pet.type}
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="mt-1 bg-white/10 text-white text-xs">
-                      {pet.type}
-                    </Badge>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-[160px]">
+              <PawPrint className="h-12 w-12 text-muted-foreground/20 mb-2" />
+              <p className="text-sm text-muted-foreground">Aucun animal enregistré</p>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => router.push(`/dashboard/user/${userId}/pets/new`)}
+                className="mt-2"
+              >
+                Ajouter un animal
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -151,10 +151,10 @@ const ClientPetsWidgetSimple = () => {
                   <div
                     className={cn(
                       "flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold",
-                      selectedPet.gender === "female" ? "bg-pink-100 text-pink-500" : "bg-blue-100 text-blue-500"
+                      selectedPet.gender === "Female" ? "bg-pink-100 text-pink-500" : "bg-blue-100 text-blue-500"
                     )}
                   >
-                    {selectedPet.gender === "female" ? "♀" : "♂"}
+                    {selectedPet.gender === "Female" ? "♀" : "♂"}
                   </div>
                 </div>
                 <div className="relative h-48 w-full overflow-hidden rounded-xl">

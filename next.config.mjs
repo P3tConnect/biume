@@ -57,6 +57,6 @@ const nextConfig = {
     STRIPE_WEBHOOK_ULTIMATE_SECRET: process.env.STRIPE_WEBHOOK_ULTIMATE_SECRET,
     STRIPE_WEBHOOK_TRANSACTION_SECRET: process.env.STRIPE_WEBHOOK_TRANSACTION_SECRET,
   },
-};
+}
 
 export default withNextIntl(nextConfig)
