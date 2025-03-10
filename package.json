@@ -22,7 +22,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "remove-unused-imports": "remove-unused-imports 'src/**/*.{ts,tsx}' 'components/**/*.{ts,tsx}' 'app/**/*.{ts,tsx}' 'emails/**/*.{ts,tsx}'"
+    "remove-unused-imports": "remove-unused-imports 'src/**/*.{ts,tsx}' 'components/**/*.{ts,tsx}' 'app/**/*.{ts,tsx}' 'emails/**/*.{ts,tsx}'",
+    "sort-imports": "eslint --fix eslint.config.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.2.0",

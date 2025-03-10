@@ -1,19 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useQuery } from "@tanstack/react-query"
-import Avvvatars from "avvvatars-react"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { ChevronRight } from "lucide-react"
-import { Loader2 } from "lucide-react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { Dispatch, SetStateAction, useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import {
   Button,
   Card,
@@ -28,20 +14,33 @@ import {
   Input,
   Separator,
 } from "@/components/ui"
-import AppointmentPicker from "@/components/ui/appointment-picker"
-import { getPets } from "@/src/actions"
-import { getOptionsFromOrganization } from "@/src/actions/options.action"
-import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action"
+import { Dispatch, SetStateAction, useState } from "react"
 import { Member, Service } from "@/src/db"
-import { loginSchema } from "@/src/lib"
-import { signIn, useSession } from "@/src/lib/auth-client"
-import { cn } from "@/src/lib/utils"
-
-import { steps, useStepper } from "./hooks/useBookingStepper"
-import { ConsultationTypeStep } from "./steps/ConsultationTypeStep"
 import { Option, OptionsStep } from "./steps/OptionsStep"
+import { signIn, useSession } from "@/src/lib/auth-client"
+import { steps, useStepper } from "./hooks/useBookingStepper"
+
+import AppointmentPicker from "@/components/ui/appointment-picker"
+import Avvvatars from "avvvatars-react"
+import { ChevronRight } from "lucide-react"
+import { ConsultationTypeStep } from "./steps/ConsultationTypeStep"
+import Link from "next/link"
+import { Loader2 } from "lucide-react"
 import { PetStep } from "./steps/PetStep"
 import { SummaryStep } from "./steps/SummaryStep"
+import { cn } from "@/src/lib/utils"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { getOptionsFromOrganization } from "@/src/actions/options.action"
+import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action"
+import { getPets } from "@/src/actions"
+import { loginSchema } from "@/src/lib"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useParams } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface BookingCardProps {
   services: Service[]
