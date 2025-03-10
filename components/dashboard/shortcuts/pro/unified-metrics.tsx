@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CountAnimation } from "@/components/count-animation";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Stethoscope,
   CalendarIcon,
@@ -12,7 +13,6 @@ import {
   TrendingUpIcon,
   User,
   RefreshCcw,
-  Loader2,
 } from "lucide-react";
 import {
   LineChart,
@@ -236,7 +236,7 @@ export const UnifiedMetrics = () => {
                 <p className="text-2xl font-bold">
                   {Math.round(
                     data.reduce((acc, curr) => acc + curr.value, 0) /
-                    data.length,
+                      data.length,
                   )}
                 </p>
               </Card>
@@ -289,11 +289,110 @@ export const UnifiedMetrics = () => {
   // Afficher un état de chargement pendant que les données sont récupérées
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-primary" />
-          <p className="text-muted-foreground">Chargement des métriques...</p>
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Rendez-vous */}
+          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+            <div className="p-3">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Rendez-vous
+                  </span>
+                  <CalendarIcon className="w-4 h-4 text-indigo-500" />
+                </div>
+                <div className="text-2xl font-semibold">
+                  <Skeleton className="h-8 w-16" />
+                </div>
+                <div className="text-xs mt-1">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Nouveaux patients */}
+          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+            <div className="p-3">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Nouveaux patients
+                  </span>
+                  <User className="w-4 h-4 text-rose-500" />
+                </div>
+                <div className="text-2xl font-semibold">
+                  <Skeleton className="h-8 w-16" />
+                </div>
+                <div className="text-xs mt-1">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Soins réalisés */}
+          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+            <div className="p-3">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Soins réalisés
+                  </span>
+                  <Stethoscope className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div className="text-2xl font-semibold">
+                  <Skeleton className="h-8 w-16" />
+                </div>
+                <div className="text-xs mt-1">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Satisfaction client */}
+          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+            <div className="p-3">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Satisfaction
+                  </span>
+                  <HeartPulseIcon className="w-4 h-4 text-amber-500" />
+                </div>
+                <div className="text-2xl font-semibold">
+                  <Skeleton className="h-8 w-16" />
+                </div>
+                <div className="text-xs mt-1">
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
+
+        {/* Prochain rendez-vous - skeleton */}
+        <Card className="border rounded-xl shadow-none">
+          <div className="p-4">
+            <h3 className="text-sm font-medium mb-3">Prochain rendez-vous</h3>
+            <div className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                </div>
+                <div>
+                  <Skeleton className="h-4 w-24 mb-1" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <Skeleton className="h-5 w-16 mb-1" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     );
   }
@@ -324,15 +423,21 @@ export const UnifiedMetrics = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Rendez-vous */}
-        <Card className="border rounded-xl shadow-none">
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          onClick={() => setOpenDialog("Rendez-vous")}
+        >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Rendez-vous</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Rendez-vous
+                </span>
                 <CalendarIcon className="w-4 h-4 text-indigo-500" />
               </div>
               <div className="text-2xl font-semibold">
-                {metrics.appointmentsData[metrics.appointmentsData.length - 1].value > 0 ? (
+                {metrics.appointmentsData[metrics.appointmentsData.length - 1]
+                  .value > 0 ? (
                   <CountAnimation
                     value={
                       metrics.appointmentsData[
@@ -347,14 +452,17 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.appointmentsData).isPositive
-                      ? "text-green-600"
-                      : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.appointmentsData).isPositive
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
-                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                  <span className="text-muted-foreground ml-1">
+                    vs mois précédent
+                  </span>
                 </div>
               )}
             </div>
@@ -362,15 +470,21 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Nouveaux patients */}
-        <Card className="border rounded-xl shadow-none">
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          onClick={() => setOpenDialog("Nouveaux patients")}
+        >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Nouveaux patients</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Nouveaux patients
+                </span>
                 <User className="w-4 h-4 text-rose-500" />
               </div>
               <div className="text-2xl font-semibold">
-                {metrics.newPatientsData[metrics.newPatientsData.length - 1].value > 0 ? (
+                {metrics.newPatientsData[metrics.newPatientsData.length - 1]
+                  .value > 0 ? (
                   <CountAnimation
                     value={
                       metrics.newPatientsData[
@@ -385,14 +499,17 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.newPatientsData).isPositive
-                      ? "text-green-600"
-                      : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.newPatientsData).isPositive
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
-                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                  <span className="text-muted-foreground ml-1">
+                    vs mois précédent
+                  </span>
                 </div>
               )}
             </div>
@@ -400,20 +517,25 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Soins réalisés */}
-        <Card className="border rounded-xl shadow-none">
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          onClick={() => setOpenDialog("Soins réalisés")}
+        >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Soins réalisés</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Soins réalisés
+                </span>
                 <Stethoscope className="w-4 h-4 text-emerald-500" />
               </div>
               <div className="text-2xl font-semibold">
-                {metrics.treatmentsData[metrics.treatmentsData.length - 1].value > 0 ? (
+                {metrics.treatmentsData[metrics.treatmentsData.length - 1]
+                  .value > 0 ? (
                   <CountAnimation
                     value={
-                      metrics.treatmentsData[
-                        metrics.treatmentsData.length - 1
-                      ].value
+                      metrics.treatmentsData[metrics.treatmentsData.length - 1]
+                        .value
                     }
                   />
                 ) : (
@@ -423,14 +545,17 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.treatmentsData).isPositive
-                      ? "text-green-600"
-                      : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.treatmentsData).isPositive
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
-                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                  <span className="text-muted-foreground ml-1">
+                    vs mois précédent
+                  </span>
                 </div>
               )}
             </div>
@@ -438,15 +563,21 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Satisfaction client */}
-        <Card className="border rounded-xl shadow-none">
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          onClick={() => setOpenDialog("Satisfaction client")}
+        >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Satisfaction</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Satisfaction
+                </span>
                 <HeartPulseIcon className="w-4 h-4 text-amber-500" />
               </div>
               <div className="text-2xl font-semibold">
-                {metrics.satisfactionData[metrics.satisfactionData.length - 1].value > 0 ? (
+                {metrics.satisfactionData[metrics.satisfactionData.length - 1]
+                  .value > 0 ? (
                   <CountAnimation
                     value={
                       metrics.satisfactionData[
@@ -461,20 +592,51 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.satisfactionData).isPositive
-                      ? "text-green-600"
-                      : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.satisfactionData).isPositive
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
-                  <span className="text-muted-foreground ml-1">vs mois précédent</span>
+                  <span className="text-muted-foreground ml-1">
+                    vs mois précédent
+                  </span>
                 </div>
               )}
             </div>
           </div>
         </Card>
       </div>
+
+      {/* Prochain rendez-vous */}
+      <Card className="border rounded-xl shadow-none">
+        <CardHeader>
+          <CardTitle>Prochain rendez-vous</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div
+            className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => setAnimalDetailsOpen(true)}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+              </div>
+              <div>
+                <p className="font-medium">{animalDetails.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  Consultation de routine
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col items-end">
+              <Badge variant="secondary">Aujourd'hui 14:30</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Modals pour les graphiques détaillés */}
       {hasData && (

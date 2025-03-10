@@ -57,12 +57,6 @@ const nextConfig = {
     STRIPE_WEBHOOK_PRO_SECRET: process.env.STRIPE_WEBHOOK_PRO_SECRET,
     STRIPE_WEBHOOK_ULTIMATE_SECRET: process.env.STRIPE_WEBHOOK_ULTIMATE_SECRET,
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization.minimize = true;
-    }
-    return config;
-  },
 };
 
 export default withNextIntl(nextConfig);

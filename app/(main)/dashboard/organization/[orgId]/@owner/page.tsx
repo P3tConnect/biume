@@ -4,6 +4,7 @@ import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appoin
 import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs";
 import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics";
 import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card";
+import { DailyMetrics } from "@/components/dashboard/shortcuts/pro/daily-metrics";
 
 export const metadata: Metadata = {
   title: "Dashboard Vétérinaire",

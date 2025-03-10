@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       );
     }
     const [org] = await db.query.organization.findMany({
-      where: eq(organization.stripeId, customerId.toString()),
+      where: eq(organization.customerStripeId, customerId.toString()),
     });
 
     if (!org) {
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "PREMIUM",
       })
-      .where(eq(organization.stripeId, customerId.toString()));
+      .where(eq(organization.customerStripeId, customerId.toString()));
 
     redirect(`/dashboard/organization/${org.id}`);
   } else if (event.type === "customer.subscription.updated") {
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     }
 
     const [org] = await db.query.organization.findMany({
-      where: eq(organization.stripeId, customerId.toString()),
+      where: eq(organization.customerStripeId, customerId.toString()),
     });
 
     if (!org) {
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "PREMIUM",
       })
-      .where(eq(organization.stripeId, customerId.toString()));
+      .where(eq(organization.customerStripeId, customerId.toString()));
 
     return NextResponse.json(
       { message: "Organization updated" },
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
       .set({
         plan: "NONE",
       })
-      .where(eq(organization.stripeId, customerId.toString()));
+      .where(eq(organization.customerStripeId, customerId.toString()));
 
     return NextResponse.json(
       { message: "Organization updated" },

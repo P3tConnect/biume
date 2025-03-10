@@ -17,11 +17,16 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
   DropdownMenuPortal,
+  Credenza,
+  CredenzaContent,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaDescription,
+  CredenzaBody,
 } from "@/components/ui";
 import { useEffect, useState } from "react";
 import {
   Home,
-  Calendar,
   Building,
   Check,
   User,
@@ -39,9 +44,7 @@ import {
   ChevronDown,
   Search,
   Menu,
-  ArrowLeftRight,
   AlertCircle,
-  Building2,
   RefreshCw,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -57,14 +60,6 @@ import { toast } from "sonner";
 import { proMenuList } from "@/src/config/menu-list";
 import { useTranslations } from "next-intl";
 import { useQueries } from "@tanstack/react-query";
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaDescription,
-  CredenzaBody,
-} from "@/components/ui";
 import Stepper from "@/components/onboarding/components/stepper";
 import { AccountSwitchDialog } from "../account-switch-dialog";
 import { getAllOrganizationsByUserId } from "@/src/actions/organization.action";
@@ -74,6 +69,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
+  const { data: activeOrganization } = useActiveOrganization();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [orgMenuOpen, setOrgMenuOpen] = useState(false);
@@ -85,7 +81,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
   const [showProfessionalDialog, setShowProfessionalDialog] = useState(false);
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { data: activeOrganization } = useActiveOrganization();
 
   const isWindows =
     typeof window !== "undefined" && window.navigator.platform.includes("Win");
@@ -288,7 +283,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                               ? "bg-primary/10 text-primary font-medium shadow-sm"
                               : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
                             switchingOrg === org.id &&
-                            "animate-pulse opacity-70",
+                              "animate-pulse opacity-70",
                           )}
                           onSelect={() => handleOrganizationSwitch(org.id)}
                           disabled={switchingOrg !== null}
