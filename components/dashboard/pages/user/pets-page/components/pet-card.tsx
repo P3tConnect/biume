@@ -4,10 +4,10 @@ import { Badge, Button, Card, Skeleton } from "@/components/ui"
 import { Calendar, PawPrint, Pencil, Trash2, Weight } from "lucide-react"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui"
 
+import EditPetStepper from "./edit-pet-stepper"
 import Image from "next/image"
 import { Pet } from "@/src/db/pets" // Assurez-vous que ce type existe
 import { PetProvider } from "../context/pet-context"
-import StepperAnimal from "./stepper-animal"
 import { cn } from "@/src/lib"
 import { deletePet } from "@/src/actions"
 import { toast } from "sonner"
@@ -57,10 +57,6 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
   }
 
   const handleOpenEditModal = () => {
-    // Stocke l'ID de l'animal dans le localStorage pour que le StepperAnimal puisse y accéder
-    if (typeof window !== "undefined") {
-      localStorage.setItem("currentPetId", pet.id)
-    }
     setIsEditModalOpen(true)
   }
 
@@ -169,7 +165,7 @@ export function PetCard({ pet, onEdit, onDelete }: PetCardProps) {
           <DialogTitle className="sr-only">Modifier l&apos;animal</DialogTitle>
           <div className="p-6">
             <PetProvider>
-              <StepperAnimal onComplete={handleCloseEditModal} petId={pet.id} />
+              <EditPetStepper onComplete={handleCloseEditModal} petId={pet.id} />
             </PetProvider>
           </div>
         </DialogContent>

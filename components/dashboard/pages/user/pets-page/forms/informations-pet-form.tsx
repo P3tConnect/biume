@@ -1,15 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { ImageIcon, PenBox, Trash2 } from "lucide-react"
-import Image from "next/image"
-import { useState } from "react"
-import { useDropzone } from "react-dropzone"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import {
   Button,
   Form,
@@ -26,12 +16,21 @@ import {
   SelectValue,
   Textarea,
 } from "@/components/ui"
-import { createPet, updatePet } from "@/src/actions/pet.action"
 import { CreatePetSchema, Pet } from "@/src/db/pets"
-import { cn } from "@/src/lib"
-import { useUploadThing } from "@/src/lib/uploadthing"
+import { ImageIcon, PenBox, Trash2 } from "lucide-react"
+import { createPet, updatePet } from "@/src/actions/pet.action"
 
+import Image from "next/image"
+import { cn } from "@/src/lib"
+import { toast } from "sonner"
+import { useDropzone } from "react-dropzone"
+import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
 import { usePetContext } from "../context/pet-context"
+import { useState } from "react"
+import { useUploadThing } from "@/src/lib/uploadthing"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ACCEPTED_IMAGE_TYPES = {
@@ -41,12 +40,11 @@ const ACCEPTED_IMAGE_TYPES = {
 
 interface InformationsPetFormProps {
   nextStep: () => void
-  previousStep: () => void
   petData?: Pet | null
   isUpdate?: boolean
 }
 
-const InformationsPetForm = ({ nextStep, previousStep, petData, isUpdate = false }: InformationsPetFormProps) => {
+const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: InformationsPetFormProps) => {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const { setPetId } = usePetContext()
