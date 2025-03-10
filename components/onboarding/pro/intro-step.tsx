@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import { ArrowRight, Check, Loader2, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
+import { ArrowRight, Check, Loader2, Sparkles } from "lucide-react"
+import Image from "next/image"
+
+import { Button } from "@/components/ui"
 
 const IntroStep = ({
   skipOnboarding,
   nextStep,
   isLoading,
 }: {
-  skipOnboarding: () => void;
-  nextStep: () => void;
-  isLoading: boolean;
+  skipOnboarding: () => void
+  nextStep: () => void
+  isLoading: boolean
 }) => {
   return (
     <div className="w-full h-full relative bg-background">
@@ -148,15 +149,12 @@ const IntroStep = ({
             onClick={nextStep}
           >
             Commencer
-            <ArrowRight
-              size={12}
-              className="ml-2 group-hover:translate-x-1 transition-transform"
-            />
+            <ArrowRight size={12} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default IntroStep;
+export default IntroStep

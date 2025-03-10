@@ -1,38 +1,19 @@
-"use client";
+"use client"
 
-import { Filter, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { useSearchParams } from "@/src/hooks/use-search-params";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { ChevronDown, Filter } from "lucide-react"
 
-const CATEGORIES = [
-  "Vétérinaire",
-  "Toiletteur",
-  "Comportementaliste",
-  "Ostéopathe",
-  "Pension",
-  "Éducateur",
-];
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
+import { useSearchParams } from "@/src/hooks/use-search-params"
+
+const CATEGORIES = ["Vétérinaire", "Toiletteur", "Comportementaliste", "Ostéopathe", "Pension", "Éducateur"]
 
 export function FiltersBar() {
-  const { availableToday, instantBooking, sortBy, categories } =
-    useSearchParams();
+  const { availableToday, instantBooking, sortBy, categories } = useSearchParams()
 
   return (
     <div className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10 w-full">
@@ -41,11 +22,7 @@ export function FiltersBar() {
           <div className="flex items-center gap-4">
             <Sheet>
               <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Filter className="h-4 w-4" />
                   Filtres
                   <ChevronDown className="h-4 w-4" />
@@ -59,22 +36,16 @@ export function FiltersBar() {
                   <div className="space-y-4">
                     <Label>Catégories</Label>
                     <div className="grid grid-cols-2 gap-2">
-                      {CATEGORIES.map((category) => (
+                      {CATEGORIES.map(category => (
                         <Badge
                           key={category}
-                          variant={
-                            categories.value.includes(category)
-                              ? "default"
-                              : "outline"
-                          }
+                          variant={categories.value.includes(category) ? "default" : "outline"}
                           className="cursor-pointer"
                           onClick={() => {
-                            const newCategories = categories.value.includes(
-                              category,
-                            )
-                              ? categories.value.filter((c) => c !== category)
-                              : [...categories.value, category];
-                            categories.set(newCategories);
+                            const newCategories = categories.value.includes(category)
+                              ? categories.value.filter(c => c !== category)
+                              : [...categories.value, category]
+                            categories.set(newCategories)
                           }}
                         >
                           {category}
@@ -84,9 +55,7 @@ export function FiltersBar() {
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="available-today">
-                        Disponible aujourd&apos;hui
-                      </Label>
+                      <Label htmlFor="available-today">Disponible aujourd&apos;hui</Label>
                       <Switch
                         id="available-today"
                         checked={availableToday.value}
@@ -94,9 +63,7 @@ export function FiltersBar() {
                       />
                     </div>
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="instant-booking">
-                        Réservation instantanée
-                      </Label>
+                      <Label htmlFor="instant-booking">Réservation instantanée</Label>
                       <Switch
                         id="instant-booking"
                         checked={instantBooking.value}
@@ -126,15 +93,13 @@ export function FiltersBar() {
                   Réservation instantanée ×
                 </Badge>
               )}
-              {categories.value.map((category) => (
+              {categories.value.map(category => (
                 <Badge
                   key={category}
                   variant="secondary"
                   className="cursor-pointer hover:bg-secondary/90 transition-colors"
                   onClick={() => {
-                    categories.set(
-                      categories.value.filter((c) => c !== category),
-                    );
+                    categories.set(categories.value.filter(c => c !== category))
                   }}
                 >
                   {category} ×
@@ -155,5 +120,5 @@ export function FiltersBar() {
         </div>
       </div>
     </div>
-  );
+  )
 }

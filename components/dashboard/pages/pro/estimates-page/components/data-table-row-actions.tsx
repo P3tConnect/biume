@@ -1,57 +1,41 @@
-"use client";
+"use client"
 
-import { Row } from "@tanstack/react-table";
-import { Quote } from "@/types/quote";
+import { Row } from "@tanstack/react-table"
+import { Copy, Edit, Eye, FileText, MoreHorizontal, Send, Trash } from "lucide-react"
+import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Copy,
-  Send,
-  FileText,
-  Trash,
-} from "lucide-react";
-import Link from "next/link";
+} from "@/components/ui/dropdown-menu"
+import { Quote } from "@/types/quote"
 
 interface DataTableRowActionsProps {
-  row: Row<Quote>;
+  row: Row<Quote>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
+        <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Menu d&apos;actions</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
-          <Link
-            href={`/dashboard/quotes/${row.original.id}`}
-            className="flex items-center"
-          >
+          <Link href={`/dashboard/quotes/${row.original.id}`} className="flex items-center">
             <Eye className="mr-2 h-4 w-4" />
             Voir
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link
-            href={`/dashboard/quotes/${row.original.id}/edit`}
-            className="flex items-center"
-          >
+          <Link href={`/dashboard/quotes/${row.original.id}/edit`} className="flex items-center">
             <Edit className="mr-2 h-4 w-4" />
             Modifier
           </Link>
@@ -76,6 +60,5 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
-

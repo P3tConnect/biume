@@ -1,44 +1,17 @@
-"use client";
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { ArrowUpDown, Calendar, Loader2, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getSortedRowModel,
-  SortingState,
   getFilteredRowModel,
-  ColumnFiltersState,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowUpDown,
-  Plus,
-  MoreHorizontal,
-  UserPlus,
-  Users,
-  Calendar,
-  Star,
-  Loader2,
-} from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,26 +19,23 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { CountAnimation } from "@/components/count-animation";
-import { ClientForm } from "./client-form";
-import { ClientDetails } from "./client-details";
-import ClientsHeader from "./clients-header";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Client,
-  getClientMetrics,
-  getClients,
-} from "@/src/actions/client.action";
-import { ClientMetrics as ClientMetricsType } from "@/src/actions/client.action";
+} from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { getClientMetrics, getClients } from "@/src/actions/client.action"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Client } from "@/src/types/client"
+import { ClientDetails } from "./client-details"
+import { ClientForm } from "./client-form"
+import { ClientMetrics } from "@/src/types/client"
+import ClientsHeader from "./clients-header"
+import { CountAnimation } from "@/components/count-animation"
+import { Input } from "@/components/ui/input"
+import React from "react"
+import { useQuery } from "@tanstack/react-query"
 
 // Type pour nos données client
 // type Client = {
@@ -88,18 +58,18 @@ const ClientMetricsComponent = () => {
     data: metrics,
     isLoading,
     error,
-  } = useQuery<ClientMetricsType>({
+  } = useQuery<ClientMetrics>({
     queryKey: ["clientMetrics"],
     queryFn: async () => {
-      const result = await getClientMetrics({});
+      const result = await getClientMetrics({})
 
       if ("error" in result) {
-        throw new Error(result.error);
+        throw new Error(result.error)
       }
 
-      return result.data;
+      return result.data
     },
-  });
+  })
 
   if (isLoading) {
     return (
@@ -117,15 +87,11 @@ const ClientMetricsComponent = () => {
           </Card>
         ))}
       </div>
-    );
+    )
   }
 
   if (error) {
-    return (
-      <div className="text-red-500">
-        Erreur lors du chargement des métriques
-      </div>
-    );
+    return <div className="text-red-500">Erreur lors du chargement des métriques</div>
   }
 
   return (
@@ -163,9 +129,7 @@ const ClientMetricsComponent = () => {
           <div className="text-2xl font-bold">
             <CountAnimation value={metrics?.appointments ?? 0} />
           </div>
-          <p className="text-xs text-muted-foreground">
-            +12.3% from last month
-          </p>
+          <p className="text-xs text-muted-foreground">+12.3% from last month</p>
         </CardContent>
       </Card>
       <Card className="rounded-xl">
@@ -174,15 +138,13 @@ const ClientMetricsComponent = () => {
           <Star className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {metrics?.averageRating ?? 0}
-          </div>
+          <div className="text-2xl font-bold">{metrics?.averageRating ?? 0}</div>
           <p className="text-xs text-muted-foreground">Based on 234 reviews</p>
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
 const ClientActions = ({
   globalFilter,
@@ -190,10 +152,10 @@ const ClientActions = ({
   setStatus,
   status,
 }: {
-  globalFilter: string;
-  setGlobalFilter: (value: string) => void;
-  setStatus: (value: string) => void;
-  status: string;
+  globalFilter: string
+  setGlobalFilter: (value: string) => void
+  setStatus: (value: string) => void
+  status: string
 }) => {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -201,7 +163,7 @@ const ClientActions = ({
         <Input
           placeholder="Rechercher par nom ou email..."
           value={globalFilter}
-          onChange={(event) => setGlobalFilter(event.target.value)}
+          onChange={event => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
         <Select value={status} onValueChange={setStatus}>
@@ -231,58 +193,49 @@ const ClientActions = ({
         </SheetContent>
       </Sheet>
     </div>
-  );
-};
+  )
+}
 
 const ClientsPageComponent = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [status, setStatus] = React.useState<string>("all");
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [selectedClient, setSelectedClient] = React.useState<Client | null>(
-    null,
-  );
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = React.useState("")
+  const [status, setStatus] = React.useState<string>("all")
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [selectedClient, setSelectedClient] = React.useState<Client | null>(null)
 
   // Utiliser useQuery pour récupérer les clients
   const {
     data: clients = [],
     isLoading,
-    error,
-  } = useQuery<Client[]>({
+    isError,
+  } = useQuery<any>({
     queryKey: ["clients", { search: globalFilter, status }],
     queryFn: async () => {
       const result = await getClients({
         search: globalFilter || undefined,
         status: (status as any) || undefined,
-      });
+      })
 
       if ("error" in result) {
-        throw new Error(result.error);
+        throw new Error(result.error)
       }
 
-      return result.data || [];
+      return result.data || []
     },
-  });
+  })
 
   const columns: ColumnDef<Client>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Nom
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
+        )
       },
-      cell: ({ row }) => (
-        <div className="font-medium">{row.getValue("name")}</div>
-      ),
+      cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
     },
     {
       accessorKey: "email",
@@ -296,14 +249,11 @@ const ClientsPageComponent = () => {
       accessorKey: "city",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Ville
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
+        )
       },
     },
     {
@@ -314,35 +264,29 @@ const ClientsPageComponent = () => {
       accessorKey: "createdAt",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Date d&apos;inscription
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
+        )
       },
     },
     {
       accessorKey: "status",
       header: "Statut",
       cell: ({ row }) => {
-        const status = row.getValue("status") as string;
+        const status = row.getValue("status") as string
         return (
-          <Badge
-            variant={status === "Active" ? "default" : "destructive"}
-            className="rounded-full"
-          >
+          <Badge variant={status === "Active" ? "default" : "destructive"} className="rounded-full">
             {status}
           </Badge>
-        );
+        )
       },
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        const client = row.original;
+        const client = row.original
         return (
           <Sheet>
             <DropdownMenu>
@@ -353,25 +297,21 @@ const ClientsPageComponent = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setSelectedClient(client)}>
-                  Voir le profil
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedClient(client)}>Voir le profil</DropdownMenuItem>
                 <DropdownMenuItem>Envoyer un message</DropdownMenuItem>
                 <DropdownMenuItem>Planifier un rendez-vous</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive">
-                  Supprimer
-                </DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">Supprimer</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </Sheet>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
-    data: clients,
+    data: clients as Client[],
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -383,7 +323,7 @@ const ClientsPageComponent = () => {
       columnFilters,
       globalFilter,
     },
-  });
+  })
 
   return (
     <div className="space-y-4">
@@ -406,23 +346,16 @@ const ClientsPageComponent = () => {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <span className="ml-2">Chargement des clients...</span>
             </div>
-          ) : error ? (
-            <div className="text-center text-red-500 py-8">
-              Erreur lors du chargement des clients
-            </div>
+          ) : isError ? (
+            <div className="text-center text-red-500 py-8">Erreur lors du chargement des clients</div>
           ) : (
             <Table>
               <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
+                {table.getHeaderGroups().map(headerGroup => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
+                    {headerGroup.headers.map(header => (
                       <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -430,28 +363,16 @@ const ClientsPageComponent = () => {
               </TableHeader>
               <TableBody>
                 {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      className="cursor-pointer"
-                      onClick={() => setSelectedClient(row.original)}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
+                  table.getRowModel().rows.map(row => (
+                    <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedClient(row.original)}>
+                      {row.getVisibleCells().map(cell => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
                       Aucun résultat.
                     </TableCell>
                   </TableRow>
@@ -464,13 +385,13 @@ const ClientsPageComponent = () => {
 
       {selectedClient && (
         <ClientDetails
-          client={selectedClient}
+          client={selectedClient as any}
           isOpen={!!selectedClient}
-          onOpenChange={(open) => !open && setSelectedClient(null)}
+          onOpenChange={open => !open && setSelectedClient(null)}
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ClientsPageComponent;
+export default ClientsPageComponent

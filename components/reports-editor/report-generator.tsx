@@ -1,82 +1,61 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Button } from "../ui/button";
-import { ReportTemplateSelector } from "./report-template-selector";
-import { ReportEditor } from "./report-editor";
-import { DataVisualizer } from "./data-visualizer";
-import { TemplateBuilder } from "./template-builder";
-import {
-  File,
-  Sparkles,
-  BarChart4,
-  FileEdit,
-  Download,
-  Eye,
-  Share2
-} from "lucide-react";
+import { BarChart4, Download, Eye, File, FileEdit, Share2, Sparkles } from "lucide-react"
+import { useState } from "react"
 
-export type ReportType =
-  | "health"
-  | "surgery"
-  | "behavior"
-  | "nutrition"
-  | "statistics";
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { DataVisualizer } from "./data-visualizer"
+import { ReportEditor } from "./report-editor"
+import { ReportTemplateSelector } from "./report-template-selector"
+import { TemplateBuilder } from "./template-builder"
+
+export type ReportType = "health" | "surgery" | "behavior" | "nutrition" | "statistics"
 
 export interface ReportTemplate {
-  id: string;
-  name: string;
-  type: ReportType;
-  description: string;
-  thumbnail: string;
+  id: string
+  name: string
+  type: ReportType
+  description: string
+  thumbnail: string
 }
 
 export function ReportGenerator() {
-  const [activeTab, setActiveTab] = useState<string>("create");
-  const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
-  const [reportData, setReportData] = useState<Record<string, any>>({});
+  const [activeTab, setActiveTab] = useState<string>("create")
+  const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null)
+  const [reportData, setReportData] = useState<Record<string, any>>({})
 
   const handleTemplateSelect = (template: ReportTemplate) => {
-    setSelectedTemplate(template);
-  };
+    setSelectedTemplate(template)
+  }
 
   const handleCreateReport = () => {
     // Logic to create and save the report
-    console.log("Creating report with data:", reportData);
-  };
+    console.log("Creating report with data:", reportData)
+  }
 
   const handlePreviewReport = () => {
     // Logic to preview the report
-    console.log("Previewing report");
-  };
+    console.log("Previewing report")
+  }
 
   const handleShareReport = () => {
     // Logic to share the report
-    console.log("Sharing report");
-  };
+    console.log("Sharing report")
+  }
 
   const handleDownloadReport = () => {
     // Logic to download the report
-    console.log("Downloading report");
-  };
+    console.log("Downloading report")
+  }
 
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Éditeur de Rapports Animaliers</h1>
-          <p className="text-muted-foreground">
-            Créez des rapports professionnels pour vos patients animaliers
-          </p>
+          <p className="text-muted-foreground">Créez des rapports professionnels pour vos patients animaliers</p>
         </div>
       </div>
 
@@ -105,11 +84,7 @@ export function ReportGenerator() {
             <ReportTemplateSelector onSelect={handleTemplateSelect} />
           ) : (
             <>
-              <ReportEditor
-                template={selectedTemplate}
-                reportData={reportData}
-                setReportData={setReportData}
-              />
+              <ReportEditor template={selectedTemplate} reportData={reportData} setReportData={setReportData} />
 
               <div className="flex gap-3 justify-end">
                 <Button variant="outline" onClick={() => setSelectedTemplate(null)}>
@@ -127,9 +102,7 @@ export function ReportGenerator() {
                   <Download className="h-4 w-4 mr-2" />
                   Télécharger
                 </Button>
-                <Button onClick={handleCreateReport}>
-                  Créer le rapport
-                </Button>
+                <Button onClick={handleCreateReport}>Créer le rapport</Button>
               </div>
             </>
           )}
@@ -148,7 +121,8 @@ export function ReportGenerator() {
             <CardHeader>
               <CardTitle>Assistant IA pour Rapports</CardTitle>
               <CardDescription>
-                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou observations
+                Utilisez l&apos;intelligence artificielle pour générer des rapports détaillés à partir de vos notes ou
+                observations
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -164,5 +138,5 @@ export function ReportGenerator() {
         </TabsContent>
       </Tabs>
     </div>
-  );
-} 
+  )
+}

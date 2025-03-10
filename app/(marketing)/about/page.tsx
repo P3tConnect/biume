@@ -1,45 +1,59 @@
-import { ArrowLeft, Building2, Heart, Shield, Users } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { UserNav } from "@/components/dashboard/layout/user-nav";
-import { HeroSection } from "./_components/hero-section";
-import { MissionSection } from "./_components/mission-section";
-import { ValuesSection } from "./_components/values-section";
-import { TeamSection } from "./_components/team-section";
-import { Metadata } from "next/types";
-import { auth } from "@/src/lib/auth";
-import { headers } from "next/headers";
+import { ArrowLeft, Building2, Heart, Shield, Users } from "lucide-react"
+import { headers } from "next/headers"
+import Link from "next/link"
+import { Metadata } from "next/types"
+
+import { UserNav } from "@/components/dashboard/layout/user-nav"
+import { Button } from "@/components/ui/button"
+import { auth } from "@/src/lib/auth"
+
+import { HeroSection } from "./_components/hero-section"
+import { MissionSection } from "./_components/mission-section"
+import { TeamSection } from "./_components/team-section"
+import { ValuesSection } from "./_components/values-section"
 
 const values = [
   {
     icon: Heart,
     title: "Passion pour la santé animale",
-    description: "Nous nous engageons à améliorer la vie des animaux en facilitant l'accès aux soins de qualité."
+    description: "Nous nous engageons à améliorer la vie des animaux en facilitant l'accès aux soins de qualité.",
   },
   {
     icon: Shield,
     title: "Excellence et fiabilité",
-    description: "Nous développons des solutions robustes et innovantes pour les professionnels de santé animale."
+    description: "Nous développons des solutions robustes et innovantes pour les professionnels de santé animale.",
   },
   {
     icon: Users,
     title: "Communauté et collaboration",
-    description: "Nous créons un écosystème où professionnels et propriétaires d'animaux collaborent efficacement."
+    description: "Nous créons un écosystème où professionnels et propriétaires d'animaux collaborent efficacement.",
   },
   {
     icon: Building2,
     title: "Innovation responsable",
-    description: "Nous innovons constamment tout en respectant les normes éthiques et professionnelles du secteur."
-  }
-];
+    description: "Nous innovons constamment tout en respectant les normes éthiques et professionnelles du secteur.",
+  },
+]
 
 export const metadata: Metadata = {
   title: "À propos de Biume | Votre partenaire en santé animale",
-  description: "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes.",
-  keywords: ["santé animale", "innovation", "soins animaux", "Biume", "logiciel", "ostéopathe animalier", "vétérinaire", "vétérinaire à proximité", "vétérinaire autour de moi"],
+  description:
+    "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes.",
+  keywords: [
+    "santé animale",
+    "innovation",
+    "soins animaux",
+    "Biume",
+    "logiciel",
+    "ostéopathe animalier",
+    "vétérinaire",
+    "vétérinaire à proximité",
+    "vétérinaire autour de moi",
+  ],
   openGraph: {
     title: "À propos de Biume | Votre partenaire en santé animale",
-    description: "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes.",
+    description:
+      "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes.",
     type: "website",
     locale: "fr_FR",
     images: [
@@ -47,21 +61,22 @@ export const metadata: Metadata = {
         url: "/og-image-about.png",
         width: 1200,
         height: 630,
-        alt: "À propos de Biume"
-      }
-    ]
+        alt: "À propos de Biume",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "À propos de Biume | Votre partenaire en santé animale",
-    description: "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes."
-  }
+    description:
+      "Découvrez notre mission, nos valeurs et notre équipe chez Biume. Nous révolutionnons les soins vétérinaires grâce à des solutions numériques innovantes.",
+  },
 }
 
 const AboutPage = async () => {
   const session = await auth.api.getSession({
-    headers: await headers()
-  });
+    headers: await headers(),
+  })
 
   return (
     <div className="flex flex-col h-screen w-screen">
@@ -97,7 +112,7 @@ const AboutPage = async () => {
       <ValuesSection values={values} />
       <TeamSection />
     </div>
-  );
-};
+  )
+}
 
-export default AboutPage;
+export default AboutPage

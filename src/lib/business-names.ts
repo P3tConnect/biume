@@ -29,7 +29,7 @@ const adjectives = [
   "cool",
   "neat",
   "rare",
-];
+]
 
 const subjects = [
   // Nature
@@ -79,18 +79,17 @@ const subjects = [
   "spark",
   "wave",
   "leaf",
-];
+]
 
 export function generateMigrationName(): string {
-  const randomNumber = getRandomNumber();
-  const paddedIndex = randomNumber.toString().padStart(4, "0");
-  const randomAdjective =
-    adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+  const randomNumber = getRandomNumber()
+  const paddedIndex = randomNumber.toString().padStart(4, "0")
+  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)]
+  const randomSubject = subjects[Math.floor(Math.random() * subjects.length)]
 
-  return `${paddedIndex}_${randomAdjective}_${randomSubject}`;
+  return `${paddedIndex}_${randomAdjective}_${randomSubject}`
 }
 
 function getRandomNumber(min: number = 0, max: number = 9): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }

@@ -1,13 +1,13 @@
-import Image from "next/image";
-import React from "react";
+import Image from "next/image"
+import React from "react"
 
 type Client = {
-  avatar: string;
-  client: string;
-  animal: string;
-  adresse: string;
-  status: string;
-};
+  avatar: string
+  client: string
+  animal: string
+  adresse: string
+  status: string
+}
 
 const RemindersList = async () => {
   const clients: Client[] = [
@@ -109,7 +109,7 @@ const RemindersList = async () => {
       adresse: "12Th lorem ipsum xx",
       status: "en cours",
     },
-  ];
+  ]
 
   return (
     <div className="mt-10">
@@ -135,27 +135,15 @@ const RemindersList = async () => {
             {clients.map((client, index) => (
               <tr key={index} className="bg-white-50">
                 <td className="px-2 py-2 flex items-center justify-start text-start whitespace-no-wrap border-b border-gray-200">
-                  <Image
-                    src={client.avatar}
-                    alt="Avatar"
-                    className="rounded-full mr-4"
-                    width={40}
-                    height={40}
-                  />
+                  <Image src={client.avatar} alt="Avatar" className="rounded-full mr-4" width={40} height={40} />
                   {client.client}
                 </td>
-                <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">
-                  {client.animal}
-                </td>
-                <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">
-                  {client.adresse}
-                </td>
+                <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">{client.animal}</td>
+                <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">{client.adresse}</td>
                 <td className="px-2 py-2 whitespace-no-wrap border-b text-center border-gray-200">
                   <span
                     className={`px-4 py-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      client.status === "Terminée"
-                        ? "bg-green-100 text-primary"
-                        : "bg-purple-100 text-secondary"
+                      client.status === "Terminée" ? "bg-green-100 text-primary" : "bg-purple-100 text-secondary"
                     }`}
                   >
                     {client.status}
@@ -167,7 +155,7 @@ const RemindersList = async () => {
         </table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RemindersList;
+export default RemindersList

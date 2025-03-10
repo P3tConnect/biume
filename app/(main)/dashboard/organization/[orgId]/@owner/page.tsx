@@ -1,10 +1,9 @@
-import { Metadata } from "next";
-import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/pro/dashboard-home-header";
-import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appointment-requests";
-import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs";
-import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics";
-import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card";
-import { DailyMetrics } from "@/components/dashboard/shortcuts/pro/daily-metrics";
+import { Metadata } from "next"
+import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/pro/dashboard-home-header"
+import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appointment-requests"
+import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs"
+import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics"
+import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card"
 
 export const metadata: Metadata = {
   title: "Dashboard Vétérinaire",
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
       follow: false,
     },
   },
-};
+}
 
 const DashboardHomeProPage = () => {
   return (
@@ -35,7 +34,7 @@ const DashboardHomeProPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DashboardHomeProPage;
+export default DashboardHomeProPage

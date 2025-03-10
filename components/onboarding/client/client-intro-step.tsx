@@ -1,5 +1,5 @@
-import Image from "next/image";
-import React from "react";
+import Image from "next/image"
+import React from "react"
 
 const ClientIntroStep = () => {
   return (
@@ -12,16 +12,14 @@ const ClientIntroStep = () => {
         className="rounded-xl w-1/2 h-full object-cover"
       />
       <div className="w-1/2 h-full flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold">
-          Vous souhaitez vous inscrire en tant que client ?
-        </h1>
+        <h1 className="text-2xl font-bold">Vous souhaitez vous inscrire en tant que client ?</h1>
         <p className="text-xs mt-2 text-muted-foreground">
-          Dans ce processus de création de votre compte, pour y parvenir, vous
-          devrez fournir des informations essentielles sur votre profil.
+          Dans ce processus de création de votre compte, pour y parvenir, vous devrez fournir des informations
+          essentielles sur votre profil.
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ClientIntroStep;
+export default ClientIntroStep

@@ -1,43 +1,37 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Calendar,
-  Stethoscope,
-  MessageCircle,
-  FileText,
-  Search,
-  BellRing,
-  Plus,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { PlanningHeader } from "./planning-header";
-import { PatientsHeader } from "./patients-header";
-import { MessagesHeader } from "./messages-header";
-import { RapportsHeader } from "./rapports-header";
-import { RappelsHeader } from "./rappels-header";
-import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget";
+import { BellRing, Calendar, FileText, MessageCircle, Plus, Search, Stethoscope } from "lucide-react"
+import React, { useEffect, useState } from "react"
+
+import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import { MessagesHeader } from "./messages-header"
+import { PatientsHeader } from "./patients-header"
+import { PlanningHeader } from "./planning-header"
+import { RappelsHeader } from "./rappels-header"
+import { RapportsHeader } from "./rapports-header"
 
 export const DashboardTabs = () => {
-  const [activeTab, setActiveTab] = useState<string>("planning");
+  const [activeTab, setActiveTab] = useState<string>("planning")
 
   useEffect(() => {
-    const savedTab = localStorage.getItem("dashboard-active-tab");
+    const savedTab = localStorage.getItem("dashboard-active-tab")
     if (savedTab) {
       if (savedTab === "dossiers" || savedTab === "analyses") {
-        setActiveTab("planning");
+        setActiveTab("planning")
       } else {
-        setActiveTab(savedTab);
+        setActiveTab(savedTab)
       }
     }
-  }, []);
+  }, [])
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    localStorage.setItem("dashboard-active-tab", value);
-  };
+    setActiveTab(value)
+    localStorage.setItem("dashboard-active-tab", value)
+  }
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -132,8 +126,8 @@ export const DashboardTabs = () => {
                 <BellRing className="h-12 w-12 mx-auto mb-3 opacity-20" />
                 <p className="mb-2">Gérez vos rappels automatiques</p>
                 <p className="text-sm max-w-md mx-auto">
-                  Planifiez des rappels pour les vaccins, traitements réguliers
-                  et rendez-vous de suivi pour vos patients.
+                  Planifiez des rappels pour les vaccins, traitements réguliers et rendez-vous de suivi pour vos
+                  patients.
                 </p>
                 <Button variant="outline" className="mt-4">
                   <Plus className="mr-2 h-4 w-4" />
@@ -155,9 +149,8 @@ export const DashboardTabs = () => {
                 <FileText className="h-12 w-12 mx-auto mb-3 opacity-20" />
                 <p className="mb-2">Rapports d&apos;activité</p>
                 <p className="text-sm max-w-md mx-auto">
-                  Générez et consultez des rapports détaillés sur l&apos;activité
-                  de votre clinique, les traitements effectués et le suivi des
-                  patients.
+                  Générez et consultez des rapports détaillés sur l&apos;activité de votre clinique, les traitements
+                  effectués et le suivi des patients.
                 </p>
               </div>
             </CardContent>
@@ -175,8 +168,8 @@ export const DashboardTabs = () => {
                 <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-20" />
                 <p className="mb-2">Aucun message récent</p>
                 <p className="text-sm max-w-md mx-auto">
-                  Ici seront affichés vos messages, rappels automatiques et
-                  communications avec les propriétaires d&apos;animaux.
+                  Ici seront affichés vos messages, rappels automatiques et communications avec les propriétaires
+                  d&apos;animaux.
                 </p>
               </div>
             </CardContent>
@@ -184,5 +177,5 @@ export const DashboardTabs = () => {
         </div>
       </TabsContent>
     </Tabs>
-  );
-};
+  )
+}

@@ -1,26 +1,28 @@
-'use server';
+"use server"
 
-import { ActionError, createServerAction, db, requireAuth } from "../lib";
-import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema";
-import { auth } from "../lib/auth";
-import { headers } from "next/headers";
-import { z } from "zod";
+import { headers } from "next/headers"
+import { z } from "zod"
+
+import { clientSettingsSchema } from "@/components/dashboard/pages/user/settings-page/types/settings-schema"
+
+import { ActionError, createServerAction, requireAuth } from "../lib"
+import { auth } from "../lib/auth"
 
 export const getUserInformations = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const data = await auth.api.getSession({
       headers: await headers(),
-    });
+    })
 
     if (!data) {
-      throw new ActionError("User not found");
+      throw new ActionError("User not found")
     }
 
-    return data;
+    return data
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 export const updateUserInformations = createServerAction(
   clientSettingsSchema,
   async (input, ctx) => {
@@ -38,13 +40,13 @@ export const updateUserInformations = createServerAction(
         emailNotifications: input.emailNotifications,
         twoFactorEnabled: input.twoFactorEnabled,
       },
-    });
+    })
 
     if (!user) {
-      throw new ActionError("User not updated");
+      throw new ActionError("User not updated")
     }
 
-    return user;
+    return user
   },
-  [requireAuth],
-);
+  [requireAuth]
+)

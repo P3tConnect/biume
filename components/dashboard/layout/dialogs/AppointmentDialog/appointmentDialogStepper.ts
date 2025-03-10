@@ -1,31 +1,31 @@
-import { defineStepper } from "@stepperize/react";
-import { z } from "zod";
+import { defineStepper } from "@stepperize/react"
+import { z } from "zod"
 
 export const clientStepSchema = z.object({
   clientId: z.string().min(1),
   patientId: z.string().min(1),
-});
+})
 
 export const serviceStepSchema = z.object({
   serviceId: z.string().min(1),
   duration: z.number().min(1),
-});
+})
 
 export const dateStepSchema = z.object({
   date: z.date(),
   startTime: z.string().min(1),
   duration: z.number().min(1),
-});
+})
 
 export const confirmationStepSchema = z.object({
   atHome: z.boolean(),
   notes: z.string().min(1),
-});
+})
 
-export type ClientStepSchema = z.infer<typeof clientStepSchema>;
-export type ServiceStepSchema = z.infer<typeof serviceStepSchema>;
-export type DateStepSchema = z.infer<typeof dateStepSchema>;
-export type ConfirmationStepSchema = z.infer<typeof confirmationStepSchema>;
+export type ClientStepSchema = z.infer<typeof clientStepSchema>
+export type ServiceStepSchema = z.infer<typeof serviceStepSchema>
+export type DateStepSchema = z.infer<typeof dateStepSchema>
+export type ConfirmationStepSchema = z.infer<typeof confirmationStepSchema>
 
 const { useStepper, utils } = defineStepper(
   {
@@ -51,7 +51,7 @@ const { useStepper, utils } = defineStepper(
     label: "Confirmation",
     description: "Confirmez le rendez-vous",
     schema: confirmationStepSchema,
-  },
-);
+  }
+)
 
-export { useStepper, utils };
+export { useStepper, utils }

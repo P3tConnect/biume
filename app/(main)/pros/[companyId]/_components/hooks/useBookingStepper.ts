@@ -1,23 +1,23 @@
-import { defineStepper } from "@stepperize/react";
-import { z } from "zod";
+import { defineStepper } from "@stepperize/react"
+import { z } from "zod"
 
 const petSchema = z.object({
   petId: z.string(),
-});
+})
 
 const consultationTypeSchema = z.object({
   isHomeVisit: z.boolean(),
-});
+})
 
 const optionsSchema = z.object({
   selectedOptions: z.array(z.string()).default([]),
-});
+})
 
 const summarySchema = z.object({
   additionalInfo: z.string().optional(),
-});
+})
 
-export type StepId = "pet" | "consultationType" | "options" | "summary";
+export type StepId = "pet" | "consultationType" | "options" | "summary"
 
 export const { steps, useStepper, utils } = defineStepper(
   {
@@ -43,5 +43,5 @@ export const { steps, useStepper, utils } = defineStepper(
     title: "Récapitulatif",
     description: "Vérifiez les détails de votre réservation",
     schema: summarySchema,
-  },
-);
+  }
+)

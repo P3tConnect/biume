@@ -1,33 +1,20 @@
-"use client";
+"use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle, CredenzaDescription } from "@/components/ui";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 interface ClientDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const formSchema = z.object({
@@ -46,24 +33,24 @@ const formSchema = z.object({
   country: z.string().min(2, {
     message: "Le pays doit contenir au moins 2 caractères.",
   }),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 // Cette fonction serait normalement importée depuis src/actions/client.action.ts
 // mais pour simplifier nous la simulons ici
 const createClient = async (data: FormValues) => {
   // Simulation d'un appel API
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
-      console.log("Client créé:", data);
-      resolve({ success: true, data });
-    }, 1000);
-  });
-};
+      console.log("Client créé:", data)
+      resolve({ success: true, data })
+    }, 1000)
+  })
+}
 
 const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -74,33 +61,31 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
       city: "",
       country: "",
     },
-  });
+  })
 
   const mutation = useMutation({
     mutationFn: createClient,
     onSuccess: () => {
-      toast.success("Le client a été créé avec succès");
-      form.reset();
-      onOpenChange(false);
-      router.refresh();
+      toast.success("Le client a été créé avec succès")
+      form.reset()
+      onOpenChange(false)
+      router.refresh()
     },
     onError: () => {
-      toast.error("Une erreur est survenue lors de la création du client");
+      toast.error("Une erreur est survenue lors de la création du client")
     },
-  });
+  })
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
-  };
+    mutation.mutate(values)
+  }
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
       <CredenzaContent className="sm:max-w-md">
         <CredenzaHeader>
           <CredenzaTitle>Créer un nouveau client</CredenzaTitle>
-          <CredenzaDescription>
-            Ajoutez un nouveau client à votre tableau de bord.
-          </CredenzaDescription>
+          <CredenzaDescription>Ajoutez un nouveau client à votre tableau de bord.</CredenzaDescription>
         </CredenzaHeader>
         <div className="py-4">
           <Form {...form}>
@@ -171,17 +156,10 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
                 )}
               />
               <div className="flex justify-end gap-3 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                >
+                <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                   Annuler
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={mutation.isPending}
-                >
+                <Button type="submit" disabled={mutation.isPending}>
                   {mutation.isPending ? "Création..." : "Créer le client"}
                 </Button>
               </div>
@@ -190,7 +168,7 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
         </div>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
-export default ClientDialog;
+export default ClientDialog

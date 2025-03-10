@@ -1,45 +1,39 @@
-"use client";
+"use client"
 
-import { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Separator } from "../ui/separator";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  Line,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Pie,
-  Cell
-} from "recharts";
-import {
+  ArrowUpDown,
   BarChart2,
+  FileDown,
   LineChart as LineChartIcon,
   PieChart as PieChartIcon,
-  FileDown,
   Plus,
-  Settings,
   RefreshCw,
-  ArrowUpDown
-} from "lucide-react";
+  Settings,
+} from "lucide-react"
+import { useState } from "react"
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
+
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Separator } from "../ui/separator"
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs"
 
 // Données simulées
 const MOCK_SPECIES_DATA = [
@@ -47,8 +41,8 @@ const MOCK_SPECIES_DATA = [
   { name: "Chats", value: 38 },
   { name: "NAC", value: 12 },
   { name: "Équins", value: 3 },
-  { name: "Autres", value: 2 }
-];
+  { name: "Autres", value: 2 },
+]
 
 const MOCK_MONTHLY_VISITS = [
   { month: "Jan", visites: 65 },
@@ -62,8 +56,8 @@ const MOCK_MONTHLY_VISITS = [
   { month: "Sep", visites: 70 },
   { month: "Oct", visites: 72 },
   { month: "Nov", visites: 82 },
-  { month: "Déc", visites: 91 }
-];
+  { month: "Déc", visites: 91 },
+]
 
 const MOCK_PROCEDURE_DATA = [
   { name: "Consultations", value: 420 },
@@ -71,37 +65,37 @@ const MOCK_PROCEDURE_DATA = [
   { name: "Chirurgies", value: 105 },
   { name: "Dentisterie", value: 87 },
   { name: "Imagerie", value: 68 },
-  { name: "Laboratoire", value: 130 }
-];
+  { name: "Laboratoire", value: 130 },
+]
 
 const MOCK_AGE_DISTRIBUTION = [
   { age: "0-1 an", chiens: 45, chats: 36, nac: 15 },
   { age: "1-5 ans", chiens: 86, chats: 72, nac: 23 },
   { age: "5-10 ans", chiens: 65, chats: 53, nac: 14 },
-  { age: "10+ ans", chiens: 38, chats: 29, nac: 4 }
-];
+  { age: "10+ ans", chiens: 38, chats: 29, nac: 4 },
+]
 
 // Palettes de couleurs
-const COLORS = ['#22c55e', '#3b82f6', '#f97316', '#a855f7', '#f43f5e', '#14b8a6'];
-const COLORS_PASTEL = ['#86efac', '#93c5fd', '#fdba74', '#d8b4fe', '#fda4af', '#99f6e4'];
+const COLORS = ["#22c55e", "#3b82f6", "#f97316", "#a855f7", "#f43f5e", "#14b8a6"]
+const COLORS_PASTEL = ["#86efac", "#93c5fd", "#fdba74", "#d8b4fe", "#fda4af", "#99f6e4"]
 
 export function DataVisualizer() {
-  const [chartType, setChartType] = useState<string>("species");
-  const [timeRange, setTimeRange] = useState<string>("12months");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [chartType, setChartType] = useState<string>("species")
+  const [timeRange, setTimeRange] = useState<string>("12months")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const refreshData = () => {
-    setIsLoading(true);
+    setIsLoading(true)
     // Simulation d'un chargement
     setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  };
+      setIsLoading(false)
+    }, 1000)
+  }
 
   const exportChart = () => {
     // Logique pour exporter le graphique en PNG/PDF
-    console.log("Exporting chart:", chartType);
-  };
+    console.log("Exporting chart:", chartType)
+  }
 
   return (
     <div className="space-y-6">
@@ -110,9 +104,7 @@ export function DataVisualizer() {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
               <CardTitle>Données & Analytiques</CardTitle>
-              <CardDescription>
-                Visualisez et analysez les données de votre clinique
-              </CardDescription>
+              <CardDescription>Visualisez et analysez les données de votre clinique</CardDescription>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={refreshData} disabled={isLoading}>
@@ -183,7 +175,7 @@ export function DataVisualizer() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value} patients`, 'Nombre']} />
+                  <Tooltip formatter={value => [`${value} patients`, "Nombre"]} />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
@@ -191,32 +183,20 @@ export function DataVisualizer() {
 
             {chartType === "visits" && (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={MOCK_MONTHLY_VISITS}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
+                <LineChart data={MOCK_MONTHLY_VISITS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="visites"
-                    stroke="#3b82f6"
-                    strokeWidth={2}
-                    activeDot={{ r: 8 }}
-                  />
+                  <Line type="monotone" dataKey="visites" stroke="#3b82f6" strokeWidth={2} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
             )}
 
             {chartType === "procedures" && (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={MOCK_PROCEDURE_DATA}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
+                <BarChart data={MOCK_PROCEDURE_DATA} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -233,10 +213,7 @@ export function DataVisualizer() {
 
             {chartType === "age" && (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={MOCK_AGE_DISTRIBUTION}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
+                <BarChart data={MOCK_AGE_DISTRIBUTION} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="age" />
                   <YAxis />
@@ -325,9 +302,7 @@ export function DataVisualizer() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>Paramètres du graphique</CardTitle>
-              <CardDescription>
-                Personnalisez l&apos;apparence et les données de vos graphiques
-              </CardDescription>
+              <CardDescription>Personnalisez l&apos;apparence et les données de vos graphiques</CardDescription>
             </div>
             <Button size="sm" variant="outline">
               <Settings className="h-4 w-4 mr-2" />
@@ -380,9 +355,7 @@ export function DataVisualizer() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>Rapports enregistrés</CardTitle>
-              <CardDescription>
-                Vos graphiques et rapports statistiques enregistrés
-              </CardDescription>
+              <CardDescription>Vos graphiques et rapports statistiques enregistrés</CardDescription>
             </div>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
@@ -396,8 +369,8 @@ export function DataVisualizer() {
               <BarChart2 className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Aucun rapport enregistré</h3>
               <p className="text-muted-foreground max-w-md mb-6">
-                Vous n&apos;avez pas encore enregistré de rapports statistiques.
-                Créez et enregistrez des visualisations de données pour les réutiliser dans vos rapports.
+                Vous n&apos;avez pas encore enregistré de rapports statistiques. Créez et enregistrez des visualisations
+                de données pour les réutiliser dans vos rapports.
               </p>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -408,5 +381,5 @@ export function DataVisualizer() {
         </CardContent>
       </Card>
     </div>
-  );
-} 
+  )
+}

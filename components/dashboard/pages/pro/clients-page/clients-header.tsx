@@ -1,6 +1,7 @@
-import { Button, Card, CardHeader, CardTitle } from '@/components/ui'
-import { Euro, FileText, PlusIcon } from 'lucide-react'
-import React from 'react'
+import { PlusIcon } from "lucide-react"
+import React from "react"
+
+import { Button, Card, CardHeader, CardTitle } from "@/components/ui"
 
 const ClientsHeader = () => {
   return (
@@ -11,9 +12,7 @@ const ClientsHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Mes Clients
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Aperçu de vos clients
-            </p>
+            <p className="text-sm text-muted-foreground">Aperçu de vos clients</p>
           </div>
           <div className="flex gap-3">
             <Button

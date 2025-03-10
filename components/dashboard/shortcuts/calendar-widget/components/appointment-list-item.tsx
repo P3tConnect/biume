@@ -1,24 +1,22 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import { Clock, Info, MapPin } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/src/lib/utils";
-import { appointmentColors, appointmentLabels } from "../data/constants";
-import type { Appointment } from "../types";
+import { motion } from "framer-motion"
+import { Clock, Info, MapPin } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/src/lib/utils"
+
+import { appointmentColors, appointmentLabels } from "../data/constants"
+import type { Appointment } from "../types"
 
 interface AppointmentListItemProps {
-  appointment: Appointment;
-  index: number;
-  onSelect: () => void;
+  appointment: Appointment
+  index: number
+  onSelect: () => void
 }
 
-export function AppointmentListItem({
-  appointment,
-  index,
-  onSelect,
-}: AppointmentListItemProps) {
+export function AppointmentListItem({ appointment, index, onSelect }: AppointmentListItemProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -32,7 +30,7 @@ export function AppointmentListItem({
       <div
         className={cn(
           "absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl transition-colors",
-          appointment.status === "confirmed" ? "bg-primary" : "bg-secondary",
+          appointment.status === "confirmed" ? "bg-primary" : "bg-secondary"
         )}
       />
 
@@ -46,9 +44,7 @@ export function AppointmentListItem({
             <span>{appointment.duration}</span>
           </div>
           <Badge
-            variant={
-              appointment.status === "confirmed" ? "default" : "secondary"
-            }
+            variant={appointment.status === "confirmed" ? "default" : "secondary"}
             className="capitalize text-sm px-3 py-1"
           >
             {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
@@ -60,37 +56,26 @@ export function AppointmentListItem({
           {/* Informations sur l'animal */}
           <div className="relative">
             <Avatar className="h-20 w-20 ring-4 ring-background">
-              <AvatarImage
-                src={appointment.petAvatar}
-                alt={appointment.petName}
-              />
-              <AvatarFallback className="text-xl">
-                {appointment.petInitial}
-              </AvatarFallback>
+              <AvatarImage src={appointment.petAvatar} alt={appointment.petName} />
+              <AvatarFallback className="text-xl">{appointment.petInitial}</AvatarFallback>
             </Avatar>
           </div>
 
           {/* Détails du rendez-vous */}
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-xl tracking-tight">
-                {appointment.petName}
-              </h3>
+              <h3 className="font-semibold text-xl tracking-tight">{appointment.petName}</h3>
               <Badge
                 variant="outline"
                 className={cn(
                   "ml-2 px-2.5 py-0.5 text-sm",
-                  appointmentColors[appointment.type]
-                    .replace("bg-", "border-")
-                    .replace("text-white", ""),
+                  appointmentColors[appointment.type].replace("bg-", "border-").replace("text-white", "")
                 )}
               >
                 {appointmentLabels[appointment.type]}
               </Badge>
             </div>
-            <p className="text-base text-muted-foreground">
-              Propriétaire: {appointment.ownerName}
-            </p>
+            <p className="text-base text-muted-foreground">Propriétaire: {appointment.ownerName}</p>
             {appointment.location && (
               <div className="flex items-center gap-2 text-base text-muted-foreground">
                 <MapPin className="h-5 w-5 text-primary" />
@@ -108,5 +93,5 @@ export function AppointmentListItem({
         </div>
       </div>
     </motion.div>
-  );
+  )
 }

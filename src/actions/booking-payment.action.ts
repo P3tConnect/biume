@@ -1,11 +1,11 @@
-"use server";
+"use server"
 
-import { z } from "zod";
-import { createServerAction, ActionError, requireAuth } from "../lib";
-import { stripe } from "../lib/stripe";
-import { db } from "../lib";
-import { transaction, service, options, organization, appointments } from "../db";
-import { eq, inArray } from "drizzle-orm";
+import { z } from "zod"
+import { createServerAction, ActionError, requireAuth } from "../lib"
+import { stripe } from "../lib/stripe"
+import { db } from "../lib"
+import { transaction, service, options, organization, appointments } from "../db"
+import { eq, inArray } from "drizzle-orm"
 
 // Schéma de validation pour la création d'une Checkout Session
 const createBookingPaymentSchema = z.object({
@@ -19,7 +19,7 @@ const createBookingPaymentSchema = z.object({
   selectedOptions: z.array(z.string()).optional(),
   amount: z.number(),
   companyId: z.string(),
-});
+})
 
 /**
  * Action serveur pour créer une session de paiement Stripe pour une réservation
@@ -29,13 +29,14 @@ export const createBookingCheckoutSession = createServerAction(
   async (input, ctx) => {
     try {
       // Utiliser directement le customerId fourni
-      const stripeCustomerId = ctx.user?.stripeId;
-      
+      const stripeCustomerId = ctx.user?.stripeId
+
       // Générer un Intent ID unique pour Stripe
-      const stripeIntentId = `cs_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      
+      const stripeIntentId = `cs_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
+
       // Créer une transaction dans la base de données
-      const newTransaction = await db.insert(transaction)
+      const newTransaction = await db
+        .insert(transaction)
         .values({
           intentId: stripeIntentId,
           amount: input.amount,
@@ -44,31 +45,29 @@ export const createBookingCheckoutSession = createServerAction(
           to: input.companyId,
           createdAt: new Date(),
         })
-        .returning();
-      
+        .returning()
+
       if (!newTransaction || newTransaction.length === 0) {
-        throw new ActionError("Impossible de créer la transaction");
+        throw new ActionError("Impossible de créer la transaction")
       }
-      
-      const transactionId = newTransaction[0].id;
-      
+
+      const transactionId = newTransaction[0].id
+
       // Formatage des options sélectionnées pour les métadonnées
-      const selectedOptionsJson = input.selectedOptions
-        ? JSON.stringify(input.selectedOptions)
-        : "[]";
-      
+      const selectedOptionsJson = input.selectedOptions ? JSON.stringify(input.selectedOptions) : "[]"
+
       // Obtenir le nom du service pour l'afficher dans la page de paiement
       const serviceResult = await db.query.service.findFirst({
         where: eq(service.id, input.serviceId),
-      });
-      
+      })
+
       if (!serviceResult) {
-        throw new ActionError("Service non trouvé");
+        throw new ActionError("Service non trouvé")
       }
 
       // Préparer les line items pour Stripe
-      const lineItems = [];
-      
+      const lineItems = []
+
       // 1. Ajouter le service principal
       lineItems.push({
         price_data: {
@@ -80,15 +79,15 @@ export const createBookingCheckoutSession = createServerAction(
           unit_amount: (serviceResult.price || 0) * 100, // Conversion en centimes, avec fallback à 0 si null
         },
         quantity: 1,
-      });
-      
+      })
+
       // 2. Ajouter les options sélectionnées si présentes
       if (input.selectedOptions && input.selectedOptions.length > 0) {
         // Récupérer les détails des options sélectionnées
         const selectedOptionsDetails = await db.query.options.findMany({
           where: inArray(options.id, input.selectedOptions),
-        });
-        
+        })
+
         selectedOptionsDetails.map(option => {
           lineItems.push({
             price_data: {
@@ -100,10 +99,10 @@ export const createBookingCheckoutSession = createServerAction(
               unit_amount: (option.price || 0) * 100, // Conversion en centimes, avec fallback à 0 si null
             },
             quantity: 1,
-          });
-        });
+          })
+        })
       }
-      
+
       // 3. Ajouter le supplément pour visite à domicile si sélectionné
       if (input.isHomeVisit) {
         lineItems.push({
@@ -116,7 +115,7 @@ export const createBookingCheckoutSession = createServerAction(
             unit_amount: 1000, // 10€ en centimes
           },
           quantity: 1,
-        });
+        })
       }
 
       const org = await db.query.organization.findFirst({
@@ -124,28 +123,28 @@ export const createBookingCheckoutSession = createServerAction(
         columns: {
           companyStripeId: true,
         },
-      });
+      })
 
-      console.log(org);
+      console.log(org)
 
       if (!org?.companyStripeId) {
-        throw new ActionError("Impossible de récupérer le compte Stripe de l'entreprise");
+        throw new ActionError("Impossible de récupérer le compte Stripe de l'entreprise")
       }
-      
+
       // Récupérer les informations du service pour obtenir sa durée
       const selectedService = await db.query.service.findFirst({
         where: eq(service.id, input.serviceId),
-      });
+      })
 
       if (!selectedService) {
-        throw new ActionError("Service non trouvé");
+        throw new ActionError("Service non trouvé")
       }
 
       // Calculer l'heure de début et de fin
-      const beginAt = new Date(`${input.date}T${input.time}`);
-      const endAt = new Date(beginAt);
+      const beginAt = new Date(`${input.date}T${input.time}`)
+      const endAt = new Date(beginAt)
       // Ajouter la durée du service en minutes à l'heure de début
-      endAt.setMinutes(endAt.getMinutes() + (selectedService.duration || 30));
+      endAt.setMinutes(endAt.getMinutes() + (selectedService.duration || 30))
 
       await db.insert(appointments).values({
         serviceId: input.serviceId,
@@ -156,7 +155,7 @@ export const createBookingCheckoutSession = createServerAction(
         status: "PENDING PAYMENT",
         atHome: input.isHomeVisit,
         type: "oneToOne",
-      });
+      })
 
       // Créer la session Checkout avec Stripe
       const session = await stripe.checkout.sessions.create({
@@ -183,32 +182,25 @@ export const createBookingCheckoutSession = createServerAction(
         },
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transaction/canceled?session_id={CHECKOUT_SESSION_ID}`,
-      });
-      
-      if (!session.url) {
-        throw new ActionError("Erreur lors de la création de la session de paiement");
-      }
-      
-      // Mettre à jour la transaction avec l'ID de session Stripe
-      await db.update(transaction)
-        .set({ intentId: session.id })
-        .where(eq(transaction.id, transactionId));
+      })
 
-        
-      
-      
+      if (!session.url) {
+        throw new ActionError("Erreur lors de la création de la session de paiement")
+      }
+
+      // Mettre à jour la transaction avec l'ID de session Stripe
+      await db.update(transaction).set({ intentId: session.id }).where(eq(transaction.id, transactionId))
+
       // Retourner l'URL de la page de paiement Stripe
       return {
         sessionUrl: session.url,
         sessionId: session.id,
         transactionId,
-      };
+      }
     } catch (error) {
-      console.error("Erreur lors de la création de la session de paiement:", error);
-      throw new ActionError(
-        `Une erreur est survenue lors de la création de la session de paiement, ${error}`,
-      );
+      console.error("Erreur lors de la création de la session de paiement:", error)
+      throw new ActionError(`Une erreur est survenue lors de la création de la session de paiement, ${error}`)
     }
   },
-  [requireAuth], // requireAuth est optionnel ici car on peut permettre aux utilisateurs non connectés de payer
-); 
+  [requireAuth] // requireAuth est optionnel ici car on peut permettre aux utilisateurs non connectés de payer
+)

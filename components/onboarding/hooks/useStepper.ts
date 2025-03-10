@@ -1,5 +1,4 @@
-import { defineStepper } from "@stepperize/react";
-import { z } from "zod";
+import { defineStepper } from "@stepperize/react"
 
 export const { steps, useStepper, utils } = defineStepper(
   {
@@ -16,14 +15,12 @@ export const { steps, useStepper, utils } = defineStepper(
   {
     id: "images",
     title: "Images",
-    description:
-      "Ajoutez des photos de votre établissement pour le mettre en valeur auprès de vos clients.",
+    description: "Ajoutez des photos de votre établissement pour le mettre en valeur auprès de vos clients.",
   },
   {
     id: "services",
     title: "Services",
-    description:
-      "Ici vous pouvez choisir les services que vous offrez à vos clients.",
+    description: "Ici vous pouvez choisir les services que vous offrez à vos clients.",
   },
   {
     id: "options",
@@ -34,13 +31,11 @@ export const { steps, useStepper, utils } = defineStepper(
   {
     id: "documents",
     title: "Documents",
-    description:
-      "Les documents nous permettent de vous identifier et de vous authentifier en tant que professionnel.",
+    description: "Les documents nous permettent de vous identifier et de vous authentifier en tant que professionnel.",
   },
   {
     id: "subscription",
     title: "Abonnement",
-    description:
-      "Choisissez le plan qui vous convient pour commencer à utiliser votre compte professionnel !",
-  },
-);
+    description: "Choisissez le plan qui vous convient pour commencer à utiliser votre compte professionnel !",
+  }
+)

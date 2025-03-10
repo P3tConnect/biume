@@ -1,53 +1,28 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import {
-  CalendarIcon,
-  ClockIcon,
-  CheckIcon,
-  UserIcon,
-  PawPrintIcon,
-  StethoscopeIcon,
-  HomeIcon,
-  MessageSquareIcon,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useStepper, utils } from "./appointmentDialogStepper";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { CalendarIcon, CheckIcon, StethoscopeIcon, UserIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { createAppointmentAction } from "@/src/actions/create-appointment.action";
-import ClientStep from "./client-step";
-import ConfirmationStep from "./confirmation-step";
-import DateStep from "./date-step";
-import ServiceStep from "./service-step";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { createAppointmentAction } from "@/src/actions/create-appointment.action"
+import { cn } from "@/src/lib/utils"
+
+import { useStepper, utils } from "./appointmentDialogStepper"
+import ClientStep from "./client-step"
+import ConfirmationStep from "./confirmation-step"
+import DateStep from "./date-step"
+import ServiceStep from "./service-step"
 
 interface AppointmentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 // Schéma de validation pour le formulaire
@@ -74,9 +49,9 @@ const appointmentFormSchema = z.object({
     .min(15, "La durée minimum est de 15 minutes"),
   atHome: z.boolean().default(false),
   notes: z.string().optional(),
-});
+})
 
-export type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
+export type AppointmentFormValues = z.infer<typeof appointmentFormSchema>
 
 const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
   // Initialiser le formulaire avec hook-form et validation zod
@@ -88,11 +63,11 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       notes: "",
     },
     mode: "onChange",
-  });
+  })
 
   // Configuration du stepper
-  const { next, goTo, prev, current, reset, switch: switchStep } = useStepper();
-  const currentIndex = utils.getIndex(current.id);
+  const { next, goTo, prev, current, reset, switch: switchStep } = useStepper()
+  const currentIndex = utils.getIndex(current.id)
 
   // Définition des étapes avec leurs icônes
   const steps = [
@@ -108,66 +83,58 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       label: "Confirmation",
       icon: <CheckIcon className="h-5 w-5" />,
     },
-  ];
+  ]
 
   // Mutation pour créer un rendez-vous en utilisant l'action serveur
   const createAppointmentMutation = useMutation({
-    mutationFn: async (
-      data: AppointmentFormValues & { beginAt: Date; endAt: Date },
-    ) => {
-      const result = await createAppointmentAction(data);
-      return result;
+    mutationFn: async (data: AppointmentFormValues & { beginAt: Date; endAt: Date }) => {
+      const result = await createAppointmentAction(data)
+      return result
     },
     onSuccess: () => {
       // Réinitialiser le formulaire et fermer la modal
-      form.reset();
-      goTo("client");
-      onOpenChange(false);
-      toast.success("Rendez-vous créé avec succès !");
+      form.reset()
+      goTo("client")
+      onOpenChange(false)
+      toast.success("Rendez-vous créé avec succès !")
     },
-    onError: (error) => {
-      console.error("Erreur lors de la création du rendez-vous:", error);
-      toast.error(
-        "Erreur lors de la création du rendez-vous. Veuillez réessayer.",
-      );
+    onError: error => {
+      console.error("Erreur lors de la création du rendez-vous:", error)
+      toast.error("Erreur lors de la création du rendez-vous. Veuillez réessayer.")
     },
-  });
+  })
 
   // Gérer la soumission du formulaire
   const onSubmit = (data: AppointmentFormValues) => {
     // Calculer l'heure de début en ajoutant la durée à l'heure de début
-    const [hours, minutes] = data.startTime.split(":").map(Number);
-    const startDate = new Date(data.date);
-    startDate.setHours(hours, minutes);
+    const [hours, minutes] = data.startTime.split(":").map(Number)
+    const startDate = new Date(data.date)
+    startDate.setHours(hours, minutes)
 
-    const endDate = new Date(startDate);
-    endDate.setMinutes(endDate.getMinutes() + data.duration);
+    const endDate = new Date(startDate)
+    endDate.setMinutes(endDate.getMinutes() + data.duration)
 
     // Préparer les données complètes pour l'envoi
     const appointmentData = {
       ...data,
       beginAt: startDate,
       endAt: endDate,
-    };
+    }
 
     // Lancer la mutation pour créer le rendez-vous
-    createAppointmentMutation.mutate(appointmentData);
-  };
+    createAppointmentMutation.mutate(appointmentData)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl lg:max-w-3xl xl:max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
-            Nouveau rendez-vous
-          </DialogTitle>
+          <DialogTitle className="text-xl font-bold">Nouveau rendez-vous</DialogTitle>
           <DialogDescription>
             {currentIndex === 0 && "Sélectionnez le client et son animal"}
             {currentIndex === 1 && "Choisissez le service et précisez sa durée"}
-            {currentIndex === 2 &&
-              "Sélectionnez la date et l'heure du rendez-vous"}
-            {currentIndex === 3 &&
-              "Ajoutez des options et confirmez le rendez-vous"}
+            {currentIndex === 2 && "Sélectionnez la date et l'heure du rendez-vous"}
+            {currentIndex === 3 && "Ajoutez des options et confirmez le rendez-vous"}
           </DialogDescription>
         </DialogHeader>
 
@@ -178,12 +145,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
               <div
                 key={step.id}
                 className="flex flex-col items-center"
-                onClick={() =>
-                  index <= currentIndex &&
-                  goTo(
-                    step.id as "client" | "service" | "date" | "confirmation",
-                  )
-                }
+                onClick={() => index <= currentIndex && goTo(step.id as "client" | "service" | "date" | "confirmation")}
               >
                 <div
                   className={cn(
@@ -193,9 +155,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                       : index === currentIndex
                         ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
                         : "bg-muted text-muted-foreground",
-                    index <= currentIndex
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed",
+                    index <= currentIndex ? "cursor-pointer" : "cursor-not-allowed"
                   )}
                 >
                   {step.icon}
@@ -203,9 +163,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                 <span
                   className={cn(
                     "text-xs mt-1 font-medium",
-                    index <= currentIndex
-                      ? "text-primary"
-                      : "text-muted-foreground",
+                    index <= currentIndex ? "text-primary" : "text-muted-foreground"
                   )}
                 >
                   {step.label}
@@ -267,14 +225,9 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
                 <Button
                   type="submit"
                   className="min-w-[160px]"
-                  disabled={
-                    createAppointmentMutation.isPending ||
-                    !form.formState.isValid
-                  }
+                  disabled={createAppointmentMutation.isPending || !form.formState.isValid}
                 >
-                  {createAppointmentMutation.isPending
-                    ? "Création en cours..."
-                    : "Créer le rendez-vous"}
+                  {createAppointmentMutation.isPending ? "Création en cours..." : "Créer le rendez-vous"}
                 </Button>
               )}
             </div>
@@ -282,7 +235,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AppointmentDialog;
+export default AppointmentDialog

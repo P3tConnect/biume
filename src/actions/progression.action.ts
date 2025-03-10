@@ -1,45 +1,42 @@
-"use server";
+"use server"
 
-import { z } from "zod";
-import { CreateProgressionSchema, progression } from "../db";
-import { organization } from "../db/organization";
-import { ActionError, createServerAction, db, requireAuth } from "../lib";
-import { eq } from "drizzle-orm";
+import { eq } from "drizzle-orm"
+import { z } from "zod"
+
+import { CreateProgressionSchema, progression } from "../db"
+import { organization } from "../db/organization"
+import { ActionError, createServerAction, db, requireAuth } from "../lib"
 
 export const getProgression = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const org = ctx.organization;
+    const org = ctx.organization
 
     const [progressionResult] = await db
       .select()
       .from(progression)
       .innerJoin(organization, eq(organization.progressionId, progression.id))
       .where(eq(organization.id, org?.id ?? ""))
-      .execute();
+      .execute()
 
-    return progressionResult;
+    return progressionResult
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const createProgression = createServerAction(
   CreateProgressionSchema,
   async (input, ctx) => {
-    const data = await db
-      .insert(progression)
-      .values(input)
-      .returning()
-      .execute();
+    const data = await db.insert(progression).values(input).returning().execute()
 
     if (!data) {
-      throw new ActionError("Progression not created");
+      throw new ActionError("Progression not created")
     }
 
-    return data;
+    return data
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const updateProgression = createServerAction(
   CreateProgressionSchema,
@@ -49,29 +46,25 @@ export const updateProgression = createServerAction(
       .set(input)
       .where(eq(progression.id, input.id as string))
       .returning()
-      .execute();
+      .execute()
 
     if (!data) {
-      throw new ActionError("Progression not updated");
+      throw new ActionError("Progression not updated")
     }
 
-    return data;
+    return data
   },
-  [requireAuth],
-);
+  [requireAuth]
+)
 
 export const deleteProgression = createServerAction(
   z.string(),
   async (input, ctx) => {
-    const data = await db
-      .delete(progression)
-      .where(eq(progression.id, input))
-      .returning()
-      .execute();
+    const data = await db.delete(progression).where(eq(progression.id, input)).returning().execute()
 
     if (!data) {
-      throw new ActionError("Progression not deleted");
+      throw new ActionError("Progression not deleted")
     }
   },
-  [requireAuth],
-);
+  [requireAuth]
+)

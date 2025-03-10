@@ -1,19 +1,14 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { safeConfig } from "@/src/lib";
-import { BillingPlanSection } from "./components/billing/billing-plan-section";
-import { BillingPaymentSection } from "./components/billing/billing-payment-section";
-import { BillingInvoicesSection } from "./components/billing/billing-invoices-section";
-import { getInvoiceHistory } from "@/src/actions/stripe.action";
-import { getBillingInfo } from "@/src/actions/stripe.action";
-import { useQueries } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+import { BillingInvoicesSection } from "./components/billing/billing-invoices-section"
+import { BillingPaymentSection } from "./components/billing/billing-payment-section"
+import { BillingPlanSection } from "./components/billing/billing-plan-section"
+import React from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { getBillingInfo } from "@/src/actions/stripe.action"
+import { getInvoiceHistory } from "@/src/actions/stripe.action"
+import { safeConfig } from "@/src/lib"
+import { useQueries } from "@tanstack/react-query"
 
 export const plans = [
   {
@@ -63,33 +58,29 @@ export const plans = [
     monthlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_MONTHLY_ID,
     yearlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_YEARLY_ID,
   },
-];
+]
 
 export const BillingSection = () => {
-  const [
-    { data: billingInfo, isLoading: isBillingLoading },
-    { data: invoices, isLoading: isInvoicesLoading },
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: ["billing-info"],
-        queryFn: () => getBillingInfo({}),
-      },
-      {
-        queryKey: ["invoices"],
-        queryFn: () => getInvoiceHistory({}),
-      },
-    ],
-  });
+  const [{ data: billingInfo, isLoading: isBillingLoading }, { data: invoices, isLoading: isInvoicesLoading }] =
+    useQueries({
+      queries: [
+        {
+          queryKey: ["billing-info"],
+          queryFn: () => getBillingInfo({}),
+        },
+        {
+          queryKey: ["invoices"],
+          queryFn: () => getInvoiceHistory({}),
+        },
+      ],
+    })
 
-  const isLoading = isBillingLoading || isInvoicesLoading;
+  const isLoading = isBillingLoading || isInvoicesLoading
 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="border-b bg-muted/10 pb-8 pt-6">
-        <CardTitle className="text-2xl font-bold">
-          Facturation & Abonnement
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold">Facturation & Abonnement</CardTitle>
         <CardDescription className="text-base">
           Gérez votre abonnement et vos informations de facturation
         </CardDescription>
@@ -116,11 +107,7 @@ export const BillingSection = () => {
             </>
           ) : (
             <>
-              <BillingPlanSection
-                plans={plans}
-                billingInfo={billingInfo}
-                isLoading={isLoading}
-              />
+              <BillingPlanSection plans={plans} billingInfo={billingInfo} isLoading={isLoading} />
               <div className="h-px bg-border" />
               <BillingPaymentSection billingInfo={billingInfo} />
               <div className="h-px bg-border" />
@@ -130,5 +117,5 @@ export const BillingSection = () => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

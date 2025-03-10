@@ -1,21 +1,21 @@
 export interface HeaderProps {
-  isScrolled: boolean;
+  isScrolled: boolean
 }
 
 export interface SessionProps {
-  session: any;
+  session: any
 }
 
 export interface MobileMenuProps {
-  isMobileMenuOpen: boolean;
-  setIsMobileMenuOpen: (value: boolean) => void;
+  isMobileMenuOpen: boolean
+  setIsMobileMenuOpen: (value: boolean) => void
 }
 
 export interface MobileUserMenuProps {
-  session: any;
-  setIsMobileMenuOpen: (value: boolean) => void;
+  session: any
+  setIsMobileMenuOpen: (value: boolean) => void
 }
 
 export interface MobileGuestMenuProps {
-  setIsMobileMenuOpen: (value: boolean) => void;
+  setIsMobileMenuOpen: (value: boolean) => void
 }

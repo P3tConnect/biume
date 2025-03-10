@@ -1,8 +1,9 @@
-import InvoicesPageComponent from "@/components/dashboard/pages/pro/invoices/invoices-page";
-import React from "react";
+import React from "react"
+
+import InvoicesPageComponent from "@/components/dashboard/pages/pro/invoices/invoices-page"
 
 const ProDashboardInvoicesPage = () => {
-  return <InvoicesPageComponent />;
-};
+  return <InvoicesPageComponent />
+}
 
-export default ProDashboardInvoicesPage;
+export default ProDashboardInvoicesPage

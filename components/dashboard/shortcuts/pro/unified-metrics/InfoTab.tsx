@@ -1,41 +1,30 @@
-"use client";
+"use client"
 
-import { ActiveTab, AnimalDetails } from "./types";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Pencil,
-  ArrowRight,
-  Weight,
-  CalendarClock,
-  CircleDot,
-  QrCode,
-  UserCircle2,
-  Mail,
-  Phone,
-  HeartPulse,
-  FileText,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
+import { ArrowRight, CalendarClock, CircleDot, Mail, Pencil, Phone, QrCode, UserCircle2, Weight } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+import { ActiveTab, AnimalDetails } from "./types"
 
 interface InfoTabProps {
-  animal: AnimalDetails;
-  setActiveTab: (tab: ActiveTab) => void;
+  animal: AnimalDetails
+  setActiveTab: (tab: ActiveTab) => void
 }
 
 export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
   // Formater la date au format lisible
   const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return "Non défini";
+    if (!dateString) return "Non défini"
 
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return date.toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
       year: "numeric",
-    });
-  };
+    })
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -64,9 +53,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
           >
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Informations générales
-                </CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Informations générales</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <motion.div
@@ -78,19 +65,12 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <motion.div
-                      whileHover={{ rotate: 15 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                       <CalendarClock className="h-4 w-4 text-muted-foreground" />
                     </motion.div>
-                    <span className="text-sm font-medium">
-                      Date de naissance
-                    </span>
+                    <span className="text-sm font-medium">Date de naissance</span>
                   </div>
-                  <span className="text-sm">
-                    {formatDate(animal.birthDate)}
-                  </span>
+                  <span className="text-sm">{formatDate(animal.birthDate)}</span>
                 </motion.div>
 
                 <motion.div
@@ -102,17 +82,12 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <motion.div
-                      whileHover={{ rotate: 15 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                       <Weight className="h-4 w-4 text-muted-foreground" />
                     </motion.div>
                     <span className="text-sm font-medium">Poids</span>
                   </div>
-                  <span className="text-sm">
-                    {animal.weight ? `${animal.weight} kg` : "Non renseigné"}
-                  </span>
+                  <span className="text-sm">{animal.weight ? `${animal.weight} kg` : "Non renseigné"}</span>
                 </motion.div>
 
                 <motion.div
@@ -124,17 +99,12 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <motion.div
-                      whileHover={{ rotate: 15 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                       <CircleDot className="h-4 w-4 text-muted-foreground" />
                     </motion.div>
                     <span className="text-sm font-medium">Couleur</span>
                   </div>
-                  <span className="text-sm">
-                    {animal.color || "Non renseigné"}
-                  </span>
+                  <span className="text-sm">{animal.color || "Non renseigné"}</span>
                 </motion.div>
               </CardContent>
             </Card>
@@ -147,9 +117,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
           >
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Informations médicales
-                </CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Informations médicales</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <motion.div
@@ -161,17 +129,12 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <motion.div
-                      whileHover={{ rotate: 15 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                       <QrCode className="h-4 w-4 text-muted-foreground" />
                     </motion.div>
                     <span className="text-sm font-medium">Numéro de puce</span>
                   </div>
-                  <span className="text-sm">
-                    {animal.microchipNumber || "Non pucé"}
-                  </span>
+                  <span className="text-sm">{animal.microchipNumber || "Non pucé"}</span>
                 </motion.div>
 
                 <motion.div
@@ -183,10 +146,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <motion.div
-                      whileHover={{ rotate: 15 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -203,9 +163,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                     </motion.div>
                     <span className="text-sm font-medium">Stérilisé(e)</span>
                   </div>
-                  <span className="text-sm">
-                    {animal.sterilized ? "Oui" : "Non"}
-                  </span>
+                  <span className="text-sm">{animal.sterilized ? "Oui" : "Non"}</span>
                 </motion.div>
 
                 {animal.sterilized && (
@@ -220,19 +178,12 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
                     animate={{ opacity: 1, height: "auto" }}
                   >
                     <div className="flex items-center gap-2">
-                      <motion.div
-                        whileHover={{ rotate: 15 }}
-                        transition={{ duration: 0.2 }}
-                      >
+                      <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.2 }}>
                         <CalendarClock className="h-4 w-4 text-muted-foreground" />
                       </motion.div>
-                      <span className="text-sm font-medium">
-                        Date de stérilisation
-                      </span>
+                      <span className="text-sm font-medium">Date de stérilisation</span>
                     </div>
-                    <span className="text-sm">
-                      {formatDate(animal.sterilizationDate)}
-                    </span>
+                    <span className="text-sm">{formatDate(animal.sterilizationDate)}</span>
                   </motion.div>
                 )}
               </CardContent>
@@ -263,10 +214,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-2">
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.2 }}>
                   <UserCircle2 className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
                 <span className="text-sm font-medium">Nom</span>
@@ -283,18 +231,13 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-2">
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.2 }}>
                   <Mail className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
                 <span className="text-sm font-medium">Email</span>
               </div>
               <span className="text-sm">
-                {animal.ownerContact.includes("@")
-                  ? animal.ownerContact
-                  : "Non renseigné"}
+                {animal.ownerContact.includes("@") ? animal.ownerContact : "Non renseigné"}
               </span>
             </motion.div>
 
@@ -307,18 +250,13 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-2">
-                <motion.div
-                  whileHover={{ scale: 1.2 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.2 }}>
                   <Phone className="h-4 w-4 text-muted-foreground" />
                 </motion.div>
                 <span className="text-sm font-medium">Téléphone</span>
               </div>
               <span className="text-sm">
-                {!animal.ownerContact.includes("@")
-                  ? animal.ownerContact
-                  : "Non renseigné"}
+                {!animal.ownerContact.includes("@") ? animal.ownerContact : "Non renseigné"}
               </span>
             </motion.div>
           </CardContent>
@@ -336,9 +274,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
 
         <Card>
           <CardContent className="pt-6">
-            <p className="text-sm">
-              {animal.notes || "Aucune note disponible pour cet animal."}
-            </p>
+            <p className="text-sm">{animal.notes || "Aucune note disponible pour cet animal."}</p>
           </CardContent>
         </Card>
       </motion.div>
@@ -351,11 +287,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
         transition={{ duration: 0.3, delay: 0.5 }}
       >
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-          <Button
-            variant="outline"
-            className="justify-between w-full"
-            onClick={() => setActiveTab("medical")}
-          >
+          <Button variant="outline" className="justify-between w-full" onClick={() => setActiveTab("medical")}>
             <span>Dossier médical</span>
             <motion.div
               animate={{ x: [0, 5, 0] }}
@@ -371,11 +303,7 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
         </motion.div>
 
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-          <Button
-            variant="outline"
-            className="justify-between w-full"
-            onClick={() => setActiveTab("appointments")}
-          >
+          <Button variant="outline" className="justify-between w-full" onClick={() => setActiveTab("appointments")}>
             <span>Rendez-vous</span>
             <motion.div
               animate={{ x: [0, 5, 0] }}
@@ -391,5 +319,5 @@ export const InfoTab = ({ animal, setActiveTab }: InfoTabProps) => {
         </motion.div>
       </motion.div>
     </div>
-  );
-};
+  )
+}

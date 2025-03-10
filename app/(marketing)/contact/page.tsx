@@ -1,64 +1,64 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { ArrowLeft, Send, Mail, Phone, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
-import { sendContactEmail, type ContactFormData } from "./actions";
+import { motion } from "framer-motion"
+import { ArrowLeft, Mail, Send } from "lucide-react"
+import Link from "next/link"
+import React, { useState } from "react"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+
+import { type ContactFormData, sendContactEmail } from "./actions"
 
 const ContactPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     subject: "",
     message: "",
-  });
+  })
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
 
     try {
-      const result = await sendContactEmail(formData);
+      const result = await sendContactEmail(formData)
 
       if (result.success) {
-        toast.success("Votre message a été envoyé avec succès !");
+        toast.success("Votre message a été envoyé avec succès !")
         setFormData({
           name: "",
           email: "",
           subject: "",
           message: "",
-        });
+        })
       } else {
         if (result.validationErrors) {
           // Afficher les erreurs de validation
           result.validationErrors.forEach(err => {
-            toast.error(`${err.path}: ${err.message}`);
-          });
+            toast.error(`${err.path}: ${err.message}`)
+          })
         } else {
-          toast.error(result.error || "Une erreur est survenue lors de l'envoi du message");
+          toast.error(result.error || "Une erreur est survenue lors de l'envoi du message")
         }
       }
     } catch (error) {
-      console.error("Erreur lors de l'envoi:", error);
-      toast.error("Une erreur est survenue lors de l'envoi du message");
+      console.error("Erreur lors de l'envoi:", error)
+      toast.error("Une erreur est survenue lors de l'envoi du message")
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col h-screen w-screen relative pb-20">
@@ -95,9 +95,8 @@ const ContactPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Nous sommes là pour répondre à toutes vos questions. N&apos;hésitez
-            pas à nous contacter et nous vous répondrons dans les plus brefs
-            délais.
+            Nous sommes là pour répondre à toutes vos questions. N&apos;hésitez pas à nous contacter et nous vous
+            répondrons dans les plus brefs délais.
           </motion.p>
         </div>
 
@@ -109,9 +108,7 @@ const ContactPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card className="p-6 h-full bg-card/50 backdrop-blur-sm border-border/30">
-              <h2 className="text-xl font-semibold mb-6">
-                Informations de contact
-              </h2>
+              <h2 className="text-xl font-semibold mb-6">Informations de contact</h2>
 
               <div className="space-y-6">
                 <div className="flex items-start gap-3">
@@ -140,9 +137,7 @@ const ContactPage = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Card className="p-6 bg-card/50 backdrop-blur-sm border-border/30">
-              <h2 className="text-xl font-semibold mb-6">
-                Envoyez-nous un message
-              </h2>
+              <h2 className="text-xl font-semibold mb-6">Envoyez-nous un message</h2>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -206,11 +201,7 @@ const ContactPage = () => {
                   />
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
                       <span className="mr-2">Envoi en cours</span>
@@ -229,7 +220,7 @@ const ContactPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ContactPage;
+export default ContactPage

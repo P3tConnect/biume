@@ -1,73 +1,70 @@
-"use client";
+"use client"
 
-import { useActiveOrganization } from "@/src/lib/auth-client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Button,
-} from "@/components/ui";
-import { AlertTriangle, CheckCircle, ExternalLink, RefreshCw } from "lucide-react";
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { getStripeConnectAccountInfo } from "@/src/actions/stripe.action";
-import { useState } from "react";
+import { AlertTriangle, CheckCircle, ExternalLink, RefreshCw } from "lucide-react"
+import { Button, Card } from "@/components/ui"
+
+import Link from "next/link"
+import { getStripeConnectAccountInfo } from "@/src/actions/stripe.action"
+import { useActiveOrganization } from "@/src/lib/auth-client"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 
 export function StripeSetupCard() {
-  const { data: activeOrg } = useActiveOrganization();
-  const [refreshing, setRefreshing] = useState(false);
+  const { data: activeOrg } = useActiveOrganization()
+  const [refreshing, setRefreshing] = useState(false)
 
   // Récupérer les informations du compte Stripe Connect si companyStripeId existe
   const { data: stripeConnectInfo, refetch } = useQuery({
-    queryKey: ['stripeConnectAccount', activeOrg?.id],
+    queryKey: ["stripeConnectAccount", activeOrg?.id],
     queryFn: async () => {
-      if (!activeOrg?.companyStripeId) return null;
+      if (!activeOrg?.companyStripeId) return null
 
-      const result = await getStripeConnectAccountInfo({});
+      const result = await getStripeConnectAccountInfo({})
       if (result.error) {
-        throw new Error(result.error);
+        throw new Error(result.error)
       }
-      return result.data;
+      return result.data
     },
     enabled: !!activeOrg?.companyStripeId,
     refetchOnWindowFocus: false,
-  });
+  })
 
   // Si l'organisation n'est pas chargée ou si tout est complètement configuré, ne pas afficher la carte
-  if (!activeOrg || (activeOrg.customerStripeId &&
-    activeOrg.companyStripeId &&
-    stripeConnectInfo?.detailsSubmitted &&
-    stripeConnectInfo?.chargesEnabled &&
-    stripeConnectInfo?.payoutsEnabled)) {
-    return null;
+  if (
+    !activeOrg ||
+    (activeOrg.customerStripeId &&
+      activeOrg.companyStripeId &&
+      stripeConnectInfo?.detailsSubmitted &&
+      stripeConnectInfo?.chargesEnabled &&
+      stripeConnectInfo?.payoutsEnabled)
+  ) {
+    return null
   }
 
   const handleRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }
 
   // Vérifier l'état de configuration de Stripe Connect
-  const isConnectConfigured = activeOrg.companyStripeId && stripeConnectInfo;
-  const isConnectComplete = isConnectConfigured &&
+  const isConnectConfigured = activeOrg.companyStripeId && stripeConnectInfo
+  const isConnectComplete =
+    isConnectConfigured &&
     stripeConnectInfo.detailsSubmitted &&
     stripeConnectInfo.chargesEnabled &&
-    stripeConnectInfo.payoutsEnabled;
+    stripeConnectInfo.payoutsEnabled
 
   // Vérifier s'il y a des exigences en attente
-  const hasPendingRequirements = isConnectConfigured &&
+  const hasPendingRequirements =
+    isConnectConfigured &&
     stripeConnectInfo.requirements &&
     ((stripeConnectInfo.requirements.currently_due?.length ?? 0) > 0 ||
       (stripeConnectInfo.requirements.eventually_due?.length ?? 0) > 0 ||
-      (stripeConnectInfo.requirements.past_due?.length ?? 0) > 0);
-
+      (stripeConnectInfo.requirements.past_due?.length ?? 0) > 0)
 
   if (!hasPendingRequirements) {
-    return null;
+    return null
   }
 
   return (
@@ -85,14 +82,13 @@ export function StripeSetupCard() {
               onClick={handleRefresh}
               disabled={refreshing}
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
             </Button>
           )}
         </div>
 
         <div className="text-sm text-muted-foreground mb-3">
-          Complétez votre configuration Stripe pour accéder à toutes les
-          fonctionnalités.
+          Complétez votre configuration Stripe pour accéder à toutes les fonctionnalités.
         </div>
 
         <div className="flex flex-col gap-2">
@@ -162,5 +158,5 @@ export function StripeSetupCard() {
         )}
       </div>
     </Card>
-  );
+  )
 }

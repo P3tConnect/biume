@@ -1,5 +1,5 @@
-import { EmailLayout } from "./EmailLayout";
+import { EmailLayout } from "./EmailLayout"
 
 export const RateEmail = () => {
-    return <EmailLayout></EmailLayout>;
-};
+  return <EmailLayout></EmailLayout>
+}

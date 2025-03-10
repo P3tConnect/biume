@@ -1,1 +1,1 @@
-export * from "./reminders.trigger";
+export * from "./reminders.trigger"

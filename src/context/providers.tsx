@@ -1,15 +1,17 @@
-"use client";
+"use client"
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { PropsWithChildren, useEffect } from "react";
-import { ThemeProvider } from "./theme-provider";
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import posthog from "posthog-js";
-import { PostHogProvider } from "posthog-js/react";
-import { safeConfig } from "../lib";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import posthog from "posthog-js"
+import { PostHogProvider } from "posthog-js/react"
+import React, { PropsWithChildren, useEffect } from "react"
 
-export const queryClient = new QueryClient();
+import { Toaster } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
+
+import { safeConfig } from "../lib"
+import { ThemeProvider } from "./theme-provider"
+
+export const queryClient = new QueryClient()
 
 const Providers = ({ children }: PropsWithChildren) => {
   useEffect(() => {
@@ -17,37 +19,27 @@ const Providers = ({ children }: PropsWithChildren) => {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "", {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "",
         person_profiles: "always",
-      });
+      })
     }
-  }, []);
+  }, [])
 
   if (safeConfig.NODE_ENV == "development") {
     return (
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange={true}
-        >
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange={true}>
           <TooltipProvider disableHoverableContent>
             {children}
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>
       </QueryClientProvider>
-    );
+    )
   }
 
   return (
     <PostHogProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange={true}
-        >
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange={true}>
           <TooltipProvider disableHoverableContent>
             {children}
             <Toaster />
@@ -55,7 +47,7 @@ const Providers = ({ children }: PropsWithChildren) => {
         </ThemeProvider>
       </QueryClientProvider>
     </PostHogProvider>
-  );
-};
+  )
+}
 
-export default Providers;
+export default Providers

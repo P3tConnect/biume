@@ -1,8 +1,9 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { InvoiceOption, invoiceOptions } from "./invoiceOptions";
-import { createInsertSchema } from "drizzle-zod";
-import { Appointment, appointments } from "./appointments";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Appointment, appointments } from "./appointments"
+import { InvoiceOption, invoiceOptions } from "./invoiceOptions"
 
 export const invoice = pgTable("invoice", {
   id: text("id")
@@ -12,11 +13,9 @@ export const invoice = pgTable("invoice", {
   appointmentId: text("appointmentId").references(() => appointments.id, {
     onDelete: "cascade",
   }),
-  createdAt: timestamp("createdAt", { mode: "date" })
-    .default(new Date())
-    .notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()).notNull(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
   options: many(invoiceOptions),
@@ -24,12 +23,12 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
     fields: [invoice.appointmentId],
     references: [appointments.id],
   }),
-}));
+}))
 
 export type Invoice = InferSelectModel<typeof invoice> & {
-  options: InvoiceOption[];
-  appointment: Appointment;
-};
-export type CreateInvoice = typeof invoice.$inferInsert;
+  options: InvoiceOption[]
+  appointment: Appointment
+}
+export type CreateInvoice = typeof invoice.$inferInsert
 
-export const CreateInvoiceSchema = createInsertSchema(invoice);
+export const CreateInvoiceSchema = createInsertSchema(invoice)

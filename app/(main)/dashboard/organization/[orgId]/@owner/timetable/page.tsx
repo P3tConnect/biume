@@ -1,6 +1,8 @@
-import { Suspense } from "react";
-import { TimetableView } from "@/components/dashboard/pages/pro/timetable-page/timetable-view";
-import DashboardOrganizationTimetableLoading from "./loading";
+import { Suspense } from "react"
+
+import { TimetableView } from "@/components/dashboard/pages/pro/timetable-page/timetable-view"
+
+import DashboardOrganizationTimetableLoading from "./loading"
 
 // Données temporaires pour la démonstration
 const mockAppointments = [
@@ -29,7 +31,7 @@ const mockAppointments = [
     duration: 60,
     status: "confirmed" as const,
   },
-];
+]
 
 export default function DashboardOrganizationTimetablePage() {
   return (
@@ -38,5 +40,5 @@ export default function DashboardOrganizationTimetablePage() {
         <TimetableView appointments={mockAppointments} />
       </Suspense>
     </div>
-  );
+  )
 }

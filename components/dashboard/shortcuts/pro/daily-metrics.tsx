@@ -1,36 +1,24 @@
-"use client";
+"use client"
 
-import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Stethoscope,
-  Syringe,
-  ChevronRight,
-  RefreshCw,
-  Cat,
-} from "lucide-react";
+import React from "react"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Stethoscope, Syringe, ChevronRight, RefreshCw, Cat } from "lucide-react"
 
 export const DailyMetrics = () => {
   // Formatage de la date
-  const today = new Date();
+  const today = new Date()
   const formattedDate = today.toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
-  });
+  })
 
   // Simuler un état de chargement (à remplacer par un vrai état de chargement basé sur vos données)
-  const isLoading = false;
+  const isLoading = false
 
   if (isLoading) {
     return (
@@ -54,9 +42,7 @@ export const DailyMetrics = () => {
                 <div className="text-lg font-medium text-secondary-foreground">
                   <Skeleton className="h-6 w-8" />
                 </div>
-                <div className="text-xs text-secondary-foreground/70">
-                  Patients aujourd&apos;hui
-                </div>
+                <div className="text-xs text-secondary-foreground/70">Patients aujourd&apos;hui</div>
               </div>
             </div>
 
@@ -68,18 +54,14 @@ export const DailyMetrics = () => {
                 <div className="text-lg font-medium text-secondary-foreground">
                   <Skeleton className="h-6 w-8" />
                 </div>
-                <div className="text-xs text-secondary-foreground/70">
-                  Vaccinations
-                </div>
+                <div className="text-xs text-secondary-foreground/70">Vaccinations</div>
               </div>
             </div>
           </div>
 
           {/* Prochain rendez-vous - skeleton */}
           <div className="mb-4">
-            <div className="text-xs font-medium text-muted-foreground mb-2">
-              PROCHAIN RENDEZ-VOUS
-            </div>
+            <div className="text-xs font-medium text-muted-foreground mb-2">PROCHAIN RENDEZ-VOUS</div>
             <div className="flex items-center justify-between p-2 border rounded-md">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
@@ -108,9 +90,7 @@ export const DailyMetrics = () => {
 
           {/* État des tâches - skeleton */}
           <div className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">
-              ÉTAT D&apos;AVANCEMENT
-            </div>
+            <div className="text-xs font-medium text-muted-foreground">ÉTAT D&apos;AVANCEMENT</div>
             <div className="pt-2 pb-3 space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span>Consultations</span>
@@ -134,7 +114,7 @@ export const DailyMetrics = () => {
           </div>
         </CardFooter>
       </Card>
-    );
+    )
   }
 
   return (
@@ -155,12 +135,8 @@ export const DailyMetrics = () => {
               <Stethoscope className="h-3.5 w-3.5 text-secondary-foreground" />
             </div>
             <div>
-              <div className="text-lg font-medium text-secondary-foreground">
-                8
-              </div>
-              <div className="text-xs text-secondary-foreground/70">
-                Patients aujourd&apos;hui
-              </div>
+              <div className="text-lg font-medium text-secondary-foreground">8</div>
+              <div className="text-xs text-secondary-foreground/70">Patients aujourd&apos;hui</div>
             </div>
           </div>
 
@@ -169,21 +145,15 @@ export const DailyMetrics = () => {
               <Syringe className="h-3.5 w-3.5 text-secondary-foreground" />
             </div>
             <div>
-              <div className="text-lg font-medium text-secondary-foreground">
-                3
-              </div>
-              <div className="text-xs text-secondary-foreground/70">
-                Vaccinations
-              </div>
+              <div className="text-lg font-medium text-secondary-foreground">3</div>
+              <div className="text-xs text-secondary-foreground/70">Vaccinations</div>
             </div>
           </div>
         </div>
 
         {/* Prochain rendez-vous */}
         <div className="mb-4">
-          <div className="text-xs font-medium text-muted-foreground mb-2">
-            PROCHAIN RENDEZ-VOUS
-          </div>
+          <div className="text-xs font-medium text-muted-foreground mb-2">PROCHAIN RENDEZ-VOUS</div>
           <div className="flex items-center justify-between p-2 border rounded-md">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
@@ -191,9 +161,7 @@ export const DailyMetrics = () => {
               </div>
               <div>
                 <div className="font-medium text-sm">Félix</div>
-                <div className="text-xs text-muted-foreground">
-                  Consultation de routine
-                </div>
+                <div className="text-xs text-muted-foreground">Consultation de routine</div>
               </div>
             </div>
             <div className="flex flex-col items-end">
@@ -210,9 +178,7 @@ export const DailyMetrics = () => {
 
         {/* État des tâches */}
         <div className="space-y-2">
-          <div className="text-xs font-medium text-muted-foreground">
-            ÉTAT D&apos;AVANCEMENT
-          </div>
+          <div className="text-xs font-medium text-muted-foreground">ÉTAT D&apos;AVANCEMENT</div>
           <div className="pt-2 pb-3 space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span>Consultations</span>
@@ -234,5 +200,5 @@ export const DailyMetrics = () => {
         </div>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}

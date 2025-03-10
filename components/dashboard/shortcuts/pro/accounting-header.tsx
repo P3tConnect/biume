@@ -1,43 +1,28 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
-  Calendar,
-  PiggyBank,
-  FileText,
-  ChevronDown,
-  ArrowUpRight,
   ArrowDownRight,
+  ArrowUpRight,
+  Calendar,
+  ChevronDown,
+  CircleDollarSign,
   Download,
+  FileText,
   Filter,
-  CircleDollarSign
-} from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+  PiggyBank,
+} from "lucide-react"
+import React, { useState } from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export const AccountingHeader = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("juin-2024");
+  const [selectedPeriod, setSelectedPeriod] = useState("juin-2024")
 
   // Données simulées pour les statistiques rapides
   const stats = {
@@ -47,8 +32,8 @@ export const AccountingHeader = () => {
     expensesChange: 3.5,
     profit: 5660,
     profitChange: 12.8,
-    unpaidInvoices: 4
-  };
+    unpaidInvoices: 4,
+  }
 
   return (
     <Card className="overflow-hidden rounded-2xl">
@@ -61,9 +46,7 @@ export const AccountingHeader = () => {
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-400 dark:to-blue-400 bg-clip-text text-transparent">
                   Comptabilité
                 </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Suivez vos finances et analysez votre rentabilité
-                </p>
+                <p className="text-sm text-muted-foreground">Suivez vos finances et analysez votre rentabilité</p>
               </div>
             </div>
           </div>
@@ -94,10 +77,7 @@ export const AccountingHeader = () => {
                     </p>
                   </div>
                   <div className="grid gap-2">
-                    <Select
-                      value={selectedPeriod}
-                      onValueChange={setSelectedPeriod}
-                    >
+                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionnez une période" />
                       </SelectTrigger>
@@ -159,7 +139,11 @@ export const AccountingHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{stats.revenue} €</p>
               <Badge variant={stats.revenueChange > 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.revenueChange > 0 ? <ArrowUpRight className="mr-1 h-3 w-3" /> : <ArrowDownRight className="mr-1 h-3 w-3" />}
+                {stats.revenueChange > 0 ? (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.revenueChange}%
               </Badge>
             </div>
@@ -170,7 +154,11 @@ export const AccountingHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{stats.expenses} €</p>
               <Badge variant={stats.expensesChange < 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.expensesChange < 0 ? <ArrowDownRight className="mr-1 h-3 w-3" /> : <ArrowUpRight className="mr-1 h-3 w-3" />}
+                {stats.expensesChange < 0 ? (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.expensesChange}%
               </Badge>
             </div>
@@ -181,7 +169,11 @@ export const AccountingHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{stats.profit} €</p>
               <Badge variant={stats.profitChange > 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.profitChange > 0 ? <ArrowUpRight className="mr-1 h-3 w-3" /> : <ArrowDownRight className="mr-1 h-3 w-3" />}
+                {stats.profitChange > 0 ? (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.profitChange}%
               </Badge>
             </div>
@@ -200,7 +192,7 @@ export const AccountingHeader = () => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default AccountingHeader; 
+export default AccountingHeader

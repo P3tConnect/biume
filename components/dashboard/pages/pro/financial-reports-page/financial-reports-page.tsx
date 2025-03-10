@@ -1,91 +1,48 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  FileText,
-  Plus,
+  AlertCircle,
+  AlertTriangle,
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpRight,
+  Banknote,
+  BarChart4,
+  Calendar,
+  ChevronDown,
+  CircleDollarSign,
+  CreditCard,
   Download,
   FileSpreadsheet,
+  FileText,
   Filter,
-  Printer,
-  Share2,
-  TrendingUp,
-  TrendingDown,
-  AlertCircle,
-  Calendar,
-  ChevronRight,
-  ArrowUpRight,
-  ArrowDownRight,
-  Briefcase,
-  Search,
-  AlertTriangle,
-  Award,
-  Target,
-  Banknote,
-  FileQuestion,
-  CreditCard,
-  Settings,
-  Clock,
-  Tag,
-  ChevronDown,
-  RefreshCw,
-  Book,
-  PieChart,
-  BarChart4,
   LineChart,
-  BarChart2,
-  LayoutGrid,
-  Users,
-  Wallet,
-  Percent,
+  PieChart,
+  Plus,
+  Printer,
   ReceiptText,
-  CircleDollarSign,
-  ArrowRight,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/src/lib";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Share2,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
+} from "lucide-react"
+import React, { useState } from "react"
 
-import { MetricsGrid } from "./components/MetricsGrid";
-import { RevenueAnalytics } from "./components/RevenueAnalytics";
-import { RevenueSourcesPieChart } from "./components/RevenueSourcesPieChart";
-import { MonthlyReports } from "./components/MonthlyReports";
-import { YearlyComparison } from "./components/YearlyComparison";
-import { ExpenseBreakdown } from "./components/ExpenseBreakdown";
-import { ReportActions } from "./components/ReportActions";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Progress } from "@/components/ui/progress"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const mockData = {
   financialOverview: {
     revenue: 124500,
     expenses: 82300,
     profit: 42200,
-    yearGrowth: 15
+    yearGrowth: 15,
   },
   revenueBreakdown: [
     { category: "Consultations", amount: 45000, percentage: 36 },
@@ -117,19 +74,19 @@ const mockData = {
     { type: "warning", message: "Dépenses de marketing dépassent le budget" },
     { type: "error", message: "3 factures en retard de paiement" },
     { type: "info", message: "Progression du CA de 5% ce mois-ci" },
-  ]
-};
+  ],
+}
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-};
+  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(value)
+}
 
 const formatPercent = (value: number) => {
-  return `${value > 0 ? '+' : ''}${value}%`;
-};
+  return `${value > 0 ? "+" : ""}${value}%`
+}
 
 const FinancialDashboardHeader = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("juin-2024");
+  const [selectedPeriod, setSelectedPeriod] = useState("juin-2024")
 
   // Données pour les statistiques rapides
   const stats = {
@@ -139,8 +96,8 @@ const FinancialDashboardHeader = () => {
     expensesChange: 8.2,
     profit: 42200,
     profitChange: 18.5,
-    reports: 5
-  };
+    reports: 5,
+  }
 
   return (
     <Card className="overflow-hidden rounded-2xl mb-6">
@@ -186,10 +143,7 @@ const FinancialDashboardHeader = () => {
                     </p>
                   </div>
                   <div className="grid gap-2">
-                    <Select
-                      value={selectedPeriod}
-                      onValueChange={setSelectedPeriod}
-                    >
+                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionnez une période" />
                       </SelectTrigger>
@@ -264,7 +218,11 @@ const FinancialDashboardHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{formatCurrency(stats.revenue)}</p>
               <Badge variant={stats.revenueChange > 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.revenueChange > 0 ? <ArrowUpRight className="mr-1 h-3 w-3" /> : <ArrowDownRight className="mr-1 h-3 w-3" />}
+                {stats.revenueChange > 0 ? (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.revenueChange}%
               </Badge>
             </div>
@@ -275,7 +233,11 @@ const FinancialDashboardHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{formatCurrency(stats.expenses)}</p>
               <Badge variant={stats.expensesChange < 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.expensesChange < 0 ? <ArrowDownRight className="mr-1 h-3 w-3" /> : <ArrowUpRight className="mr-1 h-3 w-3" />}
+                {stats.expensesChange < 0 ? (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.expensesChange}%
               </Badge>
             </div>
@@ -286,7 +248,11 @@ const FinancialDashboardHeader = () => {
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold">{formatCurrency(stats.profit)}</p>
               <Badge variant={stats.profitChange > 0 ? "secondary" : "destructive"} className="flex items-center">
-                {stats.profitChange > 0 ? <ArrowUpRight className="mr-1 h-3 w-3" /> : <ArrowDownRight className="mr-1 h-3 w-3" />}
+                {stats.profitChange > 0 ? (
+                  <ArrowUpRight className="mr-1 h-3 w-3" />
+                ) : (
+                  <ArrowDownRight className="mr-1 h-3 w-3" />
+                )}
                 {stats.profitChange}%
               </Badge>
             </div>
@@ -305,8 +271,8 @@ const FinancialDashboardHeader = () => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }) => {
   return (
@@ -325,8 +291,7 @@ const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">{formatCurrency(data.revenue)}</span>
               <Badge variant="secondary" className="text-xs">
-                <TrendingUp className="mr-1 h-3 w-3" />
-                +{data.yearGrowth}%
+                <TrendingUp className="mr-1 h-3 w-3" />+{data.yearGrowth}%
               </Badge>
             </div>
           </div>
@@ -348,9 +313,7 @@ const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">{formatCurrency(data.profit)}</span>
-              <span className="text-sm text-muted-foreground">
-                ({Math.round((data.profit / data.revenue) * 100)}%)
-              </span>
+              <span className="text-sm text-muted-foreground">({Math.round((data.profit / data.revenue) * 100)}%)</span>
             </div>
           </div>
         </div>
@@ -358,7 +321,9 @@ const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }
         <div className="mt-8">
           <div className="flex items-center justify-between text-sm mb-2">
             <span>Répartition des revenus et dépenses</span>
-            <span className="text-muted-foreground">{formatCurrency(data.revenue)} / {formatCurrency(data.expenses)}</span>
+            <span className="text-muted-foreground">
+              {formatCurrency(data.revenue)} / {formatCurrency(data.expenses)}
+            </span>
           </div>
           <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
             <div
@@ -379,8 +344,8 @@ const FinancialOverview = ({ data }: { data: typeof mockData.financialOverview }
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const KpiCards = ({ data }: { data: typeof mockData.kpis }) => {
   return (
@@ -391,11 +356,8 @@ const KpiCards = ({ data }: { data: typeof mockData.kpis }) => {
             <div className="text-sm font-medium text-muted-foreground mb-2">{kpi.label}</div>
             <div className="flex items-baseline justify-between">
               <div className="text-2xl font-bold">{kpi.value}</div>
-              <Badge
-                variant={kpi.change.startsWith('+') ? "secondary" : "destructive"}
-                className="text-xs"
-              >
-                {kpi.change.startsWith('+') ? (
+              <Badge variant={kpi.change.startsWith("+") ? "secondary" : "destructive"} className="text-xs">
+                {kpi.change.startsWith("+") ? (
                   <TrendingUp className="mr-1 h-3 w-3" />
                 ) : (
                   <TrendingDown className="mr-1 h-3 w-3" />
@@ -407,14 +369,14 @@ const KpiCards = ({ data }: { data: typeof mockData.kpis }) => {
         </Card>
       ))}
     </div>
-  );
-};
+  )
+}
 
 const RevenueAndExpenseDetails = ({
   revenueData,
-  expenseData
+  expenseData,
 }: {
-  revenueData: typeof mockData.revenueBreakdown,
+  revenueData: typeof mockData.revenueBreakdown
   expenseData: typeof mockData.expenseBreakdown
 }) => {
   return (
@@ -487,14 +449,14 @@ const RevenueAndExpenseDetails = ({
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
 const TransactionsAndAlerts = ({
   transactions,
-  alerts
+  alerts,
 }: {
-  transactions: typeof mockData.recentTransactions,
+  transactions: typeof mockData.recentTransactions
   alerts: typeof mockData.alerts
 }) => {
   return (
@@ -507,7 +469,10 @@ const TransactionsAndAlerts = ({
         <CardContent>
           <div className="space-y-4">
             {transactions.map((transaction, index) => (
-              <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors">
+              <div
+                key={index}
+                className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
                     <ReceiptText className="h-5 w-5 text-primary" />
@@ -548,10 +513,10 @@ const TransactionsAndAlerts = ({
               const alertIcons = {
                 warning: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
                 error: <AlertCircle className="h-5 w-5 text-destructive" />,
-                info: <CircleDollarSign className="h-5 w-5 text-primary" />
-              };
+                info: <CircleDollarSign className="h-5 w-5 text-primary" />,
+              }
 
-              const icon = alertIcons[alert.type as keyof typeof alertIcons];
+              const icon = alertIcons[alert.type as keyof typeof alertIcons]
 
               return (
                 <div key={index} className="flex gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
@@ -560,14 +525,14 @@ const TransactionsAndAlerts = ({
                     <p className="text-sm">{alert.message}</p>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
 const FinancialReportsPage = () => {
   return (
@@ -578,14 +543,8 @@ const FinancialReportsPage = () => {
         <TabsContent value="overview" className="space-y-6 mt-0">
           <FinancialOverview data={mockData.financialOverview} />
           <KpiCards data={mockData.kpis} />
-          <RevenueAndExpenseDetails
-            revenueData={mockData.revenueBreakdown}
-            expenseData={mockData.expenseBreakdown}
-          />
-          <TransactionsAndAlerts
-            transactions={mockData.recentTransactions}
-            alerts={mockData.alerts}
-          />
+          <RevenueAndExpenseDetails revenueData={mockData.revenueBreakdown} expenseData={mockData.expenseBreakdown} />
+          <TransactionsAndAlerts transactions={mockData.recentTransactions} alerts={mockData.alerts} />
         </TabsContent>
 
         <TabsContent value="revenue" className="space-y-6 mt-0">
@@ -595,9 +554,7 @@ const FinancialReportsPage = () => {
                 <div className="text-center">
                   <BarChart4 className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
                   <h3 className="text-lg font-medium">Analyse détaillée des revenus</h3>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Cette section est en cours de développement
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">Cette section est en cours de développement</p>
                 </div>
               </div>
             </CardContent>
@@ -611,9 +568,7 @@ const FinancialReportsPage = () => {
                 <div className="text-center">
                   <CreditCard className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
                   <h3 className="text-lg font-medium">Analyse détaillée des dépenses</h3>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Cette section est en cours de développement
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">Cette section est en cours de développement</p>
                 </div>
               </div>
             </CardContent>
@@ -621,11 +576,11 @@ const FinancialReportsPage = () => {
         </TabsContent>
       </Tabs>
     </div>
-  );
-};
+  )
+}
 
-export default FinancialReportsPage;
+export default FinancialReportsPage
 
 const Table = (props: any) => {
-  return props.children;
-};
+  return props.children
+}

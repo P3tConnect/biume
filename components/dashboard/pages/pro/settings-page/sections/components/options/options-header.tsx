@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 interface OptionsHeaderProps {
-  onCreateNew: () => void;
+  onCreateNew: () => void
 }
 
 export const OptionsHeader = ({ onCreateNew }: OptionsHeaderProps) => {
@@ -19,5 +20,5 @@ export const OptionsHeader = ({ onCreateNew }: OptionsHeaderProps) => {
         Nouvelle Option
       </Button>
     </div>
-  );
-}; 
+  )
+}

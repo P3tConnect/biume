@@ -1,24 +1,24 @@
-import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
-import { CompanyDetails } from "./_components/CompanyDetails";
-import { getCompanyById } from "@/src/actions/organization.action";
+import { notFound } from "next/navigation"
+import { Suspense } from "react"
+
+import { getCompanyById } from "@/src/actions/organization.action"
+
+import { CompanyDetails } from "./_components/CompanyDetails"
 
 interface CompanyDetailsPageProps {
   params: Promise<{
-    companyId: string;
-  }>;
+    companyId: string
+  }>
 }
 
-export default async function CompanyDetailsPage({
-  params,
-}: CompanyDetailsPageProps) {
-  const { companyId } = await params;
+export default async function CompanyDetailsPage({ params }: CompanyDetailsPageProps) {
+  const { companyId } = await params
 
   if (!companyId) {
-    notFound();
+    notFound()
   }
 
-  const company = await getCompanyById({ companyId });
+  const company = await getCompanyById({ companyId })
 
   return (
     <div className="relative h-screen w-screen bg-background overflow-auto">
@@ -45,9 +45,7 @@ export default async function CompanyDetailsPage({
 
               <div className="mt-6 text-foreground/70 font-medium text-center">
                 <p className="text-lg">Préparation de votre expérience</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Nous récupérons les informations...
-                </p>
+                <p className="text-sm text-muted-foreground mt-2">Nous récupérons les informations...</p>
               </div>
 
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 -z-10 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
@@ -60,5 +58,5 @@ export default async function CompanyDetailsPage({
         </div>
       </Suspense>
     </div>
-  );
+  )
 }

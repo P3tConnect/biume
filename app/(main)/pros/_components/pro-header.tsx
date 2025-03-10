@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import { UserNav } from "@/components/dashboard/layout/user-nav";
-import { Button } from "@/components/ui";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { useSession } from "@/src/lib/auth-client";
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
+
+import { UserNav } from "@/components/dashboard/layout/user-nav"
+import { Button } from "@/components/ui"
+import { useSession } from "@/src/lib/auth-client"
 
 export function ProHeader() {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
   return (
     <header className="w-full border-b border-border/30 bg-background/95 backdrop-blur-sm z-10 sticky top-0">
@@ -33,5 +34,5 @@ export function ProHeader() {
         )}
       </div>
     </header>
-  );
+  )
 }

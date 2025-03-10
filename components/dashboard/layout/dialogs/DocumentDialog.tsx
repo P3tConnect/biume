@@ -1,62 +1,30 @@
-"use client";
+"use client"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { CalendarIcon, Loader2, FileIcon, FolderIcon, TagIcon, UploadIcon, FileText } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/src/lib/utils";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DropzoneInput } from "@/components/ui/dropzone-input";
-import { Credenza, CredenzaContent, CredenzaTitle, CredenzaHeader } from "@/components/ui";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { CalendarIcon, FileIcon, FileText, Loader2, UploadIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Credenza, CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Card } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/src/lib/utils"
 
 interface DocumentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 // Définir le schéma du formulaire
@@ -73,23 +41,23 @@ const formSchema = z.object({
   }),
   tags: z.string().optional(),
   file: z.any().optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 // Fonction simulée pour créer un document
 const createDocument = async (data: FormValues) => {
   // Simulation d'un appel API
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
-      console.log("Document créé:", data);
-      resolve({ success: true, data });
-    }, 1000);
-  });
-};
+      console.log("Document créé:", data)
+      resolve({ success: true, data })
+    }, 1000)
+  })
+}
 
 const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -99,65 +67,83 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
       category: "medical",
       tags: "",
     },
-  });
+  })
 
-  const selectedTitle = form.watch("title");
-  const selectedCategory = form.watch("category");
-  const selectedDate = form.watch("date");
-  const selectedFile = form.watch("file");
+  const selectedTitle = form.watch("title")
+  const selectedCategory = form.watch("category")
+  const selectedDate = form.watch("date")
+  const selectedFile = form.watch("file")
 
   const mutation = useMutation({
     mutationFn: createDocument,
     onSuccess: () => {
-      toast.success("Le document a été créé avec succès");
-      form.reset();
-      onOpenChange(false);
-      router.refresh();
+      toast.success("Le document a été créé avec succès")
+      form.reset()
+      onOpenChange(false)
+      router.refresh()
     },
     onError: () => {
-      toast.error("Une erreur est survenue lors de la création du document");
+      toast.error("Une erreur est survenue lors de la création du document")
     },
-  });
+  })
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
-  };
+    mutation.mutate(values)
+  }
 
   // Fonction pour obtenir l'icône en fonction de la catégorie
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "medical": return <FileText className="h-8 w-8" />;
-      case "identity": return <FileIcon className="h-8 w-8" />;
-      case "invoice": return <FileIcon className="h-8 w-8" />;
-      case "prescription": return <FileText className="h-8 w-8" />;
-      case "other": return <FileIcon className="h-8 w-8" />;
-      default: return <FileIcon className="h-8 w-8" />;
+      case "medical":
+        return <FileText className="h-8 w-8" />
+      case "identity":
+        return <FileIcon className="h-8 w-8" />
+      case "invoice":
+        return <FileIcon className="h-8 w-8" />
+      case "prescription":
+        return <FileText className="h-8 w-8" />
+      case "other":
+        return <FileIcon className="h-8 w-8" />
+      default:
+        return <FileIcon className="h-8 w-8" />
     }
-  };
+  }
 
   // Fonction pour obtenir le libellé de la catégorie en français
   const getCategoryLabel = (category: string) => {
     switch (category) {
-      case "medical": return "Médical";
-      case "identity": return "Identité";
-      case "invoice": return "Facture";
-      case "prescription": return "Ordonnance";
-      case "other": return "Autre";
-      default: return category;
+      case "medical":
+        return "Médical"
+      case "identity":
+        return "Identité"
+      case "invoice":
+        return "Facture"
+      case "prescription":
+        return "Ordonnance"
+      case "other":
+        return "Autre"
+      default:
+        return category
     }
-  };
+  }
 
   // Fonction pour obtenir la couleur en fonction de la catégorie
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "medical": return "text-blue-500";
-      case "identity": return "text-green-500";
-      case "invoice": return "text-amber-500";
-      case "prescription": return "text-purple-500";
-      case "other": return "text-slate-500";
-      default: return "text-slate-500";
+      case "medical":
+        return "text-blue-500"
+      case "identity":
+        return "text-green-500"
+      case "invoice":
+        return "text-amber-500"
+      case "prescription":
+        return "text-purple-500"
+      case "other":
+        return "text-slate-500"
+      default:
+        return "text-slate-500"
     }
-  };
+  }
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
@@ -172,27 +158,40 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
               {/* Prévisualisation du document */}
               <Card className="md:w-1/3 p-4 flex flex-col space-y-4 border-dashed">
                 <div className="flex items-center justify-center">
-                  <div className={cn("h-24 w-24 rounded-md flex items-center justify-center",
-                    selectedCategory === "medical" ? "bg-blue-100" :
-                      selectedCategory === "identity" ? "bg-green-100" :
-                        selectedCategory === "invoice" ? "bg-amber-100" :
-                          selectedCategory === "prescription" ? "bg-purple-100" : "bg-slate-100"
-                  )}>
-                    <div className={cn(
-                      selectedCategory === "medical" ? "text-blue-600" :
-                        selectedCategory === "identity" ? "text-green-600" :
-                          selectedCategory === "invoice" ? "text-amber-600" :
-                            selectedCategory === "prescription" ? "text-purple-600" : "text-slate-600"
-                    )}>
+                  <div
+                    className={cn(
+                      "h-24 w-24 rounded-md flex items-center justify-center",
+                      selectedCategory === "medical"
+                        ? "bg-blue-100"
+                        : selectedCategory === "identity"
+                          ? "bg-green-100"
+                          : selectedCategory === "invoice"
+                            ? "bg-amber-100"
+                            : selectedCategory === "prescription"
+                              ? "bg-purple-100"
+                              : "bg-slate-100"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        selectedCategory === "medical"
+                          ? "text-blue-600"
+                          : selectedCategory === "identity"
+                            ? "text-green-600"
+                            : selectedCategory === "invoice"
+                              ? "text-amber-600"
+                              : selectedCategory === "prescription"
+                                ? "text-purple-600"
+                                : "text-slate-600"
+                      )}
+                    >
                       {getCategoryIcon(selectedCategory)}
                     </div>
                   </div>
                 </div>
 
                 <div className="text-center space-y-1">
-                  <h3 className="font-medium text-lg truncate">
-                    {selectedTitle || "Titre du document"}
-                  </h3>
+                  <h3 className="font-medium text-lg truncate">{selectedTitle || "Titre du document"}</h3>
                   <p className={cn("text-sm", getCategoryColor(selectedCategory))}>
                     {getCategoryLabel(selectedCategory)}
                   </p>
@@ -249,10 +248,7 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Catégorie</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Sélectionnez une catégorie" />
@@ -297,12 +293,7 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
                                 </FormControl>
                               </PopoverTrigger>
                               <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  initialFocus
-                                />
+                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                               </PopoverContent>
                             </Popover>
                             <FormMessage />
@@ -356,9 +347,7 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
                             <div className="border rounded-md p-4">
                               <div className="flex flex-col items-center justify-center py-4">
                                 <UploadIcon className="h-10 w-10 text-muted-foreground mb-2" />
-                                <p className="text-sm text-muted-foreground mb-1">
-                                  Glissez-déposez un fichier ici ou
-                                </p>
+                                <p className="text-sm text-muted-foreground mb-1">Glissez-déposez un fichier ici ou</p>
                                 <Button
                                   type="button"
                                   variant="outline"
@@ -366,15 +355,15 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
                                   className="mt-2"
                                   onClick={() => {
                                     // Simuler un clic sur l'input file
-                                    const input = document.createElement("input");
-                                    input.type = "file";
-                                    input.onchange = (e) => {
-                                      const file = (e.target as HTMLInputElement).files?.[0];
+                                    const input = document.createElement("input")
+                                    input.type = "file"
+                                    input.onchange = e => {
+                                      const file = (e.target as HTMLInputElement).files?.[0]
                                       if (file) {
-                                        field.onChange(file);
+                                        field.onChange(file)
                                       }
-                                    };
-                                    input.click();
+                                    }
+                                    input.click()
                                   }}
                                 >
                                   Sélectionnez un fichier
@@ -383,9 +372,7 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
                               {field.value && (
                                 <div className="mt-4 p-2 border rounded bg-gray-50 flex items-center">
                                   <FileIcon className="h-5 w-5 mr-2" />
-                                  <span className="text-sm truncate">
-                                    {field.value.name}
-                                  </span>
+                                  <span className="text-sm truncate">{field.value.name}</span>
                                 </div>
                               )}
                             </div>
@@ -400,18 +387,10 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
             </div>
 
             <div className="flex justify-end gap-3 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Annuler
               </Button>
-              <Button
-                type="submit"
-                disabled={mutation.isPending}
-                className="min-w-28"
-              >
+              <Button type="submit" disabled={mutation.isPending} className="min-w-28">
                 {mutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -426,7 +405,7 @@ const DocumentDialog = ({ open, onOpenChange }: DocumentDialogProps) => {
         </Form>
       </CredenzaContent>
     </Credenza>
-  );
-};
+  )
+}
 
-export default DocumentDialog;
+export default DocumentDialog
