@@ -250,7 +250,7 @@ export const UnifiedMetrics = () => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Rendez-vous */}
-          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+          <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
             <div className="p-3">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -268,7 +268,7 @@ export const UnifiedMetrics = () => {
           </Card>
 
           {/* Nouveaux patients */}
-          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+          <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
             <div className="p-3">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -286,7 +286,7 @@ export const UnifiedMetrics = () => {
           </Card>
 
           {/* Soins réalisés */}
-          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+          <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
             <div className="p-3">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -304,7 +304,7 @@ export const UnifiedMetrics = () => {
           </Card>
 
           {/* Satisfaction client */}
-          <Card className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10">
+          <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
             <div className="p-3">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -368,7 +368,7 @@ export const UnifiedMetrics = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Rendez-vous */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Rendez-vous")}
         >
           <div className="p-3">
@@ -402,7 +402,7 @@ export const UnifiedMetrics = () => {
 
         {/* Nouveaux patients */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Nouveaux patients")}
         >
           <div className="p-3">
@@ -436,7 +436,7 @@ export const UnifiedMetrics = () => {
 
         {/* Soins réalisés */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Soins réalisés")}
         >
           <div className="p-3">
@@ -470,7 +470,7 @@ export const UnifiedMetrics = () => {
 
         {/* Satisfaction client */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer hover:shadow-sm transition-shadow hover:bg-muted/10"
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Satisfaction client")}
         >
           <div className="p-3">

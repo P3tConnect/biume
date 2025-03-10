@@ -326,68 +326,6 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                   </div>
                 </DropdownMenuGroup>
               )}
-              {organizations && organizations.data && organizations.data.length > 0 && (
-                <DropdownMenuGroup>
-                  <DropdownMenuSeparator className="my-2" />
-                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                    Comptes professionnels
-                  </DropdownMenuLabel>
-                  <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
-                    {organizations.data.map(org => (
-                      <DropdownMenuItem
-                        key={org.id}
-                        className={cn(
-                          "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
-                          companyId === org.id
-                            ? "bg-primary/10 text-primary font-medium shadow-sm"
-                            : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                          switchingOrg === org.id && "animate-pulse opacity-70"
-                        )}
-                        onSelect={() => handleOrganizationSwitch(org.id)}
-                        disabled={switchingOrg !== null}
-                      >
-                        {org.logo ? (
-                          <div
-                            className={cn(
-                              "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                              companyId === org.id
-                                ? "ring-2 ring-primary/30"
-                                : "ring-1 ring-border/50 hover:ring-primary/20"
-                            )}
-                          >
-                            <Image
-                              src={org.logo}
-                              alt={org.name}
-                              width={32}
-                              height={32}
-                              className={cn(
-                                "h-full w-full object-cover transition-transform duration-300",
-                                companyId !== org.id && "hover:scale-110"
-                              )}
-                            />
-                          </div>
-                        ) : (
-                          <div
-                            className={cn(
-                              "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                              companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
-                            )}
-                          >
-                            <Building className="h-4 w-4 text-primary" />
-                          </div>
-                        )}
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium leading-none">{org.name}</span>
-                          <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
-                        </div>
-                        {companyId === org.id && (
-                          <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
-                        )}
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
-                </DropdownMenuGroup>
-              )}
 
               <DropdownMenuGroup>
                 <DropdownMenuSeparator className="my-2" />
