@@ -45,7 +45,7 @@ const Feature = ({
       >
         <Icon className="w-6 h-6" />
       </div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h4 className="text-xl font-semibold mb-2">{title}</h4>
       <p className="text-muted-foreground">{description}</p>
     </motion.div>
   );
@@ -150,10 +150,10 @@ export function FeaturesSection() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Tout ce dont vous avez besoin pour gérer votre activité
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <h3 className="text-lg text-muted-foreground">
             Biume regroupe tous les outils essentiels aux professionnels de la
             santé animale dans une interface moderne et intuitive.
-          </p>
+          </h3>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

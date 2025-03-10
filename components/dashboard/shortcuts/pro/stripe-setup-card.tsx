@@ -65,6 +65,11 @@ export function StripeSetupCard() {
       (stripeConnectInfo.requirements.eventually_due?.length ?? 0) > 0 ||
       (stripeConnectInfo.requirements.past_due?.length ?? 0) > 0);
 
+
+  if (!hasPendingRequirements) {
+    return null;
+  }
+
   return (
     <Card className="mb-4">
       <div className="p-4">
@@ -92,7 +97,7 @@ export function StripeSetupCard() {
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-1.5 text-xs">
-            {activeOrg.customerStripeId ? (
+            {activeOrg.customerStripeId !== "" ? (
               <CheckCircle className="h-3 w-3 text-green-500" />
             ) : (
               <AlertTriangle className="h-3 w-3 text-amber-500" />
@@ -101,7 +106,7 @@ export function StripeSetupCard() {
           </div>
 
           <div className="flex items-center gap-1.5 text-xs">
-            {activeOrg.companyStripeId ? (
+            {activeOrg.companyStripeId !== "" ? (
               <CheckCircle className="h-3 w-3 text-green-500" />
             ) : (
               <AlertTriangle className="h-3 w-3 text-amber-500" />
@@ -109,7 +114,7 @@ export function StripeSetupCard() {
             <span>Entreprise Stripe</span>
           </div>
 
-          {activeOrg.companyStripeId && (
+          {activeOrg.companyStripeId !== "" && (
             <>
               <div className="flex items-center gap-1.5 text-xs">
                 {isConnectConfigured && stripeConnectInfo.detailsSubmitted ? (
@@ -121,7 +126,7 @@ export function StripeSetupCard() {
               </div>
 
               <div className="flex items-center gap-1.5 text-xs">
-                {isConnectConfigured && stripeConnectInfo.chargesEnabled ? (
+                {isConnectConfigured && stripeConnectInfo.chargesEnabled !== false ? (
                   <CheckCircle className="h-3 w-3 text-green-500" />
                 ) : (
                   <AlertTriangle className="h-3 w-3 text-amber-500" />
@@ -130,7 +135,7 @@ export function StripeSetupCard() {
               </div>
 
               <div className="flex items-center gap-1.5 text-xs">
-                {isConnectConfigured && stripeConnectInfo.payoutsEnabled ? (
+                {isConnectConfigured && stripeConnectInfo.payoutsEnabled !== false ? (
                   <CheckCircle className="h-3 w-3 text-green-500" />
                 ) : (
                   <AlertTriangle className="h-3 w-3 text-amber-500" />

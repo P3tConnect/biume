@@ -332,19 +332,17 @@ export const UnifiedMetrics = () => {
                 <CalendarIcon className="w-4 h-4 text-indigo-500" />
               </div>
               <div className="text-2xl font-semibold">
-                <CountAnimation
-                  value={
-                    !hasData
-                      ? 0
-                      : metrics.appointmentsData[
+                {metrics.appointmentsData[metrics.appointmentsData.length - 1].value > 0 ? (
+                  <CountAnimation
+                    value={
+                      metrics.appointmentsData[
                         metrics.appointmentsData.length - 1
-                      ].value > 0
-                        ? metrics.appointmentsData[
-                          metrics.appointmentsData.length - 1
-                        ].value
-                        : 0
-                  }
-                />
+                      ].value
+                    }
+                  />
+                ) : (
+                  <p className="text-2xl font-semibold">0</p>
+                )}
               </div>
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
@@ -372,19 +370,17 @@ export const UnifiedMetrics = () => {
                 <User className="w-4 h-4 text-rose-500" />
               </div>
               <div className="text-2xl font-semibold">
-                <CountAnimation
-                  value={
-                    !hasData
-                      ? 0
-                      : metrics.newPatientsData[
+                {metrics.newPatientsData[metrics.newPatientsData.length - 1].value > 0 ? (
+                  <CountAnimation
+                    value={
+                      metrics.newPatientsData[
                         metrics.newPatientsData.length - 1
-                      ].value > 0
-                        ? metrics.newPatientsData[
-                          metrics.newPatientsData.length - 1
-                        ].value
-                        : 0
-                  }
-                />
+                      ].value
+                    }
+                  />
+                ) : (
+                  <p className="text-2xl font-semibold">0</p>
+                )}
               </div>
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
@@ -412,18 +408,17 @@ export const UnifiedMetrics = () => {
                 <Stethoscope className="w-4 h-4 text-emerald-500" />
               </div>
               <div className="text-2xl font-semibold">
-                <CountAnimation
-                  value={
-                    !hasData
-                      ? 0
-                      : metrics.treatmentsData[metrics.treatmentsData.length - 1]
-                        ?.value > 0
-                        ? metrics.treatmentsData[
-                          metrics.treatmentsData.length - 1
-                        ].value
-                        : 0
-                  }
-                />
+                {metrics.treatmentsData[metrics.treatmentsData.length - 1].value > 0 ? (
+                  <CountAnimation
+                    value={
+                      metrics.treatmentsData[
+                        metrics.treatmentsData.length - 1
+                      ].value
+                    }
+                  />
+                ) : (
+                  <p className="text-2xl font-semibold">0</p>
+                )}
               </div>
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
@@ -451,20 +446,17 @@ export const UnifiedMetrics = () => {
                 <HeartPulseIcon className="w-4 h-4 text-amber-500" />
               </div>
               <div className="text-2xl font-semibold">
-                <CountAnimation
-                  value={
-                    !hasData
-                      ? 0
-                      : metrics.satisfactionData[
+                {metrics.satisfactionData[metrics.satisfactionData.length - 1].value > 0 ? (
+                  <CountAnimation
+                    value={
+                      metrics.satisfactionData[
                         metrics.satisfactionData.length - 1
-                      ].value > 0
-                        ? metrics.satisfactionData[
-                          metrics.satisfactionData.length - 1
-                        ].value
-                        : 0
-                  }
-                />
-                <span className="text-sm font-medium ml-1">%</span>
+                      ].value
+                    }
+                  />
+                ) : (
+                  <p className="text-2xl font-semibold">0%</p>
+                )}
               </div>
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
