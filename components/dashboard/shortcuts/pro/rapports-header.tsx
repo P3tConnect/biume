@@ -13,11 +13,9 @@ export const RapportsHeader = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
-              Rapports d&apos;activité
+              Mes rapports
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Consultez et générez des rapports détaillés de votre activité
-            </p>
+            <p className="text-sm text-muted-foreground">Consultez les rapports de vos patients</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">

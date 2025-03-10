@@ -15,7 +15,9 @@ export const MessagesHeader = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               Communications
             </CardTitle>
-            <p className="text-sm text-muted-foreground">Gérez vos messages et communications avec les propriétaires</p>
+            <p className="text-sm text-muted-foreground">
+              Gérez vos messages et communications avec les propriétaires d&apos;animaux
+            </p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">

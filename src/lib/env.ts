@@ -25,6 +25,7 @@ interface ENV {
   STRIPE_WEBHOOK_BASIC_SECRET: string | undefined
   STRIPE_WEBHOOK_PRO_SECRET: string | undefined
   STRIPE_WEBHOOK_ULTIMATE_SECRET: string | undefined
+  STRIPE_WEBHOOK_TRANSACTION_SECRET: string | undefined
 }
 
 interface Config {
@@ -50,6 +51,7 @@ interface Config {
   STRIPE_WEBHOOK_BASIC_SECRET: string
   STRIPE_WEBHOOK_PRO_SECRET: string
   STRIPE_WEBHOOK_ULTIMATE_SECRET: string
+  STRIPE_WEBHOOK_TRANSACTION_SECRET: string
 }
 
 const getConfig = (): ENV => {
@@ -76,6 +78,7 @@ const getConfig = (): ENV => {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    STRIPE_WEBHOOK_TRANSACTION_SECRET: process.env.STRIPE_WEBHOOK_TRANSACTION_SECRET,
   }
 }
 

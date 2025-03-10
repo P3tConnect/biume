@@ -125,8 +125,6 @@ export const createBookingCheckoutSession = createServerAction(
         },
       })
 
-      console.log(org)
-
       if (!org?.companyStripeId) {
         throw new ActionError("Impossible de récupérer le compte Stripe de l'entreprise")
       }

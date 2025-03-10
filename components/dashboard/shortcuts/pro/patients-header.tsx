@@ -13,7 +13,7 @@ export const PatientsHeader = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-              Patients actuels
+              Mes patients
             </CardTitle>
             <p className="text-sm text-muted-foreground">Gérez les dossiers médicaux de vos patients</p>
           </div>
