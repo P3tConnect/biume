@@ -31,7 +31,6 @@ const config = [
       "max-params": ["error", 4],
       "tailwindcss/no-custom-classname": "off",
       "tailwindcss/classnames-order": "off",
-      "no-process-env": "error",
     },
   },
 ]
