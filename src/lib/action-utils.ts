@@ -1,45 +1,42 @@
-import { z } from "zod";
-import type { User } from "./auth";
-import { Organization as FullOrganization } from "@/src/db";
+import { z } from "zod"
+
+import { Organization as FullOrganization } from "@/src/db"
+
+import type { User } from "./auth"
 
 // Define minimal types needed for the context
 type MinimalOrganization = {
-  id: string;
-  name: string;
-};
+  id: string
+  name: string
+}
 
 export class ActionError extends Error {
   constructor(message: string) {
-    super(message);
-    this.name = "Action Error";
+    super(message)
+    this.name = "Action Error"
   }
 }
 
 const handleReturnedServerError = (error: Error) => {
   if (error instanceof ActionError) {
-    return error.message;
+    return error.message
   }
-  return "An unexpected error occurred";
-};
+  return "An unexpected error occurred"
+}
 
 export type ServerActionContext = {
-  user: User | null;
-  organization: MinimalOrganization | null;
-  fullOrganization: FullOrganization | null;
-  meta: Record<string, unknown> | null;
-};
+  user: User | null
+  organization: MinimalOrganization | null
+  fullOrganization: FullOrganization | null
+  meta: Record<string, unknown> | null
+}
 
-export type ActionResult<T> =
-  | { data: T; error?: never }
-  | { data?: never; error: string };
+export type ActionResult<T> = { data: T; error?: never } | { data?: never; error: string }
 
 export function createServerAction<TSchema extends z.ZodType, TOutput>(
   schema: TSchema,
-  handler: (
-    input: z.infer<TSchema>,
-    ctx: ServerActionContext,
-  ) => Promise<TOutput>,
-  middlewares: ((ctx: ServerActionContext) => Promise<void>)[] = [],
+  handler: (input: z.infer<TSchema>, ctx: ServerActionContext) => Promise<TOutput>,
+  middlewares: ((ctx: ServerActionContext) => Promise<void>)[] = []
 ): (input: z.infer<TSchema>) => Promise<ActionResult<TOutput>> {
   return async (input: z.infer<TSchema>) => {
     try {
@@ -49,28 +46,28 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
         user: null,
         organization: null,
         fullOrganization: null,
-      };
+      }
 
       // Execute all middlewares in sequence
       for (const middleware of middlewares) {
-        await middleware(ctx);
+        await middleware(ctx)
       }
 
       // Validate input
-      const validatedInput = await schema.parseAsync(input);
+      const validatedInput = await schema.parseAsync(input)
 
       // Execute handler with validated input
-      const result = await handler(validatedInput, ctx);
+      const result = await handler(validatedInput, ctx)
 
-      return { data: result };
+      return { data: result }
     } catch (e) {
       if (e instanceof z.ZodError) {
-        return { error: e.errors[0].message };
+        return { error: e.errors[0].message }
       }
       if (e instanceof Error) {
-        return { error: e.message };
+        return { error: e.message }
       }
-      return { error: "An unexpected error occurred" };
+      return { error: "An unexpected error occurred" }
     }
-  };
+  }
 }

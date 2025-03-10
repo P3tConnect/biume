@@ -1,12 +1,13 @@
-"use client";
+"use client"
 
-import { LayoutGrid, Table } from "lucide-react";
-import { Toggle } from "@/components/ui/toggle";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { LayoutGrid, Table } from "lucide-react"
+
+import { Toggle } from "@/components/ui/toggle"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface ViewToggleProps {
-  value: "table" | "kanban";
-  onValueChange: (value: "table" | "kanban") => void;
+  value: "table" | "kanban"
+  onValueChange: (value: "table" | "kanban") => void
 }
 
 export function ViewToggle({ value, onValueChange }: ViewToggleProps) {
@@ -40,5 +41,5 @@ export function ViewToggle({ value, onValueChange }: ViewToggleProps) {
         <TooltipContent>Vue kanban</TooltipContent>
       </Tooltip>
     </div>
-  );
-} 
+  )
+}

@@ -1,35 +1,24 @@
-"use client";
+"use client"
 
-import React, { use } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
-import { updateOrganization } from "@/src/actions/organization.action";
-import { useFormChangeToast } from "@/src/hooks/useFormChangeToast";
-import { Organization } from "@/src/db/organization";
-import { organizationFormSchema } from "../../profile-section";
-import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import * as z from "zod"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { updateOrganization } from "@/src/actions/organization.action"
+import { Organization } from "@/src/db/organization"
+import { useFormChangeToast } from "@/src/hooks/useFormChangeToast"
+
+import { organizationFormSchema } from "../../profile-section"
 
 interface ProfileMainInfoSectionProps {
-  org: Organization | null | undefined;
+  org: Organization | null | undefined
 }
 
 export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => {
@@ -48,23 +37,23 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
       siren: org?.siren || "",
       siret: org?.siret || "",
     },
-  });
+  })
 
-  const { handleSubmit } = form;
+  const { handleSubmit } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganization,
     onSuccess: () => {
-      toast.success("Modifications enregistrées avec succès !");
+      toast.success("Modifications enregistrées avec succès !")
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: error => {
+      toast.error(error.message)
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
-    await mutateAsync(data);
-  });
+  const onSubmit = handleSubmit(async data => {
+    await mutateAsync(data)
+  })
 
   useFormChangeToast({
     form,
@@ -72,7 +61,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
     message: "Modifications en attente",
     description: "Pensez à sauvegarder vos changements",
     position: "bottom-center",
-  });
+  })
 
   return (
     <Form {...form}>
@@ -80,9 +69,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
         <Card>
           <CardHeader>
             <CardTitle>Informations principales</CardTitle>
-            <CardDescription>
-              Les informations essentielles de votre organisation
-            </CardDescription>
+            <CardDescription>Les informations essentielles de votre organisation</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
@@ -93,10 +80,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
                   <FormItem>
                     <FormLabel>Nom de l&apos;organisation</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Entrez le nom de l&apos;organisation"
-                        {...field}
-                      />
+                      <Input placeholder="Entrez le nom de l'organisation" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,10 +94,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
                   <FormItem>
                     <FormLabel>Adresse email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Entrez l'adresse email"
-                        {...field}
-                      />
+                      <Input placeholder="Entrez l'adresse email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,11 +109,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Décrivez votre organisation..."
-                      className="min-h-[120px]"
-                      {...field}
-                    />
+                    <Textarea placeholder="Décrivez votre organisation..." className="min-h-[120px]" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -147,10 +124,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
                   <FormItem>
                     <FormLabel>Site web</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://example.com"
-                        {...field}
-                      />
+                      <Input placeholder="https://example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -175,5 +149,5 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
         </Card>
       </form>
     </Form>
-  );
-}; 
+  )
+}

@@ -1,21 +1,18 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar as CalendarIcon, List, Clock } from "lucide-react";
-import { cn } from "@/src/lib/utils";
+import { Calendar as CalendarIcon, Clock, List } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { cn } from "@/src/lib/utils"
 
 interface TimetableHeaderProps {
-  view: "calendar" | "list";
-  onViewChange: (view: "calendar" | "list") => void;
-  onNewAppointment: () => void;
+  view: "calendar" | "list"
+  onViewChange: (view: "calendar" | "list") => void
+  onNewAppointment: () => void
 }
 
-export function TimetableHeader({
-  view,
-  onViewChange,
-  onNewAppointment,
-}: TimetableHeaderProps) {
+export function TimetableHeader({ view, onViewChange, onNewAppointment }: TimetableHeaderProps) {
   return (
     <div className="pb-2">
       <Card className="overflow-hidden rounded-2xl">
@@ -25,9 +22,7 @@ export function TimetableHeader({
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                 Planification
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Gérez vos rendez-vous et votre emploi du temps
-              </p>
+              <p className="text-sm text-muted-foreground">Gérez vos rendez-vous et votre emploi du temps</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg">
@@ -35,10 +30,7 @@ export function TimetableHeader({
                   variant="ghost"
                   size="sm"
                   onClick={() => onViewChange("calendar")}
-                  className={cn(
-                    "h-8 rounded-md transition-colors",
-                    view === "calendar" && "bg-background shadow-sm",
-                  )}
+                  className={cn("h-8 rounded-md transition-colors", view === "calendar" && "bg-background shadow-sm")}
                 >
                   <CalendarIcon className="h-4 w-4 mr-2" />
                   Calendrier
@@ -47,10 +39,7 @@ export function TimetableHeader({
                   variant="ghost"
                   size="sm"
                   onClick={() => onViewChange("list")}
-                  className={cn(
-                    "h-8 rounded-md transition-colors",
-                    view === "list" && "bg-background shadow-sm",
-                  )}
+                  className={cn("h-8 rounded-md transition-colors", view === "list" && "bg-background shadow-sm")}
                 >
                   <List className="h-4 w-4 mr-2" />
                   Liste
@@ -68,5 +57,5 @@ export function TimetableHeader({
         </CardHeader>
       </Card>
     </div>
-  );
+  )
 }

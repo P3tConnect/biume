@@ -1,14 +1,15 @@
-'use client';
+"use client"
 
-import InformationsPetIntolerancesForm from '../forms/informations-pet-intolerances-form';
-import { Pet } from '@/src/db/pets';
+import { Pet } from "@/src/db/pets"
+
+import InformationsPetIntolerancesForm from "../forms/informations-pet-intolerances-form"
 
 interface InformationsPetIntolerancesStepProps {
-  nextStep: () => void;
-  previousStep: () => void;
-  isPending: boolean;
-  petData?: Pet | null;
-  isUpdate?: boolean;
+  nextStep: () => void
+  previousStep: () => void
+  isPending: boolean
+  petData?: Pet | null
+  isUpdate?: boolean
 }
 
 const InformationsPetIntolerancesStep = ({
@@ -26,7 +27,7 @@ const InformationsPetIntolerancesStep = ({
       petData={petData}
       isUpdate={isUpdate}
     />
-  );
-};
+  )
+}
 
-export default InformationsPetIntolerancesStep;
+export default InformationsPetIntolerancesStep

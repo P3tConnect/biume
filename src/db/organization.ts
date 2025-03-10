@@ -1,38 +1,29 @@
-import {
-  boolean,
-  date,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { z } from "zod";
-import { organizationDocuments } from "./organizationDocuments";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { progression } from "./progression";
-import { cancelPolicies } from "./cancelPolicies";
-import { Rating, ratings } from "./ratings";
-import { Service, service } from "./service";
-import { options } from "./options";
-import { address } from "./addresses";
-import {
-  OrganizationAddress,
-  organizationAddress,
-} from "./organizationAddress";
-import { Topic, topic } from "./topic";
-import { transaction } from "./transaction";
-import { widgets } from "./widgets";
-import { bgJobs } from "./bgJobs";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { invitation } from "./invitation";
-import { appointments } from "./appointments";
-import { Option } from "./options";
-import { Member, member } from "./member";
-import { ClientNote, clientNote } from "./clientNote";
-import { OrganizationImage, organizationImages } from "./organizationImages";
-import { OrganizationSlots, organizationSlots } from "./organizationSlots";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 
-export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"]);
+import { address } from "./addresses"
+import { appointments } from "./appointments"
+import { bgJobs } from "./bgJobs"
+import { cancelPolicies } from "./cancelPolicies"
+import { ClientNote, clientNote } from "./clientNote"
+import { invitation } from "./invitation"
+import { Member, member } from "./member"
+import { options } from "./options"
+import { Option } from "./options"
+import { OrganizationAddress, organizationAddress } from "./organizationAddress"
+import { organizationDocuments } from "./organizationDocuments"
+import { OrganizationImage, organizationImages } from "./organizationImages"
+import { OrganizationSlots, organizationSlots } from "./organizationSlots"
+import { progression } from "./progression"
+import { Rating, ratings } from "./ratings"
+import { Service, service } from "./service"
+import { Topic, topic } from "./topic"
+import { transaction } from "./transaction"
+import { widgets } from "./widgets"
+
+export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"])
 
 export const companyType = pgEnum("companyType", [
   "NONE",
@@ -43,10 +34,10 @@ export const companyType = pgEnum("companyType", [
   "SASU",
   "EURL",
   "OTHER",
-]);
+])
 
-export const PlanEnum = z.enum(plan.enumValues);
-export const CompanyTypeEnum = z.enum(companyType.enumValues);
+export const PlanEnum = z.enum(plan.enumValues)
+export const CompanyTypeEnum = z.enum(companyType.enumValues)
 
 export const organization = pgTable("organizations", {
   id: text("id").primaryKey(),
@@ -79,49 +70,46 @@ export const organization = pgTable("organizations", {
   siret: text("siret"),
   onDemand: boolean("onDemand").notNull().default(false),
   updatedAt: timestamp("updatedAt"),
-});
+})
 
-export const organizationRelations = relations(
-  organization,
-  ({ one, many }) => ({
-    progression: one(progression, {
-      fields: [organization.progressionId],
-      references: [progression.id],
-    }),
-    documents: many(organizationDocuments),
-    appointments: many(appointments),
-    cancelPolicies: many(cancelPolicies),
-    ratings: many(ratings),
-    services: many(service),
-    options: many(options),
-    topics: many(topic),
-    address: one(organizationAddress, {
-      fields: [organization.addressId],
-      references: [organizationAddress.id],
-    }),
-    transactions: many(transaction),
-    widgets: many(widgets),
-    bgJobs: many(bgJobs),
-    invitations: many(invitation),
-    members: many(member),
-    clientNotes: many(clientNote),
-    images: many(organizationImages),
-    slots: many(organizationSlots),
+export const organizationRelations = relations(organization, ({ one, many }) => ({
+  progression: one(progression, {
+    fields: [organization.progressionId],
+    references: [progression.id],
   }),
-);
+  documents: many(organizationDocuments),
+  appointments: many(appointments),
+  cancelPolicies: many(cancelPolicies),
+  ratings: many(ratings),
+  services: many(service),
+  options: many(options),
+  topics: many(topic),
+  address: one(organizationAddress, {
+    fields: [organization.addressId],
+    references: [organizationAddress.id],
+  }),
+  transactions: many(transaction),
+  widgets: many(widgets),
+  bgJobs: many(bgJobs),
+  invitations: many(invitation),
+  members: many(member),
+  clientNotes: many(clientNote),
+  images: many(organizationImages),
+  slots: many(organizationSlots),
+}))
 
 export type Organization = InferSelectModel<typeof organization> & {
-  address: OrganizationAddress;
-  members: Member[];
-  ratings: Rating[];
-  services: Service[];
-  options: Option[];
-  topics: Topic[];
-  clientNotes: ClientNote[];
-  images: OrganizationImage[];
-  slots: OrganizationSlots[];
-};
-export type CreateOrganization = typeof organization.$inferInsert;
+  address: OrganizationAddress
+  members: Member[]
+  ratings: Rating[]
+  services: Service[]
+  options: Option[]
+  topics: Topic[]
+  clientNotes: ClientNote[]
+  images: OrganizationImage[]
+  slots: OrganizationSlots[]
+}
+export type CreateOrganization = typeof organization.$inferInsert
 
-export const OrganizationSchema = createSelectSchema(organization);
-export const CreateOrganizationSchema = createInsertSchema(organization);
+export const OrganizationSchema = createSelectSchema(organization)
+export const CreateOrganizationSchema = createInsertSchema(organization)

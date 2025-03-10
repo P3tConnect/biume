@@ -1,56 +1,42 @@
-"use client";
+"use client"
 
-import {
-  CredenzaContent,
-  CredenzaTitle,
-  CredenzaDescription,
-  CredenzaHeader,
-  CredenzaFooter,
-} from "@/components/ui";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { CredenzaContent, CredenzaDescription, CredenzaFooter, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 const createObservationSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
   content: z.string().min(1, "Le contenu est requis"),
-});
+})
 
-type CreateObservationForm = z.infer<typeof createObservationSchema>;
+type CreateObservationForm = z.infer<typeof createObservationSchema>
 
 interface CreateObservationDialogProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
-export function CreateObservationDialog({
-  onClose,
-}: CreateObservationDialogProps) {
+export function CreateObservationDialog({ onClose }: CreateObservationDialogProps) {
   const form = useForm<CreateObservationForm>({
     resolver: zodResolver(createObservationSchema),
     defaultValues: {
       title: "",
       content: "",
     },
-  });
+  })
 
   async function onSubmit(data: CreateObservationForm) {
     try {
       // TODO: Implémenter la création d'observation
-      console.log("Création d'observation:", data);
-      onClose();
+      console.log("Création d'observation:", data)
+      onClose()
     } catch (error) {
-      console.error("Erreur lors de la création de l'observation:", error);
+      console.error("Erreur lors de la création de l'observation:", error)
     }
   }
 
@@ -58,9 +44,7 @@ export function CreateObservationDialog({
     <CredenzaContent>
       <CredenzaHeader>
         <CredenzaTitle>Nouvelle observation</CredenzaTitle>
-        <CredenzaDescription>
-          Créez une nouvelle observation pour un patient
-        </CredenzaDescription>
+        <CredenzaDescription>Créez une nouvelle observation pour un patient</CredenzaDescription>
       </CredenzaHeader>
 
       <Form {...form}>
@@ -86,11 +70,7 @@ export function CreateObservationDialog({
               <FormItem>
                 <FormLabel>Contenu</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Détails de l'observation..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
+                  <Textarea placeholder="Détails de l'observation..." className="min-h-[100px]" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,5 +86,5 @@ export function CreateObservationDialog({
         </form>
       </Form>
     </CredenzaContent>
-  );
+  )
 }

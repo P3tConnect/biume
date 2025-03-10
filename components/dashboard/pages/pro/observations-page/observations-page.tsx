@@ -1,47 +1,36 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import {
-  Eye,
-  FilePenLine,
-  Plus,
-  Search,
-  Table as TableIcon,
-} from "lucide-react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
-import { CreateObservationDialog } from "./create-observation-dialog";
-import ObservationDetailsDrawer from "./observation-details-drawer";
-import { Credenza } from "@/components/ui";
+import { useQuery } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Eye, FilePenLine, Plus, Search, Table as TableIcon } from "lucide-react"
+import { useState } from "react"
+
+import { Credenza } from "@/components/ui"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import { CreateObservationDialog } from "./create-observation-dialog"
+import ObservationDetailsDrawer from "./observation-details-drawer"
 
 interface Observation {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date | null;
+  id: string
+  title: string
+  content: string
+  createdAt: Date
+  updatedAt: Date | null
   session?: {
     patient: {
-      name: string;
-      species: string;
-    };
-  };
+      name: string
+      species: string
+    }
+  }
 }
 
 function ObservationsLoadingSkeleton() {
@@ -57,7 +46,7 @@ function ObservationsLoadingSkeleton() {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 function useMockObservations(filter: "all" | "pending" | "completed" = "all") {
@@ -65,7 +54,7 @@ function useMockObservations(filter: "all" | "pending" | "completed" = "all") {
     queryKey: ["observations", filter],
     queryFn: async () => {
       // Simuler un délai de chargement
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       const mockObservations: Observation[] = [
         {
@@ -95,31 +84,26 @@ function useMockObservations(filter: "all" | "pending" | "completed" = "all") {
           },
         },
         // Ajoutez plus d'observations mock si nécessaire
-      ];
+      ]
 
-      return mockObservations;
+      return mockObservations
     },
-  });
+  })
 }
 
 export default function ObservationsPageComponent() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">(
-    "all",
-  );
-  const { data: observations, isLoading } = useMockObservations(activeTab);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [selectedObservation, setSelectedObservation] =
-    useState<Observation | null>(null);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">("all")
+  const { data: observations, isLoading } = useMockObservations(activeTab)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [selectedObservation, setSelectedObservation] = useState<Observation | null>(null)
 
   const filteredObservations = observations?.filter(
-    (obs) =>
+    obs =>
       obs.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       obs.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      obs.session?.patient.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
-  );
+      obs.session?.patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -131,9 +115,7 @@ export default function ObservationsPageComponent() {
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                 Observations
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Gérez et suivez vos observations médicales
-              </p>
+              <p className="text-sm text-muted-foreground">Gérez et suivez vos observations médicales</p>
             </div>
             <div className="flex gap-3">
               <Button
@@ -161,13 +143,7 @@ export default function ObservationsPageComponent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <CardTitle>Liste des observations</CardTitle>
-              <Tabs
-                value={activeTab}
-                onValueChange={(value) =>
-                  setActiveTab(value as typeof activeTab)
-                }
-                className="ml-6"
-              >
+              <Tabs value={activeTab} onValueChange={value => setActiveTab(value as typeof activeTab)} className="ml-6">
                 <TabsList className="grid w-full grid-cols-3 h-9">
                   <TabsTrigger value="all" className="text-xs">
                     Toutes
@@ -187,7 +163,7 @@ export default function ObservationsPageComponent() {
                 placeholder="Rechercher..."
                 className="pl-8"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
@@ -199,17 +175,9 @@ export default function ObservationsPageComponent() {
             ) : filteredObservations?.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <FilePenLine className="h-12 w-12 text-muted-foreground/50" />
-                <p className="mt-4 text-lg font-medium text-muted-foreground">
-                  Aucune observation trouvée
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Commencez par créer une nouvelle observation
-                </p>
-                <Button
-                  onClick={() => setIsCreateDialogOpen(true)}
-                  className="mt-4"
-                  variant="outline"
-                >
+                <p className="mt-4 text-lg font-medium text-muted-foreground">Aucune observation trouvée</p>
+                <p className="text-sm text-muted-foreground">Commencez par créer une nouvelle observation</p>
+                <Button onClick={() => setIsCreateDialogOpen(true)} className="mt-4" variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
                   Nouvelle observation
                 </Button>
@@ -226,11 +194,9 @@ export default function ObservationsPageComponent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredObservations?.map((observation) => (
+                  {filteredObservations?.map(observation => (
                     <TableRow key={observation.id}>
-                      <TableCell className="font-medium">
-                        {observation.title}
-                      </TableCell>
+                      <TableCell className="font-medium">{observation.title}</TableCell>
                       <TableCell>
                         <div className="flex flex-col">
                           <span>{observation.session?.patient.name}</span>
@@ -240,19 +206,13 @@ export default function ObservationsPageComponent() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {format(
-                          new Date(observation.createdAt),
-                          "d MMMM yyyy",
-                          {
-                            locale: fr,
-                          },
-                        )}
+                        {format(new Date(observation.createdAt), "d MMMM yyyy", {
+                          locale: fr,
+                        })}
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant={
-                            observation.updatedAt ? "secondary" : "default"
-                          }
+                          variant={observation.updatedAt ? "secondary" : "default"}
                           className={
                             observation.updatedAt
                               ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
@@ -291,15 +251,15 @@ export default function ObservationsPageComponent() {
         observation={selectedObservation}
         isOpen={!!selectedObservation}
         onClose={() => setSelectedObservation(null)}
-        onEdit={(observation) => {
+        onEdit={observation => {
           // TODO: Implement edit functionality
-          console.log("Edit observation:", observation);
+          console.log("Edit observation:", observation)
         }}
-        onDelete={(observation) => {
+        onDelete={observation => {
           // TODO: Implement delete functionality
-          console.log("Delete observation:", observation);
+          console.log("Delete observation:", observation)
         }}
       />
     </div>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react"
 
 interface Value {
-  icon: LucideIcon;
-  title: string;
-  description: string;
+  icon: LucideIcon
+  title: string
+  description: string
 }
 
 interface ValuesSectionProps {
-  values: Value[];
+  values: Value[]
 }
 
 export function ValuesSection({ values }: ValuesSectionProps) {
@@ -16,9 +16,7 @@ export function ValuesSection({ values }: ValuesSectionProps) {
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl font-bold mb-6">Nos Valeurs</h2>
-          <p className="text-lg text-muted-foreground">
-            Ces principes guident chacune de nos décisions et innovations
-          </p>
+          <p className="text-lg text-muted-foreground">Ces principes guident chacune de nos décisions et innovations</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {values.map((value, index) => (
@@ -39,5 +37,5 @@ export function ValuesSection({ values }: ValuesSectionProps) {
         </div>
       </div>
     </section>
-  );
-} 
+  )
+}

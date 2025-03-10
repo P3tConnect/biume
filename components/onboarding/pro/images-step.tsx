@@ -1,17 +1,12 @@
-"use client";
+"use client"
 
-import ImagesForm from "../components/pro/images-form";
+import ImagesForm from "../components/pro/images-form"
 
 interface ImagesStepProps {
-  nextStep: () => void;
-  previousStep: () => void;
+  nextStep: () => void
+  previousStep: () => void
 }
 
 export default function ImagesStep({ nextStep, previousStep }: ImagesStepProps) {
-  return (
-    <ImagesForm
-      onSuccess={nextStep}
-      onBack={previousStep}
-    />
-  );
+  return <ImagesForm onSuccess={nextStep} onBack={previousStep} />
 }

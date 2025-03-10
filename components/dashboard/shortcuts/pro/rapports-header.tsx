@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FileText, Calendar, Download, Filter } from "lucide-react";
+import { Calendar, Download, Filter } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const RapportsHeader = () => {
   return (
@@ -35,5 +36,5 @@ export const RapportsHeader = () => {
         </div>
       </CardHeader>
     </Card>
-  );
-};
+  )
+}

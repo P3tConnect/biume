@@ -1,7 +1,8 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { Appointment, appointments } from "./appointments";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Appointment, appointments } from "./appointments"
 
 export const observation = pgTable("observations", {
   id: text("id")
@@ -11,15 +12,15 @@ export const observation = pgTable("observations", {
   content: text("content").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const observationRelations = relations(observation, ({ one, many }) => ({
   appointment: one(appointments),
-}));
+}))
 
 export type Observation = InferSelectModel<typeof observation> & {
-  appointment: Appointment;
-};
-export type CreateObservation = typeof observation.$inferInsert;
+  appointment: Appointment
+}
+export type CreateObservation = typeof observation.$inferInsert
 
-export const CreateObservationSchema = createInsertSchema(observation);
+export const CreateObservationSchema = createInsertSchema(observation)

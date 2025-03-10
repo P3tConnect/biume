@@ -1,21 +1,22 @@
-"use client";
+"use client"
 
-import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Header } from "@/components/landing-page/header";
-import { UserLanding } from "@/components/landing-page/user-landing";
-import { ProLanding } from "@/components/landing-page/pro-landing";
+import { AnimatePresence, motion } from "framer-motion"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+
+import { Header } from "@/components/landing-page/header"
+import { ProLanding } from "@/components/landing-page/pro-landing"
+import { UserLanding } from "@/components/landing-page/user-landing"
 
 export default function ClientHome() {
-  const searchParams = useSearchParams();
-  const version = searchParams.get("version") || "user";
-  const [mounted, setMounted] = useState(false);
+  const searchParams = useSearchParams()
+  const version = searchParams.get("version") || "user"
+  const [mounted, setMounted] = useState(false)
 
   // Assurer que les transitions fonctionnent correctement une fois que le composant est monté
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   // Éviter les problèmes d'hydratation avec le thème
   if (!mounted) {
@@ -23,7 +24,7 @@ export default function ClientHome() {
       <div className="h-screen w-screen flex items-center justify-center">
         <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
       </div>
-    );
+    )
   }
 
   return (
@@ -50,5 +51,5 @@ export default function ClientHome() {
         </motion.main>
       </AnimatePresence>
     </div>
-  );
+  )
 }

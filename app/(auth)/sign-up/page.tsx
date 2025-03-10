@@ -1,20 +1,21 @@
-"use client";
+"use client"
 
-import { Button, Input } from "@/components/ui";
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { registerSchema } from "@/src/lib";
-import { signUp } from "@/src/lib/auth-client";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Button, Input } from "@/components/ui"
+import { registerSchema } from "@/src/lib"
+import { signUp } from "@/src/lib/auth-client"
 
 const RegisterClientPage = () => {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
   const { register, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -22,9 +23,9 @@ const RegisterClientPage = () => {
       name: "",
       password: "",
     },
-  });
+  })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     await signUp.email(
       {
         email: data.email,
@@ -36,51 +37,33 @@ const RegisterClientPage = () => {
       },
       {
         onRequest: () => {
-          setLoading(true);
+          setLoading(true)
         },
-        onSuccess: (ctx) => {
-          toast.success("Inscription réussie ! Vous allez être redirigé ...");
-          router.push(`/dashboard/user/${ctx.data.user.id}`);
+        onSuccess: ctx => {
+          toast.success("Inscription réussie ! Vous allez être redirigé ...")
+          router.push(`/dashboard/user/${ctx.data.user.id}`)
         },
-        onError: (error) => {
-          setLoading(false);
-          console.log(error, "error");
-          toast.error(`Error : ${error.error.message}`);
+        onError: error => {
+          setLoading(false)
+          console.log(error, "error")
+          toast.error(`Error : ${error.error.message}`)
         },
-      },
-    );
-  });
+      }
+    )
+  })
 
   return (
     <div className="w-screen flex items-center justify-between max-h-screen px-5">
       <div className="flex flex-col items-center justify-center w-1/2 space-y-4">
         <h1 className="text-4xl font-bold text-primary">Inscription</h1>
         <p className="text-gray-600 dark:text-gray-400 max-w-96 text-center pb-14">
-          Ceci est du texte de description pour justifier de l&apos;utilité de
-          s&apos;inscrire sur notre plateforme Biume
+          Ceci est du texte de description pour justifier de l&apos;utilité de s&apos;inscrire sur notre plateforme
+          Biume
         </p>
-        <form
-          onSubmit={onSubmit}
-          className="flex flex-col items-center justify-center w-1/2 space-y-4"
-        >
-          <Input
-            className="w-96 rounded-3xl"
-            type="text"
-            placeholder="Nom d'utilisateur"
-            {...register("name")}
-          />
-          <Input
-            className="w-96 rounded-3xl"
-            type="email"
-            placeholder="Email"
-            {...register("email")}
-          />
-          <Input
-            className="w-96 rounded-3xl"
-            type="password"
-            placeholder="Mot de passe"
-            {...register("password")}
-          />
+        <form onSubmit={onSubmit} className="flex flex-col items-center justify-center w-1/2 space-y-4">
+          <Input className="w-96 rounded-3xl" type="text" placeholder="Nom d'utilisateur" {...register("name")} />
+          <Input className="w-96 rounded-3xl" type="email" placeholder="Email" {...register("email")} />
+          <Input className="w-96 rounded-3xl" type="password" placeholder="Mot de passe" {...register("password")} />
 
           <div className="h-5" />
 
@@ -90,38 +73,17 @@ const RegisterClientPage = () => {
 
           <p className="text-muted-foreground text-sm py-5">Ou</p>
 
-          <Button
-            className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
-            variant="outline"
-          >
-            <Image
-              src={"/assets/svg/facebook-icon.svg"}
-              width={20}
-              height={20}
-              alt="facebook icon"
-            />
-            <p className="text-muted-foreground">
-              S&apos;inscrire avec Facebook
-            </p>
+          <Button className="w-full h-10 rounded-3xl flex items-center justify-center gap-2" variant="outline">
+            <Image src={"/assets/svg/facebook-icon.svg"} width={20} height={20} alt="facebook icon" />
+            <p className="text-muted-foreground">S&apos;inscrire avec Facebook</p>
           </Button>
-          <Button
-            className="w-full h-10 rounded-3xl flex items-center justify-center gap-2"
-            variant="outline"
-          >
-            <Image
-              src={"/assets/svg/google-icon.svg"}
-              width={20}
-              height={20}
-              alt="google icon"
-            />
+          <Button className="w-full h-10 rounded-3xl flex items-center justify-center gap-2" variant="outline">
+            <Image src={"/assets/svg/google-icon.svg"} width={20} height={20} alt="google icon" />
             <p className="text-muted-foreground">S&apos;inscrire avec Google</p>
           </Button>
           <p className="text-sm font-normal pt-5">
             Vous avez déjà un compte ?{" "}
-            <Link
-              href="/sign-in"
-              className="dark:text-blue-300 text-blue-600 hover:cursor-pointer"
-            >
+            <Link href="/sign-in" className="dark:text-blue-300 text-blue-600 hover:cursor-pointer">
               Connectez vous !
             </Link>
           </p>
@@ -140,7 +102,7 @@ const RegisterClientPage = () => {
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterClientPage;
+export default RegisterClientPage

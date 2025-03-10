@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/image"
 
 export function MissionSection() {
   return (
@@ -17,18 +17,16 @@ export function MissionSection() {
           <div>
             <h2 className="text-3xl font-bold mb-6">Notre Vision</h2>
             <p className="text-lg text-muted-foreground mb-6">
-              Nous croyons en un monde où chaque animal reçoit les meilleurs
-              soins possibles, grâce à des professionnels de santé équipés des
-              outils technologiques les plus performants.
+              Nous croyons en un monde où chaque animal reçoit les meilleurs soins possibles, grâce à des professionnels
+              de santé équipés des outils technologiques les plus performants.
             </p>
             <p className="text-lg text-muted-foreground">
-              Notre plateforme permet aux professionnels de santé animale de se
-              concentrer sur ce qui compte vraiment : la santé et le bien-être
-              de leurs patients.
+              Notre plateforme permet aux professionnels de santé animale de se concentrer sur ce qui compte vraiment :
+              la santé et le bien-être de leurs patients.
             </p>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

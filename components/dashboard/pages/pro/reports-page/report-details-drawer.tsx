@@ -1,49 +1,30 @@
-"use client";
+"use client"
 
-import React from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  Button,
-  ScrollArea,
-  Separator,
-  Card,
-} from "@/components/ui";
-import {
-  FileText,
-  Edit2,
-  Trash2,
-  Calendar,
-  User,
-  Clock,
-  Activity,
-  Download,
-  Share2,
-  Tag,
-} from "lucide-react";
+import { Activity, Calendar, Clock, Download, Edit2, FileText, Share2, Tag, Trash2, User } from "lucide-react"
+import React from "react"
+
+import { Button, Card, ScrollArea, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui"
 
 export interface Report {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-  status: "draft" | "published" | "archived";
-  author: string;
-  category: string;
-  tags: string[];
+  id: string
+  title: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+  status: "draft" | "published" | "archived"
+  author: string
+  category: string
+  tags: string[]
 }
 
 interface ReportDetailsDrawerProps {
-  report: Report | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onEdit?: (report: Report) => void;
-  onDelete?: (report: Report) => void;
-  onDownload?: (report: Report) => void;
-  onShare?: (report: Report) => void;
+  report: Report | null
+  isOpen: boolean
+  onClose: () => void
+  onEdit?: (report: Report) => void
+  onDelete?: (report: Report) => void
+  onDownload?: (report: Report) => void
+  onShare?: (report: Report) => void
 }
 
 const ReportDetailsDrawer = ({
@@ -55,7 +36,7 @@ const ReportDetailsDrawer = ({
   onDownload,
   onShare,
 }: ReportDetailsDrawerProps) => {
-  if (!report) return null;
+  if (!report) return null
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -70,9 +51,7 @@ const ReportDetailsDrawer = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-3">
-                    <SheetTitle className="text-3xl font-bold">
-                      {report.title}
-                    </SheetTitle>
+                    <SheetTitle className="text-3xl font-bold">{report.title}</SheetTitle>
                   </div>
                   <div className="flex items-center gap-3 text-muted-foreground mt-2">
                     <div className="flex items-center gap-2">
@@ -95,41 +74,25 @@ const ReportDetailsDrawer = ({
               </div>
               <div className="flex gap-2">
                 {onShare && (
-                  <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => onShare(report)}
-                  >
+                  <Button variant="outline" size="default" onClick={() => onShare(report)}>
                     <Share2 className="h-4 w-4 mr-2" />
                     Partager
                   </Button>
                 )}
                 {onDownload && (
-                  <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => onDownload(report)}
-                  >
+                  <Button variant="outline" size="default" onClick={() => onDownload(report)}>
                     <Download className="h-4 w-4 mr-2" />
                     Télécharger
                   </Button>
                 )}
                 {onEdit && (
-                  <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => onEdit(report)}
-                  >
+                  <Button variant="outline" size="default" onClick={() => onEdit(report)}>
                     <Edit2 className="h-4 w-4 mr-2" />
                     Modifier
                   </Button>
                 )}
                 {onDelete && (
-                  <Button
-                    variant="destructive"
-                    size="default"
-                    onClick={() => onDelete(report)}
-                  >
+                  <Button variant="destructive" size="default" onClick={() => onDelete(report)}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Supprimer
                   </Button>
@@ -144,9 +107,7 @@ const ReportDetailsDrawer = ({
             <div className="space-y-6 py-6">
               {/* Report Details */}
               <Card className="p-6">
-                <h3 className="font-semibold text-lg mb-4">
-                  Détails du rapport
-                </h3>
+                <h3 className="font-semibold text-lg mb-4">Détails du rapport</h3>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
@@ -163,9 +124,7 @@ const ReportDetailsDrawer = ({
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Catégorie</p>
-                      <p className="font-medium capitalize">
-                        {report.category}
-                      </p>
+                      <p className="font-medium capitalize">{report.category}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -173,9 +132,7 @@ const ReportDetailsDrawer = ({
                       <Calendar className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">
-                        Date de création
-                      </p>
+                      <p className="text-sm text-muted-foreground">Date de création</p>
                       <p className="font-medium">
                         {report.createdAt.toLocaleDateString("fr-FR", {
                           day: "numeric",
@@ -190,9 +147,7 @@ const ReportDetailsDrawer = ({
                       <Clock className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">
-                        Dernière modification
-                      </p>
+                      <p className="text-sm text-muted-foreground">Dernière modification</p>
                       <p className="font-medium">
                         {report.updatedAt.toLocaleDateString("fr-FR", {
                           day: "numeric",
@@ -208,9 +163,7 @@ const ReportDetailsDrawer = ({
               {/* Report Content */}
               <Card className="p-6">
                 <h3 className="font-semibold text-lg mb-4">Contenu</h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">
-                  {report.description}
-                </p>
+                <p className="text-muted-foreground whitespace-pre-wrap">{report.description}</p>
               </Card>
 
               {/* Tags */}
@@ -219,10 +172,7 @@ const ReportDetailsDrawer = ({
                   <h3 className="font-semibold text-lg mb-4">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {report.tags.map((tag, index) => (
-                      <div
-                        key={index}
-                        className="px-3 py-1 bg-primary/10 rounded-full text-sm"
-                      >
+                      <div key={index} className="px-3 py-1 bg-primary/10 rounded-full text-sm">
                         {tag}
                       </div>
                     ))}
@@ -278,7 +228,7 @@ const ReportDetailsDrawer = ({
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}
 
-export default ReportDetailsDrawer;
+export default ReportDetailsDrawer

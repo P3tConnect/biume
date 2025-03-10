@@ -1,95 +1,79 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Package2, Check, Sparkles, CreditCard } from "lucide-react";
-import { ActionResult, cn } from "@/src/lib";
-import { useParams, useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { updateOrganizationPlan } from "@/src/actions/stripe.action";
-import { toast } from "sonner";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui";
-import { BillingInfo } from "@/types/billing-info";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { motion } from "framer-motion";
+import { ActionResult, cn } from "@/src/lib"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Check, CreditCard, Package2, Sparkles } from "lucide-react"
+import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui"
+import { useParams, useRouter } from "next/navigation"
+
+import { Badge } from "@/components/ui/badge"
+import { BillingInfo } from "@/types/billing-info"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import React from "react"
+import { Switch } from "@/components/ui/switch"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { motion } from "framer-motion"
+import { toast } from "sonner"
+import { updateOrganizationPlan } from "@/src/actions/stripe.action"
+import { useMutation } from "@tanstack/react-query"
 
 interface Plan {
-  name: string;
-  description: string;
-  price: string;
-  features: string[];
-  monthlyPriceId: string;
-  yearlyPriceId: string;
-  icon?: React.ElementType;
-  isPopular?: boolean;
-  badge?: string;
+  name: string
+  description: string
+  price: string
+  features: string[]
+  monthlyPriceId: string
+  yearlyPriceId: string
+  icon?: React.ElementType
+  isPopular?: boolean
+  badge?: string
 }
 
 interface BillingPlanSectionProps {
-  plans: Plan[];
-  billingInfo: ActionResult<BillingInfo> | undefined;
-  isLoading: boolean;
+  plans: Plan[]
+  billingInfo: ActionResult<BillingInfo> | undefined
+  isLoading: boolean
 }
 
-export const BillingPlanSection = ({
-  plans,
-  billingInfo,
-  isLoading,
-}: BillingPlanSectionProps) => {
-  const params = useParams();
-  const orgId = params.orgId as string;
-  const router = useRouter();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null);
-  const [isAnnual, setIsAnnual] = React.useState(true);
+export const BillingPlanSection = ({ plans, billingInfo, isLoading }: BillingPlanSectionProps) => {
+  const params = useParams()
+  const orgId = params.orgId as string
+  const router = useRouter()
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null)
+  const [isAnnual, setIsAnnual] = React.useState(true)
 
   // Associer des icônes par défaut aux plans
-  const enhancedPlans = plans.map((plan) => {
+  const enhancedPlans = plans.map(plan => {
     // Définir des valeurs par défaut
     const enhancedPlan = {
       ...plan,
-      icon:
-        plan.icon ||
-        (plan.name === "Pro"
-          ? Sparkles
-          : plan.name === "Entreprise"
-            ? Package2
-            : CreditCard),
+      icon: plan.icon || (plan.name === "Pro" ? Sparkles : plan.name === "Entreprise" ? Package2 : CreditCard),
       isPopular: plan.name === "Pro",
       badge: plan.name === "Pro" ? "Le plus choisi" : undefined,
-    };
-    return enhancedPlan;
-  });
+    }
+    return enhancedPlan
+  })
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.data) {
-        window.location.href = data.data;
+        window.location.href = data.data
       }
     },
     onError: () => {
-      toast.error("Une erreur est survenue");
+      toast.error("Une erreur est survenue")
     },
-  });
+  })
 
   const handleChangePlan = async (plan: string) => {
     await mutateAsync({
       organizationId: orgId,
       plan,
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -102,9 +86,7 @@ export const BillingPlanSection = ({
             <div>
               <h3 className="text-lg font-medium">Plan actuel</h3>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-primary">
-                  {billingInfo?.data?.currentPrice}
-                </span>
+                <span className="text-2xl font-bold text-primary">{billingInfo?.data?.currentPrice}</span>
                 <span className="text-sm text-muted-foreground">/mois</span>
               </div>
             </div>
@@ -113,9 +95,7 @@ export const BillingPlanSection = ({
         </div>
         <p className="text-sm text-muted-foreground">
           Vous êtes actuellement sur le plan{" "}
-          <span className="font-medium text-foreground">
-            {billingInfo?.data?.currentPlan}
-          </span>
+          <span className="font-medium text-foreground">{billingInfo?.data?.currentPlan}</span>
         </p>
       </div>
 
@@ -129,32 +109,18 @@ export const BillingPlanSection = ({
               <CreditCard className="w-4 h-4" />
               <span>Nos forfaits</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Choisissez le plan qui vous convient
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Choisissez le plan qui vous convient</h2>
             <p className="text-muted-foreground mb-6">
-              Tous nos forfaits incluent l&apos;accès à toutes les fonctionnalités
-              essentielles
+              Tous nos forfaits incluent l&apos;accès à toutes les fonctionnalités essentielles
             </p>
 
             {/* Sélecteur mensuel/annuel */}
             <div className="flex items-center justify-center gap-4 mb-4">
-              <span
-                className={cn(
-                  "text-sm",
-                  !isAnnual
-                    ? "font-medium text-foreground"
-                    : "text-muted-foreground",
-                )}
-              >
+              <span className={cn("text-sm", !isAnnual ? "font-medium text-foreground" : "text-muted-foreground")}>
                 Mensuel
               </span>
               <div className="flex items-center space-x-2">
-                <Switch
-                  id="billing-toggle"
-                  checked={isAnnual}
-                  onCheckedChange={setIsAnnual}
-                />
+                <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
                 <Label htmlFor="billing-toggle" className="sr-only">
                   Facturation annuelle
                 </Label>
@@ -162,9 +128,7 @@ export const BillingPlanSection = ({
               <span
                 className={cn(
                   "text-sm flex items-center gap-1.5",
-                  isAnnual
-                    ? "font-medium text-foreground"
-                    : "text-muted-foreground",
+                  isAnnual ? "font-medium text-foreground" : "text-muted-foreground"
                 )}
               >
                 Annuel
@@ -189,62 +153,42 @@ export const BillingPlanSection = ({
                 <Card
                   className={cn(
                     "relative h-full flex flex-col transition-shadow duration-200",
-                    plan.isPopular
-                      ? "shadow-lg border-primary/50"
-                      : "hover:shadow-md",
-                    selectedPlan === plan.name && "border-primary shadow-lg",
+                    plan.isPopular ? "shadow-lg border-primary/50" : "hover:shadow-md",
+                    selectedPlan === plan.name && "border-primary shadow-lg"
                   )}
                   onClick={() => setSelectedPlan(plan.name)}
                 >
                   {plan.isPopular && (
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                      <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">
-                        {plan.badge}
-                      </Badge>
+                      <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">{plan.badge}</Badge>
                     </div>
                   )}
 
-                  <CardHeader
-                    className={cn(
-                      "flex flex-col items-center text-center",
-                      plan.isPopular ? "pb-0" : "",
-                    )}
-                  >
+                  <CardHeader className={cn("flex flex-col items-center text-center", plan.isPopular ? "pb-0" : "")}>
                     <div
                       className={cn(
                         "w-12 h-12 rounded-full flex items-center justify-center mb-4",
-                        plan.isPopular
-                          ? "bg-primary/20 text-primary"
-                          : "bg-muted text-muted-foreground",
+                        plan.isPopular ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
                       )}
                     >
                       {React.createElement(plan.icon, { className: "w-6 h-6" })}
                     </div>
                     <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <CardDescription className="text-sm">
-                      {plan.description}
-                    </CardDescription>
+                    <CardDescription className="text-sm">{plan.description}</CardDescription>
                   </CardHeader>
 
                   <CardContent className="flex-1">
                     <div className="text-center mb-6">
                       <div className="flex items-baseline justify-center gap-1">
                         <span className="text-3xl font-bold">
-                          {isAnnual
-                            ? `${(parseFloat(plan.price) * 0.8).toFixed(2)}`
-                            : plan.price}
-                          €
+                          {isAnnual ? `${(parseFloat(plan.price) * 0.8).toFixed(2)}` : plan.price}€
                         </span>
-                        <span className="text-muted-foreground text-sm">
-                          /mois
-                        </span>
+                        <span className="text-muted-foreground text-sm">/mois</span>
                       </div>
 
                       {isAnnual && (
                         <div className="flex items-center justify-center gap-2 mt-2">
-                          <span className="text-xs line-through text-muted-foreground">
-                            {plan.price}€
-                          </span>
+                          <span className="text-xs line-through text-muted-foreground">{plan.price}€</span>
                           <Badge
                             variant="outline"
                             className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-800"
@@ -256,8 +200,7 @@ export const BillingPlanSection = ({
 
                       {isAnnual && (
                         <p className="text-xs text-muted-foreground mt-1">
-                          Facturé annuellement (
-                          {(parseFloat(plan.price) * 0.8 * 12).toFixed(2)}
+                          Facturé annuellement ({(parseFloat(plan.price) * 0.8 * 12).toFixed(2)}
                           €)
                         </p>
                       )}
@@ -289,7 +232,7 @@ export const BillingPlanSection = ({
                         "w-full",
                         plan.isPopular
                           ? "bg-primary hover:bg-primary/90"
-                          : "bg-primary/10 text-primary hover:bg-primary/20",
+                          : "bg-primary/10 text-primary hover:bg-primary/20"
                       )}
                       size="lg"
                       onClick={() => handleChangePlan(isAnnual ? plan.yearlyPriceId : plan.monthlyPriceId)}
@@ -304,5 +247,5 @@ export const BillingPlanSection = ({
         </CredenzaContent>
       </Credenza>
     </>
-  );
-};
+  )
+}

@@ -1,6 +1,7 @@
-import React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
+import React from "react"
+
+import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const DashboardOrganizationTimetableLoading = () => {
   return (
@@ -52,10 +53,7 @@ const DashboardOrganizationTimetableLoading = () => {
                 {Array(5)
                   .fill(0)
                   .map((_, weekIndex) => (
-                    <div
-                      key={`week-${weekIndex}`}
-                      className="grid grid-cols-7 gap-2"
-                    >
+                    <div key={`week-${weekIndex}`} className="grid grid-cols-7 gap-2">
                       {Array(7)
                         .fill(0)
                         .map((_, dayIndex) => (
@@ -79,7 +77,7 @@ const DashboardOrganizationTimetableLoading = () => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DashboardOrganizationTimetableLoading;
+export default DashboardOrganizationTimetableLoading

@@ -1,7 +1,8 @@
-import React from "react";
-import { Button, Card, CardContent, CardHeader } from "@/components/ui";
-import { SlidersHorizontal } from "lucide-react";
-import Image from "next/image";
+import { SlidersHorizontal } from "lucide-react"
+import Image from "next/image"
+import React from "react"
+
+import { Button, Card, CardContent, CardHeader } from "@/components/ui"
 
 const LastClientMonthWidget = () => {
   const clients = [
@@ -75,29 +76,21 @@ const LastClientMonthWidget = () => {
       name: "Daniel Lewis",
       address: "9630 Willow Way, Raccoon City",
     },
-  ];
-  const maxVisibleClients = 4;
+  ]
+  const maxVisibleClients = 4
 
   return (
     <Card className="w-full h-full flex flex-col rounded-3xl">
       <CardHeader className="flex flex-row w-full justify-between">
         <h1 className="font-bold text-2xl">Derniers clients</h1>
         <div className="flex flex-row gap-3">
-          <Button
-            variant="secondary"
-            className="text-black rounded-2xl"
-            size="sm"
-          >
+          <Button variant="secondary" className="text-black rounded-2xl" size="sm">
             <div className="flex flex-row gap-2 items-center text-center">
               <SlidersHorizontal size={15} />
               Filtrer
             </div>
           </Button>
-          <Button
-            variant="secondary"
-            className="text-black rounded-2xl"
-            size="sm"
-          >
+          <Button variant="secondary" className="text-black rounded-2xl" size="sm">
             Voir tous
           </Button>
         </div>
@@ -110,10 +103,7 @@ const LastClientMonthWidget = () => {
         <div className="mt-3">
           <ul className="space-y-2">
             {clients.slice(0, maxVisibleClients).map((client, index) => (
-              <li
-                key={index}
-                className="flex items-center gap-4 justify-between"
-              >
+              <li key={index} className="flex items-center gap-4 justify-between">
                 <div className="flex flex-row gap-2 items-center">
                   <Image
                     src={client.image}
@@ -122,26 +112,19 @@ const LastClientMonthWidget = () => {
                     width={20}
                     height={20}
                   />
-                  <label
-                    htmlFor={`client-${index}`}
-                    className="text-sm font-medium"
-                  >
+                  <label htmlFor={`client-${index}`} className="text-sm font-medium">
                     {client.name}
                   </label>
                 </div>
-                <label className="text-xs text-gray-500">
-                  {client.address}
-                </label>
+                <label className="text-xs text-gray-500">{client.address}</label>
               </li>
             ))}
           </ul>
-          {clients.length > maxVisibleClients && (
-            <p className="flex text-center justify-center items-center">...</p>
-          )}
+          {clients.length > maxVisibleClients && <p className="flex text-center justify-center items-center">...</p>}
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default LastClientMonthWidget;
+export default LastClientMonthWidget

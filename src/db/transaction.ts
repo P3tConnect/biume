@@ -1,8 +1,9 @@
-import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
-import { Organization, organization } from "./organization";
-import { user } from "./user";
+import { InferSelectModel, relations } from "drizzle-orm"
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema } from "drizzle-zod"
+
+import { Organization, organization } from "./organization"
+import { user } from "./user"
 
 export const transaction = pgTable("transaction", {
   id: text("id")
@@ -19,18 +20,18 @@ export const transaction = pgTable("transaction", {
   status: text("status").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
-});
+})
 
 export const transactionRelations = relations(transaction, ({ one }) => ({
   from: one(organization, {
     fields: [transaction.from],
     references: [organization.id],
   }),
-}));
+}))
 
 export type Transaction = InferSelectModel<typeof transaction> & {
-  from: Organization;
-};
-export type CreateTransaction = typeof transaction.$inferInsert;
+  from: Organization
+}
+export type CreateTransaction = typeof transaction.$inferInsert
 
-export const CreateTransactionSchema = createInsertSchema(transaction);
+export const CreateTransactionSchema = createInsertSchema(transaction)

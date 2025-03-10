@@ -1,5 +1,5 @@
-import { Milestone, RoadmapSection } from "./_components/roadmap-section";
-import { HeroSection } from "./_components/hero-section";
+import { HeroSection } from "./_components/hero-section"
+import { Milestone, RoadmapSection } from "./_components/roadmap-section"
 
 const roadmapItems: Milestone[] = [
   {
@@ -23,7 +23,7 @@ const roadmapItems: Milestone[] = [
       "Lancement de notre application mobile pour permettre aux professionnels d'accéder à leurs données en déplacement.",
     status: "planned",
   },
-];
+]
 
 const RoadmapPage = () => {
   return (
@@ -31,7 +31,7 @@ const RoadmapPage = () => {
       <HeroSection />
       <RoadmapSection milestones={roadmapItems} />
     </div>
-  );
-};
+  )
+}
 
-export default RoadmapPage;
+export default RoadmapPage

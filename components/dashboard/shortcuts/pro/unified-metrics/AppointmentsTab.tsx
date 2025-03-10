@@ -1,13 +1,15 @@
-"use client";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FileClock, Calendar, CheckCircle2 } from "lucide-react";
-import { AnimalDetails } from "./types";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
+import { Calendar } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+
+import { AnimalDetails } from "./types"
 
 interface AppointmentsTabProps {
-  animal: AnimalDetails;
+  animal: AnimalDetails
 }
 
 export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
@@ -34,7 +36,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
       doctor: "Dr. Martinez",
       status: "Terminé",
     },
-  ];
+  ]
 
   return (
     <div className="p-6 space-y-6">
@@ -46,9 +48,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
       >
         <div>
           <h3 className="text-lg font-medium">Rendez-vous</h3>
-          <p className="text-sm text-muted-foreground">
-            Historique des consultations
-          </p>
+          <p className="text-sm text-muted-foreground">Historique des consultations</p>
         </div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button size="sm" className="gap-1">
@@ -90,9 +90,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
               </motion.div>
               <div>
                 <div className="font-medium">Vaccination annuelle</div>
-                <div className="text-sm text-muted-foreground">
-                  {animal.nextVisit} à 14:30 • Dr. Martinez
-                </div>
+                <div className="text-sm text-muted-foreground">{animal.nextVisit} à 14:30 • Dr. Martinez</div>
               </div>
             </div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -132,10 +130,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
                   {appointment.date} • {appointment.doctor}
                 </div>
               </div>
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.2 }}
-              >
+              <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
                 <Badge variant="outline">{appointment.time}</Badge>
               </motion.div>
             </motion.div>
@@ -143,5 +138,5 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
         </div>
       </motion.div>
     </div>
-  );
-};
+  )
+}

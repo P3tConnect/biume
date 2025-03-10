@@ -276,8 +276,6 @@
   transition: transform 0.75s;
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

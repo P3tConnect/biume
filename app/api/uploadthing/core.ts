@@ -1,8 +1,9 @@
-import { auth } from "@/src/lib/auth";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import { createUploadthing, type FileRouter } from "uploadthing/next"
+import { UploadThingError } from "uploadthing/server"
 
-const f = createUploadthing();
+import { auth } from "@/src/lib/auth"
+
+const f = createUploadthing()
 
 export const ourFileRouter = {
   documentsUploader: f({
@@ -20,23 +21,23 @@ export const ourFileRouter = {
       // This code runs on your server before upload
       const session = await auth.api.getSession({
         headers: req.headers,
-      });
+      })
 
       // If you throw, the user will not be able to upload
-      if (!session?.user) throw new UploadThingError("Unauthorized");
+      if (!session?.user) throw new UploadThingError("Unauthorized")
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: session.user.id };
+      return { userId: session.user.id }
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+      console.log("Upload complete for userId:", metadata.userId)
 
-      console.log("file url", file.url);
+      console.log("file url", file.url)
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId, url: file.url };
+      return { uploadedBy: metadata.userId, url: file.url }
     }),
-} satisfies FileRouter;
+} satisfies FileRouter
 
-export type OurFileRouter = typeof ourFileRouter;
+export type OurFileRouter = typeof ourFileRouter

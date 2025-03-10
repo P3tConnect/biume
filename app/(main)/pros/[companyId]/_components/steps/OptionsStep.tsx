@@ -1,25 +1,22 @@
-import { motion } from "framer-motion";
-import { cn } from "@/src/lib/utils";
-import { Checkbox } from "@/components/ui";
+import { motion } from "framer-motion"
+
+import { Checkbox } from "@/components/ui"
+import { cn } from "@/src/lib/utils"
 
 export interface Option {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
+  id: string
+  name: string
+  description: string
+  price: number
 }
 
 interface OptionsStepProps {
-  availableOptions: Option[];
-  selectedOptions: string[];
-  onToggleOption: (optionId: string) => void;
+  availableOptions: Option[]
+  selectedOptions: string[]
+  onToggleOption: (optionId: string) => void
 }
 
-export function OptionsStep({
-  availableOptions,
-  selectedOptions,
-  onToggleOption,
-}: OptionsStepProps) {
+export function OptionsStep({ availableOptions, selectedOptions, onToggleOption }: OptionsStepProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -29,17 +26,14 @@ export function OptionsStep({
     >
       <div className="space-y-4">
         {availableOptions.length === 0 ? (
-          <p className="text-center text-muted-foreground py-4">
-            Aucune option disponible pour ce service
-          </p>
+          <p className="text-center text-muted-foreground py-4">Aucune option disponible pour ce service</p>
         ) : (
-          availableOptions.map((option) => (
+          availableOptions.map(option => (
             <div
               key={option.id}
               className={cn(
                 "relative rounded-xl border p-4 transition-all hover:border-primary/50",
-                selectedOptions.includes(option.id) &&
-                  "border-primary bg-primary/5",
+                selectedOptions.includes(option.id) && "border-primary bg-primary/5"
               )}
             >
               <div className="flex items-start gap-3">
@@ -50,18 +44,11 @@ export function OptionsStep({
                   className="mt-1"
                 />
                 <div className="flex-1">
-                  <label
-                    htmlFor={`option-${option.id}`}
-                    className="flex justify-between cursor-pointer"
-                  >
+                  <label htmlFor={`option-${option.id}`} className="flex justify-between cursor-pointer">
                     <span className="font-medium">{option.name}</span>
-                    <span className="font-medium text-muted-foreground">
-                      +{option.price}€
-                    </span>
+                    <span className="font-medium text-muted-foreground">+{option.price}€</span>
                   </label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {option.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">{option.description}</p>
                 </div>
               </div>
             </div>
@@ -69,5 +56,5 @@ export function OptionsStep({
         )}
       </div>
     </motion.div>
-  );
+  )
 }

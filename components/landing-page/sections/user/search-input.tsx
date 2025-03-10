@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { ArrowRight, MapPin, Search } from "lucide-react";
-import { useQueryState } from "nuqs";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ArrowRight, MapPin, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useQueryState } from "nuqs"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 const SearchInput = () => {
-  const router = useRouter();
-  const [profession, setProfession] = useQueryState("profession");
-  const [location, setLocation] = useQueryState("location");
+  const router = useRouter()
+  const [profession, setProfession] = useQueryState("profession")
+  const [location, setLocation] = useQueryState("location")
 
   const handleSearch = () => {
-    const searchParams = new URLSearchParams();
-    if (profession) searchParams.set("profession", profession);
-    if (location) searchParams.set("location", location);
-    router.push(`/pros?${searchParams.toString()}`);
-  };
+    const searchParams = new URLSearchParams()
+    if (profession) searchParams.set("profession", profession)
+    if (location) searchParams.set("location", location)
+    router.push(`/pros?${searchParams.toString()}`)
+  }
 
   return (
     <div className="bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm border border-primary/10 p-4 max-w-4xl w-full mx-auto">
@@ -30,7 +31,7 @@ const SearchInput = () => {
             placeholder="Quel professionnel ?"
             className="w-full h-12 pl-10 pr-4 bg-background/80 placeholder:text-muted-foreground/70"
             value={profession || ""}
-            onChange={(e) => setProfession(e.target.value)}
+            onChange={e => setProfession(e.target.value)}
           />
         </div>
         <div className="relative">
@@ -42,7 +43,7 @@ const SearchInput = () => {
             placeholder="Où ?"
             className="w-full h-12 pl-10 pr-4 bg-background/80 placeholder:text-muted-foreground/70"
             value={location || ""}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={e => setLocation(e.target.value)}
           />
         </div>
         <Button className="h-12 px-6 group" onClick={handleSearch}>
@@ -51,7 +52,7 @@ const SearchInput = () => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchInput;
+export default SearchInput

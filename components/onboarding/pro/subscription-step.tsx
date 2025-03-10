@@ -1,64 +1,43 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Check,
-  Loader2,
-  X,
-  CreditCard,
-  Shield,
-  Clock,
-  Sparkles,
-  Info,
-  Zap
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Check, Clock, CreditCard, Info, Loader2, Shield, Sparkles, X, Zap } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import { updateOrganizationPlan } from "@/src/actions";
-import { useActiveOrganization } from "@/src/lib/auth-client";
-import { safeConfig } from "@/src/lib";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/src/lib/utils"
+import { motion } from "framer-motion"
+import { safeConfig } from "@/src/lib"
+import { toast } from "sonner"
+import { updateOrganizationPlan } from "@/src/actions"
+import { useActiveOrganization } from "@/src/lib/auth-client"
+import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 // Type pour les plans d'abonnement
 type SubscriptionPlan = {
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   price: {
-    monthly: number;
-    annually: number;
-  };
+    monthly: number
+    annually: number
+  }
   features: {
-    text: string;
-    included: boolean;
-    explanation?: string;
-  }[];
-  isPopular?: boolean;
-  badge?: string;
-  icon: React.ElementType;
-  monthlyPriceId: string;
-  yearlyPriceId: string;
-};
+    text: string
+    included: boolean
+    explanation?: string
+  }[]
+  isPopular?: boolean
+  badge?: string
+  icon: React.ElementType
+  monthlyPriceId: string
+  yearlyPriceId: string
+}
 
 const subscriptionPlans: SubscriptionPlan[] = [
   {
@@ -169,38 +148,38 @@ const subscriptionPlans: SubscriptionPlan[] = [
     monthlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_MONTHLY_ID,
     yearlyPriceId: safeConfig.STRIPE_ULTIMATE_PLAN_YEARLY_ID,
   },
-];
+]
 
 export function SubscriptionStep() {
-  const { data: activeOrg } = useActiveOrganization();
-  const router = useRouter();
-  const [isAnnual, setIsAnnual] = useState(true);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: activeOrg } = useActiveOrganization()
+  const router = useRouter()
+  const [isAnnual, setIsAnnual] = useState(true)
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
-    onSuccess: (data) => {
-      console.log(data, "url for stripe redirect");
-      window.location.href = data.data!;
+    onSuccess: data => {
+      console.log(data, "url for stripe redirect")
+      window.location.href = data.data!
     },
     onMutate: () => {
-      setIsLoading(true);
+      setIsLoading(true)
     },
     onError: (error: { message: string }) => {
-      setIsLoading(false);
-      toast.error(error.message);
+      setIsLoading(false)
+      toast.error(error.message)
     },
-  });
+  })
 
   // Souscription au plan sélectionné
   const handleSubscription = async (plan: SubscriptionPlan) => {
-    const priceId = isAnnual ? plan.yearlyPriceId : plan.monthlyPriceId;
+    const priceId = isAnnual ? plan.yearlyPriceId : plan.monthlyPriceId
     await mutateAsync({
       organizationId: activeOrg?.id!,
       plan: priceId,
-    });
-  };
+    })
+  }
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -215,35 +194,20 @@ export function SubscriptionStep() {
           <span>Abonnement Biume</span>
         </div>
 
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Choisissez votre plan
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">Choisissez votre plan</h2>
 
         <p className="text-lg text-muted-foreground mb-10">
           Sélectionnez l&apos;offre qui correspond le mieux à vos besoins.{" "}
-          <span className="font-medium text-foreground">
-            Tous nos plans incluent un essai gratuit.
-          </span>
+          <span className="font-medium text-foreground">Tous nos plans incluent un essai gratuit.</span>
         </p>
 
         {/* Sélecteur mensuel/annuel */}
         <div className="flex items-center justify-center gap-4 mb-8">
-          <span
-            className={cn(
-              "text-sm",
-              !isAnnual
-                ? "font-medium text-foreground"
-                : "text-muted-foreground"
-            )}
-          >
+          <span className={cn("text-sm", !isAnnual ? "font-medium text-foreground" : "text-muted-foreground")}>
             Mensuel
           </span>
           <div className="flex items-center space-x-2">
-            <Switch
-              id="billing-toggle"
-              checked={isAnnual}
-              onCheckedChange={setIsAnnual}
-            />
+            <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
             <Label htmlFor="billing-toggle" className="sr-only">
               Facturation annuelle
             </Label>
@@ -251,9 +215,7 @@ export function SubscriptionStep() {
           <span
             className={cn(
               "text-sm flex items-center gap-1.5",
-              isAnnual
-                ? "font-medium text-foreground"
-                : "text-muted-foreground"
+              isAnnual ? "font-medium text-foreground" : "text-muted-foreground"
             )}
           >
             Annuel
@@ -278,55 +240,35 @@ export function SubscriptionStep() {
             <Card
               className={cn(
                 "relative h-full flex flex-col transition-shadow duration-200",
-                plan.isPopular
-                  ? "shadow-lg border-primary/50"
-                  : "hover:shadow-md",
+                plan.isPopular ? "shadow-lg border-primary/50" : "hover:shadow-md",
                 selectedPlan === plan.id && "border-primary shadow-lg"
               )}
               onClick={() => setSelectedPlan(plan.id)}
             >
               {plan.isPopular && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">
-                    {plan.badge}
-                  </Badge>
+                  <Badge className="px-3 py-1 rounded-full bg-primary text-primary-foreground">{plan.badge}</Badge>
                 </div>
               )}
 
-              <CardHeader
-                className={cn(
-                  "flex flex-col items-center text-center",
-                  plan.isPopular ? "pb-0" : ""
-                )}
-              >
+              <CardHeader className={cn("flex flex-col items-center text-center", plan.isPopular ? "pb-0" : "")}>
                 <div
                   className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center mb-4",
-                    plan.isPopular
-                      ? "bg-primary/20 text-primary"
-                      : "bg-muted text-muted-foreground"
+                    plan.isPopular ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
                   )}
                 >
                   <plan.icon className="w-6 h-6" />
                 </div>
                 <CardTitle className="text-xl">{plan.name}</CardTitle>
-                <CardDescription className="text-sm">
-                  {plan.description}
-                </CardDescription>
+                <CardDescription className="text-sm">{plan.description}</CardDescription>
               </CardHeader>
 
               <CardContent className="flex-1">
                 <div className="text-center mb-6">
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-3xl font-bold">
-                      {isAnnual
-                        ? plan.price.annually
-                        : plan.price.monthly}
-                      €
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      /mois
-                    </span>
+                    <span className="text-3xl font-bold">{isAnnual ? plan.price.annually : plan.price.monthly}€</span>
+                    <span className="text-muted-foreground text-sm">/mois</span>
                   </div>
 
                   {isAnnual && (
@@ -355,11 +297,7 @@ export function SubscriptionStep() {
                             : "text-muted-foreground/70 bg-muted"
                         )}
                       >
-                        {feature.included ? (
-                          <Check className="w-3 h-3" />
-                        ) : (
-                          <X className="w-3 h-3" />
-                        )}
+                        {feature.included ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                       </div>
                       <span
                         className={cn(
@@ -375,9 +313,7 @@ export function SubscriptionStep() {
                                 <Info className="w-3.5 h-3.5 text-muted-foreground/80" />
                               </span>
                             </TooltipTrigger>
-                            <TooltipContent side="top">
-                              {feature.explanation}
-                            </TooltipContent>
+                            <TooltipContent side="top">{feature.explanation}</TooltipContent>
                           </Tooltip>
                         )}
                       </span>
@@ -390,9 +326,7 @@ export function SubscriptionStep() {
                 <Button
                   className={cn(
                     "w-full",
-                    plan.isPopular
-                      ? "bg-primary hover:bg-primary/90"
-                      : "bg-primary/10 text-primary hover:bg-primary/20"
+                    plan.isPopular ? "bg-primary hover:bg-primary/90" : "bg-primary/10 text-primary hover:bg-primary/20"
                   )}
                   size="lg"
                   disabled={isLoading}
@@ -425,16 +359,15 @@ export function SubscriptionStep() {
             <Zap className="w-6 h-6 text-primary" />
           </div>
         </div>
-        <h3 className="text-2xl font-bold mb-4">
-          Besoin d&apos;aide pour choisir?
-        </h3>
+        <h3 className="text-2xl font-bold mb-4">Besoin d&apos;aide pour choisir?</h3>
         <p className="text-muted-foreground mb-6">
-          Si vous avez des questions sur nos plans ou si vous avez besoin d&apos;une solution personnalisée, n&apos;hésitez pas à nous contacter.
+          Si vous avez des questions sur nos plans ou si vous avez besoin d&apos;une solution personnalisée,
+          n&apos;hésitez pas à nous contacter.
         </p>
         <Button variant="outline" size="lg">
           Contactez-nous
         </Button>
       </motion.div>
     </div>
-  );
+  )
 }

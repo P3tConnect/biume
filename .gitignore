@@ -49,3 +49,13 @@ next-env.d.ts
 *.lockb
 bun.lockb
 .cursor/
+
+# Turborepo
+.turbo
+
+# prettier
+.prettierrc
+.prettierignore
+
+# cursor
+.cursor

@@ -1,11 +1,12 @@
-import { Avatar, AvatarFallback } from "@/components/ui";
-import { Star } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Rating } from "@/src/db";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Star } from "lucide-react"
+
+import { Avatar, AvatarFallback } from "@/components/ui"
+import { Rating } from "@/src/db"
 
 interface CompanyReviewsProps {
-  reviews: Rating[];
+  reviews: Rating[]
 }
 
 export function CompanyReviews({ reviews }: CompanyReviewsProps) {
@@ -13,13 +14,11 @@ export function CompanyReviews({ reviews }: CompanyReviewsProps) {
     <div>
       {reviews.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-muted-foreground">
-            Aucun avis client disponible pour le moment.
-          </p>
+          <p className="text-muted-foreground">Aucun avis client disponible pour le moment.</p>
         </div>
       ) : (
         <div className="space-y-6">
-          {reviews.map((review) => (
+          {reviews.map(review => (
             <div key={review.id} className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -30,10 +29,7 @@ export function CompanyReviews({ reviews }: CompanyReviewsProps) {
                     <p className="font-medium">{review.writer.name}</p>
                     <div className="flex">
                       {Array.from({ length: review.rate }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-3 w-3 fill-yellow-400 text-yellow-400"
-                        />
+                        <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
                   </div>
@@ -50,5 +46,5 @@ export function CompanyReviews({ reviews }: CompanyReviewsProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

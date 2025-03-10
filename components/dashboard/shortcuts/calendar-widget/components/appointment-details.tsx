@@ -1,21 +1,5 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/src/lib/utils";
-import { Clock, Calendar, Users, MapPin, Edit, Trash } from "lucide-react";
-import { appointmentColors, appointmentLabels } from "../data/constants";
-import type { Appointment } from "../types";
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaBody,
-  CredenzaFooter,
-  CredenzaClose
-} from "@/components/ui/credenza";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,57 +9,61 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/alert-dialog"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui/credenza"
+import React, { useState } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { appointmentColors, appointmentLabels } from "../data/constants"
+
+import type { Appointment } from "../types"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Clock } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/src/lib/utils"
 
 // Type pour les services du professionnel
 interface Service {
-  id: string;
-  name: string;
-  duration: string;
-  type: Appointment['type'];
-  price?: number;
-  description?: string;
+  id: string
+  name: string
+  duration: string
+  type: Appointment["type"]
+  price?: number
+  description?: string
 }
 
 interface AppointmentDetailsProps {
-  appointment: Appointment;
-  onEdit?: (id: string, updatedAppointment: Partial<Appointment>) => void;
-  onDelete?: (id: string) => void;
+  appointment: Appointment
+  onEdit?: (id: string, updatedAppointment: Partial<Appointment>) => void
+  onDelete?: (id: string) => void
 }
 
-export function AppointmentDetails({
-  appointment,
-  onEdit,
-  onDelete
-}: AppointmentDetailsProps) {
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [editedAppointment, setEditedAppointment] = useState<Partial<Appointment>>({});
-  const [services, setServices] = useState<Service[]>([]);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export function AppointmentDetails({ appointment, onEdit, onDelete }: AppointmentDetailsProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [editedAppointment, setEditedAppointment] = useState<Partial<Appointment>>({})
+  const [services, setServices] = useState<Service[]>([])
+  const [selectedService, setSelectedService] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Fonction simulée pour récupérer les services du professionnel
   // Dans un cas réel, cela ferait un appel API
   const fetchServices = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       // Simulation d'un délai d'API
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 300))
 
       // Données simulées - à remplacer par un vrai appel API
       const mockServices: Service[] = [
@@ -85,7 +73,7 @@ export function AppointmentDetails({
           duration: "30min",
           type: "consultation",
           price: 50,
-          description: "Consultation médicale de routine"
+          description: "Consultation médicale de routine",
         },
         {
           id: "2",
@@ -93,7 +81,7 @@ export function AppointmentDetails({
           duration: "45min",
           type: "consultation",
           price: 75,
-          description: "Examen complet pour problèmes complexes"
+          description: "Examen complet pour problèmes complexes",
         },
         {
           id: "3",
@@ -101,7 +89,7 @@ export function AppointmentDetails({
           duration: "15min",
           type: "vaccination",
           price: 40,
-          description: "Ensemble des vaccins recommandés"
+          description: "Ensemble des vaccins recommandés",
         },
         {
           id: "4",
@@ -109,7 +97,7 @@ export function AppointmentDetails({
           duration: "1h",
           type: "grooming",
           price: 60,
-          description: "Toilettage incluant bain et coupe"
+          description: "Toilettage incluant bain et coupe",
         },
         {
           id: "5",
@@ -117,7 +105,7 @@ export function AppointmentDetails({
           duration: "1h30",
           type: "grooming",
           price: 90,
-          description: "Toilettage complet avec soins spécifiques"
+          description: "Toilettage complet avec soins spécifiques",
         },
         {
           id: "6",
@@ -125,7 +113,7 @@ export function AppointmentDetails({
           duration: "1h",
           type: "surgery",
           price: 150,
-          description: "Opérations simples sous anesthésie locale"
+          description: "Opérations simples sous anesthésie locale",
         },
         {
           id: "7",
@@ -133,26 +121,26 @@ export function AppointmentDetails({
           duration: "20min",
           type: "checkup",
           price: 35,
-          description: "Suivi après chirurgie"
-        }
-      ];
+          description: "Suivi après chirurgie",
+        },
+      ]
 
-      setServices(mockServices);
+      setServices(mockServices)
 
       // Trouver un service correspondant (duration + type)
       const matchingService = mockServices.find(
         service => service.duration === appointment.duration && service.type === appointment.type
-      );
+      )
 
       if (matchingService) {
-        setSelectedService(matchingService.id);
+        setSelectedService(matchingService.id)
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des services:", error);
+      console.error("Erreur lors de la récupération des services:", error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleEditOpen = () => {
     // Initialisation des données du formulaire
@@ -165,40 +153,40 @@ export function AppointmentDetails({
       status: appointment.status,
       location: appointment.location,
       notes: appointment.notes,
-    });
+    })
 
     // Ouverture de la modale et récupération des services
-    setIsEditOpen(true);
-    fetchServices();
-  };
+    setIsEditOpen(true)
+    fetchServices()
+  }
 
   const handleServiceSelect = (serviceId: string) => {
-    setSelectedService(serviceId);
+    setSelectedService(serviceId)
 
     // Mise à jour de l'appointment avec les infos du service sélectionné
-    const service = services.find(s => s.id === serviceId);
+    const service = services.find(s => s.id === serviceId)
     if (service) {
       setEditedAppointment({
         ...editedAppointment,
         type: service.type,
-        duration: service.duration
-      });
+        duration: service.duration,
+      })
     }
-  };
+  }
 
   const handleEditSave = () => {
     if (onEdit) {
-      onEdit(appointment.id, editedAppointment);
+      onEdit(appointment.id, editedAppointment)
     }
-    setIsEditOpen(false);
-  };
+    setIsEditOpen(false)
+  }
 
   const handleDeleteConfirm = () => {
     if (onDelete) {
-      onDelete(appointment.id);
+      onDelete(appointment.id)
     }
-    setIsDeleteOpen(false);
-  };
+    setIsDeleteOpen(false)
+  }
 
   return (
     <div className="p-5 rounded-lg border border-border space-y-4 hover:border-border/80 transition-colors">
@@ -213,19 +201,14 @@ export function AppointmentDetails({
               {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
             </Badge>
           </div>
-          <p className="text-base text-muted-foreground">
-            {appointment.ownerName}
-          </p>
+          <p className="text-base text-muted-foreground">{appointment.ownerName}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-2 text-base">
         <Badge
           variant="outline"
-          className={cn(
-            "text-sm px-2.5 py-0.5",
-            appointmentColors[appointment.type].replace("bg-", "border-"),
-          )}
+          className={cn("text-sm px-2.5 py-0.5", appointmentColors[appointment.type].replace("bg-", "border-"))}
         >
           {appointmentLabels[appointment.type]}
         </Badge>
@@ -237,19 +220,10 @@ export function AppointmentDetails({
         </div>
       </div>
 
-      {appointment.location && (
-        <p className="text-sm text-muted-foreground">
-          {appointment.location}
-        </p>
-      )}
+      {appointment.location && <p className="text-sm text-muted-foreground">{appointment.location}</p>}
 
       <div className="flex items-center gap-3 pt-1">
-        <Button
-          variant="outline"
-          size="default"
-          className="w-full"
-          onClick={handleEditOpen}
-        >
+        <Button variant="outline" size="default" className="w-full" onClick={handleEditOpen}>
           Modifier
         </Button>
         <Button
@@ -283,52 +257,64 @@ export function AppointmentDetails({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="petName" className="text-base">Nom de l'animal</Label>
+                          <Label htmlFor="petName" className="text-base">
+                            Nom de l&apos;animal
+                          </Label>
                           <Input
                             id="petName"
                             className="mt-1.5"
                             value={editedAppointment.petName || ""}
-                            onChange={(e) => setEditedAppointment({ ...editedAppointment, petName: e.target.value })}
+                            onChange={e => setEditedAppointment({ ...editedAppointment, petName: e.target.value })}
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="time" className="text-base">Heure du rendez-vous</Label>
+                          <Label htmlFor="time" className="text-base">
+                            Heure du rendez-vous
+                          </Label>
                           <Input
                             id="time"
                             className="mt-1.5"
                             value={editedAppointment.time || ""}
-                            onChange={(e) => setEditedAppointment({ ...editedAppointment, time: e.target.value })}
+                            onChange={e => setEditedAppointment({ ...editedAppointment, time: e.target.value })}
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="location" className="text-base">Lieu</Label>
+                          <Label htmlFor="location" className="text-base">
+                            Lieu
+                          </Label>
                           <Input
                             id="location"
                             className="mt-1.5"
                             value={editedAppointment.location || ""}
-                            onChange={(e) => setEditedAppointment({ ...editedAppointment, location: e.target.value })}
+                            onChange={e => setEditedAppointment({ ...editedAppointment, location: e.target.value })}
                           />
                         </div>
                       </div>
 
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="ownerName" className="text-base">Nom du propriétaire</Label>
+                          <Label htmlFor="ownerName" className="text-base">
+                            Nom du propriétaire
+                          </Label>
                           <Input
                             id="ownerName"
                             className="mt-1.5"
                             value={editedAppointment.ownerName || ""}
-                            onChange={(e) => setEditedAppointment({ ...editedAppointment, ownerName: e.target.value })}
+                            onChange={e => setEditedAppointment({ ...editedAppointment, ownerName: e.target.value })}
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="status" className="text-base">Statut</Label>
+                          <Label htmlFor="status" className="text-base">
+                            Statut
+                          </Label>
                           <Select
                             value={editedAppointment.status}
-                            onValueChange={(value: any) => setEditedAppointment({ ...editedAppointment, status: value })}
+                            onValueChange={(value: any) =>
+                              setEditedAppointment({ ...editedAppointment, status: value })
+                            }
                           >
                             <SelectTrigger className="mt-1.5">
                               <SelectValue placeholder="Sélectionnez un statut" />
@@ -352,12 +338,10 @@ export function AppointmentDetails({
                     </div>
 
                     {isLoading ? (
-                      <div className="py-8 text-center text-muted-foreground">
-                        Chargement des services...
-                      </div>
+                      <div className="py-8 text-center text-muted-foreground">Chargement des services...</div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {services.map((service) => (
+                        {services.map(service => (
                           <div
                             key={service.id}
                             className={cn(
@@ -374,7 +358,10 @@ export function AppointmentDetails({
                                 className={cn(
                                   "text-xs",
                                   appointmentColors[service.type].replace("bg-", "border-"),
-                                  appointmentColors[service.type].replace("bg-", "text-").replace(" text-white", "").replace(" hover:bg-", " hover:text-")
+                                  appointmentColors[service.type]
+                                    .replace("bg-", "text-")
+                                    .replace(" text-white", "")
+                                    .replace(" hover:bg-", " hover:text-")
                                 )}
                               >
                                 {appointmentLabels[service.type]}
@@ -382,12 +369,12 @@ export function AppointmentDetails({
                               <span className="text-xs text-muted-foreground">{service.duration}</span>
                             </div>
 
-                            <div className="text-sm font-medium mb-1">
-                              {service.name}
-                            </div>
+                            <div className="text-sm font-medium mb-1">{service.name}</div>
 
                             {service.description && (
-                              <p className="text-xs text-muted-foreground flex-grow line-clamp-2">{service.description}</p>
+                              <p className="text-xs text-muted-foreground flex-grow line-clamp-2">
+                                {service.description}
+                              </p>
                             )}
 
                             {service.price && (
@@ -406,13 +393,15 @@ export function AppointmentDetails({
                   <CredenzaBody className="py-2">
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="notes" className="text-base">Notes sur le rendez-vous</Label>
+                        <Label htmlFor="notes" className="text-base">
+                          Notes sur le rendez-vous
+                        </Label>
                         <Textarea
                           id="notes"
                           className="min-h-[150px] mt-1.5"
                           placeholder="Informations complémentaires sur le rendez-vous"
                           value={editedAppointment.notes || ""}
-                          onChange={(e) => setEditedAppointment({ ...editedAppointment, notes: e.target.value })}
+                          onChange={e => setEditedAppointment({ ...editedAppointment, notes: e.target.value })}
                         />
                       </div>
                     </div>
@@ -428,9 +417,7 @@ export function AppointmentDetails({
                 <Button variant="outline" onClick={() => setIsEditOpen(false)}>
                   Annuler
                 </Button>
-                <Button onClick={handleEditSave}>
-                  Enregistrer les modifications
-                </Button>
+                <Button onClick={handleEditSave}>Enregistrer les modifications</Button>
               </div>
             </CredenzaFooter>
           </div>
@@ -458,5 +445,5 @@ export function AppointmentDetails({
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }

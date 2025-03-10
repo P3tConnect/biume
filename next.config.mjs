@@ -1,6 +1,6 @@
-import createNextIntlPlugin from "next-intl/plugin";
+import createNextIntlPlugin from "next-intl/plugin"
 
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,21 +15,21 @@ const nextConfig = {
         protocol: "https",
       },
       {
-        hostname: 'randomuser.me',
-        protocol: 'https',
-      },
-      {
-        hostname: 'images.unsplash.com',
+        hostname: "randomuser.me",
         protocol: "https",
       },
       {
-        hostname: 'sea1.ingest.uploadthing.com',
-        protocol: 'https',
+        hostname: "images.unsplash.com",
+        protocol: "https",
       },
       {
-        hostname: 'utfs.io',
-        protocol: 'https',
-      }
+        hostname: "sea1.ingest.uploadthing.com",
+        protocol: "https",
+      },
+      {
+        hostname: "utfs.io",
+        protocol: "https",
+      },
     ],
   },
   env: {
@@ -42,8 +42,7 @@ const nextConfig = {
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
@@ -57,12 +56,6 @@ const nextConfig = {
     STRIPE_WEBHOOK_PRO_SECRET: process.env.STRIPE_WEBHOOK_PRO_SECRET,
     STRIPE_WEBHOOK_ULTIMATE_SECRET: process.env.STRIPE_WEBHOOK_ULTIMATE_SECRET,
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization.minimize = true;
-    }
-    return config;
-  },
-};
+}
 
-export default withNextIntl(nextConfig);
+export default withNextIntl(nextConfig)

@@ -1,31 +1,25 @@
-import { motion } from "framer-motion";
-import { cn } from "@/src/lib/utils";
-import { Star, Home, PawPrint, Dog, Cat, Bird } from "lucide-react";
-import Image from "next/image";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Separator,
-  Textarea,
-  Label,
-} from "@/components/ui";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import Avvvatars from "avvvatars-react";
-import { Pet, Service, Member } from "@/src/db";
-import { Option } from "./OptionsStep";
+import Avvvatars from "avvvatars-react"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { motion } from "framer-motion"
+import { Bird, Cat, Dog, Home, PawPrint, Star } from "lucide-react"
+import Image from "next/image"
+
+import { Avatar, AvatarFallback, AvatarImage, Label, Separator, Textarea } from "@/components/ui"
+import { Member, Pet, Service } from "@/src/db"
+
+import { Option } from "./OptionsStep"
 
 interface SummaryStepProps {
-  selectedPet: Pet | undefined;
-  selectedService: Service | null;
-  selectedPro: Member | null;
-  selectedDate: Date | undefined;
-  selectedTime: string | null;
-  isHomeVisit: boolean;
-  additionalInfo: string;
-  onAdditionalInfoChange: (value: string) => void;
-  selectedOptions: Option[];
+  selectedPet: Pet | undefined
+  selectedService: Service | null
+  selectedPro: Member | null
+  selectedDate: Date | undefined
+  selectedTime: string | null
+  isHomeVisit: boolean
+  additionalInfo: string
+  onAdditionalInfoChange: (value: string) => void
+  selectedOptions: Option[]
 }
 
 export function SummaryStep({
@@ -42,27 +36,24 @@ export function SummaryStep({
   const getPetIcon = (type: string) => {
     switch (type) {
       case "Dog":
-        return <Dog className="h-5 w-5" />;
+        return <Dog className="h-5 w-5" />
       case "Cat":
-        return <Cat className="h-5 w-5" />;
+        return <Cat className="h-5 w-5" />
       case "Bird":
-        return <Bird className="h-5 w-5" />;
+        return <Bird className="h-5 w-5" />
       default:
-        return <PawPrint className="h-5 w-5" />;
+        return <PawPrint className="h-5 w-5" />
     }
-  };
+  }
 
   // Calculer le prix total en incluant les options
   const calculateTotalPrice = () => {
-    const basePrice = parseInt(selectedService?.price?.toString() || "0");
-    const homeVisitFee = isHomeVisit ? 10 : 0;
-    const optionsPrice = selectedOptions.reduce(
-      (total, option) => total + option.price,
-      0,
-    );
+    const basePrice = parseInt(selectedService?.price?.toString() || "0")
+    const homeVisitFee = isHomeVisit ? 10 : 0
+    const optionsPrice = selectedOptions.reduce((total, option) => total + option.price, 0)
 
-    return basePrice + homeVisitFee + optionsPrice;
-  };
+    return basePrice + homeVisitFee + optionsPrice
+  }
 
   return (
     <motion.div
@@ -113,17 +104,13 @@ export function SummaryStep({
                   <AvatarFallback>
                     {selectedPro.user.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map(n => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
               ) : (
                 <div className="h-6 w-6 rounded-full overflow-hidden">
-                  <Avvvatars
-                    value={selectedPro?.user.name || ""}
-                    style="shape"
-                    size={24}
-                  />
+                  <Avvvatars value={selectedPro?.user.name || ""} style="shape" size={24} />
                 </div>
               )}
               <span className="font-medium">{selectedPro?.user.name}</span>
@@ -163,11 +150,8 @@ export function SummaryStep({
               <div>
                 <span className="text-muted-foreground">Options</span>
                 <div className="mt-2 space-y-2">
-                  {selectedOptions.map((option) => (
-                    <div
-                      key={option.id}
-                      className="flex justify-between items-center"
-                    >
+                  {selectedOptions.map(option => (
+                    <div key={option.id} className="flex justify-between items-center">
                       <span className="text-sm">{option.name}</span>
                       <span className="font-medium">+{option.price}€</span>
                     </div>
@@ -181,9 +165,7 @@ export function SummaryStep({
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Prix total</span>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-semibold">
-                {calculateTotalPrice()}€
-              </span>
+              <span className="text-xl font-semibold">{calculateTotalPrice()}€</span>
             </div>
           </div>
         </div>
@@ -194,10 +176,10 @@ export function SummaryStep({
         <Textarea
           placeholder="Ajoutez des informations utiles pour le professionnel..."
           value={additionalInfo}
-          onChange={(e) => onAdditionalInfoChange(e.target.value)}
+          onChange={e => onAdditionalInfoChange(e.target.value)}
           className="min-h-[100px] resize-none"
         />
       </div>
     </motion.div>
-  );
+  )
 }

@@ -1,30 +1,31 @@
-"use client";
+"use client"
 
-import React from "react";
-import { InvoicesHeader } from "./components/InvoicesHeader";
-import { MetricsGrid } from "./components/MetricsGrid";
-import { InvoicesTable } from "./components/InvoicesTable";
-import { InvoiceDetails } from "./components/InvoiceDetails";
-import { Sheet, SheetContent } from "@/components/ui";
-import { useInvoices, useInvoiceMetrics } from "@/src/hooks";
-import { InvoiceData, InvoiceMetricsData } from "@/src/actions/invoice.action";
+import React from "react"
+
+import { Sheet, SheetContent } from "@/components/ui"
+import { useInvoiceMetrics, useInvoices } from "@/src/hooks"
+
+import { InvoiceDetails } from "./components/InvoiceDetails"
+import { InvoicesHeader } from "./components/InvoicesHeader"
+import { InvoicesTable } from "./components/InvoicesTable"
+import { MetricsGrid } from "./components/MetricsGrid"
 
 // Types
 export interface Invoice {
-  id: string;
-  number: string;
-  clientName: string;
-  amount: number;
-  status: "paid" | "pending" | "overdue";
-  dueDate: string;
-  createdAt: string;
+  id: string
+  number: string
+  clientName: string
+  amount: number
+  status: "paid" | "pending" | "overdue"
+  dueDate: string
+  createdAt: string
 }
 
 export interface InvoiceMetrics {
-  totalRevenue: number;
-  unpaidInvoices: number;
-  overdueInvoices: number;
-  averagePaymentTime: number;
+  totalRevenue: number
+  unpaidInvoices: number
+  overdueInvoices: number
+  averagePaymentTime: number
 }
 
 // Composant fallback pour l'état de chargement
@@ -32,34 +33,23 @@ const LoadingState = () => (
   <div className="flex items-center justify-center w-full py-10">
     <span className="text-primary animate-spin">Chargement...</span>
   </div>
-);
+)
 
 // Composant pour afficher les erreurs
-const ErrorState = ({
-  message,
-  onRetry,
-}: {
-  message: string;
-  onRetry: () => void;
-}) => (
+const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
   <div className="flex flex-col items-center justify-center w-full py-10 text-center">
     <p className="text-red-500 mb-2">{message}</p>
-    <button
-      className="px-4 py-2 mt-2 bg-primary text-white rounded-md"
-      onClick={onRetry}
-    >
+    <button className="px-4 py-2 mt-2 bg-primary text-white rounded-md" onClick={onRetry}>
       Réessayer
     </button>
   </div>
-);
+)
 
 const InvoicesPageComponent = () => {
   // Dans un environnement réel, vous récupéreriez l'ID de l'organisation depuis un contexte ou un paramètre
-  const organizationId = "current-organization-id";
+  const organizationId = "current-organization-id"
 
-  const [selectedInvoice, setSelectedInvoice] = React.useState<Invoice | null>(
-    null,
-  );
+  const [selectedInvoice, setSelectedInvoice] = React.useState<Invoice | null>(null)
 
   // Utiliser les hooks de requête pour charger les données
   const {
@@ -67,40 +57,37 @@ const InvoicesPageComponent = () => {
     isLoading: isLoadingInvoices,
     error: invoicesError,
     refetch: refetchInvoices,
-  } = useInvoices(organizationId);
+  } = useInvoices(organizationId)
 
   const {
     data: metrics,
     isLoading: isLoadingMetrics,
     error: metricsError,
     refetch: refetchMetrics,
-  } = useInvoiceMetrics(organizationId);
+  } = useInvoiceMetrics(organizationId)
 
   // Vérifier s'il y a des erreurs
-  const error = invoicesError || metricsError;
+  const error = invoicesError || metricsError
 
   // Vérifier si les données sont en cours de chargement
-  const isLoading = isLoadingInvoices || isLoadingMetrics;
+  const isLoading = isLoadingInvoices || isLoadingMetrics
 
   // Fonction pour réessayer toutes les requêtes
   const handleRetry = () => {
-    refetchInvoices();
-    refetchMetrics();
-  };
+    refetchInvoices()
+    refetchMetrics()
+  }
 
   // Fallback pour l'état de chargement
   if (isLoading) {
-    return <LoadingState />;
+    return <LoadingState />
   }
 
   // Gestion des erreurs
   if (error) {
     return (
-      <ErrorState
-        message="Impossible de charger les données. Veuillez réessayer plus tard."
-        onRetry={handleRetry}
-      />
-    );
+      <ErrorState message="Impossible de charger les données. Veuillez réessayer plus tard." onRetry={handleRetry} />
+    )
   }
 
   return (
@@ -109,21 +96,15 @@ const InvoicesPageComponent = () => {
 
       {metrics && <MetricsGrid data={metrics} />}
 
-      <InvoicesTable
-        invoices={invoices || []}
-        onInvoiceSelect={setSelectedInvoice}
-      />
+      <InvoicesTable invoices={invoices || []} onInvoiceSelect={setSelectedInvoice} />
 
-      <Sheet
-        open={!!selectedInvoice}
-        onOpenChange={() => setSelectedInvoice(null)}
-      >
+      <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
         <SheetContent className="w-full sm:max-w-3xl">
           {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
         </SheetContent>
       </Sheet>
     </div>
-  );
-};
+  )
+}
 
-export default InvoicesPageComponent;
+export default InvoicesPageComponent

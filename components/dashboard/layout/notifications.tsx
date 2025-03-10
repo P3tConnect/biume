@@ -1,4 +1,7 @@
+"use client"
+
 import {
+  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -9,14 +12,14 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  Badge,
-} from "@/components/ui";
-import { Bell } from "lucide-react";
-import React from "react";
+} from "@/components/ui"
+
+import { Bell } from "lucide-react"
+import React from "react"
 
 const Notifications = () => {
   // Nombre temporaire de notifications (sera remplacé par la logique fonctionnelle plus tard)
-  const notificationCount = 5;
+  const notificationCount = 5
 
   // Fausses notifications temporaires
   const tempNotifications = [
@@ -55,25 +58,20 @@ const Notifications = () => {
       time: "Il y a 5 heures",
       read: false,
     },
-  ];
+  ]
 
   // Nombre de notifications non lues
-  const unreadCount = tempNotifications.filter(notification => !notification.read).length;
+  const unreadCount = tempNotifications.filter(notification => !notification.read).length
 
   return (
     <DropdownMenu>
       <Tooltip delayDuration={100}>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="rounded-full h-8 w-8 p-0 bg-card relative"
-            >
+            <Button variant="outline" className="rounded-full h-8 w-8 p-0 bg-card relative">
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <Badge
-                  className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px] bg-red-600 text-white"
-                >
+                <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px] bg-red-600 text-white">
                   {unreadCount}
                 </Badge>
               )}
@@ -83,13 +81,11 @@ const Notifications = () => {
         <TooltipContent side="bottom">Notifications</TooltipContent>
       </Tooltip>
       <DropdownMenuContent className="w-80" side="bottom" align="end">
-        <DropdownMenuLabel className="font-bold">
-          Notifications
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="font-bold">Notifications</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="max-h-[300px] overflow-y-auto">
           {tempNotifications.length > 0 ? (
-            tempNotifications.map((notification) => (
+            tempNotifications.map(notification => (
               <div key={notification.id} className="p-3 hover:bg-muted rounded-md cursor-pointer flex items-start">
                 {!notification.read && (
                   <div className="h-2 w-2 rounded-full bg-blue-500 mt-1.5 mr-2 flex-shrink-0"></div>
@@ -102,9 +98,7 @@ const Notifications = () => {
               </div>
             ))
           ) : (
-            <div className="p-3 text-center text-muted-foreground">
-              Aucune notification
-            </div>
+            <div className="p-3 text-center text-muted-foreground">Aucune notification</div>
           )}
         </DropdownMenuGroup>
         {tempNotifications.length > 0 && (
@@ -119,7 +113,7 @@ const Notifications = () => {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
 
-export default Notifications;
+export default Notifications

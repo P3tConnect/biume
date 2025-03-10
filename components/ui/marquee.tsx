@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/src/lib/utils"
 
 interface MarqueeProps {
-  className?: string;
-  reverse?: boolean;
-  pauseOnHover?: boolean;
-  children?: React.ReactNode;
-  vertical?: boolean;
-  repeat?: number;
-  [key: string]: any;
+  className?: string
+  reverse?: boolean
+  pauseOnHover?: boolean
+  children?: React.ReactNode
+  vertical?: boolean
+  repeat?: number
+  [key: string]: any
 }
 
 export default function Marquee({
@@ -30,7 +30,7 @@ export default function Marquee({
           "flex-row": !vertical,
           "flex-col": vertical,
         },
-        className,
+        className
       )}
     >
       {Array(repeat)
@@ -49,5 +49,5 @@ export default function Marquee({
           </div>
         ))}
     </div>
-  );
+  )
 }

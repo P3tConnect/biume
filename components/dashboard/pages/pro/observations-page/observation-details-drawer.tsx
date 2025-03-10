@@ -1,39 +1,35 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Edit2, Trash2, Calendar, Clock, PawPrint } from "lucide-react";
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { Calendar, Clock, Edit2, PawPrint, Trash2 } from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 interface Observation {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date | null;
+  id: string
+  title: string
+  content: string
+  createdAt: Date
+  updatedAt: Date | null
   session?: {
     patient: {
-      name: string;
-      species: string;
-    };
-  };
+      name: string
+      species: string
+    }
+  }
 }
 
 interface ObservationDetailsDrawerProps {
-  observation: Observation | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onEdit?: (observation: Observation) => void;
-  onDelete?: (observation: Observation) => void;
+  observation: Observation | null
+  isOpen: boolean
+  onClose: () => void
+  onEdit?: (observation: Observation) => void
+  onDelete?: (observation: Observation) => void
 }
 
 const ObservationDetailsDrawer = ({
@@ -43,7 +39,7 @@ const ObservationDetailsDrawer = ({
   onEdit,
   onDelete,
 }: ObservationDetailsDrawerProps) => {
-  if (!observation) return null;
+  if (!observation) return null
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -58,9 +54,7 @@ const ObservationDetailsDrawer = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-3">
-                    <SheetTitle className="text-3xl font-bold">
-                      {observation.title}
-                    </SheetTitle>
+                    <SheetTitle className="text-3xl font-bold">{observation.title}</SheetTitle>
                     <Badge
                       variant={observation.updatedAt ? "secondary" : "default"}
                       className={
@@ -76,13 +70,9 @@ const ObservationDetailsDrawer = ({
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
                       <span>
-                        {format(
-                          new Date(observation.createdAt),
-                          "d MMMM yyyy",
-                          {
-                            locale: fr,
-                          },
-                        )}
+                        {format(new Date(observation.createdAt), "d MMMM yyyy", {
+                          locale: fr,
+                        })}
                       </span>
                     </div>
                     {observation.updatedAt && (
@@ -92,13 +82,9 @@ const ObservationDetailsDrawer = ({
                           <Clock className="h-4 w-4" />
                           <span>
                             Mise à jour le{" "}
-                            {format(
-                              new Date(observation.updatedAt),
-                              "d MMMM yyyy",
-                              {
-                                locale: fr,
-                              },
-                            )}
+                            {format(new Date(observation.updatedAt), "d MMMM yyyy", {
+                              locale: fr,
+                            })}
                           </span>
                         </div>
                       </>
@@ -108,21 +94,13 @@ const ObservationDetailsDrawer = ({
               </div>
               <div className="flex gap-2">
                 {onEdit && (
-                  <Button
-                    variant="outline"
-                    size="default"
-                    onClick={() => onEdit(observation)}
-                  >
+                  <Button variant="outline" size="default" onClick={() => onEdit(observation)}>
                     <Edit2 className="h-4 w-4 mr-2" />
                     Modifier
                   </Button>
                 )}
                 {onDelete && (
-                  <Button
-                    variant="destructive"
-                    size="default"
-                    onClick={() => onDelete(observation)}
-                  >
+                  <Button variant="destructive" size="default" onClick={() => onDelete(observation)}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Supprimer
                   </Button>
@@ -144,9 +122,7 @@ const ObservationDetailsDrawer = ({
                       {observation.session.patient.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-medium text-lg">
-                        {observation.session.patient.name}
-                      </h4>
+                      <h4 className="font-medium text-lg">{observation.session.patient.name}</h4>
                       <Badge variant="outline" className="mt-1">
                         {observation.session.patient.species}
                       </Badge>
@@ -157,19 +133,15 @@ const ObservationDetailsDrawer = ({
 
               {/* Observation Content */}
               <Card className="p-6">
-                <h3 className="font-semibold text-lg mb-4">
-                  Contenu de l&apos;observation
-                </h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">
-                  {observation.content}
-                </p>
+                <h3 className="font-semibold text-lg mb-4">Contenu de l&apos;observation</h3>
+                <p className="text-muted-foreground whitespace-pre-wrap">{observation.content}</p>
               </Card>
             </div>
           </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}
 
-export default ObservationDetailsDrawer;
+export default ObservationDetailsDrawer

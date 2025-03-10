@@ -1,38 +1,33 @@
-"use client";
+"use client"
 
-import React from "react";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
+  ActivityIcon,
+  AlertTriangleIcon,
   CalendarDays,
   CalendarIcon,
-  ClockIcon,
-  UserCircle2Icon,
-  CheckIcon,
-  XIcon,
-  ChevronRightIcon,
-  DogIcon,
   CatIcon,
-  AlertTriangleIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  DogIcon,
   HeartPulseIcon,
   SyringeIcon,
-  ActivityIcon,
-} from "lucide-react";
-import { cn } from "@/src/lib/utils";
+  UserCircle2Icon,
+  XIcon,
+} from "lucide-react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import React from "react"
+import { cn } from "@/src/lib/utils"
 
 export const AppointmentRequests = () => {
   // Fonction pour gérer l'action
   const handleAction = (action: string, id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log(`Action ${action} pour la demande ${id}`);
-  };
+    e.stopPropagation()
+    console.log(`Action ${action} pour la demande ${id}`)
+  }
 
   // Données avec plus d'informations pour le design
   const requests = [
@@ -74,8 +69,8 @@ export const AppointmentRequests = () => {
       serviceIcon: <ActivityIcon className="h-4 w-4" />,
       color: "red",
       urgent: true,
-    }
-  ];
+    },
+  ]
 
   return (
     <Card className="overflow-hidden border border-border">
@@ -84,9 +79,7 @@ export const AppointmentRequests = () => {
           <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
             <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
           </div>
-          <CardTitle className="text-lg font-medium">
-            Demandes de rendez-vous
-          </CardTitle>
+          <CardTitle className="text-lg font-medium">Demandes de rendez-vous</CardTitle>
         </div>
         <Badge className="bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/70">
           {requests.length}
@@ -95,7 +88,7 @@ export const AppointmentRequests = () => {
 
       <CardContent className="p-4">
         <div className="grid grid-cols-1 gap-3">
-          {requests.map((request) => (
+          {requests.map(request => (
             <div
               key={request.id}
               onClick={() => console.log(`Voir détails de ${request.petName}`)}
@@ -118,12 +111,14 @@ export const AppointmentRequests = () => {
 
               <div className="flex items-start gap-4">
                 {/* Info de l'animal */}
-                <div className={cn(
-                  "p-2.5 rounded-lg flex-shrink-0 flex items-center justify-center",
-                  request.urgent
-                    ? "bg-rose-100 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400"
-                    : "bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400"
-                )}>
+                <div
+                  className={cn(
+                    "p-2.5 rounded-lg flex-shrink-0 flex items-center justify-center",
+                    request.urgent
+                      ? "bg-rose-100 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400"
+                      : "bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400"
+                  )}
+                >
                   {request.icon}
                 </div>
 
@@ -132,9 +127,7 @@ export const AppointmentRequests = () => {
                   <div className="flex items-center justify-between mb-1">
                     <div className="font-medium text-base">
                       {request.petName}
-                      <span className="text-sm font-normal text-muted-foreground ml-1">
-                        ({request.petBreed})
-                      </span>
+                      <span className="text-sm font-normal text-muted-foreground ml-1">({request.petBreed})</span>
                     </div>
                   </div>
 
@@ -145,7 +138,9 @@ export const AppointmentRequests = () => {
                     </div>
                     <div className="flex items-center gap-1.5 text-sm">
                       <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                      <span className={request.urgent ? "text-red-600 dark:text-red-400 font-medium" : ""}>{request.timeframe}</span>
+                      <span className={request.urgent ? "text-red-600 dark:text-red-400 font-medium" : ""}>
+                        {request.timeframe}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                       <UserCircle2Icon className="h-4 w-4" />
@@ -153,7 +148,7 @@ export const AppointmentRequests = () => {
                     </div>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                       <CalendarIcon className="h-4 w-4" />
-                      <span>Aujourd'hui</span>
+                      <span>Aujourd&apos;hui</span>
                     </div>
                   </div>
                 </div>
@@ -164,7 +159,7 @@ export const AppointmentRequests = () => {
                     variant="outline"
                     size="sm"
                     className="h-8 w-8 p-0 rounded-full bg-green-50 hover:bg-green-100 text-green-600 border-green-200 hover:border-green-300 dark:bg-green-900/20 dark:hover:bg-green-900/40 dark:border-green-800"
-                    onClick={(e) => handleAction("confirm", request.id, e)}
+                    onClick={e => handleAction("confirm", request.id, e)}
                   >
                     <CheckIcon className="h-4 w-4" />
                   </Button>
@@ -172,7 +167,7 @@ export const AppointmentRequests = () => {
                     variant="outline"
                     size="sm"
                     className="h-8 w-8 p-0 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border-red-200 hover:border-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:border-red-800"
-                    onClick={(e) => handleAction("reject", request.id, e)}
+                    onClick={e => handleAction("reject", request.id, e)}
                   >
                     <XIcon className="h-4 w-4" />
                   </Button>
@@ -186,12 +181,8 @@ export const AppointmentRequests = () => {
               <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full mb-3">
                 <CheckIcon className="h-6 w-6" />
               </div>
-              <p className="text-lg font-medium mb-1">
-                Aucune demande en attente
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Toutes les demandes ont été traitées
-              </p>
+              <p className="text-lg font-medium mb-1">Aucune demande en attente</p>
+              <p className="text-sm text-muted-foreground">Toutes les demandes ont été traitées</p>
             </div>
           )}
         </div>
@@ -210,5 +201,5 @@ export const AppointmentRequests = () => {
         </CardFooter>
       )}
     </Card>
-  );
-};
+  )
+}

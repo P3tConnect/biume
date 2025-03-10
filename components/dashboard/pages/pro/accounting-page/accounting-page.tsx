@@ -1,101 +1,100 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  CircleDollarSign,
-  ArrowUpRight,
   ArrowDownRight,
-  Calendar,
-  PiggyBank,
-  FileText,
-  AlertCircle,
+  ArrowUpRight,
   BarChart3,
-  Users,
-  PawPrint,
-  Stethoscope,
-  ShoppingBag,
-  Tag,
-  Lightbulb,
+  CircleDollarSign,
   Download,
+  FileText,
+  Lightbulb,
+  PawPrint,
   Printer,
-} from "lucide-react";
-import AccountingHeader from "../../../shortcuts/pro/accounting-header";
+  ShoppingBag,
+  Stethoscope,
+  Tag,
+  Users,
+} from "lucide-react"
+import React from "react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import AccountingHeader from "../../../shortcuts/pro/accounting-header"
 
 // Interfaces pour les composants
 interface RevenueWidgetProps {
   data: {
-    totalRevenue: number;
-    changePercent: number;
-    monthlyData: number[];
-  };
+    totalRevenue: number
+    changePercent: number
+    monthlyData: number[]
+  }
 }
 
 interface ProfitabilityWidgetProps {
   data: {
-    revenue: number;
-    revenueChangePercent: number;
-    expenses: number;
-    expensesChangePercent: number;
-    profitMargin: number;
-    profitMarginChange: number;
-  };
+    revenue: number
+    revenueChangePercent: number
+    expenses: number
+    expensesChangePercent: number
+    profitMargin: number
+    profitMarginChange: number
+  }
 }
 
 interface Invoice {
-  id: number;
-  client: string;
-  clientAvatar: string;
-  amount: number;
-  dueDate: string;
+  id: number
+  client: string
+  clientAvatar: string
+  amount: number
+  dueDate: string
 }
 
 interface InvoicesWidgetProps {
   data: {
-    unpaid: Invoice[];
+    unpaid: Invoice[]
     // Autres propriétés peuvent être ajoutées si nécessaire
-  };
+  }
 }
 
 interface Species {
-  name: string;
-  percentage: number;
+  name: string
+  percentage: number
 }
 
 interface PatientInsightsWidgetProps {
   data: {
-    patientCount: number;
-    newPatients: number;
-    retentionRate: number;
-    regularPatients: number;
-    topSpecies: Species[];
-  };
+    patientCount: number
+    newPatients: number
+    retentionRate: number
+    regularPatients: number
+    topSpecies: Species[]
+  }
 }
 
 interface TaxPreparationWidgetProps {
   data: {
-    vat: number;
-    socialCharges: number;
-    incomeTax: number;
-    nextDeadline: string;
-    deadlineDescription: string;
-  };
+    vat: number
+    socialCharges: number
+    incomeTax: number
+    nextDeadline: string
+    deadlineDescription: string
+  }
 }
 
 interface Service {
-  name: string;
-  profitability: number;
+  name: string
+  profitability: number
 }
 
 interface ProfitabilityByServiceWidgetProps {
   data: {
-    services: Service[];
-    mostProfitable: Service;
-    leastProfitable: Service;
-  };
+    services: Service[]
+    mostProfitable: Service
+    leastProfitable: Service
+  }
 }
 
 // Composants avec leurs interfaces
@@ -110,7 +109,8 @@ const ConsultationRevenueWidget = ({ data }: RevenueWidgetProps) => {
         <div className="text-2xl font-bold">{data.totalRevenue} €</div>
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span className={data.changePercent > 0 ? "text-emerald-500" : "text-rose-500"}>
-            {data.changePercent > 0 ? "+" : ""}{data.changePercent}%
+            {data.changePercent > 0 ? "+" : ""}
+            {data.changePercent}%
           </span>
           <span>depuis le mois dernier</span>
         </div>
@@ -129,8 +129,8 @@ const ConsultationRevenueWidget = ({ data }: RevenueWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const TreatmentRevenueWidget = ({ data }: RevenueWidgetProps) => {
   return (
@@ -143,7 +143,8 @@ const TreatmentRevenueWidget = ({ data }: RevenueWidgetProps) => {
         <div className="text-2xl font-bold">{data.totalRevenue} €</div>
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span className={data.changePercent > 0 ? "text-emerald-500" : "text-rose-500"}>
-            {data.changePercent > 0 ? "+" : ""}{data.changePercent}%
+            {data.changePercent > 0 ? "+" : ""}
+            {data.changePercent}%
           </span>
           <span>depuis le mois dernier</span>
         </div>
@@ -162,8 +163,8 @@ const TreatmentRevenueWidget = ({ data }: RevenueWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const ProductRevenueWidget = ({ data }: RevenueWidgetProps) => {
   return (
@@ -176,7 +177,8 @@ const ProductRevenueWidget = ({ data }: RevenueWidgetProps) => {
         <div className="text-2xl font-bold">{data.totalRevenue} €</div>
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span className={data.changePercent > 0 ? "text-emerald-500" : "text-rose-500"}>
-            {data.changePercent > 0 ? "+" : ""}{data.changePercent}%
+            {data.changePercent > 0 ? "+" : ""}
+            {data.changePercent}%
           </span>
           <span>depuis le mois dernier</span>
         </div>
@@ -195,8 +197,8 @@ const ProductRevenueWidget = ({ data }: RevenueWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const ProfitabilityWidget = ({ data }: ProfitabilityWidgetProps) => {
   return (
@@ -228,7 +230,8 @@ const ProfitabilityWidget = ({ data }: ProfitabilityWidgetProps) => {
             <p className="text-2xl font-bold">{data.profitMargin} %</p>
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span className={data.profitMarginChange > 0 ? "text-emerald-500" : "text-rose-500"}>
-                {data.profitMarginChange > 0 ? "+" : ""}{data.profitMarginChange}%
+                {data.profitMarginChange > 0 ? "+" : ""}
+                {data.profitMarginChange}%
               </span>
               <span>depuis le mois dernier</span>
             </div>
@@ -236,8 +239,8 @@ const ProfitabilityWidget = ({ data }: ProfitabilityWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const InvoicesWidget = ({ data }: InvoicesWidgetProps) => {
   return (
@@ -274,14 +277,14 @@ const InvoicesWidget = ({ data }: InvoicesWidgetProps) => {
                     </Avatar>
                     <div>
                       <p className="text-sm font-medium">{invoice.client}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Échéance: {invoice.dueDate}
-                      </p>
+                      <p className="text-xs text-muted-foreground">Échéance: {invoice.dueDate}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <p className="text-sm font-bold">{invoice.amount} €</p>
-                    <Button variant="outline" size="sm">Rappeler</Button>
+                    <Button variant="outline" size="sm">
+                      Rappeler
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -298,8 +301,8 @@ const InvoicesWidget = ({ data }: InvoicesWidgetProps) => {
         </Tabs>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const PatientInsightsWidget = ({ data }: PatientInsightsWidgetProps) => {
   return (
@@ -344,8 +347,8 @@ const PatientInsightsWidget = ({ data }: PatientInsightsWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const TaxPreparationWidget = ({ data }: TaxPreparationWidgetProps) => {
   return (
@@ -382,8 +385,8 @@ const TaxPreparationWidget = ({ data }: TaxPreparationWidgetProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 const ProfitabilityByServiceWidget = ({ data }: ProfitabilityByServiceWidgetProps) => {
   return (
@@ -399,7 +402,7 @@ const ProfitabilityByServiceWidget = ({ data }: ProfitabilityByServiceWidgetProp
               <p className="text-sm font-medium col-span-2">{service.name}</p>
               <div className="col-span-2 h-2 rounded-full bg-muted overflow-hidden">
                 <div
-                  className={`h-full rounded-full ${service.profitability >= 50 ? 'bg-emerald-500' : service.profitability >= 30 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                  className={`h-full rounded-full ${service.profitability >= 50 ? "bg-emerald-500" : service.profitability >= 30 ? "bg-amber-500" : "bg-rose-500"}`}
                   style={{ width: `${service.profitability}%` }}
                 />
               </div>
@@ -410,11 +413,15 @@ const ProfitabilityByServiceWidget = ({ data }: ProfitabilityByServiceWidgetProp
         <div className="flex justify-between items-center mt-6 pt-4 border-t">
           <div>
             <p className="text-sm font-medium">Service le plus rentable</p>
-            <p className="text-sm text-muted-foreground">{data.mostProfitable.name} ({data.mostProfitable.profitability}%)</p>
+            <p className="text-sm text-muted-foreground">
+              {data.mostProfitable.name} ({data.mostProfitable.profitability}%)
+            </p>
           </div>
           <div>
             <p className="text-sm font-medium">Service le moins rentable</p>
-            <p className="text-sm text-muted-foreground">{data.leastProfitable.name} ({data.leastProfitable.profitability}%)</p>
+            <p className="text-sm text-muted-foreground">
+              {data.leastProfitable.name} ({data.leastProfitable.profitability}%)
+            </p>
           </div>
           <Button variant="outline" size="sm">
             <Lightbulb className="mr-2 h-4 w-4" />
@@ -423,19 +430,19 @@ const ProfitabilityByServiceWidget = ({ data }: ProfitabilityByServiceWidgetProp
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 // Type pour les données mockées
 interface MockDataType {
-  consultationRevenue: RevenueWidgetProps['data'];
-  treatmentRevenue: RevenueWidgetProps['data'];
-  productRevenue: RevenueWidgetProps['data'];
-  profitability: ProfitabilityWidgetProps['data'];
-  invoices: InvoicesWidgetProps['data'];
-  patientInsights: PatientInsightsWidgetProps['data'];
-  taxPreparation: TaxPreparationWidgetProps['data'];
-  servicesProfitability: ProfitabilityByServiceWidgetProps['data'];
+  consultationRevenue: RevenueWidgetProps["data"]
+  treatmentRevenue: RevenueWidgetProps["data"]
+  productRevenue: RevenueWidgetProps["data"]
+  profitability: ProfitabilityWidgetProps["data"]
+  invoices: InvoicesWidgetProps["data"]
+  patientInsights: PatientInsightsWidgetProps["data"]
+  taxPreparation: TaxPreparationWidgetProps["data"]
+  servicesProfitability: ProfitabilityByServiceWidgetProps["data"]
 }
 
 const AccountingPageComponent = () => {
@@ -505,7 +512,7 @@ const AccountingPageComponent = () => {
       mostProfitable: { name: "Vaccinations", profitability: 82 },
       leastProfitable: { name: "Vente d'aliments", profitability: 28 },
     },
-  };
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -527,7 +534,7 @@ const AccountingPageComponent = () => {
 
       <ProfitabilityByServiceWidget data={mockData.servicesProfitability} />
     </div>
-  );
-};
+  )
+}
 
-export default AccountingPageComponent;
+export default AccountingPageComponent

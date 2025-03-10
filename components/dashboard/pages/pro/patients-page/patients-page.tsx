@@ -1,4 +1,17 @@
-"use client";
+"use client"
+
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table"
+import { ArrowUpDown, Bird, Cat, Dog, Filter, House, MoreHorizontal, Plus, Search } from "lucide-react"
+import React from "react"
 
 import {
   Card,
@@ -6,44 +19,14 @@ import {
   CardHeader,
   CardTitle,
   Credenza,
-  CredenzaTitle,
   CredenzaContent,
-  CredenzaHeader,
-  CredenzaTrigger,
   CredenzaDescription,
-} from "@/components/ui";
-import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getSortedRowModel,
-  SortingState,
-  getFilteredRowModel,
-  ColumnFiltersState,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowUpDown,
-  Dog,
-  Cat,
-  Bird,
-  House,
-  Search,
-  Plus,
-  MoreHorizontal,
-  Filter,
-} from "lucide-react";
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/ui"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,25 +34,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PatientDetailsDrawer from "./patient-details-drawer";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import PatientDetailsDrawer from "./patient-details-drawer"
 
 // Define the type for our patient data
 export type Patient = {
-  id: string;
-  name: string;
-  type: "Dog" | "Cat" | "Bird" | "Horse" | "NAC";
-  nacType?: string;
-  weight?: number;
-  height?: number;
-  birthDate: string;
-  furColor?: string;
-  eyeColor?: string;
-  ownerName: string;
-  createdAt: string;
-};
+  id: string
+  name: string
+  type: "Dog" | "Cat" | "Bird" | "Horse" | "NAC"
+  nacType?: string
+  weight?: number
+  height?: number
+  birthDate: string
+  furColor?: string
+  eyeColor?: string
+  ownerName: string
+  createdAt: string
+}
 
 // Fake patient data
 const patients: Patient[] = [
@@ -195,7 +180,7 @@ const patients: Patient[] = [
     ownerName: "Hugo Leroy",
     createdAt: "2023-12-02",
   },
-];
+]
 
 // Nouvelles statistiques
 const stats = [
@@ -206,45 +191,38 @@ const stats = [
   },
   {
     label: "Chiens",
-    value: patients.filter((p) => p.type === "Dog").length,
+    value: patients.filter(p => p.type === "Dog").length,
     icon: Dog,
   },
   {
     label: "Chats",
-    value: patients.filter((p) => p.type === "Cat").length,
+    value: patients.filter(p => p.type === "Cat").length,
     icon: Cat,
   },
   {
     label: "Autres",
-    value: patients.filter((p) => !["Dog", "Cat"].includes(p.type)).length,
+    value: patients.filter(p => !["Dog", "Cat"].includes(p.type)).length,
     icon: Bird,
   },
-];
+]
 
 const PatientsPageComponent = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [activeTab, setActiveTab] = React.useState("all");
-  const [selectedPatient, setSelectedPatient] = React.useState<Patient | null>(
-    null,
-  );
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = React.useState("")
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [activeTab, setActiveTab] = React.useState("all")
+  const [selectedPatient, setSelectedPatient] = React.useState<Patient | null>(null)
 
   const columns: ColumnDef<Patient>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Nom
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
+        )
       },
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
@@ -261,7 +239,7 @@ const PatientsPageComponent = () => {
       accessorKey: "type",
       header: "Type",
       cell: ({ row }) => {
-        const type = row.getValue("type") as string;
+        const type = row.getValue("type") as string
         return (
           <div className="flex items-center gap-2">
             {type === "Dog" && <Dog className="w-4 h-4" />}
@@ -270,32 +248,27 @@ const PatientsPageComponent = () => {
             {type === "Horse" && <House className="w-4 h-4" />}
             <span>{type}</span>
           </div>
-        );
+        )
       },
     },
     {
       accessorKey: "weight",
       header: "Poids (kg)",
-      cell: ({ row }) => (
-        <div className="font-mono">{row.getValue("weight")} kg</div>
-      ),
+      cell: ({ row }) => <div className="font-mono">{row.getValue("weight")} kg</div>,
     },
     {
       accessorKey: "birthDate",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Date de naissance
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const date = new Date(row.getValue("birthDate"));
-        return new Intl.DateTimeFormat("fr-FR").format(date);
+        const date = new Date(row.getValue("birthDate"))
+        return new Intl.DateTimeFormat("fr-FR").format(date)
       },
     },
     {
@@ -325,15 +298,13 @@ const PatientsPageComponent = () => {
               <DropdownMenuItem>Voir le dossier</DropdownMenuItem>
               <DropdownMenuItem>Nouvelle consultation</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
-                Supprimer
-              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
     data: patients,
@@ -348,7 +319,7 @@ const PatientsPageComponent = () => {
       columnFilters,
       globalFilter,
     },
-  });
+  })
 
   return (
     <div className="space-y-6">
@@ -360,9 +331,7 @@ const PatientsPageComponent = () => {
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                 Patients
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Gérez vos patients et leurs dossiers médicaux
-              </p>
+              <p className="text-sm text-muted-foreground">Gérez vos patients et leurs dossiers médicaux</p>
             </div>
             <div className="flex gap-3">
               <Credenza>
@@ -375,9 +344,7 @@ const PatientsPageComponent = () => {
                 <CredenzaContent>
                   <CredenzaHeader>
                     <CredenzaTitle>Ajouter un nouveau patient</CredenzaTitle>
-                    <CredenzaDescription>
-                      Formulaire d&apos;ajout de patient à implémenter
-                    </CredenzaDescription>
+                    <CredenzaDescription>Formulaire d&apos;ajout de patient à implémenter</CredenzaDescription>
                   </CredenzaHeader>
                 </CredenzaContent>
               </Credenza>
@@ -396,9 +363,7 @@ const PatientsPageComponent = () => {
                   <stat.icon className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {stat.label}
-                  </p>
+                  <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
                   <h3 className="text-2xl font-bold">{stat.value}</h3>
                 </div>
               </div>
@@ -410,16 +375,9 @@ const PatientsPageComponent = () => {
       <Card className="w-full rounded-xl shadow-sm">
         <CardHeader className="pb-0">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xl font-semibold">
-              Mes Patients
-            </CardTitle>
+            <CardTitle className="text-xl font-semibold">Mes Patients</CardTitle>
           </div>
-          <Tabs
-            defaultValue="all"
-            className="w-full"
-            value={activeTab}
-            onValueChange={setActiveTab}
-          >
+          <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between">
               <TabsList>
                 <TabsTrigger value="all">Tous</TabsTrigger>
@@ -434,7 +392,7 @@ const PatientsPageComponent = () => {
                   <Input
                     placeholder="Rechercher..."
                     value={globalFilter}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    onChange={event => setGlobalFilter(event.target.value)}
                     className="pl-8 w-[250px]"
                   />
                 </div>
@@ -458,16 +416,13 @@ const PatientsPageComponent = () => {
             <TabsContent value="all" className="mt-6">
               <Table>
                 <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
+                  {table.getHeaderGroups().map(headerGroup => (
                     <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
+                      {headerGroup.headers.map(header => (
                         <TableHead key={header.id}>
                           {header.isPlaceholder
                             ? null
-                            : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            : flexRender(header.column.columnDef.header, header.getContext())}
                         </TableHead>
                       ))}
                     </TableRow>
@@ -475,30 +430,22 @@ const PatientsPageComponent = () => {
                 </TableHeader>
                 <TableBody>
                   {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
+                    table.getRowModel().rows.map(row => (
                       <TableRow
                         key={row.id}
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() =>
-                          setSelectedPatient(row.original as Patient)
-                        }
+                        onClick={() => setSelectedPatient(row.original as Patient)}
                       >
-                        {row.getVisibleCells().map((cell) => (
+                        {row.getVisibleCells().map(cell => (
                           <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </TableCell>
                         ))}
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
+                      <TableCell colSpan={columns.length} className="h-24 text-center">
                         Aucun résultat.
                       </TableCell>
                     </TableRow>
@@ -514,17 +461,17 @@ const PatientsPageComponent = () => {
         patient={selectedPatient}
         isOpen={!!selectedPatient}
         onClose={() => setSelectedPatient(null)}
-        onEdit={(patient) => {
+        onEdit={patient => {
           // TODO: Implement edit functionality
-          console.log("Edit patient:", patient);
+          console.log("Edit patient:", patient)
         }}
-        onDelete={(patient) => {
+        onDelete={patient => {
           // TODO: Implement delete functionality
-          console.log("Delete patient:", patient);
+          console.log("Delete patient:", patient)
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PatientsPageComponent;
+export default PatientsPageComponent

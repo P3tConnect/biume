@@ -1,10 +1,9 @@
-import React from 'react'
-import { EmailLayout } from './EmailLayout'
+import React from "react"
+
+import { EmailLayout } from "./EmailLayout"
 
 const NewRateProEmail = () => {
-  return (
-    <EmailLayout>NewRateProEmail</EmailLayout>
-  )
+  return <EmailLayout>NewRateProEmail</EmailLayout>
 }
 
 export default NewRateProEmail
