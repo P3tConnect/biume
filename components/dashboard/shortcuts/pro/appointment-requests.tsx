@@ -31,53 +31,30 @@ export const AppointmentRequests = () => {
     console.log(`Action ${action} pour la demande ${id}`)
   }
 
-  // Données avec plus d'informations pour le design
-  // const requests = [
-  //   {
-  //     id: "15",
-  //     petName: "Luna",
-  //     petType: "chien",
-  //     petBreed: "Berger australien",
-  //     ownerName: "Marie Dupont",
-  //     service: "Consultation",
-  //     timeframe: "09:30 - 10:00",
-  //     icon: <DogIcon className="h-4 w-4" />,
-  //     serviceIcon: <HeartPulseIcon className="h-4 w-4" />,
-  //     color: "green",
-  //     urgent: false,
-  //   },
-  //   {
-  //     id: "14",
-  //     petName: "Simba",
-  //     petType: "chat",
-  //     petBreed: "Maine Coon",
-  //     ownerName: "Paul Martin",
-  //     service: "Vaccination",
-  //     timeframe: "14:15 - 14:30",
-  //     icon: <CatIcon className="h-4 w-4" />,
-  //     serviceIcon: <SyringeIcon className="h-4 w-4" />,
-  //     color: "green",
-  //     urgent: false,
-  //   },
-  //   {
-  //     id: "12",
-  //     petName: "Rocky",
-  //     petType: "chien",
-  //     petBreed: "Jack Russell",
-  //     ownerName: "Lucie Moreau",
-  //     service: "Urgence",
-  //     timeframe: "Dès que possible",
-  //     icon: <DogIcon className="h-4 w-4" />,
-  //     serviceIcon: <ActivityIcon className="h-4 w-4" />,
-  //     color: "red",
-  //     urgent: true,
-  //   },
-  // ]
-
-  const { data: appointments } = useQuery({
+  const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
     queryKey: ["appointments"],
     queryFn: () => getPendingAndPayedAppointments({}),
-  });
+  })
+
+  if (isLoadingAppointments) {
+    return (
+      <Card className="overflow-hidden border border-border">
+        <CardHeader className="py-3 px-4 flex flex-row items-center justify-between bg-gradient-to-r from-green-50 to-white dark:from-green-950/30 dark:to-slate-900">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
+              <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
+            <CardTitle className="text-lg font-medium">Demandes de rendez-vous</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-center py-8">
+            <div className="w-10 h-10 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card className="overflow-hidden border border-border">
@@ -101,7 +78,7 @@ export const AppointmentRequests = () => {
               onClick={() => console.log(`Voir détails de ${appointment.pet?.name}`)}
               className={cn(
                 "group relative rounded-xl p-3 transition-all hover:scale-[1.01] cursor-pointer border",
-                "bg-rose-50/30 dark:bg-rose-950/10 border-rose-200 dark:border-rose-900/30 hover:border-rose-300 dark:hover:border-rose-800/50"
+                "border-green-100 dark:border-green-900/30 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80"
               )}
             >
               {/* Indicateur d'urgence */}
@@ -140,8 +117,14 @@ export const AppointmentRequests = () => {
                     </div>
                     <div className="flex items-center gap-1.5 text-sm">
                       <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                      <span className={appointment.status === "SCHEDULED" ? "text-red-600 dark:text-red-400 font-medium" : ""}>
-                        {appointment.slot?.start?.toLocaleString()}
+                      <span className={appointment.status === "SCHEDULED" ? "" : ""}>
+                        {appointment.slot?.start?.toLocaleString("fr-FR", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">

@@ -120,11 +120,11 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
             mode="single"
             selected={date}
             onSelect={handleDateChange}
-            className="p-2 sm:pe-5"
+            className="p-3 sm:pe-5 max-w-none"
             disabled={isDayDisabled}
             locale={fr}
           />
-          <div className="relative w-full max-sm:h-48 sm:w-52">
+          <div className="relative w-full max-sm:h-72 sm:h-[350px] sm:w-64">
             <div className="absolute inset-0 py-4 max-sm:border-t">
               <ScrollArea className="h-full sm:border-s">
                 <div className="space-y-3">

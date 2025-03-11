@@ -16,7 +16,7 @@ import {
   Star,
   Users,
 } from "lucide-react"
-import { Organization, OrganizationSlots, Pet } from "@/src/db"
+import { Organization } from "@/src/db"
 import { useEffect, useRef, useState } from "react"
 
 import { ActionResult } from "@/src/lib"
@@ -48,11 +48,6 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const companyResult = data
   const [isMounted, setIsMounted] = useState(false)
   const [activeSection, setActiveSection] = useState("about")
-  const [selectedService, setSelectedService] = useState<string | null>(null)
-  const [selectedPro, setSelectedPro] = useState<string | null>(null)
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
-  const [selectedSlot, setSelectedSlot] = useState<OrganizationSlots | null>(null)
   const [isBookingExpanded, setIsBookingExpanded] = useState(false)
 
   // Refs pour le défilement
@@ -75,7 +70,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
     // Observer pour détecter la section active au défilement
     const observer = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
+        entries.map(entry => {
           if (entry.isIntersecting) {
             // Trouver l'ID de la section active
             const id = Object.entries(sectionRefs.current).find(([_, el]) => el === entry.target)?.[0]
@@ -87,12 +82,12 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
     )
 
     // Observer chaque section
-    Object.entries(sectionRefs.current).forEach(([_, ref]) => {
+    Object.entries(sectionRefs.current).map(([_, ref]) => {
       if (ref instanceof HTMLElement) observer.observe(ref)
     })
 
     return () => {
-      Object.entries(sectionRefs.current).forEach(([_, ref]) => {
+      Object.entries(sectionRefs.current).map(([_, ref]) => {
         if (ref instanceof HTMLElement) observer.unobserve(ref)
       })
     }
@@ -136,7 +131,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
       ? (companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length)
           .toString()
           .substring(0, 3)
-      : "4.8"
+      : "0"
 
   return (
     <AnimatePresence>
@@ -487,20 +482,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                               <ChevronDown className="h-5 w-5" />
                             </Button>
                           </div>
-                          <BookingCard
-                            services={companyResult.data?.services || []}
-                            professionals={companyResult.data?.members || []}
-                            selectedService={selectedService}
-                            selectedPro={selectedPro}
-                            selectedDate={selectedDate}
-                            selectedTime={selectedTime}
-                            selectedSlot={selectedSlot}
-                            setSelectedService={setSelectedService}
-                            setSelectedPro={setSelectedPro}
-                            setSelectedDate={setSelectedDate}
-                            setSelectedTime={setSelectedTime}
-                            setSelectedSlot={setSelectedSlot}
-                          />
+                          <BookingCard organization={companyResult.data} />
                         </motion.div>
                       )}
                     </div>
@@ -517,20 +499,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         <h2 className="text-2xl font-semibold">Prendre rendez-vous</h2>
                         <p className="text-muted-foreground">Réservez rapidement et facilement</p>
                       </div>
-                      <BookingCard
-                        services={companyResult.data?.services || []}
-                        professionals={companyResult.data?.members || []}
-                        selectedService={selectedService}
-                        selectedPro={selectedPro}
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        selectedSlot={selectedSlot}
-                        setSelectedService={setSelectedService}
-                        setSelectedPro={setSelectedPro}
-                        setSelectedDate={setSelectedDate}
-                        setSelectedTime={setSelectedTime}
-                        setSelectedSlot={setSelectedSlot}
-                      />
+                      <BookingCard organization={companyResult.data} />
 
                       {/* Info complémentaire */}
                       <div className="p-6 border-t">

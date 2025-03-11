@@ -8,7 +8,7 @@ import { Service, service } from "./service"
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
-import { organizationSlots } from "./organizationSlots"
+import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { report } from "./report"
 import { user } from "./user"
 
@@ -24,6 +24,8 @@ export const appointmentStatusType = pgEnum("appointment_status_type", [
   "DENIED",
   "CANCELED",
   "POSTPONED",
+  "ONGOING",
+  "COMPLETED",
 ])
 
 export const appointments = pgTable("appointments", {
@@ -102,6 +104,7 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   report: Report
   observation: Observation
   client: InferSelectModel<typeof user>
+  slot: OrganizationSlots
 }
 export type CreateAppointment = typeof appointments.$inferInsert
 

@@ -3,13 +3,12 @@
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
 import { cn } from "@/src/lib/utils"
 
-import type { DayAppointments } from "../types"
 import { AppointmentCalendarItem } from "./appointment-calendar-item"
-
+import type { Appointment } from "@/src/db"
 interface CalendarGridProps {
   currentDate: Date
   selectedDate: Date | null
-  appointments: DayAppointments
+  appointments: Appointment[]
   onDayClick: (day: number) => void
 }
 
@@ -35,7 +34,7 @@ export function CalendarGrid({ currentDate, selectedDate, appointments, onDayCli
   const renderAppointments = (day: number) => {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
     const dateString = date.toDateString()
-    const dayAppointments = appointments[dateString] || []
+    const dayAppointments = appointments.filter(appointment => appointment.slot.start.toDateString() === dateString)
 
     if (dayAppointments.length === 0) return null
 
