@@ -3,7 +3,7 @@
 import { z } from "zod"
 import { createServerAction, ActionError, requireAuth } from "../lib"
 import { db } from "../lib"
-import { transaction, service, options, appointments, appointmentStatusType } from "../db"
+import { transaction, service, options, appointments, appointmentStatusType, appointmentOptions, organizationSlots } from "../db"
 import { eq, inArray } from "drizzle-orm"
 
 // Schéma de validation pour la création d'un rendez-vous (similaire à celui du paiement)
@@ -79,9 +79,17 @@ export const createBooking = createServerAction(
 
       // Si des options ont été sélectionnées, les enregistrer
       if (input.selectedOptions && input.selectedOptions.length > 0) {
-        // Ici, ajouter le code pour enregistrer les options sélectionnées
-        // en lien avec le rendez-vous (selon votre modèle de données)
+        await db.insert(appointmentOptions).values(input.selectedOptions.map(option => ({
+          appointmentId: appointment.id,
+          optionId: option,
+        })))
       }
+
+      await db.update(organizationSlots).set({
+        isAvailable: false,
+      })
+      .where(eq(organizationSlots.id, input.slotId ?? ""))
+      .execute();
 
       return {
         success: true,

@@ -1,6 +1,6 @@
 "use server"
 
-import { eq, and, or } from "drizzle-orm"
+import { eq, and, or, desc } from "drizzle-orm"
 import { z } from "zod"
 import { requireAuth, requireFullOrganization, requireOwner } from "@/src/lib/action"
 
@@ -30,9 +30,18 @@ export const confirmAppointment = createServerAction(
     appointmentId: z.string(),
   }),
   async (input, ctx) => {
-    await db.update(appointmentsTable).set({ status: "CONFIRMED" }).where(eq(appointmentsTable.id, input.appointmentId))
+    const [appointment] = await db
+      .update(appointmentsTable)
+      .set({ status: "CONFIRMED" })
+      .where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute();
 
-    revalidatePath("/dashboard/calendar")
+    if (!appointment) {
+      throw new ActionError("Appointment not updated")
+    }
+
+    return appointment
   },
   [requireAuth, requireFullOrganization]
 )
@@ -43,12 +52,18 @@ export const denyAppointment = createServerAction(
     deniedReason: z.string(),
   }),
   async (input, ctx) => {
-    await db
+    const [appointment] = await db
       .update(appointmentsTable)
       .set({ status: "DENIED", deniedReason: input.deniedReason })
       .where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute();
 
-    revalidatePath("/dashboard/calendar")
+    if (!appointment) {
+      throw new ActionError("Appointment not updated")
+    }
+
+    return appointment
   },
   [requireAuth, requireFullOrganization]
 )
@@ -71,6 +86,17 @@ export const getConfirmedAndAboveAppointments = createServerAction(
         )
       ),
       with: {
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+              },
+            },
+          },
+        },
         pet: {
           columns: {
             id: true,
@@ -78,11 +104,28 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             type: true,
           },
         },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
+            phoneNumber: true,
+            email: true,
+          },
+        },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
           },
         },
       },
@@ -195,6 +238,7 @@ export const getAllAppointmentForClient = createServerAction(
           },
         },
       },
+      orderBy: [desc(appointmentsTable.status)],
     })
 
     if (!appointments) {
@@ -204,4 +248,30 @@ export const getAllAppointmentForClient = createServerAction(
     return appointments as unknown as Appointment[]
   },
   [requireAuth]
+)
+
+export const getProNextAppointment = createServerAction(
+  z.object({
+    petId: z.string(),
+  }),
+  async (input, ctx) => {
+    const nextAppointment = await db.query.appointments.findFirst({
+      where: and(
+        eq(appointmentsTable.patientId, input.petId),
+        eq(appointmentsTable.status, "SCHEDULED")
+      ),
+      with: {
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+          },
+        },
+      },
+      // orderBy: [desc(appointmentsTable.slot.start)],
+    })
+
+    return nextAppointment
+  },
+  [requireAuth, requireFullOrganization]
 )

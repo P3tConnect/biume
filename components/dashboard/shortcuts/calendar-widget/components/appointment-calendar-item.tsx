@@ -44,14 +44,23 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "group relative flex flex-col p-2 rounded-md cursor-pointer transition-all",
-              statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+              "flex items-center gap-1 text-[0.7rem] rounded-md px-1.5 py-1 mb-1 cursor-pointer transition-all",
+              statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"],
+              "hover:ring-1 hover:ring-white/20"
             )}
           >
-            <div className="flex items-center justify-between">
-              <span className="font-medium text-white truncate">{petName}</span>
+            <div className="relative flex-shrink-0">
+              <Avatar className="h-4 w-4">
+                <AvatarImage src={appointment.pet?.image || ""} alt={appointment.pet?.name || "Animal"} />
+                <AvatarFallback className="text-[0.55rem]">{(appointment.pet?.name || "A")[0]}</AvatarFallback>
+              </Avatar>
             </div>
-            <div className="text-sm text-white/80 truncate">{ownerName}</div>
+            <div className="flex-1 truncate font-medium">
+              {appointment.slot.start.toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
           </div>
         </TooltipTrigger>
 
@@ -106,11 +115,14 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Horaire</p>
-                    <p className="font-medium">{appointment.slot.start.toLocaleTimeString()}</p>
+                    <p className="font-medium">{appointment.slot.start.toLocaleTimeString("fr-FR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Durée</p>
-                    <p className="font-medium">{appointment.slot.end.toLocaleTimeString()}</p>
+                    <p className="font-medium">{appointment.service.duration} min</p>
                   </div>
                 </div>
               </div>

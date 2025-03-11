@@ -129,8 +129,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length)
-          .toString()
-          .substring(0, 3)
+        .toString()
+        .substring(0, 3)
       : "0"
 
   return (
@@ -146,7 +146,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
           {/* Header flottant avec navigation et info essentielles */}
           <motion.header
             style={{ opacity: headerOpacity, scale: headerScale }}
-            className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
+            className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b shadow-sm rounded-lg"
           >
             <div className="container mx-auto py-3">
               <div className="flex justify-between items-center">
@@ -252,18 +252,11 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
 
                   <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full">
                     <Clock className="h-4 w-4" />
-                    <span>Ouvert · 9:00-19:00</span>
+                    <span>Ouvert · {companyResult.data.openAt} - {companyResult.data.closeAt}</span>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <Button
-                    className="bg-white text-primary hover:bg-white/90 gap-2"
-                    onClick={() => setIsBookingExpanded(true)}
-                  >
-                    <CalendarDays className="h-4 w-4" />
-                    Prendre rendez-vous
-                  </Button>
                   <Button
                     variant="outline"
                     className="border-white/30 bg-black/30 text-white hover:bg-black/40 hover:text-white gap-2"
