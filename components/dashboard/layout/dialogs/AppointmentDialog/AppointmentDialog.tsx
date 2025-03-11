@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import { createAppointmentAction } from "@/src/actions/create-appointment.action"
+import { createAppointmentAction } from "@/src/actions/appointment.action"
 import { cn } from "@/src/lib/utils"
 
 import { useStepper, utils } from "./appointmentDialogStepper"

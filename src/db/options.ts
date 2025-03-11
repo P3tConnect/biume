@@ -1,6 +1,6 @@
 import { InferSelectModel, relations } from "drizzle-orm"
 import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { AppointmentOption, appointmentOptions } from "./appointmentOptions"
 import { InvoiceOption, invoiceOptions } from "./invoiceOptions"
@@ -37,3 +37,4 @@ export type Option = InferSelectModel<typeof options> & {
 export type CreateOption = typeof options.$inferInsert
 
 export const CreateOptionSchema = createInsertSchema(options)
+export const OptionSchema = createSelectSchema(options)

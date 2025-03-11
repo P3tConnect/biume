@@ -7,51 +7,88 @@ import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/src/lib/utils"
 
-import { appointmentColors, appointmentLabels } from "../data/constants"
-import type { Appointment } from "../types"
+import { appointmentColors, appointmentLabels, statusColors } from "../data/constants"
+import type { Appointment } from "@/src/db"
+
+// Type pour les clés de couleurs d'appointments
+type AppointmentColorKey = keyof typeof appointmentColors
+type StatusColorKey = keyof typeof statusColors
+
+// Mappage des types d'appointments vers les types de couleurs et labels
+const appointmentTypeToColorKey: Record<"oneToOne" | "multiple", AppointmentColorKey> = {
+  oneToOne: "consultation", // Par défaut on utilise consultation pour oneToOne
+  multiple: "grooming", // Par défaut on utilise grooming pour multiple
+}
 
 interface AppointmentCalendarItemProps {
   appointment: Appointment
 }
 
 export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItemProps) {
+  // Convertir le type d'appointment en une clé valide pour les couleurs et labels
+  const colorKey = appointmentTypeToColorKey[appointment.type]
+
+  // Déterminer le nom du propriétaire et du pet à partir du rendez-vous
+  const petName = appointment.pet?.name || "Animal"
+  const ownerName = appointment.client?.name || "Client"
+
+  // Simplifier la gestion de l'adresse pour éviter les erreurs de type
+  const slotLocation = appointment.pro ? appointment.pro.name || "" : ""
+
+  // Récupérer les notes depuis les propriétés disponibles
+  const slotNotes = appointment.observation?.content || ""
+
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "flex items-center gap-1 text-[0.7rem] rounded-md px-1.5 py-1 mb-1 cursor-pointer transition-all",
-              appointmentColors[appointment.type],
-              "hover:ring-1 hover:ring-white/20"
+              "group relative flex flex-col p-2 rounded-md cursor-pointer transition-all",
+              statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
             )}
           >
-            <div className="relative flex-shrink-0">
-              <Avatar className="h-4 w-4">
-                <AvatarImage src={appointment.petAvatar} alt={appointment.petName} />
-                <AvatarFallback className="text-[0.55rem]">
-                  {appointment.petInitial || appointment.petName[0]}
-                </AvatarFallback>
-              </Avatar>
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-white truncate">{petName}</span>
             </div>
-            <div className="flex-1 truncate font-medium">{appointment.time}</div>
+            <div className="text-sm text-white/80 truncate">{ownerName}</div>
           </div>
         </TooltipTrigger>
+
         <TooltipContent side="right" align="start" className="p-0">
           <div className="w-72">
-            <div className={cn("flex items-center gap-2 p-3 border-b", appointmentColors[appointment.type])}>
+            <div
+              className={cn(
+                "flex items-center gap-2 p-3 border-b",
+                statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+              )}
+            >
               <Avatar className="h-12 w-12 ring-2 ring-white/20">
-                <AvatarImage src={appointment.petAvatar} alt={appointment.petName} />
-                <AvatarFallback>{appointment.petInitial || appointment.petName[0]}</AvatarFallback>
+                <AvatarImage src={appointment.pet.image || ""} alt={appointment.pet.name} />
+                <AvatarFallback>{appointment.pet.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-white">{appointment.petName}</p>
-                  <Badge variant={appointment.status === "confirmed" ? "default" : "secondary"} className="capitalize">
-                    {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
+                  <p className="font-medium text-white">{appointment.pet.name}</p>
+                  <Badge
+                    variant="default"
+                    className={cn(
+                      "capitalize",
+                      statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+                    )}
+                  >
+                    {appointment.status === "CONFIRMED"
+                      ? "Confirmé"
+                      : appointment.status === "PENDING PAYMENT"
+                        ? "En attente"
+                        : appointment.status === "COMPLETED"
+                          ? "Terminé"
+                          : appointment.status === "CANCELED"
+                            ? "Annulé"
+                            : appointment.status}
                   </Badge>
                 </div>
-                <p className="text-sm text-white/80">{appointment.ownerName}</p>
+                <p className="text-sm text-white/80">{appointment.client.name}</p>
               </div>
             </div>
 
@@ -60,34 +97,32 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="outline"
-                    className={cn("text-xs", appointmentColors[appointment.type].replace("bg-", "border-"))}
+                    className={cn("text-xs", appointmentColors[colorKey].replace("bg-", "border-"))}
                   >
-                    {appointmentLabels[appointment.type]}
+                    {appointmentLabels[colorKey]}
                   </Badge>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Horaire</p>
-                    <p className="font-medium">{appointment.time}</p>
+                    <p className="font-medium">{appointment.slot.start.toLocaleTimeString()}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Durée</p>
-                    <p className="font-medium">{appointment.duration}</p>
+                    <p className="font-medium">{appointment.slot.end.toLocaleTimeString()}</p>
                   </div>
                 </div>
               </div>
 
-              {appointment.location && (
+              {slotLocation && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  <span>{appointment.location}</span>
+                  <span>{slotLocation}</span>
                 </div>
               )}
 
-              {appointment.notes && (
-                <div className="text-sm text-muted-foreground bg-muted/50 rounded-lg p-2">{appointment.notes}</div>
-              )}
+              {slotNotes && <div className="text-sm text-muted-foreground bg-muted/50 rounded-lg p-2">{slotNotes}</div>}
             </div>
           </div>
         </TooltipContent>

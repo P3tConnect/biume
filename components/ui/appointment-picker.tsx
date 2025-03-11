@@ -9,27 +9,9 @@ import { OrganizationSlots } from "@/src/db"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { fr } from "date-fns/locale"
 
-// Interfaces pour les différents types de créneaux
-interface SimpleTimeSlot {
-  time: string
-  available: boolean
-  date?: Date | string
-}
-
-interface ComplexTimeSlot {
-  start: string
-  isAvailable: boolean
-  date?: Date | string
-  day?: Date | string
-  startDate?: Date | string
-}
-
-// Type permettant de supporter plusieurs formats de créneaux
-type TimeSlotType = SimpleTimeSlot | ComplexTimeSlot
-
 interface AppointmentPickerProps {
   timeSlots: OrganizationSlots[]
-  onSelectDateTime?: (date: Date, time: string | null) => void
+  onSelectDateTime?: (date: Date, time: string | null, slot: OrganizationSlots | null) => void
 }
 
 export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: AppointmentPickerProps) {
@@ -46,7 +28,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
     // Enregistrer toutes les dates avec des créneaux
     const daysWithSlots = new Set<string>()
 
-    timeSlots.forEach(slot => {
+    timeSlots.map(slot => {
       const slotDate = new Date(slot.start)
       const dateKey = format(slotDate, "yyyy-MM-dd")
 
@@ -63,8 +45,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
     // Trouver les dates où tous les créneaux sont indisponibles
     const unavailableDates: Date[] = []
 
-    slotsByDate.forEach((slots, dateKey) => {
-      // Vérifier si tous les créneaux de cette date sont indisponibles
+    slotsByDate.forEach((slots: OrganizationSlots[], dateKey: string) => {
       const allUnavailable = slots.length > 0 && slots.every(slot => !slot.isAvailable)
 
       if (allUnavailable) {
@@ -107,25 +88,20 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
       return isSameDay(startDate, date)
     })
 
-    console.log("Date sélectionnée:", format(date, "yyyy-MM-dd"))
-    console.log("Créneaux filtrés:", filtered)
-
     setFilteredSlots(filtered)
   }, [timeSlots, date])
 
-  // Handler pour mettre à jour la date
   const handleDateChange = (newDate: Date | undefined) => {
     if (newDate) {
       setDate(newDate)
       setTime(null)
-      if (onSelectDateTime) onSelectDateTime(newDate, null)
+      if (onSelectDateTime) onSelectDateTime(newDate, null, null)
     }
   }
 
-  // Handler pour mettre à jour l'heure
-  const handleTimeChange = (timeSlot: string) => {
+  const handleTimeChange = (timeSlot: string, slot: OrganizationSlots | null) => {
     setTime(timeSlot)
-    if (onSelectDateTime) onSelectDateTime(date, timeSlot)
+    if (onSelectDateTime) onSelectDateTime(date, timeSlot, slot)
   }
 
   // Fonction pour formater l'heure à partir d'une date
@@ -134,7 +110,6 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
     return format(date, "HH'h'mm", { locale: fr })
   }
 
-  // Determiner si des créneaux sont disponibles pour cette date
   const hasSlots = filteredSlots.length > 0
 
   return (
@@ -145,11 +120,11 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
             mode="single"
             selected={date}
             onSelect={handleDateChange}
-            className="p-2 sm:pe-5"
+            className="p-3 sm:pe-5 max-w-none"
             disabled={isDayDisabled}
             locale={fr}
           />
-          <div className="relative w-full max-sm:h-48 sm:w-52">
+          <div className="relative w-full max-sm:h-72 sm:h-[350px] sm:w-64">
             <div className="absolute inset-0 py-4 max-sm:border-t">
               <ScrollArea className="h-full sm:border-s">
                 <div className="space-y-3">
@@ -170,7 +145,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
                             variant={time === timeString ? "default" : "outline"}
                             size="sm"
                             className="w-full"
-                            onClick={() => handleTimeChange(timeString)}
+                            onClick={() => handleTimeChange(timeString, slot)}
                           >
                             {timeString}
                           </Button>

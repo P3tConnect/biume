@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/src/lib/utils"
 
-import { appointmentColors, appointmentLabels } from "../data/constants"
+import { appointmentColors, appointmentLabels, statusColors } from "../data/constants"
 import type { Appointment } from "../types"
 
 interface AppointmentListItemProps {
@@ -26,11 +26,11 @@ export function AppointmentListItem({ appointment, index, onSelect }: Appointmen
       className="relative m-4 rounded-xl border bg-card hover:bg-accent/5 cursor-pointer group"
       onClick={onSelect}
     >
-      {/* Bande de statut */}
+      {/* Bande de statut - Utilisation des couleurs basées sur le statut */}
       <div
         className={cn(
           "absolute left-0 top-0 bottom-0 w-1.5 rounded-l-xl transition-colors",
-          appointment.status === "confirmed" ? "bg-primary" : "bg-secondary"
+          statusColors[appointment.status.toLowerCase() as keyof typeof statusColors]
         )}
       />
 
@@ -44,10 +44,21 @@ export function AppointmentListItem({ appointment, index, onSelect }: Appointmen
             <span>{appointment.duration}</span>
           </div>
           <Badge
-            variant={appointment.status === "confirmed" ? "default" : "secondary"}
-            className="capitalize text-sm px-3 py-1"
+            variant="default"
+            className={cn(
+              "capitalize text-sm px-3 py-1",
+              statusColors[appointment.status.toLowerCase() as keyof typeof statusColors]
+            )}
           >
-            {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
+            {appointment.status === "confirmed"
+              ? "Confirmé"
+              : appointment.status === "pending"
+                ? "En attente"
+                : appointment.status === "completed"
+                  ? "Terminé"
+                  : appointment.status === "cancelled"
+                    ? "Annulé"
+                    : appointment.status}
           </Badge>
         </div>
 

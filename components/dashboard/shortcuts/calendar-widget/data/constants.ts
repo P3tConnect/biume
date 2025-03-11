@@ -10,6 +10,28 @@ export const appointmentColors = {
   checkup: "bg-amber-500 text-white hover:bg-amber-600",
 } as const
 
+// Nouvelles couleurs basées sur le statut
+export const statusColors = {
+  // Statuts simplifiés utilisés dans le widget
+  confirmed: "bg-emerald-500 text-white hover:bg-emerald-600",
+  pending: "bg-amber-500 text-white hover:bg-amber-600",
+  completed: "bg-blue-500 text-white hover:bg-blue-600",
+  cancelled: "bg-gray-500 text-white hover:bg-gray-600",
+
+  // Statuts complets du système (pour compatibilité avec l'API)
+  CREATED: "bg-gray-400 text-white hover:bg-gray-500",
+  DRAFT: "bg-gray-400 text-white hover:bg-gray-500",
+  "PENDING PAYMENT": "bg-amber-500 text-white hover:bg-amber-600",
+  SCHEDULED: "bg-indigo-500 text-white hover:bg-indigo-600",
+  PAYED: "bg-teal-500 text-white hover:bg-teal-600",
+  CONFIRMED: "bg-emerald-500 text-white hover:bg-emerald-600",
+  DENIED: "bg-red-500 text-white hover:bg-red-600",
+  CANCELED: "bg-gray-500 text-white hover:bg-gray-600",
+  POSTPONED: "bg-purple-500 text-white hover:bg-purple-600",
+  ONGOING: "bg-blue-500 text-white hover:bg-blue-600",
+  COMPLETED: "bg-blue-700 text-white hover:bg-blue-800",
+} as const
+
 export const appointmentLabels = {
   consultation: "Consultation",
   surgery: "Chirurgie",

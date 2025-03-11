@@ -22,7 +22,7 @@ export const getOptions = createServerAction(
   []
 )
 
-export const getOptionsFromOrganization = createServerAction(
+export const getOptionsFromConnectedOrganization = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const options = await db.query.options.findMany({
@@ -43,6 +43,29 @@ export const getOptionsFromOrganization = createServerAction(
   },
   [requireAuth, requireOwner]
 )
+
+export const getOptionsFromOrganization = createServerAction(
+  z.object({ organizationId: z.string() }),
+  async (input, ctx) => {
+    const options = await db.query.options.findMany({
+      where: eq(optionsTable.organizationId, input.organizationId),
+      columns: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+      },
+    })
+
+    if (!options) {
+      throw new ActionError("Options not found")
+    }
+
+    return options as Option[]
+  },
+  [requireAuth]
+)
+
 export const createOption = createServerAction(
   CreateOptionSchema,
   async (input, ctx) => {

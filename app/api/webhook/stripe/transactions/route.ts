@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { appointmentOptions, appointments, service, transaction } from "@/src/db"
+import { appointmentOptions, appointments, organizationSlots, service, transaction } from "@/src/db"
 import { db, safeConfig, stripe } from "@/src/lib"
 
 import Stripe from "stripe"
@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Gérer les événements de paiement
-  if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object as Stripe.PaymentIntent
+  if (event.type === "checkout.session.completed") {
+    const paymentIntent = event.data.object as Stripe.Checkout.Session
     const metadata = paymentIntent.metadata
 
     if (!metadata?.transactionId) {
@@ -45,17 +45,10 @@ export async function POST(req: NextRequest) {
       // Extraire les métadonnées de la réservation
       const serviceId = metadata.serviceId
       const professionalId = metadata.professionalId
-      const date = new Date(metadata.date)
-      const time = metadata.time
+      const slotId = metadata.slotId
       const petId = metadata.petId
       const isHomeVisit = metadata.isHomeVisit === "true"
-      const additionalInfo = metadata.additionalInfo
       const clientId = paymentIntent.customer as string
-
-      // Calculer l'heure de début et de fin
-      const [hours, minutes] = time.split(":").map(Number)
-      const beginAt = new Date(date)
-      beginAt.setHours(hours, minutes, 0, 0)
 
       // Récupérer la durée du service pour calculer l'heure de fin
 
@@ -69,10 +62,14 @@ export async function POST(req: NextRequest) {
       // S'assurer que serviceDuration est un nombre
       const serviceDuration = serviceQuery.duration || 60
 
-      const endAt = new Date(beginAt)
-      endAt.setMinutes(beginAt.getMinutes() + serviceDuration)
+      const slotQuery = await db.query.organizationSlots.findFirst({
+        where: eq(organizationSlots.id, slotId),
+      })
 
-      // Créer le rendez-vous dans la base de données avec une requête SQL brute
+      if (!slotQuery) {
+        return NextResponse.json({ error: "Slot non trouvé" }, { status: 400 })
+      }
+
       try {
         const [appointmentQuery] = await db
           .insert(appointments)
@@ -81,8 +78,7 @@ export async function POST(req: NextRequest) {
             clientId,
             patientId: petId,
             serviceId,
-            beginAt,
-            endAt,
+            slotId,
             status: "PAYED",
             atHome: isHomeVisit,
             type: "oneToOne",

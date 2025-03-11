@@ -12,152 +12,102 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   Input,
-  Separator,
 } from "@/components/ui"
-import { Dispatch, SetStateAction, useState } from "react"
-import { Member, Service } from "@/src/db"
-import { Option, OptionsStep } from "./steps/OptionsStep"
+import { useState, useEffect } from "react"
+import { Member, OrganizationSlots, Service, Option, Organization, Pet } from "@/src/db"
 import { signIn, useSession } from "@/src/lib/auth-client"
 import { steps, useStepper } from "./hooks/useBookingStepper"
 import { useMutation, useQuery } from "@tanstack/react-query"
-
-import AppointmentPicker from "@/components/ui/appointment-picker"
-import Avvvatars from "avvvatars-react"
-import { ChevronRight } from "lucide-react"
-import { ConsultationTypeStep } from "./steps/ConsultationTypeStep"
+import { Calendar, ChevronRight, Clock } from "lucide-react"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { PetStep } from "./steps/PetStep"
-import { SummaryStep } from "./steps/SummaryStep"
 import { cn } from "@/src/lib/utils"
 import { createBookingCheckoutSession } from "@/src/actions/booking-payment.action"
-import { format } from "date-fns"
+import { format, addDays, isAfter, isFuture } from "date-fns"
 import { fr } from "date-fns/locale"
-import { getOptionsFromOrganization } from "@/src/actions/options.action"
-import { getOrganizationSlotsByService } from "@/src/actions/organizationSlots.action"
-import { getPets } from "@/src/actions"
+import { getOrganizationSlots } from "@/src/actions/organizationSlots.action"
+import { createBooking } from "@/src/actions"
 import { loginSchema } from "@/src/lib"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { useParams } from "next/navigation"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ServiceAndOptionsStep } from "./steps/ServiceAndOptionsStep"
+import { ProfessionalStep } from "./steps/ProfessionalStep"
+import { SummaryStep } from "./steps/SummaryStep"
+import { PaymentStep } from "./steps/PaymentStep"
+import { DateStep } from "./steps/DateStep"
 
-interface BookingCardProps {
-  services: Service[]
-  professionals: Member[]
-  selectedService: string | null
-  selectedPro: string | null
-  selectedDate: Date | undefined
-  selectedTime: string | null
-  setSelectedService: Dispatch<SetStateAction<string | null>>
-  setSelectedPro: Dispatch<SetStateAction<string | null>>
-  setSelectedDate: Dispatch<SetStateAction<Date | undefined>>
-  setSelectedTime: Dispatch<SetStateAction<string | null>>
+// Création d'un type pour les slots d'affichage
+interface DisplaySlot {
+  date: Date
+  slot: OrganizationSlots
 }
 
-export function BookingCard({
-  services,
-  professionals,
-  selectedService,
-  selectedPro,
-  selectedDate,
-  selectedTime,
-  setSelectedService,
-  setSelectedPro,
-  setSelectedDate,
-  setSelectedTime,
-}: BookingCardProps) {
+export function BookingCard({ organization }: { organization: Organization }) {
   const { data: session } = useSession()
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [loginLoading, setLoginLoading] = useState(false)
+  const [upcomingSlots, setUpcomingSlots] = useState<DisplaySlot[]>([])
+  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [selectedPro, setSelectedPro] = useState<Member | null>(null)
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [selectedSlot, setSelectedSlot] = useState<OrganizationSlots | null>(null)
+  const [consultationType, setConsultationType] = useState<boolean | null>(null)
+  const [selectedOptions, setSelectedOptions] = useState<Option[] | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "inPerson" | null>(null)
+  const [additionalNotes, setAdditionalNotes] = useState("")
   const { handleSubmit, register } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   })
 
-  const { data: userPets } = useQuery({
-    queryKey: ["user-pets"],
-    queryFn: () => getPets({}),
-  })
-
-  // Récupération des slots d'organisation basés sur le service sélectionné
+  // Récupération des slots d'organisation
   const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
-    queryKey: ["organization-slots", selectedService],
+    queryKey: ["organization-slots"],
     queryFn: async () => {
-      if (!selectedService) return { data: [] }
-      return getOrganizationSlotsByService({ serviceId: selectedService })
+      // Récupérer tous les slots disponibles
+      return getOrganizationSlots({})
     },
-    enabled: !!selectedService,
   })
 
-  // Récupération des options de l'organisation
-  const { data: organizationOptions, isLoading: isLoadingOptions } = useQuery({
-    queryKey: ["organization-options"],
-    queryFn: async () => {
-      const options = await getOptionsFromOrganization({})
-      return options
-    },
-  })
+  // Filtrage des créneaux pour affichage
+  useEffect(() => {
+    if (organizationSlots?.data && organizationSlots.data.length > 0) {
+      const now = new Date()
+      const nextSevenDays = addDays(now, 7)
+
+      // Filtrer les créneaux disponibles pour les 7 prochains jours
+      const availableSlots = organizationSlots.data
+        .filter(slot => {
+          const slotDate = new Date(slot.start || "")
+          return isFuture(slotDate) && !isAfter(slotDate, nextSevenDays) && slot.isAvailable
+        })
+        .map(slot => ({
+          date: new Date(slot.start || ""),
+          slot,
+        }))
+        .sort((a, b) => a.date.getTime() - b.date.getTime())
+        .slice(0, 4) // Limiter à 4 créneaux pour l'affichage
+
+      setUpcomingSlots(availableSlots)
+    }
+  }, [organizationSlots])
 
   const {
     switch: switchStep,
     current,
-    metadata,
-    setMetadata,
     isFirst,
     isLast,
     next,
     prev,
+    goTo,
   } = useStepper({
-    initialStep: "pet",
-  })
-
-  const selectedServiceData = selectedService ? (services.find(s => s.id === selectedService) ?? null) : null
-
-  const selectedProData = selectedPro ? (professionals.find(p => p.id === selectedPro) ?? null) : null
-
-  const selectedPet = userPets?.data?.find(p => p.id === metadata?.pet?.petId)
-
-  // Fonction de callback pour AppointmentPicker
-  const handleDateTimeSelect = (date: Date, time: string | null) => {
-    setSelectedDate(date)
-    setSelectedTime(time)
-  }
-
-  const handleOpenBookingModal = () => {
-    if (!session) {
-      // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion
-      setIsLoginModalOpen(true)
-    } else {
-      // Si l'utilisateur est connecté, ouvrir la modale de réservation
-      setIsConfirmModalOpen(true)
-    }
-  }
-
-  const onLoginSubmit = handleSubmit(async data => {
-    await signIn.email(
-      {
-        email: data.email,
-        password: data.password,
-        rememberMe: false,
-      },
-      {
-        onRequest: () => {
-          setLoginLoading(true)
-        },
-        onSuccess: () => {
-          setLoginLoading(false)
-          toast.success("Connexion réussie !")
-          setIsLoginModalOpen(false)
-          setIsConfirmModalOpen(true) // Ouvrir la modale de réservation après connexion
-        },
-        onError: error => {
-          setLoginLoading(false)
-          toast.error(`Erreur : ${error.error.message}`)
-        },
-      }
-    )
+    initialStep: "serviceAndOptions",
   })
 
   const params = useParams()
@@ -189,21 +139,72 @@ export function BookingCard({
     },
   })
 
+  const handleOpenReservationModal = () => {
+    if (!session) {
+      setIsLoginModalOpen(true)
+    } else {
+      setSelectedService(null)
+      setSelectedPro(null)
+      setSelectedDate(undefined)
+      setSelectedTime(null)
+      setSelectedSlot(null)
+      setSelectedPet(null)
+      setConsultationType(null)
+      setSelectedOptions(null)
+      setPaymentMethod(null)
+      setAdditionalNotes("")
+      goTo("serviceAndOptions")
+      setIsReservationModalOpen(true)
+    }
+  }
+
+  const onLoginSubmit = handleSubmit(async data => {
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
+      },
+      {
+        onRequest: () => {
+          setLoginLoading(true)
+        },
+        onSuccess: () => {
+          setLoginLoading(false)
+          toast.success("Connexion réussie !")
+          setIsLoginModalOpen(false)
+          setIsReservationModalOpen(true)
+        },
+        onError: error => {
+          setLoginLoading(false)
+          toast.error(`Erreur : ${error.error.message}`)
+        },
+      }
+    )
+  })
+
   const handleBooking = async () => {
     if (!selectedService || !selectedPro || !selectedDate || !selectedTime) {
       toast.error("Veuillez sélectionner tous les éléments nécessaires")
       return
     }
 
-    // Récupérer le service sélectionné
-    const servicePrice = selectedServiceData?.price ?? 0
-    const optionsPrice = metadata?.options?.selectedOptions.reduce((acc: number, optionId: string) => {
-      const option = organizationOptions?.data?.find(o => o.id === optionId)
-      return acc + (option?.price ?? 0)
-    }, 0)
+    if (!selectedPet) {
+      toast.error("Veuillez sélectionner un animal")
+      return
+    }
 
-    const homeVisitPrice = metadata?.consultationType?.isHomeVisit ? 10 : 0
-    const amount = servicePrice + optionsPrice + homeVisitPrice
+    if (!session?.user) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    const servicePrice = selectedService.price || 0
+    const optionsPrice = selectedOptions?.reduce((acc: number, option: Option) => {
+      return acc + (option.price ?? 0)
+    }, 0)
+    const homeVisitPrice = consultationType ? 10 : 0
+    const amount = servicePrice + (optionsPrice ?? 0) + homeVisitPrice
 
     if (!amount || amount <= 0) {
       toast.error("Le montant du paiement est invalide")
@@ -217,26 +218,41 @@ export function BookingCard({
         return
       }
 
-      // Si l'utilisateur n'est pas connecté, demander l'email
-      if (!session?.user) {
-        setIsLoginModalOpen(true)
+      if (paymentMethod === "inPerson") {
+        const result = await createBooking({
+          serviceId: selectedService.id,
+          professionalId: selectedPro.id,
+          petId,
+          isHomeVisit: !!consultationType,
+          additionalInfo: additionalNotes,
+          selectedOptions: selectedOptions?.map(option => option.id) || [],
+          amount,
+          companyId: companyId,
+          status: "SCHEDULED",
+          isPaid: false,
+          slotId: selectedSlot?.id ?? undefined,
+        })
+
+        if (result.error) {
+          toast.error(`Erreur: ${result.error}`)
+          return
+        }
+
+        toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
+        setIsReservationModalOpen(false)
         return
       }
 
-      // Notes additionnelles si présentes dans les métadonnées
-      const additionalNotes = metadata?.summary?.notes || ""
-
       await bookPayment({
-        serviceId: selectedService,
-        professionalId: selectedPro,
-        date: selectedDate.toISOString().split("T")[0],
-        time: selectedTime,
+        serviceId: selectedService.id,
+        professionalId: selectedPro.id,
         petId,
-        isHomeVisit: !!metadata?.consultationType?.isHomeVisit,
+        isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
-        selectedOptions: metadata?.options?.selectedOptions || [],
+        selectedOptions: selectedOptions?.map(option => option.id) || [],
         amount,
         companyId: companyId,
+        slot: selectedSlot!,
       })
     } catch (error) {
       console.error("Erreur de paiement:", error)
@@ -244,105 +260,49 @@ export function BookingCard({
     }
   }
 
-  // Transformer les options de l'organisation au format attendu par le composant OptionsStep
-  const adaptedOptions: Option[] = (organizationOptions?.data || []).map(option => ({
-    id: option.id,
-    name: option.title,
-    description: option.description || "",
-    price: option.price || 0,
-  }))
-
   return (
     <Card className="border-2">
       <CardContent className="p-6">
         <div className="space-y-6">
-          {/* Prix */}
+          {/* Titre */}
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-semibold">À partir de 40€</span>
+            <h3 className="text-xl font-semibold">Prochains créneaux disponibles</h3>
           </div>
 
-          {/* Service Selection */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">Sélectionnez un service</label>
-            <div className="space-y-2">
-              {services.map(service => (
-                <button
-                  key={service.id}
-                  onClick={() => setSelectedService(service.id)}
-                  className={cn(
-                    "w-full text-left p-4 rounded-xl border transition-all",
-                    selectedService === service.id ? "border-2 border-primary" : "hover:border-primary/50"
-                  )}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{service.name}</span>
-                    <span className="text-muted-foreground">{service.price} €</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">{service.duration} min</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Professional Selection */}
-          {selectedService && (
-            <div>
-              <label className="text-sm font-medium mb-2 block">Choisissez un professionnel</label>
-              <div className="space-y-2">
-                {professionals.map(pro => (
-                  <button
-                    key={pro.id}
-                    onClick={() => setSelectedPro(pro.id)}
-                    className={cn(
-                      "w-full text-left p-4 rounded-xl border transition-all",
-                      selectedPro === pro.id ? "border-2 border-primary" : "hover:border-primary/50"
-                    )}
-                  >
-                    <div className="flex gap-4">
-                      <div className="h-12 w-12 rounded-full overflow-hidden">
-                        <Avvvatars value={pro.user.name || ""} style="shape" size={48} />
-                      </div>
-                      <div>
-                        <p className="font-medium">{pro.user.name}</p>
-                        <p className="text-sm text-muted-foreground">{pro.role}</p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+          {/* Affichage des prochains créneaux */}
+          <div className="space-y-4">
+            {isLoadingSlots ? (
+              <div className="flex items-center justify-center p-8">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <span className="ml-2 text-muted-foreground">Chargement des disponibilités...</span>
               </div>
-            </div>
-          )}
-
-          <Separator />
-
-          {/* Date et Time Selection avec AppointmentPicker */}
-          {selectedPro && (
-            <div>
-              <label className="text-sm font-medium mb-2 block">Sélectionnez date et heure</label>
-              {isLoadingSlots ? (
-                <div className="p-4 text-center text-muted-foreground">Chargement des disponibilités...</div>
-              ) : (
-                <div className="w-full">
-                  <AppointmentPicker
-                    timeSlots={organizationSlots?.data ?? []}
-                    onSelectDateTime={handleDateTimeSelect}
-                  />
+            ) : upcomingSlots.length > 0 ? (
+              upcomingSlots.map((item, index) => (
+                <div key={index} className="p-4 rounded-lg border hover:border-primary transition-all">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span className="font-medium">{format(item.date, "EEEE d MMMM", { locale: fr })}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">{format(item.date, "HH'h'mm")}</span>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="text-center p-6 text-muted-foreground">
+                Aucun créneau disponible pour les prochains jours
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button disabled={!selectedTime} className="w-full" size="lg" onClick={handleOpenBookingModal}>
-          {selectedTime && selectedDate
-            ? `Réserver pour ${format(selectedDate, "d MMMM", {
-                locale: fr,
-              })} à ${selectedTime}`
-            : "Sélectionnez un créneau"}
+        <Button className="w-full" size="lg" onClick={handleOpenReservationModal}>
+          Prendre rendez-vous
         </Button>
       </CardFooter>
 
@@ -380,6 +340,7 @@ export function BookingCard({
                   Annuler
                 </Button>
                 <Button type="submit" disabled={loginLoading}>
+                  {loginLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                   {loginLoading ? "Connexion..." : "Se connecter"}
                 </Button>
               </div>
@@ -397,88 +358,99 @@ export function BookingCard({
       </Credenza>
 
       {/* Modale de réservation */}
-      <Credenza open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
-        <CredenzaContent className="sm:max-w-[600px]">
+      <Credenza open={isReservationModalOpen} onOpenChange={setIsReservationModalOpen}>
+        <CredenzaContent className="sm:max-w-[800px] sm:max-h-[90vh]">
           <CredenzaHeader>
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
               {Object.values(steps).map((stepItem, index) => (
-                <div key={stepItem.id} className="flex items-center">
+                <div key={stepItem.id} className="flex items-center shrink-0">
                   <div
                     className={cn(
-                      "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
+                      "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
                       current.id === stepItem.id
                         ? "border-primary text-primary"
                         : index < Object.values(steps).findIndex(s => s.id === current.id)
                           ? "border-primary bg-primary text-white"
-                          : "border-muted-foreground text-muted-foreground"
+                          : "border-muted-foreground/30 text-muted-foreground/50"
                     )}
-                    onClick={() => {
-                      // stepper.switch(stepItem.id);
-                    }}
                     role="button"
                     tabIndex={0}
                   >
                     {index + 1}
                   </div>
                   {index < Object.values(steps).length - 1 && (
-                    <ChevronRight className="h-4 w-4 text-muted-foreground mx-2" />
+                    <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
                   )}
                 </div>
               ))}
             </div>
-            <CredenzaTitle>{current.title}</CredenzaTitle>
-            <CredenzaDescription>{current.description}</CredenzaDescription>
+            <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
+            <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
           </CredenzaHeader>
 
           <div className="py-4">
             {switchStep({
-              pet: () => (
-                <PetStep
-                  userPets={userPets?.data ?? []}
-                  selectedPetId={metadata?.pet?.petId ?? ""}
-                  onSelectPet={petId => setMetadata("pet", { petId })}
+              serviceAndOptions: () => (
+                <ServiceAndOptionsStep
+                  services={organization.services}
+                  selectedService={selectedService}
+                  selectedOptions={selectedOptions || []}
+                  onSelectService={(service: Service) => setSelectedService(service)}
+                  onToggleOption={(option: Option) => {
+                    const currentOptions = selectedOptions || []
+                    if (currentOptions.some(o => o.id === option.id)) {
+                      setSelectedOptions(currentOptions.filter(o => o.id !== option.id))
+                    } else {
+                      setSelectedOptions([...currentOptions, option])
+                    }
+                  }}
                 />
               ),
-              consultationType: () => (
-                <ConsultationTypeStep
-                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                  onSelectType={isHomeVisit => setMetadata("consultationType", { isHomeVisit })}
+              professional: () => (
+                <ProfessionalStep
+                  professionals={organization.members}
+                  selectedService={selectedService}
+                  selectedPro={selectedPro}
+                  onSelectPro={(pro: Member) => setSelectedPro(pro)}
                 />
               ),
-              options: () =>
-                isLoadingOptions ? (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                    <p className="text-muted-foreground">Chargement des options...</p>
-                  </div>
-                ) : (
-                  <OptionsStep
-                    availableOptions={adaptedOptions}
-                    selectedOptions={metadata?.options?.selectedOptions ?? []}
-                    onToggleOption={(optionId: string) => {
-                      const currentOptions = metadata?.options?.selectedOptions ?? []
-                      const newOptions = currentOptions.includes(optionId)
-                        ? currentOptions.filter((id: string) => id !== optionId)
-                        : [...currentOptions, optionId]
-                      setMetadata("options", { selectedOptions: newOptions })
-                    }}
-                  />
-                ),
-              summary: () => (
-                <SummaryStep
-                  selectedPet={selectedPet}
-                  selectedService={selectedServiceData}
-                  selectedPro={selectedProData}
+              date: () => (
+                <DateStep
+                  selectedService={selectedService}
+                  selectedPro={selectedPro}
                   selectedDate={selectedDate}
                   selectedTime={selectedTime}
-                  isHomeVisit={metadata?.consultationType?.isHomeVisit ?? false}
-                  additionalInfo={metadata?.summary?.additionalInfo ?? ""}
-                  onAdditionalInfoChange={value => setMetadata("summary", { additionalInfo: value })}
-                  selectedOptions={
-                    metadata?.options?.selectedOptions
-                      ? metadata.options.selectedOptions.map((id: string) => adaptedOptions.find(o => o.id === id)!)
-                      : []
-                  }
+                  selectedSlot={selectedSlot}
+                  isHomeVisit={!!consultationType}
+                  onSelectDateTime={(date, time, slot) => {
+                    setSelectedDate(date)
+                    setSelectedTime(time)
+                    setSelectedSlot(slot)
+                  }}
+                  onToggleHomeVisit={value => setConsultationType(value)}
+                />
+              ),
+              pet: () => <PetStep selectedPet={selectedPet} onSelectPet={pet => setSelectedPet(pet)} />,
+              summary: () => (
+                <SummaryStep
+                  selectedService={selectedService}
+                  selectedPro={selectedPro}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  selectedPet={selectedPet}
+                  isHomeVisit={!!consultationType}
+                  selectedOptions={selectedOptions || []}
+                  additionalInfo={additionalNotes}
+                  onAdditionalInfoChange={(info: string) => setAdditionalNotes(info)}
+                />
+              ),
+              payment: () => (
+                <PaymentStep
+                  selectedService={selectedService}
+                  isHomeVisit={!!consultationType}
+                  selectedOptions={selectedOptions || []}
+                  paymentMethod={paymentMethod}
+                  onSelectPaymentMethod={(method: string) => setPaymentMethod(method as "online" | "inPerson" | null)}
                 />
               ),
             })}
@@ -490,7 +462,7 @@ export function BookingCard({
                 variant="outline"
                 onClick={() => {
                   if (isFirst) {
-                    setIsConfirmModalOpen(false)
+                    setIsReservationModalOpen(false)
                   } else {
                     prev()
                   }
@@ -506,9 +478,28 @@ export function BookingCard({
                     next()
                   }
                 }}
-                disabled={(current.id === "pet" && !metadata?.pet?.petId) || (isLast && !metadata?.pet?.petId)}
+                disabled={
+                  (current.id === "serviceAndOptions" && !selectedService) ||
+                  (current.id === "professional" && !selectedPro) ||
+                  (current.id === "date" && (!selectedDate || !selectedTime)) ||
+                  (current.id === "pet" && !selectedPet) ||
+                  (current.id === "payment" && !paymentMethod) ||
+                  (isLast && isPaymentLoading)
+                }
               >
-                {isLast ? (isPaymentLoading ? "Redirection..." : "Confirmer et payer") : "Suivant"}
+                {isLast ? (
+                  isPaymentLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Redirection...
+                    </>
+                  ) : paymentMethod === "inPerson" ? (
+                    "Confirmer le rendez-vous"
+                  ) : (
+                    "Confirmer et payer"
+                  )
+                ) : (
+                  "Suivant"
+                )}
               </Button>
             </div>
           </CredenzaFooter>

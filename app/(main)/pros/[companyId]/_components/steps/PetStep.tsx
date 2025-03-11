@@ -1,76 +1,106 @@
-import { motion } from "framer-motion"
-import { Bird, Cat, Dog, PawPrint } from "lucide-react"
-import Image from "next/image"
+"use client"
 
+import { useState } from "react"
 import { Pet } from "@/src/db"
 import { cn } from "@/src/lib/utils"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Plus, Dog, Cat, PawPrint } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { useQuery } from "@tanstack/react-query"
+import { getPets } from "@/src/actions"
 
 interface PetStepProps {
-  userPets: Pet[]
-  selectedPetId: string
-  onSelectPet: (petId: string) => void
+  selectedPet: Pet | null
+  onSelectPet: (pet: Pet) => void
 }
 
-export function PetStep({ userPets, selectedPetId, onSelectPet }: PetStepProps) {
-  const getPetIcon = (type: string) => {
-    switch (type) {
-      case "Dog":
-        return <Dog className="h-5 w-5" />
-      case "Cat":
-        return <Cat className="h-5 w-5" />
-      case "Bird":
-        return <Bird className="h-5 w-5" />
+export function PetStep({ selectedPet, onSelectPet }: PetStepProps) {
+  // Récupération des animaux de l'utilisateur
+  const { data: userPets, isLoading } = useQuery({
+    queryKey: ["user-pets"],
+    queryFn: () => getPets({}),
+  })
+
+  // Obtenir l'icône appropriée en fonction du type d'animal
+  const getPetIcon = (type?: string) => {
+    switch (type?.toLowerCase()) {
+      case "dog":
+        return <Dog className="h-4 w-4" />
+      case "cat":
+        return <Cat className="h-4 w-4" />
       default:
-        return <PawPrint className="h-5 w-5" />
+        return <PawPrint className="h-4 w-4" />
     }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-6"
-    >
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {userPets?.map(pet => (
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            key={pet.id}
-            onClick={() => onSelectPet(pet.id)}
-            className={cn(
-              "relative cursor-pointer rounded-xl border-2 p-4 transition-all",
-              selectedPetId === pet.id ? "border-primary bg-primary/5" : "hover:border-primary/50"
-            )}
-          >
-            <div className="flex items-center gap-4">
-              <div className="relative h-16 w-16 overflow-hidden rounded-lg">
-                {pet.image ? (
-                  <Image width={64} height={64} src={pet.image} alt={pet.name} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-muted">
-                    <PawPrint className="h-8 w-8 text-muted-foreground" />
+    <div className="space-y-6">
+      <h3 className="font-medium text-lg">Sélectionnez un animal pour ce rendez-vous</h3>
+
+      {isLoading ? (
+        <div className="flex justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {(userPets?.data || []).map(pet => (
+            <Card
+              key={pet.id}
+              className={cn(
+                "cursor-pointer transition-all hover:border-primary/50",
+                selectedPet?.id === pet.id ? "border-2 border-primary bg-primary/5" : ""
+              )}
+              onClick={() => onSelectPet(pet)}
+            >
+              <CardContent className="p-4 flex items-center gap-3">
+                <Avatar className="h-12 w-12">
+                  {pet.image ? (
+                    <AvatarImage src={pet.image} alt={pet.name} />
+                  ) : (
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {pet.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <div className="flex-grow">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-medium">{pet.name}</h4>
+                    <Badge variant="outline" className="text-xs flex items-center gap-1">
+                      {getPetIcon(pet.type)}
+                      {pet.type}
+                    </Badge>
                   </div>
-                )}
-              </div>
-              <div>
-                <h4 className="font-medium">{pet.name}</h4>
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  {getPetIcon(pet.type)}
-                  <span>{pet.type}</span>
+                  <p className="text-sm text-muted-foreground">
+                    {pet.breed || ""}
+                    {pet.weight ? `, ${pet.weight} kg` : ""}
+                  </p>
                 </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          <Card className="cursor-pointer hover:border-primary/50 border-dashed">
+            <CardContent className="p-4 flex flex-col items-center justify-center gap-2 text-muted-foreground h-full">
+              <div className="rounded-full bg-primary/10 p-2">
+                <Plus className="h-5 w-5 text-primary" />
               </div>
-            </div>
-          </motion.div>
-        ))}
-        {!userPets?.length && (
-          <div className="col-span-2 flex flex-col items-center justify-center p-8 text-center">
-            <PawPrint className="h-12 w-12 text-muted-foreground/20 mb-4" />
-            <p className="text-muted-foreground">Vous n&apos;avez pas encore enregistré d&apos;animal.</p>
-          </div>
-        )}
-      </div>
-    </motion.div>
+              <span className="font-medium">Ajouter un animal</span>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {(userPets?.data?.length === 0 || !userPets?.data) && !isLoading && (
+        <div className="text-center p-6 border rounded-lg">
+          <p className="text-muted-foreground mb-4">Vous n'avez pas encore ajouté d'animaux</p>
+          <Button variant="outline" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Ajouter mon premier animal
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }

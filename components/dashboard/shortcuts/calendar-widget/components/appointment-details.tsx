@@ -21,9 +21,10 @@ import {
 import React, { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { appointmentColors, appointmentLabels } from "../data/constants"
+import { appointmentColors, appointmentLabels, statusColors } from "../data/constants"
 
-import type { Appointment } from "../types"
+// Importer le type Appointment depuis la DB
+import type { Appointment } from "@/src/db"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Clock } from "lucide-react"
@@ -32,12 +33,22 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/src/lib/utils"
 
+// Type pour mapper les types d'appointments vers les clés dans appointmentColors et appointmentLabels
+type AppointmentColorKey = keyof typeof appointmentColors
+type AppointmentLabelKey = keyof typeof appointmentLabels
+type StatusColorKey = keyof typeof statusColors
+
+const appointmentTypeToColorKey: Record<"oneToOne" | "multiple", AppointmentColorKey> = {
+  oneToOne: "consultation", // Par défaut on utilise consultation pour oneToOne
+  multiple: "grooming", // Par défaut on utilise grooming pour multiple
+}
+
 // Type pour les services du professionnel
 interface Service {
   id: string
   name: string
   duration: string
-  type: Appointment["type"]
+  type: "oneToOne" | "multiple"
   price?: number
   description?: string
 }
@@ -46,118 +57,37 @@ interface AppointmentDetailsProps {
   appointment: Appointment
   onEdit?: (id: string, updatedAppointment: Partial<Appointment>) => void
   onDelete?: (id: string) => void
+  services?: Service[]
+  isLoadingServices?: boolean
 }
 
-export function AppointmentDetails({ appointment, onEdit, onDelete }: AppointmentDetailsProps) {
+export function AppointmentDetails({
+  appointment,
+  onEdit,
+  onDelete,
+  services = [],
+  isLoadingServices = false,
+}: AppointmentDetailsProps) {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [editedAppointment, setEditedAppointment] = useState<Partial<Appointment>>({})
-  const [services, setServices] = useState<Service[]>([])
   const [selectedService, setSelectedService] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
-  // Fonction simulée pour récupérer les services du professionnel
-  // Dans un cas réel, cela ferait un appel API
-  const fetchServices = async () => {
-    setIsLoading(true)
-
-    try {
-      // Simulation d'un délai d'API
-      await new Promise(resolve => setTimeout(resolve, 300))
-
-      // Données simulées - à remplacer par un vrai appel API
-      const mockServices: Service[] = [
-        {
-          id: "1",
-          name: "Consultation standard",
-          duration: "30min",
-          type: "consultation",
-          price: 50,
-          description: "Consultation médicale de routine",
-        },
-        {
-          id: "2",
-          name: "Consultation approfondie",
-          duration: "45min",
-          type: "consultation",
-          price: 75,
-          description: "Examen complet pour problèmes complexes",
-        },
-        {
-          id: "3",
-          name: "Vaccination complète",
-          duration: "15min",
-          type: "vaccination",
-          price: 40,
-          description: "Ensemble des vaccins recommandés",
-        },
-        {
-          id: "4",
-          name: "Toilettage standard",
-          duration: "1h",
-          type: "grooming",
-          price: 60,
-          description: "Toilettage incluant bain et coupe",
-        },
-        {
-          id: "5",
-          name: "Toilettage premium",
-          duration: "1h30",
-          type: "grooming",
-          price: 90,
-          description: "Toilettage complet avec soins spécifiques",
-        },
-        {
-          id: "6",
-          name: "Chirurgie mineure",
-          duration: "1h",
-          type: "surgery",
-          price: 150,
-          description: "Opérations simples sous anesthésie locale",
-        },
-        {
-          id: "7",
-          name: "Contrôle post-opératoire",
-          duration: "20min",
-          type: "checkup",
-          price: 35,
-          description: "Suivi après chirurgie",
-        },
-      ]
-
-      setServices(mockServices)
-
-      // Trouver un service correspondant (duration + type)
-      const matchingService = mockServices.find(
-        service => service.duration === appointment.duration && service.type === appointment.type
-      )
-
-      if (matchingService) {
-        setSelectedService(matchingService.id)
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des services:", error)
-    } finally {
-      setIsLoading(false)
-    }
+  // Obtenir la clé de couleur correspondante au type d'appointment
+  const getColorKey = (type: "oneToOne" | "multiple"): AppointmentColorKey => {
+    return appointmentTypeToColorKey[type]
   }
 
   const handleEditOpen = () => {
     // Initialisation des données du formulaire
     setEditedAppointment({
-      petName: appointment.petName,
-      ownerName: appointment.ownerName,
       type: appointment.type,
-      time: appointment.time,
-      duration: appointment.duration,
       status: appointment.status,
-      location: appointment.location,
-      notes: appointment.notes,
+      // Autres propriétés à ajouter selon le modèle Appointment
     })
 
-    // Ouverture de la modale et récupération des services
+    // Ouverture de la modale
     setIsEditOpen(true)
-    fetchServices()
   }
 
   const handleServiceSelect = (serviceId: string) => {
@@ -169,7 +99,7 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
       setEditedAppointment({
         ...editedAppointment,
         type: service.type,
-        duration: service.duration,
+        // Autres propriétés à mettre à jour selon le service
       })
     }
   }
@@ -188,39 +118,70 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
     setIsDeleteOpen(false)
   }
 
+  // Déterminer la clé de couleur pour ce rendez-vous
+  const colorKey = getColorKey(appointment.type)
+
+  // Déterminer le nom du propriétaire et du pet à partir du rendez-vous
+  const petName = appointment.pet?.name || "Animal"
+  const ownerName = appointment.client?.name || "Client"
+  const appointmentTime = appointment.slot?.start
+    ? new Date(appointment.slot.start).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "Horaire non défini"
+  const appointmentDuration =
+    appointment.slot?.end && appointment.slot?.start
+      ? `${Math.round((new Date(appointment.slot.end).getTime() - new Date(appointment.slot.start).getTime()) / 1000 / 60)} min`
+      : "Durée inconnue"
+
+  // Simplifier la gestion de l'adresse pour éviter les erreurs de type
+  const location = appointment.pro ? appointment.pro.name || "" : ""
+
+  // Récupérer les notes depuis les propriétés disponibles
+  const notes = appointment.observation?.content || ""
+
   return (
     <div className="p-5 rounded-lg border border-border space-y-4 hover:border-border/80 transition-colors">
       <div className="flex items-start justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <h3 className="font-medium text-lg">{appointment.petName}</h3>
+            <h3 className="font-medium text-lg">{petName}</h3>
             <Badge
-              variant={appointment.status === "confirmed" ? "default" : "secondary"}
-              className="capitalize text-sm px-2.5 py-0.5"
+              variant="default"
+              className={cn(
+                "capitalize text-sm px-2.5 py-0.5",
+                statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+              )}
             >
-              {appointment.status === "confirmed" ? "Confirmé" : "En attente"}
+              {appointment.status === "CONFIRMED"
+                ? "Confirmé"
+                : appointment.status === "PENDING PAYMENT"
+                  ? "En attente"
+                  : appointment.status === "COMPLETED"
+                    ? "Terminé"
+                    : appointment.status === "CANCELED"
+                      ? "Annulé"
+                      : appointment.status}
             </Badge>
           </div>
-          <p className="text-base text-muted-foreground">{appointment.ownerName}</p>
+          <p className="text-base text-muted-foreground">{ownerName}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-2 text-base">
         <Badge
           variant="outline"
-          className={cn("text-sm px-2.5 py-0.5", appointmentColors[appointment.type].replace("bg-", "border-"))}
+          className={cn("text-sm px-2.5 py-0.5", appointmentColors[colorKey].replace("bg-", "border-"))}
         >
-          {appointmentLabels[appointment.type]}
+          {appointmentLabels[colorKey]}
         </Badge>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock className="h-4 w-4" />
-          <span>{appointment.time}</span>
+          <span>{appointmentTime}</span>
           <span>•</span>
-          <span>{appointment.duration}</span>
+          <span>{appointmentDuration}</span>
         </div>
       </div>
 
-      {appointment.location && <p className="text-sm text-muted-foreground">{appointment.location}</p>}
+      {location && <p className="text-sm text-muted-foreground">{location}</p>}
 
       <div className="flex items-center gap-3 pt-1">
         <Button variant="outline" size="default" className="w-full" onClick={handleEditOpen}>
@@ -255,55 +216,36 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                 <TabsContent value="informations" className="mt-0">
                   <CredenzaBody className="space-y-5 py-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Informations du rendez-vous - À adapter selon la structure de vos données */}
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="petName" className="text-base">
+                          <Label htmlFor="pet" className="text-base">
                             Nom de l&apos;animal
                           </Label>
-                          <Input
-                            id="petName"
-                            className="mt-1.5"
-                            value={editedAppointment.petName || ""}
-                            onChange={e => setEditedAppointment({ ...editedAppointment, petName: e.target.value })}
-                          />
+                          <Input id="pet" className="mt-1.5" value={petName} readOnly />
                         </div>
 
                         <div>
                           <Label htmlFor="time" className="text-base">
                             Heure du rendez-vous
                           </Label>
-                          <Input
-                            id="time"
-                            className="mt-1.5"
-                            value={editedAppointment.time || ""}
-                            onChange={e => setEditedAppointment({ ...editedAppointment, time: e.target.value })}
-                          />
+                          <Input id="time" className="mt-1.5" value={appointmentTime} readOnly />
                         </div>
 
                         <div>
                           <Label htmlFor="location" className="text-base">
                             Lieu
                           </Label>
-                          <Input
-                            id="location"
-                            className="mt-1.5"
-                            value={editedAppointment.location || ""}
-                            onChange={e => setEditedAppointment({ ...editedAppointment, location: e.target.value })}
-                          />
+                          <Input id="location" className="mt-1.5" value={location} readOnly />
                         </div>
                       </div>
 
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="ownerName" className="text-base">
+                          <Label htmlFor="owner" className="text-base">
                             Nom du propriétaire
                           </Label>
-                          <Input
-                            id="ownerName"
-                            className="mt-1.5"
-                            value={editedAppointment.ownerName || ""}
-                            onChange={e => setEditedAppointment({ ...editedAppointment, ownerName: e.target.value })}
-                          />
+                          <Input id="owner" className="mt-1.5" value={ownerName} readOnly />
                         </div>
 
                         <div>
@@ -311,7 +253,7 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                             Statut
                           </Label>
                           <Select
-                            value={editedAppointment.status}
+                            value={editedAppointment.status || appointment.status}
                             onValueChange={(value: any) =>
                               setEditedAppointment({ ...editedAppointment, status: value })
                             }
@@ -320,9 +262,10 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                               <SelectValue placeholder="Sélectionnez un statut" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="confirmed">Confirmé</SelectItem>
-                              <SelectItem value="pending">En attente</SelectItem>
-                              <SelectItem value="completed">Terminé</SelectItem>
+                              <SelectItem value="CONFIRMED">Confirmé</SelectItem>
+                              <SelectItem value="SCHEDULED">En attente</SelectItem>
+                              <SelectItem value="COMPLETED">Terminé</SelectItem>
+                              <SelectItem value="CANCELED">Annulé</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -337,53 +280,56 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                       <Label className="text-base font-medium">Services disponibles</Label>
                     </div>
 
-                    {isLoading ? (
+                    {isLoadingServices ? (
                       <div className="py-8 text-center text-muted-foreground">Chargement des services...</div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {services.map(service => (
-                          <div
-                            key={service.id}
-                            className={cn(
-                              "flex flex-col border rounded-lg p-2.5 cursor-pointer transition-all",
-                              selectedService === service.id
-                                ? "border-primary bg-primary/5 shadow-sm"
-                                : "border-border hover:border-border/80"
-                            )}
-                            onClick={() => handleServiceSelect(service.id)}
-                          >
-                            <div className="mb-1.5 flex items-center gap-2">
-                              <Badge
-                                variant="outline"
-                                className={cn(
-                                  "text-xs",
-                                  appointmentColors[service.type].replace("bg-", "border-"),
-                                  appointmentColors[service.type]
-                                    .replace("bg-", "text-")
-                                    .replace(" text-white", "")
-                                    .replace(" hover:bg-", " hover:text-")
-                                )}
-                              >
-                                {appointmentLabels[service.type]}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">{service.duration}</span>
-                            </div>
-
-                            <div className="text-sm font-medium mb-1">{service.name}</div>
-
-                            {service.description && (
-                              <p className="text-xs text-muted-foreground flex-grow line-clamp-2">
-                                {service.description}
-                              </p>
-                            )}
-
-                            {service.price && (
-                              <div className="mt-2 text-right">
-                                <span className="text-sm font-semibold">{service.price}€</span>
+                        {services.map(service => {
+                          const serviceColorKey = appointmentTypeToColorKey[service.type]
+                          return (
+                            <div
+                              key={service.id}
+                              className={cn(
+                                "flex flex-col border rounded-lg p-2.5 cursor-pointer transition-all",
+                                selectedService === service.id
+                                  ? "border-primary bg-primary/5 shadow-sm"
+                                  : "border-border hover:border-border/80"
+                              )}
+                              onClick={() => handleServiceSelect(service.id)}
+                            >
+                              <div className="mb-1.5 flex items-center gap-2">
+                                <Badge
+                                  variant="outline"
+                                  className={cn(
+                                    "text-xs",
+                                    appointmentColors[serviceColorKey].replace("bg-", "border-"),
+                                    appointmentColors[serviceColorKey]
+                                      .replace("bg-", "text-")
+                                      .replace(" text-white", "")
+                                      .replace(" hover:bg-", " hover:text-")
+                                  )}
+                                >
+                                  {appointmentLabels[serviceColorKey]}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">{service.duration}</span>
                               </div>
-                            )}
-                          </div>
-                        ))}
+
+                              <div className="text-sm font-medium mb-1">{service.name}</div>
+
+                              {service.description && (
+                                <p className="text-xs text-muted-foreground flex-grow line-clamp-2">
+                                  {service.description}
+                                </p>
+                              )}
+
+                              {service.price && (
+                                <div className="mt-2 text-right">
+                                  <span className="text-sm font-semibold">{service.price}€</span>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
                       </div>
                     )}
                   </CredenzaBody>
@@ -400,8 +346,13 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
                           id="notes"
                           className="min-h-[150px] mt-1.5"
                           placeholder="Informations complémentaires sur le rendez-vous"
-                          value={editedAppointment.notes || ""}
-                          onChange={e => setEditedAppointment({ ...editedAppointment, notes: e.target.value })}
+                          value={notes}
+                          onChange={e =>
+                            setEditedAppointment({
+                              ...editedAppointment,
+                              observation: { ...appointment.observation, content: e.target.value },
+                            })
+                          }
                         />
                       </div>
                     </div>
@@ -430,7 +381,7 @@ export function AppointmentDetails({ appointment, onEdit, onDelete }: Appointmen
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Voulez-vous vraiment supprimer le rendez-vous de {appointment.petName} ? Cette action est irréversible.
+              Voulez-vous vraiment supprimer le rendez-vous de {petName} ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

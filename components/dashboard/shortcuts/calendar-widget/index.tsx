@@ -17,6 +17,8 @@ import { AppointmentListItem } from "./components/appointment-list-item"
 import { CalendarGrid } from "./components/calendar-grid"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
+import { useQuery } from "@tanstack/react-query"
+import { getConfirmedAndAboveAppointments } from "@/src/actions/appointments.action"
 
 const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -27,6 +29,11 @@ const CalendarWidget = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
+
+  const { data: appointments } = useQuery({
+    queryKey: ["confirmed-and-above-appointments"],
+    queryFn: () => getConfirmedAndAboveAppointments({}),
+  })
 
   // Charger la préférence utilisateur au montage du composant
   useEffect(() => {
@@ -60,7 +67,8 @@ const CalendarWidget = () => {
   const renderSelectedDateAppointments = () => {
     if (!selectedDate) return null
     const dateString = selectedDate.toDateString()
-    const dayAppointments = mockAppointments[dateString] || []
+    const dayAppointments =
+      appointments?.data?.filter(appointment => appointment.slot.start.toDateString() === dateString) || []
 
     return (
       <div className="space-y-4">
@@ -156,7 +164,7 @@ const CalendarWidget = () => {
           <CalendarGrid
             currentDate={currentDate}
             selectedDate={selectedDate}
-            appointments={mockAppointments}
+            appointments={appointments?.data || []}
             onDayClick={handleDayClick}
           />
         </div>

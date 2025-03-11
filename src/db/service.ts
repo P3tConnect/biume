@@ -1,10 +1,12 @@
 import { InferSelectModel, relations } from "drizzle-orm"
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema } from "drizzle-zod"
+import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
 import { Organization, organization } from "./organization"
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
+
+export const serviceType = pgEnum("service_type", ["ONE_TO_ONE", "MULTIPLE"])
 
 export const service = pgTable("service", {
   id: text("id")
@@ -18,6 +20,7 @@ export const service = pgTable("service", {
     onDelete: "cascade",
   }),
   duration: integer("duration"), // in minutes
+  type: serviceType("type").default("ONE_TO_ONE").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 })
@@ -39,3 +42,4 @@ export type Service = InferSelectModel<typeof service> & {
 export type CreateService = typeof service.$inferInsert
 
 export const CreateServiceSchema = createInsertSchema(service)
+export const ServiceSchema = createSelectSchema(service)

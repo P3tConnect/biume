@@ -1,9 +1,9 @@
 import { InferSelectModel, relations } from "drizzle-orm"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 import { User } from "better-auth"
 import { appointments } from "./appointments"
-import { createInsertSchema } from "drizzle-zod"
 import { user } from "./user"
 import { z } from "zod"
 
@@ -52,3 +52,4 @@ export type CreatePet = typeof pets.$inferInsert
 export const PetTypeEnum = z.enum(petType.enumValues)
 
 export const CreatePetSchema = createInsertSchema(pets)
+export const PetSchema = createSelectSchema(pets)

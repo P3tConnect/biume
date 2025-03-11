@@ -12,6 +12,7 @@ export default function PaymentFailure() {
   const amount = searchParams.get("amount") || "0"
   const professionalName = searchParams.get("professionalName") || "le professionnel"
   const error = searchParams.get("error") || "Une erreur est survenue lors du traitement de votre paiement"
+  const userId = searchParams.get("userId") || ""
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-background">
@@ -53,7 +54,7 @@ export default function PaymentFailure() {
         </div>
 
         <div className="flex justify-center pt-4">
-          <Link href="/dashboard">
+          <Link href={`/dashboard/user/${userId}`}>
             <Button variant="ghost" size="lg">
               Retourner au tableau de bord
             </Button>
