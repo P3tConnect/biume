@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Gérer les événements de paiement
-  if (event.type === "checkout.session.completed") {
-    const paymentIntent = event.data.object as Stripe.Checkout.Session
+  if (event.type === "payment_intent.succeeded") {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent
     const metadata = paymentIntent.metadata
 
     if (!metadata?.transactionId) {
@@ -103,6 +103,14 @@ export async function POST(req: NextRequest) {
             )
           }
         }
+
+        await db
+          .update(organizationSlots)
+          .set({
+            isAvailable: false,
+          })
+          .where(eq(organizationSlots.id, slotId))
+          .execute()
 
         console.log("Rendez-vous créé avec succès, ID:", appointmentId)
       } catch (insertError) {

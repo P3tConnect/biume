@@ -112,6 +112,9 @@ export const updateOrganizationPlan = createServerAction(
       customer: stripeCustomer ?? "",
       mode: "subscription",
       payment_method_types: ["card"],
+      payment_intent_data: {
+        setup_future_usage: "off_session",
+      },
       line_items: [
         {
           price: input.plan,
@@ -190,6 +193,9 @@ export const createPaymentMethodUpdateSession = createServerAction(
       const session = await stripe.checkout.sessions.create({
         customer: ctx.fullOrganization.customerStripeId,
         payment_method_types: ["card"],
+        payment_intent_data: {
+          setup_future_usage: "off_session",
+        },
         mode: "setup",
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/organization/${ctx.fullOrganization.id}/settings`,
