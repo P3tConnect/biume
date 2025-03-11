@@ -38,15 +38,20 @@ export function CalendarGrid({ currentDate, selectedDate, appointments, onDayCli
 
     if (dayAppointments.length === 0) return null
 
+    // Afficher jusqu'à 3 rendez-vous maximum par case
+    const maxDisplayedAppointments = 3
+    const visibleAppointments = dayAppointments.slice(0, maxDisplayedAppointments)
+    const hiddenAppointments = dayAppointments.length - maxDisplayedAppointments
+
     return (
       <>
-        {dayAppointments.slice(0, 1).map(appointment => (
+        {visibleAppointments.map(appointment => (
           <AppointmentCalendarItem key={appointment.id} appointment={appointment} />
         ))}
-        {dayAppointments.length > 1 && (
+        {hiddenAppointments > 0 && (
           <div className="flex justify-end">
             <div className="text-[0.65rem] font-medium px-1 py-0.5 rounded-full bg-primary/10 text-primary">
-              +{dayAppointments.length - 1}
+              +{hiddenAppointments}
             </div>
           </div>
         )}

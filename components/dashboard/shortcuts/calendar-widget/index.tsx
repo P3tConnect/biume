@@ -31,7 +31,7 @@ const CalendarWidget = () => {
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
 
   const { data: appointments } = useQuery({
-    queryKey: ["appointments"],
+    queryKey: ["confirmed-and-above-appointments"],
     queryFn: () => getConfirmedAndAboveAppointments({}),
   })
 
@@ -67,7 +67,8 @@ const CalendarWidget = () => {
   const renderSelectedDateAppointments = () => {
     if (!selectedDate) return null
     const dateString = selectedDate.toDateString()
-    const dayAppointments = mockAppointments[dateString] || []
+    const dayAppointments =
+      appointments?.data?.filter(appointment => appointment.slot.start.toDateString() === dateString) || []
 
     return (
       <div className="space-y-4">

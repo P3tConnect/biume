@@ -58,6 +58,7 @@ export const appointments = pgTable("appointments", {
   status: appointmentStatusType("status").default("PENDING PAYMENT").notNull(),
   atHome: boolean("atHome").default(false).notNull(),
   type: appointmentType("type").default("oneToOne").notNull(),
+  deniedReason: text("deniedReason"),
   createdAt: timestamp("createdAt", { mode: "date" }).default(new Date()),
   updated: timestamp("updatedAt", { mode: "date" }),
 })
