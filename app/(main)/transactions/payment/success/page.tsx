@@ -11,6 +11,7 @@ export default function PaymentSuccess() {
   const searchParams = useSearchParams()
   const amount = searchParams.get("amount") || "0"
   const professionalName = searchParams.get("professionalName") || "le professionnel"
+  const userId = searchParams.get("userId") || ""
 
   return (
     <div className="h-screen w-screen bg-gradient-to-b from-background to-emerald-50/30 flex items-center justify-center p-6">
@@ -56,7 +57,7 @@ export default function PaymentSuccess() {
               </div>
 
               <div>
-                <Link href="/dashboard" className="w-full">
+                <Link href={`/dashboard/user/${userId}`} className="w-full">
                   <Button size="lg" className="w-full gap-2">
                     <ArrowLeft className="w-4 h-4" />
                     Retour au tableau de bord

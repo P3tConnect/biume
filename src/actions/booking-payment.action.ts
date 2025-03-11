@@ -290,8 +290,8 @@ export const createBookingCheckoutSession = createServerAction(
         line_items: lineItems,
         mode: "payment",
         payment_method_types: ["card"],
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/failure?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/success?session_id={CHECKOUT_SESSION_ID}&userId=${ctx.user?.id}&amount=${input.amount}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/failure?session_id={CHECKOUT_SESSION_ID}&userId=${ctx.user?.id}&amount=${input.amount}`,
         metadata: {
           transactionId,
           appointmentId: appointment.id,

@@ -27,8 +27,6 @@ export async function POST(req: NextRequest) {
     const paymentIntent = event.data.object as Stripe.Checkout.Session
     const metadata = paymentIntent.metadata
 
-    console.log(metadata, "paymentIntent")
-
     if (!metadata?.transactionId) {
       return NextResponse.json({ error: "Missing transactionId in metadata" }, { status: 400 })
     }
