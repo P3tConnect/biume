@@ -288,13 +288,7 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
 
         {/* Section détails */}
         <div className="grid gap-8 md:grid-cols-2">
-          {/* Caractéristiques physiques */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <Ruler className="h-5 w-5 text-muted-foreground" />
-              <h3 className="font-medium">Caractéristiques physiques</h3>
-            </div>
-
             <div className="grid gap-4">
               <FormField
                 control={form.control}
