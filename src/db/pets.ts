@@ -1,11 +1,11 @@
-import { User } from "better-auth"
 import { InferSelectModel, relations } from "drizzle-orm"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema } from "drizzle-zod"
-import { z } from "zod"
 
+import { User } from "better-auth"
 import { appointments } from "./appointments"
+import { createInsertSchema } from "drizzle-zod"
 import { user } from "./user"
+import { z } from "zod"
 
 export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "NAC"])
 
@@ -28,6 +28,7 @@ export const pets = pgTable("pets", {
   gender: petGender("gender").notNull().default("Male"),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
+  chippedNumber: integer("chippedNumber"),
   deseases: text("deseases").array(),
   allergies: text("allergies").array(),
   intolerences: text("intolerences").array(),
