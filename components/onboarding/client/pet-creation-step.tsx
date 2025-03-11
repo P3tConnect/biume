@@ -54,7 +54,7 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
       description: "",
       weight: 0,
       height: 0,
-      chippedNumber: undefined,
+      chippedNumber: 0,
     },
   })
 

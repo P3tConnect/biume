@@ -28,7 +28,7 @@ export const pets = pgTable("pets", {
   gender: petGender("gender").notNull().default("Male"),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
-  chippedNumber: text("chippedNumber"),
+  chippedNumber: integer("chippedNumber"),
   deseases: text("deseases").array(),
   allergies: text("allergies").array(),
   intolerences: text("intolerences").array(),

@@ -61,7 +61,7 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
       description: petData?.description || "",
       weight: petData?.weight || 0,
       height: petData?.height || 0,
-      chippedNumber: petData?.chippedNumber || "",
+      chippedNumber: petData?.chippedNumber || 0,
     },
   })
 
@@ -436,7 +436,7 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                       placeholder="Numéro d'identification"
                       {...field}
                       value={field.value ?? ""}
-                      onChange={e => field.onChange(e.target.value || "")}
+                      onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
                     />
                   </FormControl>
                   <FormMessage />

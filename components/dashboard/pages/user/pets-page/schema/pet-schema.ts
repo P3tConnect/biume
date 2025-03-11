@@ -9,12 +9,7 @@ export const petSchema = z.object({
   type: z.enum(["Dog", "Cat", "Bird", "Horse", "NAC"]),
   weight: z.number().nullable().optional(),
   height: z.number().nullable().optional(),
-  chippedNumber: z
-    .string()
-    .regex(/^\d{15}$/, "Le numéro de puce doit contenir exactement 15 chiffres")
-    .transform(val => (val ? parseInt(val) : null))
-    .nullable()
-    .optional(),
+  chippedNumber: z.number().nullable().optional(),
   description: z.string().optional(),
   furColor: z.string().min(1, "La couleur du pelage est requise"),
   eyeColor: z.string().min(1, "La couleur des yeux est requise"),
