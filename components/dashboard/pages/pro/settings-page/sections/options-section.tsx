@@ -10,13 +10,15 @@ import { getOptionsFromOrganization } from "@/src/actions"
 import { OptionForm } from "./components/options/option-form"
 import { OptionsGrid } from "./components/options/options-grid"
 import { OptionsHeader } from "./components/options/options-header"
+import { useActiveOrganization } from "@/src/lib/auth-client"
 
 export const OptionsSection = () => {
   const [isCreating, setIsCreating] = useState(false)
+  const { data: activeOrganization } = useActiveOrganization()
 
   const { data: options, isLoading } = useQuery({
     queryKey: ["organization-options"],
-    queryFn: () => getOptionsFromOrganization({}),
+    queryFn: () => getOptionsFromOrganization({ organizationId: activeOrganization?.id || "" }),
   })
 
   if (isLoading) {
