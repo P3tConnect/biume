@@ -281,10 +281,6 @@ export function BookingCard({ organization }: { organization: Organization }) {
         return
       }
 
-      if (paymentMethod === "inPerson") {
-        return
-      }
-
       await bookPayment({
         serviceId: selectedService.id,
         professionalId: organization.id,
