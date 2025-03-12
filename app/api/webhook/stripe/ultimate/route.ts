@@ -7,7 +7,7 @@ import { organization } from "@/src/db"
 import { redirect } from "next/navigation"
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  const body = await req.text()
 
   const stripeSignature = req.headers.get("stripe-signature")
 

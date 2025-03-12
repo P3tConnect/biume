@@ -245,7 +245,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
       await bookPayment({
         serviceId: selectedService.id,
-        professionalId: selectedPro.id,
+        professionalId: organization.id,
         petId,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,

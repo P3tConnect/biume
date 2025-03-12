@@ -6,7 +6,7 @@ import Stripe from "stripe"
 import { eq } from "drizzle-orm"
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  const body = await req.text()
 
   const signature = req.headers.get("stripe-signature")
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       const slotId = metadata.slotId
       const petId = metadata.petId
       const isHomeVisit = metadata.isHomeVisit === "true"
-      const clientId = paymentIntent.customer as string
+      const clientId = metadata.clientId;
 
       // Récupérer la durée du service pour calculer l'heure de fin
 
@@ -75,10 +75,10 @@ export async function POST(req: NextRequest) {
           .insert(appointments)
           .values({
             proId: professionalId,
-            clientId,
+            clientId: clientId,
             patientId: petId,
-            serviceId,
-            slotId,
+            serviceId: serviceId,
+            slotId: slotId,
             status: "PAYED",
             atHome: isHomeVisit,
             type: "oneToOne",

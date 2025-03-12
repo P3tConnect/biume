@@ -305,6 +305,7 @@ export const createBookingCheckoutSession = createServerAction(
             additionalInfo: input.additionalInfo || "",
             selectedOptions: selectedOptionsJson,
             companyId: input.companyId,
+            clientId: ctx.user?.id ?? "",
           },
           transfer_data: {
             destination: org?.companyStripeId || "",
