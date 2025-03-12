@@ -6,6 +6,7 @@ import { z } from "zod"
 
 import { appointments } from "./appointments"
 import { user } from "./user"
+import { PetDocument, petDocuments } from "./petDocuments"
 
 export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "NAC"])
 
@@ -25,6 +26,7 @@ export const pets = pgTable("pets", {
   }),
   breed: text("breed").notNull(),
   image: text("image"),
+  chippedNumber: integer("chippedNumber"),
   gender: petGender("gender").notNull().default("Male"),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
@@ -41,10 +43,12 @@ export const petsRelations = relations(pets, ({ many, one }) => ({
     fields: [pets.ownerId],
     references: [user.id],
   }),
+  documents: many(petDocuments),
 }))
 
 export type Pet = InferSelectModel<typeof pets> & {
   owner: User
+  documents: PetDocument[]
 }
 
 export type CreatePet = typeof pets.$inferInsert

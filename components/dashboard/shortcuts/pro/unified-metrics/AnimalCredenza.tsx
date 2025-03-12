@@ -1,6 +1,6 @@
 "use client"
 
-import { ActiveTab, AnimalDetails } from "./types"
+import { ActiveTab } from "./types"
 import { CredenzaClose, CredenzaContent, CredenzaTitle } from "@/components/ui"
 import { FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
 
@@ -13,14 +13,23 @@ import { InfoTab } from "./InfoTab"
 import { MedicalTab } from "./MedicalTab"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { useState } from "react"
+import { Pet, User, Appointment } from "@/src/db"
 
 interface AnimalCredenzaProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  animalDetails: AnimalDetails
+  animalDetails: Pet
+  nextAppointmentClient: User
+  nextAppointmentData: Appointment
 }
 
-export const AnimalCredenza = ({ isOpen, onOpenChange, animalDetails }: AnimalCredenzaProps) => {
+export const AnimalCredenza = ({
+  isOpen,
+  onOpenChange,
+  animalDetails,
+  nextAppointmentClient,
+  nextAppointmentData,
+}: AnimalCredenzaProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("info")
 
   return (
@@ -32,7 +41,13 @@ export const AnimalCredenza = ({ isOpen, onOpenChange, animalDetails }: AnimalCr
         {/* Interface à deux panneaux avec navigation latérale */}
         <div className="flex flex-col md:flex-row h-[80vh] max-h-[700px]">
           {/* Sidebar avec photo et navigation */}
-          <AnimalDetailsSidebar animal={animalDetails} activeTab={activeTab} setActiveTab={setActiveTab} />
+          <AnimalDetailsSidebar
+            animal={animalDetails}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            nextAppointmentClient={nextAppointmentClient}
+            nextAppointmentData={nextAppointmentData}
+          />
 
           {/* Contenu principal */}
           <div className="flex-1 overflow-y-auto">
@@ -71,10 +86,34 @@ export const AnimalCredenza = ({ isOpen, onOpenChange, animalDetails }: AnimalCr
             </div>
 
             {/* Contenu dynamique en fonction de l'onglet actif */}
-            {activeTab === "info" && <InfoTab animal={animalDetails} setActiveTab={setActiveTab} />}
-            {activeTab === "medical" && <MedicalTab animal={animalDetails} />}
-            {activeTab === "appointments" && <AppointmentsTab animal={animalDetails} />}
-            {activeTab === "documents" && <DocumentsTab animal={animalDetails} />}
+            {activeTab === "info" && (
+              <InfoTab
+                animal={animalDetails}
+                setActiveTab={setActiveTab}
+                nextAppointmentClient={nextAppointmentClient}
+              />
+            )}
+            {activeTab === "medical" && (
+              <MedicalTab
+                animal={animalDetails}
+                nextAppointmentClient={nextAppointmentClient}
+                nextAppointmentData={nextAppointmentData}
+              />
+            )}
+            {activeTab === "appointments" && (
+              <AppointmentsTab
+                animal={animalDetails}
+                nextAppointmentClient={nextAppointmentClient}
+                nextAppointmentData={nextAppointmentData}
+              />
+            )}
+            {activeTab === "documents" && (
+              <DocumentsTab
+                animal={animalDetails}
+                nextAppointmentClient={nextAppointmentClient}
+                nextAppointmentData={nextAppointmentData}
+              />
+            )}
           </div>
         </div>
       </CredenzaContent>

@@ -40,7 +40,7 @@ export const getOrganizationSlotsByService = createServerAction(
   }),
   async (input, ctx) => {
     const slots = await db.query.organizationSlots.findMany({
-      where: eq(organizationSlots.serviceId, input.serviceId),
+      where: and(eq(organizationSlots.serviceId, input.serviceId), eq(organizationSlots.isAvailable, true)),
     })
 
     if (!slots) {

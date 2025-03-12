@@ -1,10 +1,22 @@
 "use server"
 
 import { z } from "zod"
-import { createServerAction, ActionError, requireAuth } from "../lib"
+import { createServerAction, ActionError, requireAuth, resend } from "../lib"
 import { db } from "../lib"
-import { transaction, service, options, appointments, appointmentStatusType, appointmentOptions, organizationSlots } from "../db"
+import {
+  transaction,
+  service,
+  options,
+  appointments,
+  appointmentStatusType,
+  appointmentOptions,
+  organizationSlots,
+  pets,
+  organization,
+} from "../db"
 import { eq, inArray } from "drizzle-orm"
+import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
+import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
 
 // Schéma de validation pour la création d'un rendez-vous (similaire à celui du paiement)
 const createBookingSchema = z.object({
@@ -71,7 +83,7 @@ export const createBooking = createServerAction(
           type: "oneToOne",
         })
         .returning()
-        .execute();
+        .execute()
 
       if (!appointment) {
         throw new ActionError("Impossible de créer le rendez-vous")
@@ -79,17 +91,95 @@ export const createBooking = createServerAction(
 
       // Si des options ont été sélectionnées, les enregistrer
       if (input.selectedOptions && input.selectedOptions.length > 0) {
-        await db.insert(appointmentOptions).values(input.selectedOptions.map(option => ({
-          appointmentId: appointment.id,
-          optionId: option,
-        })))
+        await db.insert(appointmentOptions).values(
+          input.selectedOptions.map(option => ({
+            appointmentId: appointment.id,
+            optionId: option,
+          }))
+        )
       }
 
-      await db.update(organizationSlots).set({
-        isAvailable: false,
+      await db
+        .update(organizationSlots)
+        .set({
+          isAvailable: false,
+        })
+        .where(eq(organizationSlots.id, input.slotId ?? ""))
+        .execute()
+
+      const petQuery = await db.query.pets
+        .findFirst({
+          where: eq(pets.id, input.petId),
+          columns: {
+            name: true,
+          },
+        })
+        .execute()
+
+      const serviceQuery = await db.query.service
+        .findFirst({
+          where: eq(service.id, input.serviceId),
+          columns: {
+            name: true,
+          },
+        })
+        .execute()
+
+      const slotQuery = await db.query.organizationSlots
+        .findFirst({
+          where: eq(organizationSlots.id, input.slotId ?? ""),
+          columns: {
+            start: true,
+          },
+        })
+        .execute()
+
+      const professionalQuery = await db.query.organization
+        .findFirst({
+          where: eq(organization.id, input.companyId),
+          columns: {
+            name: true,
+          },
+        })
+        .execute()
+
+      const proEmail = await resend.emails.send({
+        from: "Biume <noreply@biume.com>",
+        to: input.companyId,
+        subject: "Vous avez une nouvelle réservation",
+        react: NewReservationEmailPro({
+          customerName: ctx.user?.name || "",
+          petName: petQuery?.name || "",
+          serviceName: serviceQuery?.name || "",
+          date: slotQuery?.start.toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })!,
+          time: slotQuery?.start.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })!,
+          providerName: professionalQuery?.name || "",
+          price: input.amount.toString(),
+        }),
       })
-      .where(eq(organizationSlots.id, input.slotId ?? ""))
-      .execute();
+
+      if (proEmail.error) {
+        console.error("Erreur lors de l'envoi de l'email au professionnel:", proEmail.error)
+      }
+
+      // TODO: Envoyer un email de confirmation au client et au professionnel
+      const clientEmail = await resend.emails.send({
+        from: "Biume <noreply@biume.com>",
+        to: ctx.user?.email || "",
+        subject: "Vous avez une nouvelle réservation",
+        react: ReservationWaitingEmailClient(),
+      })
+
+      if (clientEmail.error) {
+        console.error("Erreur lors de l'envoi de l'email au client:", clientEmail.error)
+      }
 
       return {
         success: true,

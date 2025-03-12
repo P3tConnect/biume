@@ -5,48 +5,62 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CountAnimation } from "@/components/count-animation"
-import { Stethoscope, CalendarIcon, HeartPulseIcon, TrendingUpIcon, User, RefreshCcw, Loader2 } from "lucide-react"
+import { Stethoscope, CalendarIcon, HeartPulseIcon, TrendingUpIcon, User, RefreshCcw } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import { CredenzaContent, CredenzaTitle, CredenzaHeader, Skeleton } from "@/components/ui"
 import { Credenza } from "@/components/ui"
 import { AnimalCredenza } from "./unified-metrics/AnimalCredenza"
 import { AnimalDetails } from "./unified-metrics/types"
-import { getMetricsAction, MetricsData } from "@/src/actions/metrics.action"
+import { getMetricsAction } from "@/src/actions/metrics.action"
 import { useQuery } from "@tanstack/react-query"
+import { getProNextAppointment } from "@/src/actions/appointments.action"
+import { Appointment, Pet, User as UserType } from "@/src/db"
+import { MetricData } from "@/types/metric-data"
 
 // Données de secours (fallback) en cas d'échec du chargement
-const fallbackData: MetricsData = {
+const fallbackData: MetricData = {
+  currentMonth: {
+    appointments: 20,
+    newPatients: 40,
+    treatments: 110,
+    satisfaction: 95,
+  },
+  previousMonth: {
+    appointments: 20,
+    newPatients: 40,
+    treatments: 110,
+    satisfaction: 95,
+  },
+  currentMonthLabel: "Janvier 2024",
+  previousMonthLabel: "Février 2024",
+  // Chart data arrays
   appointmentsData: [
+    { month: "Sep", value: 15 },
+    { month: "Oct", value: 18 },
+    { month: "Nov", value: 22 },
+    { month: "Déc", value: 19 },
     { month: "Jan", value: 20 },
-    { month: "Fév", value: 25 },
-    { month: "Mar", value: 22 },
-    { month: "Avr", value: 28 },
-    { month: "Mai", value: 24 },
-    { month: "Juin", value: 30 },
   ],
   newPatientsData: [
+    { month: "Sep", value: 30 },
+    { month: "Oct", value: 35 },
+    { month: "Nov", value: 38 },
+    { month: "Déc", value: 42 },
     { month: "Jan", value: 40 },
-    { month: "Fév", value: 42 },
-    { month: "Mar", value: 38 },
-    { month: "Avr", value: 45 },
-    { month: "Mai", value: 43 },
-    { month: "Juin", value: 48 },
   ],
   treatmentsData: [
+    { month: "Sep", value: 90 },
+    { month: "Oct", value: 95 },
+    { month: "Nov", value: 105 },
+    { month: "Déc", value: 108 },
     { month: "Jan", value: 110 },
-    { month: "Fév", value: 115 },
-    { month: "Mar", value: 108 },
-    { month: "Avr", value: 128 },
-    { month: "Mai", value: 125 },
-    { month: "Juin", value: 135 },
   ],
   satisfactionData: [
+    { month: "Sep", value: 92 },
+    { month: "Oct", value: 93 },
+    { month: "Nov", value: 94 },
+    { month: "Déc", value: 94 },
     { month: "Jan", value: 95 },
-    { month: "Fév", value: 96 },
-    { month: "Mar", value: 97 },
-    { month: "Avr", value: 96 },
-    { month: "Mai", value: 98 },
-    { month: "Juin", value: 98 },
   ],
 }
 
@@ -102,8 +116,17 @@ export const UnifiedMetrics = () => {
     },
   })
 
+  const { data: nextAppointment } = useQuery({
+    queryKey: ["nextAppointment"],
+    queryFn: async () => getProNextAppointment({}),
+  })
+
+  const nextAppointmentData = nextAppointment?.data?.nextAppointment as Appointment
+  const nextAppointmentClient = nextAppointment?.data?.client as UserType
+  const nextAppointmentPet = nextAppointment?.data?.pet as Pet
+
   // Utiliser les données récupérées ou les données de secours en cas d'erreur
-  const metrics: MetricsData = metricsData || fallbackData
+  const metrics: MetricData = metricsData || fallbackData
 
   // Formatage de la date
   const today = new Date()
@@ -113,39 +136,13 @@ export const UnifiedMetrics = () => {
     month: "long",
   })
 
-  // Données enrichies pour la fiche de l'animal (conservées pour la démo)
-  const animalDetails: AnimalDetails = {
-    id: "felix-001",
-    name: "Félix",
-    species: "Chat",
-    breed: "Européen",
-    gender: "male",
-    birthDate: "2020-06-15", // Format ISO
-    weight: 4.2,
-    age: "3 ans",
-    color: "Tigré gris",
-    microchipNumber: "250269100123456",
-    sterilized: true,
-    sterilizationDate: "2021-03-20",
-    ownerName: "Sophie Dupont",
-    ownerContact: "sophie.dupont@email.com",
-    profileImage: "/images/cat-profile.jpg",
-    notes: "Félix est un chat calme et affectueux. Il a tendance à être stressé lors des visites vétérinaires.",
-    nextVisit: "09/10/2023",
-    // Conserver les autres données
-    vaccinations: [],
-    medicalRecords: [],
-    appointments: [],
-    documents: [],
-  }
-
   // Vérifier si les données sont disponibles avant de les utiliser
   const hasData =
     metrics &&
-    metrics.appointmentsData?.length > 0 &&
-    metrics.newPatientsData?.length > 0 &&
-    metrics.treatmentsData?.length > 0 &&
-    metrics.satisfactionData?.length > 0
+    metrics.currentMonth.appointments > 0 &&
+    metrics.currentMonth.newPatients > 0 &&
+    metrics.currentMonth.treatments > 0 &&
+    metrics.currentMonth.satisfaction > 0
 
   const getPercentageChange = (dataArray: any[], isPositiveGood = true) => {
     if (!dataArray || dataArray.length < 2) return { value: 0, isPositive: true }
@@ -509,23 +506,37 @@ export const UnifiedMetrics = () => {
           <CardTitle>Prochain rendez-vous</CardTitle>
         </CardHeader>
         <CardContent>
-          <div
-            className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => setAnimalDetailsOpen(true)}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+          {nextAppointment ? (
+            <div
+              className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() => setAnimalDetailsOpen(true)}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                  <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+                </div>
+                <div>
+                  <p className="font-medium">{nextAppointmentPet?.name}</p>
+                  <p className="text-xs text-muted-foreground">{nextAppointmentData?.service?.name}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">{animalDetails.name}</p>
-                <p className="text-xs text-muted-foreground">Consultation de routine</p>
+              <div className="flex flex-col items-end">
+                <Badge variant="secondary">
+                  {nextAppointmentData?.slot?.start.toLocaleString("fr-FR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Badge>
               </div>
             </div>
-            <div className="flex flex-col items-end">
-              <Badge variant="secondary">Aujourd'hui 14:30</Badge>
+          ) : (
+            <div className="p-3">
+              <p className="text-sm text-muted-foreground">Aucun rendez-vous programmé</p>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -540,7 +551,13 @@ export const UnifiedMetrics = () => {
       )}
 
       {/* Utilisation de notre nouveau composant AnimalCredenza */}
-      <AnimalCredenza isOpen={animalDetailsOpen} onOpenChange={setAnimalDetailsOpen} animalDetails={animalDetails} />
+      <AnimalCredenza
+        isOpen={animalDetailsOpen}
+        onOpenChange={setAnimalDetailsOpen}
+        animalDetails={nextAppointmentPet}
+        nextAppointmentClient={nextAppointmentClient}
+        nextAppointmentData={nextAppointmentData}
+      />
     </div>
   )
 }

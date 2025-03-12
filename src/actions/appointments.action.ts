@@ -1,12 +1,13 @@
 "use server"
 
-import { eq, and, or, desc } from "drizzle-orm"
+import { eq, and, or, desc, asc } from "drizzle-orm"
 import { z } from "zod"
 import { requireAuth, requireFullOrganization, requireOwner } from "@/src/lib/action"
 
 import { Appointment, appointments as appointmentsTable } from "../db/appointments"
 import { ActionError, createServerAction, db } from "../lib"
 import { revalidatePath } from "next/cache"
+import { Pet, pets, User, user } from "../db"
 
 export const getAllAppointments = createServerAction(
   z.object({}),
@@ -35,7 +36,7 @@ export const confirmAppointment = createServerAction(
       .set({ status: "CONFIRMED" })
       .where(eq(appointmentsTable.id, input.appointmentId))
       .returning()
-      .execute();
+      .execute()
 
     if (!appointment) {
       throw new ActionError("Appointment not updated")
@@ -57,7 +58,7 @@ export const denyAppointment = createServerAction(
       .set({ status: "DENIED", deniedReason: input.deniedReason })
       .where(eq(appointmentsTable.id, input.appointmentId))
       .returning()
-      .execute();
+      .execute()
 
     if (!appointment) {
       throw new ActionError("Appointment not updated")
@@ -80,6 +81,8 @@ export const getConfirmedAndAboveAppointments = createServerAction(
       where: and(
         eq(appointmentsTable.proId, ctx.organization?.id || ""),
         or(
+          eq(appointmentsTable.status, "SCHEDULED"),
+          eq(appointmentsTable.status, "PAYED"),
           eq(appointmentsTable.status, "CONFIRMED"),
           eq(appointmentsTable.status, "ONGOING"),
           eq(appointmentsTable.status, "COMPLETED")
@@ -135,7 +138,15 @@ export const getConfirmedAndAboveAppointments = createServerAction(
       throw new ActionError("No appointments found")
     }
 
-    return appointmentQuery as unknown as Appointment[]
+    // Trier les rendez-vous par date de début du créneau
+    const sortedAppointments = appointmentQuery.sort((a, b) => {
+      if (a.slot && b.slot) {
+        return new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime()
+      }
+      return 0
+    })
+
+    return sortedAppointments as unknown as Appointment[]
   },
   [requireAuth, requireFullOrganization]
 )
@@ -250,16 +261,64 @@ export const getAllAppointmentForClient = createServerAction(
   [requireAuth]
 )
 
-export const getProNextAppointment = createServerAction(
+export const getAppointmentsByPetId = createServerAction(
   z.object({
     petId: z.string(),
   }),
   async (input, ctx) => {
-    const nextAppointment = await db.query.appointments.findFirst({
-      where: and(
-        eq(appointmentsTable.patientId, input.petId),
-        eq(appointmentsTable.status, "SCHEDULED")
-      ),
+    const appointments = await db.query.appointments.findMany({
+      where: and(eq(appointmentsTable.patientId, input.petId), eq(appointmentsTable.status, "COMPLETED")),
+      columns: {
+        id: true,
+        beginAt: true,
+        endAt: true,
+        status: true,
+        type: true,
+        atHome: true,
+      },
+      with: {
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+          },
+        },
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    return appointments as unknown as Appointment[]
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const getProNextAppointment = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const now = new Date()
+
+    // Récupérer tous les rendez-vous programmés pour ce pet
+    const appointments = await db.query.appointments.findMany({
+      where: and(eq(appointmentsTable.proId, ctx.organization?.id || ""), eq(appointmentsTable.status, "CONFIRMED")),
       with: {
         slot: {
           columns: {
@@ -267,11 +326,88 @@ export const getProNextAppointment = createServerAction(
             start: true,
           },
         },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+          },
+        },
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              },
+            },
+          },
+        },
       },
-      // orderBy: [desc(appointmentsTable.slot.start)],
     })
 
-    return nextAppointment
+    // Filtrer pour ne conserver que les rendez-vous futurs et trier par date
+    const futureAppointments = appointments
+      .filter(appointment => appointment.slot && new Date(appointment.slot.start) > now)
+      .sort((a, b) => {
+        if (a.slot && b.slot) {
+          return new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime()
+        }
+        return 0
+      })
+
+    const client = await db.query.user.findFirst({
+      where: eq(user.id, futureAppointments[0]?.clientId || ""),
+      columns: {
+        name: true,
+        email: true,
+        phoneNumber: true,
+        image: true,
+      },
+    })
+
+    const pet = await db.query.pets.findFirst({
+      where: eq(pets.id, futureAppointments[0]?.patientId || ""),
+      columns: {
+        id: true,
+        name: true,
+        image: true,
+        type: true,
+        breed: true,
+        birthDate: true,
+        gender: true,
+      },
+      with: {
+        appointments: {
+          where: and(eq(appointmentsTable.status, "CONFIRMED"), eq(appointmentsTable.status, "COMPLETED")),
+          columns: {
+            id: true,
+            status: true,
+            type: true,
+            atHome: true,
+          },
+          with: {
+            invoices: {
+              columns: {
+                id: true,
+                total: true,
+                checkoutSessionId: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    // Retourner le premier rendez-vous (le plus proche) s'il existe
+    return {
+      nextAppointment: futureAppointments.length > 0 ? (futureAppointments[0] as unknown as Appointment) : null,
+      client: client ? (client as unknown as User) : null,
+      pet: pet ? (pet as unknown as Pet) : null,
+    }
   },
   [requireAuth, requireFullOrganization]
 )

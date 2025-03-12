@@ -27,7 +27,7 @@ import { createBookingCheckoutSession } from "@/src/actions/booking-payment.acti
 import { format, addDays, isAfter, isFuture } from "date-fns"
 import { fr } from "date-fns/locale"
 import { getOrganizationSlots } from "@/src/actions/organizationSlots.action"
-import { createBooking } from "@/src/actions"
+import { createBooking as createBookingAction } from "@/src/actions"
 import { loginSchema } from "@/src/lib"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
@@ -69,10 +69,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
   // Récupération des slots d'organisation
   const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
     queryKey: ["organization-slots"],
-    queryFn: async () => {
-      // Récupérer tous les slots disponibles
-      return getOrganizationSlots({})
-    },
+    queryFn: () => getOrganizationSlots({}),
   })
 
   // Filtrage des créneaux pour affichage
@@ -135,6 +132,18 @@ export function BookingCard({ organization }: { organization: Organization }) {
     },
     onError: (error: Error) => {
       console.error("Erreur de paiement:", error)
+      toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
+    },
+  })
+
+  const { mutateAsync: createBooking, isPending: isBookingLoading } = useMutation({
+    mutationFn: createBookingAction,
+    onSuccess: () => {
+      toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
+      setIsReservationModalOpen(false)
+    },
+    onError: (error: Error) => {
+      console.error("Erreur de création de rendez-vous:", error)
       toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
     },
   })
@@ -218,28 +227,61 @@ export function BookingCard({ organization }: { organization: Organization }) {
         return
       }
 
+      await createBooking({
+        serviceId: selectedService.id,
+        professionalId: selectedPro.id,
+        petId,
+        isHomeVisit: !!consultationType,
+        additionalInfo: additionalNotes,
+        selectedOptions: selectedOptions?.map(option => option.id) || [],
+        amount,
+        companyId: companyId,
+        status: "SCHEDULED",
+        isPaid: false,
+        slotId: selectedSlot?.id ?? undefined,
+      })
+    } catch (err) {
+      console.error("Erreur de création de rendez-vous:", err)
+      toast.error(`Erreur: ${err instanceof Error ? err.message : "Une erreur s'est produite"}`)
+    }
+  }
+
+  const handleBookingPayment = async () => {
+    if (!selectedService || !selectedPro || !selectedDate || !selectedTime) {
+      toast.error("Veuillez sélectionner tous les éléments nécessaires")
+      return
+    }
+
+    if (!selectedPet) {
+      toast.error("Veuillez sélectionner un animal")
+      return
+    }
+
+    if (!session?.user) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    const servicePrice = selectedService.price || 0
+    const optionsPrice = selectedOptions?.reduce((acc: number, option: Option) => {
+      return acc + (option.price ?? 0)
+    }, 0)
+    const homeVisitPrice = consultationType ? 10 : 0
+    const amount = servicePrice + (optionsPrice ?? 0) + homeVisitPrice
+
+    if (!amount || amount <= 0) {
+      toast.error("Le montant du paiement est invalide")
+      return
+    }
+
+    try {
+      const petId = selectedPet?.id
+      if (!petId) {
+        toast.error("Veuillez sélectionner un animal")
+        return
+      }
+
       if (paymentMethod === "inPerson") {
-        const result = await createBooking({
-          serviceId: selectedService.id,
-          professionalId: selectedPro.id,
-          petId,
-          isHomeVisit: !!consultationType,
-          additionalInfo: additionalNotes,
-          selectedOptions: selectedOptions?.map(option => option.id) || [],
-          amount,
-          companyId: companyId,
-          status: "SCHEDULED",
-          isPaid: false,
-          slotId: selectedSlot?.id ?? undefined,
-        })
-
-        if (result.error) {
-          toast.error(`Erreur: ${result.error}`)
-          return
-        }
-
-        toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
-        setIsReservationModalOpen(false)
         return
       }
 
@@ -473,7 +515,11 @@ export function BookingCard({ organization }: { organization: Organization }) {
               <Button
                 onClick={() => {
                   if (isLast) {
-                    handleBooking()
+                    if (paymentMethod === "inPerson") {
+                      handleBooking()
+                    } else {
+                      handleBookingPayment()
+                    }
                   } else {
                     next()
                   }
@@ -484,7 +530,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   (current.id === "date" && (!selectedDate || !selectedTime)) ||
                   (current.id === "pet" && !selectedPet) ||
                   (current.id === "payment" && !paymentMethod) ||
-                  (isLast && isPaymentLoading)
+                  (isLast && (isPaymentLoading || isBookingLoading))
                 }
               >
                 {isLast ? (

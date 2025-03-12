@@ -12,6 +12,7 @@ import { Member, member } from "./member"
 import { notification } from "./notifications"
 import { Pet, pets } from "./pets"
 import { session } from "./session"
+import { Invoice, invoice } from "./invoice"
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -45,6 +46,7 @@ export const userRelations = relations(user, ({ one, many }) => ({
   invitations: many(invitation),
   addresses: many(address),
   clientNotes: many(clientNote),
+  invoices: many(invoice),
 }))
 
 export type User = InferSelectModel<typeof user> & {
@@ -54,6 +56,7 @@ export type User = InferSelectModel<typeof user> & {
   memberships: Member[]
   addresses: Address[]
   clientNotes: ClientNote[]
+  invoices: Invoice[]
 }
 
 export const CreateUserSchema = createInsertSchema(user)

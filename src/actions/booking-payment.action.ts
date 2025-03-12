@@ -21,134 +21,6 @@ const createBookingPaymentSchema = z.object({
 })
 
 /**
- * Action serveur pour créer un Payment Intent Stripe pour une réservation
- * Note: Cette fonction n'est pas utilisée actuellement, l'application utilise createBookingCheckoutSession à la place
- */
-export const createBookingPaymentIntent = createServerAction(
-  createBookingPaymentSchema,
-  async (input, ctx) => {
-    try {
-      // Utiliser directement le customerId fourni
-      const stripeCustomerId = ctx.user?.stripeId || ""
-
-      // Générer un Intent ID unique pour Stripe
-      const stripeIntentId = `pi_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
-
-      // Créer une transaction dans la base de données
-      const newTransaction = await db
-        .insert(transaction)
-        .values({
-          intentId: stripeIntentId,
-          amount: input.amount,
-          status: "PENDING",
-          from: ctx.user?.id,
-          to: input.companyId,
-          createdAt: new Date(),
-        })
-        .returning()
-
-      if (!newTransaction || newTransaction.length === 0) {
-        throw new ActionError("Impossible de créer la transaction")
-      }
-
-      const transactionId = newTransaction[0].id
-
-      // Formatage des options sélectionnées pour les métadonnées
-      const selectedOptionsJson = input.selectedOptions ? JSON.stringify(input.selectedOptions) : "[]"
-
-      // Obtenir le nom du service pour l'afficher dans la page de paiement
-      const serviceResult = await db.query.service.findFirst({
-        where: eq(service.id, input.serviceId),
-      })
-
-      if (!serviceResult) {
-        throw new ActionError("Service non trouvé")
-      }
-
-      const org = await db.query.organization.findFirst({
-        where: eq(organization.id, input.companyId),
-        columns: {
-          companyStripeId: true,
-        },
-      })
-
-      if (!org?.companyStripeId) {
-        throw new ActionError("Impossible de récupérer le compte Stripe de l'entreprise")
-      }
-
-      // Récupérer les informations du service pour obtenir sa durée
-      const selectedService = await db.query.service.findFirst({
-        where: eq(service.id, input.serviceId),
-      })
-
-      if (!selectedService) {
-        throw new ActionError("Service non trouvé")
-      }
-
-      const [appointment] = await db
-        .insert(appointments)
-        .values({
-          serviceId: input.serviceId,
-          proId: input.companyId,
-          patientId: input.petId,
-          clientId: ctx.user?.id ?? "",
-          status: "PENDING PAYMENT",
-          atHome: input.isHomeVisit,
-          type: "oneToOne",
-          slotId: input.slot.id,
-        })
-        .returning({ id: appointments.id })
-        .execute()
-
-      if (!stripeCustomerId) {
-        throw new ActionError("Impossible de récupérer le customerId de l'utilisateur")
-      }
-
-      // Calculer le montant total en centimes
-      const amountInCents = Math.round(input.amount * 100);
-
-      // Créer un Payment Intent avec Stripe
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amountInCents,
-        currency: "eur",
-        customer: stripeCustomerId,
-        payment_method_types: ["card"],
-        description: `Rendez-vous chez ${serviceResult.name} le ${input.slot.start}`,
-        metadata: {
-          transactionId,
-          appointmentId: appointment.id,
-          slotId: input.slot.id,
-          serviceId: input.serviceId,
-          professionalId: input.professionalId,
-          petId: input.petId,
-          isHomeVisit: input.isHomeVisit.toString(),
-          additionalInfo: input.additionalInfo || "",
-          selectedOptions: selectedOptionsJson,
-          companyId: input.companyId,
-        },
-        transfer_data: {
-          destination: org?.companyStripeId || "",
-        },
-      });
-
-      // Mettre à jour la transaction avec l'ID du Payment Intent
-      await db.update(transaction).set({ intentId: paymentIntent.id }).where(eq(transaction.id, transactionId))
-
-      // Retourner les informations nécessaires du Payment Intent
-      return {
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
-        transactionId,
-      }
-    } catch (error) {
-      console.error("Erreur lors de la création du Payment Intent:", error)
-      throw new ActionError(`Une erreur est survenue lors de la création du Payment Intent, ${error}`)
-    }
-  },
-  [requireAuth] // requireAuth est nécessaire ici car l'utilisateur doit être authentifié
-)
-
-/**
  * Action serveur pour créer une session de paiement Stripe pour une réservation (méthode existante maintenue pour compatibilité)
  */
 export const createBookingCheckoutSession = createServerAction(
@@ -201,7 +73,14 @@ export const createBookingCheckoutSession = createServerAction(
           currency: "eur",
           product_data: {
             name: `Service: ${serviceResult.name}`,
-            description: `Rendez-vous le ${input.slot.start} à ${input.slot.end}`,
+            description: `Rendez-vous le ${input.slot.start.toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })} à ${input.slot.start.toLocaleTimeString("fr-FR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`,
           },
           unit_amount: (serviceResult.price || 0) * 100, // Conversion en centimes, avec fallback à 0 si null
         },
@@ -297,6 +176,7 @@ export const createBookingCheckoutSession = createServerAction(
           metadata: {
             transactionId,
             appointmentId: appointment.id,
+            amount: input.amount,
             slotId: input.slot.id,
             serviceId: input.serviceId,
             professionalId: input.professionalId,
@@ -308,6 +188,7 @@ export const createBookingCheckoutSession = createServerAction(
             clientId: ctx.user?.id ?? "",
           },
           transfer_data: {
+            amount: input.amount,
             destination: org?.companyStripeId || "",
           },
         },
@@ -318,7 +199,7 @@ export const createBookingCheckoutSession = createServerAction(
       }
 
       // Mettre à jour la transaction avec l'ID de session Stripe
-      await db.update(transaction).set({ intentId: session.id }).where(eq(transaction.id, transactionId))
+      await db.update(transaction).set({ intentId: session.id }).where(eq(transaction.id, transactionId)).execute()
 
       // Retourner l'URL de la page de paiement Stripe
       return {

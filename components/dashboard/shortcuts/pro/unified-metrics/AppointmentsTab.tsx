@@ -6,37 +6,22 @@ import { Calendar } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-import { AnimalDetails } from "./types"
+import { Pet, User as UserType, Appointment } from "@/src/db"
+import { useQuery } from "@tanstack/react-query"
+import { getAppointmentsByPetId } from "@/src/actions/appointments.action"
+import { format } from "date-fns"
 
 interface AppointmentsTabProps {
-  animal: AnimalDetails
+  animal: Pet
+  nextAppointmentClient: UserType
+  nextAppointmentData: Appointment
 }
 
-export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
-  // Données des rendez-vous
-  const appointments = [
-    {
-      date: "12/04/2023",
-      title: "Consultation de routine",
-      time: "10:30",
-      doctor: "Dr. Martinez",
-      status: "Terminé",
-    },
-    {
-      date: "03/01/2023",
-      title: "Traitement infection",
-      time: "15:00",
-      doctor: "Dr. Lopez",
-      status: "Terminé",
-    },
-    {
-      date: "15/09/2022",
-      title: "Contrôle dentaire",
-      time: "11:45",
-      doctor: "Dr. Martinez",
-      status: "Terminé",
-    },
-  ]
+export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointmentData }: AppointmentsTabProps) => {
+  const { data: appointments } = useQuery({
+    queryKey: ["appointments", animal.id],
+    queryFn: () => getAppointmentsByPetId({ petId: animal.id }),
+  })
 
   return (
     <div className="p-6 space-y-6">
@@ -59,7 +44,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
       </motion.div>
 
       {/* Prochain rendez-vous */}
-      {animal.nextVisit && (
+      {nextAppointmentData && (
         <motion.div
           className="rounded-lg border overflow-hidden mb-6"
           initial={{ opacity: 0, y: 10 }}
@@ -89,8 +74,16 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
                 <Calendar className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
               </motion.div>
               <div>
-                <div className="font-medium">Vaccination annuelle</div>
-                <div className="text-sm text-muted-foreground">{animal.nextVisit} à 14:30 • Dr. Martinez</div>
+                <div className="font-medium">{nextAppointmentData.service.name}</div>
+                <div className="text-sm text-muted-foreground">
+                  {nextAppointmentData.beginAt
+                    ? format(nextAppointmentData.beginAt, "dd/MM/yyyy")
+                    : nextAppointmentData.slot.start.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                </div>
               </div>
             </div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -111,7 +104,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
       >
         <h4 className="text-sm font-medium mb-2">Historique</h4>
         <div className="space-y-2">
-          {appointments.map((appointment, index) => (
+          {appointments?.data?.map((appointment, index) => (
             <motion.div
               key={index}
               className="p-3 border rounded-md flex items-center justify-between"
@@ -125,13 +118,28 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
               }}
             >
               <div>
-                <div className="font-medium">{appointment.title}</div>
+                <div className="font-medium">{appointment.service.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {appointment.date} • {appointment.doctor}
+                  {appointment.beginAt
+                    ? format(appointment.beginAt, "dd/MM/yyyy")
+                    : appointment.slot.start.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                  • {appointment.pro.name}
                 </div>
               </div>
               <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
-                <Badge variant="outline">{appointment.time}</Badge>
+                <Badge variant="outline">
+                  {appointment.beginAt
+                    ? format(appointment.beginAt, "dd/MM/yyyy")
+                    : appointment.slot.start.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                </Badge>
               </motion.div>
             </motion.div>
           ))}
