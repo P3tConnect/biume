@@ -1,6 +1,6 @@
 "use server"
 
-import { and, eq } from "drizzle-orm"
+import { and, eq, gte, asc } from "drizzle-orm"
 import { z } from "zod"
 
 import { organizationSlots } from "../db"
@@ -196,4 +196,46 @@ export const deleteRecurrentOrganizationSlots = createServerAction(
     return slots
   },
   [requireAuth, requireFullOrganization]
+)
+
+export const getOrganizationSlotsByCompanyId = createServerAction(
+  z.object({
+    companyId: z.string(),
+  }),
+  async (input, ctx) => {
+    try {
+      const slots = await db.query.organizationSlots.findMany({
+        where: and(
+          eq(organizationSlots.organizationId, input.companyId),
+          eq(organizationSlots.isAvailable, true),
+          gte(organizationSlots.start, new Date()) // Seulement les créneaux futurs
+        ),
+        with: {
+          service: {
+            columns: {
+              id: true,
+              name: true,
+              price: true,
+            }
+          }
+        },
+        orderBy: asc(organizationSlots.start),
+        columns: {
+          id: true,
+          start: true,
+          end: true,
+          isAvailable: true,
+          organizationId: true,
+          serviceId: true,
+        },
+      })
+
+      return slots as OrganizationSlots[]
+    } catch (error) {
+      throw new ActionError(
+        `Erreur lors de la récupération des créneaux: ${error instanceof Error ? error.message : String(error)}`
+      )
+    }
+  },
+  [] // Pas besoin d'authentification pour cette fonction publique
 )

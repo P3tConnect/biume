@@ -10,7 +10,6 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "rec
 import { CredenzaContent, CredenzaTitle, CredenzaHeader, Skeleton } from "@/components/ui"
 import { Credenza } from "@/components/ui"
 import { AnimalCredenza } from "./unified-metrics/AnimalCredenza"
-import { AnimalDetails } from "./unified-metrics/types"
 import { getMetricsAction } from "@/src/actions/metrics.action"
 import { useQuery } from "@tanstack/react-query"
 import { getProNextAppointment } from "@/src/actions/appointments.action"
@@ -81,7 +80,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<"info" | "vaccinations" | "medical" | "appointments" | "documents">("info")
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
 
   // Utiliser useQuery pour récupérer les métriques
@@ -116,7 +114,7 @@ export const UnifiedMetrics = () => {
     },
   })
 
-  const { data: nextAppointment } = useQuery({
+  const { data: nextAppointment, isLoading: nextAppointmentLoading } = useQuery({
     queryKey: ["nextAppointment"],
     queryFn: async () => getProNextAppointment({}),
   })
@@ -127,14 +125,6 @@ export const UnifiedMetrics = () => {
 
   // Utiliser les données récupérées ou les données de secours en cas d'erreur
   const metrics: MetricData = metricsData || fallbackData
-
-  // Formatage de la date
-  const today = new Date()
-  const formattedDate = today.toLocaleDateString("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  })
 
   // Vérifier si les données sont disponibles avant de les utiliser
   const hasData =
@@ -384,9 +374,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -418,9 +407,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -452,9 +440,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -486,9 +473,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -506,7 +492,11 @@ export const UnifiedMetrics = () => {
           <CardTitle>Prochain rendez-vous</CardTitle>
         </CardHeader>
         <CardContent>
-          {nextAppointment ? (
+          {nextAppointmentLoading ? (
+            <div className="p-3">
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : nextAppointment ? (
             <div
               className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={() => setAnimalDetailsOpen(true)}

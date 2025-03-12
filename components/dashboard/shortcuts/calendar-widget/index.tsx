@@ -9,7 +9,7 @@
 
 import { Button, ScrollArea, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui"
 import { CALENDAR_VIEW_MODE_KEY, mockAppointments } from "./data/constants"
-import { CalendarDays, Calendar as CalendarIcon, ChevronLeft, ChevronRight, List } from "lucide-react"
+import { CalendarDays, Calendar as CalendarIcon, ChevronLeft, ChevronRight, List, Loader2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 import { AppointmentDetails } from "./components/appointment-details"
@@ -30,7 +30,7 @@ const CalendarWidget = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
 
-  const { data: appointments } = useQuery({
+  const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
     queryKey: ["confirmed-and-above-appointments"],
     queryFn: () => getConfirmedAndAboveAppointments({}),
   })
@@ -89,6 +89,48 @@ const CalendarWidget = () => {
             </div>
           </>
         )}
+      </div>
+    )
+  }
+
+  if (isLoadingAppointments) {
+    return (
+      <div className="h-full w-full flex flex-col p-2">
+        {/* En-tête simulé */}
+        <div className="flex items-center justify-between pb-1">
+          <div className="flex items-center gap-2">
+            <div className="h-5 w-5 rounded-md bg-muted/60 animate-pulse"></div>
+            <div className="h-6 w-32 rounded-md bg-muted/60 animate-pulse"></div>
+          </div>
+          <div className="h-8 w-8 rounded-md bg-muted/60 animate-pulse"></div>
+        </div>
+
+        {/* Corps du calendrier simulé */}
+        <div className="flex-1 overflow-auto pt-1 px-1 rounded-md bg-muted/10">
+          {/* En-tête des jours */}
+          <div className="grid grid-cols-7 gap-1 mb-1">
+            {Array(7).fill(0).map((_, i) => (
+              <div key={i} className="h-5 rounded bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 50}ms` }}></div>
+            ))}
+          </div>
+
+          {/* Grille du calendrier */}
+          <div className="grid grid-cols-7 gap-1">
+            {Array(35).fill(0).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square rounded bg-muted/30 animate-pulse flex items-center justify-center"
+                style={{ animationDelay: `${(i % 7) * 50}ms` }}
+              >
+                <div className="h-3 w-3 rounded-full bg-muted/40"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-2 text-center text-sm text-muted-foreground">
+          Chargement de votre calendrier...
+        </div>
       </div>
     )
   }
