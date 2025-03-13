@@ -30,9 +30,9 @@ export const getMetricsAction = createServerAction(
     // Calculate date ranges for current and previous month
     const now = new Date()
 
-    // Current month
+    // Current month - using Date.now() to ensure we don't get future appointments
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+    const currentMonthEnd = new Date(Date.now()) // Using current timestamp instead of end of month
 
     // Previous month
     const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)

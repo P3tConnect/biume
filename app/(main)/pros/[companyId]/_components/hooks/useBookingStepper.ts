@@ -36,7 +36,10 @@ const paymentSchema = z.object({
   method: z.enum(["online", "inPerson"]).optional(),
 })
 
-export type StepId = "serviceAndOptions" | "professional" | "date" | "pet" | "summary" | "payment"
+// Schéma pour le succès
+const successSchema = z.object({})
+
+export type StepId = "serviceAndOptions" | "professional" | "date" | "pet" | "summary" | "payment" | "success"
 
 export const { steps, useStepper, utils } = defineStepper(
   {
@@ -74,5 +77,11 @@ export const { steps, useStepper, utils } = defineStepper(
     title: "Paiement",
     description: "Choisissez votre méthode de paiement",
     schema: paymentSchema,
+  },
+  {
+    id: "success" as const,
+    title: "Confirmation",
+    description: "Votre réservation a été confirmée",
+    schema: successSchema,
   }
 )

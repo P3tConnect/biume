@@ -166,7 +166,21 @@ export async function POST(req: NextRequest) {
             from: "Biume <noreply@biume.com>",
             to: clientQuery?.email || "",
             subject: "Vous avez une nouvelle réservation",
-            react: ReservationWaitingEmailClient(),
+            react: ReservationWaitingEmailClient({
+              clientName: clientQuery.name || "",
+              petName: petQuery.name || "",
+              serviceName: serviceQuery.name || "",
+              date: slotQuery.start.toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              time: slotQuery.start.toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              providerName: professionalQuery.name || "",
+            }),
           })
 
           if (clientEmail.error) {

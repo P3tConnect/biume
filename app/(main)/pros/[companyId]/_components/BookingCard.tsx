@@ -39,6 +39,9 @@ import { ProfessionalStep } from "./steps/ProfessionalStep"
 import { SummaryStep } from "./steps/SummaryStep"
 import { PaymentStep } from "./steps/PaymentStep"
 import { DateStep } from "./steps/DateStep"
+import { getOptionsFromOrganization } from "@/src/actions/options.action"
+import { SuccessStep } from "./steps/SuccessStep"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 // Création d'un type pour les slots d'affichage
 interface DisplaySlot {
@@ -75,9 +78,20 @@ export function BookingCard({ organization }: { organization: Organization }) {
     queryFn: () => getOrganizationSlotsByCompanyId({ companyId }),
   })
 
+  const { data: organizationOptions } = useQuery({
+    queryKey: ["organization-options", organization.id],
+    queryFn: () => getOptionsFromOrganization({ organizationId: organization.id }),
+    enabled: !!organization.id,
+  })
+
   // Filtrage des créneaux pour affichage
   useEffect(() => {
-    if (organizationSlots && "data" in organizationSlots && organizationSlots.data && organizationSlots.data.length > 0) {
+    if (
+      organizationSlots &&
+      "data" in organizationSlots &&
+      organizationSlots.data &&
+      organizationSlots.data.length > 0
+    ) {
       const now = new Date()
       const nextSevenDays = addDays(now, 7)
 
@@ -91,8 +105,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
           date: new Date(slot.start || ""),
           slot,
         }))
-        .sort((a: { date: Date; slot: OrganizationSlots }, b: { date: Date; slot: OrganizationSlots }) =>
-          a.date.getTime() - b.date.getTime()
+        .sort(
+          (a: { date: Date; slot: OrganizationSlots }, b: { date: Date; slot: OrganizationSlots }) =>
+            a.date.getTime() - b.date.getTime()
         )
         .slice(0, 8) // Afficher jusqu'à 8 créneaux pour montrer plus d'options
 
@@ -142,7 +157,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
     mutationFn: createBookingAction,
     onSuccess: () => {
       toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
-      setIsReservationModalOpen(false)
+      goTo("success")
     },
     onError: (error: Error) => {
       console.error("Erreur de création de rendez-vous:", error)
@@ -150,15 +165,16 @@ export function BookingCard({ organization }: { organization: Organization }) {
     },
   })
 
-  const handleOpenReservationModal = () => {
+  const handleOpenReservationModal = (selectedDisplaySlot?: DisplaySlot) => {
     if (!session) {
       setIsLoginModalOpen(true)
     } else {
-      setSelectedService(null)
+      const service = selectedDisplaySlot?.slot.service || null
+      setSelectedService(service)
       setSelectedPro(null)
-      setSelectedDate(undefined)
-      setSelectedTime(null)
-      setSelectedSlot(null)
+      setSelectedDate(selectedDisplaySlot ? selectedDisplaySlot.date : undefined)
+      setSelectedTime(selectedDisplaySlot ? format(selectedDisplaySlot.date, "HH:mm") : null)
+      setSelectedSlot(selectedDisplaySlot?.slot || null)
       setSelectedPet(null)
       setConsultationType(null)
       setSelectedOptions(null)
@@ -322,20 +338,16 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   <div
                     key={index}
                     className="p-3 rounded-md border border-muted-foreground/20 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={handleOpenReservationModal}
+                    onClick={() => handleOpenReservationModal(item)}
                   >
                     <div className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5 text-primary" />
-                      <span className="text-xs font-medium">
-                        {format(item.date, "EEE d MMM", { locale: fr })}
-                      </span>
+                      <span className="text-xs font-medium">{format(item.date, "EEE d MMM", { locale: fr })}</span>
                     </div>
                     <div className="flex items-center justify-between mt-1.5">
                       <div className="flex items-center gap-2">
                         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-xs">
-                          {format(item.date, "HH'h'mm")}
-                        </span>
+                        <span className="text-xs">{format(item.date, "HH'h'mm")}</span>
                       </div>
                       {item.slot.service && (
                         <span className="text-xs text-primary font-medium truncate max-w-[100px]">
@@ -356,7 +368,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button className="w-full" size="lg" onClick={handleOpenReservationModal}>
+        <Button className="w-full" size="lg" onClick={() => handleOpenReservationModal()}>
           Prendre rendez-vous
         </Button>
       </CardFooter>
@@ -415,33 +427,39 @@ export function BookingCard({ organization }: { organization: Organization }) {
       {/* Modale de réservation */}
       <Credenza open={isReservationModalOpen} onOpenChange={setIsReservationModalOpen}>
         <CredenzaContent className="sm:max-w-[800px] sm:max-h-[90vh]">
-          <CredenzaHeader>
-            <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
-              {Object.values(steps).map((stepItem, index) => (
-                <div key={stepItem.id} className="flex items-center shrink-0">
-                  <div
-                    className={cn(
-                      "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
-                      current.id === stepItem.id
-                        ? "border-primary text-primary"
-                        : index < Object.values(steps).findIndex(s => s.id === current.id)
-                          ? "border-primary bg-primary text-white"
-                          : "border-muted-foreground/30 text-muted-foreground/50"
+          {isLast ? (
+            <VisuallyHidden>
+              <CredenzaTitle>Rendez-vous confirmé</CredenzaTitle>
+            </VisuallyHidden>
+          ) : (
+            <CredenzaHeader>
+              <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
+                {Object.values(steps).map((stepItem, index) => (
+                  <div key={stepItem.id} className="flex items-center shrink-0">
+                    <div
+                      className={cn(
+                        "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
+                        current.id === stepItem.id
+                          ? "border-primary text-primary"
+                          : index < Object.values(steps).findIndex(s => s.id === current.id)
+                            ? "border-primary bg-primary text-white"
+                            : "border-muted-foreground/30 text-muted-foreground/50"
+                      )}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      {index + 1}
+                    </div>
+                    {index < Object.values(steps).length - 1 && (
+                      <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
                     )}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    {index + 1}
                   </div>
-                  {index < Object.values(steps).length - 1 && (
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
-                  )}
-                </div>
-              ))}
-            </div>
-            <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
-            <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
-          </CredenzaHeader>
+                ))}
+              </div>
+              <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
+              <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
+            </CredenzaHeader>
+          )}
 
           <div className="py-4">
             {switchStep({
@@ -459,6 +477,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                       setSelectedOptions([...currentOptions, option])
                     }
                   }}
+                  organizationOptions={organizationOptions?.data || []}
                 />
               ),
               professional: () => (
@@ -508,58 +527,63 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   onSelectPaymentMethod={(method: string) => setPaymentMethod(method as "online" | "inPerson" | null)}
                 />
               ),
+              success: () => <SuccessStep onClose={() => setIsReservationModalOpen(false)} />,
             })}
           </div>
 
           <CredenzaFooter>
             <div className="flex w-full justify-between">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (isFirst) {
-                    setIsReservationModalOpen(false)
-                  } else {
-                    prev()
-                  }
-                }}
-              >
-                {isFirst ? "Annuler" : "Retour"}
-              </Button>
-              <Button
-                onClick={() => {
-                  if (isLast) {
-                    if (paymentMethod === "inPerson") {
-                      handleBooking()
+              {isLast ? null : (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (isFirst) {
+                      setIsReservationModalOpen(false)
                     } else {
-                      handleBookingPayment()
+                      prev()
                     }
-                  } else {
-                    next()
+                  }}
+                >
+                  {isFirst ? "Annuler" : "Retour"}
+                </Button>
+              )}
+              {current.id !== "success" && (
+                <Button
+                  onClick={() => {
+                    if (current.id === "payment") {
+                      if (paymentMethod === "inPerson") {
+                        handleBooking()
+                      } else {
+                        handleBookingPayment()
+                      }
+                    } else {
+                      next()
+                    }
+                  }}
+                  disabled={
+                    (current.id === "serviceAndOptions" && !selectedService) ||
+                    (current.id === "professional" && !selectedPro) ||
+                    (current.id === "date" && (!selectedDate || !selectedTime)) ||
+                    (current.id === "pet" && !selectedPet) ||
+                    (current.id === "payment" && !paymentMethod) ||
+                    (current.id === "payment" && (isPaymentLoading || isBookingLoading))
                   }
-                }}
-                disabled={
-                  (current.id === "serviceAndOptions" && !selectedService) ||
-                  (current.id === "professional" && !selectedPro) ||
-                  (current.id === "date" && (!selectedDate || !selectedTime)) ||
-                  (current.id === "pet" && !selectedPet) ||
-                  (current.id === "payment" && !paymentMethod) ||
-                  (isLast && (isPaymentLoading || isBookingLoading))
-                }
-              >
-                {isLast ? (
-                  isPaymentLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Redirection...
-                    </>
-                  ) : paymentMethod === "inPerson" ? (
-                    "Confirmer le rendez-vous"
+                >
+                  {current.id === "payment" ? (
+                    isPaymentLoading || isBookingLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traitement en cours...
+                      </>
+                    ) : paymentMethod === "inPerson" ? (
+                      "Confirmer le rendez-vous"
+                    ) : (
+                      "Confirmer et payer"
+                    )
                   ) : (
-                    "Confirmer et payer"
-                  )
-                ) : (
-                  "Suivant"
-                )}
-              </Button>
+                    "Suivant"
+                  )}
+                </Button>
+              )}
             </div>
           </CredenzaFooter>
         </CredenzaContent>

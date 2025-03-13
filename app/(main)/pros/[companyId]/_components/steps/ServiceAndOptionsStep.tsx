@@ -19,6 +19,7 @@ interface ServiceAndOptionsStepProps {
   selectedOptions: Option[]
   onSelectService: (service: Service) => void
   onToggleOption: (option: Option) => void
+  organizationOptions: Option[]
 }
 
 export function ServiceAndOptionsStep({
@@ -27,21 +28,8 @@ export function ServiceAndOptionsStep({
   selectedOptions,
   onSelectService,
   onToggleOption,
+  organizationOptions,
 }: ServiceAndOptionsStepProps) {
-  // Récupération des options
-  const { data: options, isLoading } = useQuery({
-    queryKey: ["options", selectedService?.id],
-    queryFn: async () => {
-      if (!selectedService?.id) return { data: [] }
-      return getOptionsFromOrganization({
-        organizationId: selectedService.organizationId || "",
-      })
-    },
-    enabled: !!selectedService?.id,
-  })
-
-  const availableOptions = options?.data || []
-
   // Calculer le prix total des options sélectionnées
   const totalOptionPrice = selectedOptions.reduce((acc, option) => acc + (option.price || 0), 0)
   const totalPrice = (selectedService?.price || 0) + totalOptionPrice
@@ -107,14 +95,10 @@ export function ServiceAndOptionsStep({
               <Info className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm">Veuillez d'abord sélectionner un service</p>
             </div>
-          ) : isLoading ? (
-            <div className="flex justify-center py-4 border rounded-md">
-              <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-primary"></div>
-            </div>
-          ) : availableOptions.length > 0 ? (
+          ) : organizationOptions.length > 0 ? (
             <ScrollArea className="max-h-[400px]">
               <div className="grid grid-cols-1 gap-2 pr-2">
-                {availableOptions.map(option => {
+                {organizationOptions.map(option => {
                   const isSelected = selectedOptions.some(o => o.id === option.id)
                   return (
                     <div

@@ -160,7 +160,7 @@ const PatientDialog = ({ open, onOpenChange }: PatientDialogProps) => {
 
   return (
     <Credenza open={open} onOpenChange={onOpenChange}>
-      <CredenzaContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <CredenzaContent className="sm:max-w-2xl max-h-[600px] overflow-y-auto">
         <CredenzaHeader>
           <CredenzaTitle className="text-xl font-bold">Créer un nouveau patient</CredenzaTitle>
         </CredenzaHeader>

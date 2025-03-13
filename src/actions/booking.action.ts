@@ -13,6 +13,10 @@ import {
   organizationSlots,
   pets,
   organization,
+  Service,
+  OrganizationSlots,
+  Organization,
+  Pet,
 } from "../db"
 import { eq, inArray } from "drizzle-orm"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
@@ -108,56 +112,59 @@ export const createBooking = createServerAction(
         .where(eq(organizationSlots.id, input.slotId ?? ""))
         .execute()
 
-      const petQuery = await db.query.pets
-        .findFirst({
+      const transactionQuery = await db.transaction(async tx => {
+        const petQuery = (await tx.query.pets.findFirst({
           where: eq(pets.id, input.petId),
           columns: {
             name: true,
           },
-        })
-        .execute()
+        })) as Pet
 
-      const serviceQuery = await db.query.service
-        .findFirst({
+        const serviceQuery = (await tx.query.service.findFirst({
           where: eq(service.id, input.serviceId),
           columns: {
             name: true,
           },
-        })
-        .execute()
+        })) as Service
 
-      const slotQuery = await db.query.organizationSlots
-        .findFirst({
+        const slotQuery = (await tx.query.organizationSlots.findFirst({
           where: eq(organizationSlots.id, input.slotId ?? ""),
           columns: {
             start: true,
           },
-        })
-        .execute()
+        })) as OrganizationSlots
 
-      const professionalQuery = await db.query.organization
-        .findFirst({
+        const professionalQuery = (await tx.query.organization.findFirst({
           where: eq(organization.id, input.companyId),
           columns: {
             name: true,
           },
-        })
-        .execute()
+        })) as Organization
+
+        return {
+          petQuery,
+          serviceQuery,
+          slotQuery,
+          professionalQuery,
+        }
+      })
+
+      const { petQuery, serviceQuery, slotQuery, professionalQuery } = transactionQuery
 
       const proEmail = await resend.emails.send({
         from: "Biume <noreply@biume.com>",
-        to: input.companyId,
+        to: professionalQuery.email || "",
         subject: "Vous avez une nouvelle réservation",
         react: NewReservationEmailPro({
           customerName: ctx.user?.name || "",
-          petName: petQuery?.name || "",
-          serviceName: serviceQuery?.name || "",
-          date: slotQuery?.start.toLocaleDateString("fr-FR", {
+          petName: petQuery.name || "",
+          serviceName: serviceQuery.name || "",
+          date: slotQuery.start.toLocaleDateString("fr-FR", {
             year: "numeric",
             month: "long",
             day: "numeric",
           })!,
-          time: slotQuery?.start.toLocaleTimeString("fr-FR", {
+          time: slotQuery.start.toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
           })!,
@@ -174,8 +181,22 @@ export const createBooking = createServerAction(
       const clientEmail = await resend.emails.send({
         from: "Biume <noreply@biume.com>",
         to: ctx.user?.email || "",
-        subject: "Vous avez une nouvelle réservation",
-        react: ReservationWaitingEmailClient(),
+        subject: "Merci pour votre réservation",
+        react: ReservationWaitingEmailClient({
+          clientName: ctx.user?.name || "",
+          petName: petQuery.name || "",
+          serviceName: serviceQuery.name || "",
+          date: slotQuery.start.toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })!,
+          time: slotQuery.start.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })!,
+          providerName: professionalQuery?.name || "",
+        }),
       })
 
       if (clientEmail.error) {

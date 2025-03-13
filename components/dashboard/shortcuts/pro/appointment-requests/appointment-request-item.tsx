@@ -9,6 +9,13 @@ import {
   UserCircle2Icon,
   XIcon,
   CreditCardIcon,
+  PhoneIcon,
+  MailIcon,
+  MapPinIcon,
+  InfoIcon,
+  CalendarDaysIcon,
+  ClipboardIcon,
+  BadgeDollarSignIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import React, { useState } from "react"
@@ -18,8 +25,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Appointment } from "@/src/db"
+import { Appointment, User } from "@/src/db"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
 
 // Utilisons any temporairement pour éviter les problèmes de typage
 // avec la vraie structure de données
@@ -30,6 +39,9 @@ type AppointmentRequestItemProps = {
 export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemProps) => {
   const queryClient = useQueryClient()
   const [isDenyModalOpen, setIsDenyModalOpen] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [isAnimalCredenzaOpen, setIsAnimalCredenzaOpen] = useState(false)
+  const [isClientDialogOpen, setIsClientDialogOpen] = useState(false)
   const [denyReason, setDenyReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -42,6 +54,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       })
       queryClient.invalidateQueries({
         queryKey: ["confirmed-and-above-appointments"],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["metrics"],
       })
     },
     onError: () => {
@@ -58,6 +73,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       })
       queryClient.invalidateQueries({
         queryKey: ["confirmed-and-above-appointments"],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["metrics"],
       })
     },
     onError: () => {
@@ -101,7 +119,10 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
   return (
     <>
       <div
-        onClick={() => console.log(`Voir détails de ${appointment.pet?.name}`)}
+        onClick={e => {
+          e.stopPropagation()
+          setIsSheetOpen(true)
+        }}
         className={cn(
           "group relative rounded-xl p-3 transition-all hover:scale-[1.01] cursor-pointer border",
           "border-green-100 dark:border-green-900/30 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80"
@@ -172,7 +193,10 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0 rounded-full bg-green-50 hover:bg-green-100 text-green-600 border-green-200 hover:border-green-300 dark:bg-green-900/20 dark:hover:bg-green-900/40 dark:border-green-800"
-              onClick={handleConfirm}
+              onClick={e => {
+                e.stopPropagation()
+                handleConfirm()
+              }}
               disabled={isLoading}
             >
               <CheckIcon className="h-4 w-4" />
@@ -181,7 +205,10 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border-red-200 hover:border-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:border-red-800"
-              onClick={handleOpenDenyModal}
+              onClick={e => {
+                e.stopPropagation()
+                handleOpenDenyModal()
+              }}
               disabled={isLoading}
             >
               <XIcon className="h-4 w-4" />
@@ -189,6 +216,172 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
           </div>
         </div>
       </div>
+
+      {/* Sheet des détails */}
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2">
+              <CalendarDaysIcon className="h-5 w-5 text-primary" />
+              Détails de la réservation
+            </SheetTitle>
+            <SheetDescription>Informations complètes sur le rendez-vous</SheetDescription>
+          </SheetHeader>
+          <div className="mt-6 space-y-6">
+            {/* Section Animal */}
+            <Button
+              variant="ghost"
+              className="w-full p-0 h-auto hover:bg-transparent"
+              onClick={() => setIsAnimalCredenzaOpen(true)}
+            >
+              <div className="w-full flex items-center gap-4 rounded-lg border p-4 hover:border-primary/50 transition-colors">
+                <div className={cn("p-3 rounded-full flex-shrink-0", "bg-green-100 dark:bg-green-900/20")}>
+                  {appointment.pet?.type === "Dog" ? (
+                    <DogIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <CatIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  )}
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium text-base">{appointment.pet?.name}</p>
+                    <span className="text-sm text-muted-foreground">({appointment.pet?.type})</span>
+                  </div>
+                  <p className="text-xs text-blue-500 mt-0.5">Voir la fiche complète →</p>
+                </div>
+              </div>
+            </Button>
+
+            {/* Section Client */}
+            <Button
+              variant="ghost"
+              className="w-full p-0 h-auto hover:bg-transparent"
+              onClick={() => setIsClientDialogOpen(true)}
+            >
+              <div className="w-full flex items-center gap-4 rounded-lg border p-4 hover:border-primary/50 transition-colors">
+                <div className={cn("p-3 rounded-full flex-shrink-0", "bg-blue-100 dark:bg-blue-900/20")}>
+                  <UserCircle2Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-base">{appointment.client?.name}</p>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
+                      <MailIcon className="h-3.5 w-3.5" />
+                      <span>{appointment.client?.email}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-500 mt-1">Voir le profil complet →</p>
+                </div>
+              </div>
+            </Button>
+
+            {/* Section Rendez-vous */}
+            <div className="space-y-3 rounded-lg border p-4">
+              <h3 className="flex items-center gap-2 font-medium">
+                <ClipboardIcon className="h-4 w-4" />
+                Rendez-vous
+              </h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Service:</span>
+                  <p className="font-medium">{appointment.service?.name}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Durée:</span>
+                  <p className="font-medium">{appointment.service?.duration || "Non spécifiée"} minutes</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Date et heure:</span>
+                  <p className="font-medium flex items-center gap-1">
+                    <CalendarIcon className="h-3 w-3" />
+                    {appointment.slot?.start?.toLocaleString("fr-FR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Prix:</span>
+                  <p className="font-medium flex items-center gap-1">
+                    <BadgeDollarSignIcon className="h-3 w-3" />
+                    {appointment.service?.price || "0"}€
+                  </p>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Paiement:</span>
+                  <p className="font-medium flex items-center gap-1">
+                    <CreditCardIcon className="h-3 w-3" />
+                    {appointment.status === "SCHEDULED" ? "Paiement sur place" : "Payé en ligne"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={() => setIsSheetOpen(false)}>
+                Fermer
+              </Button>
+              <Button variant="default" onClick={handleConfirm} disabled={isLoading}>
+                Confirmer
+              </Button>
+              <Button variant="destructive" onClick={handleOpenDenyModal} disabled={isLoading}>
+                Refuser
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Dialog du client */}
+      <Dialog open={isClientDialogOpen} onOpenChange={setIsClientDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserCircle2Icon className="h-5 w-5" />
+              Profil du client
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-6">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">Nom:</span>
+                <p className="font-medium">{appointment.client?.name}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Email:</span>
+                <p className="font-medium">{appointment.client?.email}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Adresse:</span>
+                <p className="font-medium">{appointment.client?.address || "Non spécifiée"}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Ville:</span>
+                <p className="font-medium">{appointment.client?.city || "Non spécifiée"}</p>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsClientDialogOpen(false)}>
+              Fermer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Credenza de l'animal */}
+      <AnimalCredenza
+        isOpen={isAnimalCredenzaOpen}
+        onOpenChange={setIsAnimalCredenzaOpen}
+        animalDetails={appointment.pet!}
+        nextAppointmentClient={appointment.client! as User}
+        nextAppointmentData={appointment}
+      />
 
       {/* Modale de refus */}
       <Dialog open={isDenyModalOpen} onOpenChange={setIsDenyModalOpen}>
