@@ -13,7 +13,7 @@ interface NewReservationEmailProps {
   price: string
 }
 
-const NewReservationEmail = ({
+const NewReservationEmailPro = ({
   customerName,
   petName,
   serviceName,
@@ -71,4 +71,4 @@ const NewReservationEmail = ({
   )
 }
 
-export default NewReservationEmail
+export default NewReservationEmailPro

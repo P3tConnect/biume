@@ -8,15 +8,26 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-import { ActiveTab, AnimalDetails } from "./types"
+import { ActiveTab } from "./types"
+import { Pet, User as UserType, Appointment } from "@/src/db"
 
 interface AnimalDetailsSidebarProps {
-  animal: AnimalDetails
+  animal: Pet
   activeTab: ActiveTab
   setActiveTab: (tab: ActiveTab) => void
+  nextAppointmentClient: UserType
+  nextAppointmentData: Appointment
 }
 
-export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: AnimalDetailsSidebarProps) => {
+// Interface pour les rendez-vous du pet, puisque le type Pet n'inclut pas la propriété appointments
+
+export const AnimalDetailsSidebar = ({
+  animal,
+  activeTab,
+  setActiveTab,
+  nextAppointmentClient,
+  nextAppointmentData,
+}: AnimalDetailsSidebarProps) => {
   // Calcul de l'âge basé sur la date de naissance
   const getAge = () => {
     if (!animal.birthDate) return "Âge inconnu"
@@ -46,7 +57,7 @@ export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: Animal
       {/* En-tête avec image de profil et info de base */}
       <div className="p-6 flex flex-col items-center text-center border-b">
         <Avatar className="h-24 w-24 mb-4">
-          <AvatarImage src={animal.profileImage} alt={animal.name} />
+          <AvatarImage src={animal.image || ""} alt={animal.name} />
           <AvatarFallback className="text-2xl bg-primary/10 text-primary">
             {animal.name.substring(0, 2).toUpperCase()}
           </AvatarFallback>
@@ -56,10 +67,10 @@ export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: Animal
 
         <div className="space-y-1 w-full mb-3">
           <p className="text-sm text-muted-foreground">
-            {animal.species} • {animal.breed}
+            {animal.type} • {animal.breed}
           </p>
           <p className="text-sm text-muted-foreground">
-            {animal.gender === "male" ? "Mâle" : "Femelle"} • {getAge()}
+            {animal.gender === "Male" ? "Mâle" : "Femelle"} • {getAge()}
           </p>
           <Badge variant="outline" className="mt-2">
             Patient ID: {animal.id.substring(0, 8)}
@@ -68,10 +79,11 @@ export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: Animal
 
         <div className="text-sm text-left w-full mt-3">
           <p className="flex items-center gap-1 mb-1">
-            <span className="font-medium">Propriétaire:</span> {animal.ownerName}
+            <span className="font-medium">Propriétaire:</span> {nextAppointmentClient?.name || "Non défini"}
           </p>
           <p className="flex items-center gap-1">
-            <span className="font-medium">Contact:</span> {animal.ownerContact}
+            <span className="font-medium">Contact:</span>{" "}
+            {nextAppointmentClient?.phoneNumber || nextAppointmentClient?.email || "Non défini"}
           </p>
         </div>
       </div>
@@ -116,7 +128,7 @@ export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: Animal
       </nav>
 
       {/* Pied de sidebar avec date de dernière visite */}
-      {animal.appointments && animal.appointments.length > 0 && (
+      {/* {appointments && appointments.length > 0 && (
         <div className="p-4 border-t text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <CalendarDays className="h-3 w-3" />
@@ -124,13 +136,13 @@ export const AnimalDetailsSidebar = ({ animal, activeTab, setActiveTab }: Animal
           </div>
           <p className="font-medium">
             {formatDate(
-              animal.appointments
+              appointments
                 .filter(apt => apt.status === "completed")
                 .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]?.date || ""
             )}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm"
+import { PetDocument, petDocuments } from "./petDocuments"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
@@ -25,10 +26,10 @@ export const pets = pgTable("pets", {
   }),
   breed: text("breed").notNull(),
   image: text("image"),
+  chippedNumber: integer("chippedNumber"),
   gender: petGender("gender").notNull().default("Male"),
   nacType: text("nacType"),
   birthDate: timestamp("birthDate", { mode: "date" }).notNull(),
-  chippedNumber: integer("chippedNumber"),
   deseases: text("deseases").array(),
   allergies: text("allergies").array(),
   intolerences: text("intolerences").array(),
@@ -42,10 +43,12 @@ export const petsRelations = relations(pets, ({ many, one }) => ({
     fields: [pets.ownerId],
     references: [user.id],
   }),
+  documents: many(petDocuments),
 }))
 
 export type Pet = InferSelectModel<typeof pets> & {
   owner: User
+  documents: PetDocument[]
 }
 
 export type CreatePet = typeof pets.$inferInsert

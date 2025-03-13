@@ -11,7 +11,13 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { safeConfig } from "../lib"
 import { ThemeProvider } from "./theme-provider"
 
-export const queryClient = new QueryClient()
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 const Providers = ({ children }: PropsWithChildren) => {
   useEffect(() => {

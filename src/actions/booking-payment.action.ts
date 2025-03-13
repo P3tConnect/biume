@@ -1,11 +1,12 @@
 "use server"
 
-import { z } from "zod"
-import { createServerAction, ActionError, requireAuth } from "../lib"
-import { stripe } from "../lib/stripe"
-import { db } from "../lib"
-import { transaction, service, options, organization, appointments, SelectOrganizationSlotsSchema } from "../db"
+import { ActionError, createServerAction, requireAuth } from "../lib"
+import { SelectOrganizationSlotsSchema, appointments, options, organization, service, transaction } from "../db"
 import { eq, inArray } from "drizzle-orm"
+
+import { db } from "../lib"
+import { stripe } from "../lib/stripe"
+import { z } from "zod"
 
 // Schéma de validation pour la création d'un Payment Intent
 const createBookingPaymentSchema = z.object({
@@ -201,7 +202,14 @@ export const createBookingCheckoutSession = createServerAction(
           currency: "eur",
           product_data: {
             name: `Service: ${serviceResult.name}`,
-            description: `Rendez-vous le ${input.slot.start} à ${input.slot.end}`,
+            description: `Rendez-vous le ${input.slot.start.toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })} à ${input.slot.start.toLocaleTimeString("fr-FR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`,
           },
           unit_amount: (serviceResult.price || 0) * 100, // Conversion en centimes, avec fallback à 0 si null
         },
@@ -273,6 +281,7 @@ export const createBookingCheckoutSession = createServerAction(
           patientId: input.petId,
           clientId: ctx.user?.id ?? "",
           status: "PENDING PAYMENT",
+          payedOnline: true,
           atHome: input.isHomeVisit,
           type: "oneToOne",
           slotId: input.slot.id,
@@ -292,21 +301,24 @@ export const createBookingCheckoutSession = createServerAction(
         payment_method_types: ["card"],
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/success?session_id={CHECKOUT_SESSION_ID}&userId=${ctx.user?.id}&amount=${input.amount}`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/payment/failure?session_id={CHECKOUT_SESSION_ID}&userId=${ctx.user?.id}&amount=${input.amount}`,
-        metadata: {
-          transactionId,
-          appointmentId: appointment.id,
-          slotId: input.slot.id,
-          serviceId: input.serviceId,
-          professionalId: input.professionalId,
-          petId: input.petId,
-          isHomeVisit: input.isHomeVisit.toString(),
-          additionalInfo: input.additionalInfo || "",
-          selectedOptions: selectedOptionsJson,
-          companyId: input.companyId,
-        },
         payment_intent_data: {
           setup_future_usage: "off_session",
+          metadata: {
+            transactionId,
+            appointmentId: appointment.id,
+            amount: input.amount,
+            slotId: input.slot.id,
+            serviceId: input.serviceId,
+            professionalId: input.professionalId,
+            petId: input.petId,
+            isHomeVisit: input.isHomeVisit.toString(),
+            additionalInfo: input.additionalInfo || "",
+            selectedOptions: selectedOptionsJson,
+            companyId: input.companyId,
+            clientId: ctx.user?.id ?? "",
+          },
           transfer_data: {
+            amount: input.amount,
             destination: org?.companyStripeId || "",
           },
         },
@@ -317,7 +329,7 @@ export const createBookingCheckoutSession = createServerAction(
       }
 
       // Mettre à jour la transaction avec l'ID de session Stripe
-      await db.update(transaction).set({ intentId: session.id }).where(eq(transaction.id, transactionId))
+      await db.update(transaction).set({ intentId: session.id }).where(eq(transaction.id, transactionId)).execute()
 
       // Retourner l'URL de la page de paiement Stripe
       return {

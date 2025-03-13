@@ -38,7 +38,10 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     onSuccess: () => {
       toast.success("Rendez-vous confirmé avec succès")
       queryClient.invalidateQueries({
-        queryKey: ["pending-and-payed-appointments", "confirmed-and-above-appointments"],
+        queryKey: ["pending-and-payed-appointments"],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["confirmed-and-above-appointments"],
       })
     },
     onError: () => {
@@ -51,7 +54,10 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     onSuccess: () => {
       toast.success("Rendez-vous refusé avec succès")
       queryClient.invalidateQueries({
-        queryKey: ["pending-and-payed-appointments", "confirmed-and-above-appointments"],
+        queryKey: ["pending-and-payed-appointments"],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["confirmed-and-above-appointments"],
       })
     },
     onError: () => {
@@ -59,8 +65,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     },
   })
 
-  const handleConfirm = async (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleConfirm = async () => {
     try {
       setIsLoading(true)
       await confirmAppointmentMutation({ appointmentId: appointment.id })
@@ -71,13 +76,11 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     }
   }
 
-  const handleOpenDenyModal = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleOpenDenyModal = () => {
     setIsDenyModalOpen(true)
   }
 
-  const handleDeny = async (e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleDeny = async () => {
     if (!denyReason.trim()) {
       toast.error("Veuillez saisir une raison de refus")
       return
@@ -153,10 +156,6 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <UserCircle2Icon className="h-4 w-4" />
                 <span>{appointment.client?.name}</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <CalendarIcon className="h-4 w-4" />
-                <span>Aujourd&apos;hui</span>
               </div>
               <div className="flex items-center gap-1.5 text-sm">
                 <CreditCardIcon className="h-4 w-4 text-muted-foreground" />

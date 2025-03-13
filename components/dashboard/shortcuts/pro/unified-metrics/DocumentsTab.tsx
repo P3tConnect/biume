@@ -6,40 +6,21 @@ import { ArrowRightCircle, FileText, Shield } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-import { AnimalDetails } from "./types"
+import { Appointment, Pet, User as UserType } from "@/src/db"
+import { useQuery } from "@tanstack/react-query"
+import { getPetDocumentsByPetId } from "@/src/actions/petDocuments.action"
 
 interface DocumentsTabProps {
-  animal: AnimalDetails
+  animal: Pet
+  nextAppointmentClient: UserType
+  nextAppointmentData: Appointment
 }
 
-export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
-  // Données de documents
-  const documents = [
-    {
-      type: "Certificat",
-      title: "Carnet de vaccination",
-      date: "12/04/2023",
-      icon: "Shield",
-    },
-    {
-      type: "Ordonnance",
-      title: "Traitement infection urinaire",
-      date: "03/01/2023",
-      icon: "FileText",
-    },
-    {
-      type: "Rapport",
-      title: "Analyse sanguine",
-      date: "12/04/2023",
-      icon: "FileText",
-    },
-    {
-      type: "Certificat",
-      title: "Identification puce électronique",
-      date: "22/05/2021",
-      icon: "Shield",
-    },
-  ]
+export const DocumentsTab = ({ animal, nextAppointmentClient, nextAppointmentData }: DocumentsTabProps) => {
+  const { data: documents } = useQuery({
+    queryKey: ["pet-documents"],
+    queryFn: () => getPetDocumentsByPetId({ petId: animal.id }),
+  })
 
   return (
     <div className="p-6 space-y-6">
@@ -106,7 +87,7 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        {documents.map((doc, index) => (
+        {documents?.data?.map((doc, index) => (
           <motion.div
             key={index}
             className="border rounded-lg p-4 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer"
@@ -126,22 +107,20 @@ export const DocumentsTab = ({ animal }: DocumentsTabProps) => {
                   whileHover={{ rotate: 5, scale: 1.1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {doc.icon === "Shield" ? (
-                    <Shield className="h-4 w-4 text-amber-500" />
-                  ) : (
-                    <FileText className="h-4 w-4 text-amber-500" />
-                  )}
+                  <FileText className="h-4 w-4 text-amber-500" />
                 </motion.div>
                 <div>
                   <div className="font-medium">{doc.title}</div>
                   <div className="text-xs text-muted-foreground flex items-center gap-1.5">
                     <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
                       <Badge variant="outline" className="text-xs px-1 py-0 h-4">
-                        {doc.type}
+                        {doc.documentType}
                       </Badge>
                     </motion.div>
                     <span>•</span>
-                    <span>{doc.date}</span>
+                    <span>
+                      {doc.createdAt.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" })}
+                    </span>
                   </div>
                 </div>
               </div>

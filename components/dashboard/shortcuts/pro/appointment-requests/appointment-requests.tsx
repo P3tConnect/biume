@@ -50,7 +50,7 @@ export const AppointmentRequests = () => {
         </Badge>
       </CardHeader>
 
-      <CardContent className="p-4">
+      <CardContent className="p-4 max-h-[360px] overflow-auto rounded-lg border">
         <div className="grid grid-cols-1 gap-3">
           {appointments?.data?.map(appointment => (
             <React.Fragment key={appointment.id}>

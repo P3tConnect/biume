@@ -1,12 +1,29 @@
 import { NextRequest, NextResponse } from "next/server"
-import { appointmentOptions, appointments, organizationSlots, service, transaction } from "@/src/db"
-import { db, safeConfig, stripe } from "@/src/lib"
+import {
+  appointmentOptions,
+  appointments,
+  invoice,
+  Organization,
+  organization,
+  OrganizationSlots,
+  organizationSlots,
+  Pet,
+  pets,
+  Service,
+  service,
+  transaction,
+  User,
+  user,
+} from "@/src/db"
+import { db, resend, safeConfig, stripe } from "@/src/lib"
 
 import Stripe from "stripe"
 import { eq } from "drizzle-orm"
+import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
+import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  const body = await req.text()
 
   const signature = req.headers.get("stripe-signature")
 
@@ -23,22 +40,14 @@ export async function POST(req: NextRequest) {
   }
 
   // Gérer les événements de paiement
-  if (event.type === "checkout.session.completed") {
-    const paymentIntent = event.data.object as Stripe.Checkout.Session
+  if (event.type === "payment_intent.succeeded") {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent
     const metadata = paymentIntent.metadata
+    const paymentIntentId = paymentIntent.id
 
     if (!metadata?.transactionId) {
       return NextResponse.json({ error: "Missing transactionId in metadata" }, { status: 400 })
     }
-
-    // Mettre à jour le statut de la transaction dans la base de données
-    await db
-      .update(transaction)
-      .set({
-        status: "COMPLETED",
-        updatedAt: new Date(),
-      })
-      .where(eq(transaction.id, metadata.transactionId))
 
     // Récupérer les données de réservation depuis les métadonnées
     try {
@@ -47,47 +56,43 @@ export async function POST(req: NextRequest) {
       const professionalId = metadata.professionalId
       const slotId = metadata.slotId
       const petId = metadata.petId
-      const isHomeVisit = metadata.isHomeVisit === "true"
-      const clientId = paymentIntent.customer as string
+      const appointmentId = metadata.appointmentId
+      const clientId = metadata.clientId
+      const amount = metadata.amount
 
-      // Récupérer la durée du service pour calculer l'heure de fin
+      const transactionQuery = await db.transaction(async tx => {
+        const serviceQuery = (await tx.query.service.findFirst({
+          where: eq(service.id, serviceId),
+        })) as Service
 
-      const serviceQuery = await db.query.service.findFirst({
-        where: eq(service.id, serviceId),
+        const professionalQuery = (await tx.query.organization.findFirst({
+          where: eq(organization.id, professionalId),
+        })) as Organization
+
+        const petQuery = (await tx.query.pets.findFirst({
+          where: eq(pets.id, petId),
+        })) as Pet
+
+        const clientQuery = (await tx.query.user.findFirst({
+          where: eq(user.id, clientId),
+        })) as User
+
+        const slotQuery = (await tx.query.organizationSlots.findFirst({
+          where: eq(organizationSlots.id, slotId),
+        })) as OrganizationSlots
+
+        return {
+          serviceQuery,
+          professionalQuery,
+          petQuery,
+          clientQuery,
+          slotQuery,
+        }
       })
 
-      if (!serviceQuery) {
-        return NextResponse.json({ error: "Service non trouvé" }, { status: 400 })
-      }
-      // S'assurer que serviceDuration est un nombre
-      const serviceDuration = serviceQuery.duration || 60
-
-      const slotQuery = await db.query.organizationSlots.findFirst({
-        where: eq(organizationSlots.id, slotId),
-      })
-
-      if (!slotQuery) {
-        return NextResponse.json({ error: "Slot non trouvé" }, { status: 400 })
-      }
+      const { professionalQuery, clientQuery, petQuery, serviceQuery, slotQuery } = transactionQuery
 
       try {
-        const [appointmentQuery] = await db
-          .insert(appointments)
-          .values({
-            proId: professionalId,
-            clientId,
-            patientId: petId,
-            serviceId,
-            slotId,
-            status: "PAYED",
-            atHome: isHomeVisit,
-            type: "oneToOne",
-          })
-          .returning({ id: appointments.id })
-          .execute()
-
-        const appointmentId = appointmentQuery?.id
-
         // Si des options ont été sélectionnées, les ajouter à la réservation
         if (metadata.selectedOptions && appointmentId) {
           const selectedOptions = JSON.parse(metadata.selectedOptions)
@@ -102,6 +107,97 @@ export async function POST(req: NextRequest) {
               })
             )
           }
+        }
+
+        const session = await stripe.checkout.sessions.list({
+          payment_intent: paymentIntentId,
+          limit: 1,
+        })
+
+        if (session.data.length > 0) {
+          // Créer la facture
+          const [invoiceQuery] = await db
+            .insert(invoice)
+            .values({
+              total: parseInt(amount),
+              appointmentId: appointmentId,
+              checkoutSessionId: session.data[0].id,
+              proId: professionalId,
+              clientId: clientId,
+            })
+            .returning()
+            .execute()
+
+          const invoiceId = invoiceQuery?.checkoutSessionId
+
+          if (!invoiceId) {
+            return NextResponse.json({ error: "Invoice non trouvé" }, { status: 400 })
+          }
+
+          // Envoyer un email de confirmation au client et au professionnel
+          const proEmail = await resend.emails.send({
+            from: "Biume <noreply@biume.com>",
+            to: professionalQuery.email || "",
+            subject: "Vous avez une nouvelle réservation",
+            react: NewReservationEmailPro({
+              customerName: clientQuery.name || "",
+              petName: petQuery.name || "",
+              serviceName: serviceQuery.name || "",
+              date: slotQuery.start.toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              time: slotQuery.start.toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              providerName: professionalQuery.name || "",
+              price: amount,
+            }),
+          })
+
+          if (proEmail.error) {
+            console.error("Erreur lors de l'envoi de l'email au professionnel:", proEmail.error)
+          }
+
+          // Envoyer un email de confirmation au client
+          const clientEmail = await resend.emails.send({
+            from: "Biume <noreply@biume.com>",
+            to: clientQuery?.email || "",
+            subject: "Vous avez une nouvelle réservation",
+            react: ReservationWaitingEmailClient(),
+          })
+
+          if (clientEmail.error) {
+            console.error("Erreur lors de l'envoi de l'email au client:", clientEmail.error)
+          }
+
+          await db.transaction(async tx => {
+            await tx
+              .update(appointments)
+              .set({
+                status: "PAYED",
+              })
+              .where(eq(appointments.id, appointmentId))
+
+            await tx
+              .update(organizationSlots)
+              .set({
+                isAvailable: false,
+              })
+              .where(eq(organizationSlots.id, slotId))
+
+            await db
+              .update(transaction)
+              .set({
+                status: "COMPLETED",
+                updatedAt: new Date(),
+              })
+              .where(eq(transaction.id, metadata.transactionId))
+          })
+        } else {
+          return NextResponse.json({ error: "Session non trouvée" }, { status: 400 })
         }
 
         console.log("Rendez-vous créé avec succès, ID:", appointmentId)

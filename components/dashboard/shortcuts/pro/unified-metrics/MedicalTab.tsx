@@ -1,24 +1,35 @@
 "use client"
 
-import { AnimalDetails, MedicalRecord } from "./types"
 import { AnimatePresence, motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronDown, ClipboardList, HeartPulse, Pill, Plus, Stethoscope } from "lucide-react"
-import { format, isValid } from "date-fns"
+import { format } from "date-fns"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { fr } from "date-fns/locale"
 import { useState } from "react"
+import { Appointment, Pet, User as UserType } from "@/src/db"
+import { useQuery } from "@tanstack/react-query"
+import { getAppointmentsByPetId } from "@/src/actions/appointments.action"
 
 interface MedicalTabProps {
-  animal: AnimalDetails
+  animal: Pet
+  nextAppointmentClient: UserType
+  nextAppointmentData: Appointment
 }
 
-export const MedicalTab = ({ animal }: MedicalTabProps) => {
+export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData }: MedicalTabProps) => {
   const [expandedRecords, setExpandedRecords] = useState<{
     [key: string]: boolean
   }>({})
+
+  // Utiliser react-query pour récupérer l'historique des rendez-vous
+  const { data: appointmentsData, isLoading } = useQuery({
+    queryKey: ["pet-appointments", animal.id],
+    queryFn: () => getAppointmentsByPetId({ petId: animal.id }),
+    enabled: !!animal.id,
+  })
 
   // Fonction pour basculer l'état d'expansion d'un dossier
   const toggleExpand = (recordId: string) => {
@@ -28,78 +39,61 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
     }))
   }
 
-  // Données fictives en cas d'absence de dossier médical
-  const medicalRecords = animal.medicalRecords || []
-
-  // Trier les dossiers médicaux par date (du plus récent au plus ancien)
-  const sortedRecords = [...medicalRecords].sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime()
-  })
-
-  // Fonction pour formater la date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    if (!isValid(date)) return "Date invalide"
-
-    return format(date, "d MMMM yyyy", { locale: fr })
-  }
-
-  // Fonction pour obtenir l'icône et la couleur en fonction du type de consultation
-  const getTypeDetails = (type: MedicalRecord["type"]) => {
-    switch (type) {
-      case "consultation":
-        return {
-          icon: <Stethoscope className="h-4 w-4" />,
-          label: "Consultation",
-          color: "text-blue-600 bg-blue-100",
-          description: "Examen clinique standard de l'animal",
-          commonProcedures: ["Examen physique", "Prise de sang", "Auscultation"],
-          duration: "30 minutes",
-          followUpNeeded: false,
-        }
-      case "surgery":
-        return {
-          icon: <HeartPulse className="h-4 w-4" />,
-          label: "Chirurgie",
-          color: "text-red-600 bg-red-100",
-          description: "Intervention chirurgicale sous anesthésie",
-          commonProcedures: ["Stérilisation", "Extraction dentaire", "Excision de masse"],
-          duration: "1-3 heures",
-          followUpNeeded: true,
-          recoveryPeriod: "7-14 jours",
-          requiresFasting: true,
-        }
-      case "hospitalization":
-        return {
-          icon: <ClipboardList className="h-4 w-4" />,
-          label: "Hospitalisation",
-          color: "text-purple-600 bg-purple-100",
-          description: "Séjour sous surveillance vétérinaire",
-          commonReasons: ["Surveillance post-chirurgicale", "Traitement intensif", "Observation"],
-          averageDuration: "1-5 jours",
-          includesFeeding: true,
-          monitoring: "Toutes les 4 heures",
-        }
-      case "treatment":
-        return {
-          icon: <Pill className="h-4 w-4" />,
-          label: "Traitement",
-          color: "text-amber-600 bg-amber-100",
-          description: "Administration de médicaments ou soins thérapeutiques",
-          commonTypes: ["Antibiotiques", "Anti-inflammatoires", "Pansements"],
-          frequency: "Variable selon prescription",
-          requiresFollowUp: true,
-          atHomeInstructions: "Disponibles selon le traitement",
-        }
-      default:
-        return {
-          icon: <ClipboardList className="h-4 w-4" />,
-          label: "Autre",
-          color: "text-slate-600 bg-slate-100",
-          description: "Autre type d'intervention médicale",
-        }
+  // Obtenir l'icône en fonction du type de service
+  const getServiceIcon = (serviceName: string) => {
+    const name = serviceName.toLowerCase()
+    if (name.includes("consultation") || name.includes("examen")) {
+      return <Stethoscope className="h-4 w-4 text-blue-500" />
+    } else if (name.includes("chirurgie") || name.includes("opération")) {
+      return <HeartPulse className="h-4 w-4 text-red-500" />
+    } else if (name.includes("traitement") || name.includes("médication")) {
+      return <Pill className="h-4 w-4 text-amber-500" />
+    } else {
+      return <ClipboardList className="h-4 w-4 text-slate-500" />
     }
   }
+
+  // Obtenir la couleur de fond en fonction du type de service
+  const getServiceBgColor = (serviceName: string) => {
+    const name = serviceName.toLowerCase()
+    if (name.includes("consultation") || name.includes("examen")) {
+      return "bg-blue-100 text-blue-600"
+    } else if (name.includes("chirurgie") || name.includes("opération")) {
+      return "bg-red-100 text-red-600"
+    } else if (name.includes("traitement") || name.includes("médication")) {
+      return "bg-amber-100 text-amber-600"
+    } else {
+      return "bg-slate-100 text-slate-600"
+    }
+  }
+
+  // État de chargement
+  if (isLoading) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-medium">Dossier médical</h3>
+            <p className="text-sm text-muted-foreground">Chargement...</p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="pt-6 flex flex-col items-center justify-center text-center p-8">
+            <div className="animate-pulse h-10 w-10 rounded-full bg-muted mb-4"></div>
+            <div className="animate-pulse h-4 w-36 bg-muted mb-2 rounded-md"></div>
+            <div className="animate-pulse h-3 w-48 bg-muted rounded-md"></div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Trier les rendez-vous du plus récent au plus ancien
+  const sortedAppointments = [...(appointmentsData?.data || [])].sort((a, b) => {
+    const dateA = a.slot?.start ? new Date(a.slot.start).getTime() : 0
+    const dateB = b.slot?.start ? new Date(b.slot.start).getTime() : 0
+    return dateB - dateA
+  })
 
   return (
     <div className="p-6 space-y-6">
@@ -123,7 +117,7 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
       </motion.div>
 
       {/* Dossiers médicaux avec animations */}
-      {medicalRecords.length === 0 ? (
+      {!sortedAppointments.length ? (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
           <Card>
             <CardContent className="pt-6 flex flex-col items-center justify-center text-center p-8">
@@ -154,43 +148,58 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          {sortedRecords.map((record, index) => {
-            const typeDetails = getTypeDetails(record.type)
-            const isExpanded = expandedRecords[record.id] || false
+          {sortedAppointments.map((appointment, index) => {
+            const isExpanded = expandedRecords[appointment.id] || false
+            const serviceName = appointment.service?.name || "Consultation"
+            const serviceIcon = getServiceIcon(serviceName)
+            const serviceBgColor = getServiceBgColor(serviceName)
+            const appointmentDate = appointment.slot?.start
+              ? new Date(appointment.slot.start)
+              : appointment.beginAt
+                ? new Date(appointment.beginAt)
+                : new Date()
 
             return (
               <motion.div
-                key={record.id}
+                key={appointment.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.3 }}
                 className="border p-4 rounded-lg hover:shadow-sm transition-shadow duration-200"
               >
                 {/* En-tête de la carte */}
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleExpand(record.id)}>
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleExpand(appointment.id)}>
                   <motion.div
-                    className={`h-8 w-8 rounded-full flex items-center justify-center ${typeDetails.color}`}
+                    className={`h-8 w-8 rounded-full flex items-center justify-center ${serviceBgColor}`}
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.2 }}
                   >
-                    {typeDetails.icon}
+                    {serviceIcon}
                   </motion.div>
                   <div className="flex-1">
-                    <h4 className="font-medium">{record.diagnosis || typeDetails.label}</h4>
+                    <h4 className="font-medium">{serviceName}</h4>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>{formatDate(record.date)}</span>
-                      <span>•</span>
-                      <span>Dr. {record.veterinarian}</span>
+                      <span>
+                        {appointmentDate.toLocaleDateString("fr-FR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
                   </div>
-                  <Badge className="mr-2">{typeDetails.label}</Badge>
+                  <Badge className="mr-2" variant="outline">
+                    {appointment.status}
+                  </Badge>
                   <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </motion.div>
                 </div>
 
-                {/* Description du type d'intervention - toujours visible */}
-                <div className="text-sm my-2 text-muted-foreground">{typeDetails.description}</div>
+                {/* Description */}
+                <div className="text-sm my-2 text-muted-foreground">
+                  {appointment.service?.description || `Rendez-vous de ${serviceName}`}
+                </div>
 
                 {/* Contenu extensible */}
                 <AnimatePresence>
@@ -203,64 +212,68 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                     >
                       <div className="border-t pt-3 mt-2">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
-                          {/* Informations spécifiques au type d'intervention */}
+                          {/* Détails du rendez-vous */}
                           <div className="rounded-md border p-3 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
-                            <h5 className="text-xs font-medium mb-2">Détails de l&apos;intervention</h5>
-                            {typeDetails.duration && (
+                            <h5 className="text-xs font-medium mb-2">Détails du rendez-vous</h5>
+                            <div className="flex justify-between text-xs mb-1">
+                              <span className="text-muted-foreground">Date :</span>
+                              <span>
+                                {appointmentDate.toLocaleDateString("fr-FR", {
+                                  day: "numeric",
+                                  month: "long",
+                                  year: "numeric",
+                                })}
+                              </span>
+                            </div>
+                            {appointment.service?.duration && (
                               <div className="flex justify-between text-xs mb-1">
                                 <span className="text-muted-foreground">Durée :</span>
-                                <span>{typeDetails.duration}</span>
+                                <span>{appointment.service.duration} minutes</span>
                               </div>
                             )}
-                            {typeDetails.averageDuration && (
+                            {appointment.slot?.start && appointment.slot?.end && (
                               <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Durée moyenne :</span>
-                                <span>{typeDetails.averageDuration}</span>
+                                <span className="text-muted-foreground">Horaire :</span>
+                                <span>
+                                  {new Date(appointment.slot.start).toLocaleTimeString("fr-FR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}{" "}
+                                  -{" "}
+                                  {new Date(appointment.slot.end).toLocaleTimeString("fr-FR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
                               </div>
                             )}
-                            {typeDetails.recoveryPeriod && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Période de récupération :</span>
-                                <span>{typeDetails.recoveryPeriod}</span>
-                              </div>
-                            )}
-                            {typeDetails.monitoring && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Surveillance :</span>
-                                <span>{typeDetails.monitoring}</span>
-                              </div>
-                            )}
-                            {typeDetails.frequency && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Fréquence :</span>
-                                <span>{typeDetails.frequency}</span>
-                              </div>
-                            )}
-                            {typeDetails.followUpNeeded !== undefined && (
-                              <div className="flex justify-between text-xs">
-                                <span className="text-muted-foreground">Suivi nécessaire :</span>
-                                <span>{typeDetails.followUpNeeded ? "Oui" : "Non"}</span>
-                              </div>
-                            )}
+                            <div className="flex justify-between text-xs mb-1">
+                              <span className="text-muted-foreground">À domicile :</span>
+                              <span>{appointment.atHome ? "Oui" : "Non"}</span>
+                            </div>
                           </div>
 
-                          {/* Traitement et symptômes */}
+                          {/* Options et prix */}
                           <div className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors duration-200">
-                            {record.treatment && (
-                              <div className="mb-2">
-                                <span className="text-xs font-medium">Traitement :</span>
-                                <p className="text-xs">{record.treatment}</p>
+                            <h5 className="text-xs font-medium mb-2">Service et options</h5>
+                            <div className="flex justify-between text-xs mb-1">
+                              <span className="text-muted-foreground">Service :</span>
+                              <span>{serviceName}</span>
+                            </div>
+                            {appointment.service?.price && (
+                              <div className="flex justify-between text-xs mb-1">
+                                <span className="text-muted-foreground">Prix de base :</span>
+                                <span>{appointment.service.price} €</span>
                               </div>
                             )}
-
-                            {record.symptoms && record.symptoms.length > 0 && (
-                              <div>
-                                <span className="text-xs font-medium">Symptômes :</span>
+                            {appointment.options && appointment.options.length > 0 && (
+                              <div className="mt-2">
+                                <span className="text-xs font-medium">Options incluses :</span>
                                 <div className="flex flex-wrap gap-1 mt-1">
-                                  {record.symptoms.map((symptom, i) => (
+                                  {appointment.options.map((opt, i) => (
                                     <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                                       <Badge variant="outline" className="text-xs">
-                                        {symptom}
+                                        {opt.option.title}
                                       </Badge>
                                     </motion.div>
                                   ))}
@@ -269,49 +282,6 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
                             )}
                           </div>
                         </div>
-
-                        {/* Procédures ou types communs */}
-                        {(typeDetails.commonProcedures || typeDetails.commonTypes || typeDetails.commonReasons) && (
-                          <div className="mb-3">
-                            <span className="text-xs font-medium">
-                              {typeDetails.commonProcedures
-                                ? "Procédures courantes"
-                                : typeDetails.commonReasons
-                                  ? "Raisons courantes"
-                                  : "Types courants"}{" "}
-                            </span>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {(
-                                typeDetails.commonProcedures ||
-                                typeDetails.commonTypes ||
-                                typeDetails.commonReasons ||
-                                []
-                              ).map((item, i) => (
-                                <motion.div
-                                  key={i}
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{
-                                    delay: i * 0.05,
-                                    duration: 0.2,
-                                  }}
-                                >
-                                  <Badge variant="secondary" className="text-xs">
-                                    {item}
-                                  </Badge>
-                                </motion.div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Notes */}
-                        {record.notes && (
-                          <div className="border-t pt-2 mt-2">
-                            <span className="text-xs font-medium">Notes :</span>
-                            <p className="text-xs text-muted-foreground mt-1">{record.notes}</p>
-                          </div>
-                        )}
                       </div>
                     </motion.div>
                   )}
@@ -356,9 +326,44 @@ export const MedicalTab = ({ animal }: MedicalTabProps) => {
           </motion.svg>
           Allergies et informations importantes
         </h4>
-        <p className="text-sm text-muted-foreground">
-          Aucune allergie connue ou information critique n&apos;a été enregistrée.
-        </p>
+        {animal.allergies == null || animal.deseases == null || animal.intolerences == null ? (
+          <p className="text-sm text-muted-foreground">
+            Aucune allergie connue ou information critique n&apos;a été enregistrée pour {animal.name}.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {animal.allergies && (
+              <div>
+                <h5 className="text-sm font-medium text-amber-600 mb-1">Allergies:</h5>
+                <div className="flex flex-wrap gap-1">
+                  {animal.allergies.map((allergy, index) => (
+                    <Badge key={index}>{allergy}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+            {animal.deseases && (
+              <div>
+                <h5 className="text-sm font-medium text-amber-600 mb-1">Diseases:</h5>
+                <div className="flex flex-wrap gap-1">
+                  {animal.deseases.map((disease, index) => (
+                    <Badge key={index}>{disease}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+            {animal.intolerences && (
+              <div>
+                <h5 className="text-sm font-medium text-amber-600 mb-1">Intolerances:</h5>
+                <div className="flex flex-wrap gap-1">
+                  {animal.intolerences.map((intolerance, index) => (
+                    <Badge key={index}>{intolerance}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   )

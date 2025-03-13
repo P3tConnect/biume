@@ -26,8 +26,8 @@ import { cn } from "@/src/lib/utils"
 import { createBookingCheckoutSession } from "@/src/actions/booking-payment.action"
 import { format, addDays, isAfter, isFuture } from "date-fns"
 import { fr } from "date-fns/locale"
-import { getOrganizationSlots } from "@/src/actions/organizationSlots.action"
-import { createBooking } from "@/src/actions"
+import { getOrganizationSlotsByCompanyId } from "@/src/actions"
+import { createBooking as createBookingAction } from "@/src/actions"
 import { loginSchema } from "@/src/lib"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
@@ -66,33 +66,41 @@ export function BookingCard({ organization }: { organization: Organization }) {
     resolver: zodResolver(loginSchema),
   })
 
+  const params = useParams()
+  const companyId = params.companyId as string
+
   // Récupération des slots d'organisation
   const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
-    queryKey: ["organization-slots"],
-    queryFn: async () => {
-      // Récupérer tous les slots disponibles
-      return getOrganizationSlots({})
-    },
+    queryKey: ["organization-slots", companyId],
+    queryFn: () => getOrganizationSlotsByCompanyId({ companyId }),
   })
 
   // Filtrage des créneaux pour affichage
   useEffect(() => {
-    if (organizationSlots?.data && organizationSlots.data.length > 0) {
+    if (
+      organizationSlots &&
+      "data" in organizationSlots &&
+      organizationSlots.data &&
+      organizationSlots.data.length > 0
+    ) {
       const now = new Date()
       const nextSevenDays = addDays(now, 7)
 
       // Filtrer les créneaux disponibles pour les 7 prochains jours
       const availableSlots = organizationSlots.data
-        .filter(slot => {
+        .filter((slot: OrganizationSlots) => {
           const slotDate = new Date(slot.start || "")
           return isFuture(slotDate) && !isAfter(slotDate, nextSevenDays) && slot.isAvailable
         })
-        .map(slot => ({
+        .map((slot: OrganizationSlots) => ({
           date: new Date(slot.start || ""),
           slot,
         }))
-        .sort((a, b) => a.date.getTime() - b.date.getTime())
-        .slice(0, 4) // Limiter à 4 créneaux pour l'affichage
+        .sort(
+          (a: { date: Date; slot: OrganizationSlots }, b: { date: Date; slot: OrganizationSlots }) =>
+            a.date.getTime() - b.date.getTime()
+        )
+        .slice(0, 8) // Afficher jusqu'à 8 créneaux pour montrer plus d'options
 
       setUpcomingSlots(availableSlots)
     }
@@ -109,9 +117,6 @@ export function BookingCard({ organization }: { organization: Organization }) {
   } = useStepper({
     initialStep: "serviceAndOptions",
   })
-
-  const params = useParams()
-  const companyId = params.companyId as string
 
   const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation({
     mutationFn: createBookingCheckoutSession,
@@ -135,6 +140,18 @@ export function BookingCard({ organization }: { organization: Organization }) {
     },
     onError: (error: Error) => {
       console.error("Erreur de paiement:", error)
+      toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
+    },
+  })
+
+  const { mutateAsync: createBooking, isPending: isBookingLoading } = useMutation({
+    mutationFn: createBookingAction,
+    onSuccess: () => {
+      toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
+      setIsReservationModalOpen(false)
+    },
+    onError: (error: Error) => {
+      console.error("Erreur de création de rendez-vous:", error)
       toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`)
     },
   })
@@ -218,34 +235,63 @@ export function BookingCard({ organization }: { organization: Organization }) {
         return
       }
 
-      if (paymentMethod === "inPerson") {
-        const result = await createBooking({
-          serviceId: selectedService.id,
-          professionalId: selectedPro.id,
-          petId,
-          isHomeVisit: !!consultationType,
-          additionalInfo: additionalNotes,
-          selectedOptions: selectedOptions?.map(option => option.id) || [],
-          amount,
-          companyId: companyId,
-          status: "SCHEDULED",
-          isPaid: false,
-          slotId: selectedSlot?.id ?? undefined,
-        })
+      await createBooking({
+        serviceId: selectedService.id,
+        professionalId: selectedPro.id,
+        petId,
+        isHomeVisit: !!consultationType,
+        additionalInfo: additionalNotes,
+        selectedOptions: selectedOptions?.map(option => option.id) || [],
+        amount,
+        companyId: companyId,
+        status: "SCHEDULED",
+        isPaid: false,
+        slotId: selectedSlot?.id ?? undefined,
+      })
+    } catch (err) {
+      console.error("Erreur de création de rendez-vous:", err)
+      toast.error(`Erreur: ${err instanceof Error ? err.message : "Une erreur s'est produite"}`)
+    }
+  }
 
-        if (result.error) {
-          toast.error(`Erreur: ${result.error}`)
-          return
-        }
+  const handleBookingPayment = async () => {
+    if (!selectedService || !selectedPro || !selectedDate || !selectedTime) {
+      toast.error("Veuillez sélectionner tous les éléments nécessaires")
+      return
+    }
 
-        toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
-        setIsReservationModalOpen(false)
+    if (!selectedPet) {
+      toast.error("Veuillez sélectionner un animal")
+      return
+    }
+
+    if (!session?.user) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    const servicePrice = selectedService.price || 0
+    const optionsPrice = selectedOptions?.reduce((acc: number, option: Option) => {
+      return acc + (option.price ?? 0)
+    }, 0)
+    const homeVisitPrice = consultationType ? 10 : 0
+    const amount = servicePrice + (optionsPrice ?? 0) + homeVisitPrice
+
+    if (!amount || amount <= 0) {
+      toast.error("Le montant du paiement est invalide")
+      return
+    }
+
+    try {
+      const petId = selectedPet?.id
+      if (!petId) {
+        toast.error("Veuillez sélectionner un animal")
         return
       }
 
       await bookPayment({
         serviceId: selectedService.id,
-        professionalId: selectedPro.id,
+        professionalId: organization.id,
         petId,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
@@ -270,29 +316,40 @@ export function BookingCard({ organization }: { organization: Organization }) {
           </div>
 
           {/* Affichage des prochains créneaux */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {isLoadingSlots ? (
-              <div className="flex items-center justify-center p-8">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                <span className="ml-2 text-muted-foreground">Chargement des disponibilités...</span>
+              <div className="flex items-center justify-center p-4">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                <span className="ml-2 text-sm text-muted-foreground">Chargement des disponibilités...</span>
               </div>
             ) : upcomingSlots.length > 0 ? (
-              upcomingSlots.map((item, index) => (
-                <div key={index} className="p-4 rounded-lg border hover:border-primary transition-all">
-                  <div className="flex justify-between items-center">
+              <div className="grid grid-cols-2 gap-3">
+                {upcomingSlots.map((item, index) => (
+                  <div
+                    key={index}
+                    className="p-3 rounded-md border border-muted-foreground/20 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
+                    onClick={handleOpenReservationModal}
+                  >
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-primary" />
-                      <span className="font-medium">{format(item.date, "EEEE d MMMM", { locale: fr })}</span>
+                      <Calendar className="h-3.5 w-3.5 text-primary" />
+                      <span className="text-xs font-medium">{format(item.date, "EEE d MMM", { locale: fr })}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">{format(item.date, "HH'h'mm")}</span>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs">{format(item.date, "HH'h'mm")}</span>
+                      </div>
+                      {item.slot.service && (
+                        <span className="text-xs text-primary font-medium truncate max-w-[100px]">
+                          {item.slot.service.name}
+                        </span>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <div className="text-center p-6 text-muted-foreground">
+              <div className="text-center p-4 text-sm text-muted-foreground">
                 Aucun créneau disponible pour les prochains jours
               </div>
             )}
@@ -473,7 +530,11 @@ export function BookingCard({ organization }: { organization: Organization }) {
               <Button
                 onClick={() => {
                   if (isLast) {
-                    handleBooking()
+                    if (paymentMethod === "inPerson") {
+                      handleBooking()
+                    } else {
+                      handleBookingPayment()
+                    }
                   } else {
                     next()
                   }
@@ -484,7 +545,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   (current.id === "date" && (!selectedDate || !selectedTime)) ||
                   (current.id === "pet" && !selectedPet) ||
                   (current.id === "payment" && !paymentMethod) ||
-                  (isLast && isPaymentLoading)
+                  (isLast && (isPaymentLoading || isBookingLoading))
                 }
               >
                 {isLast ? (

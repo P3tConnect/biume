@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Clock, Euro, X } from "lucide-react"
+import { Clock, Euro, Users, X } from "lucide-react"
 import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -15,6 +15,7 @@ import { FormControl, FormDescription, FormLabel, FormMessage } from "@/componen
 import { Form, FormItem } from "@/components/ui/form"
 import { FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { createService, updateService } from "@/src/actions"
 import { Service } from "@/src/db"
@@ -28,6 +29,7 @@ const servicesSchema = z.object({
   price: z.number().min(0, "Le prix est requis"),
   image: z.string().nullable().optional(),
   organizationId: z.string().optional(),
+  type: z.enum(["ONE_TO_ONE", "MULTIPLE"]).default("ONE_TO_ONE"),
 })
 
 interface ServiceFormProps {
@@ -48,6 +50,7 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
       price: service.price || 0,
       image: service.image ?? undefined,
       organizationId: service.organizationId ?? undefined,
+      type: service.type || "ONE_TO_ONE",
     },
   })
 
@@ -258,6 +261,29 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Switch pour plusieurs animaux */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                      <div className="flex items-center space-x-2">
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <FormLabel className="text-sm font-normal mb-0">Accueille plusieurs animaux</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value === "MULTIPLE"}
+                          onCheckedChange={val => field.onChange(val ? "MULTIPLE" : "ONE_TO_ONE")}
+                        />
+                      </FormControl>
+                      <FormDescription className="hidden">
+                        Activez cette option si ce service peut accueillir plusieurs animaux lors d'une même séance.
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
