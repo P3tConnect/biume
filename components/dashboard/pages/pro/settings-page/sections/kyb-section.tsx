@@ -116,7 +116,7 @@ export default function KYBSection() {
     refetchOnWindowFocus: false,
   })
 
-  console.log(accountInfoData, "accountInfoData");
+  console.log(accountInfoData, "accountInfoData")
 
   // Mettre à jour accountInfo quand accountInfoData change
   useEffect(() => {
@@ -172,11 +172,10 @@ export default function KYBSection() {
       past_due: [],
     }
 
-    const hasRequirements = (
-      (requirements.currently_due?.length > 0) ||
-      (requirements.eventually_due?.length > 0) ||
-      (requirements.past_due?.length > 0)
-    )
+    const hasRequirements =
+      requirements.currently_due?.length > 0 ||
+      requirements.eventually_due?.length > 0 ||
+      requirements.past_due?.length > 0
 
     // Ne retourner 100% que si toutes les exigences sont satisfaites ET que les paiements sont activés
     if (accountInfo.chargesEnabled && accountInfo.payoutsEnabled && !hasRequirements) return 100
@@ -260,11 +259,10 @@ export default function KYBSection() {
       past_due: [],
     }
 
-    const hasRequirements = (
-      (requirements.currently_due?.length > 0) ||
-      (requirements.eventually_due?.length > 0) ||
-      (requirements.past_due?.length > 0)
-    )
+    const hasRequirements =
+      requirements.currently_due?.length > 0 ||
+      requirements.eventually_due?.length > 0 ||
+      requirements.past_due?.length > 0
 
     if (accountInfo.detailsSubmitted && !hasRequirements && accountInfo.chargesEnabled && accountInfo.payoutsEnabled) {
       return (
@@ -529,25 +527,35 @@ export default function KYBSection() {
             {accountInfo?.detailsSubmitted && (
               <Badge
                 variant={
-                  (accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
-                    !(accountInfo.requirements.currently_due?.length > 0 ||
-                      accountInfo.requirements.eventually_due?.length > 0 ||
-                      accountInfo.requirements.past_due?.length > 0))
+                  accountInfo.payoutsEnabled &&
+                  accountInfo.chargesEnabled &&
+                  !(
+                    accountInfo.requirements.currently_due?.length > 0 ||
+                    accountInfo.requirements.eventually_due?.length > 0 ||
+                    accountInfo.requirements.past_due?.length > 0
+                  )
                     ? "default"
                     : "outline"
                 }
-                className={`mb-2 ${(accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
-                  !(accountInfo.requirements.currently_due?.length > 0 ||
+                className={`mb-2 ${
+                  accountInfo.payoutsEnabled &&
+                  accountInfo.chargesEnabled &&
+                  !(
+                    accountInfo.requirements.currently_due?.length > 0 ||
                     accountInfo.requirements.eventually_due?.length > 0 ||
-                    accountInfo.requirements.past_due?.length > 0))
-                  ? "bg-green-100 text-green-800 hover:bg-green-100"
-                  : ""
-                  }`}
+                    accountInfo.requirements.past_due?.length > 0
+                  )
+                    ? "bg-green-100 text-green-800 hover:bg-green-100"
+                    : ""
+                }`}
               >
-                {(accountInfo.payoutsEnabled && accountInfo.chargesEnabled &&
-                  !(accountInfo.requirements.currently_due?.length > 0 ||
-                    accountInfo.requirements.eventually_due?.length > 0 ||
-                    accountInfo.requirements.past_due?.length > 0)) ? (
+                {accountInfo.payoutsEnabled &&
+                accountInfo.chargesEnabled &&
+                !(
+                  accountInfo.requirements.currently_due?.length > 0 ||
+                  accountInfo.requirements.eventually_due?.length > 0 ||
+                  accountInfo.requirements.past_due?.length > 0
+                ) ? (
                   <>
                     <CheckCircle2 className="mr-1 h-3 w-3" />
                     Compte activé

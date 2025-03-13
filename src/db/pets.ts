@@ -1,12 +1,12 @@
-import { User } from "better-auth"
 import { InferSelectModel, relations } from "drizzle-orm"
-import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { PetDocument, petDocuments } from "./petDocuments"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-import { z } from "zod"
+import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
+import { User } from "better-auth"
 import { appointments } from "./appointments"
 import { user } from "./user"
-import { PetDocument, petDocuments } from "./petDocuments"
+import { z } from "zod"
 
 export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "NAC"])
 

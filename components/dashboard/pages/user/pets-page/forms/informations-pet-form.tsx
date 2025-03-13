@@ -61,10 +61,28 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
       description: petData?.description || "",
       weight: petData?.weight || 0,
       height: petData?.height || 0,
+      chippedNumber: petData?.chippedNumber || 0,
     },
   })
 
-  const { handleSubmit } = form
+  const handleSubmit = form.handleSubmit
+
+  // Ajoutons une fonction pour vérifier la validité du formulaire avant de soumettre
+  const validateAndSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+
+    // Déclenchons la validation du formulaire
+    const isValid = await form.trigger()
+
+    // Si le formulaire n'est pas valide, ne pas procéder
+    if (!isValid) {
+      toast.error("Veuillez remplir tous les champs obligatoires")
+      return
+    }
+
+    // Si le formulaire est valide, soumettre
+    onSubmit(event as any)
+  }
 
   // Mutation pour créer un animal
   const createMutation = useMutation({
@@ -139,6 +157,23 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
 
   const onSubmit = handleSubmit(async data => {
     try {
+      // Vérification explicite des champs obligatoires
+      if (
+        !data.name ||
+        !data.birthDate ||
+        !data.breed ||
+        data.weight === undefined ||
+        data.height === undefined ||
+        !data.image ||
+        !data.description ||
+        !data.type ||
+        !data.gender
+      ) {
+        // Afficher un message d'erreur
+        toast.error("Veuillez remplir tous les champs obligatoires")
+        return // Ne pas continuer si les champs obligatoires ne sont pas remplis
+      }
+
       if (isUpdate && petData) {
         await updateMutation.mutateAsync({
           ...data,
@@ -187,7 +222,7 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={validateAndSubmit} className="space-y-6">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-4 space-y-2">
             <FormField
@@ -215,6 +250,7 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                                 <p className="text-xs font-medium text-primary">Glissez-déposez</p>
                                 <p className="text-xs text-muted-foreground">ou cliquez</p>
                                 <p className="text-xs text-muted-foreground">PNG, JPG • 5MB</p>
+                                <p className="text-xs text-red-500 font-medium">* Image obligatoire</p>
                               </div>
                             </div>
                           </div>
@@ -279,7 +315,9 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nom</FormLabel>
+                    <FormLabel>
+                      Nom <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Ex: Luna" {...field} />
                     </FormControl>
@@ -293,18 +331,21 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                 name="birthDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de naissance</FormLabel>
+                    <FormLabel>
+                      Date de naissance <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="date"
                         {...field}
                         value={
-                          field.value
-                            ? new Date(field.value).toLocaleDateString("fr-FR").split("/").reverse().join("-")
+                          field.value instanceof Date && !isNaN(field.value.getTime())
+                            ? field.value.toISOString().split("T")[0]
                             : ""
                         }
                         onChange={e => {
-                          const date = e.target.value ? new Date(e.target.value) : null
+                          const value = e.target.value
+                          const date = value ? new Date(value) : null
                           field.onChange(date)
                         }}
                       />
@@ -321,7 +362,9 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type d&apos;animal</FormLabel>
+                    <FormLabel>
+                      Type d&apos;animal <span className="text-red-500">*</span>
+                    </FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -346,7 +389,9 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sexe</FormLabel>
+                    <FormLabel>
+                      Sexe <span className="text-red-500">*</span>
+                    </FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -366,16 +411,16 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
           </div>
         </div>
 
-        {/* Caractéristiques physiques */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Caractéristiques physiques</h3>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <FormField
               control={form.control}
               name="weight"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Poids (kg)</FormLabel>
+                  <FormLabel>
+                    Poids (kg) <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -396,7 +441,9 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
               name="height"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Taille (cm)</FormLabel>
+                  <FormLabel>
+                    Taille (cm) <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -416,9 +463,31 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
               name="breed"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Race</FormLabel>
+                  <FormLabel>
+                    Race <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: Golden Retriever" {...field} value={field.value ?? ""} />
+                    <Input placeholder="Ex: Border Collie" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="chippedNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Numéro d&apos;identification</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Numéro d'identification"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -431,7 +500,9 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  Description <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Décrivez votre animal..."
@@ -446,8 +517,13 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
           />
         </div>
 
-        <div className="flex justify-end pt-2">
-          <Button type="submit">Suivant</Button>
+        <div className="flex flex-col space-y-4">
+          <p className="text-sm text-muted-foreground mt-4">
+            <span className="text-red-500">*</span> Champs obligatoires
+          </p>
+          <div className="flex justify-end">
+            <Button type="submit">Suivant</Button>
+          </div>
         </div>
       </form>
     </Form>

@@ -1,15 +1,5 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import { FileText, ImageIcon, PawPrint, PenBox, Ruler, Trash2 } from "lucide-react"
-import Image from "next/image"
-import { useState } from "react"
-import { useDropzone } from "react-dropzone"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
 import {
   Button,
   DatePicker,
@@ -27,10 +17,20 @@ import {
   SelectValue,
   Textarea,
 } from "@/components/ui"
-import { createPet } from "@/src/actions"
+import { FileText, ImageIcon, PawPrint, PenBox, Ruler, Trash2 } from "lucide-react"
+
 import { CreatePetSchema } from "@/src/db/pets"
+import Image from "next/image"
 import { cn } from "@/src/lib"
+import { createPet } from "@/src/actions"
+import { toast } from "sonner"
+import { useDropzone } from "react-dropzone"
+import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 import { useUploadThing } from "@/src/lib/uploadthing"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = {
@@ -54,6 +54,7 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
       description: "",
       weight: 0,
       height: 0,
+      chippedNumber: 0,
     },
   })
 
@@ -287,13 +288,7 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
 
         {/* Section détails */}
         <div className="grid gap-8 md:grid-cols-2">
-          {/* Caractéristiques physiques */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <Ruler className="h-5 w-5 text-muted-foreground" />
-              <h3 className="font-medium">Caractéristiques physiques</h3>
-            </div>
-
             <div className="grid gap-4">
               <FormField
                 control={form.control}
@@ -354,6 +349,26 @@ export default function PetCreationStep({ onSkip }: { onSkip: () => void }) {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="chippedNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Numéro pucé (oreille)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Numéro de puce dans l'oreille"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={e => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
 
