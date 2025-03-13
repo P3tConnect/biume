@@ -152,6 +152,7 @@ export const createBookingCheckoutSession = createServerAction(
           patientId: input.petId,
           clientId: ctx.user?.id ?? "",
           status: "PENDING PAYMENT",
+          payedOnline: true,
           atHome: input.isHomeVisit,
           type: "oneToOne",
           slotId: input.slot.id,

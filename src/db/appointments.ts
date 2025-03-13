@@ -54,6 +54,7 @@ export const appointments = pgTable("appointments", {
     onDelete: "cascade",
   }),
   beginAt: timestamp("beginAt"),
+  payedOnline: boolean("payedOnline"),
   endAt: timestamp("endAt"),
   status: appointmentStatusType("status").default("PENDING PAYMENT").notNull(),
   atHome: boolean("atHome").default(false).notNull(),

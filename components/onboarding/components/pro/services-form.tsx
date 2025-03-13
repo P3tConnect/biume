@@ -2,16 +2,17 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { Clock, Euro, Loader2, Plus, X } from "lucide-react"
+import { Clock, Euro, Loader2, Plus, Users, X } from "lucide-react"
 import Image from "next/image"
 import React, { useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { createServicesStepAction } from "@/src/actions"
 import { UploadButton } from "@/src/lib/uploadthing"
@@ -70,6 +71,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     duration: 30,
                     price: 0,
                     image: "",
+                    type: "ONE_TO_ONE",
                   })
                 }
                 className="flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
@@ -213,6 +215,25 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                       )}
                     />
                   </div>
+
+                  <FormField
+                    control={control}
+                    name={`services.${index}.type`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                        <div className="flex items-center space-x-2">
+                          <Users className="h-4 w-4 text-gray-500" />
+                          <FormLabel className="text-sm font-normal">Accueille plusieurs animaux</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value === "MULTIPLE"}
+                            onCheckedChange={val => field.onChange(val ? "MULTIPLE" : "ONE_TO_ONE")}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 {fields.length > 1 && (
@@ -239,6 +260,7 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     duration: 30,
                     price: 0,
                     image: "",
+                    type: "ONE_TO_ONE",
                   })
                 }
                 className={cn(

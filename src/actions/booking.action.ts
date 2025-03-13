@@ -77,6 +77,7 @@ export const createBooking = createServerAction(
           proId: input.companyId,
           patientId: input.petId,
           clientId: ctx.user?.id ?? "",
+          payedOnline: false,
           slotId: input.slotId,
           status: input.status,
           atHome: input.isHomeVisit,
