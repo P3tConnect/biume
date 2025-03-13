@@ -7,6 +7,7 @@ import InformationsPetAllergiesStep from "./informations-pet-allergies-step"
 import InformationsPetDeseasesStep from "./informations-pet-deseases-step"
 import InformationsPetIntolerancesStep from "./informations-pet-intolerances-step"
 import InformationsPetStep from "./informations-pet-step"
+import { Loader2 } from "lucide-react"
 import { Pet } from "@/src/db/pets"
 import PetCompleteStep from "../forms/pet-complete-step"
 import React from "react"
@@ -54,7 +55,7 @@ const EditPetStepper = ({ onComplete, petId }: EditPetStepperProps) => {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
-          <p>Chargement des données de l'animal...</p>
+          <Loader2 className="w-4 h-4 animate-spin" />
         </div>
       ) : (
         switchStep({

@@ -109,28 +109,34 @@ const CalendarWidget = () => {
         <div className="flex-1 overflow-auto pt-1 px-1 rounded-md bg-muted/10">
           {/* En-tête des jours */}
           <div className="grid grid-cols-7 gap-1 mb-1">
-            {Array(7).fill(0).map((_, i) => (
-              <div key={i} className="h-5 rounded bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 50}ms` }}></div>
-            ))}
+            {Array(7)
+              .fill(0)
+              .map((_, i) => (
+                <div
+                  key={i}
+                  className="h-5 rounded bg-muted/40 animate-pulse"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                ></div>
+              ))}
           </div>
 
           {/* Grille du calendrier */}
           <div className="grid grid-cols-7 gap-1">
-            {Array(35).fill(0).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square rounded bg-muted/30 animate-pulse flex items-center justify-center"
-                style={{ animationDelay: `${(i % 7) * 50}ms` }}
-              >
-                <div className="h-3 w-3 rounded-full bg-muted/40"></div>
-              </div>
-            ))}
+            {Array(35)
+              .fill(0)
+              .map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-square rounded bg-muted/30 animate-pulse flex items-center justify-center"
+                  style={{ animationDelay: `${(i % 7) * 50}ms` }}
+                >
+                  <div className="h-3 w-3 rounded-full bg-muted/40"></div>
+                </div>
+              ))}
           </div>
         </div>
 
-        <div className="mt-2 text-center text-sm text-muted-foreground">
-          Chargement de votre calendrier...
-        </div>
+        <div className="mt-2 text-center text-sm text-muted-foreground">Chargement de votre calendrier...</div>
       </div>
     )
   }

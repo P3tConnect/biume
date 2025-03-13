@@ -150,11 +150,11 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
                                   value={
                                     field.value
                                       ? [
-                                        {
-                                          url: field.value,
-                                          name: field.value,
-                                        },
-                                      ]
+                                          {
+                                            url: field.value,
+                                            name: field.value,
+                                          },
+                                        ]
                                       : []
                                   }
                                   uploadEndpoint="imageUploader"

@@ -115,10 +115,12 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Horaire</p>
-                    <p className="font-medium">{appointment.slot.start.toLocaleTimeString("fr-FR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}</p>
+                    <p className="font-medium">
+                      {appointment.slot.start.toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-muted-foreground">Durée</p>

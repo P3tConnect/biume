@@ -61,6 +61,7 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
       description: petData?.description || "",
       weight: petData?.weight || 0,
       height: petData?.height || 0,
+      chippedNumber: petData?.chippedNumber || 0,
     },
   })
 
@@ -366,10 +367,8 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
           </div>
         </div>
 
-        {/* Caractéristiques physiques */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Caractéristiques physiques</h3>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <FormField
               control={form.control}
               name="weight"
@@ -418,7 +417,27 @@ const InformationsPetForm = ({ nextStep, petData, isUpdate = false }: Informatio
                 <FormItem>
                   <FormLabel>Race</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: Golden Retriever" {...field} value={field.value ?? ""} />
+                    <Input placeholder="Ex: Border Collie" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="chippedNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Numéro d&apos;identification</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Numéro d'identification"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

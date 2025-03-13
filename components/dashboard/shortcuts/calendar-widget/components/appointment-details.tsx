@@ -38,7 +38,7 @@ import {
   FolderOpen,
   MapPin,
   Trash2,
-  User as UserIcon
+  User as UserIcon,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -173,52 +173,51 @@ export function AppointmentDetails({
   // Détermine les initiales pour l'avatar
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map(n => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
-      .substring(0, 2);
+      .substring(0, 2)
   }
 
   // Rendu du badge de statut
   const renderStatusBadge = (status: string) => {
-    let label = "Statut inconnu";
+    let label = "Statut inconnu"
 
     switch (status) {
       case "CONFIRMED":
-        label = "Confirmé";
-        break;
+        label = "Confirmé"
+        break
       case "SCHEDULED":
       case "PENDING PAYMENT":
-        label = "En attente";
-        break;
+        label = "En attente"
+        break
       case "COMPLETED":
-        label = "Terminé";
-        break;
+        label = "Terminé"
+        break
       case "CANCELED":
-        label = "Annulé";
-        break;
+        label = "Annulé"
+        break
     }
 
     return (
       <Badge
-        className={cn(
-          "capitalize text-xs",
-          statusColors[status as StatusColorKey] || statusColors["PENDING PAYMENT"]
-        )}
+        className={cn("capitalize text-xs", statusColors[status as StatusColorKey] || statusColors["PENDING PAYMENT"])}
       >
         {label}
       </Badge>
-    );
-  };
+    )
+  }
 
   return (
     <div className="bg-white dark:bg-card rounded-xl border border-border/40 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
       {/* En-tête de la carte avec statut */}
-      <div className={cn(
-        "h-1 w-full transition-colors",
-        statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
-      )} />
+      <div
+        className={cn(
+          "h-1 w-full transition-colors",
+          statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+        )}
+      />
 
       <div className="p-4 space-y-3">
         {/* Informations principales */}
@@ -228,10 +227,12 @@ export function AppointmentDetails({
               onClick={handleViewPetDetails}
               className="relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              <Avatar className={cn(
-                "h-10 w-10 text-white text-xs font-medium flex items-center justify-center group-hover:ring-2 ring-offset-2 ring-offset-background transition-all",
-                appointmentColors[colorKey]
-              )}>
+              <Avatar
+                className={cn(
+                  "h-10 w-10 text-white text-xs font-medium flex items-center justify-center group-hover:ring-2 ring-offset-2 ring-offset-background transition-all",
+                  appointmentColors[colorKey]
+                )}
+              >
                 {getInitials(petName)}
               </Avatar>
               <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-background" />
@@ -251,10 +252,7 @@ export function AppointmentDetails({
 
           <Badge
             variant="outline"
-            className={cn(
-              "text-xs px-2 py-0.5 rounded-full",
-              appointmentColors[colorKey].replace("bg-", "border-")
-            )}
+            className={cn("text-xs px-2 py-0.5 rounded-full", appointmentColors[colorKey].replace("bg-", "border-"))}
           >
             {appointmentLabels[colorKey]}
           </Badge>
@@ -286,29 +284,17 @@ export function AppointmentDetails({
         {/* Notes (aperçu) */}
         {notes && (
           <div className="pt-1 pb-0">
-            <p className="text-xs text-muted-foreground line-clamp-1">
-              {notes}
-            </p>
+            <p className="text-xs text-muted-foreground line-clamp-1">{notes}</p>
           </div>
         )}
 
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1.5">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1 gap-1.5 h-8"
-            onClick={handleEditOpen}
-          >
+          <Button variant="outline" size="sm" className="flex-1 gap-1.5 h-8" onClick={handleEditOpen}>
             <Edit className="h-3.5 w-3.5" />
             <span>Modifier</span>
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 gap-1.5"
-            onClick={handleViewPetDetails}
-          >
+          <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleViewPetDetails}>
             <FolderOpen className="h-3.5 w-3.5" />
             <span>Dossier</span>
           </Button>
@@ -347,9 +333,7 @@ export function AppointmentDetails({
                     <Label htmlFor="status">Statut</Label>
                     <Select
                       value={editedAppointment.status || appointment.status}
-                      onValueChange={(value: any) =>
-                        setEditedAppointment({ ...editedAppointment, status: value })
-                      }
+                      onValueChange={(value: any) => setEditedAppointment({ ...editedAppointment, status: value })}
                     >
                       <SelectTrigger className="mt-2">
                         <SelectValue placeholder="Sélectionnez un statut" />
@@ -365,51 +349,29 @@ export function AppointmentDetails({
 
                   <div>
                     <Label htmlFor="animal">Animal</Label>
-                    <Input
-                      id="animal"
-                      value={petName}
-                      className="mt-2"
-                      readOnly
-                    />
+                    <Input id="animal" value={petName} className="mt-2" readOnly />
                   </div>
 
                   <div>
                     <Label htmlFor="owner">Propriétaire</Label>
-                    <Input
-                      id="owner"
-                      value={ownerName}
-                      className="mt-2"
-                      readOnly
-                    />
+                    <Input id="owner" value={ownerName} className="mt-2" readOnly />
                   </div>
 
                   <div>
                     <Label htmlFor="date">Date & Heure</Label>
-                    <Input
-                      id="date"
-                      value={`${appointmentDate}, ${appointmentTime}`}
-                      className="mt-2"
-                      readOnly
-                    />
+                    <Input id="date" value={`${appointmentDate}, ${appointmentTime}`} className="mt-2" readOnly />
                   </div>
 
                   <div>
                     <Label htmlFor="duration">Durée</Label>
-                    <Input
-                      id="duration"
-                      value={appointmentDuration}
-                      className="mt-2"
-                      readOnly
-                    />
+                    <Input id="duration" value={appointmentDuration} className="mt-2" readOnly />
                   </div>
                 </div>
               </TabsContent>
 
               <TabsContent value="services" className="mt-0">
                 <div className="space-y-4">
-                  <div className="text-sm text-muted-foreground mb-2">
-                    Sélectionnez un service pour ce rendez-vous
-                  </div>
+                  <div className="text-sm text-muted-foreground mb-2">Sélectionnez un service pour ce rendez-vous</div>
 
                   {isLoadingServices ? (
                     <div className="py-8 text-center text-muted-foreground">
@@ -451,9 +413,7 @@ export function AppointmentDetails({
                               </div>
                             </div>
 
-                            {service.price && (
-                              <div className="text-sm font-semibold">{service.price}€</div>
-                            )}
+                            {service.price && <div className="text-sm font-semibold">{service.price}€</div>}
                           </div>
                         )
                       })}
@@ -489,9 +449,7 @@ export function AppointmentDetails({
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Annuler
             </Button>
-            <Button onClick={handleEditSave}>
-              Enregistrer
-            </Button>
+            <Button onClick={handleEditSave}>Enregistrer</Button>
           </CredenzaFooter>
         </CredenzaContent>
       </Credenza>
@@ -539,7 +497,7 @@ export function AppointmentCard({
   onEdit,
   onDelete,
   onViewPetDetails,
-  compact = false
+  compact = false,
 }: AppointmentDetailsProps & { compact?: boolean }) {
   // Réutilise la logique du composant principal mais avec un rendu différent
   // Version compacte pour les listes, tableaux, etc.
@@ -556,10 +514,12 @@ export function AppointmentCard({
     return (
       <div className="flex items-center justify-between p-2 border-b gap-3 hover:bg-muted/20 transition-colors">
         <div className="flex items-center gap-2">
-          <div className={cn(
-            "w-1 h-8 rounded-full",
-            statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
-          )} />
+          <div
+            className={cn(
+              "w-1 h-8 rounded-full",
+              statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
+            )}
+          />
           <div>
             <h4 className="text-sm font-medium">{petName}</h4>
             <p className="text-xs text-muted-foreground">{ownerName}</p>
@@ -573,10 +533,7 @@ export function AppointmentCard({
           </div>
           <Badge
             variant="outline"
-            className={cn(
-              "text-xs px-1.5 py-0 rounded-full",
-              appointmentColors[colorKey].replace("bg-", "border-")
-            )}
+            className={cn("text-xs px-1.5 py-0 rounded-full", appointmentColors[colorKey].replace("bg-", "border-"))}
           >
             {appointmentLabels[colorKey]}
           </Badge>
@@ -584,7 +541,7 @@ export function AppointmentCard({
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0"
-            onClick={() => onViewPetDetails?.(appointment.pet?.id || '')}
+            onClick={() => onViewPetDetails?.(appointment.pet?.id || "")}
           >
             <Eye className="h-3 w-3" />
           </Button>

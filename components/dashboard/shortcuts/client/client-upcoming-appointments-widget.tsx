@@ -152,13 +152,14 @@ const ClientUpcomingAppointmentsWidget = () => {
                     <div className="flex items-center gap-2">
                       <Clock className="size-4 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">{selectedAppointment.slot.start.toLocaleString("fr-FR", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        <p className="font-medium">
+                          {selectedAppointment.slot.start.toLocaleString("fr-FR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
                     </div>

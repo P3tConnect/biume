@@ -216,8 +216,8 @@ export const getOrganizationSlotsByCompanyId = createServerAction(
               id: true,
               name: true,
               price: true,
-            }
-          }
+            },
+          },
         },
         orderBy: asc(organizationSlots.start),
         columns: {

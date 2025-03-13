@@ -129,8 +129,8 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) / companyResult.data.ratings.length)
-        .toString()
-        .substring(0, 3)
+          .toString()
+          .substring(0, 3)
       : "0"
 
   return (
@@ -252,7 +252,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
 
                   <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full">
                     <Clock className="h-4 w-4" />
-                    <span>Ouvert · {companyResult.data.openAt} - {companyResult.data.closeAt}</span>
+                    <span>
+                      Ouvert · {companyResult.data.openAt} - {companyResult.data.closeAt}
+                    </span>
                   </div>
                 </div>
 

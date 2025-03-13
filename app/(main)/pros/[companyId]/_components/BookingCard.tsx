@@ -77,7 +77,12 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
   // Filtrage des créneaux pour affichage
   useEffect(() => {
-    if (organizationSlots && "data" in organizationSlots && organizationSlots.data && organizationSlots.data.length > 0) {
+    if (
+      organizationSlots &&
+      "data" in organizationSlots &&
+      organizationSlots.data &&
+      organizationSlots.data.length > 0
+    ) {
       const now = new Date()
       const nextSevenDays = addDays(now, 7)
 
@@ -91,8 +96,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
           date: new Date(slot.start || ""),
           slot,
         }))
-        .sort((a: { date: Date; slot: OrganizationSlots }, b: { date: Date; slot: OrganizationSlots }) =>
-          a.date.getTime() - b.date.getTime()
+        .sort(
+          (a: { date: Date; slot: OrganizationSlots }, b: { date: Date; slot: OrganizationSlots }) =>
+            a.date.getTime() - b.date.getTime()
         )
         .slice(0, 8) // Afficher jusqu'à 8 créneaux pour montrer plus d'options
 
@@ -326,16 +332,12 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   >
                     <div className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5 text-primary" />
-                      <span className="text-xs font-medium">
-                        {format(item.date, "EEE d MMM", { locale: fr })}
-                      </span>
+                      <span className="text-xs font-medium">{format(item.date, "EEE d MMM", { locale: fr })}</span>
                     </div>
                     <div className="flex items-center justify-between mt-1.5">
                       <div className="flex items-center gap-2">
                         <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-xs">
-                          {format(item.date, "HH'h'mm")}
-                        </span>
+                        <span className="text-xs">{format(item.date, "HH'h'mm")}</span>
                       </div>
                       {item.slot.service && (
                         <span className="text-xs text-primary font-medium truncate max-w-[100px]">
