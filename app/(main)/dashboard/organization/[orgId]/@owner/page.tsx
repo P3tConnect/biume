@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { DashboardHomeHeader } from "@/components/dashboard/shortcuts/pro/dashboard-home-header"
 import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appointment-requests/appointment-requests"
-import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs"
+import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs/dashboard-tabs"
 import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics"
 import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card"
 

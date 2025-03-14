@@ -8,11 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { MessagesHeader } from "./messages-header"
-import { PatientsHeader } from "./patients-header"
-import { PlanningHeader } from "./planning-header"
-import { RappelsHeader } from "./rappels-header"
-import { RapportsHeader } from "./rapports-header"
+import { MessagesHeader } from "../messages-header"
+import { PatientsHeader } from "./patients-tab/patients-header"
+import { PlanningHeader } from "../planning-header"
+import { RappelsHeader } from "../rappels-header"
+import { RapportsHeader } from "../rapports-header"
+import { PatientsList } from "./patients-tab/patients-list"
 
 export const DashboardTabs = () => {
   const [activeTab, setActiveTab] = useState<string>("planning")
@@ -100,19 +101,7 @@ export const DashboardTabs = () => {
       <TabsContent value="patients" className="m-0 overflow-y-auto">
         <div className="space-y-4">
           <PatientsHeader />
-
-          <Card className="border shadow-sm">
-            <CardContent className="p-4">
-              <div className="text-center text-muted-foreground py-8">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                <p>Sélectionnez un patient pour voir son dossier complet</p>
-                <Button variant="outline" className="mt-4">
-                  <Search className="mr-2 h-4 w-4" />
-                  Rechercher un patient
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <PatientsList />
         </div>
       </TabsContent>
 

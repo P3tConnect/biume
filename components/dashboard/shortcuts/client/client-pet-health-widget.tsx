@@ -31,10 +31,11 @@ import { useSession } from "@/src/lib/auth-client"
 // Types
 type HealthMetric = {
   label: string
-  value: number
-  target: number
-  unit: string
+  value: number | string
+  target?: number
+  unit?: string
   status: "good" | "warning" | "alert"
+  date?: string
 }
 
 type PetHealth = {
@@ -42,9 +43,25 @@ type PetHealth = {
   name: string
   avatar: string
   age: string
-  nextVaccination: string
+  species: string
+  breed: string
+  nextAppointment: {
+    date: string
+    type: string
+    practitioner: string
+  }
   lastCheckup: string
   metrics: HealthMetric[]
+  medicalHistory: {
+    date: string
+    type: string
+    description: string
+  }[]
+  currentTreatments: {
+    medication: string
+    frequency: string
+    endDate: string
+  }[]
   alerts: string[]
 }
 
@@ -55,7 +72,13 @@ const petsHealth: PetHealth[] = [
     name: "Luna",
     avatar: "/images/pets/persian-cat.jpg",
     age: "3 ans",
-    nextVaccination: "15 Avril 2024",
+    species: "Chat",
+    breed: "Persan",
+    nextAppointment: {
+      date: "15 Avril 2024",
+      type: "Vaccination antirabique",
+      practitioner: "Dr. Martin",
+    },
     lastCheckup: "15 Mars 2024",
     metrics: [
       {
@@ -64,23 +87,59 @@ const petsHealth: PetHealth[] = [
         target: 4,
         unit: "kg",
         status: "warning",
+        date: "15 Mars 2024",
       },
       {
-        label: "Activité",
-        value: 85,
-        target: 100,
-        unit: "%",
+        label: "Température",
+        value: 38.5,
+        target: 39,
+        unit: "°C",
+        status: "good",
+        date: "15 Mars 2024",
+      },
+      {
+        label: "Dernier vermifuge",
+        value: "01 Mars 2024",
         status: "good",
       },
     ],
-    alerts: ["Vaccination antirabique à renouveler dans 30 jours", "Légère perte de poids à surveiller"],
+    medicalHistory: [
+      {
+        date: "15 Mars 2024",
+        type: "Examen général",
+        description: "Bilan annuel - RAS",
+      },
+      {
+        date: "01 Mars 2024",
+        type: "Vermifuge",
+        description: "Administration Milbemax",
+      },
+    ],
+    currentTreatments: [
+      {
+        medication: "Complément alimentaire",
+        frequency: "1x par jour",
+        endDate: "15 Avril 2024",
+      },
+    ],
+    alerts: [
+      "Vaccination antirabique à renouveler dans 30 jours",
+      "Légère perte de poids à surveiller",
+      "Prochain vermifuge prévu le 01 Juin 2024",
+    ],
   },
   {
     id: "2",
     name: "Max",
     avatar: "/images/pets/german-shepherd.jpg",
     age: "5 ans",
-    nextVaccination: "10 Mai 2024",
+    species: "Chien",
+    breed: "Berger Allemand",
+    nextAppointment: {
+      date: "10 Mai 2024",
+      type: "Suivi arthrose",
+      practitioner: "Dr. Dupont",
+    },
     lastCheckup: "10 Mars 2024",
     metrics: [
       {
@@ -89,16 +148,51 @@ const petsHealth: PetHealth[] = [
         target: 30,
         unit: "kg",
         status: "alert",
+        date: "10 Mars 2024",
       },
       {
-        label: "Activité",
+        label: "Mobilité articulaire",
         value: 60,
         target: 100,
         unit: "%",
         status: "warning",
+        date: "10 Mars 2024",
+      },
+      {
+        label: "Dernier antiparasitaire",
+        value: "01 Mars 2024",
+        status: "good",
       },
     ],
-    alerts: ["Surpoids - Régime recommandé", "Augmenter l'activité physique"],
+    medicalHistory: [
+      {
+        date: "10 Mars 2024",
+        type: "Consultation arthrose",
+        description: "Raideur articulations postérieures",
+      },
+      {
+        date: "01 Mars 2024",
+        type: "Antiparasitaire",
+        description: "Administration Nexgard",
+      },
+    ],
+    currentTreatments: [
+      {
+        medication: "Locox",
+        frequency: "2x par jour",
+        endDate: "10 Juin 2024",
+      },
+      {
+        medication: "Complément articulaire",
+        frequency: "1x par jour",
+        endDate: "10 Juin 2024",
+      },
+    ],
+    alerts: [
+      "Surpoids - Régime recommandé",
+      "Suivi arthrose en cours",
+      "Prochain antiparasitaire prévu le 01 Juin 2024",
+    ],
   },
 ]
 
@@ -134,13 +228,20 @@ const ClientPetHealthWidget = () => {
     }
   }
 
+  const calculateProgress = (metric: HealthMetric) => {
+    if (typeof metric.value === "number" && metric.target) {
+      return (metric.value / metric.target) * 100
+    }
+    return 0
+  }
+
   return (
     <>
       <Card className="rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="flex items-center gap-2">
             <Heart className="size-5" />
-            Suivi santé
+            Suivi médical
           </CardTitle>
           <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/user/${userId}/pets`)}>
             Voir tout
@@ -162,7 +263,12 @@ const ClientPetHealthWidget = () => {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium truncate">{pet.name}</h3>
+                    <div>
+                      <h3 className="font-medium truncate">{pet.name}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {pet.species} - {pet.breed}
+                      </p>
+                    </div>
                     {pet.alerts.length > 0 && (
                       <TooltipProvider>
                         <Tooltip>
@@ -187,12 +293,17 @@ const ClientPetHealthWidget = () => {
                   <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Syringe className="size-3" />
-                      <span className="truncate">Vaccin : {pet.nextVaccination}</span>
+                      <span className="truncate">
+                        RDV : {pet.nextAppointment.type} ({pet.nextAppointment.date})
+                      </span>
                     </div>
-                    {pet.metrics.find(m => m.label === "Poids") && (
+                    {pet.currentTreatments.length > 0 && (
                       <div className="flex items-center gap-1">
-                        <Weight className="size-3" />
-                        <span>{pet.metrics.find(m => m.label === "Poids")?.value} kg</span>
+                        <Heart className="size-3" />
+                        <span>
+                          {pet.currentTreatments.length} traitement{pet.currentTreatments.length > 1 ? "s" : ""} en
+                          cours
+                        </span>
                       </div>
                     )}
                   </div>
@@ -215,47 +326,87 @@ const ClientPetHealthWidget = () => {
                   </Avatar>
                   <div>
                     <SheetTitle>{selectedPet.name}</SheetTitle>
-                    <SheetDescription>{selectedPet.age}</SheetDescription>
+                    <SheetDescription>
+                      {selectedPet.species} - {selectedPet.breed} - {selectedPet.age}
+                    </SheetDescription>
                   </div>
                 </div>
               </SheetHeader>
 
               <div className="mt-6 space-y-6">
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Métriques de santé</h4>
-                  {selectedPet.metrics.map((metric, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="flex items-center gap-2">
-                          {metric.label === "Poids" ? <Weight className="size-4" /> : <Heart className="size-4" />}
-                          {metric.label}
-                        </span>
-                        <span className={getStatusColor(metric.status)}>
-                          {metric.value} / {metric.target} {metric.unit}
-                        </span>
-                      </div>
-                      <Progress
-                        value={(metric.value / metric.target) * 100}
-                        className="h-2"
-                        indicatorClassName={getProgressColor(metric.status)}
-                      />
+                  <h4 className="text-sm font-medium">Prochain rendez-vous</h4>
+                  <div className="grid gap-2 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Type</span>
+                      <span>{selectedPet.nextAppointment.type}</span>
                     </div>
-                  ))}
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Date</span>
+                      <span>{selectedPet.nextAppointment.date}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Praticien</span>
+                      <span>{selectedPet.nextAppointment.practitioner}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <Separator />
 
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Suivi vétérinaire</h4>
-                  <div className="grid gap-2 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Prochain vaccin</span>
-                      <span>{selectedPet.nextVaccination}</span>
+                  <h4 className="text-sm font-medium">Métriques de santé</h4>
+                  {selectedPet.metrics.map((metric, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{metric.label}</span>
+                        <span className={getStatusColor(metric.status)}>
+                          {metric.value} {metric.unit}
+                        </span>
+                      </div>
+                      {typeof metric.value === "number" && metric.target && (
+                        <Progress
+                          value={calculateProgress(metric)}
+                          className="h-2"
+                          indicatorClassName={getProgressColor(metric.status)}
+                        />
+                      )}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Dernier checkup</span>
-                      <span>{selectedPet.lastCheckup}</span>
+                  ))}
+                </div>
+
+                {selectedPet.currentTreatments.length > 0 && (
+                  <>
+                    <Separator />
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-medium">Traitements en cours</h4>
+                      <div className="space-y-3">
+                        {selectedPet.currentTreatments.map((treatment, index) => (
+                          <div key={index} className="text-sm">
+                            <div className="font-medium">{treatment.medication}</div>
+                            <div className="text-muted-foreground">
+                              {treatment.frequency} - Jusqu'au {treatment.endDate}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
+                  </>
+                )}
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium">Historique médical récent</h4>
+                  <div className="space-y-3">
+                    {selectedPet.medicalHistory.map((event, index) => (
+                      <div key={index} className="text-sm">
+                        <div className="font-medium">{event.type}</div>
+                        <div className="text-muted-foreground">
+                          {event.date} - {event.description}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -265,7 +416,7 @@ const ClientPetHealthWidget = () => {
                     <div className="space-y-4">
                       <h4 className="text-sm font-medium flex items-center gap-2">
                         <AlertTriangle className="size-4 text-yellow-500" />
-                        Points d&apos;attention
+                        Points d'attention
                       </h4>
                       <ul className="space-y-2">
                         {selectedPet.alerts.map((alert, index) => (

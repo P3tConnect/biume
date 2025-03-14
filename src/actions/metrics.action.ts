@@ -9,6 +9,7 @@ import { ratings } from "@/src/db/ratings"
 import { createServerAction, requireAuth, requireFullOrganization } from "@/src/lib"
 import { db } from "@/src/lib/db"
 import { MetricData } from "@/types/metric-data"
+import { user } from "@/src/db/user"
 
 // Empty schema since we don't need input parameters
 const emptySchema = z.object({
@@ -157,6 +158,31 @@ export const getMetricsAction = createServerAction(
         )
       )
 
+    // Ajout de la requête pour récupérer les clients avec rendez-vous
+    const clientsWithAppointments = await db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        appointmentCount: count(appointments.id),
+        lastAppointmentDate: sql<Date>`MAX(${appointments.createdAt})`,
+      })
+      .from(appointments)
+      .innerJoin(user, eq(appointments.clientId, user.id))
+      .where(
+        and(
+          eq(appointments.proId, organizationId),
+          or(
+            eq(appointments.status, "CONFIRMED"),
+            eq(appointments.status, "ONGOING"),
+            eq(appointments.status, "COMPLETED")
+          )
+        )
+      )
+      .groupBy(user.id, user.name, user.email, user.phoneNumber)
+      .orderBy(sql`MAX(${appointments.createdAt}) DESC`)
+
     // Generate chart data for the past X months
     const appointmentsData: { month: string; value: number }[] = []
     const newPatientsData: { month: string; value: number }[] = []
@@ -261,6 +287,7 @@ export const getMetricsAction = createServerAction(
       newPatientsData,
       treatmentsData,
       satisfactionData,
+      clients: clientsWithAppointments,
     }
   },
   [requireAuth, requireFullOrganization]

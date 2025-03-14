@@ -433,3 +433,70 @@ export const getProNextAppointment = createServerAction(
   },
   [requireAuth, requireFullOrganization]
 )
+
+export const getPreviousPros = createServerAction(
+  z.object({
+    userId: z.string(),
+  }),
+  async (input, ctx) => {
+    const appointments = await db.query.appointments.findMany({
+      where: and(
+        eq(appointmentsTable.clientId, input.userId),
+        eq(appointmentsTable.status, "COMPLETED"),
+        eq(appointmentsTable.status, "CONFIRMED")
+      ),
+      with: {
+        pro: {
+          columns: {
+            id: true,
+            name: true,
+            logo: true,
+            description: true,
+            email: true,
+            slug: true,
+          },
+          with: {
+            address: true,
+            services: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+                image: true,
+                description: true,
+              },
+            },
+            ratings: {
+              with: {
+                writer: {
+                  columns: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: [desc(appointmentsTable.createdAt)],
+    })
+
+    // Filtrer pour obtenir des organisations uniques
+    const uniqueOrganizations = [
+      ...new Map(
+        appointments
+          .filter(
+            (appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
+              appointment.pro !== null && appointment.pro !== undefined
+          )
+          .map(appointment => [appointment.pro.id, appointment.pro])
+      ).values(),
+    ]
+
+    return uniqueOrganizations
+  },
+  [requireAuth]
+)

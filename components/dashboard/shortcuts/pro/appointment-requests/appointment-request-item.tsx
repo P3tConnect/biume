@@ -58,6 +58,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       queryClient.invalidateQueries({
         queryKey: ["metrics"],
       })
+      queryClient.invalidateQueries({
+        queryKey: ["client-upcoming-appointments"],
+      })
     },
     onError: () => {
       toast.error("Une erreur est survenue lors de la confirmation")
@@ -76,6 +79,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       })
       queryClient.invalidateQueries({
         queryKey: ["metrics"],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["client-upcoming-appointments"],
       })
     },
     onError: () => {

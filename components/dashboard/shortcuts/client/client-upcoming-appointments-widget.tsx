@@ -36,10 +36,30 @@ const ClientUpcomingAppointmentsWidget = () => {
   const userId = session?.user?.id
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null)
 
-  const { data: appointments } = useQuery({
-    queryKey: ["client-appointments"],
+  const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
+    queryKey: ["client-upcoming-appointments"],
     queryFn: () => getAllAppointmentForClient({}),
   })
+
+  if (isLoadingAppointments) {
+    return (
+      <Card className="rounded-xl">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="flex items-center gap-2">
+            <CalendarDays className="size-5" />
+            Prochains rendez-vous
+          </CardTitle>
+          <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/user/${userId}/timetable`)}>
+            Voir tout
+            <ChevronRight className="size-4 ml-1" />
+          </Button>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="w-10 h-10 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <>
@@ -165,10 +185,12 @@ const ClientUpcomingAppointmentsWidget = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="size-4 text-muted-foreground" />
-                      <div>
+                      {/* <div>
                         <p className="font-medium">Lieu</p>
-                        <p className="text-muted-foreground">{selectedAppointment.pro.address.postalAddress}</p>
-                      </div>
+                        <p className="text-muted-foreground">
+                          {selectedAppointment.pro.address.postalAddress ?? "Lieu non renseigné"}
+                        </p>
+                      </div> */}
                     </div>
                   </div>
                 </div>
