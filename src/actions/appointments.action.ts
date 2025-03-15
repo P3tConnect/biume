@@ -2,11 +2,10 @@
 
 import { eq, and, or, desc, asc } from "drizzle-orm"
 import { z } from "zod"
-import { requireAuth, requireFullOrganization, requireOwner } from "@/src/lib/action"
+import { requireAuth, requireFullOrganization } from "@/src/lib/action"
 
 import { Appointment, appointments as appointmentsTable } from "../db/appointments"
 import { ActionError, createServerAction, db } from "../lib"
-import { revalidatePath } from "next/cache"
 import { Pet, pets, User, user } from "../db"
 
 export const getAllAppointments = createServerAction(
@@ -74,9 +73,6 @@ export const denyAppointment = createServerAction(
 export const getConfirmedAndAboveAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    console.log("Organisation ID:", ctx.organization?.id)
-
-    // Récupérer les rendez-vous avec une condition SQL plus explicite
     const appointmentQuery = await db.query.appointments.findMany({
       where: and(
         eq(appointmentsTable.proId, ctx.organization?.id || ""),
@@ -104,18 +100,11 @@ export const getConfirmedAndAboveAppointments = createServerAction(
           columns: {
             id: true,
             name: true,
-            type: true,
             image: true,
+            type: true,
+            breed: true,
             birthDate: true,
             gender: true,
-            breed: true,
-            weight: true,
-            height: true,
-            chippedNumber: true,
-            description: true,
-            allergies: true,
-            deseases: true,
-            intolerences: true,
           },
         },
         client: {
@@ -157,7 +146,49 @@ export const getConfirmedAndAboveAppointments = createServerAction(
       return 0
     })
 
+    console.log(sortedAppointments, "appointments confirmed and above")
+
     return sortedAppointments as unknown as Appointment[]
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const cancelAppointment = createServerAction(
+  z.object({
+    appointmentId: z.string(),
+    deniedReason: z.string(),
+  }),
+  async (input, ctx) => {
+    const [appointment] = await db
+      .update(appointmentsTable)
+      .set({ status: "CANCELED", deniedReason: input.deniedReason })
+      .where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute()
+
+    if (!appointment) {
+      throw new ActionError("Appointment not updated")
+    }
+
+    return appointment
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const deleteAppointment = createServerAction(
+  z.object({
+    appointmentId: z.string(),
+  }),
+  async (input, ctx) => {
+    const [appointment] = await db.delete(appointmentsTable).where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute()
+
+    if (!appointment) {
+      throw new ActionError("Appointment not deleted")
+    }
+
+    return appointment
   },
   [requireAuth, requireFullOrganization]
 )
@@ -181,18 +212,9 @@ export const getPendingAndPayedAppointments = createServerAction(
           columns: {
             id: true,
             name: true,
-            type: true,
             image: true,
-            birthDate: true,
-            gender: true,
             breed: true,
-            weight: true,
-            height: true,
-            chippedNumber: true,
-            description: true,
-            allergies: true,
-            deseases: true,
-            intolerences: true,
+            type: true,
           },
         },
         slot: {
@@ -217,6 +239,8 @@ export const getPendingAndPayedAppointments = createServerAction(
             name: true,
             image: true,
             phoneNumber: true,
+            address: true,
+            country: true,
           },
         },
       },
@@ -226,9 +250,11 @@ export const getPendingAndPayedAppointments = createServerAction(
       throw new ActionError("No appointments found")
     }
 
+    console.log(appointments, "appointments pending and payed")
+
     return appointments as unknown as Appointment[]
   },
-  [requireAuth, requireOwner, requireFullOrganization]
+  [requireAuth, requireFullOrganization]
 )
 
 export const getAllAppointmentForClient = createServerAction(
@@ -348,6 +374,17 @@ export const getProNextAppointment = createServerAction(
             start: true,
           },
         },
+        pet: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
+            type: true,
+            breed: true,
+            birthDate: true,
+            gender: true,
+          },
+        },
         service: {
           columns: {
             id: true,
@@ -423,6 +460,8 @@ export const getProNextAppointment = createServerAction(
         },
       },
     })
+
+    console.log(futureAppointments, "futureAppointments")
 
     // Retourner le premier rendez-vous (le plus proche) s'il existe
     return {

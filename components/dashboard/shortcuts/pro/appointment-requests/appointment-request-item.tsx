@@ -384,9 +384,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       <AnimalCredenza
         isOpen={isAnimalCredenzaOpen}
         onOpenChange={setIsAnimalCredenzaOpen}
-        animalDetails={appointment.pet!}
-        nextAppointmentClient={appointment.client! as User}
-        nextAppointmentData={appointment}
+        petId={appointment.pet?.id!}
       />
 
       {/* Modale de refus */}

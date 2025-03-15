@@ -25,7 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { appointmentColors, appointmentLabels, statusColors } from "../data/constants"
 
 // Importer le type Appointment depuis la DB
-import type { Appointment, Pet, User } from "@/src/db"
+import type { Appointment, Organization, Pet, User } from "@/src/db"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -47,6 +47,11 @@ import { cn } from "@/src/lib/utils"
 import { Avatar } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { AnimalCredenza } from "../../pro/unified-metrics/AnimalCredenza"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { cancelAppointment } from "@/src/actions/appointments.action"
+import { toast } from "sonner"
+import { useActiveOrganization } from "@/src/lib/auth-client"
+import { getCurrentOrganization, getPetById } from "@/src/actions"
 
 // Type pour mapper les types d'appointments vers les clés dans appointmentColors et appointmentLabels
 type AppointmentColorKey = keyof typeof appointmentColors
@@ -90,6 +95,7 @@ export function AppointmentDetails({
   const [isAnimalCredenzaOpen, setIsAnimalCredenzaOpen] = useState(false)
   const [editedAppointment, setEditedAppointment] = useState<Partial<Appointment>>({})
   const [selectedService, setSelectedService] = useState<string | null>(null)
+  const [cancelReason, setCancelReason] = useState<string>("")
 
   // Obtenir la clé de couleur correspondante au type d'appointment
   const getColorKey = (type: "oneToOne" | "multiple"): AppointmentColorKey => {
@@ -146,6 +152,17 @@ export function AppointmentDetails({
       onViewPetDetails(appointment.pet.id)
     }
   }
+
+  const { mutateAsync: cancel } = useMutation({
+    mutationFn: ({ appointmentId, deniedReason }: { appointmentId: string; deniedReason: string }) =>
+      cancelAppointment({ appointmentId, deniedReason }),
+    onSuccess: () => {
+      toast.success("Rendez-vous annulé avec succès")
+    },
+    onError: () => {
+      toast.error("Erreur lors de l'annulation du rendez-vous")
+    },
+  })
 
   // Déterminer la clé de couleur pour ce rendez-vous
   const colorKey = getColorKey(appointment.type)
@@ -301,7 +318,7 @@ export function AppointmentDetails({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="h-8 text-red-600 hover:text-red-600 hover:bg-red-600/10"
             onClick={() => setIsDeleteOpen(true)}
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -431,10 +448,7 @@ export function AppointmentDetails({
                     placeholder="Informations complémentaires sur le rendez-vous"
                     value={editedAppointment.observation?.content || notes}
                     onChange={e =>
-                      setEditedAppointment({
-                        ...editedAppointment,
-                        observation: { ...appointment.observation, content: e.target.value },
-                      })
+                      setCancelReason(e.target.value)
                     }
                   />
                   <p className="text-xs text-muted-foreground">
@@ -459,9 +473,7 @@ export function AppointmentDetails({
         <AnimalCredenza
           isOpen={isAnimalCredenzaOpen}
           onOpenChange={setIsAnimalCredenzaOpen}
-          animalDetails={appointment.pet as Pet}
-          nextAppointmentClient={appointment.client as User}
-          nextAppointmentData={appointment}
+          petId={appointment.pet.id}
         />
       )}
 
@@ -474,10 +486,24 @@ export function AppointmentDetails({
               Voulez-vous vraiment supprimer le rendez-vous de {petName} ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          <Label htmlFor="deniedReason">Raison de l'annulation</Label>
+          <Textarea
+            id="deniedReason"
+            value={cancelReason}
+            onChange={e => setCancelReason(e.target.value)}
+            placeholder="Exemple: Patient trop excité, pro absent, etc."
+          />
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDeleteConfirm}
+              onClick={async () => {
+                if (!cancelReason) {
+                  toast.error("Veuillez entrer une raison de l'annulation")
+                  return
+                }
+                await cancel({ appointmentId: appointment.id, deniedReason: cancelReason })
+                setIsDeleteOpen(false)
+              }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Supprimer

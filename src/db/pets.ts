@@ -4,9 +4,10 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 import { User } from "better-auth"
-import { appointments } from "./appointments"
+import { Appointment, appointments } from "./appointments"
 import { user } from "./user"
 import { z } from "zod"
+import { PetAppointment, petAppointments } from "./pet_appointments"
 
 export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "NAC"])
 
@@ -38,7 +39,7 @@ export const pets = pgTable("pets", {
 })
 
 export const petsRelations = relations(pets, ({ many, one }) => ({
-  appointments: many(appointments),
+  appointments: many(petAppointments),
   owner: one(user, {
     fields: [pets.ownerId],
     references: [user.id],
@@ -49,6 +50,7 @@ export const petsRelations = relations(pets, ({ many, one }) => ({
 export type Pet = InferSelectModel<typeof pets> & {
   owner: User
   documents: PetDocument[]
+  appointments: PetAppointment[]
 }
 
 export type CreatePet = typeof pets.$inferInsert

@@ -6,7 +6,7 @@ import { z } from "zod"
 import { CreatePetSchema, Pet, pets } from "@/src/db/pets"
 import { appointments } from "@/src/db/appointments"
 
-import { createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
 
 export const createPet = createServerAction(
   CreatePetSchema,
@@ -164,18 +164,58 @@ export const deletePet = createServerAction(
 
 export const getPetById = createServerAction(
   z.object({
-    petId: z.string().uuid(),
+    petId: z.string(),
   }),
   async (input, ctx) => {
-    const pet = await db.query.pets.findFirst({
-      where: p => and(eq(p.id, input.petId), eq(p.ownerId, ctx.user?.id ?? "")),
-    })
+    try {
+      const pet = await db.query.pets.findFirst({
+        where: eq(pets.id, input.petId),
+        with: {
+          owner: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              phoneNumber: true,
+              email: true,
+              address: true,
+              country: true,
+            },
+          },
+          appointments: {
+            with: {
+              slot: {
+                columns: {
+                  id: true,
+                  start: true,
+                  end: true,
+                },
+              },
+              service: {
+                columns: {
+                  id: true,
+                  name: true,
+                  price: true,
+                  duration: true,
+                  description: true,
+                },
+              },
+            },
+          },
+        },
+      })
+  
+      if (!pet) {
+        throw new ActionError("L'animal n'existe pas")
+      }
+  
+      console.log(pet, "pet in getPetById")
 
-    if (!pet) {
-      throw new Error("L'animal n'existe pas ou ne vous appartient pas")
+      return pet as unknown as Pet
+    } catch (err) {
+      console.error(err)
+      throw new ActionError("Erreur lors de la récupération de l'animal")
     }
-
-    return pet as Pet
   },
   [requireAuth]
 )

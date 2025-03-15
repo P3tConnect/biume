@@ -144,7 +144,7 @@ export const getCurrentOrganization = createServerAction(
       throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    return ctx.fullOrganization
+    return ctx.fullOrganization as unknown as Organization
   },
   [requireAuth, requireFullOrganization]
 )

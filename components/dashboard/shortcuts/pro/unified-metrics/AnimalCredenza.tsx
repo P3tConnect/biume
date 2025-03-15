@@ -13,24 +13,31 @@ import { InfoTab } from "./InfoTab"
 import { MedicalTab } from "./MedicalTab"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { useState } from "react"
-import { Pet, User, Appointment } from "@/src/db"
+import { User } from "@/src/db"
+import { useQuery } from "@tanstack/react-query"
+import { getPetById } from "@/src/actions/pet.action"
 
 interface AnimalCredenzaProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  animalDetails: Pet
-  nextAppointmentClient: User
-  nextAppointmentData: Appointment
+  petId: string
 }
 
 export const AnimalCredenza = ({
   isOpen,
   onOpenChange,
-  animalDetails,
-  nextAppointmentClient,
-  nextAppointmentData,
+  petId,
 }: AnimalCredenzaProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("info")
+
+  console.log(petId, "petId")
+
+  const { data: pet, isLoading: isLoadingPet } = useQuery({
+    queryKey: ["pet", petId],
+    queryFn: () => getPetById({ petId }),
+  })
+
+  console.log(pet, "pet")
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
@@ -42,11 +49,11 @@ export const AnimalCredenza = ({
         <div className="flex flex-col md:flex-row h-[80vh] max-h-[700px]">
           {/* Sidebar avec photo et navigation */}
           <AnimalDetailsSidebar
-            animal={animalDetails}
+            animal={pet?.data!}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            nextAppointmentClient={nextAppointmentClient}
-            nextAppointmentData={nextAppointmentData}
+            nextAppointmentClient={pet?.data?.owner as User}
+            nextAppointmentData={pet?.data?.appointments[0]!}
           />
 
           {/* Contenu principal */}
@@ -88,30 +95,30 @@ export const AnimalCredenza = ({
             {/* Contenu dynamique en fonction de l'onglet actif */}
             {activeTab === "info" && (
               <InfoTab
-                animal={animalDetails}
+                animal={pet?.data!}
                 setActiveTab={setActiveTab}
-                nextAppointmentClient={nextAppointmentClient}
+                nextAppointmentClient={pet?.data?.owner as User}
               />
             )}
             {activeTab === "medical" && (
               <MedicalTab
-                animal={animalDetails}
-                nextAppointmentClient={nextAppointmentClient}
-                nextAppointmentData={nextAppointmentData}
+                animal={pet?.data!}
+                nextAppointmentClient={pet?.data?.owner as User}
+                nextAppointmentData={pet?.data?.appointments[0]!}
               />
             )}
             {activeTab === "appointments" && (
               <AppointmentsTab
-                animal={animalDetails}
-                nextAppointmentClient={nextAppointmentClient}
-                nextAppointmentData={nextAppointmentData}
+                animal={pet?.data!}
+                nextAppointmentClient={pet?.data?.owner as User}
+                nextAppointmentData={pet?.data?.appointments[0]!}
               />
             )}
             {activeTab === "documents" && (
               <DocumentsTab
-                animal={animalDetails}
-                nextAppointmentClient={nextAppointmentClient}
-                nextAppointmentData={nextAppointmentData}
+                animal={pet?.data!}
+                nextAppointmentClient={pet?.data?.owner as User}
+                nextAppointmentData={pet?.data?.appointments[0]!}
               />
             )}
           </div>

@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getProNextAppointment } from "@/src/actions/appointments.action"
 import { Appointment, Pet, User as UserType } from "@/src/db"
 import { MetricData } from "@/types/metric-data"
+import { getCurrentOrganization } from "@/src/actions"
 
 // Données de secours (fallback) en cas d'échec du chargement
 const fallbackData: MetricData = {
@@ -374,9 +375,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -408,9 +408,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -442,9 +441,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -476,9 +474,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -548,9 +545,7 @@ export const UnifiedMetrics = () => {
       <AnimalCredenza
         isOpen={animalDetailsOpen}
         onOpenChange={setAnimalDetailsOpen}
-        animalDetails={nextAppointmentPet}
-        nextAppointmentClient={nextAppointmentClient}
-        nextAppointmentData={nextAppointmentData}
+        petId={nextAppointmentPet?.id}
       />
     </div>
   )
