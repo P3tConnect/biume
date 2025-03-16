@@ -79,10 +79,10 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
                   {nextAppointmentData.beginAt
                     ? format(nextAppointmentData.beginAt, "dd/MM/yyyy")
                     : nextAppointmentData.slot.start.toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                 </div>
               </div>
             </div>
@@ -118,27 +118,27 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
               }}
             >
               <div>
-                <div className="font-medium">{appointment.service.name}</div>
+                <div className="font-medium">{appointment?.service.name}</div>
                 <div className="text-xs text-muted-foreground">
-                  {appointment.beginAt
-                    ? format(appointment.beginAt, "dd/MM/yyyy")
-                    : appointment.slot.start.toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                  • {appointment.pro.name}
+                  {appointment?.beginAt
+                    ? format(appointment?.beginAt, "dd/MM/yyyy")
+                    : appointment?.slot?.start.toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  • {appointment?.pro?.name}
                 </div>
               </div>
               <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.2 }}>
                 <Badge variant="outline">
-                  {appointment.beginAt
-                    ? format(appointment.beginAt, "dd/MM/yyyy")
-                    : appointment.slot.start.toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
+                  {appointment?.beginAt
+                    ? format(appointment?.beginAt, "dd/MM/yyyy")
+                    : appointment?.slot?.start.toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                 </Badge>
               </motion.div>
             </motion.div>

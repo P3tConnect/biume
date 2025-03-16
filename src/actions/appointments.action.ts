@@ -1,20 +1,69 @@
 "use server"
 
-import { eq, and, or, desc, asc } from "drizzle-orm"
+import { eq, and, or, desc } from "drizzle-orm"
 import { z } from "zod"
 import { requireAuth, requireFullOrganization } from "@/src/lib/action"
 
-import { Appointment, appointments as appointmentsTable } from "../db/appointments"
+import { appointments as appointmentsTable } from "../db/appointments"
 import { ActionError, createServerAction, db } from "../lib"
-import { Pet, pets, User, user } from "../db"
+import { user } from "../db"
+import { petAppointments } from "../db/pet_appointments"
 
 export const getAllAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const appointments = await db
-      .select()
-      .from(appointmentsTable)
-      .where(eq(appointmentsTable.proId, ctx.organization?.id || ""))
+    const appointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.proId, ctx.organization?.id || ""),
+      with: {
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            }
+          }
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+          }
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+          }
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+          }
+        },
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              }
+            }
+          }
+        }
+      }
+    })
 
     if (!appointments) {
       throw new ActionError("No appointments found")
@@ -68,8 +117,6 @@ export const denyAppointment = createServerAction(
   [requireAuth, requireFullOrganization]
 )
 
-// "CONFIRMED", "DENIED", "CANCELED", "POSTPONED", "ONGOING", "COMPLETED"
-
 export const getConfirmedAndAboveAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
@@ -92,36 +139,37 @@ export const getConfirmedAndAboveAppointments = createServerAction(
                 id: true,
                 title: true,
                 price: true,
-              },
-            },
-          },
+                description: true,
+              }
+            }
+          }
         },
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            type: true,
-            breed: true,
-            birthDate: true,
-            gender: true,
-          },
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            }
+          }
         },
         client: {
           columns: {
             id: true,
             name: true,
-            image: true,
-            phoneNumber: true,
             email: true,
-          },
+            phoneNumber: true,
+            image: true,
+          }
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          },
+          }
         },
         service: {
           columns: {
@@ -129,9 +177,9 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
-          },
+          }
         },
-      },
+      }
     })
 
     if (!appointmentQuery.length) {
@@ -146,9 +194,7 @@ export const getConfirmedAndAboveAppointments = createServerAction(
       return 0
     })
 
-    console.log(sortedAppointments, "appointments confirmed and above")
-
-    return sortedAppointments as unknown as Appointment[]
+    return sortedAppointments
   },
   [requireAuth, requireFullOrganization]
 )
@@ -201,28 +247,24 @@ export const getPendingAndPayedAppointments = createServerAction(
         eq(appointmentsTable.proId, ctx.organization?.id || ""),
         or(eq(appointmentsTable.status, "SCHEDULED"), eq(appointmentsTable.status, "PAYED"))
       ),
-      columns: {
-        atHome: true,
-        status: true,
-        type: true,
-        id: true,
-      },
       with: {
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            breed: true,
-            type: true,
-          },
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            },
+          }
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          },
+          }
         },
         service: {
           columns: {
@@ -230,29 +272,25 @@ export const getPendingAndPayedAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
-          },
+          }
         },
         client: {
           columns: {
             id: true,
-            email: true,
             name: true,
-            image: true,
+            email: true,
             phoneNumber: true,
-            address: true,
-            country: true,
-          },
-        },
-      },
+            image: true,
+          }
+        }
+      }
     })
 
     if (!appointments) {
       throw new ActionError("No appointments found")
     }
 
-    console.log(appointments, "appointments pending and payed")
-
-    return appointments as unknown as Appointment[]
+    return appointments
   },
   [requireAuth, requireFullOrganization]
 )
@@ -263,48 +301,56 @@ export const getAllAppointmentForClient = createServerAction(
     const appointments = await db.query.appointments.findMany({
       where: eq(appointmentsTable.clientId, ctx.user?.id || ""),
       with: {
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            type: true,
-          },
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            }
+          }
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          },
+          }
         },
         service: {
           columns: {
             id: true,
             name: true,
-          },
+            price: true,
+            duration: true,
+          }
         },
         client: {
           columns: {
             id: true,
-            email: true,
             name: true,
-          },
+            email: true,
+            phoneNumber: true,
+            image: true,
+          }
         },
         pro: {
           columns: {
             id: true,
             name: true,
-          },
-        },
-      },
-      orderBy: [desc(appointmentsTable.status)],
+            logo: true,
+          }
+        }
+      }
     })
 
     if (!appointments) {
       throw new ActionError("Appointment not found")
     }
 
-    return appointments as unknown as Appointment[]
+    return appointments
   },
   [requireAuth]
 )
@@ -314,47 +360,62 @@ export const getAppointmentsByPetId = createServerAction(
     petId: z.string(),
   }),
   async (input, ctx) => {
-    const appointments = await db.query.appointments.findMany({
-      where: and(eq(appointmentsTable.patientId, input.petId), eq(appointmentsTable.status, "COMPLETED")),
-      columns: {
-        id: true,
-        beginAt: true,
-        endAt: true,
-        status: true,
-        type: true,
-        atHome: true,
-      },
+    const appointments = await db.query.petAppointments.findMany({
+      where: and(
+        eq(petAppointments.petId, input.petId),
+        eq(appointmentsTable.status, "COMPLETED")
+      ),
       with: {
-        slot: {
+        appointment: {
           columns: {
             id: true,
-            start: true,
-            end: true,
+            beginAt: true,
+            endAt: true,
+            status: true,
+            type: true,
+            atHome: true,
           },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-            price: true,
-            duration: true,
-          },
-        },
-        options: {
           with: {
-            option: {
+            slot: {
               columns: {
                 id: true,
-                title: true,
-                price: true,
-                description: true,
-              },
+                start: true,
+                end: true,
+              }
             },
-          },
-        },
-      },
+            service: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+              }
+            },
+            pro: {
+              columns: {
+                id: true,
+                name: true,
+                logo: true,
+              }
+            },
+            options: {
+              with: {
+                option: {
+                  columns: {
+                    id: true,
+                    title: true,
+                    price: true,
+                    description: true,
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     })
-    return appointments as unknown as Appointment[]
+    
+    return appointments.map(pa => pa.appointment)
   },
   [requireAuth, requireFullOrganization]
 )
@@ -364,48 +425,25 @@ export const getProNextAppointment = createServerAction(
   async (input, ctx) => {
     const now = new Date()
 
-    // Récupérer tous les rendez-vous programmés pour ce pet
     const appointments = await db.query.appointments.findMany({
-      where: and(eq(appointmentsTable.proId, ctx.organization?.id || ""), eq(appointmentsTable.status, "CONFIRMED")),
+      where: and(
+        eq(appointmentsTable.proId, ctx.organization?.id || ""),
+        eq(appointmentsTable.status, "CONFIRMED")
+      ),
       with: {
-        slot: {
-          columns: {
-            id: true,
-            start: true,
-          },
+        slot: true,
+        pets: {
+          with: {
+            pet: true
+          }
         },
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            type: true,
-            breed: true,
-            birthDate: true,
-            gender: true,
-          },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-            price: true,
-            duration: true,
-          },
-        },
+        service: true,
         options: {
           with: {
-            option: {
-              columns: {
-                id: true,
-                title: true,
-                price: true,
-                description: true,
-              },
-            },
-          },
-        },
-      },
+            option: true
+          }
+        }
+      }
     })
 
     // Filtrer pour ne conserver que les rendez-vous futurs et trier par date
@@ -418,56 +456,29 @@ export const getProNextAppointment = createServerAction(
         return 0
       })
 
+    if (futureAppointments.length === 0) {
+      return {
+        nextAppointment: null,
+        client: null,
+        pet: null
+      }
+    }
+
+    const nextAppointment = futureAppointments[0]
     const client = await db.query.user.findFirst({
-      where: eq(user.id, futureAppointments[0]?.clientId || ""),
+      where: eq(user.id, nextAppointment.clientId || ""),
       columns: {
         name: true,
         email: true,
         phoneNumber: true,
         image: true,
-      },
+      }
     })
 
-    const pet = await db.query.pets.findFirst({
-      where: eq(pets.id, futureAppointments[0]?.patientId || ""),
-      columns: {
-        id: true,
-        name: true,
-        image: true,
-        type: true,
-        breed: true,
-        birthDate: true,
-        gender: true,
-      },
-      with: {
-        appointments: {
-          where: and(eq(appointmentsTable.status, "CONFIRMED"), eq(appointmentsTable.status, "COMPLETED")),
-          columns: {
-            id: true,
-            status: true,
-            type: true,
-            atHome: true,
-          },
-          with: {
-            invoices: {
-              columns: {
-                id: true,
-                total: true,
-                checkoutSessionId: true,
-              },
-            },
-          },
-        },
-      },
-    })
-
-    console.log(futureAppointments, "futureAppointments")
-
-    // Retourner le premier rendez-vous (le plus proche) s'il existe
     return {
-      nextAppointment: futureAppointments.length > 0 ? (futureAppointments[0] as unknown as Appointment) : null,
-      client: client ? (client as unknown as User) : null,
-      pet: pet ? (pet as unknown as Pet) : null,
+      nextAppointment,
+      client,
+      pet: nextAppointment.pets?.[0]?.pet || null
     }
   },
   [requireAuth, requireFullOrganization]
@@ -481,31 +492,16 @@ export const getPreviousPros = createServerAction(
     const appointments = await db.query.appointments.findMany({
       where: and(
         eq(appointmentsTable.clientId, input.userId),
-        eq(appointmentsTable.status, "COMPLETED"),
-        eq(appointmentsTable.status, "CONFIRMED")
+        or(
+          eq(appointmentsTable.status, "COMPLETED"),
+          eq(appointmentsTable.status, "CONFIRMED")
+        )
       ),
       with: {
         pro: {
-          columns: {
-            id: true,
-            name: true,
-            logo: true,
-            description: true,
-            email: true,
-            slug: true,
-          },
           with: {
             address: true,
-            services: {
-              columns: {
-                id: true,
-                name: true,
-                price: true,
-                duration: true,
-                image: true,
-                description: true,
-              },
-            },
+            services: true,
             ratings: {
               with: {
                 writer: {
@@ -513,26 +509,25 @@ export const getPreviousPros = createServerAction(
                     id: true,
                     name: true,
                     image: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+                  }
+                }
+              }
+            }
+          }
+        }
       },
-      orderBy: [desc(appointmentsTable.createdAt)],
+      orderBy: [desc(appointmentsTable.createdAt)]
     })
 
     // Filtrer pour obtenir des organisations uniques
     const uniqueOrganizations = [
       ...new Map(
         appointments
-          .filter(
-            (appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
-              appointment.pro !== null && appointment.pro !== undefined
+          .filter((appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
+            appointment.pro !== null && appointment.pro !== undefined
           )
           .map(appointment => [appointment.pro.id, appointment.pro])
-      ).values(),
+      ).values()
     ]
 
     return uniqueOrganizations

@@ -19,6 +19,7 @@ import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useQuery } from "@tanstack/react-query"
 import { getConfirmedAndAboveAppointments } from "@/src/actions/appointments.action"
+import { Appointment } from "@/src/db"
 
 const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -68,7 +69,7 @@ const CalendarWidget = () => {
     if (!selectedDate) return null
     const dateString = selectedDate.toDateString()
     const dayAppointments =
-      appointments?.data?.filter(appointment => appointment.slot.start.toDateString() === dateString) || []
+      appointments?.data?.filter(appointment => appointment.slot?.start.toDateString() === dateString) || []
 
     return (
       <div className="space-y-4">
@@ -84,7 +85,7 @@ const CalendarWidget = () => {
             </div>
             <div className="space-y-2">
               {dayAppointments.map(appointment => (
-                <AppointmentDetails key={appointment.id} appointment={appointment} />
+                <AppointmentDetails key={appointment.id} appointment={appointment as Appointment} />
               ))}
             </div>
           </>
@@ -212,7 +213,7 @@ const CalendarWidget = () => {
           <CalendarGrid
             currentDate={currentDate}
             selectedDate={selectedDate}
-            appointments={appointments?.data || []}
+            appointments={appointments?.data as Appointment[]}
             onDayClick={handleDayClick}
           />
         </div>

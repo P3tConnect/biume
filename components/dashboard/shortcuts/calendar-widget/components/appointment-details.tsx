@@ -44,7 +44,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/src/lib/utils"
-import { Avatar } from "@/components/ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { AnimalCredenza } from "../../pro/unified-metrics/AnimalCredenza"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -143,13 +143,13 @@ export function AppointmentDetails({
     setIsDeleteOpen(false)
   }
 
-  const handleViewPetDetails = () => {
+  const handleViewPetDetails = (petId: string) => {
     // Ouvre l'AnimalCredenza directement
     setIsAnimalCredenzaOpen(true)
 
     // Appelle aussi l'ancienne fonction si elle existe (pour compatibilité)
-    if (onViewPetDetails && appointment.pet?.id) {
-      onViewPetDetails(appointment.pet.id)
+    if (onViewPetDetails) {
+      onViewPetDetails(petId)
     }
   }
 
@@ -167,8 +167,12 @@ export function AppointmentDetails({
   // Déterminer la clé de couleur pour ce rendez-vous
   const colorKey = getColorKey(appointment.type)
 
-  // Déterminer le nom du propriétaire et du pet à partir du rendez-vous
-  const petName = appointment.pet?.name || "Animal"
+  // Récupérer les informations des animaux
+  const pets = appointment.pets?.map(pa => pa.pet) || []
+  const firstPet = pets[0]
+  const totalPets = pets.length
+
+  // Déterminer le nom du propriétaire à partir du rendez-vous
   const ownerName = appointment.client?.name || "Client"
   const appointmentTime = appointment.slot?.start
     ? new Date(appointment.slot.start).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
@@ -240,24 +244,29 @@ export function AppointmentDetails({
         {/* Informations principales */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleViewPetDetails}
-              className="relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <Avatar
-                className={cn(
-                  "h-10 w-10 text-white text-xs font-medium flex items-center justify-center group-hover:ring-2 ring-offset-2 ring-offset-background transition-all",
-                  appointmentColors[colorKey]
-                )}
-              >
-                {getInitials(petName)}
-              </Avatar>
-              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-background" />
-            </button>
+            <div className="flex -space-x-2">
+              {pets.map((pet, index) => (
+                <button
+                  key={pet.id}
+                  onClick={() => handleViewPetDetails(pet.id)}
+                  className="relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <Avatar
+                    className={cn(
+                      "h-10 w-10 text-white text-xs font-medium flex items-center justify-center group-hover:ring-2 ring-offset-2 ring-offset-background transition-all border-2 border-background",
+                      appointmentColors[colorKey]
+                    )}
+                  >
+                    {getInitials(pet.name)}
+                  </Avatar>
+                  <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-background" />
+                </button>
+              ))}
+            </div>
 
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                <h3 className="font-medium text-base">{petName}</h3>
+                <h3 className="font-medium text-base">{pets.map(pet => pet.name).join(", ")}</h3>
                 {renderStatusBadge(appointment.status)}
               </div>
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -311,7 +320,7 @@ export function AppointmentDetails({
             <Edit className="h-3.5 w-3.5" />
             <span>Modifier</span>
           </Button>
-          <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleViewPetDetails}>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={() => handleViewPetDetails(pets[0].id)}>
             <FolderOpen className="h-3.5 w-3.5" />
             <span>Dossier</span>
           </Button>
@@ -365,8 +374,8 @@ export function AppointmentDetails({
                   </div>
 
                   <div>
-                    <Label htmlFor="animal">Animal</Label>
-                    <Input id="animal" value={petName} className="mt-2" readOnly />
+                    <Label htmlFor="animals">Animaux</Label>
+                    <Input id="animals" value={pets.map(pet => pet.name).join(", ")} className="mt-2" readOnly />
                   </div>
 
                   <div>
@@ -469,13 +478,14 @@ export function AppointmentDetails({
       </Credenza>
 
       {/* Intégration de l'AnimalCredenza pour le dossier animal */}
-      {appointment.pet && appointment.client && (
+      {pets.map(pet => (
         <AnimalCredenza
+          key={pet.id}
           isOpen={isAnimalCredenzaOpen}
           onOpenChange={setIsAnimalCredenzaOpen}
-          petId={appointment.pet.id}
+          petId={pet.id}
         />
-      )}
+      ))}
 
       {/* AlertDialog pour confirmer la suppression */}
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
@@ -483,7 +493,7 @@ export function AppointmentDetails({
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Voulez-vous vraiment supprimer le rendez-vous de {petName} ? Cette action est irréversible.
+              Voulez-vous vraiment supprimer le rendez-vous de {pets.map(pet => pet.name).join(", ")} ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Label htmlFor="deniedReason">Raison de l'annulation</Label>
@@ -525,12 +535,9 @@ export function AppointmentCard({
   onViewPetDetails,
   compact = false,
 }: AppointmentDetailsProps & { compact?: boolean }) {
-  // Réutilise la logique du composant principal mais avec un rendu différent
-  // Version compacte pour les listes, tableaux, etc.
-
   if (compact) {
     // Rendu compact
-    const petName = appointment.pet?.name || "Animal"
+    const pets = appointment.pets?.map(pa => pa.pet) || []
     const ownerName = appointment.client?.name || "Client"
     const appointmentTime = appointment.slot?.start
       ? new Date(appointment.slot.start).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
@@ -546,8 +553,16 @@ export function AppointmentCard({
               statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
             )}
           />
+          <div className="flex -space-x-2">
+            {pets.map((pet, index) => (
+              <Avatar key={pet.id} className="h-6 w-6 border-2 border-background">
+                <AvatarImage src={pet.image || ""} alt={pet.name} />
+                <AvatarFallback>{pet.name[0]}</AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
           <div>
-            <h4 className="text-sm font-medium">{petName}</h4>
+            <h4 className="text-sm font-medium">{pets.map(pet => pet.name).join(", ")}</h4>
             <p className="text-xs text-muted-foreground">{ownerName}</p>
           </div>
         </div>
@@ -563,14 +578,17 @@ export function AppointmentCard({
           >
             {appointmentLabels[colorKey]}
           </Badge>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 p-0"
-            onClick={() => onViewPetDetails?.(appointment.pet?.id || "")}
-          >
-            <Eye className="h-3 w-3" />
-          </Button>
+          {pets.map(pet => (
+            <Button
+              key={pet.id}
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0"
+              onClick={() => onViewPetDetails?.(pet.id)}
+            >
+              <Eye className="h-3 w-3" />
+            </Button>
+          ))}
         </div>
       </div>
     )

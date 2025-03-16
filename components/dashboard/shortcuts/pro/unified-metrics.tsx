@@ -120,9 +120,11 @@ export const UnifiedMetrics = () => {
     queryFn: async () => getProNextAppointment({}),
   })
 
+  console.log(nextAppointment, "nextAppointment")
+
   const nextAppointmentData = nextAppointment?.data?.nextAppointment as Appointment
   const nextAppointmentClient = nextAppointment?.data?.client as UserType
-  const nextAppointmentPet = nextAppointment?.data?.pet as Pet
+  const nextAppointmentPets = nextAppointmentData?.pets?.map(pa => pa.pet) || []
 
   // Utiliser les données récupérées ou les données de secours en cas d'erreur
   const metrics: MetricData = metricsData || fallbackData
@@ -503,11 +505,19 @@ export const UnifiedMetrics = () => {
               onClick={() => setAnimalDetailsOpen(true)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                  <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+                <div className="flex -space-x-2">
+                  {nextAppointmentPets.map((pet) => (
+                    <div key={pet.id} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background">
+                      {pet.image ? (
+                        <img src={pet.image} alt={pet.name} className="w-full h-full rounded-full object-cover" />
+                      ) : (
+                        <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <div>
-                  <p className="font-medium">{nextAppointmentPet?.name}</p>
+                  <p className="font-medium">{nextAppointmentPets.map(pet => pet.name).join(", ")}</p>
                   <p className="text-xs text-muted-foreground">{nextAppointmentData?.service?.name}</p>
                 </div>
               </div>
@@ -542,11 +552,14 @@ export const UnifiedMetrics = () => {
       )}
 
       {/* Utilisation de notre nouveau composant AnimalCredenza */}
-      <AnimalCredenza
-        isOpen={animalDetailsOpen}
-        onOpenChange={setAnimalDetailsOpen}
-        petId={nextAppointmentPet?.id}
-      />
+      {nextAppointmentPets.map(pet => (
+        <AnimalCredenza
+          key={pet.id}
+          isOpen={animalDetailsOpen}
+          onOpenChange={setAnimalDetailsOpen}
+          petId={pet.id}
+        />
+      ))}
     </div>
   )
 }

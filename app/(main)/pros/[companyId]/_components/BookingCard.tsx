@@ -57,7 +57,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
   const [upcomingSlots, setUpcomingSlots] = useState<DisplaySlot[]>([])
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [selectedPro, setSelectedPro] = useState<Member | null>(null)
-  const [selectedPet, setSelectedPet] = useState<Pet | null>(null)
+  const [selectedPets, setSelectedPets] = useState<Pet[] | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [selectedSlot, setSelectedSlot] = useState<OrganizationSlots | null>(null)
@@ -175,7 +175,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       setSelectedDate(selectedDisplaySlot ? selectedDisplaySlot.date : undefined)
       setSelectedTime(selectedDisplaySlot ? format(selectedDisplaySlot.date, "HH:mm") : null)
       setSelectedSlot(selectedDisplaySlot?.slot || null)
-      setSelectedPet(null)
+      setSelectedPets(null)
       setConsultationType(null)
       setSelectedOptions(null)
       setPaymentMethod(null)
@@ -216,7 +216,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       return
     }
 
-    if (!selectedPet) {
+    if (!selectedPets) {
       toast.error("Veuillez sélectionner un animal")
       return
     }
@@ -239,8 +239,8 @@ export function BookingCard({ organization }: { organization: Organization }) {
     }
 
     try {
-      const petId = selectedPet?.id
-      if (!petId) {
+      const petIds = selectedPets?.map(pet => pet.id)
+      if (!petIds) {
         toast.error("Veuillez sélectionner un animal")
         return
       }
@@ -248,7 +248,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       await createBooking({
         serviceId: selectedService.id,
         professionalId: selectedPro.id,
-        petId,
+        selectedPets: petIds,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
         selectedOptions: selectedOptions?.map(option => option.id) || [],
@@ -270,7 +270,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       return
     }
 
-    if (!selectedPet) {
+    if (!selectedPets) {
       toast.error("Veuillez sélectionner un animal")
       return
     }
@@ -293,8 +293,8 @@ export function BookingCard({ organization }: { organization: Organization }) {
     }
 
     try {
-      const petId = selectedPet?.id
-      if (!petId) {
+      const petIds = selectedPets?.map(pet => pet.id)
+      if (!petIds) {
         toast.error("Veuillez sélectionner un animal")
         return
       }
@@ -302,7 +302,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       await bookPayment({
         serviceId: selectedService.id,
         professionalId: organization.id,
-        petId,
+        selectedPets: petIds,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
         selectedOptions: selectedOptions?.map(option => option.id) || [],
@@ -504,14 +504,14 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   onToggleHomeVisit={value => setConsultationType(value)}
                 />
               ),
-              pet: () => <PetStep selectedPet={selectedPet} onSelectPet={pet => setSelectedPet(pet)} />,
+              pet: () => <PetStep selectedPets={selectedPets} onSelectPets={pets => setSelectedPets(pets)} selectedService={selectedService} />,
               summary: () => (
                 <SummaryStep
                   selectedService={selectedService}
                   selectedPro={selectedPro}
                   selectedDate={selectedDate}
                   selectedTime={selectedTime}
-                  selectedPet={selectedPet}
+                  selectedPets={selectedPets}
                   isHomeVisit={!!consultationType}
                   selectedOptions={selectedOptions || []}
                   additionalInfo={additionalNotes}
@@ -564,7 +564,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                     (current.id === "serviceAndOptions" && !selectedService) ||
                     (current.id === "professional" && !selectedPro) ||
                     (current.id === "date" && (!selectedDate || !selectedTime)) ||
-                    (current.id === "pet" && !selectedPet) ||
+                    (current.id === "pet" && !selectedPets) ||
                     (current.id === "payment" && !paymentMethod) ||
                     (current.id === "payment" && (isPaymentLoading || isBookingLoading))
                   }

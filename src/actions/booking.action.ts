@@ -21,15 +21,16 @@ import {
 import { eq, inArray } from "drizzle-orm"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
 import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
+import { petAppointments } from "../db/pet_appointments"
 
 // Schéma de validation pour la création d'un rendez-vous (similaire à celui du paiement)
 const createBookingSchema = z.object({
   serviceId: z.string(),
   professionalId: z.string(),
-  petId: z.string(),
   isHomeVisit: z.boolean().default(false),
   additionalInfo: z.string().optional(),
   selectedOptions: z.array(z.string()).optional(),
+  selectedPets: z.array(z.string()).optional(),
   amount: z.number(),
   companyId: z.string(),
   status: z.enum(["PENDING PAYMENT", "SCHEDULED", "CANCELED", "CONFIRMED"]).default("SCHEDULED"),
@@ -79,7 +80,6 @@ export const createBooking = createServerAction(
         .values({
           serviceId: input.serviceId,
           proId: input.companyId,
-          patientId: input.petId,
           clientId: ctx.user?.id ?? "",
           payedOnline: false,
           slotId: input.slotId,
@@ -104,6 +104,17 @@ export const createBooking = createServerAction(
         )
       }
 
+      if (input.selectedPets && input.selectedPets.length > 0) {
+        await db.insert(petAppointments).values(
+          input.selectedPets.map(pet => ({
+            petId: pet,
+            appointmentId: appointment.id,
+          }))
+        )
+        .returning()
+        .execute()
+      }
+
       await db
         .update(organizationSlots)
         .set({
@@ -113,12 +124,13 @@ export const createBooking = createServerAction(
         .execute()
 
       const transactionQuery = await db.transaction(async tx => {
-        const petQuery = (await tx.query.pets.findFirst({
-          where: eq(pets.id, input.petId),
+        const petQuery = (await tx.query.pets.findMany({
+          where: inArray(pets.id, input.selectedPets ?? []),
           columns: {
             name: true,
+            image: true,
           },
-        })) as Pet
+        })) as Pet[]
 
         const serviceQuery = (await tx.query.service.findFirst({
           where: eq(service.id, input.serviceId),
@@ -157,7 +169,7 @@ export const createBooking = createServerAction(
         subject: "Vous avez une nouvelle réservation",
         react: NewReservationEmailPro({
           customerName: ctx.user?.name || "",
-          petName: petQuery.name || "",
+          petName: petQuery.map(pet => pet.name).join(", ") || "",
           serviceName: serviceQuery.name || "",
           date: slotQuery.start.toLocaleDateString("fr-FR", {
             year: "numeric",
@@ -184,7 +196,7 @@ export const createBooking = createServerAction(
         subject: "Merci pour votre réservation",
         react: ReservationWaitingEmailClient({
           clientName: ctx.user?.name || "",
-          petName: petQuery.name || "",
+          petName: petQuery.map(pet => pet.name).join(", ") || "",
           serviceName: serviceQuery.name || "",
           date: slotQuery.start.toLocaleDateString("fr-FR", {
             year: "numeric",

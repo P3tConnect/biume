@@ -7,16 +7,17 @@ import { eq, inArray } from "drizzle-orm"
 import { db } from "../lib"
 import { stripe } from "../lib/stripe"
 import { z } from "zod"
+import { petAppointments } from "../db/pet_appointments"
 
 // Schéma de validation pour la création d'un Payment Intent
 const createBookingPaymentSchema = z.object({
   serviceId: z.string(),
   professionalId: z.string(),
-  petId: z.string(),
   isHomeVisit: z.boolean().default(false),
   additionalInfo: z.string().optional(),
   selectedOptions: z.array(z.string()).optional(),
   amount: z.number(),
+  selectedPets: z.array(z.string()).optional(),
   companyId: z.string(),
   slot: SelectOrganizationSlotsSchema,
 })
@@ -91,7 +92,6 @@ export const createBookingPaymentIntent = createServerAction(
         .values({
           serviceId: input.serviceId,
           proId: input.companyId,
-          patientId: input.petId,
           clientId: ctx.user?.id ?? "",
           status: "PENDING PAYMENT",
           atHome: input.isHomeVisit,
@@ -121,11 +121,11 @@ export const createBookingPaymentIntent = createServerAction(
           slotId: input.slot.id,
           serviceId: input.serviceId,
           professionalId: input.professionalId,
-          petId: input.petId,
           isHomeVisit: input.isHomeVisit.toString(),
           additionalInfo: input.additionalInfo || "",
           selectedOptions: selectedOptionsJson,
           companyId: input.companyId,
+          selectedPets: input.selectedPets ? JSON.stringify(input.selectedPets) : "[]",
         },
         transfer_data: {
           destination: org?.companyStripeId || "",
@@ -278,7 +278,6 @@ export const createBookingCheckoutSession = createServerAction(
         .values({
           serviceId: input.serviceId,
           proId: input.companyId,
-          patientId: input.petId,
           clientId: ctx.user?.id ?? "",
           status: "PENDING PAYMENT",
           payedOnline: true,
@@ -288,6 +287,17 @@ export const createBookingCheckoutSession = createServerAction(
         })
         .returning({ id: appointments.id })
         .execute()
+
+      if (input.selectedPets && input.selectedPets.length > 0) {
+        await db.insert(petAppointments).values(
+          input.selectedPets.map(pet => ({
+            petId: pet,
+            appointmentId: appointment.id,
+          }))
+        )
+        .returning()
+        .execute()
+      }
 
       if (!stripeCustomerId) {
         throw new ActionError("Impossible de récupérer le customerId de l'utilisateur")
@@ -310,12 +320,12 @@ export const createBookingCheckoutSession = createServerAction(
             slotId: input.slot.id,
             serviceId: input.serviceId,
             professionalId: input.professionalId,
-            petId: input.petId,
             isHomeVisit: input.isHomeVisit.toString(),
             additionalInfo: input.additionalInfo || "",
             selectedOptions: selectedOptionsJson,
             companyId: input.companyId,
             clientId: ctx.user?.id ?? "",
+            selectedPets: input.selectedPets ? JSON.stringify(input.selectedPets) : "[]",
           },
           transfer_data: {
             amount: input.amount,

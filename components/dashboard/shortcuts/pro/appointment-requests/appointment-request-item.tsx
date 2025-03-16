@@ -122,6 +122,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     }
   }
 
+  // Récupérer le premier animal de la liste
+  const firstPet = appointment.pets[0]?.pet
+
   return (
     <>
       <div
@@ -152,15 +155,15 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               "bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400"
             )}
           >
-            {appointment.pet?.type === "Dog" ? <DogIcon className="h-4 w-4" /> : <CatIcon className="h-4 w-4" />}
+            {firstPet?.type === "Dog" ? <DogIcon className="h-4 w-4" /> : <CatIcon className="h-4 w-4" />}
           </div>
 
           {/* Détails de la demande */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
               <div className="font-medium text-base">
-                {appointment.pet?.name}
-                <span className="text-sm font-normal text-muted-foreground ml-1">({appointment.pet?.type})</span>
+                {firstPet?.name}
+                <span className="text-sm font-normal text-muted-foreground ml-1">({firstPet?.type})</span>
               </div>
             </div>
 
@@ -170,8 +173,8 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               </div>
               <div className="flex items-center gap-1.5 text-sm">
                 <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                <span className={appointment.status === "SCHEDULED" ? "" : ""}>
-                  {appointment.slot?.start?.toLocaleString("fr-FR", {
+                <span>
+                  {appointment.beginAt?.toLocaleString("fr-FR", {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
@@ -186,8 +189,8 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
               </div>
               <div className="flex items-center gap-1.5 text-sm">
                 <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
-                <span className={appointment.status === "SCHEDULED" ? "text-yellow-600" : "text-green-600"}>
-                  {appointment.status === "SCHEDULED" ? "Paiement sur place" : "Payé en ligne"}
+                <span className={!appointment.payedOnline ? "text-yellow-600" : "text-green-600"}>
+                  {!appointment.payedOnline ? "Paiement sur place" : "Payé en ligne"}
                 </span>
               </div>
             </div>
@@ -242,7 +245,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
             >
               <div className="w-full flex items-center gap-4 rounded-lg border p-4 hover:border-primary/50 transition-colors">
                 <div className={cn("p-3 rounded-full flex-shrink-0", "bg-green-100 dark:bg-green-900/20")}>
-                  {appointment.pet?.type === "Dog" ? (
+                  {firstPet?.type === "Dog" ? (
                     <DogIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
                   ) : (
                     <CatIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -250,8 +253,8 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
                 </div>
                 <div className="flex-1 text-left">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-base">{appointment.pet?.name}</p>
-                    <span className="text-sm text-muted-foreground">({appointment.pet?.type})</span>
+                    <p className="font-medium text-base">{firstPet?.name}</p>
+                    <span className="text-sm text-muted-foreground">({firstPet?.type})</span>
                   </div>
                   <p className="text-xs text-blue-500 mt-0.5">Voir la fiche complète →</p>
                 </div>
@@ -302,7 +305,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
                   <span className="text-muted-foreground">Date et heure:</span>
                   <p className="font-medium flex items-center gap-1">
                     <CalendarIcon className="h-3 w-3" />
-                    {appointment.slot?.start?.toLocaleString("fr-FR", {
+                    {appointment.beginAt?.toLocaleString("fr-FR", {
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
@@ -322,7 +325,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
                   <span className="text-muted-foreground">Paiement:</span>
                   <p className="font-medium flex items-center gap-1">
                     <CreditCardIcon className="h-3 w-3" />
-                    {appointment.status === "SCHEDULED" ? "Paiement sur place" : "Payé en ligne"}
+                    {!appointment.payedOnline ? "Paiement sur place" : "Payé en ligne"}
                   </p>
                 </div>
               </div>
@@ -384,7 +387,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       <AnimalCredenza
         isOpen={isAnimalCredenzaOpen}
         onOpenChange={setIsAnimalCredenzaOpen}
-        petId={appointment.pet?.id!}
+        petId={firstPet?.id!}
       />
 
       {/* Modale de refus */}

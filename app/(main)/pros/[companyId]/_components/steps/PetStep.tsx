@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { Pet } from "@/src/db"
+import { Pet, Service } from "@/src/db"
 import { cn } from "@/src/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,16 +11,35 @@ import { useQuery } from "@tanstack/react-query"
 import { getPets } from "@/src/actions"
 
 interface PetStepProps {
-  selectedPet: Pet | null
-  onSelectPet: (pet: Pet) => void
+  selectedPets: Pet[] | null
+  onSelectPets: (pets: Pet[]) => void
+  selectedService: Service | null
 }
 
-export function PetStep({ selectedPet, onSelectPet }: PetStepProps) {
+export function PetStep({ selectedPets, onSelectPets, selectedService }: PetStepProps) {
   // Récupération des animaux de l'utilisateur
   const { data: userPets, isLoading } = useQuery({
     queryKey: ["user-pets"],
     queryFn: () => getPets({}),
   })
+
+  // Gestion de la sélection des animaux
+  const handlePetSelection = (pet: Pet) => {
+    if (!selectedService) return
+
+    if (selectedService.type === "MULTIPLE") {
+      // Pour les services de groupe, permettre la sélection multiple
+      const isSelected = selectedPets?.some(p => p.id === pet.id)
+      if (isSelected) {
+        onSelectPets((selectedPets || []).filter(p => p.id !== pet.id))
+      } else {
+        onSelectPets([...(selectedPets || []), pet])
+      }
+    } else {
+      // Pour les services individuels, permettre uniquement la sélection d'un animal
+      onSelectPets([pet])
+    }
+  }
 
   // Obtenir l'icône appropriée en fonction du type d'animal
   const getPetIcon = (type?: string) => {
@@ -37,7 +55,12 @@ export function PetStep({ selectedPet, onSelectPet }: PetStepProps) {
 
   return (
     <div className="space-y-6">
-      <h3 className="font-medium text-lg">Sélectionnez un animal pour ce rendez-vous</h3>
+      <div className="space-y-2">
+        <h3 className="font-medium text-lg">Sélectionnez {selectedService?.type === "MULTIPLE" ? "un ou plusieurs animaux" : "un animal"} pour ce rendez-vous</h3>
+        {selectedService?.type === "MULTIPLE" && (
+          <p className="text-sm text-muted-foreground">Ce service permet d'accueillir plusieurs animaux en même temps.</p>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="flex justify-center p-8">
@@ -50,9 +73,9 @@ export function PetStep({ selectedPet, onSelectPet }: PetStepProps) {
               key={pet.id}
               className={cn(
                 "cursor-pointer transition-all hover:border-primary/50",
-                selectedPet?.id === pet.id ? "border-2 border-primary bg-primary/5" : ""
+                selectedPets?.some(p => p.id === pet.id) ? "border-2 border-primary bg-primary/5" : ""
               )}
-              onClick={() => onSelectPet(pet)}
+              onClick={() => handlePetSelection(pet)}
             >
               <CardContent className="p-4 flex items-center gap-3">
                 <Avatar className="h-12 w-12">

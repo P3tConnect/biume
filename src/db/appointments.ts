@@ -10,8 +10,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { report } from "./report"
-import { user } from "./user"
-import { petAppointments } from "./pet_appointments"
+import { User, user } from "./user"
+import { PetAppointment, petAppointments } from "./pet_appointments"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -97,10 +97,10 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   invoice: Invoice
   service: Service
   options: AppointmentOption[]
-  pet: Pet
+  pets: PetAppointment[]
   report: Report
   observation: Observation
-  client: InferSelectModel<typeof user>
+  client: User
   slot: OrganizationSlots
 }
 export type CreateAppointment = typeof appointments.$inferInsert

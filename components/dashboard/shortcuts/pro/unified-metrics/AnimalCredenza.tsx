@@ -3,6 +3,7 @@
 import { ActiveTab } from "./types"
 import { CredenzaClose, CredenzaContent, CredenzaTitle } from "@/components/ui"
 import { FileClock, FileText, HeartPulseIcon, Info } from "lucide-react"
+import { Appointment, User } from "@/src/db"
 
 import { AnimalDetailsSidebar } from "./AnimalDetailsSidebar"
 import { AppointmentsTab } from "./AppointmentsTab"
@@ -13,7 +14,6 @@ import { InfoTab } from "./InfoTab"
 import { MedicalTab } from "./MedicalTab"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { useState } from "react"
-import { User } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
 import { getPetById } from "@/src/actions/pet.action"
 
@@ -53,7 +53,7 @@ export const AnimalCredenza = ({
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             nextAppointmentClient={pet?.data?.owner as User}
-            nextAppointmentData={pet?.data?.appointments[0]!}
+            nextAppointmentData={pet?.data?.appointments[0]?.appointment as Appointment}
           />
 
           {/* Contenu principal */}
@@ -104,21 +104,21 @@ export const AnimalCredenza = ({
               <MedicalTab
                 animal={pet?.data!}
                 nextAppointmentClient={pet?.data?.owner as User}
-                nextAppointmentData={pet?.data?.appointments[0]!}
+                nextAppointmentData={pet?.data?.appointments[0]?.appointment as Appointment}
               />
             )}
             {activeTab === "appointments" && (
               <AppointmentsTab
                 animal={pet?.data!}
                 nextAppointmentClient={pet?.data?.owner as User}
-                nextAppointmentData={pet?.data?.appointments[0]!}
+                nextAppointmentData={pet?.data?.appointments[0]?.appointment as Appointment}
               />
             )}
             {activeTab === "documents" && (
               <DocumentsTab
                 animal={pet?.data!}
                 nextAppointmentClient={pet?.data?.owner as User}
-                nextAppointmentData={pet?.data?.appointments[0]!}
+                nextAppointmentData={pet?.data?.appointments[0]?.appointment as Appointment}
               />
             )}
           </div>

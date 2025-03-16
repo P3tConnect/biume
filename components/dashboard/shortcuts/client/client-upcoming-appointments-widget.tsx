@@ -80,11 +80,11 @@ const ClientUpcomingAppointmentsWidget = () => {
               <div
                 key={appointment.id}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer"
-                onClick={() => setSelectedAppointment(appointment)}
+                onClick={() => setSelectedAppointment(appointment as Appointment)}
               >
                 <Avatar className="size-12 border-2 border-background">
-                  <AvatarImage src={appointment.pet.image || ""} alt={appointment.pet.name} />
-                  <AvatarFallback>{appointment.pet.name[0]}</AvatarFallback>
+                  <AvatarImage src={appointment.pets[0]?.pet?.image || ""} alt={appointment.pets[0]?.pet?.name} />
+                  <AvatarFallback>{appointment.pets[0]?.pet?.name[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1 min-w-0">
@@ -113,7 +113,7 @@ const ClientUpcomingAppointmentsWidget = () => {
                     <div className="flex items-center gap-1">
                       <Clock className="size-3" />
                       <span className="truncate">
-                        {appointment.slot.start.toLocaleString("fr-FR", {
+                        {appointment.slot?.start.toLocaleString("fr-FR", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
@@ -124,7 +124,7 @@ const ClientUpcomingAppointmentsWidget = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <User2 className="size-3" />
-                      <span className="truncate">{appointment.pro.name}</span>
+                      <span className="truncate">{appointment.pro?.name}</span>
                     </div>
                   </div>
                 </div>
@@ -155,12 +155,12 @@ const ClientUpcomingAppointmentsWidget = () => {
               <SheetHeader className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="size-16 border-2 border-background">
-                    <AvatarImage src={selectedAppointment.pet.image || ""} alt={selectedAppointment.pet.name} />
-                    <AvatarFallback>{selectedAppointment.pet.name[0]}</AvatarFallback>
+                    <AvatarImage src={selectedAppointment.pets[0]?.pet?.image || ""} alt={selectedAppointment.pets[0]?.pet?.name} />
+                    <AvatarFallback>{selectedAppointment.pets[0]?.pet?.name[0]}</AvatarFallback>
                   </Avatar>
                   <div>
                     <SheetTitle>{selectedAppointment.service.name}</SheetTitle>
-                    <SheetDescription>Pour {selectedAppointment.pet.name}</SheetDescription>
+                    <SheetDescription>Pour {selectedAppointment.pets[0]?.pet?.name}</SheetDescription>
                   </div>
                 </div>
               </SheetHeader>
@@ -173,7 +173,7 @@ const ClientUpcomingAppointmentsWidget = () => {
                       <Clock className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">
-                          {selectedAppointment.slot.start.toLocaleString("fr-FR", {
+                          {selectedAppointment.slot?.start.toLocaleString("fr-FR", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -201,12 +201,12 @@ const ClientUpcomingAppointmentsWidget = () => {
                   <h4 className="text-sm font-medium">Professionnel</h4>
                   <div className="flex items-center gap-3">
                     <Avatar className="size-12">
-                      <AvatarImage src={selectedAppointment.pro.logo || ""} alt={selectedAppointment.pro.name} />
-                      <AvatarFallback>{selectedAppointment.pro.name[0]}</AvatarFallback>
+                      <AvatarImage src={selectedAppointment.pro?.logo || ""} alt={selectedAppointment.pro?.name} />
+                      <AvatarFallback>{selectedAppointment.pro?.name[0]}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium">{selectedAppointment.pro.name}</p>
-                      <p className="text-sm text-muted-foreground">{selectedAppointment.pro.description}</p>
+                      <p className="font-medium">{selectedAppointment.pro?.name}</p>
+                      <p className="text-sm text-muted-foreground">{selectedAppointment.pro?.description}</p>
                     </div>
                   </div>
                 </div>

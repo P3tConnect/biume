@@ -8,11 +8,11 @@ import type { Appointment } from "@/src/db"
 interface CalendarGridProps {
   currentDate: Date
   selectedDate: Date | null
-  appointments: Appointment[]
+  appointments: Appointment[] | undefined
   onDayClick: (day: number) => void
 }
 
-export function CalendarGrid({ currentDate, selectedDate, appointments, onDayClick }: CalendarGridProps) {
+export function CalendarGrid({ currentDate, selectedDate, appointments = [], onDayClick }: CalendarGridProps) {
   const daysInMonth = getDaysInMonth(currentDate)
   const firstDayOfMonth = getFirstDayOfMonth(currentDate)
 
@@ -32,9 +32,11 @@ export function CalendarGrid({ currentDate, selectedDate, appointments, onDayCli
   }
 
   const renderAppointments = (day: number) => {
+    if (!appointments) return null
+
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
     const dateString = date.toDateString()
-    const dayAppointments = appointments.filter(appointment => appointment.slot.start.toDateString() === dateString)
+    const dayAppointments = appointments.filter(appointment => appointment.slot?.start.toDateString() === dateString)
 
     if (dayAppointments.length === 0) return null
 
@@ -46,7 +48,7 @@ export function CalendarGrid({ currentDate, selectedDate, appointments, onDayCli
     return (
       <>
         {visibleAppointments.map(appointment => (
-          <AppointmentCalendarItem key={appointment.id} appointment={appointment} />
+          <AppointmentCalendarItem key={appointment.id} appointment={appointment as Appointment} />
         ))}
         {hiddenAppointments > 0 && (
           <div className="flex justify-end">
@@ -116,13 +118,13 @@ export function CalendarGrid({ currentDate, selectedDate, appointments, onDayCli
                 day === 0
                   ? "invisible"
                   : cn(
-                      "rounded-xl border border-border hover:border-border/80",
-                      "dark:border-gray-700 dark:hover:border-gray-600",
-                      isToday(day) && "bg-primary/5 ring-2 ring-primary",
-                      isSelected(day) && "bg-secondary/5 ring-2 ring-secondary",
-                      isWeekend(dayIndex) && "bg-muted/50",
-                      "cursor-pointer"
-                    )
+                    "rounded-xl border border-border hover:border-border/80",
+                    "dark:border-gray-700 dark:hover:border-gray-600",
+                    isToday(day) && "bg-primary/5 ring-2 ring-primary",
+                    isSelected(day) && "bg-secondary/5 ring-2 ring-secondary",
+                    isWeekend(dayIndex) && "bg-muted/50",
+                    "cursor-pointer"
+                  )
               )}
               onClick={() => day !== 0 && onDayClick(day)}
             >

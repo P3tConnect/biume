@@ -28,9 +28,10 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
   // Convertir le type d'appointment en une clé valide pour les couleurs et labels
   const colorKey = appointmentTypeToColorKey[appointment.type]
 
-  // Déterminer le nom du propriétaire et du pet à partir du rendez-vous
-  const petName = appointment.pet?.name || "Animal"
-  const ownerName = appointment.client?.name || "Client"
+  // Récupérer les informations des animaux
+  const pets = appointment.pets?.map(pa => pa.pet) || []
+  const firstPet = pets[0]
+  const totalPets = pets.length
 
   // Simplifier la gestion de l'adresse pour éviter les erreurs de type
   const slotLocation = appointment.pro ? appointment.pro.name || "" : ""
@@ -50,10 +51,21 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
             )}
           >
             <div className="relative flex-shrink-0">
-              <Avatar className="h-4 w-4">
-                <AvatarImage src={appointment.pet?.image || ""} alt={appointment.pet?.name || "Animal"} />
-                <AvatarFallback className="text-[0.55rem]">{(appointment.pet?.name || "A")[0]}</AvatarFallback>
-              </Avatar>
+              {firstPet ? (
+                <Avatar className="h-4 w-4">
+                  <AvatarImage src={firstPet.image || ""} alt={firstPet.name} />
+                  <AvatarFallback className="text-[0.55rem]">{firstPet.name[0]}</AvatarFallback>
+                </Avatar>
+              ) : (
+                <Avatar className="h-4 w-4">
+                  <AvatarFallback className="text-[0.55rem]">?</AvatarFallback>
+                </Avatar>
+              )}
+              {totalPets > 1 && (
+                <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-[0.6rem] w-3 h-3 flex items-center justify-center">
+                  {totalPets}
+                </div>
+              )}
             </div>
             <div className="flex-1 truncate font-medium">
               {appointment.slot.start.toLocaleTimeString("fr-FR", {
@@ -72,13 +84,19 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                 statusColors[appointment.status as StatusColorKey] || statusColors["PENDING PAYMENT"]
               )}
             >
-              <Avatar className="h-12 w-12 ring-2 ring-white/20">
-                <AvatarImage src={appointment.pet.image || ""} alt={appointment.pet.name} />
-                <AvatarFallback>{appointment.pet.name[0]}</AvatarFallback>
-              </Avatar>
+              <div className="flex -space-x-2">
+                {pets.map((pet, index) => (
+                  <Avatar key={pet.id} className="h-12 w-12 ring-2 ring-white/20 border-2 border-background">
+                    <AvatarImage src={pet.image || ""} alt={pet.name} />
+                    <AvatarFallback>{pet.name[0]}</AvatarFallback>
+                  </Avatar>
+                ))}
+              </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-white">{appointment.pet.name}</p>
+                  <p className="font-medium text-white">
+                    {pets.map(pet => pet.name).join(", ")}
+                  </p>
                   <Badge
                     variant="default"
                     className={cn(
