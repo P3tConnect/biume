@@ -377,8 +377,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -410,8 +411,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -443,8 +445,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -476,8 +479,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -499,15 +503,20 @@ export const UnifiedMetrics = () => {
             <div className="p-3">
               <Skeleton className="h-10 w-full" />
             </div>
-          ) : nextAppointment ? (
+          ) : nextAppointment?.data?.client != null ||
+            nextAppointment?.data?.nextAppointment != null ||
+            nextAppointment?.data?.pet != null ? (
             <div
               className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={() => setAnimalDetailsOpen(true)}
             >
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
-                  {nextAppointmentPets.map((pet) => (
-                    <div key={pet.id} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background">
+                  {nextAppointmentPets.map(pet => (
+                    <div
+                      key={pet.id}
+                      className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background"
+                    >
                       {pet.image ? (
                         <img src={pet.image} alt={pet.name} className="w-full h-full rounded-full object-cover" />
                       ) : (
@@ -534,8 +543,18 @@ export const UnifiedMetrics = () => {
               </div>
             </div>
           ) : (
-            <div className="p-3">
-              <p className="text-sm text-muted-foreground">Aucun rendez-vous programmé</p>
+            <div className="flex flex-col items-center justify-center p-6 space-y-3 text-center border-2 border-dashed rounded-lg border-muted">
+              <CalendarIcon className="w-12 h-12 text-muted-foreground/50" />
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Aucun rendez-vous à venir</p>
+                <p className="text-xs text-muted-foreground/75 mt-1">
+                  Commencez à planifier vos consultations pour voir apparaître votre prochain rendez-vous ici
+                </p>
+              </div>
+              <Button variant="outline" size="sm" className="mt-2">
+                <CalendarIcon className="w-4 h-4 mr-2" />
+                Planifier un rendez-vous
+              </Button>
             </div>
           )}
         </CardContent>
@@ -553,12 +572,7 @@ export const UnifiedMetrics = () => {
 
       {/* Utilisation de notre nouveau composant AnimalCredenza */}
       {nextAppointmentPets.map(pet => (
-        <AnimalCredenza
-          key={pet.id}
-          isOpen={animalDetailsOpen}
-          onOpenChange={setAnimalDetailsOpen}
-          petId={pet.id}
-        />
+        <AnimalCredenza key={pet.id} isOpen={animalDetailsOpen} onOpenChange={setAnimalDetailsOpen} petId={pet.id} />
       ))}
     </div>
   )

@@ -184,32 +184,32 @@ export const getPetById = createServerAction(
           },
           appointments: {
             with: {
-              slot: {
-                columns: {
-                  id: true,
-                  start: true,
-                  end: true,
-                },
-              },
-              service: {
-                columns: {
-                  id: true,
-                  name: true,
-                  price: true,
-                  duration: true,
-                  description: true,
+              appointment: {
+                with: {
+                  slot: {
+                    columns: {
+                      id: true,
+                      start: true,
+                      end: true,
+                    },
+                  },
+                  service: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      price: true,
+                    },
+                  },
                 },
               },
             },
           },
         },
       })
-  
+
       if (!pet) {
         throw new ActionError("L'animal n'existe pas")
       }
-  
-      console.log(pet, "pet in getPetById")
 
       return pet as unknown as Pet
     } catch (err) {
@@ -275,8 +275,9 @@ export const getProPatients = createServerAction(
       },
       with: {
         appointments: {
-          where: and(eq(appointments.status, "CONFIRMED"), eq(appointments.proId, ctx.fullOrganization?.id ?? "")),
-          orderBy: [desc(appointments.createdAt)],
+          with: {
+            appointment: true,
+          },
         },
         owner: {
           columns: {
@@ -290,8 +291,12 @@ export const getProPatients = createServerAction(
       },
     })
 
-    // Ne retourner que les animaux qui ont au moins un rendez-vous confirmé
-    return patients.filter(patient => patient.appointments.length > 0) as unknown as Pet[]
+    // Ne retourner que les animaux qui ont au moins un rendez-vous confirmé via la table de jointure
+    return patients.filter(patient =>
+      patient.appointments?.some(
+        pa => pa.appointment?.status === "CONFIRMED" && pa.appointment?.proId === ctx.fullOrganization?.id
+      )
+    ) as unknown as Pet[]
   },
   [requireAuth, requireFullOrganization]
 )

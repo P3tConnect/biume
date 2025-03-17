@@ -144,10 +144,24 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
                             key={index}
                             variant={time === timeString ? "default" : "outline"}
                             size="sm"
-                            className="w-full"
+                            className="w-full flex items-center justify-between gap-2"
                             onClick={() => handleTimeChange(timeString, slot)}
                           >
-                            {timeString}
+                            <span>{timeString}</span>
+                            <span
+                              className={`
+                              px-2 py-0.5 rounded-full text-xs
+                              ${
+                                slot.remainingPlaces <= 2
+                                  ? "bg-red-100 text-red-700"
+                                  : slot.remainingPlaces <= 5
+                                    ? "bg-orange-100 text-orange-700"
+                                    : "bg-green-100 text-green-700"
+                              }
+                            `}
+                            >
+                              {slot.remainingPlaces} {slot.remainingPlaces > 1 ? "places" : "place"}
+                            </span>
                           </Button>
                         )
                       })

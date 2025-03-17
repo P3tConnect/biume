@@ -9,10 +9,7 @@ import {
   UserCircle2Icon,
   XIcon,
   CreditCardIcon,
-  PhoneIcon,
   MailIcon,
-  MapPinIcon,
-  InfoIcon,
   CalendarDaysIcon,
   ClipboardIcon,
   BadgeDollarSignIcon,
@@ -25,7 +22,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { Appointment, User } from "@/src/db"
+import { Appointment } from "@/src/db"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
@@ -44,11 +41,12 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
   const [isClientDialogOpen, setIsClientDialogOpen] = useState(false)
   const [denyReason, setDenyReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null)
 
   const { mutateAsync: confirmAppointmentMutation } = useMutation({
     mutationFn: confirmAppointment,
     onSuccess: () => {
-      toast.success("Rendez-vous confirmé avec succès")
+      toast.success("Rendez-vous confirmé !")
       queryClient.invalidateQueries({
         queryKey: ["pending-and-payed-appointments"],
       })
@@ -70,7 +68,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
   const { mutateAsync: denyAppointmentMutation } = useMutation({
     mutationFn: denyAppointment,
     onSuccess: () => {
-      toast.success("Rendez-vous refusé avec succès")
+      toast.success("Rendez-vous refusé !")
       queryClient.invalidateQueries({
         queryKey: ["pending-and-payed-appointments"],
       })
@@ -122,9 +120,6 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
     }
   }
 
-  // Récupérer le premier animal de la liste
-  const firstPet = appointment.pets[0]?.pet
-
   return (
     <>
       <div
@@ -133,95 +128,125 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
           setIsSheetOpen(true)
         }}
         className={cn(
-          "group relative rounded-xl p-3 transition-all hover:scale-[1.01] cursor-pointer border",
-          "border-green-100 dark:border-green-900/30 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80"
+          "group relative rounded-lg transition-all hover:scale-[1.01] cursor-pointer",
+          "bg-blue-50/80 dark:bg-blue-950/20 hover:bg-blue-100/80 dark:hover:bg-blue-950/30",
+          "border border-blue-100 dark:border-blue-900/50",
+          "shadow-[0_2px_4px_rgba(96,165,250,0.03)] dark:shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
         )}
       >
-        {/* Indicateur d'urgence */}
-        {/* {appointment.urgent && (
-          <div className="absolute -top-2 -right-2">
-            <div className="px-2 py-0.5 bg-red-500 text-white text-xs font-medium rounded-full shadow-sm animate-pulse flex items-center gap-1">
-              <AlertTriangleIcon className="h-3 w-3" />
-              <span>Urgent</span>
+        <div className="p-3">
+          {/* En-tête avec le service et le statut de paiement */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-blue-400 dark:bg-blue-500"></div>
+              <span className="text-xs font-medium text-blue-700 dark:text-blue-300">{appointment.service?.name}</span>
             </div>
-          </div>
-        )} */}
-
-        <div className="flex items-start gap-4">
-          {/* Info de l'animal */}
-          <div
-            className={cn(
-              "p-2.5 rounded-lg flex-shrink-0 flex items-center justify-center",
-              "bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400"
-            )}
-          >
-            {firstPet?.type === "Dog" ? <DogIcon className="h-4 w-4" /> : <CatIcon className="h-4 w-4" />}
-          </div>
-
-          {/* Détails de la demande */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-1">
-              <div className="font-medium text-base">
-                {firstPet?.name}
-                <span className="text-sm font-normal text-muted-foreground ml-1">({firstPet?.type})</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <div className="flex items-center gap-1.5 text-sm">
-                <span>{appointment.service?.name}</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm">
-                <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                <span>
-                  {appointment.beginAt?.toLocaleString("fr-FR", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <UserCircle2Icon className="h-4 w-4" />
-                <span>{appointment.client?.name}</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm">
-                <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
-                <span className={!appointment.payedOnline ? "text-yellow-600" : "text-green-600"}>
-                  {!appointment.payedOnline ? "Paiement sur place" : "Payé en ligne"}
-                </span>
-              </div>
+            <div className="flex items-center gap-1.5 text-xs">
+              <CreditCardIcon className="h-3 w-3" />
+              <span
+                className={cn(
+                  !appointment.payedOnline
+                    ? "text-yellow-500 dark:text-yellow-400"
+                    : "text-emerald-500 dark:text-emerald-400",
+                  "font-medium"
+                )}
+              >
+                {!appointment.payedOnline ? "À payer" : "Payé"}
+              </span>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full bg-green-50 hover:bg-green-100 text-green-600 border-green-200 hover:border-green-300 dark:bg-green-900/20 dark:hover:bg-green-900/40 dark:border-green-800"
-              onClick={e => {
-                e.stopPropagation()
-                handleConfirm()
-              }}
-              disabled={isLoading}
-            >
-              <CheckIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border-red-200 hover:border-red-300 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:border-red-800"
-              onClick={e => {
-                e.stopPropagation()
-                handleOpenDenyModal()
-              }}
-              disabled={isLoading}
-            >
-              <XIcon className="h-4 w-4" />
-            </Button>
+          {/* Informations principales */}
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              {/* Animaux */}
+              <div className="flex items-center gap-1 mb-1.5">
+                {appointment.pets.map((petData, index) => (
+                  <div
+                    key={petData.pet.id}
+                    className="inline-flex items-center bg-slate-50 dark:bg-slate-800 rounded-full pl-1 pr-2 py-0.5"
+                  >
+                    {petData.pet.type === "Dog" ? (
+                      <DogIcon className="h-3 w-3 text-slate-500 mr-1" />
+                    ) : (
+                      <CatIcon className="h-3 w-3 text-slate-500 mr-1" />
+                    )}
+                    <span className="text-xs">{petData.pet.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Client */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-5 w-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                  <UserCircle2Icon className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
+                </div>
+                <span className="text-sm">{appointment.client?.name}</span>
+              </div>
+
+              {/* Date et heure */}
+              <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-1">
+                  <CalendarIcon className="h-3 w-3" />
+                  <span>
+                    {appointment.slot.start.toLocaleDateString("fr-FR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <ClockIcon className="h-3 w-3" />
+                  <span>
+                    {appointment.slot.start.toLocaleTimeString("fr-FR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-8 w-8 rounded-full",
+                  "bg-emerald-50 text-emerald-600 hover:text-emerald-50 hover:bg-emerald-600",
+                  "dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-emerald-50",
+                  "transition-colors duration-200"
+                )}
+                onClick={e => {
+                  e.stopPropagation()
+                  handleConfirm()
+                }}
+                disabled={isLoading}
+              >
+                <CheckIcon className="h-4 w-4" />
+                <span className="sr-only">Confirmer</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-8 w-8 rounded-full",
+                  "bg-red-50 text-red-600 hover:text-red-50 hover:bg-red-600",
+                  "dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-red-50",
+                  "transition-colors duration-200"
+                )}
+                onClick={e => {
+                  e.stopPropagation()
+                  handleOpenDenyModal()
+                }}
+                disabled={isLoading}
+              >
+                <XIcon className="h-4 w-4" />
+                <span className="sr-only">Refuser</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -237,29 +262,37 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
             <SheetDescription>Informations complètes sur le rendez-vous</SheetDescription>
           </SheetHeader>
           <div className="mt-6 space-y-6">
-            {/* Section Animal */}
-            <Button
-              variant="ghost"
-              className="w-full p-0 h-auto hover:bg-transparent"
-              onClick={() => setIsAnimalCredenzaOpen(true)}
-            >
-              <div className="w-full flex items-center gap-4 rounded-lg border p-4 hover:border-primary/50 transition-colors">
-                <div className={cn("p-3 rounded-full flex-shrink-0", "bg-green-100 dark:bg-green-900/20")}>
-                  {firstPet?.type === "Dog" ? (
-                    <DogIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  ) : (
-                    <CatIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  )}
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium text-base">{firstPet?.name}</p>
-                    <span className="text-sm text-muted-foreground">({firstPet?.type})</span>
+            {/* Section Animaux */}
+            <div className="space-y-3">
+              {appointment.pets.map(petData => (
+                <Button
+                  key={petData.pet.id}
+                  variant="ghost"
+                  className="w-full p-0 h-auto hover:bg-transparent"
+                  onClick={() => {
+                    setIsAnimalCredenzaOpen(true)
+                    setSelectedPetId(petData.pet.id)
+                  }}
+                >
+                  <div className="w-full flex items-center gap-4 rounded-lg border p-4 hover:border-primary/50 transition-colors">
+                    <div className={cn("p-3 rounded-full flex-shrink-0", "bg-green-100 dark:bg-green-900/20")}>
+                      {petData.pet.type === "Dog" ? (
+                        <DogIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      ) : (
+                        <CatIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      )}
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-base">{petData.pet.name}</p>
+                        <span className="text-sm text-muted-foreground">({petData.pet.type})</span>
+                      </div>
+                      <p className="text-xs text-blue-500 mt-0.5">Voir la fiche complète →</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-blue-500 mt-0.5">Voir la fiche complète →</p>
-                </div>
-              </div>
-            </Button>
+                </Button>
+              ))}
+            </div>
 
             {/* Section Client */}
             <Button
@@ -305,7 +338,7 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
                   <span className="text-muted-foreground">Date et heure:</span>
                   <p className="font-medium flex items-center gap-1">
                     <CalendarIcon className="h-3 w-3" />
-                    {appointment.beginAt?.toLocaleString("fr-FR", {
+                    {appointment.slot.start.toLocaleString("fr-FR", {
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
@@ -384,11 +417,9 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
       </Dialog>
 
       {/* Credenza de l'animal */}
-      <AnimalCredenza
-        isOpen={isAnimalCredenzaOpen}
-        onOpenChange={setIsAnimalCredenzaOpen}
-        petId={firstPet?.id!}
-      />
+      {selectedPetId && (
+        <AnimalCredenza isOpen={isAnimalCredenzaOpen} onOpenChange={setIsAnimalCredenzaOpen} petId={selectedPetId} />
+      )}
 
       {/* Modale de refus */}
       <Dialog open={isDenyModalOpen} onOpenChange={setIsDenyModalOpen}>

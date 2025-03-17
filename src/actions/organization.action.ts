@@ -95,7 +95,16 @@ export const getCompanyById = createServerAction(
       where: eq(organizationTable.id, input.companyId),
       with: {
         options: true,
-        services: true,
+        services: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            type: true,
+            places: true,
+          },
+        },
         members: {
           with: {
             user: {

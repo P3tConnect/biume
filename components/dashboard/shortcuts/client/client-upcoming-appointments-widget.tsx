@@ -29,6 +29,7 @@ import { useSession } from "@/src/lib/auth-client"
 import { Appointment } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
 import { getAllAppointmentForClient } from "@/src/actions/appointments.action"
+import { cn } from "@/lib/utils"
 
 const ClientUpcomingAppointmentsWidget = () => {
   const router = useRouter()
@@ -79,55 +80,71 @@ const ClientUpcomingAppointmentsWidget = () => {
             {appointments?.data?.map(appointment => (
               <div
                 key={appointment.id}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer"
+                className="group flex items-center gap-4 p-3 bg-card hover:bg-accent hover:shadow-lg rounded-lg cursor-pointer transition-all duration-200 border border-transparent hover:border-border"
                 onClick={() => setSelectedAppointment(appointment as Appointment)}
               >
-                <Avatar className="size-12 border-2 border-background">
-                  <AvatarImage src={appointment.pets[0]?.pet?.image || ""} alt={appointment.pets[0]?.pet?.name} />
-                  <AvatarFallback>{appointment.pets[0]?.pet?.name[0]}</AvatarFallback>
-                </Avatar>
+                {/* Date block */}
+                <div className="flex-shrink-0 w-[4.5rem] h-[4.5rem] flex flex-col items-center justify-center rounded-lg bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors">
+                  <span className="text-2xl font-semibold">{appointment.slot?.start.getDate()}</span>
+                  <span className="text-xs capitalize">
+                    {appointment.slot?.start.toLocaleString("fr-FR", { month: "short" })}
+                  </span>
+                </div>
 
+                {/* Main content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium truncate">{appointment.service.name}</h3>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger onClick={e => e.stopPropagation()}>
-                          <Badge
-                            variant={appointment.status === "CONFIRMED" ? "default" : "secondary"}
-                            className="shrink-0"
-                          >
-                            {appointment.status === "CONFIRMED" ? "Confirmé" : "En attente"}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="text-xs">
-                            {appointment.status === "CONFIRMED" ? "Rendez-vous confirmé" : "En attente de confirmation"}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-medium truncate group-hover:text-primary transition-colors">
+                      {appointment.service.name}
+                    </h3>
+                    <Badge
+                      variant={appointment.status === "CONFIRMED" ? "default" : "secondary"}
+                      className={cn(
+                        "shrink-0 transition-all",
+                        appointment.status === "CONFIRMED" ? "group-hover:bg-primary/20" : ""
+                      )}
+                    >
+                      {appointment.status === "CONFIRMED" ? "Confirmé" : "En attente"}
+                    </Badge>
                   </div>
 
-                  <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="size-3" />
-                      <span className="truncate">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="size-3.5 group-hover:text-primary transition-colors" />
+                      <span className="group-hover:text-primary transition-colors">
                         {appointment.slot?.start.toLocaleString("fr-FR", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <User2 className="size-3" />
-                      <span className="truncate">{appointment.pro?.name}</span>
+                    <div className="flex items-center gap-1.5">
+                      <User2 className="size-3.5 group-hover:text-primary transition-colors" />
+                      <span className="truncate group-hover:text-primary transition-colors">
+                        {appointment.pro?.name}
+                      </span>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex -space-x-2">
+                      {appointment.pets.map((petAppointment, index) => (
+                        <Avatar
+                          key={petAppointment.pet?.id}
+                          className="size-6 border-2 border-background group-hover:border-accent transition-colors"
+                        >
+                          <AvatarImage src={petAppointment.pet?.image || ""} alt={petAppointment.pet?.name} />
+                          <AvatarFallback>{petAppointment.pet?.name[0]}</AvatarFallback>
+                        </Avatar>
+                      ))}
+                    </div>
+                    <span className="text-xs text-muted-foreground truncate group-hover:text-primary/80 transition-colors">
+                      {appointment.pets.map(pet => pet.pet?.name).join(", ")}
+                    </span>
+                  </div>
                 </div>
+
+                <ChevronRight className="size-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
               </div>
             ))}
 
@@ -154,13 +171,19 @@ const ClientUpcomingAppointmentsWidget = () => {
             <>
               <SheetHeader className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <Avatar className="size-16 border-2 border-background">
-                    <AvatarImage src={selectedAppointment.pets[0]?.pet?.image || ""} alt={selectedAppointment.pets[0]?.pet?.name} />
-                    <AvatarFallback>{selectedAppointment.pets[0]?.pet?.name[0]}</AvatarFallback>
-                  </Avatar>
+                  <div className="flex -space-x-2">
+                    {selectedAppointment.pets.map((petAppointment, index) => (
+                      <Avatar key={petAppointment.pet.id} className="size-12 border-2 border-background">
+                        <AvatarImage src={petAppointment.pet.image || ""} alt={petAppointment.pet.name} />
+                        <AvatarFallback>{petAppointment.pet.name[0]}</AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
                   <div>
                     <SheetTitle>{selectedAppointment.service.name}</SheetTitle>
-                    <SheetDescription>Pour {selectedAppointment.pets[0]?.pet?.name}</SheetDescription>
+                    <SheetDescription>
+                      Pour {selectedAppointment.pets.map(pet => pet.pet.name).join(", ")}
+                    </SheetDescription>
                   </div>
                 </div>
               </SheetHeader>

@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PatientItem } from "./patient-item"
 import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
-import { Appointment, Pet, User } from "@/src/db"
+import { Pet } from "@/src/db"
 
 export const PatientsList = () => {
   const [search, setSearch] = useState("")
@@ -26,6 +26,8 @@ export const PatientsList = () => {
   const filteredPatients = patientsResult?.data?.filter(patient =>
     patient.name.toLowerCase().includes(search.toLowerCase())
   )
+
+  console.log(patientsResult?.data, "patientsResult")
 
   if (isLoading) {
     return (
@@ -83,13 +85,7 @@ export const PatientsList = () => {
       </ScrollArea>
 
       {selectedPatient && (
-        <AnimalCredenza
-          isOpen={isCredenzaOpen}
-          onOpenChange={setIsCredenzaOpen}
-          animalDetails={selectedPatient}
-          nextAppointmentClient={selectedPatient.owner as User}
-          nextAppointmentData={selectedPatient}
-        />
+        <AnimalCredenza isOpen={isCredenzaOpen} onOpenChange={setIsCredenzaOpen} petId={selectedPatient.id} />
       )}
     </div>
   )

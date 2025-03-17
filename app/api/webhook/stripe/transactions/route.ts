@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
       const appointmentId = metadata.appointmentId
       const clientId = metadata.clientId
       const amount = metadata.amount
+      const selectedPets = metadata.selectedPets ? JSON.parse(metadata.selectedPets) : []
 
       const transactionQuery = await db.transaction(async tx => {
         const serviceQuery = (await tx.query.service.findFirst({
@@ -195,12 +196,23 @@ export async function POST(req: NextRequest) {
               })
               .where(eq(appointments.id, appointmentId))
 
-            await tx
-              .update(organizationSlots)
-              .set({
-                isAvailable: false,
-              })
-              .where(eq(organizationSlots.id, slotId))
+            if (selectedPets) {
+              await tx
+                .update(organizationSlots)
+                .set({
+                  isAvailable: false,
+                  remainingPlaces: slotQuery.remainingPlaces - selectedPets.length,
+                })
+                .where(eq(organizationSlots.id, slotId))
+            } else {
+              await tx
+                .update(organizationSlots)
+                .set({
+                  isAvailable: false,
+                  remainingPlaces: slotQuery.remainingPlaces - 1,
+                })
+                .where(eq(organizationSlots.id, slotId))
+            }
 
             await db
               .update(transaction)

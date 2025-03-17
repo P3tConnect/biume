@@ -1,12 +1,15 @@
 "use client"
 
-import { Search } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
+import Link from "next/link"
 import React from "react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { useActiveOrganization } from "@/src/lib/auth-client"
 
 export const PatientsHeader = () => {
+  const { data: activeOrganization } = useActiveOrganization()
+
   return (
     <Card className="overflow-hidden rounded-2xl">
       <CardHeader className="border-b border-gray-100 dark:border-gray-800">
@@ -17,12 +20,12 @@ export const PatientsHeader = () => {
             </CardTitle>
             <p className="text-sm text-muted-foreground">Gérez les dossiers médicaux de vos patients</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="text-xs h-8 gap-1.5">
-              <Search className="h-3.5 w-3.5" />
-              <span>Rechercher</span>
-            </Button>
-          </div>
+          <Button variant="outline" size="sm" className="ml-auto" asChild>
+            <Link href={`/dashboard/organization/${activeOrganization?.data?.id}/patients`}>
+              <ArrowUpRight className="h-4 w-4 mr-2" />
+              Voir plus
+            </Link>
+          </Button>
         </div>
       </CardHeader>
     </Card>

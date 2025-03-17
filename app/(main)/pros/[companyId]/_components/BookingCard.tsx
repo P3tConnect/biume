@@ -244,9 +244,18 @@ export function BookingCard({ organization }: { organization: Organization }) {
         toast.error("Veuillez sélectionner un animal")
         return
       }
+      if (!selectedSlot) {
+        toast.error("Veuillez sélectionner un créneau")
+        return
+      }
+
+      console.log(petIds, "petIds")
 
       await createBooking({
-        serviceId: selectedService.id,
+        service: {
+          id: selectedService.id,
+          places: selectedService.places ?? 0,
+        },
         professionalId: selectedPro.id,
         selectedPets: petIds,
         isHomeVisit: !!consultationType,
@@ -256,7 +265,11 @@ export function BookingCard({ organization }: { organization: Organization }) {
         companyId: companyId,
         status: "SCHEDULED",
         isPaid: false,
-        slotId: selectedSlot?.id ?? undefined,
+        slot: {
+          id: selectedSlot.id,
+          start: selectedSlot.start,
+          remainingPlaces: selectedSlot.remainingPlaces,
+        },
       })
     } catch (err) {
       console.error("Erreur de création de rendez-vous:", err)
@@ -299,8 +312,18 @@ export function BookingCard({ organization }: { organization: Organization }) {
         return
       }
 
+      if (!selectedSlot) {
+        toast.error("Veuillez sélectionner un créneau")
+        return
+      }
+
+      console.log(petIds, "petIds")
+
       await bookPayment({
-        serviceId: selectedService.id,
+        service: {
+          id: selectedService.id,
+          places: selectedService.places ?? 0,
+        },
         professionalId: organization.id,
         selectedPets: petIds,
         isHomeVisit: !!consultationType,
@@ -308,7 +331,11 @@ export function BookingCard({ organization }: { organization: Organization }) {
         selectedOptions: selectedOptions?.map(option => option.id) || [],
         amount,
         companyId: companyId,
-        slot: selectedSlot!,
+        slot: {
+          id: selectedSlot.id,
+          start: selectedSlot.start,
+          remainingPlaces: selectedSlot.remainingPlaces,
+        },
       })
     } catch (error) {
       console.error("Erreur de paiement:", error)
@@ -434,27 +461,32 @@ export function BookingCard({ organization }: { organization: Organization }) {
           ) : (
             <CredenzaHeader>
               <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
-                {Object.values(steps).map((stepItem, index) => (
-                  <div key={stepItem.id} className="flex items-center shrink-0">
-                    <div
-                      className={cn(
-                        "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
-                        current.id === stepItem.id
-                          ? "border-primary text-primary"
-                          : index < Object.values(steps).findIndex(s => s.id === current.id)
-                            ? "border-primary bg-primary text-white"
-                            : "border-muted-foreground/30 text-muted-foreground/50"
+                {Object.values(steps)
+                  .filter(step => step.id !== "success")
+                  .map((stepItem, index) => (
+                    <div key={stepItem.id} className="flex items-center shrink-0">
+                      <div
+                        className={cn(
+                          "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
+                          current.id === stepItem.id
+                            ? "border-primary text-primary"
+                            : index <
+                                Object.values(steps)
+                                  .filter(s => s.id !== "success")
+                                  .findIndex(s => s.id === current.id)
+                              ? "border-primary bg-primary text-white"
+                              : "border-muted-foreground/30 text-muted-foreground/50"
+                        )}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        {index + 1}
+                      </div>
+                      {index < Object.values(steps).filter(s => s.id !== "success").length - 1 && (
+                        <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
                       )}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      {index + 1}
                     </div>
-                    {index < Object.values(steps).length - 1 && (
-                      <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
-                    )}
-                  </div>
-                ))}
+                  ))}
               </div>
               <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
               <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
@@ -504,7 +536,13 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   onToggleHomeVisit={value => setConsultationType(value)}
                 />
               ),
-              pet: () => <PetStep selectedPets={selectedPets} onSelectPets={pets => setSelectedPets(pets)} selectedService={selectedService} />,
+              pet: () => (
+                <PetStep
+                  selectedPets={selectedPets}
+                  onSelectPets={pets => setSelectedPets(pets)}
+                  selectedService={selectedService}
+                />
+              ),
               summary: () => (
                 <SummaryStep
                   selectedService={selectedService}

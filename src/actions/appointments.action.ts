@@ -22,16 +22,16 @@ export const getAllAppointments = createServerAction(
                 id: true,
                 name: true,
                 image: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          }
+          },
         },
         service: {
           columns: {
@@ -39,7 +39,7 @@ export const getAllAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
-          }
+          },
         },
         client: {
           columns: {
@@ -48,7 +48,7 @@ export const getAllAppointments = createServerAction(
             email: true,
             phoneNumber: true,
             image: true,
-          }
+          },
         },
         options: {
           with: {
@@ -58,11 +58,11 @@ export const getAllAppointments = createServerAction(
                 title: true,
                 price: true,
                 description: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!appointments) {
@@ -140,9 +140,9 @@ export const getConfirmedAndAboveAppointments = createServerAction(
                 title: true,
                 price: true,
                 description: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         pets: {
           with: {
@@ -151,9 +151,9 @@ export const getConfirmedAndAboveAppointments = createServerAction(
                 id: true,
                 name: true,
                 image: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         client: {
           columns: {
@@ -162,14 +162,14 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             email: true,
             phoneNumber: true,
             image: true,
-          }
+          },
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          }
+          },
         },
         service: {
           columns: {
@@ -177,9 +177,9 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
-          }
+          },
         },
-      }
+      },
     })
 
     if (!appointmentQuery.length) {
@@ -226,7 +226,9 @@ export const deleteAppointment = createServerAction(
     appointmentId: z.string(),
   }),
   async (input, ctx) => {
-    const [appointment] = await db.delete(appointmentsTable).where(eq(appointmentsTable.id, input.appointmentId))
+    const [appointment] = await db
+      .delete(appointmentsTable)
+      .where(eq(appointmentsTable.id, input.appointmentId))
       .returning()
       .execute()
 
@@ -255,16 +257,18 @@ export const getPendingAndPayedAppointments = createServerAction(
                 id: true,
                 name: true,
                 image: true,
-              }
+                breed: true,
+                type: true,
+              },
             },
-          }
+          },
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          }
+          },
         },
         service: {
           columns: {
@@ -272,7 +276,7 @@ export const getPendingAndPayedAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
-          }
+          },
         },
         client: {
           columns: {
@@ -281,9 +285,12 @@ export const getPendingAndPayedAppointments = createServerAction(
             email: true,
             phoneNumber: true,
             image: true,
-          }
-        }
-      }
+            address: true,
+            city: true,
+            country: true,
+          },
+        },
+      },
     })
 
     if (!appointments) {
@@ -308,16 +315,16 @@ export const getAllAppointmentForClient = createServerAction(
                 id: true,
                 name: true,
                 image: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         slot: {
           columns: {
             id: true,
             start: true,
             end: true,
-          }
+          },
         },
         service: {
           columns: {
@@ -325,7 +332,7 @@ export const getAllAppointmentForClient = createServerAction(
             name: true,
             price: true,
             duration: true,
-          }
+          },
         },
         client: {
           columns: {
@@ -334,16 +341,16 @@ export const getAllAppointmentForClient = createServerAction(
             email: true,
             phoneNumber: true,
             image: true,
-          }
+          },
         },
         pro: {
           columns: {
             id: true,
             name: true,
             logo: true,
-          }
-        }
-      }
+          },
+        },
+      },
     })
 
     if (!appointments) {
@@ -361,10 +368,7 @@ export const getAppointmentsByPetId = createServerAction(
   }),
   async (input, ctx) => {
     const appointments = await db.query.petAppointments.findMany({
-      where: and(
-        eq(petAppointments.petId, input.petId),
-        eq(appointmentsTable.status, "COMPLETED")
-      ),
+      where: and(eq(petAppointments.petId, input.petId), eq(appointmentsTable.status, "COMPLETED")),
       with: {
         appointment: {
           columns: {
@@ -381,7 +385,7 @@ export const getAppointmentsByPetId = createServerAction(
                 id: true,
                 start: true,
                 end: true,
-              }
+              },
             },
             service: {
               columns: {
@@ -389,14 +393,14 @@ export const getAppointmentsByPetId = createServerAction(
                 name: true,
                 price: true,
                 duration: true,
-              }
+              },
             },
             pro: {
               columns: {
                 id: true,
                 name: true,
                 logo: true,
-              }
+              },
             },
             options: {
               with: {
@@ -406,15 +410,15 @@ export const getAppointmentsByPetId = createServerAction(
                     title: true,
                     price: true,
                     description: true,
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
-    
+
     return appointments.map(pa => pa.appointment)
   },
   [requireAuth, requireFullOrganization]
@@ -426,24 +430,47 @@ export const getProNextAppointment = createServerAction(
     const now = new Date()
 
     const appointments = await db.query.appointments.findMany({
-      where: and(
-        eq(appointmentsTable.proId, ctx.organization?.id || ""),
-        eq(appointmentsTable.status, "CONFIRMED")
-      ),
+      where: and(eq(appointmentsTable.proId, ctx.organization?.id || ""), eq(appointmentsTable.status, "CONFIRMED")),
       with: {
-        slot: true,
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+          },
+        },
         pets: {
           with: {
-            pet: true
-          }
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
         },
-        service: true,
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+          },
+        },
         options: {
           with: {
-            option: true
-          }
-        }
-      }
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     // Filtrer pour ne conserver que les rendez-vous futurs et trier par date
@@ -460,7 +487,7 @@ export const getProNextAppointment = createServerAction(
       return {
         nextAppointment: null,
         client: null,
-        pet: null
+        pet: null,
       }
     }
 
@@ -472,13 +499,13 @@ export const getProNextAppointment = createServerAction(
         email: true,
         phoneNumber: true,
         image: true,
-      }
+      },
     })
 
     return {
       nextAppointment,
       client,
-      pet: nextAppointment.pets?.[0]?.pet || null
+      pet: nextAppointment.pets?.[0]?.pet || null,
     }
   },
   [requireAuth, requireFullOrganization]
@@ -492,10 +519,7 @@ export const getPreviousPros = createServerAction(
     const appointments = await db.query.appointments.findMany({
       where: and(
         eq(appointmentsTable.clientId, input.userId),
-        or(
-          eq(appointmentsTable.status, "COMPLETED"),
-          eq(appointmentsTable.status, "CONFIRMED")
-        )
+        or(eq(appointmentsTable.status, "COMPLETED"), eq(appointmentsTable.status, "CONFIRMED"))
       ),
       with: {
         pro: {
@@ -509,25 +533,26 @@ export const getPreviousPros = createServerAction(
                     id: true,
                     name: true,
                     image: true,
-                  }
-                }
-              }
-            }
-          }
-        }
+                  },
+                },
+              },
+            },
+          },
+        },
       },
-      orderBy: [desc(appointmentsTable.createdAt)]
+      orderBy: [desc(appointmentsTable.createdAt)],
     })
 
     // Filtrer pour obtenir des organisations uniques
     const uniqueOrganizations = [
       ...new Map(
         appointments
-          .filter((appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
-            appointment.pro !== null && appointment.pro !== undefined
+          .filter(
+            (appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
+              appointment.pro !== null && appointment.pro !== undefined
           )
           .map(appointment => [appointment.pro.id, appointment.pro])
-      ).values()
+      ).values(),
     ]
 
     return uniqueOrganizations

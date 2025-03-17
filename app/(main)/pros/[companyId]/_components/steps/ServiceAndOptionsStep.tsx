@@ -61,9 +61,18 @@ export function ServiceAndOptionsStep({
                 >
                   <div className="flex flex-col w-full">
                     <div className="flex justify-between items-start w-full">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-primary" />
-                        <span className="font-medium">{service.name}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{service.name}</span>
+                            {service.type === "MULTIPLE" && (
+                              <div className="inline-flex items-center text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 bg-primary/5 text-primary border border-primary/10 rounded">
+                                Collectif
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                       <span className="font-semibold text-primary">{service.price} €</span>
                     </div>
