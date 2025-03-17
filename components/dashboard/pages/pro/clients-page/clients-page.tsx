@@ -36,6 +36,8 @@ import { CountAnimation } from "@/components/count-animation"
 import { Input } from "@/components/ui/input"
 import React from "react"
 import { useQuery } from "@tanstack/react-query"
+import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
+import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
 
 // Type pour nos données client
 // type Client = {
@@ -202,6 +204,7 @@ const ClientsPageComponent = () => {
   const [status, setStatus] = React.useState<string>("all")
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [selectedClient, setSelectedClient] = React.useState<Client | null>(null)
+  const { shouldShowAlert, organizationId } = useSubscriptionCheck()
 
   // Utiliser useQuery pour récupérer les clients
   const {
@@ -326,71 +329,74 @@ const ClientsPageComponent = () => {
   })
 
   return (
-    <div className="space-y-4">
-      <ClientsHeader />
-      <ClientMetricsComponent />
+    <>
+      {shouldShowAlert && organizationId && <SubscriptionNonPayedAlert organizationId={organizationId} />}
+      <div className="space-y-4">
+        <ClientsHeader />
+        <ClientMetricsComponent />
 
-      <Card className="rounded-xl">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Mes Clients</CardTitle>
-          <ClientActions
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            status={status}
-            setStatus={setStatus}
-          />
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex justify-center items-center h-40">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              <span className="ml-2">Chargement des clients...</span>
-            </div>
-          ) : isError ? (
-            <div className="text-center text-red-500 py-8">Erreur lors du chargement des clients</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map(row => (
-                    <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedClient(row.original)}>
-                      {row.getVisibleCells().map(cell => (
-                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">Mes Clients</CardTitle>
+            <ClientActions
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+              status={status}
+              setStatus={setStatus}
+            />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-40">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <span className="ml-2">Chargement des clients...</span>
+              </div>
+            ) : isError ? (
+              <div className="text-center text-red-500 py-8">Erreur lors du chargement des clients</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map(headerGroup => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map(header => (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                        </TableHead>
                       ))}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                      Aucun résultat.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map(row => (
+                      <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedClient(row.original)}>
+                        {row.getVisibleCells().map(cell => (
+                          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} className="h-24 text-center">
+                        Aucun résultat.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
 
-      {selectedClient && (
-        <ClientDetails
-          client={selectedClient as any}
-          isOpen={!!selectedClient}
-          onOpenChange={open => !open && setSelectedClient(null)}
-        />
-      )}
-    </div>
+        {selectedClient && (
+          <ClientDetails
+            client={selectedClient as any}
+            isOpen={!!selectedClient}
+            onOpenChange={open => !open && setSelectedClient(null)}
+          />
+        )}
+      </div>
+    </>
   )
 }
 

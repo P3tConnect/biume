@@ -84,7 +84,19 @@ export const getStripeBalance = createServerAction(
         stripeAccount: org.companyStripeId,
       })
 
-      return balance
+      // Transformer en objet sérialisable
+      return {
+        data: {
+          available: balance.available.map(b => ({
+            amount: b.amount,
+            currency: b.currency,
+          })),
+          pending: balance.pending.map(b => ({
+            amount: b.amount,
+            currency: b.currency,
+          })),
+        },
+      }
     } catch (error) {
       throw new ActionError("Erreur lors de la récupération du solde")
     }

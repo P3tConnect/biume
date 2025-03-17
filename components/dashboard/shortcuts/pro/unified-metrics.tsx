@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CountAnimation } from "@/components/count-animation"
-import { Stethoscope, CalendarIcon, HeartPulseIcon, TrendingUpIcon, User, RefreshCcw } from "lucide-react"
+import { Stethoscope, CalendarIcon, HeartPulseIcon, TrendingUpIcon, User, RefreshCcw, PawPrint, Wallet, CreditCard } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import { CredenzaContent, CredenzaTitle, CredenzaHeader, Skeleton } from "@/components/ui"
 import { Credenza } from "@/components/ui"
@@ -16,6 +16,8 @@ import { getProNextAppointment } from "@/src/actions/appointments.action"
 import { Appointment, Pet, User as UserType } from "@/src/db"
 import { MetricData } from "@/types/metric-data"
 import { getCurrentOrganization } from "@/src/actions"
+import { getStripeBalance } from "@/src/actions/stripe.action"
+import { getInvoiceMetrics } from "@/src/actions/invoice.action"
 
 // Données de secours (fallback) en cas d'échec du chargement
 const fallbackData: MetricData = {
@@ -82,6 +84,31 @@ export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
+
+  const { data: organization } = useQuery({
+    queryKey: ["currentOrganization"],
+    queryFn: getCurrentOrganization,
+  })
+
+  const { data: stripeBalance, isLoading: isLoadingStripe } = useQuery({
+    queryKey: ["stripeBalance", organization?.data?.id],
+    queryFn: async () => {
+      if (!organization?.data?.id) return null
+      const result = await getStripeBalance({ organizationId: organization.data.id })
+      return result.data
+    },
+    enabled: !!organization?.data?.id,
+  })
+
+  const { data: invoiceMetrics, isLoading: isLoadingInvoices } = useQuery({
+    queryKey: ["invoiceMetrics", organization?.data?.id],
+    queryFn: async () => {
+      if (!organization?.data?.id) return null
+      const result = await getInvoiceMetrics(organization.data.id)
+      return result.data
+    },
+    enabled: !!organization?.data?.id,
+  })
 
   // Utiliser useQuery pour récupérer les métriques
   const {
@@ -377,9 +404,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -411,9 +437,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -445,9 +470,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -479,15 +503,77 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
                   <span className="text-muted-foreground ml-1">vs mois précédent</span>
                 </div>
               )}
+            </div>
+          </div>
+        </Card>
+
+        {/* Solde Stripe */}
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+        >
+          <div className="p-3">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Solde Stripe</span>
+                <Wallet className="w-4 h-4 text-blue-500" />
+              </div>
+              <div className="text-2xl font-semibold">
+                {isLoadingStripe ? (
+                  <Skeleton className="h-8 w-24" />
+                ) : stripeBalance?.data ? (
+                  <span>
+                    <CountAnimation
+                      value={stripeBalance.data.available
+                        .filter((b: { currency: string }) => b.currency === "eur")
+                        .reduce((sum: number, b: { amount: number }) => sum + b.amount, 0) / 100
+                      }
+                    />
+                    <span className="text-muted-foreground ml-1">€</span>
+                  </span>
+                ) : (
+                  <p className="text-2xl font-semibold">0€</p>
+                )}
+              </div>
+              <div className="text-xs mt-1 text-muted-foreground">
+                Solde disponible pour le virement
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Chiffre d'affaires du mois */}
+        <Card
+          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+        >
+          <div className="p-3">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">CA du mois</span>
+                <CreditCard className="w-4 h-4 text-violet-500" />
+              </div>
+              <div className="text-2xl font-semibold">
+                {isLoadingInvoices ? (
+                  <Skeleton className="h-8 w-24" />
+                ) : invoiceMetrics?.data?.totalRevenue ? (
+                  <span>
+                    <CountAnimation value={invoiceMetrics.data.totalRevenue} />
+                    <span className="text-muted-foreground ml-1">€</span>
+                  </span>
+                ) : (
+                  <p className="text-2xl font-semibold">0€</p>
+                )}
+              </div>
+              <div className="text-xs mt-1">
+                <span className="text-muted-foreground">Factures payées ce mois-ci</span>
+              </div>
             </div>
           </div>
         </Card>
@@ -520,7 +606,7 @@ export const UnifiedMetrics = () => {
                       {pet.image ? (
                         <img src={pet.image} alt={pet.name} className="w-full h-full rounded-full object-cover" />
                       ) : (
-                        <User className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+                        <PawPrint className="h-6 w-6 text-slate-600 dark:text-slate-400" />
                       )}
                     </div>
                   ))}

@@ -1,6 +1,8 @@
 "use client"
 
 import React from "react"
+import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
+import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
 
 import { Sheet, SheetContent } from "@/components/ui"
 import { useInvoiceMetrics, useInvoices } from "@/src/hooks"
@@ -50,6 +52,7 @@ const InvoicesPageComponent = () => {
   const organizationId = "current-organization-id"
 
   const [selectedInvoice, setSelectedInvoice] = React.useState<Invoice | null>(null)
+  const { shouldShowAlert, organizationId: subscriptionOrgId } = useSubscriptionCheck()
 
   // Utiliser les hooks de requête pour charger les données
   const {
@@ -91,19 +94,22 @@ const InvoicesPageComponent = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <InvoicesHeader />
+    <>
+      {shouldShowAlert && subscriptionOrgId && <SubscriptionNonPayedAlert organizationId={subscriptionOrgId} />}
+      <div className="flex flex-col gap-6">
+        <InvoicesHeader />
 
-      {metrics && <MetricsGrid data={metrics} />}
+        {metrics && <MetricsGrid data={metrics} />}
 
-      <InvoicesTable invoices={invoices || []} onInvoiceSelect={setSelectedInvoice} />
+        <InvoicesTable invoices={invoices || []} onInvoiceSelect={setSelectedInvoice} />
 
-      <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
-        <SheetContent className="w-full sm:max-w-3xl">
-          {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
-        </SheetContent>
-      </Sheet>
-    </div>
+        <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+          <SheetContent className="w-full sm:max-w-3xl">
+            {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   )
 }
 

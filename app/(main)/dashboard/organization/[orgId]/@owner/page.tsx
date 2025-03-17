@@ -4,6 +4,7 @@ import { AppointmentRequests } from "@/components/dashboard/shortcuts/pro/appoin
 import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-tabs/dashboard-tabs"
 import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/unified-metrics"
 import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card"
+import NonPayedSubscription from "@/components/dashboard/shortcuts/pro/non-payed-subscription"
 
 export const metadata: Metadata = {
   title: "Dashboard Vétérinaire",
@@ -25,6 +26,7 @@ const DashboardHomeProPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
         <div className="space-y-4 lg:col-span-2 h-full">
           <StripeSetupCard />
+          <NonPayedSubscription />
           <UnifiedMetrics />
           <AppointmentRequests />
         </div>
