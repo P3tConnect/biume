@@ -176,5 +176,8 @@
         "nextSessions": "Calendrier et prochains rendez-vous"
       }
     }
+  },
+  "common": {
+    "coming_soon": "Bientôt disponible"
   }
 }

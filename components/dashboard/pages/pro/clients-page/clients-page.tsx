@@ -34,10 +34,11 @@ import { ClientMetrics } from "@/src/types/client"
 import ClientsHeader from "./clients-header"
 import { CountAnimation } from "@/components/count-animation"
 import { Input } from "@/components/ui/input"
-import React from "react"
+import React, { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
 import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
+import { User } from "@/src/db"
 
 // Type pour nos données client
 // type Client = {
@@ -198,36 +199,15 @@ const ClientActions = ({
   )
 }
 
-const ClientsPageComponent = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = React.useState("")
-  const [status, setStatus] = React.useState<string>("all")
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [selectedClient, setSelectedClient] = React.useState<Client | null>(null)
+const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState("")
+  const [status, setStatus] = useState<string>("all")
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [selectedClient, setSelectedClient] = useState<User | null>(null)
   const { shouldShowAlert, organizationId } = useSubscriptionCheck()
 
-  // Utiliser useQuery pour récupérer les clients
-  const {
-    data: clients = [],
-    isLoading,
-    isError,
-  } = useQuery<any>({
-    queryKey: ["clients", { search: globalFilter, status }],
-    queryFn: async () => {
-      const result = await getClients({
-        search: globalFilter || undefined,
-        status: (status as any) || undefined,
-      })
-
-      if ("error" in result) {
-        throw new Error(result.error)
-      }
-
-      return result.data || []
-    },
-  })
-
-  const columns: ColumnDef<Client>[] = [
+  const columns: ColumnDef<User>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
@@ -314,7 +294,7 @@ const ClientsPageComponent = () => {
   ]
 
   const table = useReactTable({
-    data: clients as Client[],
+    data: clients as User[],
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -346,45 +326,36 @@ const ClientsPageComponent = () => {
             />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
-              <div className="flex justify-center items-center h-40">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                <span className="ml-2">Chargement des clients...</span>
-              </div>
-            ) : isError ? (
-              <div className="text-center text-red-500 py-8">Erreur lors du chargement des clients</div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map(header => (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableHead>
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map(row => (
+                    <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedClient(row.original)}>
+                      {row.getVisibleCells().map(cell => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                       ))}
                     </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map(row => (
-                      <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelectedClient(row.original)}>
-                        {row.getVisibleCells().map(cell => (
-                          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="h-24 text-center">
-                        Aucun résultat.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            )}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      Aucun résultat.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 

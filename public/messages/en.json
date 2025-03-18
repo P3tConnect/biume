@@ -176,5 +176,8 @@
         "nextSessions": "Calendar and next sessions"
       }
     }
+  },
+  "common": {
+    "coming_soon": "Coming soon"
   }
 }
