@@ -3,14 +3,13 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
+import { ArrowRight as ArrowRightIcon } from "lucide-react"
+import Link from "next/link"
 import React from "react"
 import { useActiveOrganization } from "@/src/lib/auth-client"
-import { useRouter } from "next/navigation"
 
 export const PlanningHeader = () => {
   const { data: activeOrganization } = useActiveOrganization()
-  const router = useRouter()
 
   return (
     <Card className="overflow-hidden rounded-2xl">
@@ -22,14 +21,15 @@ export const PlanningHeader = () => {
             </CardTitle>
             <p className="text-sm text-muted-foreground">Gérez vos rendez-vous et consultations</p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs h-8 gap-1.5"
-            onClick={() => router.push(`/dashboard/organization/${activeOrganization?.id}/timetable`)}
-          >
-            Voir plus
-            <ChevronRight className="h-3.5 w-3.5" />
+
+          <Button variant="outline" size="sm" className="ml-auto" asChild>
+            <Link
+              href={`/dashboard/organization/${activeOrganization?.data?.id}/timetable`}
+              className="flex items-center gap-2"
+            >
+              Voir plus
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </CardHeader>

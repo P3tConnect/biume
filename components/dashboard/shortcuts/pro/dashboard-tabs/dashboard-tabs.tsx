@@ -1,6 +1,6 @@
 "use client"
 
-import { BellRing, Calendar, FileText, MessageCircle, PawPrint, Plus, Search, Stethoscope } from "lucide-react"
+import { BellRing, Calendar, FileText, PawPrint, Plus } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget"
@@ -8,11 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { MessagesHeader } from "../messages-header"
 import { PatientsHeader } from "./patients-tab/patients-header"
-import { PlanningHeader } from "../planning-header"
-import { RappelsHeader } from "../rappels-header"
-import { RapportsHeader } from "../rapports-header"
+import { PlanningHeader } from "./planning-tab/planning-header"
+import { RappelsHeader } from "./reminders-tab/rappels-header"
+import { RapportsHeader } from "./reports-tab/rapports-header"
 import { PatientsList } from "./patients-tab/patients-list"
 
 export const DashboardTabs = () => {

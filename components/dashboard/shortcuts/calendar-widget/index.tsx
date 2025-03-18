@@ -1,25 +1,17 @@
 "use client"
 
-// Modifications pour la vue compacte:
-// - Réduction des espacements et des marges
-// - Diminution de la hauteur des cellules à 60px pour un aspect plus carré
-// - Icônes et textes plus petits
-// - En-tête simplifié
-// - Structure visuelle optimisée pour un affichage compact
-
 import { Button, ScrollArea, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui"
-import { CALENDAR_VIEW_MODE_KEY, mockAppointments } from "./data/constants"
+import { CALENDAR_VIEW_MODE_KEY } from "./data/constants"
 import { CalendarDays, Calendar as CalendarIcon, ChevronLeft, ChevronRight, List, Loader2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
-import { AppointmentDetails } from "./components/appointment-details"
+import { AppointmentDetails } from "./components/appointment-details/AppointmentDetails"
 import { AppointmentListItem } from "./components/appointment-list-item"
 import { CalendarGrid } from "./components/calendar-grid"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useQuery } from "@tanstack/react-query"
 import { getConfirmedAndAboveAppointments } from "@/src/actions/appointments.action"
-import { Appointment } from "@/src/db"
 
 const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -66,27 +58,36 @@ const CalendarWidget = () => {
   }
 
   const renderSelectedDateAppointments = () => {
-    if (!selectedDate) return null
-    const dateString = selectedDate.toDateString()
-    const dayAppointments =
-      appointments?.data?.filter(appointment => appointment.slot?.start.toDateString() === dateString) || []
+    if (!selectedDate || !appointments?.data) return null
+
+    const selectedDateAppointments = appointments.data.filter(appointment => {
+      const appointmentDate = appointment.slot?.start ? new Date(appointment.slot.start) : null
+      if (!appointmentDate) return false
+
+      return (
+        appointmentDate.getFullYear() === selectedDate.getFullYear() &&
+        appointmentDate.getMonth() === selectedDate.getMonth() &&
+        appointmentDate.getDate() === selectedDate.getDate()
+      )
+    })
 
     return (
       <div className="space-y-4">
-        {dayAppointments.length === 0 ? (
+        {selectedDateAppointments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-5 text-center">
-            <p className="text-muted-foreground mb-1">Aucun rendez-vous pour cette journée</p>
-            <p className="text-xs text-muted-foreground">Cliquez sur un autre jour pour voir les rendez-vous</p>
+            <div className="p-1.5 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-3">
+              <CalendarDays className="w-4 h-4 text-blue-500" />
+            </div>
+            <p className="text-muted-foreground mb-1 text-sm">Aucun rendez-vous pour cette journée</p>
+            <p className="text-xs text-muted-foreground">Sélectionnez un autre jour pour voir les rendez-vous</p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">{dayAppointments.length} rendez-vous</p>
+              <p className="text-sm text-muted-foreground">{selectedDateAppointments.length} rendez-vous</p>
             </div>
             <div className="space-y-2">
-              {dayAppointments.map(appointment => (
-                <AppointmentDetails key={appointment.id} appointment={appointment as Appointment} />
-              ))}
+              <AppointmentDetails appointments={selectedDateAppointments} />
             </div>
           </>
         )}
@@ -213,13 +214,13 @@ const CalendarWidget = () => {
           <CalendarGrid
             currentDate={currentDate}
             selectedDate={selectedDate}
-            appointments={appointments?.data as Appointment[]}
+            appointments={appointments?.data || []}
             onDayClick={handleDayClick}
           />
         </div>
       ) : (
         <ScrollArea className="h-[500px] pr-3 pt-1 rounded-md bg-muted/10">
-          {(mockAppointments[new Date().toDateString()] || []).length === 0 ? (
+          {appointments?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-5 text-center">
               <div className="p-1.5 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-3">
                 <CalendarDays className="w-4 h-4 text-blue-500" />
@@ -228,10 +229,30 @@ const CalendarWidget = () => {
               <p className="text-xs text-muted-foreground">Profitez de cette journée tranquille!</p>
             </div>
           ) : (
-            (mockAppointments[new Date().toDateString()] || []).map((appointment, index) => (
+            appointments?.data?.map((appointment, index) => (
               <AppointmentListItem
                 key={appointment.id}
-                appointment={appointment}
+                appointment={{
+                  ...appointment,
+                  slot: {
+                    ...appointment.slot,
+                    start: appointment.slot?.start || new Date(),
+                    end: appointment.slot?.end || new Date(),
+                    remainingPlaces: appointment.slot?.remainingPlaces || 0,
+                  },
+                  service: {
+                    ...appointment.service,
+                    places: appointment.service?.places || 1,
+                  },
+                  pets:
+                    appointment.pets?.map(pet => ({
+                      pet: {
+                        id: pet.pet?.id || "",
+                        name: pet.pet?.name || "",
+                        image: pet.pet?.image || null,
+                      },
+                    })) || [],
+                }}
                 index={index}
                 onSelect={() => {
                   setSelectedDate(new Date())

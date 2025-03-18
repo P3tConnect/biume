@@ -22,16 +22,18 @@ const appointmentTypeToColorKey: Record<"oneToOne" | "multiple", AppointmentColo
 
 interface AppointmentCalendarItemProps {
   appointment: Appointment
+  totalInSlot?: number
 }
 
-export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItemProps) {
+export function AppointmentCalendarItem({ appointment, totalInSlot = 1 }: AppointmentCalendarItemProps) {
   // Convertir le type d'appointment en une clé valide pour les couleurs et labels
   const colorKey = appointmentTypeToColorKey[appointment.type]
 
   // Récupérer les informations des animaux
   const pets = appointment.pets?.map(pa => pa.pet) || []
+  const remainingPlaces = appointment.slot?.remainingPlaces
   const firstPet = pets[0]
-  const totalPets = pets.length
+  const totalPets = pets.length * totalInSlot
 
   // Simplifier la gestion de l'adresse pour éviter les erreurs de type
   const slotLocation = appointment.pro ? appointment.pro.name || "" : ""
@@ -61,7 +63,7 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                   <AvatarFallback className="text-[0.55rem]">?</AvatarFallback>
                 </Avatar>
               )}
-              {totalPets > 1 && (
+              {totalInSlot > 1 && (
                 <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-[0.6rem] w-3 h-3 flex items-center justify-center">
                   {totalPets}
                 </div>
@@ -72,6 +74,7 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                 hour: "2-digit",
                 minute: "2-digit",
               })}
+              {totalInSlot > 1 && <span className="ml-1 opacity-50">({remainingPlaces})</span>}
             </div>
           </div>
         </TooltipTrigger>
@@ -94,9 +97,7 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-white">
-                    {pets.map(pet => pet.name).join(", ")}
-                  </p>
+                  <p className="font-medium text-white">{pets.map(pet => pet.name).join(", ")}</p>
                   <Badge
                     variant="default"
                     className={cn(
@@ -115,7 +116,10 @@ export function AppointmentCalendarItem({ appointment }: AppointmentCalendarItem
                             : appointment.status}
                   </Badge>
                 </div>
-                <p className="text-sm text-white/80">{appointment.client.name}</p>
+                <p className="text-sm text-white/80">
+                  {appointment.client.name}
+                  {totalInSlot > 1 && <span className="opacity-50"> (+{totalInSlot - 1} autres)</span>}
+                </p>
               </div>
             </div>
 

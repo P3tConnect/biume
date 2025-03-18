@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUpRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import { Button } from "@/components/ui/button"
@@ -22,8 +22,8 @@ export const PatientsHeader = () => {
           </div>
           <Button variant="outline" size="sm" className="ml-auto" asChild>
             <Link href={`/dashboard/organization/${activeOrganization?.data?.id}/patients`}>
-              <ArrowUpRight className="h-4 w-4 mr-2" />
               Voir plus
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>

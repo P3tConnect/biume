@@ -4,7 +4,7 @@ import { eq, and, or, desc } from "drizzle-orm"
 import { z } from "zod"
 import { requireAuth, requireFullOrganization } from "@/src/lib/action"
 
-import { appointments as appointmentsTable } from "../db/appointments"
+import { Appointment, appointments as appointmentsTable } from "../db/appointments"
 import { ActionError, createServerAction, db } from "../lib"
 import { user } from "../db"
 import { petAppointments } from "../db/pet_appointments"
@@ -31,6 +31,7 @@ export const getAllAppointments = createServerAction(
             id: true,
             start: true,
             end: true,
+            remainingPlaces: true,
           },
         },
         service: {
@@ -39,6 +40,7 @@ export const getAllAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
           },
         },
         client: {
@@ -132,6 +134,19 @@ export const getConfirmedAndAboveAppointments = createServerAction(
         )
       ),
       with: {
+        pro: {
+          columns: {
+            id: true,
+            name: true,
+            logo: true,
+          },
+        },
+        observation: {
+          columns: {
+            id: true,
+            content: true,
+          },
+        },
         options: {
           with: {
             option: {
@@ -169,6 +184,19 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             id: true,
             start: true,
             end: true,
+            remainingPlaces: true,
+          },
+          with: {
+            service: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+                places: true,
+                type: true,
+              },
+            },
           },
         },
         service: {
@@ -177,24 +205,14 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
+            type: true,
           },
         },
       },
     })
 
-    if (!appointmentQuery.length) {
-      throw new ActionError("No appointments found")
-    }
-
-    // Trier les rendez-vous par date de début du créneau
-    const sortedAppointments = appointmentQuery.sort((a, b) => {
-      if (a.slot && b.slot) {
-        return new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime()
-      }
-      return 0
-    })
-
-    return sortedAppointments
+    return appointmentQuery as Appointment[]
   },
   [requireAuth, requireFullOrganization]
 )
@@ -268,6 +286,7 @@ export const getPendingAndPayedAppointments = createServerAction(
             id: true,
             start: true,
             end: true,
+            remainingPlaces: true,
           },
         },
         service: {
@@ -276,6 +295,7 @@ export const getPendingAndPayedAppointments = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
           },
         },
         client: {
@@ -324,6 +344,7 @@ export const getAllAppointmentForClient = createServerAction(
             id: true,
             start: true,
             end: true,
+            remainingPlaces: true,
           },
         },
         service: {
@@ -332,6 +353,7 @@ export const getAllAppointmentForClient = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
           },
         },
         client: {
@@ -385,6 +407,7 @@ export const getAppointmentsByPetId = createServerAction(
                 id: true,
                 start: true,
                 end: true,
+                remainingPlaces: true,
               },
             },
             service: {
@@ -393,6 +416,7 @@ export const getAppointmentsByPetId = createServerAction(
                 name: true,
                 price: true,
                 duration: true,
+                places: true,
               },
             },
             pro: {
@@ -456,6 +480,7 @@ export const getProNextAppointment = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
           },
         },
         options: {
@@ -525,7 +550,15 @@ export const getPreviousPros = createServerAction(
         pro: {
           with: {
             address: true,
-            services: true,
+            services: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+                places: true,
+              },
+            },
             ratings: {
               with: {
                 writer: {

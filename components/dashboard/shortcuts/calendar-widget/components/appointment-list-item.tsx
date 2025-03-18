@@ -8,10 +8,10 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/src/lib/utils"
 
 import { appointmentColors, appointmentLabels, statusColors } from "../data/constants"
-import type { Appointment } from "../types"
+import type { AppointmentWithRelations } from "../types"
 
 interface AppointmentListItemProps {
-  appointment: Appointment
+  appointment: AppointmentWithRelations
   index: number
   onSelect: () => void
 }
@@ -39,9 +39,15 @@ export function AppointmentListItem({ appointment, index, onSelect }: Appointmen
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-base font-medium">
             <Clock className="h-5 w-5 text-primary" />
-            <span>{appointment.time}</span>
+            <span>
+              {appointment.slot?.start.toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}
+            </span>
             <span className="text-muted-foreground">•</span>
-            <span>{appointment.duration}</span>
+            <span>{appointment.service.duration} min</span>
           </div>
           <Badge
             variant="default"
@@ -50,13 +56,13 @@ export function AppointmentListItem({ appointment, index, onSelect }: Appointmen
               statusColors[appointment.status.toLowerCase() as keyof typeof statusColors]
             )}
           >
-            {appointment.status === "confirmed"
+            {appointment.status === "CONFIRMED"
               ? "Confirmé"
-              : appointment.status === "pending"
+              : appointment.status === "PENDING PAYMENT"
                 ? "En attente"
-                : appointment.status === "completed"
+                : appointment.status === "COMPLETED"
                   ? "Terminé"
-                  : appointment.status === "cancelled"
+                  : appointment.status === "CANCELED"
                     ? "Annulé"
                     : appointment.status}
           </Badge>
@@ -64,33 +70,37 @@ export function AppointmentListItem({ appointment, index, onSelect }: Appointmen
 
         {/* Contenu principal */}
         <div className="flex items-center gap-5">
-          {/* Informations sur l'animal */}
-          <div className="relative">
-            <Avatar className="h-20 w-20 ring-4 ring-background">
-              <AvatarImage src={appointment.petAvatar} alt={appointment.petName} />
-              <AvatarFallback className="text-xl">{appointment.petInitial}</AvatarFallback>
-            </Avatar>
+          {/* Informations sur les animaux */}
+          <div className="relative flex -space-x-4">
+            {appointment.pets.map(({ pet }, index) => (
+              <Avatar key={pet.id} className={cn("h-20 w-20 ring-4 ring-background", index > 0 && "ml-4")}>
+                <AvatarImage src={pet.image || undefined} alt={pet.name} />
+                <AvatarFallback className="text-xl">{pet.name.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
+            ))}
           </div>
 
           {/* Détails du rendez-vous */}
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-xl tracking-tight">{appointment.petName}</h3>
+              <h3 className="font-semibold text-xl tracking-tight">
+                {appointment.pets.map(({ pet }) => pet.name).join(", ")}
+              </h3>
               <Badge
                 variant="outline"
                 className={cn(
                   "ml-2 px-2.5 py-0.5 text-sm",
-                  appointmentColors[appointment.type].replace("bg-", "border-").replace("text-white", "")
+                  statusColors[appointment.status.toLowerCase() as keyof typeof statusColors]
                 )}
               >
-                {appointmentLabels[appointment.type]}
+                {appointment.status}
               </Badge>
             </div>
-            <p className="text-base text-muted-foreground">Propriétaire: {appointment.ownerName}</p>
-            {appointment.location && (
+            <p className="text-base text-muted-foreground">Propriétaire: {appointment.client.name}</p>
+            {appointment.atHome && (
               <div className="flex items-center gap-2 text-base text-muted-foreground">
                 <MapPin className="h-5 w-5 text-primary" />
-                <span>{appointment.location}</span>
+                <span>À domicile</span>
               </div>
             )}
           </div>

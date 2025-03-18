@@ -5,11 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CountAnimation } from "@/components/count-animation"
-import { Stethoscope, CalendarIcon, HeartPulseIcon, TrendingUpIcon, User, RefreshCcw, PawPrint, Wallet, CreditCard } from "lucide-react"
+import {
+  Stethoscope,
+  CalendarIcon,
+  HeartPulseIcon,
+  TrendingUpIcon,
+  User,
+  RefreshCcw,
+  PawPrint,
+  Wallet,
+  CreditCard,
+} from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import { CredenzaContent, CredenzaTitle, CredenzaHeader, Skeleton } from "@/components/ui"
 import { Credenza } from "@/components/ui"
-import { AnimalCredenza } from "./unified-metrics/AnimalCredenza"
+import { AnimalCredenza } from "../unified-metrics/AnimalCredenza"
 import { getMetricsAction } from "@/src/actions/metrics.action"
 import { useQuery } from "@tanstack/react-query"
 import { getProNextAppointment } from "@/src/actions/appointments.action"
@@ -84,6 +94,7 @@ export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null)
 
   const { data: organization } = useQuery({
     queryKey: ["currentOrganization"],
@@ -404,8 +415,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -437,8 +449,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -470,8 +483,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -503,8 +517,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -516,9 +531,7 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Solde Stripe */}
-        <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
-        >
+        <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
@@ -531,9 +544,10 @@ export const UnifiedMetrics = () => {
                 ) : stripeBalance?.data ? (
                   <span>
                     <CountAnimation
-                      value={stripeBalance.data.available
-                        .filter((b: { currency: string }) => b.currency === "eur")
-                        .reduce((sum: number, b: { amount: number }) => sum + b.amount, 0) / 100
+                      value={
+                        stripeBalance.data.available
+                          .filter((b: { currency: string }) => b.currency === "eur")
+                          .reduce((sum: number, b: { amount: number }) => sum + b.amount, 0) / 100
                       }
                     />
                     <span className="text-muted-foreground ml-1">€</span>
@@ -542,17 +556,13 @@ export const UnifiedMetrics = () => {
                   <p className="text-2xl font-semibold">0€</p>
                 )}
               </div>
-              <div className="text-xs mt-1 text-muted-foreground">
-                Solde disponible pour le virement
-              </div>
+              <div className="text-xs mt-1 text-muted-foreground">Solde disponible pour le virement</div>
             </div>
           </div>
         </Card>
 
         {/* Chiffre d'affaires du mois */}
-        <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
-        >
+        <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
@@ -601,7 +611,11 @@ export const UnifiedMetrics = () => {
                   {nextAppointmentPets.map(pet => (
                     <div
                       key={pet.id}
-                      className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background"
+                      className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background hover:scale-105 transition-transform cursor-pointer relative z-10 hover:z-20"
+                      onClick={e => {
+                        e.stopPropagation()
+                        setSelectedPetId(pet.id)
+                      }}
                     >
                       {pet.image ? (
                         <img src={pet.image} alt={pet.name} className="w-full h-full rounded-full object-cover" />
@@ -657,9 +671,16 @@ export const UnifiedMetrics = () => {
       )}
 
       {/* Utilisation de notre nouveau composant AnimalCredenza */}
-      {nextAppointmentPets.map(pet => (
-        <AnimalCredenza key={pet.id} isOpen={animalDetailsOpen} onOpenChange={setAnimalDetailsOpen} petId={pet.id} />
-      ))}
+      {selectedPetId && (
+        <AnimalCredenza
+          key={selectedPetId}
+          isOpen={!!selectedPetId}
+          onOpenChange={open => {
+            if (!open) setSelectedPetId(null)
+          }}
+          petId={selectedPetId}
+        />
+      )}
     </div>
   )
 }

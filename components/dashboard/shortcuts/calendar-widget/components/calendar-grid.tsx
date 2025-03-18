@@ -2,13 +2,13 @@
 
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
 import { cn } from "@/src/lib/utils"
-
+import { Appointment } from "@/src/db"
 import { AppointmentCalendarItem } from "./appointment-calendar-item"
-import type { Appointment } from "@/src/db"
+
 interface CalendarGridProps {
   currentDate: Date
   selectedDate: Date | null
-  appointments: Appointment[] | undefined
+  appointments: Appointment[]
   onDayClick: (day: number) => void
 }
 
@@ -40,15 +40,36 @@ export function CalendarGrid({ currentDate, selectedDate, appointments = [], onD
 
     if (dayAppointments.length === 0) return null
 
-    // Afficher jusqu'à 3 rendez-vous maximum par case
-    const maxDisplayedAppointments = 3
-    const visibleAppointments = dayAppointments.slice(0, maxDisplayedAppointments)
-    const hiddenAppointments = dayAppointments.length - maxDisplayedAppointments
+    // Grouper les rendez-vous par créneau horaire
+    const groupedAppointments = dayAppointments.reduce(
+      (acc, appointment) => {
+        const timeKey = appointment.slot.start.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+        if (!acc[timeKey]) {
+          acc[timeKey] = []
+        }
+        acc[timeKey].push(appointment)
+        return acc
+      },
+      {} as Record<string, Appointment[]>
+    )
+
+    // Convertir l'objet en tableau trié par heure
+    const sortedGroups = Object.entries(groupedAppointments)
+      .sort(([timeA], [timeB]) => timeA.localeCompare(timeB))
+      .map(([_, appointments]) => appointments)
+
+    // Afficher jusqu'à 3 groupes de rendez-vous maximum par case
+    const maxDisplayedGroups = 3
+    const visibleGroups = sortedGroups.slice(0, maxDisplayedGroups)
+    const hiddenAppointments = sortedGroups.slice(maxDisplayedGroups).reduce((acc, group) => acc + group.length, 0)
 
     return (
       <>
-        {visibleAppointments.map(appointment => (
-          <AppointmentCalendarItem key={appointment.id} appointment={appointment as Appointment} />
+        {visibleGroups.map(group => (
+          <AppointmentCalendarItem key={group[0].id} appointment={group[0]} totalInSlot={group.length} />
         ))}
         {hiddenAppointments > 0 && (
           <div className="flex justify-end">
@@ -118,13 +139,13 @@ export function CalendarGrid({ currentDate, selectedDate, appointments = [], onD
                 day === 0
                   ? "invisible"
                   : cn(
-                    "rounded-xl border border-border hover:border-border/80",
-                    "dark:border-gray-700 dark:hover:border-gray-600",
-                    isToday(day) && "bg-primary/5 ring-2 ring-primary",
-                    isSelected(day) && "bg-secondary/5 ring-2 ring-secondary",
-                    isWeekend(dayIndex) && "bg-muted/50",
-                    "cursor-pointer"
-                  )
+                      "rounded-xl border border-border hover:border-border/80",
+                      "dark:border-gray-700 dark:hover:border-gray-600",
+                      isToday(day) && "bg-primary/5 ring-2 ring-primary",
+                      isSelected(day) && "bg-secondary/5 ring-2 ring-secondary",
+                      isWeekend(dayIndex) && "bg-muted/50",
+                      "cursor-pointer"
+                    )
               )}
               onClick={() => day !== 0 && onDayClick(day)}
             >

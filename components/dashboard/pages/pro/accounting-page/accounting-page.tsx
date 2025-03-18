@@ -1,42 +1,14 @@
 "use client"
 
-import { Download, FileText, Euro, TrendingUp, Calendar } from "lucide-react"
+import { Download, Euro, TrendingUp, Calendar } from "lucide-react"
 import React from "react"
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { cn } from "@/src/lib/utils"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
 import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-import AccountingHeader from "../../../shortcuts/pro/accounting-header"
-
-interface ChiffreAffairesProps {
-  data: {
-    montant: number
-    evolution: number
-    periode: string
-    historique: {
-      mois: string
-      montant: number
-    }[]
-    repartition: {
-      categorie: string
-      montant: number
-      pourcentage: number
-    }[]
-  }
-}
-
-interface PaiementsProps {
-  data: {
-    client: string
-    montant: number
-    date: string
-    statut: "en_attente" | "en_retard"
-  }[]
-}
+import AccountingHeader from "../../../shortcuts/pro/dashboard-tabs/accounting-tab/accounting-header"
 
 const AccountingPageComponent = () => {
   const { shouldShowAlert, organizationId } = useSubscriptionCheck()
