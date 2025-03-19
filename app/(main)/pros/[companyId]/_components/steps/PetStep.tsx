@@ -9,14 +9,16 @@ import { Plus, Dog, Cat, PawPrint } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useQuery } from "@tanstack/react-query"
 import { getPets } from "@/src/actions"
+import { OrganizationSlots } from "@/src/db"
 
 interface PetStepProps {
   selectedPets: Pet[] | null
   onSelectPets: (pets: Pet[]) => void
   selectedService: Service | null
+  selectedSlot: OrganizationSlots | null
 }
 
-export function PetStep({ selectedPets, onSelectPets, selectedService }: PetStepProps) {
+export function PetStep({ selectedPets, onSelectPets, selectedService, selectedSlot }: PetStepProps) {
   // Récupération des animaux de l'utilisateur
   const { data: userPets, isLoading } = useQuery({
     queryKey: ["user-pets"],
@@ -25,19 +27,29 @@ export function PetStep({ selectedPets, onSelectPets, selectedService }: PetStep
 
   // Gestion de la sélection des animaux
   const handlePetSelection = (pet: Pet) => {
-    if (!selectedService) return
+    if (!selectedService || !selectedSlot) return
+
+    const remainingPlaces = selectedSlot.remainingPlaces || 0
+    const currentSelectedCount = selectedPets?.length || 0
 
     if (selectedService.type === "MULTIPLE") {
-      // Pour les services de groupe, permettre la sélection multiple
       const isSelected = selectedPets?.some(p => p.id === pet.id)
+
       if (isSelected) {
+        // Si on désélectionne un animal, pas de vérification nécessaire
         onSelectPets((selectedPets || []).filter(p => p.id !== pet.id))
       } else {
-        onSelectPets([...(selectedPets || []), pet])
+        // Vérifier si on peut ajouter un animal de plus par rapport aux places restantes
+        if (currentSelectedCount < remainingPlaces) {
+          onSelectPets([...(selectedPets || []), pet])
+        }
       }
     } else {
       // Pour les services individuels, permettre uniquement la sélection d'un animal
-      onSelectPets([pet])
+      // et vérifier qu'il reste au moins une place
+      if (remainingPlaces > 0) {
+        onSelectPets([pet])
+      }
     }
   }
 
@@ -57,8 +69,15 @@ export function PetStep({ selectedPets, onSelectPets, selectedService }: PetStep
     <div className="space-y-6">
       <div className="space-y-2">
         <h3 className="font-medium text-lg">Sélectionnez {selectedService?.type === "MULTIPLE" ? "un ou plusieurs animaux" : "un animal"} pour ce rendez-vous</h3>
-        {selectedService?.type === "MULTIPLE" && (
-          <p className="text-sm text-muted-foreground">Ce service permet d'accueillir plusieurs animaux en même temps.</p>
+        {selectedService?.type === "MULTIPLE" && selectedSlot && (
+          <p className="text-sm text-muted-foreground">
+            Ce service permet d'accueillir plusieurs animaux en même temps.
+            {selectedSlot.remainingPlaces && selectedSlot.remainingPlaces > 0 ? (
+              ` Il reste ${selectedSlot.remainingPlaces} place${selectedSlot.remainingPlaces > 1 ? 's' : ''} disponible${selectedSlot.remainingPlaces > 1 ? 's' : ''}.`
+            ) : (
+              " Il n'y a plus de places disponibles pour ce créneau."
+            )}
+          </p>
         )}
       </div>
 
