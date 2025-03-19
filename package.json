@@ -158,6 +158,7 @@
     "protobufjs",
     "sharp"
   ],
+  "packageManager": "bun@1.2.4",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
