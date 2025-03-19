@@ -11,11 +11,11 @@ import { z } from "zod"
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui"
 import { Button } from "@/components/ui/button"
+import { DropzoneInput } from "@/components/ui/dropzone-input"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { createServicesStepAction } from "@/src/actions"
-import { UploadButton } from "@/src/lib/uploadthing"
 import { cn } from "@/src/lib/utils"
 
 import { proServicesSchema } from "../../types/onboarding-schemas"
@@ -110,15 +110,22 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                         </>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <UploadButton
-                            endpoint="documentsUploader"
-                            onClientUploadComplete={res => {
-                              if (res?.[0]) {
-                                imageField.onChange(res[0].url)
+                          <DropzoneInput
+                            uploadEndpoint="imageUploader"
+                            value={imageField.value ? [{ url: imageField.value, name: "service-image" }] : []}
+                            onFilesChanged={files => {
+                              if (files[0]) {
+                                imageField.onChange(files[0].url)
                               }
                             }}
-                            onUploadError={(error: Error) => {
-                              console.error(error)
+                            acceptedFileTypes={{
+                              "image/jpeg": [".jpg", ".jpeg"],
+                              "image/png": [".png"],
+                            }}
+                            placeholder={{
+                              dragActive: "Déposez votre image ici",
+                              dragInactive: "Glissez-déposez votre image ici, ou cliquez pour sélectionner",
+                              fileTypes: "JPEG, PNG - 5MB max",
                             }}
                           />
                         </div>

@@ -20,16 +20,12 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from "@/components/ui"
 import { useSession } from "@/src/lib/auth-client"
 import { Appointment } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
 import { getAllAppointmentForClient } from "@/src/actions/appointments.action"
-import { cn } from "@/lib/utils"
+import { cn } from "@/src/lib"
 
 const ClientUpcomingAppointmentsWidget = () => {
   const router = useRouter()
