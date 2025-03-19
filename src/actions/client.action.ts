@@ -1,13 +1,12 @@
 "use server"
 
+import { createServerAction, db, requireAuth } from "../lib"
+
+import { ClientFilterSchema } from "../types/client"
+import { User } from "@/src/db/user"
+import { appointments } from "@/src/db/appointments"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
-
-import { appointments } from "@/src/db/appointments"
-import { User } from "@/src/db/user"
-
-import { createServerAction, db, requireAuth } from "../lib"
-import { ClientFilterSchema } from "../types/client"
 
 // Action pour récupérer tous les clients d'une organisation
 export const getClients = createServerAction(
