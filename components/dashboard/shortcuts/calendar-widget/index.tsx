@@ -150,7 +150,7 @@ const CalendarWidget = () => {
           <div className="flex items-center justify-between gap-2 flex-1">
             <div className="flex items-center gap-1">
               <div className="p-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-md">
-                <CalendarDays className="size-3 text-blue-600 dark:text-blue-400" />
+                <CalendarDays className="size-4 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-lg font-semibold">
                 {capitalizeFirstLetter(

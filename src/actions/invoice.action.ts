@@ -3,18 +3,20 @@
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 
-import { CreateInvoiceSchema, invoice } from "../db"
-import { ActionError, createServerAction, db, requireAuth, requireOwner } from "../lib"
+import { CreateInvoiceSchema, Invoice, invoice } from "../db"
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization, requireOwner } from "../lib"
 
 // Interface pour la structure des données de facture
 export interface InvoiceData {
   id: string
-  number: string
-  clientName: string
-  amount: number
-  status: "paid" | "pending" | "overdue"
-  dueDate: string
-  createdAt: string
+  total: number
+  appointmentId: string | null
+  proId: string
+  clientId: string
+  checkoutSessionId: string | null
+  createdAt: Date
+  updatedAt: Date | null
+  status: "paid" | "pending" | "overdue" // Statut calculé
 }
 
 // Interface pour les métriques des factures
@@ -26,43 +28,19 @@ export interface InvoiceMetricsData {
 }
 
 export const getInvoices = createServerAction(
-  z.string().optional(),
-  async (organizationId, ctx) => {
+  z.object({}),
+  async (input, ctx) => {
     try {
       // Si organizationId est fourni, filtrer par organisation
       // Sinon, récupérer toutes les factures de l'utilisateur
       const data = await db.query.invoice.findMany({
         with: {
           options: true,
-          // Commentons temporairement cette partie qui cause des erreurs
-          // appointment: {
-          //   with: {
-          //     pet: true,
-          //     user: true,
-          //   },
-          // },
         },
         orderBy: (invoice, { desc }) => [desc(invoice.createdAt)],
       })
 
-      const invoices: InvoiceData[] = data.map(inv => {
-        // Générer un nom de client aléatoire pour simuler les données
-        const possibleNames = ["Sophie Martin", "Jean Dupont", "Marie Bernard", "Thomas Laurent"]
-        const randomName = possibleNames[Math.floor(Math.random() * possibleNames.length)]
-
-        return {
-          id: inv.id,
-          number: `INV-${inv.id.substring(0, 8).toUpperCase()}`,
-          // Utilisons une valeur simulée au lieu de inv.appointment?.user?.name
-          clientName: randomName,
-          amount: inv.total || 0,
-          status: getInvoiceStatus(inv) as "paid" | "pending" | "overdue",
-          dueDate: new Date(inv.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // Due date: 30 jours après création
-          createdAt: inv.createdAt.toISOString().split("T")[0],
-        }
-      })
-
-      return { data: invoices }
+      return data as Invoice[];
     } catch (error) {
       console.error("Erreur lors de la récupération des factures:", error)
       throw new ActionError("Impossible de récupérer les factures")
@@ -72,17 +50,17 @@ export const getInvoices = createServerAction(
 )
 
 export const getInvoiceMetrics = createServerAction(
-  z.string().optional(),
-  async (organizationId, ctx) => {
+  z.object({}),
+  async (input, ctx) => {
     try {
-      const invoicesResult = await getInvoices(organizationId)
+      const invoicesResult = await getInvoices({})
 
       if ("error" in invoicesResult) {
         throw new Error(invoicesResult.error)
       }
 
       // Extraire les factures de la réponse
-      let invoicesArray: InvoiceData[] = []
+      let invoicesArray: Invoice[] = []
       if (invoicesResult.data && Array.isArray(invoicesResult.data)) {
         invoicesArray = invoicesResult.data
       }
@@ -97,8 +75,11 @@ export const getInvoiceMetrics = createServerAction(
       // Parcourir manuellement le tableau
       for (let i = 0; i < invoicesArray.length; i++) {
         const inv = invoicesArray[i]
-        if (inv.status === "paid") {
-          totalRevenue += inv.amount
+        const status = getInvoiceStatus(inv)
+        const total = inv.total || 0 // Utiliser 0 si total est null
+        
+        if (status === "paid") {
+          totalRevenue += total
 
           // Calculer le temps de paiement (pour la moyenne)
           const createdDate = new Date(inv.createdAt)
@@ -107,30 +88,29 @@ export const getInvoiceMetrics = createServerAction(
 
           totalPaymentDays += daysDiff
           paidCount++
-        } else if (inv.status === "pending") {
-          unpaidInvoices += inv.amount
-        } else if (inv.status === "overdue") {
-          overdueInvoices += inv.amount
+        } else if (status === "pending") {
+          unpaidInvoices += total
+        } else if (status === "overdue") {
+          overdueInvoices += total
         }
       }
 
       // Calculer le temps moyen de paiement
       const averagePaymentTime = paidCount > 0 ? Math.round(totalPaymentDays / paidCount) : 0
 
-      const metrics: InvoiceMetricsData = {
+      // Retourner directement les métriques sans les imbriquer dans un objet data
+      return {
         totalRevenue,
         unpaidInvoices,
         overdueInvoices,
         averagePaymentTime,
       }
-
-      return { data: metrics }
     } catch (error) {
       console.error("Erreur lors du calcul des métriques:", error)
       throw new ActionError("Impossible de calculer les métriques des factures")
     }
   },
-  [requireAuth]
+  [requireAuth, requireFullOrganization]
 )
 
 // Fonction utilitaire pour déterminer le statut d'une facture

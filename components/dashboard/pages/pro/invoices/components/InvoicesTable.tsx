@@ -38,8 +38,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-import { Invoice } from "../invoices-page"
+import { Invoice } from "@/src/db"
 
 interface InvoicesTableProps {
   invoices: Invoice[]
