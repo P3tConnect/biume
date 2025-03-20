@@ -89,11 +89,13 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
   }
 
   // Trier les rendez-vous du plus récent au plus ancien
-  const sortedAppointments = [...(appointmentsData?.data || [])].sort((a, b) => {
-    const dateA = a.slot?.start ? new Date(a.slot.start).getTime() : 0
-    const dateB = b.slot?.start ? new Date(b.slot.start).getTime() : 0
-    return dateB - dateA
-  })
+  const sortedAppointments = [...(appointmentsData?.data || [])]
+    .filter((appointment): appointment is NonNullable<typeof appointment> => appointment !== null)
+    .sort((a, b) => {
+      const dateA = a?.slot?.start ? new Date(a.slot.start).getTime() : a?.beginAt ? new Date(a.beginAt).getTime() : 0
+      const dateB = b?.slot?.start ? new Date(b.slot.start).getTime() : b?.beginAt ? new Date(b.beginAt).getTime() : 0
+      return dateB - dateA
+    })
 
   return (
     <div className="p-6 space-y-6">
@@ -149,6 +151,8 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
           transition={{ duration: 0.3 }}
         >
           {sortedAppointments.map((appointment, index) => {
+            if (!appointment) return null
+
             const isExpanded = expandedRecords[appointment.id] || false
             const serviceName = appointment.service?.name || "Consultation"
             const serviceIcon = getServiceIcon(serviceName)
@@ -198,7 +202,7 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
 
                 {/* Description */}
                 <div className="text-sm my-2 text-muted-foreground">
-                  {appointment.service?.description || `Rendez-vous de ${serviceName}`}
+                  {`Rendez-vous de ${serviceName}`}
                 </div>
 
                 {/* Contenu extensible */}
@@ -270,13 +274,20 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
                               <div className="mt-2">
                                 <span className="text-xs font-medium">Options incluses :</span>
                                 <div className="flex flex-wrap gap-1 mt-1">
-                                  {appointment.options.map((opt, i) => (
-                                    <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-                                      <Badge variant="outline" className="text-xs">
-                                        {opt.option.title}
-                                      </Badge>
-                                    </motion.div>
-                                  ))}
+                                  {appointment.options
+                                    .filter((opt): opt is NonNullable<typeof opt> & { option: { title: string } } =>
+                                      opt !== null &&
+                                      opt.option !== null &&
+                                      typeof opt.option === 'object' &&
+                                      'title' in opt.option
+                                    )
+                                    .map((opt, i) => (
+                                      <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+                                        <Badge variant="outline" className="text-xs">
+                                          {opt.option.title}
+                                        </Badge>
+                                      </motion.div>
+                                    ))}
                                 </div>
                               </div>
                             )}

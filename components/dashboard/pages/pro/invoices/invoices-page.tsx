@@ -108,11 +108,11 @@ const InvoicesPageComponent = () => {
 
         <InvoicesTable invoices={invoices?.data as Invoice[]} onInvoiceSelect={setSelectedInvoice} />
 
-        <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+        {/* <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
           <SheetContent className="w-full sm:max-w-3xl">
-            {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
+            {selectedInvoice && <InvoiceDetails invoice={selectedInvoice as Invoice} />}
           </SheetContent>
-        </Sheet>
+        </Sheet> */}
       </div>
     </>
   )

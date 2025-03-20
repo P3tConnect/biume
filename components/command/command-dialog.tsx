@@ -34,6 +34,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { getClients } from "@/src/actions/client.action"
 import { getPetsAction } from "@/src/actions/pets.action"
+import type { User } from "@/src/db"
 
 // Définition des types de résultats de recherche
 type SearchResultType = "client" | "patient" | "page" | "action"
@@ -76,8 +77,8 @@ interface ClientData {
   name: string
   email: string
   phoneNumber: string | null
+  city: string | null
   status: string
-  // autres propriétés si nécessaire
 }
 
 // Type pour les patients (animaux) retournés par l'API
@@ -115,7 +116,14 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
       if ("error" in result) {
         throw new Error(result.error)
       }
-      return result.data || []
+      return (result.data || []).map(user => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        status: "Active"
+      }))
     },
     enabled: open && searchTerm.length > 1,
   })
@@ -147,27 +155,27 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
   // Formatage des résultats de recherche pour les clients
   const clientResults: ClientSearchResult[] = clientsData
     ? clientsData.map((client: ClientData) => ({
-        id: client.id,
-        type: "client",
-        title: client.name,
-        description: client.email,
-        icon: Users,
-        email: client.email,
-        phoneNumber: client.phoneNumber || undefined,
-      }))
+      id: client.id,
+      type: "client",
+      title: client.name,
+      description: client.email,
+      icon: Users,
+      email: client.email,
+      phoneNumber: client.phoneNumber || undefined,
+    }))
     : []
 
   // Formatage des résultats de recherche pour les patients (animaux)
   const patientResults: PatientSearchResult[] = patientsData
     ? patientsData.map((patient: PatientData) => ({
-        id: patient.id,
-        type: "patient",
-        title: patient.name || "",
-        description: patient.breed || undefined,
-        icon: PawPrint,
-        owner: patient.owner?.name || "Propriétaire inconnu",
-        animalType: patient.type || "",
-      }))
+      id: patient.id,
+      type: "patient",
+      title: patient.name || "",
+      description: patient.breed || undefined,
+      icon: PawPrint,
+      owner: patient.owner?.name || "Propriétaire inconnu",
+      animalType: patient.type || "",
+    }))
     : []
 
   // Pages principales
