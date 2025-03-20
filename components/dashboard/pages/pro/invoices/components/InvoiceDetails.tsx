@@ -17,7 +17,15 @@ import {
   SheetTitle,
 } from "@/components/ui"
 
-import { Invoice } from "../invoices-page"
+import type { Invoice as DbInvoice } from "@/src/db"
+
+type Invoice = DbInvoice & {
+  number: string
+  clientName: string
+  amount: number
+  dueDate: Date
+  status: "paid" | "pending" | "overdue"
+}
 
 interface InvoiceDetailsProps {
   invoice: Invoice

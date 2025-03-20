@@ -251,14 +251,24 @@ export const getReportsAction = createServerAction(
     // Récupérer tous les rapports
     const allReports = await db.query.report.findMany({
       with: {
-        appointments: true,
+        appointments: {
+          with: {
+            pets: {
+              with: {
+                pet: true,
+              }
+            }
+          }
+        },
         topics: true,
       },
     })
 
     // Si petId est fourni, filtrer les rapports côté application
-    // en utilisant patientId dans appointments qui correspond au petId
-    const reports = input.petId ? allReports.filter(r => r.appointments?.patientId === input.petId) : allReports
+    // en vérifiant si le petId correspond à l'un des pets dans les appointments
+    const reports = input.petId 
+      ? allReports.filter(r => r.appointments?.pets.some(p => p.pet?.id === input.petId))
+      : allReports
 
     return { reports }
   },

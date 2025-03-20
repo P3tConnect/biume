@@ -3,37 +3,47 @@
 import React from "react"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
 import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
-
-import { Sheet, SheetContent } from "@/components/ui"
-import { useInvoiceMetrics, useInvoices } from "@/src/hooks"
-
+import { Sheet, SheetContent, Skeleton } from "@/components/ui"
 import { InvoiceDetails } from "./components/InvoiceDetails"
 import { InvoicesHeader } from "./components/InvoicesHeader"
 import { InvoicesTable } from "./components/InvoicesTable"
 import { MetricsGrid } from "./components/MetricsGrid"
-
-// Types
-export interface Invoice {
-  id: string
-  number: string
-  clientName: string
-  amount: number
-  status: "paid" | "pending" | "overdue"
-  dueDate: string
-  createdAt: string
-}
-
-export interface InvoiceMetrics {
-  totalRevenue: number
-  unpaidInvoices: number
-  overdueInvoices: number
-  averagePaymentTime: number
-}
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { getInvoiceMetrics, getInvoices, InvoiceMetricsData } from "@/src/actions/invoice.action"
+import { Invoice } from "@/src/db"
 
 // Composant fallback pour l'état de chargement
 const LoadingState = () => (
-  <div className="flex items-center justify-center w-full py-10">
-    <span className="text-primary animate-spin">Chargement...</span>
+  <div className="w-full space-y-6">
+    {/* En-tête simulé */}
+    <div className="flex justify-between items-center">
+      <Skeleton className="h-10 w-[200px]" />
+      <Skeleton className="h-10 w-[120px]" />
+    </div>
+
+    {/* Métriques simulées */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {Array(4).fill(null).map((_, i) => (
+        <div key={i} className="p-4 border rounded-lg">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-8 w-32" />
+        </div>
+      ))}
+    </div>
+
+    {/* Tableau simulé */}
+    <div className="border rounded-lg p-4">
+      <div className="space-y-4">
+        {Array(5).fill(null).map((_, i) => (
+          <div key={i} className="flex items-center gap-4">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 )
 
@@ -49,25 +59,20 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
 
 const InvoicesPageComponent = () => {
   // Dans un environnement réel, vous récupéreriez l'ID de l'organisation depuis un contexte ou un paramètre
-  const organizationId = "current-organization-id"
 
+  const queryClient = useQueryClient()
   const [selectedInvoice, setSelectedInvoice] = React.useState<Invoice | null>(null)
   const { shouldShowAlert, organizationId: subscriptionOrgId } = useSubscriptionCheck()
 
-  // Utiliser les hooks de requête pour charger les données
-  const {
-    data: invoices,
-    isLoading: isLoadingInvoices,
-    error: invoicesError,
-    refetch: refetchInvoices,
-  } = useInvoices(organizationId)
+  const { data: invoices, isLoading: isLoadingInvoices, error: invoicesError } = useQuery({
+    queryKey: ["invoices"],
+    queryFn: () => getInvoices({}),
+  });
 
-  const {
-    data: metrics,
-    isLoading: isLoadingMetrics,
-    error: metricsError,
-    refetch: refetchMetrics,
-  } = useInvoiceMetrics(organizationId)
+  const { data: invoiceMetrics, isLoading: isLoadingMetrics, error: metricsError } = useQuery({
+    queryKey: ["invoice-metrics"],
+    queryFn: () => getInvoiceMetrics({}),
+  })
 
   // Vérifier s'il y a des erreurs
   const error = invoicesError || metricsError
@@ -77,8 +82,8 @@ const InvoicesPageComponent = () => {
 
   // Fonction pour réessayer toutes les requêtes
   const handleRetry = () => {
-    refetchInvoices()
-    refetchMetrics()
+    queryClient.invalidateQueries({ queryKey: ["invoices"] })
+    queryClient.invalidateQueries({ queryKey: ["invoice-metrics"] })
   }
 
   // Fallback pour l'état de chargement
@@ -99,15 +104,15 @@ const InvoicesPageComponent = () => {
       <div className="flex flex-col gap-6">
         <InvoicesHeader />
 
-        {metrics && <MetricsGrid data={metrics} />}
+        {invoiceMetrics?.data && <MetricsGrid data={invoiceMetrics.data} />}
 
-        <InvoicesTable invoices={invoices || []} onInvoiceSelect={setSelectedInvoice} />
+        <InvoicesTable invoices={invoices?.data as Invoice[]} onInvoiceSelect={setSelectedInvoice} />
 
-        <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+        {/* <Sheet open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
           <SheetContent className="w-full sm:max-w-3xl">
-            {selectedInvoice && <InvoiceDetails invoice={selectedInvoice} />}
+            {selectedInvoice && <InvoiceDetails invoice={selectedInvoice as Invoice} />}
           </SheetContent>
-        </Sheet>
+        </Sheet> */}
       </div>
     </>
   )
