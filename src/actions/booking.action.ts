@@ -15,8 +15,6 @@ import {
   OrganizationSlots,
   Organization,
   Pet,
-  ServiceSchema,
-  SelectOrganizationSlotsSchema,
 } from "../db"
 import { eq, inArray } from "drizzle-orm"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"

@@ -64,7 +64,7 @@ export function AppointmentCalendarItem({ appointment, totalInSlot = 1 }: Appoin
                 </Avatar>
               )}
               {totalInSlot > 1 && (
-                <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-[0.6rem] w-3 h-3 flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 bg-red-500 text-primary-foreground rounded-full text-[0.6rem] w-3 h-3 flex items-center justify-center">
                   {totalPets}
                 </div>
               )}
@@ -74,7 +74,7 @@ export function AppointmentCalendarItem({ appointment, totalInSlot = 1 }: Appoin
                 hour: "2-digit",
                 minute: "2-digit",
               })}
-              {totalInSlot > 1 && <span className="ml-1 opacity-50">({remainingPlaces})</span>}
+              {totalInSlot > 1 && <span className="ml-1 opacity-50">({remainingPlaces} restante)</span>}
             </div>
           </div>
         </TooltipTrigger>
