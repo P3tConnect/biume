@@ -3,41 +3,39 @@ import { Suspense } from "react"
 import { TimetableView } from "@/components/dashboard/pages/pro/timetable-page/timetable-view"
 
 import DashboardOrganizationTimetableLoading from "./loading"
+import { CalendarView } from "@/components/calendar"
+import { getAllAppointments } from "@/src/actions/appointments.action"
+import { Appointment } from "@/src/db/appointments"
 
 // Données temporaires pour la démonstration
 const mockAppointments = [
   {
-    id: "1",
-    clientName: "Jean Dupont",
-    date: new Date(),
-    time: "09:00",
-    duration: 30,
-    status: "confirmed" as const,
-    notes: "Premier rendez-vous",
+    title: "Product Review",
+    startTime: "14:00",
+    endTime: "15:30",
+    date: new Date(2025, 2, 22), // 22 mars 2025
   },
   {
-    id: "2",
-    clientName: "Marie Martin",
-    date: new Date(),
-    time: "10:30",
-    duration: 45,
-    status: "pending" as const,
+    title: "Product Review",
+    startTime: "14:00",
+    endTime: "15:30",
+    date: new Date(2025, 2, 23), // 22 mars 2025
   },
   {
-    id: "3",
-    clientName: "Pierre Durand",
-    date: new Date(new Date().setDate(new Date().getDate() + 2)),
-    time: "14:00",
-    duration: 60,
-    status: "confirmed" as const,
+    title: "Product Review",
+    startTime: "14:00",
+    endTime: "15:30",
+    date: new Date(2025, 2, 24), // 22 mars 2025
   },
 ]
 
-export default function DashboardOrganizationTimetablePage() {
+export default async function DashboardOrganizationTimetablePage() {
+  const appointments = await getAllAppointments({})
+
   return (
     <div className="h-full w-full flex flex-col">
       <Suspense fallback={<DashboardOrganizationTimetableLoading />}>
-        <TimetableView appointments={mockAppointments} />
+        <CalendarView appointments={appointments.data as Appointment[]} />
       </Suspense>
     </div>
   )

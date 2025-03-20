@@ -13,7 +13,7 @@ import { fr } from "date-fns/locale"
 import { useQuery } from "@tanstack/react-query"
 import { getConfirmedAndAboveAppointments } from "@/src/actions/appointments.action"
 
-const capitalizeFirstLetter = (str: string) => {
+export const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 

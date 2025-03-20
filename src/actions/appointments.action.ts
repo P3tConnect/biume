@@ -166,6 +166,8 @@ export const getConfirmedAndAboveAppointments = createServerAction(
                 id: true,
                 name: true,
                 image: true,
+                type: true,
+                breed: true,
               },
             },
           },
@@ -177,6 +179,9 @@ export const getConfirmedAndAboveAppointments = createServerAction(
             email: true,
             phoneNumber: true,
             image: true,
+            address: true,
+            city: true,
+            country: true,
           },
         },
         slot: {
@@ -210,6 +215,7 @@ export const getConfirmedAndAboveAppointments = createServerAction(
           },
         },
       },
+      orderBy: [desc(appointmentsTable.createdAt)],
     })
 
     return appointmentQuery as Appointment[]
