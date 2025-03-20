@@ -60,8 +60,6 @@ export async function POST(req: NextRequest) {
       const amount = metadata.amount
       const selectedPets = metadata.selectedPets ? JSON.parse(metadata.selectedPets) : []
 
-      console.log("selectedPets", selectedPets)
-
       const transactionQuery = await db.transaction(async tx => {
         const serviceQuery = (await tx.query.service.findFirst({
           where: eq(service.id, serviceId),
@@ -135,8 +133,6 @@ export async function POST(req: NextRequest) {
           if (!invoiceId) {
             return NextResponse.json({ error: "Invoice non trouvé" }, { status: 400 })
           }
-
-          console.log("petQuery", petQuery)
 
           // Envoyer un email de confirmation au client et au professionnel
           const proEmail = await resend.emails.send({
