@@ -118,8 +118,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           href: `/dashboard/organization/${companyId}/observations`,
           label: "dashboard.sidebar.observations",
           comingSoon: true,
-          active:
-            pathname == `/dashboard/organization/${companyId}/observations`,
+          active: pathname == `/dashboard/organization/${companyId}/observations`,
           icon: Eye,
         },
         {
@@ -135,7 +134,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
       menus: [
         {
           href: `/dashboard/organization/${companyId}/settings`,
-          label: "Paramètres",
+          label: "dashboard.sidebar.settings",
           active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
           icon: Settings,
         },

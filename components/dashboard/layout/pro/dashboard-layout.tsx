@@ -1,10 +1,18 @@
-import { DashboardNavbar } from "./dashboard-navbar"
+"use client"
+
+import { DashboardSidebar } from "./dashboard-sidebar"
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function DashboardLayout({ children, companyId }: { children: React.ReactNode; companyId: string }) {
   return (
-    <div className="h-screen w-screen bg-background flex flex-col">
-      <DashboardNavbar companyId={companyId} />
-      <main className="h-full w-full p-2 overflow-y-auto">{children}</main>
+    <div className="flex h-screen w-screen">
+      <DashboardSidebar companyId={companyId} />
+      <SidebarInset className="flex min-h-screen flex-col">
+        <div className="flex h-14 items-center border-b px-4">
+          <SidebarTrigger />
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">{children}</div>
+      </SidebarInset>
     </div>
   )
 }
