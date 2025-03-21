@@ -2,8 +2,7 @@
 
 import { cn } from "@/src/lib/utils"
 import { Appointment } from "@/src/db/appointments"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { groupAppointmentsByTimeSlot, getTotalPetsInGroup } from "./utils"
+import { groupAppointmentsByTimeSlot, getTotalPetsInGroup } from "../utils"
 import { useEffect, useState } from "react"
 
 interface CalendarCellProps {

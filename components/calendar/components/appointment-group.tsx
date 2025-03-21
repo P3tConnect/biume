@@ -3,7 +3,7 @@ import { cn } from "@/src/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { getAllPetsInGroup } from "./utils"
+import { getAllPetsInGroup } from "../utils"
 import { Clock, Users, MapPin, Phone, MessageSquare, Calendar, Euro } from "lucide-react"
 
 interface AppointmentGroupProps {
@@ -110,12 +110,8 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
 
                 {/* Noms des patients et propriétaire */}
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">
-                    {appointment.pets.map(pet => pet.pet.name).join(", ")}
-                  </div>
-                  <div className="text-sm text-muted-foreground truncate">
-                    {appointment.client.name}
-                  </div>
+                  <div className="font-medium truncate">{appointment.pets.map(pet => pet.pet.name).join(", ")}</div>
+                  <div className="text-sm text-muted-foreground truncate">{appointment.client.name}</div>
                 </div>
 
                 {/* Prix du service */}

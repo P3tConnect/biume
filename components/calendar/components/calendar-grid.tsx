@@ -7,8 +7,8 @@ import { CalendarCell } from "./calendar-cell"
 import { Appointment } from "@/src/db/appointments"
 import { useState } from "react"
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
-import { Card } from "../ui"
-import { capitalizeFirstLetter } from "../dashboard/shortcuts/calendar-widget"
+import { Card } from "../../ui"
+import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
 
 interface CalendarGridProps {
   appointments: Appointment[]

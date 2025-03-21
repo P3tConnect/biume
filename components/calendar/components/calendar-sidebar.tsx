@@ -2,8 +2,8 @@
 
 import { CalendarDays, Calendar as CalendarIcon } from "lucide-react"
 import { Appointment } from "@/src/db/appointments"
-import { capitalizeFirstLetter } from "../dashboard/shortcuts/calendar-widget"
-import { groupAppointmentsByTimeSlot } from "./utils"
+import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
+import { groupAppointmentsByTimeSlot } from "../utils"
 import { AppointmentGroup } from "./appointment-group"
 
 interface CalendarSidebarProps {
@@ -25,12 +25,12 @@ export function CalendarSidebar({ selectedDate, appointments }: CalendarSidebarP
             <h3 className="text-lg font-semibold truncate">
               {selectedDate
                 ? capitalizeFirstLetter(
-                  selectedDate.toLocaleString("fr-FR", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                  })
-                )
+                    selectedDate.toLocaleString("fr-FR", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                    })
+                  )
                 : "Sélectionnez une date"}
             </h3>
             {selectedDate && appointments.length > 0 && (
