@@ -15,26 +15,26 @@ export function CalendarSidebar({ selectedDate, appointments }: CalendarSidebarP
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
 
   return (
-    <div className="w-[500px] h-[85vh] rounded-2xl border bg-card flex flex-col">
+    <div className="h-full rounded-2xl border bg-card flex flex-col">
       <div className="p-4 border-b">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
             <CalendarDays className="w-5 h-5 text-purple-900 dark:text-purple-100" />
           </div>
-          <div>
-            <h3 className="text-lg font-semibold">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold truncate">
               {selectedDate
                 ? capitalizeFirstLetter(
-                    selectedDate.toLocaleString("fr-FR", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                    })
-                  )
+                  selectedDate.toLocaleString("fr-FR", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                  })
+                )
                 : "Sélectionnez une date"}
             </h3>
             {selectedDate && appointments.length > 0 && (
-              <p className="text-sm text-muted-foreground mt-0.5">
+              <p className="text-sm text-muted-foreground mt-0.5 truncate">
                 {appointments.length} rendez-vous programmé{appointments.length > 1 ? "s" : ""}
                 {groupedAppointments.length < appointments.length && ` (${groupedAppointments.length} créneaux)`}
               </p>
@@ -47,7 +47,6 @@ export function CalendarSidebar({ selectedDate, appointments }: CalendarSidebarP
         <div className="p-4 space-y-4">
           {selectedDate ? (
             appointments.length > 0 ? (
-              // Trier les groupes par heure de début
               groupedAppointments
                 .sort((a, b) => {
                   const timeA = new Date(a[0].slot.start).getTime()

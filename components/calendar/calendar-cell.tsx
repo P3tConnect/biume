@@ -4,6 +4,7 @@ import { cn } from "@/src/lib/utils"
 import { Appointment } from "@/src/db/appointments"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { groupAppointmentsByTimeSlot, getTotalPetsInGroup } from "./utils"
+import { useEffect, useState } from "react"
 
 interface CalendarCellProps {
   day: number
@@ -14,12 +15,12 @@ interface CalendarCellProps {
   onClick: () => void
 }
 
-function renderDayAppointments(appointments: Appointment[]) {
+function renderDayAppointments(appointments: Appointment[], maxDisplayedGroups: number) {
   if (appointments.length === 0) return null
 
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
-  const displayedGroups = groupedAppointments.slice(0, 2)
-  const remainingCount = groupedAppointments.length - 2
+  const displayedGroups = groupedAppointments.slice(0, maxDisplayedGroups)
+  const remainingCount = groupedAppointments.length - maxDisplayedGroups
 
   return (
     <>
@@ -31,73 +32,30 @@ function renderDayAppointments(appointments: Appointment[]) {
           <div
             key={index}
             className={cn(
-              "text-xs truncate rounded-lg px-2 py-1",
+              "text-[10px] sm:text-xs truncate rounded-lg px-1.5 sm:px-2 py-0.5 sm:py-1",
               group.length > 1
                 ? "bg-secondary/10 dark:bg-secondary/30 text-secondary dark:text-secondary-foreground border border-secondary/20 dark:border-secondary/40"
                 : "bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-100 border border-purple-200 dark:border-purple-800"
             )}
           >
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-1">
+              <span className="font-medium">
+                {new Date(mainAppointment.slot.start).toLocaleTimeString("fr-FR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
               <div className="flex items-center gap-1">
-                <span className="font-medium">
-                  {new Date(mainAppointment.slot.start).toLocaleTimeString("fr-FR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                <span className="text-[8px] sm:text-[10px] font-medium">
+                  {totalPets} {totalPets > 1 ? "patients" : "patient"}
                 </span>
-                {group.length > 1 && <span className="text-[10px] font-medium">({group.length})</span>}
-              </div>
-              <div className="flex -space-x-2">
-                {group
-                  .flatMap(
-                    appointment =>
-                      appointment.pets?.map((pet, petIndex) => (
-                        <Avatar
-                          key={`${appointment.id}-${petIndex}`}
-                          className={cn(
-                            "h-5 w-5 border",
-                            group.length > 1
-                              ? "border-secondary/20 dark:border-secondary/40"
-                              : "border-purple-200 dark:border-purple-800"
-                          )}
-                        >
-                          {pet.pet.image ? (
-                            <AvatarImage src={pet.pet.image} alt={pet.pet.name} />
-                          ) : (
-                            <AvatarFallback
-                              className={cn(
-                                "text-[10px]",
-                                group.length > 1
-                                  ? "bg-secondary/10 dark:bg-secondary/30 text-secondary dark:text-secondary-foreground"
-                                  : "bg-purple-200 dark:bg-purple-900/50 text-purple-900 dark:text-purple-100"
-                              )}
-                            >
-                              {pet.pet.name.charAt(0)}
-                            </AvatarFallback>
-                          )}
-                        </Avatar>
-                      )) || []
-                  )
-                  .slice(0, 3)}
-                {totalPets > 3 && (
-                  <div
-                    className={cn(
-                      "h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-medium border",
-                      group.length > 1
-                        ? "bg-secondary/10 dark:bg-secondary/30 text-secondary border-secondary/20 dark:border-secondary/40"
-                        : "bg-purple-200 dark:bg-purple-900/50 text-purple-900 border-purple-200 dark:border-purple-800"
-                    )}
-                  >
-                    +{totalPets - 3}
-                  </div>
-                )}
               </div>
             </div>
           </div>
         )
       })}
       {remainingCount > 0 && (
-        <div className="text-xs font-medium text-muted-foreground mt-1">
+        <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mt-0.5 sm:mt-1">
           +{remainingCount} autre{remainingCount > 1 ? "s" : ""}
         </div>
       )}
@@ -106,6 +64,26 @@ function renderDayAppointments(appointments: Appointment[]) {
 }
 
 export function CalendarCell({ day, isToday, isSelected, isWeekend, appointments, onClick }: CalendarCellProps) {
+  const [maxDisplayedGroups, setMaxDisplayedGroups] = useState(2)
+
+  // Ajuster le nombre d'événements affichés en fonction de la hauteur de la fenêtre
+  useEffect(() => {
+    const updateMaxDisplayedGroups = () => {
+      const windowHeight = window.innerHeight
+      if (windowHeight < 768) {
+        setMaxDisplayedGroups(1)
+      } else if (windowHeight < 1024) {
+        setMaxDisplayedGroups(2)
+      } else {
+        setMaxDisplayedGroups(3)
+      }
+    }
+
+    updateMaxDisplayedGroups()
+    window.addEventListener("resize", updateMaxDisplayedGroups)
+    return () => window.removeEventListener("resize", updateMaxDisplayedGroups)
+  }, [])
+
   if (day === 0) {
     return <div className="invisible" />
   }
@@ -113,8 +91,9 @@ export function CalendarCell({ day, isToday, isSelected, isWeekend, appointments
   return (
     <div
       className={cn(
-        "relative flex flex-col p-2 transition-all duration-200 h-full",
-        "rounded-xl border border-border/60 hover:border-border",
+        "relative flex flex-col p-1 sm:p-2 transition-all duration-200",
+        "h-[120px] sm:h-[130px]", // Hauteur fixe pour toutes les cellules
+        "rounded-lg sm:rounded-xl border border-border/60 hover:border-border",
         "dark:border-gray-700 dark:hover:border-gray-600",
         isToday && "bg-primary/5 ring-2 ring-primary border-primary/50",
         isSelected && "bg-secondary/5 ring-2 ring-secondary border-secondary/50",
@@ -125,7 +104,7 @@ export function CalendarCell({ day, isToday, isSelected, isWeekend, appointments
     >
       <div
         className={cn(
-          "text-sm font-medium",
+          "text-xs sm:text-sm font-medium",
           "group-hover:text-secondary",
           isToday && "text-primary",
           isSelected && "text-secondary",
@@ -134,7 +113,9 @@ export function CalendarCell({ day, isToday, isSelected, isWeekend, appointments
       >
         {day}
       </div>
-      <div className="mt-1 space-y-1">{renderDayAppointments(appointments)}</div>
+      <div className="mt-0.5 sm:mt-1 space-y-0.5 sm:space-y-1 overflow-y-auto scrollbar-none">
+        {renderDayAppointments(appointments, maxDisplayedGroups)}
+      </div>
     </div>
   )
 }

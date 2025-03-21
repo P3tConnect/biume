@@ -7,7 +7,7 @@ import { CalendarCell } from "./calendar-cell"
 import { Appointment } from "@/src/db/appointments"
 import { useState } from "react"
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
-import { Card, CardContent, CardHeader } from "../ui"
+import { Card } from "../ui"
 import { capitalizeFirstLetter } from "../dashboard/shortcuts/calendar-widget"
 
 interface CalendarGridProps {
@@ -62,12 +62,10 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
     const weeks: number[][] = []
     let currentWeek: number[] = []
 
-    // Fill empty days at the start
     for (let i = 0; i < firstDayOfMonth; i++) {
       currentWeek.push(0)
     }
 
-    // Fill days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       currentWeek.push(day)
 
@@ -77,7 +75,6 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
       }
     }
 
-    // Fill empty days at the end
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
         currentWeek.push(0)
@@ -89,13 +86,13 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
   }
 
   return (
-    <div className="flex flex-col h-full flex-1">
+    <div className="flex flex-col h-full">
       <Card className="mb-4 p-4 rounded-2xl">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <CalendarIcon size={24} className="text-secondary" />
-              <h2 className="text-2xl font-semibold">
+              <h2 className="text-xl sm:text-2xl font-semibold truncate">
                 {capitalizeFirstLetter(
                   currentDate.toLocaleString("fr-FR", {
                     month: "long",
@@ -156,13 +153,13 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
         </div>
       </Card>
 
-      <div className="rounded-2xl border bg-card text-card-foreground shadow-sm flex-1 flex flex-col">
+      <div className="rounded-2xl border bg-card text-card-foreground shadow-sm flex-1 flex flex-col min-h-0">
         <div className="grid grid-cols-7 p-4 pb-2">
           {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map(day => (
             <div
               key={day}
               className={cn(
-                "text-center font-medium p-1",
+                "text-center font-medium text-xs sm:text-sm p-1",
                 day === "Dim" || day === "Sam" ? "text-red-500" : "text-gray-600 dark:text-gray-300"
               )}
             >
@@ -171,9 +168,9 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
           ))}
         </div>
 
-        <div className="flex-1 grid grid-rows-[repeat(6,1fr)] gap-2 p-4 pt-2">
+        <div className="flex-1 grid grid-rows-[repeat(6,1fr)] gap-1 sm:gap-2 p-2 sm:p-4 pt-2 min-h-0 overflow-y-auto">
           {getWeeksInMonth().map((week, weekIndex) => (
-            <div key={weekIndex} className="grid grid-cols-7 gap-2 h-full">
+            <div key={weekIndex} className="grid grid-cols-7 gap-1 sm:gap-2 h-full">
               {week.map((day, dayIndex) => (
                 <CalendarCell
                   key={`${weekIndex}-${dayIndex}`}
