@@ -13,6 +13,7 @@ import { appointments as appointmentsTable, progression as progressionTable } fr
 import {
   organizationFormSchema,
   organizationImagesFormSchema,
+  organizationUpdateFormSchema,
 } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section"
 
 import { auth } from "../lib/auth"
@@ -165,22 +166,22 @@ export const getCurrentOrganizationPlan = createServerAction(
       throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    const customerStripeId = ctx.fullOrganization?.customerStripeId;
+    const customerStripeId = ctx.fullOrganization?.customerStripeId
     if (!customerStripeId) {
-      throw new ActionError("L'identifiant Stripe du client ne peut pas être indéfini");
+      throw new ActionError("L'identifiant Stripe du client ne peut pas être indéfini")
     }
 
-    const subscription = await stripe.subscriptions.retrieve(customerStripeId);
+    const subscription = await stripe.subscriptions.retrieve(customerStripeId)
 
     if (!subscription) {
-      throw new ActionError("Le plan de l'entreprise ne peut pas être récupéré");
+      throw new ActionError("Le plan de l'entreprise ne peut pas être récupéré")
     }
 
     return {
       id: ctx.fullOrganization?.id,
       plan: ctx.fullOrganization?.plan,
-      subscription
-    };
+      subscription,
+    }
   },
   [requireAuth, requireFullOrganization]
 )
@@ -246,7 +247,7 @@ export const createOrganization = createServerAction(
 )
 
 export const updateOrganization = createServerAction(
-  organizationFormSchema,
+  organizationUpdateFormSchema,
   async (input, ctx) => {
     const [data] = await db
       .update(organizationTable)
@@ -260,7 +261,33 @@ export const updateOrganization = createServerAction(
         atHome: input.atHome,
         nac: input.nac,
         siren: input.siren,
+        onDemand: input.onDemand,
         siret: input.siret,
+      })
+      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .returning()
+      .execute()
+
+    console.log(data, "data")
+
+    if (!data) {
+      throw new ActionError("Organization not updated")
+    }
+
+    return data as Organization
+  },
+  [requireAuth, requireOwner]
+)
+
+export const updateOrganizationOnDemand = createServerAction(
+  z.object({
+    onDemand: z.boolean(),
+  }),
+  async (input, ctx) => {
+    const [data] = await db
+      .update(organizationTable)
+      .set({
+        onDemand: input.onDemand,
       })
       .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()

@@ -5,8 +5,10 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import { Organization } from "@/src/db/organization"
-import { updateOrganization } from "@/src/actions/organization.action"
+import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
 import { Sparkles } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 interface ProfileOnDemandSectionProps {
   org: Organization | undefined
@@ -16,23 +18,7 @@ export const ProfileOnDemandSection = ({ org }: ProfileOnDemandSectionProps) => 
   const queryClient = useQueryClient()
 
   const { mutate: updateOnDemand } = useMutation({
-    mutationFn: async (onDemand: boolean) => {
-      if (!org) return
-
-      return await updateOrganization({
-        name: org.name,
-        email: org.email as string,
-        address: org.address.id,
-        description: org.description as string,
-        openAt: org.openAt?.toString() ?? "",
-        closeAt: org.closeAt?.toString() ?? "",
-        atHome: org.atHome,
-        nac: org.nac as string,
-        siren: org.siren as string,
-        siret: org.siret as string,
-        onDemand,
-      })
-    },
+    mutationFn: (onDemand: boolean) => updateOrganizationOnDemand({ onDemand }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organization-profile"] })
       toast.success("Les paramètres de rendez-vous à la demande ont été mis à jour")
@@ -47,34 +33,29 @@ export const ProfileOnDemandSection = ({ org }: ProfileOnDemandSectionProps) => 
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle>Rendez-vous à la demande</CardTitle>
-          <Sparkles className="h-5 w-5 text-blue-500" />
+          <Sparkles className="h-5 w-5 text-muted-foreground" />
         </div>
-        <CardDescription className="space-y-2">
-          <p className="text-blue-500">
-            Biume AI va analyser les données de votre agenda pour proposer les meilleurs créneaux disponibles à vos clients.
-          </p>
+        <CardDescription>
+          Biume AI va analyser les données de votre agenda pour proposer les meilleurs créneaux disponibles à vos
+          clients.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center space-x-4">
-          <Switch
-            checked={org?.onDemand}
-            onCheckedChange={(checked) => updateOnDemand(checked)}
-          />
-          <div className="flex flex-col gap-1">
-            <span>
-              {org?.onDemand
-                ? "Les rendez-vous à la demande sont activés"
-                : "Les rendez-vous à la demande sont désactivés"}
-            </span>
-            {org?.onDemand && (
-              <span className="text-sm text-muted-foreground">
-                Biume AI est à votre service pour gérer vos demandes de rendez-vous
-              </span>
-            )}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Switch checked={org?.onDemand} onCheckedChange={checked => updateOnDemand(checked)} />
+            <span className="text-sm text-muted-foreground">{org?.onDemand ? "Activé" : "Désactivé"}</span>
           </div>
+          {org?.plan === "BASIC" && org?.onDemand && (
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/dashboard/pro/billing">Passer au Pro</Link>
+            </Button>
+          )}
         </div>
+        {org?.plan === "BASIC" && org?.onDemand && (
+          <p className="text-xs text-muted-foreground mt-2">0,06€ par requête sur le plan Basic</p>
+        )}
       </CardContent>
     </Card>
   )
-} 
+}

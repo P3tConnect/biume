@@ -99,7 +99,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       header: "Statut",
       cell: ({ row }) => {
         const status = row.getValue("status") as keyof typeof statusMap
-        const { label, variant } = statusMap[status]
+        const defaultStatus = { label: "Inconnu", variant: "secondary" as const }
+        const { label, variant } = statusMap[status] || defaultStatus
         return (
           <Badge variant={variant} className="rounded-full">
             {label}
@@ -118,9 +119,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
         )
       },
       cell: ({ row }) => {
-        return format(new Date(row.getValue("dueDate")), "d MMMM yyyy", {
-          locale: fr,
-        })
+        const dueDate = row.getValue("dueDate") as Date
+        return dueDate ? format(dueDate, "d MMMM yyyy", { locale: fr }) : "Inconnu"
       },
     },
     {
@@ -134,9 +134,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
         )
       },
       cell: ({ row }) => {
-        return format(new Date(row.getValue("createdAt")), "d MMMM yyyy", {
-          locale: fr,
-        })
+        const createdAt = row.getValue("createdAt") as Date
+        return createdAt ? format(createdAt, "d MMMM yyyy", { locale: fr }) : "Inconnu"
       },
     },
     {
