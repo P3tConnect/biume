@@ -16,7 +16,7 @@ interface AppointmentItemProps {
   relatedAppointments: Appointment[]
 }
 
-export const appointmentVariants = {
+const appointmentVariants = {
   initial: {
     opacity: 0,
     scale: 0.9,
@@ -50,6 +50,102 @@ export const appointmentVariants = {
   },
 }
 
+interface HeaderProps {
+  startTime: Date
+  endTime: Date
+  status: { label: string }
+  isGroup: boolean
+  relatedAppointments: Appointment[]
+}
+
+function Header({ startTime, endTime, status, isGroup, relatedAppointments }: HeaderProps) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <span className="font-medium">
+          {format(startTime, "HH:mm", { locale: fr })} - {format(endTime, "HH:mm", { locale: fr })}
+        </span>
+        <Badge
+          variant="outline"
+          className={cn(
+            "text-[8px] px-1 py-0 h-3.5",
+            isGroup
+              ? "bg-secondary/20"
+              : {
+                "border-emerald-500/50 bg-emerald-50 text-emerald-600": status.label === "Confirmé",
+                "border-orange-500/50 bg-orange-50 text-orange-600": status.label === "En attente",
+                "border-red-500/50 bg-red-50 text-red-600": status.label === "Annulé",
+                "border-blue-500/50 bg-blue-50 text-blue-600": status.label === "Terminé",
+              }
+          )}
+        >
+          {isGroup ? `${relatedAppointments.length} RDV` : status.label}
+        </Badge>
+      </div>
+    </div>
+  )
+}
+
+interface GroupContentProps {
+  totalPets: number
+  totalPrice: number
+  service?: { description: string | null }
+}
+
+function GroupContent({ totalPets, totalPrice, service }: GroupContentProps) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <div className="flex items-center gap-1 text-muted-foreground">
+        <Users className="h-3 w-3" />
+        <span>{totalPets} patients</span>
+        {totalPrice > 0 && (
+          <>
+            <span className="mx-1">•</span>
+            <Euro className="h-3 w-3" />
+            <span>{totalPrice}€</span>
+          </>
+        )}
+      </div>
+      {service && (
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <Tag className="h-3 w-3" />
+          <span className="truncate">{service.description}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface SingleAppointmentContentProps {
+  pets?: Array<{ pet: { name: string } }>
+  client?: { name: string }
+  service?: { price: number | null; description: string | null }
+}
+
+function SingleAppointmentContent({ pets, client, service }: SingleAppointmentContentProps) {
+  return (
+    <div className="flex flex-col gap-0.5 min-h-0">
+      <div className="font-medium truncate">{pets?.map(pet => pet.pet.name).join(", ")}</div>
+      <div className="text-muted-foreground truncate flex items-center gap-1">
+        <span>{client?.name}</span>
+        {service?.price && (
+          <>
+            <span className="mx-1">•</span>
+            <Euro className="h-3 w-3" />
+            <span>{service.price}€</span>
+          </>
+        )}
+      </div>
+      {service && (
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <Tag className="h-3 w-3" />
+          <span className="truncate">{service.description}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function AppointmentItem({
   appointment,
   position,
@@ -65,7 +161,6 @@ export function AppointmentItem({
 
   if (!startTime || !endTime) return null
 
-  // Calculer le prix total pour les groupes
   const totalPrice = isGroup
     ? relatedAppointments.reduce((total, apt) => total + (apt.service?.price || 0), 0)
     : appointment.service?.price || 0
@@ -81,9 +176,7 @@ export function AppointmentItem({
           : "bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-100 border border-purple-200 dark:border-purple-800",
         "cursor-pointer hover:shadow-md transition-shadow"
       )}
-      style={{
-        ...position,
-      }}
+      style={position}
       variants={appointmentVariants}
       initial="initial"
       animate="animate"
@@ -92,73 +185,26 @@ export function AppointmentItem({
       onClick={onClick}
       layoutId={`appointment-${appointment.id}`}
     >
-      {/* En-tête avec l'heure et le statut */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">
-            {format(startTime, "HH:mm", { locale: fr })} - {format(endTime, "HH:mm", { locale: fr })}
-          </span>
-          <Badge
-            variant="outline"
-            className={cn(
-              "text-[8px] px-1 py-0 h-3.5",
-              isGroup
-                ? "bg-secondary/20"
-                : {
-                    "border-emerald-500/50 bg-emerald-50 text-emerald-600": status.label === "Confirmé",
-                    "border-orange-500/50 bg-orange-50 text-orange-600": status.label === "En attente",
-                    "border-red-500/50 bg-red-50 text-red-600": status.label === "Annulé",
-                    "border-blue-500/50 bg-blue-50 text-blue-600": status.label === "Terminé",
-                  }
-            )}
-          >
-            {isGroup ? `${relatedAppointments.length} RDV` : status.label}
-          </Badge>
-        </div>
-      </div>
+      <Header
+        startTime={startTime}
+        endTime={endTime}
+        status={status}
+        isGroup={isGroup}
+        relatedAppointments={relatedAppointments}
+      />
 
-      {/* Contenu principal */}
       {isGroup ? (
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Users className="h-3 w-3" />
-            <span>{totalPets} patients</span>
-            {totalPrice > 0 && (
-              <>
-                <span className="mx-1">•</span>
-                <Euro className="h-3 w-3" />
-                <span>{totalPrice}€</span>
-              </>
-            )}
-          </div>
-          {appointment.service && (
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Tag className="h-3 w-3" />
-              <span className="truncate">{appointment.service.description}</span>
-            </div>
-          )}
-        </div>
+        <GroupContent
+          totalPets={displayedPets}
+          totalPrice={totalPrice}
+          service={appointment.service}
+        />
       ) : (
-        <div className="flex flex-col gap-0.5 min-h-0">
-          {/* Noms des animaux et propriétaire */}
-          <div className="font-medium truncate">{appointment.pets?.map(pet => pet.pet.name).join(", ")}</div>
-          <div className="text-muted-foreground truncate flex items-center gap-1">
-            <span>{appointment.client?.name}</span>
-            {appointment.service?.price && (
-              <>
-                <span className="mx-1">•</span>
-                <Euro className="h-3 w-3" />
-                <span>{appointment.service.price}€</span>
-              </>
-            )}
-          </div>
-          {appointment.service && (
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Tag className="h-3 w-3" />
-              <span className="truncate">{appointment.service.description}</span>
-            </div>
-          )}
-        </div>
+        <SingleAppointmentContent
+          pets={appointment.pets}
+          client={appointment.client}
+          service={appointment.service}
+        />
       )}
     </motion.div>
   )

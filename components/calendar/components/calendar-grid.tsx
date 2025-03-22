@@ -9,25 +9,45 @@ import { useState } from "react"
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
 import { Card } from "../../ui"
 import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
+import { CalendarHeader } from "./calendar-header"
+import { ViewMode } from "@/src/types/view-mode"
+import { motion } from "framer-motion"
 
 interface CalendarGridProps {
   appointments: Appointment[]
   onDateSelect: (date: Date) => void
+  currentDate: Date
+  onDateChange: (date: Date) => void
+  viewMode: ViewMode
+  onViewModeChange: (mode: ViewMode) => void
 }
 
-export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) {
-  const [currentDate, setCurrentDate] = useState(new Date())
+export function CalendarGrid({
+  appointments,
+  onDateSelect,
+  currentDate,
+  onDateChange,
+  viewMode,
+  onViewModeChange
+}: CalendarGridProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const daysInMonth = getDaysInMonth(currentDate)
   const firstDayOfMonth = getFirstDayOfMonth(currentDate)
 
   const handlePrevMonth = () => {
-    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1))
+    onDateChange(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
   }
 
   const handleNextMonth = () => {
-    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1))
+    onDateChange(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+  }
+
+  const handleToday = () => {
+    const today = new Date()
+    onDateChange(today)
+    setSelectedDate(today)
+    onDateSelect(today)
   }
 
   const isToday = (day: number) => {
@@ -86,72 +106,20 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <Card className="mb-4 p-4 rounded-2xl">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <CalendarIcon size={24} className="text-secondary" />
-              <h2 className="text-xl sm:text-2xl font-semibold truncate">
-                {capitalizeFirstLetter(
-                  currentDate.toLocaleString("fr-FR", {
-                    month: "long",
-                    year: "numeric",
-                  })
-                )}
-              </h2>
-            </div>
-            <Button
-              onClick={() => {
-                const today = new Date()
-                setCurrentDate(today)
-                setSelectedDate(today)
-                onDateSelect(today)
-              }}
-              variant="outline"
-              size="sm"
-              className="hidden sm:flex items-center gap-2 text-secondary hover:text-secondary-foreground"
-            >
-              <CalendarDays className="h-4 w-4" />
-              Aujourd'hui
-            </Button>
-          </div>
-          <div className="flex items-center justify-between sm:justify-end gap-2">
-            <Button
-              onClick={() => {
-                const today = new Date()
-                setCurrentDate(today)
-                setSelectedDate(today)
-                onDateSelect(today)
-              }}
-              variant="outline"
-              size="sm"
-              className="sm:hidden flex items-center gap-2 text-secondary hover:text-secondary-foreground flex-1"
-            >
-              <CalendarDays className="h-4 w-4" />
-              Aujourd'hui
-            </Button>
-            <div className="flex items-center gap-1">
-              <Button
-                onClick={handlePrevMonth}
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-xl bg-secondary/5 hover:bg-secondary/10 text-secondary transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Button
-                onClick={handleNextMonth}
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-xl bg-secondary/5 hover:bg-secondary/10 text-secondary transition-colors"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Card>
+    <motion.div
+      className="flex flex-col h-full"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <CalendarHeader
+        currentDate={currentDate}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        onPrevious={handlePrevMonth}
+        onNext={handleNextMonth}
+        onToday={handleToday}
+      />
 
       <div className="rounded-2xl border bg-card text-card-foreground shadow-sm flex-1 flex flex-col min-h-0">
         <div className="grid grid-cols-7 p-4 pb-2">
@@ -190,6 +158,6 @@ export function CalendarGrid({ appointments, onDateSelect }: CalendarGridProps) 
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

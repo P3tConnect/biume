@@ -29,27 +29,51 @@ export function DayColumn({
   onAppointmentClick,
 }: DayColumnProps) {
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
+  const isToday = format(new Date(), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
 
   return (
     <motion.div
-      className="flex-1 min-w-[200px]"
+      className="w-full"
       initial={{ x: 50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      {/* En-tête du jour */}
       <div className="flex flex-col h-full">
-        {/* Header avec la date */}
-        <div className="sticky top-0 bg-background z-50 pb-2">
-          <div className={cn("h-12 border-b border-r border-border px-2 py-1", "sticky top-0 bg-background z-10")}>
-            <div className="font-medium">{format(date, "EEEE", { locale: fr })}</div>
-            <div className="text-sm text-muted-foreground">{format(date, "d MMM", { locale: fr })}</div>
+        <div className="sticky top-0 z-50">
+          <div
+            className={cn(
+              "h-12 border-b border-border px-3",
+              "sticky top-0 bg-card/80 backdrop-blur-sm z-10 transition-colors",
+              isToday && "bg-accent/10 backdrop-blur-md"
+            )}
+          >
+            <div className="flex h-full flex-col justify-center">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.25">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground/70">
+                    {format(date, "EEEE", { locale: fr })}
+                  </div>
+                  <div className={cn(
+                    "text-md font-semibold tracking-tight",
+                    isToday && "text-primary"
+                  )}>
+                    {format(date, "d", { locale: fr })}
+                  </div>
+                </div>
+                {isToday && (
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                    <span className="text-[10px] uppercase tracking-wider text-primary font-medium">
+                      Aujourd'hui
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Conteneur des rendez-vous */}
-        <div className="relative">
-          {/* Grille des heures */}
+        <div className="relative flex-1 bg-background/50">
           {hours.map(hour => (
             <TimeGridCell
               key={hour}
@@ -61,8 +85,7 @@ export function DayColumn({
             />
           ))}
 
-          {/* Rendez-vous */}
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {groupedAppointments.map(group => {
               const mainAppointment = group[0]
               const position = getAppointmentPosition(mainAppointment)

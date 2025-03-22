@@ -10,18 +10,32 @@ import { TimeColumn } from "./time-column"
 import { DayColumn } from "./day-column"
 import { AppointmentDetails } from "./appointment-details"
 import { NewAppointmentForm } from "./new-appointment-form"
+import { CalendarHeader } from "./calendar-header"
+import { ViewMode } from "@/src/types/view-mode"
+import { Card } from "@/components/ui/card"
 
 interface WeekViewProps {
   appointments?: Appointment[]
   onDateSelect?: (date: Date) => void
   onNewAppointment?: (date: Date) => void
+  currentDate: Date
+  onDateChange: (date: Date) => void
+  viewMode: ViewMode
+  onViewModeChange: (mode: ViewMode) => void
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const HOUR_HEIGHT = 80 // hauteur d'une cellule en pixels
 
-export function WeekView({ appointments = [], onDateSelect, onNewAppointment }: WeekViewProps) {
-  const [currentDate, setCurrentDate] = useState(new Date())
+export function WeekView({
+  appointments = [],
+  onDateSelect,
+  onNewAppointment,
+  currentDate,
+  onDateChange,
+  viewMode,
+  onViewModeChange
+}: WeekViewProps) {
   const [selectedAppointments, setSelectedAppointments] = useState<Appointment[]>([])
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
@@ -32,11 +46,15 @@ export function WeekView({ appointments = [], onDateSelect, onNewAppointment }: 
   const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
   const handlePrevWeek = () => {
-    setCurrentDate(prev => addDays(prev, -7))
+    onDateChange(addDays(currentDate, -7))
   }
 
   const handleNextWeek = () => {
-    setCurrentDate(prev => addDays(prev, 7))
+    onDateChange(addDays(currentDate, 7))
+  }
+
+  const handleToday = () => {
+    onDateChange(new Date())
   }
 
   const getAppointmentsForDate = (date: Date) => {
@@ -112,32 +130,22 @@ export function WeekView({ appointments = [], onDateSelect, onNewAppointment }: 
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* En-tête avec navigation */}
-      <motion.div
-        className="flex items-center justify-between mb-4"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-      >
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{format(weekStart, "MMMM yyyy", { locale: fr })}</h3>
-          <div className="flex items-center gap-1">
-            <Button onClick={handlePrevWeek} variant="ghost" size="icon" className="h-8 w-8">
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button onClick={handleNextWeek} variant="ghost" size="icon" className="h-8 w-8">
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </motion.div>
+      <CalendarHeader
+        currentDate={currentDate}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        onPrevious={handlePrevWeek}
+        onNext={handleNextWeek}
+        onToday={handleToday}
+      />
 
-      {/* Grille du calendrier */}
-      <div className="flex flex-1 overflow-hidden border rounded-lg">
+      <Card className="bg-card text-card-foreground shadow-sm flex-1 flex flex-col min-h-0 p-4 rounded-2xl">
         <ScrollArea className="flex-1 h-full">
-          <div className="flex min-w-full">
+          <div className="grid grid-cols-[auto_repeat(7,1fr)]">
             {/* Colonne des heures */}
-            <TimeColumn hours={HOURS} formatHour={formatHour} />
+            <div className="sticky left-0 z-10">
+              <TimeColumn hours={HOURS} formatHour={formatHour} />
+            </div>
 
             {/* Colonnes des jours */}
             {daysInWeek.map((date, index) => (
@@ -146,7 +154,7 @@ export function WeekView({ appointments = [], onDateSelect, onNewAppointment }: 
                 date={date}
                 hours={HOURS}
                 appointments={getAppointmentsForDate(date)}
-                onDateSelect={onDateSelect || (() => {})}
+                onDateSelect={onDateSelect || (() => { })}
                 onNewAppointment={handleNewAppointmentClick}
                 getAppointmentStatus={getAppointmentStatus}
                 getAppointmentPosition={getAppointmentPosition}
@@ -155,7 +163,7 @@ export function WeekView({ appointments = [], onDateSelect, onNewAppointment }: 
             ))}
           </div>
         </ScrollArea>
-      </div>
+      </Card>
 
       {/* Modales */}
       <AppointmentDetails appointments={selectedAppointments} isOpen={isDetailsOpen} onOpenChange={setIsDetailsOpen} />
