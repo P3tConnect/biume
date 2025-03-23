@@ -6,22 +6,23 @@ import { Calendar } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-import { Pet, User as UserType, Appointment } from "@/src/db"
+import { Pet, User as UserType, Appointment, PetAppointment } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
-import { getAppointmentsByPetId } from "@/src/actions/appointments.action"
+import { getAppointmentsByPetId, getOrganizationAppointmentsByDate } from "@/src/actions/appointments.action"
 import { format } from "date-fns"
 
 interface AppointmentsTabProps {
   animal: Pet
-  nextAppointmentClient: UserType
-  nextAppointmentData: Appointment
 }
 
-export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointmentData }: AppointmentsTabProps) => {
+export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
   const { data: appointments } = useQuery({
     queryKey: ["appointments", animal.id],
-    queryFn: () => getAppointmentsByPetId({ petId: animal.id }),
+    queryFn: () => getOrganizationAppointmentsByDate({ petId: animal.id }),
   })
+
+  const nextAppointmentData = appointments?.data?.nextAppointment
+  const pastAppointments = appointments?.data?.pastAppointments
 
   return (
     <div className="p-6 space-y-6">
@@ -78,7 +79,7 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
                 <div className="text-sm text-muted-foreground">
                   {nextAppointmentData.beginAt
                     ? format(nextAppointmentData.beginAt, "dd/MM/yyyy")
-                    : nextAppointmentData.slot.start.toLocaleDateString("fr-FR", {
+                    : nextAppointmentData.slot?.start.toLocaleDateString("fr-FR", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
@@ -104,7 +105,7 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
       >
         <h4 className="text-sm font-medium mb-2">Historique</h4>
         <div className="space-y-2">
-          {appointments?.data?.map((appointment, index) => (
+          {pastAppointments?.map((appointment, index) => (
             <motion.div
               key={index}
               className="p-3 border rounded-md flex items-center justify-between"

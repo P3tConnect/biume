@@ -1,7 +1,7 @@
 import { Appointment } from "@/src/db/appointments"
 import { cn } from "@/src/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getAllPetsInGroup } from "../utils"
 import { Clock, Users, MapPin, Phone, MessageSquare, Calendar, Euro } from "lucide-react"
@@ -17,137 +17,147 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
   const endTime = new Date(mainAppointment.slot.end)
 
   return (
-    <Card className="overflow-hidden group transition-all duration-200 hover:shadow-md">
-      <div
-        className={cn(
-          "h-1.5 w-full transition-colors",
-          appointments.length > 1
-            ? "bg-secondary group-hover:bg-secondary/80"
-            : "bg-purple-500 group-hover:bg-purple-400"
-        )}
-      />
-      <div className="p-4 space-y-4">
-        {/* En-tête avec l'heure et le nombre de rendez-vous */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div
-              className={cn(
-                "p-2 rounded-lg",
+    <Card className="relative border-none ring-1 ring-border/50 shadow-md hover:shadow-lg transition-all duration-300">
+      {/* Time banner */}
+      <div className={cn(
+        "px-6 py-4 border-b",
+        appointments.length > 1
+          ? "bg-emerald-50 dark:bg-emerald-950/30"
+          : "bg-purple-50 dark:bg-purple-950"
+      )}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-light">
+                {startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+              </span>
+              <div className={cn(
+                "h-[2px] w-12 my-2",
                 appointments.length > 1
-                  ? "bg-secondary/10 text-secondary"
-                  : "bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-100"
-              )}
-            >
-              <Clock className="w-4 h-4" />
-            </div>
-            <div className="space-y-1">
-              <span className="font-medium">
-                {startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })} -{" "}
+                  ? "bg-emerald-400 dark:bg-emerald-400/70"
+                  : "bg-purple-300 dark:bg-purple-700"
+              )} />
+              <span className="text-3xl font-light">
                 {endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
               </span>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Calendar className="w-3.5 h-3.5" />
-                <span>
+            </div>
+            <div className="space-y-1 border-l-2 border-border/30 pl-6">
+              <p className="text-sm text-muted-foreground">
+                <Calendar className="w-3.5 h-3.5 inline-block mr-2" />
+                <span className="capitalize">
                   {startTime.toLocaleDateString("fr-FR", {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
                   })}
                 </span>
-              </div>
+              </p>
+              {appointments.length > 1 && (
+                <p className="text-sm text-muted-foreground">
+                  <Users className="w-3.5 h-3.5 inline-block mr-2" />
+                  {appointments.length} rendez-vous groupés
+                </p>
+              )}
             </div>
           </div>
-          {appointments.length > 1 && (
-            <Badge variant="secondary" className="flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5" />
-              <span>{appointments.length} rendez-vous</span>
-            </Badge>
-          )}
         </div>
+      </div>
 
-        {/* Liste des rendez-vous */}
-        <div className="space-y-4">
-          {appointments.map((appointment, index) => (
-            <div
-              key={appointment.id}
-              className={cn(
-                "flex flex-col gap-3 p-3 rounded-xl transition-colors",
-                appointments.length > 1 && index !== appointments.length - 1 && "border-b pb-4",
-                appointments.length > 1
-                  ? "bg-secondary/5 hover:bg-secondary/10"
-                  : "bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-100/80 dark:hover:bg-purple-900/20"
-              )}
-            >
-              {/* En-tête avec patients et propriétaire */}
-              <div className="flex items-start gap-3">
-                {/* Avatars des animaux */}
-                <div className="flex -space-x-2 shrink-0">
-                  {appointment.pets?.map(pet => (
-                    <Avatar
-                      key={pet.pet.id}
-                      className={cn(
-                        "h-8 w-8 border-2 border-background",
-                        appointments.length > 1 ? "ring-1 ring-secondary/20" : "ring-1 ring-purple-500/20"
-                      )}
-                    >
-                      {pet.pet.image ? (
-                        <AvatarImage src={pet.pet.image} alt={pet.pet.name} />
-                      ) : (
-                        <AvatarFallback
-                          className={cn(
-                            "text-xs font-medium",
+      <CardContent className="p-0 bg-white dark:bg-slate-950">
+        {appointments.map((appointment, index) => (
+          <div key={appointment.id} className={cn(
+            "group relative",
+            index !== appointments.length - 1 && "border-b border-border/50"
+          )}>
+            {/* Hover indicator */}
+            <div className={cn(
+              "absolute left-0 top-0 w-1 h-full opacity-0 transition-all duration-300 group-hover:opacity-100",
+              appointments.length > 1
+                ? "bg-emerald-400 dark:bg-emerald-400/70"
+                : "bg-purple-400 dark:bg-purple-600"
+            )} />
+
+            <div className={cn(
+              "px-6 py-5 space-y-6 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/50",
+              appointments.length > 1
+                ? "bg-white dark:bg-slate-950"
+                : "bg-white dark:bg-slate-950"
+            )}>
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  <div className="flex items-center -space-x-2">
+                    {appointment.pets?.map(pet => (
+                      <Avatar
+                        key={pet.pet.id}
+                        className="w-11 h-11 border-[3px] border-background shadow-md transition-transform duration-200 hover:scale-105 hover:z-10"
+                      >
+                        {pet.pet.image ? (
+                          <AvatarImage src={pet.pet.image} alt={pet.pet.name} />
+                        ) : (
+                          <AvatarFallback className={cn(
+                            "font-medium shadow-inner",
                             appointments.length > 1
-                              ? "bg-secondary/10 text-secondary"
-                              : "bg-purple-100 text-purple-900 dark:bg-purple-900/50 dark:text-purple-100"
-                          )}
-                        >
-                          {pet.pet.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                  ))}
+                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                              : "bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100"
+                          )}>
+                            {pet.pet.name.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                    ))}
+                  </div>
+                  <div>
+                    <h4 className="font-medium tracking-tight">
+                      {appointment.pets.map(pet => pet.pet.name).join(", ")}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">{appointment.client.name}</p>
+                  </div>
                 </div>
-
-                {/* Noms des patients et propriétaire */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{appointment.pets.map(pet => pet.pet.name).join(", ")}</div>
-                  <div className="text-sm text-muted-foreground truncate">{appointment.client.name}</div>
-                </div>
-
-                {/* Prix du service */}
-                <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
-                  <Euro className="w-3.5 h-3.5" />
-                  <span>{appointment.service.price || 0}€</span>
+                <div className={cn(
+                  "px-3 py-1.5 text-sm font-medium rounded-full shadow-sm",
+                  appointments.length > 1
+                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                    : "bg-purple-100 dark:bg-purple-900"
+                )}>
+                  {appointment.service.price || 0}€
                 </div>
               </div>
 
-              {/* Informations de contact */}
-              <div className="flex flex-col gap-1.5 text-sm">
+              {/* Contact info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 {appointment.client.phoneNumber && (
-                  <div className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-muted-foreground truncate">{appointment.client.phoneNumber}</span>
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900">
+                    <Phone className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">{appointment.client.phoneNumber}</span>
                   </div>
                 )}
                 {appointment.client.address && (
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
                     <span className="text-muted-foreground truncate">{appointment.client.address}</span>
                   </div>
                 )}
               </div>
 
-              {/* Notes et observations */}
+              {/* Notes */}
               {appointment.observation?.content && (
-                <div className="flex items-start gap-2 p-2 rounded-lg bg-background/80">
-                  <MessageSquare className="w-3.5 h-3.5 mt-0.5 text-muted-foreground shrink-0" />
-                  <p className="text-sm text-muted-foreground line-clamp-2">{appointment.observation.content}</p>
+                <div className={cn(
+                  "px-4 py-3 rounded-lg text-sm shadow-sm",
+                  appointments.length > 1
+                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30"
+                    : "bg-purple-50 dark:bg-purple-950 border border-purple-100 dark:border-purple-900/30"
+                )}>
+                  <div className="flex gap-3">
+                    <MessageSquare className="w-4 h-4 text-muted-foreground shrink-0" />
+                    <p className="text-muted-foreground">{appointment.observation.content}</p>
+                  </div>
                 </div>
               )}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        ))}
+      </CardContent>
     </Card>
   )
 }

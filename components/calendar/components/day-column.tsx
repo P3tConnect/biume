@@ -61,11 +61,8 @@ export function DayColumn({
                   </div>
                 </div>
                 {isToday && (
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-end">
                     <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[10px] uppercase tracking-wider text-primary font-medium">
-                      Aujourd'hui
-                    </span>
                   </div>
                 )}
               </div>

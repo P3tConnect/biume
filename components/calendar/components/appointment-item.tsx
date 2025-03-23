@@ -3,8 +3,7 @@ import { Appointment } from "@/src/db/appointments"
 import { cn } from "@/src/lib/utils"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { Users, Euro, Tag } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Users, Euro, User2 } from "lucide-react"
 
 interface AppointmentItemProps {
   appointment: Appointment
@@ -53,34 +52,31 @@ const appointmentVariants = {
 interface HeaderProps {
   startTime: Date
   endTime: Date
-  status: { label: string }
+  status: string
   isGroup: boolean
   relatedAppointments: Appointment[]
 }
 
 function Header({ startTime, endTime, status, isGroup, relatedAppointments }: HeaderProps) {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="font-medium">
-          {format(startTime, "HH:mm", { locale: fr })} - {format(endTime, "HH:mm", { locale: fr })}
-        </span>
-        <Badge
-          variant="outline"
-          className={cn(
-            "text-[8px] px-1 py-0 h-3.5",
+    <div className="flex items-center justify-between min-w-0">
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <div className={cn(
+            "flex-shrink-0 w-2 h-2 rounded-full",
             isGroup
-              ? "bg-secondary/20"
+              ? "bg-secondary"
               : {
-                "border-emerald-500/50 bg-emerald-50 text-emerald-600": status.label === "Confirmé",
-                "border-orange-500/50 bg-orange-50 text-orange-600": status.label === "En attente",
-                "border-red-500/50 bg-red-50 text-red-600": status.label === "Annulé",
-                "border-blue-500/50 bg-blue-50 text-blue-600": status.label === "Terminé",
+                "bg-emerald-500": status === "CONFIRMED",
+                "bg-orange-500": status === "PENDING",
+                "bg-red-500": status === "CANCELLED",
+                "bg-blue-500": status === "COMPLETED",
               }
-          )}
-        >
-          {isGroup ? `${relatedAppointments.length} RDV` : status.label}
-        </Badge>
+          )} />
+          <span className="font-medium truncate">
+            {format(startTime, "HH:mm", { locale: fr })} - {format(endTime, "HH:mm", { locale: fr })}
+          </span>
+        </div>
       </div>
     </div>
   )
@@ -94,24 +90,19 @@ interface GroupContentProps {
 
 function GroupContent({ totalPets, totalPrice, service }: GroupContentProps) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <div className="flex items-center gap-1 text-muted-foreground">
-        <Users className="h-3 w-3" />
-        <span>{totalPets} patients</span>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <div className="flex items-center gap-1 text-muted-foreground flex-wrap min-w-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <Users className="h-3 w-3 flex-shrink-0" />
+          <span>{totalPets} patients</span>
+        </div>
         {totalPrice > 0 && (
-          <>
+          <div className="flex items-center gap-1 flex-shrink-0">
             <span className="mx-1">•</span>
-            <Euro className="h-3 w-3" />
             <span>{totalPrice}€</span>
-          </>
+          </div>
         )}
       </div>
-      {service && (
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Tag className="h-3 w-3" />
-          <span className="truncate">{service.description}</span>
-        </div>
-      )}
     </div>
   )
 }
@@ -124,24 +115,20 @@ interface SingleAppointmentContentProps {
 
 function SingleAppointmentContent({ pets, client, service }: SingleAppointmentContentProps) {
   return (
-    <div className="flex flex-col gap-0.5 min-h-0">
+    <div className="flex flex-col gap-0.5 min-w-0">
       <div className="font-medium truncate">{pets?.map(pet => pet.pet.name).join(", ")}</div>
-      <div className="text-muted-foreground truncate flex items-center gap-1">
-        <span>{client?.name}</span>
+      <div className="text-muted-foreground flex items-center gap-1 flex-wrap min-w-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <User2 className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">{client?.name}</span>
+        </div>
         {service?.price && (
-          <>
+          <div className="flex items-center gap-1 flex-shrink-0">
             <span className="mx-1">•</span>
-            <Euro className="h-3 w-3" />
             <span>{service.price}€</span>
-          </>
+          </div>
         )}
       </div>
-      {service && (
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Tag className="h-3 w-3" />
-          <span className="truncate">{service.description}</span>
-        </div>
-      )}
     </div>
   )
 }
@@ -188,7 +175,7 @@ export function AppointmentItem({
       <Header
         startTime={startTime}
         endTime={endTime}
-        status={status}
+        status={appointment.status}
         isGroup={isGroup}
         relatedAppointments={relatedAppointments}
       />
