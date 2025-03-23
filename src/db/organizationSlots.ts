@@ -1,5 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm"
-import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { boolean, integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
@@ -22,6 +22,7 @@ export const organizationSlots = pgTable("organization_slots", {
   end: timestamp("end").notNull(),
   type: organizationSlotsType("type").notNull().default("unique"),
   isAvailable: boolean("isAvailable").notNull().default(true),
+  remainingPlaces: integer("remainingPlaces").notNull().default(0),
   recurrenceId: text("recurrenceId"),
   createdAt: timestamp("createdAt").notNull().default(new Date()),
   updatedAt: timestamp("updatedAt"),

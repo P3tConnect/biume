@@ -225,12 +225,19 @@ const SlotsForm = ({ onSubmit: onFormSubmit, onCancel, initialData, isEditing, s
           serviceId: slot.serviceId,
         })
 
+        const service = services?.data?.find(s => s.id === slot.serviceId)
+        if (!service) {
+          toast.error("Service introuvable")
+          return
+        }
+
         const data = {
           serviceId: slot.serviceId,
           start: startDate,
           end: endDate,
           isAvailable: true,
           type: "unique" as const,
+          remainingPlaces: service.type === "MULTIPLE" ? service.places : 1,
         }
 
         if (isEditing && selectedSlotId) {
@@ -323,6 +330,7 @@ const SlotsForm = ({ onSubmit: onFormSubmit, onCancel, initialData, isEditing, s
                 type: "recurring" as const,
                 organizationId: service.organizationId,
                 recurrenceId,
+                remainingPlaces: service.type === "MULTIPLE" ? service.places : 1,
               })
 
               currentMinute += slot.serviceDuration

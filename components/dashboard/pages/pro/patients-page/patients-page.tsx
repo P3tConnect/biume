@@ -12,6 +12,8 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, Bird, Cat, Dog, Filter, House, MoreHorizontal, Plus, Search } from "lucide-react"
 import React from "react"
+import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
+import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
 
 import {
   Card,
@@ -212,6 +214,7 @@ const PatientsPageComponent = () => {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [activeTab, setActiveTab] = React.useState("all")
   const [selectedPatient, setSelectedPatient] = React.useState<Patient | null>(null)
+  const { shouldShowAlert, organizationId } = useSubscriptionCheck()
 
   const columns: ColumnDef<Patient>[] = [
     {
@@ -322,155 +325,158 @@ const PatientsPageComponent = () => {
   })
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <Card className="overflow-hidden rounded-2xl">
-        <CardHeader className="border-b border-gray-100 dark:border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                Patients
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">Gérez vos patients et leurs dossiers médicaux</p>
-            </div>
-            <div className="flex gap-3">
-              <Credenza>
-                <CredenzaTrigger asChild>
-                  <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
-                    <Plus className="size-4 mr-2" />
-                    Nouveau patient
-                  </Button>
-                </CredenzaTrigger>
-                <CredenzaContent>
-                  <CredenzaHeader>
-                    <CredenzaTitle>Ajouter un nouveau patient</CredenzaTitle>
-                    <CredenzaDescription>Formulaire d&apos;ajout de patient à implémenter</CredenzaDescription>
-                  </CredenzaHeader>
-                </CredenzaContent>
-              </Credenza>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="flex items-center p-6">
-              <div className="flex items-center space-x-4">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <stat.icon className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
-                  <h3 className="text-2xl font-bold">{stat.value}</h3>
-                </div>
+    <>
+      {shouldShowAlert && organizationId && <SubscriptionNonPayedAlert organizationId={organizationId} />}
+      <div className="space-y-6">
+        {/* Header */}
+        <Card className="overflow-hidden rounded-2xl">
+          <CardHeader className="border-b border-gray-100 dark:border-gray-800">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                  Patients
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">Gérez vos patients et leurs dossiers médicaux</p>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="w-full rounded-xl shadow-sm">
-        <CardHeader className="pb-0">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-xl font-semibold">Mes Patients</CardTitle>
-          </div>
-          <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex items-center justify-between">
-              <TabsList>
-                <TabsTrigger value="all">Tous</TabsTrigger>
-                <TabsTrigger value="dogs">Chiens</TabsTrigger>
-                <TabsTrigger value="cats">Chats</TabsTrigger>
-                <TabsTrigger value="others">Autres</TabsTrigger>
-              </TabsList>
-
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Rechercher..."
-                    value={globalFilter}
-                    onChange={event => setGlobalFilter(event.target.value)}
-                    className="pl-8 w-[250px]"
-                  />
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                      <Filter className="h-4 w-4" />
-                      Filtres
+              <div className="flex gap-3">
+                <Credenza>
+                  <CredenzaTrigger asChild>
+                    <Button className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-300">
+                      <Plus className="size-4 mr-2" />
+                      Nouveau patient
                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
-                    <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
-                    <DropdownMenuItem>Âge</DropdownMenuItem>
-                    <DropdownMenuItem>Type</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  </CredenzaTrigger>
+                  <CredenzaContent>
+                    <CredenzaHeader>
+                      <CredenzaTitle>Ajouter un nouveau patient</CredenzaTitle>
+                      <CredenzaDescription>Formulaire d&apos;ajout de patient à implémenter</CredenzaDescription>
+                    </CredenzaHeader>
+                  </CredenzaContent>
+                </Credenza>
               </div>
             </div>
+          </CardHeader>
+        </Card>
 
-            <TabsContent value="all" className="mt-6">
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map(header => (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map(row => (
-                      <TableRow
-                        key={row.id}
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => setSelectedPatient(row.original as Patient)}
-                      >
-                        {row.getVisibleCells().map(cell => (
-                          <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {stats.map((stat, index) => (
+            <Card key={index}>
+              <CardContent className="flex items-center p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <stat.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                    <h3 className="text-2xl font-bold">{stat.value}</h3>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Card className="w-full rounded-xl shadow-sm">
+          <CardHeader className="pb-0">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl font-semibold">Mes Patients</CardTitle>
+            </div>
+            <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+              <div className="flex items-center justify-between">
+                <TabsList>
+                  <TabsTrigger value="all">Tous</TabsTrigger>
+                  <TabsTrigger value="dogs">Chiens</TabsTrigger>
+                  <TabsTrigger value="cats">Chats</TabsTrigger>
+                  <TabsTrigger value="others">Autres</TabsTrigger>
+                </TabsList>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Rechercher..."
+                      value={globalFilter}
+                      onChange={event => setGlobalFilter(event.target.value)}
+                      className="pl-8 w-[250px]"
+                    />
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        <Filter className="h-4 w-4" />
+                        Filtres
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
+                      <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
+                      <DropdownMenuItem>Âge</DropdownMenuItem>
+                      <DropdownMenuItem>Type</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              <TabsContent value="all" className="mt-6">
+                <Table>
+                  <TableHeader>
+                    {table.getHeaderGroups().map(headerGroup => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(header.column.columnDef.header, header.getContext())}
+                          </TableHead>
                         ))}
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="h-24 text-center">
-                        Aucun résultat.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TabsContent>
-          </Tabs>
-        </CardHeader>
-      </Card>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map(row => (
+                        <TableRow
+                          key={row.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => setSelectedPatient(row.original as Patient)}
+                        >
+                          {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          Aucun résultat.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+            </Tabs>
+          </CardHeader>
+        </Card>
 
-      <PatientDetailsDrawer
-        patient={selectedPatient}
-        isOpen={!!selectedPatient}
-        onClose={() => setSelectedPatient(null)}
-        onEdit={patient => {
-          // TODO: Implement edit functionality
-          console.log("Edit patient:", patient)
-        }}
-        onDelete={patient => {
-          // TODO: Implement delete functionality
-          console.log("Delete patient:", patient)
-        }}
-      />
-    </div>
+        <PatientDetailsDrawer
+          patient={selectedPatient}
+          isOpen={!!selectedPatient}
+          onClose={() => setSelectedPatient(null)}
+          onEdit={patient => {
+            // TODO: Implement edit functionality
+            console.log("Edit patient:", patient)
+          }}
+          onDelete={patient => {
+            // TODO: Implement delete functionality
+            console.log("Delete patient:", patient)
+          }}
+        />
+      </div>
+    </>
   )
 }
 

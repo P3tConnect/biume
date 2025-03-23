@@ -2,6 +2,7 @@ import {
   Calendar,
   Contact2,
   DollarSignIcon,
+  Eye,
   FileText,
   FolderOpen,
   LayoutGrid,
@@ -17,6 +18,7 @@ export type Submenu = {
   href: string
   label: string
   active: boolean
+  comingSoon?: boolean
   icon: LucideIcon
 }
 
@@ -26,6 +28,7 @@ export type Menu = {
   active: boolean
   icon: LucideIcon
   submenus?: Submenu[]
+  comingSoon?: boolean
 }
 
 export type Group = {
@@ -71,6 +74,7 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               href: `/dashboard/organization/${companyId}/accounting/estimates`,
               label: "dashboard.sidebar.estimates",
               active: pathname === `/dashboard/organization/${companyId}/accounting/estimates`,
+              comingSoon: true,
               icon: FileText,
             },
             {
@@ -110,13 +114,13 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active: pathname == `/dashboard/organization/${companyId}/reports`,
           icon: NotepadText,
         },
-        // {
-        //   href: `/dashboard/organization/${companyId}/observations`,
-        //   label: "dashboard.sidebar.observations",
-        //   active:
-        //     pathname == `/dashboard/organization/${companyId}/observations`,
-        //   icon: Eye,
-        // },
+        {
+          href: `/dashboard/organization/${companyId}/observations`,
+          label: "dashboard.sidebar.observations",
+          comingSoon: true,
+          active: pathname == `/dashboard/organization/${companyId}/observations`,
+          icon: Eye,
+        },
         {
           href: `/dashboard/organization/${companyId}/reminders`,
           label: "dashboard.sidebar.reminders",

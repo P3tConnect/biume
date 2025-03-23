@@ -20,15 +20,12 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from "@/components/ui"
 import { useSession } from "@/src/lib/auth-client"
 import { Appointment } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
 import { getAllAppointmentForClient } from "@/src/actions/appointments.action"
+import { cn } from "@/src/lib"
 
 const ClientUpcomingAppointmentsWidget = () => {
   const router = useRouter()
@@ -36,10 +33,30 @@ const ClientUpcomingAppointmentsWidget = () => {
   const userId = session?.user?.id
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null)
 
-  const { data: appointments } = useQuery({
-    queryKey: ["client-appointments"],
+  const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
+    queryKey: ["client-upcoming-appointments"],
     queryFn: () => getAllAppointmentForClient({}),
   })
+
+  if (isLoadingAppointments) {
+    return (
+      <Card className="rounded-xl">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="flex items-center gap-2">
+            <CalendarDays className="size-5" />
+            Prochains rendez-vous
+          </CardTitle>
+          <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/user/${userId}/timetable`)}>
+            Voir tout
+            <ChevronRight className="size-4 ml-1" />
+          </Button>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="w-10 h-10 border-t-2 border-b-2 border-primary rounded-full animate-spin"></div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <>
@@ -59,55 +76,71 @@ const ClientUpcomingAppointmentsWidget = () => {
             {appointments?.data?.map(appointment => (
               <div
                 key={appointment.id}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer"
-                onClick={() => setSelectedAppointment(appointment)}
+                className="group flex items-center gap-4 p-3 bg-card hover:bg-accent hover:shadow-lg rounded-lg cursor-pointer transition-all duration-200 border border-transparent hover:border-border"
+                onClick={() => setSelectedAppointment(appointment as Appointment)}
               >
-                <Avatar className="size-12 border-2 border-background">
-                  <AvatarImage src={appointment.pet.image || ""} alt={appointment.pet.name} />
-                  <AvatarFallback>{appointment.pet.name[0]}</AvatarFallback>
-                </Avatar>
+                {/* Date block */}
+                <div className="flex-shrink-0 w-[4.5rem] h-[4.5rem] flex flex-col items-center justify-center rounded-lg bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors">
+                  <span className="text-2xl font-semibold">{appointment.slot?.start.getDate()}</span>
+                  <span className="text-xs capitalize">
+                    {appointment.slot?.start.toLocaleString("fr-FR", { month: "short" })}
+                  </span>
+                </div>
 
+                {/* Main content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium truncate">{appointment.service.name}</h3>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger onClick={e => e.stopPropagation()}>
-                          <Badge
-                            variant={appointment.status === "CONFIRMED" ? "default" : "secondary"}
-                            className="shrink-0"
-                          >
-                            {appointment.status === "CONFIRMED" ? "Confirmé" : "En attente"}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="text-xs">
-                            {appointment.status === "CONFIRMED" ? "Rendez-vous confirmé" : "En attente de confirmation"}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-medium truncate group-hover:text-primary transition-colors">
+                      {appointment.service.name}
+                    </h3>
+                    <Badge
+                      variant={appointment.status === "CONFIRMED" ? "default" : "secondary"}
+                      className={cn(
+                        "shrink-0 transition-all",
+                        appointment.status === "CONFIRMED" ? "group-hover:bg-primary/20" : ""
+                      )}
+                    >
+                      {appointment.status === "CONFIRMED" ? "Confirmé" : "En attente"}
+                    </Badge>
                   </div>
 
-                  <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="size-3" />
-                      <span className="truncate">
-                        {appointment.slot.start.toLocaleString("fr-FR", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="size-3.5 group-hover:text-primary transition-colors" />
+                      <span className="group-hover:text-primary transition-colors">
+                        {appointment.slot?.start.toLocaleString("fr-FR", {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <User2 className="size-3" />
-                      <span className="truncate">{appointment.pro.name}</span>
+                    <div className="flex items-center gap-1.5">
+                      <User2 className="size-3.5 group-hover:text-primary transition-colors" />
+                      <span className="truncate group-hover:text-primary transition-colors">
+                        {appointment.pro?.name}
+                      </span>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex -space-x-2">
+                      {appointment.pets.map((petAppointment, index) => (
+                        <Avatar
+                          key={petAppointment.pet?.id}
+                          className="size-6 border-2 border-background group-hover:border-accent transition-colors"
+                        >
+                          <AvatarImage src={petAppointment.pet?.image || ""} alt={petAppointment.pet?.name} />
+                          <AvatarFallback>{petAppointment.pet?.name[0]}</AvatarFallback>
+                        </Avatar>
+                      ))}
+                    </div>
+                    <span className="text-xs text-muted-foreground truncate group-hover:text-primary/80 transition-colors">
+                      {appointment.pets.map(pet => pet.pet?.name).join(", ")}
+                    </span>
+                  </div>
                 </div>
+
+                <ChevronRight className="size-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
               </div>
             ))}
 
@@ -134,13 +167,19 @@ const ClientUpcomingAppointmentsWidget = () => {
             <>
               <SheetHeader className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <Avatar className="size-16 border-2 border-background">
-                    <AvatarImage src={selectedAppointment.pet.image || ""} alt={selectedAppointment.pet.name} />
-                    <AvatarFallback>{selectedAppointment.pet.name[0]}</AvatarFallback>
-                  </Avatar>
+                  <div className="flex -space-x-2">
+                    {selectedAppointment.pets.map((petAppointment, index) => (
+                      <Avatar key={petAppointment.pet.id} className="size-12 border-2 border-background">
+                        <AvatarImage src={petAppointment.pet.image || ""} alt={petAppointment.pet.name} />
+                        <AvatarFallback>{petAppointment.pet.name[0]}</AvatarFallback>
+                      </Avatar>
+                    ))}
+                  </div>
                   <div>
                     <SheetTitle>{selectedAppointment.service.name}</SheetTitle>
-                    <SheetDescription>Pour {selectedAppointment.pet.name}</SheetDescription>
+                    <SheetDescription>
+                      Pour {selectedAppointment.pets.map(pet => pet.pet.name).join(", ")}
+                    </SheetDescription>
                   </div>
                 </div>
               </SheetHeader>
@@ -153,7 +192,7 @@ const ClientUpcomingAppointmentsWidget = () => {
                       <Clock className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">
-                          {selectedAppointment.slot.start.toLocaleString("fr-FR", {
+                          {selectedAppointment.slot?.start.toLocaleString("fr-FR", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -165,10 +204,12 @@ const ClientUpcomingAppointmentsWidget = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="size-4 text-muted-foreground" />
-                      <div>
+                      {/* <div>
                         <p className="font-medium">Lieu</p>
-                        <p className="text-muted-foreground">{selectedAppointment.pro.address.postalAddress}</p>
-                      </div>
+                        <p className="text-muted-foreground">
+                          {selectedAppointment.pro.address.postalAddress ?? "Lieu non renseigné"}
+                        </p>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -179,12 +220,12 @@ const ClientUpcomingAppointmentsWidget = () => {
                   <h4 className="text-sm font-medium">Professionnel</h4>
                   <div className="flex items-center gap-3">
                     <Avatar className="size-12">
-                      <AvatarImage src={selectedAppointment.pro.logo || ""} alt={selectedAppointment.pro.name} />
-                      <AvatarFallback>{selectedAppointment.pro.name[0]}</AvatarFallback>
+                      <AvatarImage src={selectedAppointment.pro?.logo || ""} alt={selectedAppointment.pro?.name} />
+                      <AvatarFallback>{selectedAppointment.pro?.name[0]}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium">{selectedAppointment.pro.name}</p>
-                      <p className="text-sm text-muted-foreground">{selectedAppointment.pro.description}</p>
+                      <p className="font-medium">{selectedAppointment.pro?.name}</p>
+                      <p className="text-sm text-muted-foreground">{selectedAppointment.pro?.description}</p>
                     </div>
                   </div>
                 </div>

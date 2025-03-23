@@ -29,6 +29,7 @@ const servicesSchema = z.object({
   price: z.number().min(0, "Le prix est requis"),
   image: z.string().nullable().optional(),
   organizationId: z.string().optional(),
+  places: z.number().min(1, "Le nombre de places est requis"),
   type: z.enum(["ONE_TO_ONE", "MULTIPLE"]).default("ONE_TO_ONE"),
 })
 
@@ -51,6 +52,7 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
       image: service.image ?? undefined,
       organizationId: service.organizationId ?? undefined,
       type: service.type || "ONE_TO_ONE",
+      places: service.places || 1,
     },
   })
 
@@ -287,6 +289,32 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
                     </FormItem>
                   )}
                 />
+
+                {/* Champ nombre de places si type MULTIPLE */}
+                {form.watch("type") === "MULTIPLE" && (
+                  <FormField
+                    control={form.control}
+                    name="places"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                        <div className="flex items-center space-x-2">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <FormLabel className="text-sm font-normal mb-0">Nombre de places</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            className="max-w-[100px] bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                            {...field}
+                            value={field.value || ""}
+                            onChange={e => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
 
               <div className="flex justify-end gap-3 pt-3 mt-3 border-t">

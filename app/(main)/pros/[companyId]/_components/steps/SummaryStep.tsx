@@ -11,7 +11,7 @@ interface SummaryStepProps {
   selectedPro: Member | null
   selectedDate: Date | undefined
   selectedTime: string | null
-  selectedPet: Pet | null
+  selectedPets: Pet[] | null
   isHomeVisit: boolean
   selectedOptions: Option[]
   additionalInfo: string
@@ -23,7 +23,7 @@ export function SummaryStep({
   selectedPro,
   selectedDate,
   selectedTime,
-  selectedPet,
+  selectedPets,
   isHomeVisit,
   selectedOptions,
   additionalInfo,

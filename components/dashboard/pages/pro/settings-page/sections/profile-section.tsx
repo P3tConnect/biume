@@ -9,6 +9,7 @@ import { getCurrentOrganization } from "@/src/actions/organization.action"
 import { ProfileCoverSection } from "./components/profile/profile-cover-section"
 import { ProfileLegalInfoSection } from "./components/profile/profile-legal-info-section"
 import { ProfileMainInfoSection } from "./components/profile/profile-main-info-section"
+import { ProfileOnDemandSection } from "./components/profile/profile-ondemand-section"
 import { ProfileScheduleSection } from "./components/profile/profile-schedule-section"
 import { ProfileServicesSection } from "./components/profile/profile-services-section"
 
@@ -33,6 +34,7 @@ export const organizationFormSchema = z.object({
   openAt: z.string(),
   closeAt: z.string(),
   atHome: z.boolean(),
+  onDemand: z.boolean().optional(),
   nac: z.string(),
   siren: z.string().length(9, "Le numéro SIREN doit contenir 9 chiffres"),
   siret: z.string().length(14, "Le numéro SIRET doit contenir 14 chiffres"),
@@ -67,6 +69,7 @@ export const ProfileSection = () => {
         </div>
 
         <div className="space-y-6">
+          <ProfileOnDemandSection org={org?.data} />
           <ProfileScheduleSection org={org?.data} />
           <ProfileServicesSection org={org?.data} />
         </div>

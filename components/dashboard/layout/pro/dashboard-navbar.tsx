@@ -19,12 +19,7 @@ import {
   CredenzaTitle,
   CredenzaDescription,
   CredenzaBody,
-  DialogTitle,
-  CommandInput,
-  CommandEmpty,
-  CommandList,
-  CommandGroup,
-  CommandItem,
+  Badge,
 } from "@/components/ui"
 import { useEffect, useState } from "react"
 import {
@@ -48,8 +43,6 @@ import {
   Menu,
   AlertCircle,
   RefreshCw,
-  Command,
-  Calendar,
 } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 import { useActiveOrganization, organization, getSession } from "@/src/lib/auth-client"
@@ -67,7 +60,6 @@ import { CommandDialog } from "@/components/command/command-dialog"
 import React from "react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { UserNav } from "../user-nav"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import Notifications from "../notifications"
 
 export function DashboardNavbar({ companyId }: { companyId: string }) {
@@ -462,16 +454,29 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                                   {menu.submenus.map((submenu, subIndex) => (
                                     <DropdownMenuItem
                                       key={subIndex}
-                                      asChild
+                                      asChild={!submenu.comingSoon}
                                       className={cn(
                                         "rounded-lg p-2 transition-all duration-200",
-                                        submenu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1"
+                                        submenu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1",
+                                        submenu.comingSoon && "opacity-50 cursor-not-allowed"
                                       )}
                                     >
-                                      <Link href={submenu.href} className="flex w-full items-center">
-                                        {submenu.icon && <submenu.icon className="h-4 w-4 mr-2" />}
-                                        <span>{t(submenu.label)}</span>
-                                      </Link>
+                                      {submenu.comingSoon ? (
+                                        <div className="flex w-full items-center justify-between">
+                                          <div className="flex items-center">
+                                            {submenu.icon && <submenu.icon className="h-4 w-4 mr-2" />}
+                                            <span>{t(submenu.label)}</span>
+                                          </div>
+                                          <Badge variant="secondary" className="ml-2 text-[9px] px-1.5 py-0 h-4">
+                                            {t("common.coming_soon")}
+                                          </Badge>
+                                        </div>
+                                      ) : (
+                                        <Link href={submenu.href} className="flex w-full items-center">
+                                          {submenu.icon && <submenu.icon className="h-4 w-4 mr-2" />}
+                                          <span>{t(submenu.label)}</span>
+                                        </Link>
+                                      )}
                                     </DropdownMenuItem>
                                   ))}
                                 </DropdownMenuSubContent>
@@ -480,16 +485,29 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                           ) : (
                             <DropdownMenuItem
                               key={menuIndex}
-                              asChild
+                              asChild={!menu.comingSoon}
                               className={cn(
                                 "rounded-lg p-2 transition-all duration-200",
-                                menu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1"
+                                menu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1",
+                                menu.comingSoon && "opacity-50 cursor-not-allowed"
                               )}
                             >
-                              <Link href={menu.href} className="flex items-center">
-                                {menu.icon && <menu.icon className="h-4 w-4 mr-2" />}
-                                <span>{t(menu.label)}</span>
-                              </Link>
+                              {menu.comingSoon ? (
+                                <div className="flex w-full items-center justify-between">
+                                  <div className="flex items-center">
+                                    {menu.icon && <menu.icon className="h-4 w-4 mr-2" />}
+                                    <span>{t(menu.label)}</span>
+                                  </div>
+                                  <Badge variant="secondary" className="ml-2 text-[9px] px-1.5 py-0 h-4">
+                                    {t("common.coming_soon")}
+                                  </Badge>
+                                </div>
+                              ) : (
+                                <Link href={menu.href} className="flex items-center">
+                                  {menu.icon && <menu.icon className="h-4 w-4 mr-2" />}
+                                  <span>{t(menu.label)}</span>
+                                </Link>
+                              )}
                             </DropdownMenuItem>
                           )
                         )}
@@ -565,12 +583,22 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
                               href={menu.href}
                               className={cn(
                                 "flex items-center gap-3 p-2 rounded-lg transition-all duration-200",
-                                menu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1"
+                                menu.active ? "bg-accent/80 font-medium" : "hover:bg-accent hover:pl-1",
+                                menu.comingSoon && "opacity-50 cursor-not-allowed pointer-events-none"
                               )}
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
-                              {menu.icon && <menu.icon className="h-4 w-4" />}
-                              <span className="text-sm">{t(menu.label)}</span>
+                              <div className="flex w-full items-center justify-between">
+                                <div className="flex items-center">
+                                  {menu.icon && <menu.icon className="h-4 w-4" />}
+                                  <span className="text-sm ml-2">{t(menu.label)}</span>
+                                </div>
+                                {menu.comingSoon && (
+                                  <Badge variant="secondary" className="ml-2 text-[9px] px-1.5 py-0 h-4">
+                                    {t("common.coming_soon")}
+                                  </Badge>
+                                )}
+                              </div>
                             </Link>
                           ))}
                         </div>

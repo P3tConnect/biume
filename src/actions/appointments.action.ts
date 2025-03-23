@@ -1,21 +1,71 @@
 "use server"
 
-import { eq, and, or, desc, asc } from "drizzle-orm"
+import { eq, and, or, desc } from "drizzle-orm"
 import { z } from "zod"
-import { requireAuth, requireFullOrganization, requireOwner } from "@/src/lib/action"
+import { requireAuth, requireFullOrganization } from "@/src/lib/action"
 
 import { Appointment, appointments as appointmentsTable } from "../db/appointments"
 import { ActionError, createServerAction, db } from "../lib"
-import { revalidatePath } from "next/cache"
-import { Pet, pets, User, user } from "../db"
+import { user } from "../db"
+import { petAppointments } from "../db/pet_appointments"
 
 export const getAllAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    const appointments = await db
-      .select()
-      .from(appointmentsTable)
-      .where(eq(appointmentsTable.proId, ctx.organization?.id || ""))
+    const appointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.proId, ctx.organization?.id || ""),
+      with: {
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            remainingPlaces: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            places: true,
+          },
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+          },
+        },
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              },
+            },
+          },
+        },
+      },
+    })
 
     if (!appointments) {
       throw new ActionError("No appointments found")
@@ -69,14 +119,9 @@ export const denyAppointment = createServerAction(
   [requireAuth, requireFullOrganization]
 )
 
-// "CONFIRMED", "DENIED", "CANCELED", "POSTPONED", "ONGOING", "COMPLETED"
-
 export const getConfirmedAndAboveAppointments = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    console.log("Organisation ID:", ctx.organization?.id)
-
-    // Récupérer les rendez-vous avec une condition SQL plus explicite
     const appointmentQuery = await db.query.appointments.findMany({
       where: and(
         eq(appointmentsTable.proId, ctx.organization?.id || ""),
@@ -89,218 +134,17 @@ export const getConfirmedAndAboveAppointments = createServerAction(
         )
       ),
       with: {
-        options: {
-          with: {
-            option: {
-              columns: {
-                id: true,
-                title: true,
-                price: true,
-              },
-            },
-          },
-        },
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            type: true,
-            image: true,
-            birthDate: true,
-            gender: true,
-            breed: true,
-            weight: true,
-            height: true,
-            chippedNumber: true,
-            description: true,
-            allergies: true,
-            deseases: true,
-            intolerences: true,
-          },
-        },
-        client: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            phoneNumber: true,
-            email: true,
-          },
-        },
-        slot: {
-          columns: {
-            id: true,
-            start: true,
-            end: true,
-          },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-            price: true,
-            duration: true,
-          },
-        },
-      },
-    })
-
-    if (!appointmentQuery.length) {
-      throw new ActionError("No appointments found")
-    }
-
-    // Trier les rendez-vous par date de début du créneau
-    const sortedAppointments = appointmentQuery.sort((a, b) => {
-      if (a.slot && b.slot) {
-        return new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime()
-      }
-      return 0
-    })
-
-    return sortedAppointments as unknown as Appointment[]
-  },
-  [requireAuth, requireFullOrganization]
-)
-
-export const getPendingAndPayedAppointments = createServerAction(
-  z.object({}),
-  async (input, ctx) => {
-    const appointments = await db.query.appointments.findMany({
-      where: and(
-        eq(appointmentsTable.proId, ctx.organization?.id || ""),
-        or(eq(appointmentsTable.status, "SCHEDULED"), eq(appointmentsTable.status, "PAYED"))
-      ),
-      columns: {
-        atHome: true,
-        status: true,
-        type: true,
-        id: true,
-      },
-      with: {
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            type: true,
-          },
-        },
-        slot: {
-          columns: {
-            id: true,
-            start: true,
-            end: true,
-          },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-            price: true,
-            duration: true,
-          },
-        },
-        client: {
-          columns: {
-            id: true,
-            email: true,
-            name: true,
-            image: true,
-            phoneNumber: true,
-          },
-        },
-      },
-    })
-
-    if (!appointments) {
-      throw new ActionError("No appointments found")
-    }
-
-    return appointments as unknown as Appointment[]
-  },
-  [requireAuth, requireOwner, requireFullOrganization]
-)
-
-export const getAllAppointmentForClient = createServerAction(
-  z.object({}),
-  async (input, ctx) => {
-    const appointments = await db.query.appointments.findMany({
-      where: eq(appointmentsTable.clientId, ctx.user?.id || ""),
-      with: {
-        pet: {
-          columns: {
-            id: true,
-            name: true,
-            type: true,
-          },
-        },
-        slot: {
-          columns: {
-            id: true,
-            start: true,
-            end: true,
-          },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-        client: {
-          columns: {
-            id: true,
-            email: true,
-            name: true,
-          },
-        },
         pro: {
           columns: {
             id: true,
             name: true,
+            logo: true,
           },
         },
-      },
-      orderBy: [desc(appointmentsTable.status)],
-    })
-
-    if (!appointments) {
-      throw new ActionError("Appointment not found")
-    }
-
-    return appointments as unknown as Appointment[]
-  },
-  [requireAuth]
-)
-
-export const getAppointmentsByPetId = createServerAction(
-  z.object({
-    petId: z.string(),
-  }),
-  async (input, ctx) => {
-    const appointments = await db.query.appointments.findMany({
-      where: and(eq(appointmentsTable.patientId, input.petId), eq(appointmentsTable.status, "COMPLETED")),
-      columns: {
-        id: true,
-        beginAt: true,
-        endAt: true,
-        status: true,
-        type: true,
-        atHome: true,
-      },
-      with: {
-        slot: {
+        observation: {
           columns: {
             id: true,
-            start: true,
-            end: true,
-          },
-        },
-        service: {
-          columns: {
-            id: true,
-            name: true,
-            price: true,
-            duration: true,
+            content: true,
           },
         },
         options: {
@@ -315,9 +159,291 @@ export const getAppointmentsByPetId = createServerAction(
             },
           },
         },
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+          },
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            remainingPlaces: true,
+          },
+          with: {
+            service: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+                places: true,
+                type: true,
+              },
+            },
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            places: true,
+            type: true,
+          },
+        },
       },
     })
-    return appointments as unknown as Appointment[]
+
+    return appointmentQuery as Appointment[]
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const cancelAppointment = createServerAction(
+  z.object({
+    appointmentId: z.string(),
+    deniedReason: z.string(),
+  }),
+  async (input, ctx) => {
+    const [appointment] = await db
+      .update(appointmentsTable)
+      .set({ status: "CANCELED", deniedReason: input.deniedReason })
+      .where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute()
+
+    if (!appointment) {
+      throw new ActionError("Appointment not updated")
+    }
+
+    return appointment
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const deleteAppointment = createServerAction(
+  z.object({
+    appointmentId: z.string(),
+  }),
+  async (input, ctx) => {
+    const [appointment] = await db
+      .delete(appointmentsTable)
+      .where(eq(appointmentsTable.id, input.appointmentId))
+      .returning()
+      .execute()
+
+    if (!appointment) {
+      throw new ActionError("Appointment not deleted")
+    }
+
+    return appointment
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const getPendingAndPayedAppointments = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const appointments = await db.query.appointments.findMany({
+      where: and(
+        eq(appointmentsTable.proId, ctx.organization?.id || ""),
+        or(eq(appointmentsTable.status, "SCHEDULED"), eq(appointmentsTable.status, "PAYED"))
+      ),
+      with: {
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+                breed: true,
+                type: true,
+              },
+            },
+          },
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            remainingPlaces: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            places: true,
+          },
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+            address: true,
+            city: true,
+            country: true,
+          },
+        },
+      },
+    })
+
+    if (!appointments) {
+      throw new ActionError("No appointments found")
+    }
+
+    return appointments
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const getAllAppointmentForClient = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    const appointments = await db.query.appointments.findMany({
+      where: eq(appointmentsTable.clientId, ctx.user?.id || ""),
+      with: {
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            remainingPlaces: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            places: true,
+          },
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+          },
+        },
+        pro: {
+          columns: {
+            id: true,
+            name: true,
+            logo: true,
+          },
+        },
+      },
+    })
+
+    if (!appointments) {
+      throw new ActionError("Appointment not found")
+    }
+
+    return appointments
+  },
+  [requireAuth]
+)
+
+export const getAppointmentsByPetId = createServerAction(
+  z.object({
+    petId: z.string(),
+  }),
+  async (input, ctx) => {
+    const appointments = await db.query.petAppointments.findMany({
+      where: and(eq(petAppointments.petId, input.petId), eq(appointmentsTable.status, "COMPLETED")),
+      with: {
+        appointment: {
+          columns: {
+            id: true,
+            beginAt: true,
+            endAt: true,
+            status: true,
+            type: true,
+            atHome: true,
+          },
+          with: {
+            slot: {
+              columns: {
+                id: true,
+                start: true,
+                end: true,
+                remainingPlaces: true,
+              },
+            },
+            service: {
+              columns: {
+                id: true,
+                name: true,
+                price: true,
+                duration: true,
+                places: true,
+              },
+            },
+            pro: {
+              columns: {
+                id: true,
+                name: true,
+                logo: true,
+              },
+            },
+            options: {
+              with: {
+                option: {
+                  columns: {
+                    id: true,
+                    title: true,
+                    price: true,
+                    description: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+
+    return appointments.map(pa => pa.appointment)
   },
   [requireAuth, requireFullOrganization]
 )
@@ -327,7 +453,6 @@ export const getProNextAppointment = createServerAction(
   async (input, ctx) => {
     const now = new Date()
 
-    // Récupérer tous les rendez-vous programmés pour ce pet
     const appointments = await db.query.appointments.findMany({
       where: and(eq(appointmentsTable.proId, ctx.organization?.id || ""), eq(appointmentsTable.status, "CONFIRMED")),
       with: {
@@ -335,6 +460,18 @@ export const getProNextAppointment = createServerAction(
           columns: {
             id: true,
             start: true,
+            end: true,
+          },
+        },
+        pets: {
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
           },
         },
         service: {
@@ -343,6 +480,7 @@ export const getProNextAppointment = createServerAction(
             name: true,
             price: true,
             duration: true,
+            places: true,
           },
         },
         options: {
@@ -370,8 +508,17 @@ export const getProNextAppointment = createServerAction(
         return 0
       })
 
+    if (futureAppointments.length === 0) {
+      return {
+        nextAppointment: null,
+        client: null,
+        pet: null,
+      }
+    }
+
+    const nextAppointment = futureAppointments[0]
     const client = await db.query.user.findFirst({
-      where: eq(user.id, futureAppointments[0]?.clientId || ""),
+      where: eq(user.id, nextAppointment.clientId || ""),
       columns: {
         name: true,
         email: true,
@@ -380,45 +527,68 @@ export const getProNextAppointment = createServerAction(
       },
     })
 
-    const pet = await db.query.pets.findFirst({
-      where: eq(pets.id, futureAppointments[0]?.patientId || ""),
-      columns: {
-        id: true,
-        name: true,
-        image: true,
-        type: true,
-        breed: true,
-        birthDate: true,
-        gender: true,
-      },
+    return {
+      nextAppointment,
+      client,
+      pet: nextAppointment.pets?.[0]?.pet || null,
+    }
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const getPreviousPros = createServerAction(
+  z.object({
+    userId: z.string(),
+  }),
+  async (input, ctx) => {
+    const appointments = await db.query.appointments.findMany({
+      where: and(
+        eq(appointmentsTable.clientId, input.userId),
+        or(eq(appointmentsTable.status, "COMPLETED"), eq(appointmentsTable.status, "CONFIRMED"))
+      ),
       with: {
-        appointments: {
-          where: and(eq(appointmentsTable.status, "CONFIRMED"), eq(appointmentsTable.status, "COMPLETED")),
-          columns: {
-            id: true,
-            status: true,
-            type: true,
-            atHome: true,
-          },
+        pro: {
           with: {
-            invoices: {
+            address: true,
+            services: {
               columns: {
                 id: true,
-                total: true,
-                checkoutSessionId: true,
+                name: true,
+                price: true,
+                duration: true,
+                places: true,
+              },
+            },
+            ratings: {
+              with: {
+                writer: {
+                  columns: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
               },
             },
           },
         },
       },
+      orderBy: [desc(appointmentsTable.createdAt)],
     })
 
-    // Retourner le premier rendez-vous (le plus proche) s'il existe
-    return {
-      nextAppointment: futureAppointments.length > 0 ? (futureAppointments[0] as unknown as Appointment) : null,
-      client: client ? (client as unknown as User) : null,
-      pet: pet ? (pet as unknown as Pet) : null,
-    }
+    // Filtrer pour obtenir des organisations uniques
+    const uniqueOrganizations = [
+      ...new Map(
+        appointments
+          .filter(
+            (appointment): appointment is typeof appointment & { pro: NonNullable<typeof appointment.pro> } =>
+              appointment.pro !== null && appointment.pro !== undefined
+          )
+          .map(appointment => [appointment.pro.id, appointment.pro])
+      ).values(),
+    ]
+
+    return uniqueOrganizations
   },
-  [requireAuth, requireFullOrganization]
+  [requireAuth]
 )

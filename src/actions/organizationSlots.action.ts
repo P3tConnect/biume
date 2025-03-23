@@ -220,6 +220,7 @@ export const getOrganizationSlotsByCompanyId = createServerAction(
           },
         },
         orderBy: asc(organizationSlots.start),
+        limit: 4,
         columns: {
           id: true,
           start: true,

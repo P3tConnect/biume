@@ -1,6 +1,6 @@
 "use server"
 
-import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner } from "../lib"
+import { ActionError, createServerAction, requireAuth, requireFullOrganization, requireOwner, stripe } from "../lib"
 import {
   Organization,
   OrganizationImage,
@@ -95,7 +95,16 @@ export const getCompanyById = createServerAction(
       where: eq(organizationTable.id, input.companyId),
       with: {
         options: true,
-        services: true,
+        services: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            type: true,
+            places: true,
+          },
+        },
         members: {
           with: {
             user: {
@@ -144,7 +153,34 @@ export const getCurrentOrganization = createServerAction(
       throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
     }
 
-    return ctx.fullOrganization
+    return ctx.fullOrganization as unknown as Organization
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+export const getCurrentOrganizationPlan = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    if (!ctx.organization?.id) {
+      throw new ActionError("L'identifiant de l'organisation ne peut pas être indéfini")
+    }
+
+    const customerStripeId = ctx.fullOrganization?.customerStripeId
+    if (!customerStripeId) {
+      throw new ActionError("L'identifiant Stripe du client ne peut pas être indéfini")
+    }
+
+    const subscription = await stripe.subscriptions.retrieve(customerStripeId)
+
+    if (!subscription) {
+      throw new ActionError("Le plan de l'entreprise ne peut pas être récupéré")
+    }
+
+    return {
+      id: ctx.fullOrganization?.id,
+      plan: ctx.fullOrganization?.plan,
+      subscription,
+    }
   },
   [requireAuth, requireFullOrganization]
 )

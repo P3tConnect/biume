@@ -9,6 +9,7 @@ import React from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getPendingAndPayedAppointments } from "@/src/actions/appointments.action"
 import { AppointmentRequestItem } from "./appointment-request-item"
+import { Appointment } from "@/src/db"
 
 export const AppointmentRequests = () => {
   const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
@@ -54,7 +55,7 @@ export const AppointmentRequests = () => {
         <div className="grid grid-cols-1 gap-3">
           {appointments?.data?.map(appointment => (
             <React.Fragment key={appointment.id}>
-              <AppointmentRequestItem appointment={appointment} />
+              <AppointmentRequestItem appointment={appointment as Appointment} />
             </React.Fragment>
           ))}
 

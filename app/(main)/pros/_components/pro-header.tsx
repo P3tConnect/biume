@@ -25,10 +25,10 @@ export function ProHeader() {
         ) : (
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Connexion</Link>
+              <Link href="/sign-in">Connexion</Link>
             </Button>
             <Button size="sm" asChild>
-              <Link href="/register">Inscription</Link>
+              <Link href="/sign-up">Inscription</Link>
             </Button>
           </div>
         )}

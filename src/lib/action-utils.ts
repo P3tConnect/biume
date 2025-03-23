@@ -54,7 +54,16 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
       }
 
       // Validate input
-      const validatedInput = await schema.parseAsync(input)
+      const validatedInput = await schema.parseAsync(input).catch(e => {
+        if (e instanceof z.ZodError) {
+          const errors = e.errors.map(err => ({
+            path: err.path.join("."),
+            message: err.message,
+          }))
+          return { error: JSON.stringify(errors) }
+        }
+        return { error: e.message }
+      })
 
       // Execute handler with validated input
       const result = await handler(validatedInput, ctx)

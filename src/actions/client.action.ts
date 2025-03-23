@@ -1,8 +1,7 @@
 "use server"
 
-import { createServerAction, db, requireAuth } from "../lib"
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
 
-import { ClientFilterSchema } from "../types/client"
 import { User } from "@/src/db/user"
 import { appointments } from "@/src/db/appointments"
 import { eq } from "drizzle-orm"
@@ -10,7 +9,10 @@ import { z } from "zod"
 
 // Action pour récupérer tous les clients d'une organisation
 export const getClients = createServerAction(
-  ClientFilterSchema,
+  z.object({
+    search: z.string().optional(),
+    status: z.string().optional(),
+  }),
   async (input, ctx) => {
     // Vérifier que l'utilisateur est un professionnel
     if (!ctx.user?.isPro) {
@@ -88,30 +90,25 @@ export const getClients = createServerAction(
         filteredClients = filteredClients.filter(client => client.status === input.status)
       }
 
-      return filteredClients
+      return filteredClients as User[]
     } catch (error) {
       console.error("Erreur lors de la récupération des clients:", error)
       throw new Error("Impossible de récupérer les clients de l'organisation")
     }
   },
-  [requireAuth]
+  [requireAuth, requireFullOrganization]
 )
 
 // Action pour récupérer les métriques des clients
 export const getClientMetrics = createServerAction(
   z.object({}),
   async (input, ctx) => {
-    // Vérifier que l'utilisateur est un professionnel
-    if (!ctx.user?.isPro) {
-      throw new Error("Vous devez être un professionnel pour accéder à cette ressource")
-    }
-
     try {
       // Récupérer l'ID de l'organisation
-      const organizationId = ctx.organization?.id
+      const organizationId = ctx.fullOrganization?.id
 
       if (!organizationId) {
-        throw new Error("ID d'organisation non trouvé")
+        throw new ActionError("ID d'organisation non trouvé")
       }
 
       // Récupérer les utilisateurs qui ont pris des rendez-vous avec cette organisation
@@ -136,27 +133,30 @@ export const getClientMetrics = createServerAction(
         orderBy: (appointments, { desc }) => [desc(appointments.createdAt)],
       })
 
-      // Extraire les utilisateurs uniques (éliminer les doublons)
+      // Filtrer d'abord les rendez-vous avec des clients valides
+      const validAppointments = clientsWithAppointments.filter(
+        (appointment): appointment is typeof appointment & { client: NonNullable<typeof appointment.client> } =>
+          appointment.client !== null
+      )
+
+      // Extraire les utilisateurs uniques
       const uniqueClients = Array.from(
-        new Map(
-          clientsWithAppointments
-            .filter(appointment => appointment.client !== null) // Filtrer les rendez-vous sans client
-            .map(appointment => [appointment.client!.id, appointment.client])
-        ).values()
+        new Map(validAppointments.map(appointment => [appointment.client.id, appointment.client])).values()
       )
 
       // Déterminer les clients actifs (ceux qui ont des rendez-vous à venir)
       const now = new Date()
-      const activeClients = clientsWithAppointments.filter(appointment => new Date(appointment.slot!.start) > now)
+      const activeAppointments = validAppointments.filter(
+        appointment => appointment.slot && new Date(appointment.slot.start) > now
+      )
 
       // Récupérer le nombre unique de clients actifs
-      const uniqueActiveClientsCount = new Set(activeClients.map(appointment => appointment.clientId)).size
+      const uniqueActiveClientsCount = new Set(activeAppointments.map(appointment => appointment.client.id)).size
 
-      // Calculer le nombre total de rendez-vous
-      const totalAppointments = clientsWithAppointments.length
+      // Calculer le nombre total de rendez-vous valides
+      const totalAppointments = validAppointments.length
 
       // Dans un cas réel, on pourrait récupérer la notation moyenne depuis la table ratings
-      // Pour l'instant on garde la valeur fictive
       const averageRating = 4.8 // Valeur fictive
 
       return {
@@ -167,8 +167,8 @@ export const getClientMetrics = createServerAction(
       }
     } catch (error) {
       console.error("Erreur lors de la récupération des métriques client:", error)
-      throw new Error("Impossible de récupérer les métriques des clients")
+      throw new ActionError("Impossible de récupérer les métriques des clients")
     }
   },
-  [requireAuth]
+  [requireAuth, requireFullOrganization]
 )

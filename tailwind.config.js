@@ -124,6 +124,7 @@ const theme = {
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
       ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
+      gradient: "gradient 3s ease infinite",
     },
   },
 }

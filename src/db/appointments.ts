@@ -10,7 +10,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { report } from "./report"
-import { user } from "./user"
+import { User, user } from "./user"
+import { PetAppointment, petAppointments } from "./pet_appointments"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -36,9 +37,6 @@ export const appointments = pgTable("appointments", {
     onDelete: "cascade",
   }),
   clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
-  patientId: text("patientId").references(() => pets.id, {
-    onDelete: "cascade",
-  }),
   reportId: text("reportId").references(() => report.id, {
     onDelete: "cascade",
   }),
@@ -75,10 +73,7 @@ export const appointmentsRelations = relations(appointments, ({ one, many }) => 
     references: [service.id],
   }),
   options: many(appointmentOptions),
-  pet: one(pets, {
-    fields: [appointments.patientId],
-    references: [pets.id],
-  }),
+  pets: many(petAppointments),
   report: one(report, {
     fields: [appointments.reportId],
     references: [report.id],
@@ -102,10 +97,10 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   invoice: Invoice
   service: Service
   options: AppointmentOption[]
-  pet: Pet
+  pets: PetAppointment[]
   report: Report
   observation: Observation
-  client: InferSelectModel<typeof user>
+  client: User
   slot: OrganizationSlots
 }
 export type CreateAppointment = typeof appointments.$inferInsert

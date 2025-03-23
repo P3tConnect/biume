@@ -39,6 +39,9 @@ import { ProfessionalStep } from "./steps/ProfessionalStep"
 import { SummaryStep } from "./steps/SummaryStep"
 import { PaymentStep } from "./steps/PaymentStep"
 import { DateStep } from "./steps/DateStep"
+import { getOptionsFromOrganization } from "@/src/actions/options.action"
+import { SuccessStep } from "./steps/SuccessStep"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 // Création d'un type pour les slots d'affichage
 interface DisplaySlot {
@@ -54,7 +57,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
   const [upcomingSlots, setUpcomingSlots] = useState<DisplaySlot[]>([])
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [selectedPro, setSelectedPro] = useState<Member | null>(null)
-  const [selectedPet, setSelectedPet] = useState<Pet | null>(null)
+  const [selectedPets, setSelectedPets] = useState<Pet[] | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [selectedSlot, setSelectedSlot] = useState<OrganizationSlots | null>(null)
@@ -73,6 +76,12 @@ export function BookingCard({ organization }: { organization: Organization }) {
   const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
     queryKey: ["organization-slots", companyId],
     queryFn: () => getOrganizationSlotsByCompanyId({ companyId }),
+  })
+
+  const { data: organizationOptions } = useQuery({
+    queryKey: ["organization-options", organization.id],
+    queryFn: () => getOptionsFromOrganization({ organizationId: organization.id }),
+    enabled: !!organization.id,
   })
 
   // Filtrage des créneaux pour affichage
@@ -148,7 +157,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
     mutationFn: createBookingAction,
     onSuccess: () => {
       toast.success("Votre rendez-vous a été confirmé. Vous paierez sur place.")
-      setIsReservationModalOpen(false)
+      goTo("success")
     },
     onError: (error: Error) => {
       console.error("Erreur de création de rendez-vous:", error)
@@ -156,16 +165,17 @@ export function BookingCard({ organization }: { organization: Organization }) {
     },
   })
 
-  const handleOpenReservationModal = () => {
+  const handleOpenReservationModal = (selectedDisplaySlot?: DisplaySlot) => {
     if (!session) {
       setIsLoginModalOpen(true)
     } else {
-      setSelectedService(null)
+      const service = selectedDisplaySlot?.slot.service || null
+      setSelectedService(service)
       setSelectedPro(null)
-      setSelectedDate(undefined)
-      setSelectedTime(null)
-      setSelectedSlot(null)
-      setSelectedPet(null)
+      setSelectedDate(selectedDisplaySlot ? selectedDisplaySlot.date : undefined)
+      setSelectedTime(selectedDisplaySlot ? format(selectedDisplaySlot.date, "HH:mm") : null)
+      setSelectedSlot(selectedDisplaySlot?.slot || null)
+      setSelectedPets(null)
       setConsultationType(null)
       setSelectedOptions(null)
       setPaymentMethod(null)
@@ -206,7 +216,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       return
     }
 
-    if (!selectedPet) {
+    if (!selectedPets) {
       toast.error("Veuillez sélectionner un animal")
       return
     }
@@ -229,16 +239,25 @@ export function BookingCard({ organization }: { organization: Organization }) {
     }
 
     try {
-      const petId = selectedPet?.id
-      if (!petId) {
+      const petIds = selectedPets?.map(pet => pet.id)
+      if (!petIds) {
         toast.error("Veuillez sélectionner un animal")
         return
       }
+      if (!selectedSlot) {
+        toast.error("Veuillez sélectionner un créneau")
+        return
+      }
+
+      console.log(petIds, "petIds")
 
       await createBooking({
-        serviceId: selectedService.id,
+        service: {
+          id: selectedService.id,
+          places: selectedService.places ?? 0,
+        },
         professionalId: selectedPro.id,
-        petId,
+        selectedPets: petIds,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
         selectedOptions: selectedOptions?.map(option => option.id) || [],
@@ -246,7 +265,11 @@ export function BookingCard({ organization }: { organization: Organization }) {
         companyId: companyId,
         status: "SCHEDULED",
         isPaid: false,
-        slotId: selectedSlot?.id ?? undefined,
+        slot: {
+          id: selectedSlot.id,
+          start: selectedSlot.start,
+          remainingPlaces: selectedSlot.remainingPlaces,
+        },
       })
     } catch (err) {
       console.error("Erreur de création de rendez-vous:", err)
@@ -260,7 +283,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       return
     }
 
-    if (!selectedPet) {
+    if (!selectedPets) {
       toast.error("Veuillez sélectionner un animal")
       return
     }
@@ -283,22 +306,36 @@ export function BookingCard({ organization }: { organization: Organization }) {
     }
 
     try {
-      const petId = selectedPet?.id
-      if (!petId) {
+      const petIds = selectedPets?.map(pet => pet.id)
+      if (!petIds) {
         toast.error("Veuillez sélectionner un animal")
         return
       }
 
+      if (!selectedSlot) {
+        toast.error("Veuillez sélectionner un créneau")
+        return
+      }
+
+      console.log(petIds, "petIds")
+
       await bookPayment({
-        serviceId: selectedService.id,
+        service: {
+          id: selectedService.id,
+          places: selectedService.places ?? 0,
+        },
         professionalId: organization.id,
-        petId,
+        selectedPets: petIds,
         isHomeVisit: !!consultationType,
         additionalInfo: additionalNotes,
         selectedOptions: selectedOptions?.map(option => option.id) || [],
         amount,
         companyId: companyId,
-        slot: selectedSlot!,
+        slot: {
+          id: selectedSlot.id,
+          start: selectedSlot.start,
+          remainingPlaces: selectedSlot.remainingPlaces,
+        },
       })
     } catch (error) {
       console.error("Erreur de paiement:", error)
@@ -328,7 +365,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   <div
                     key={index}
                     className="p-3 rounded-md border border-muted-foreground/20 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={handleOpenReservationModal}
+                    onClick={() => handleOpenReservationModal(item)}
                   >
                     <div className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5 text-primary" />
@@ -358,7 +395,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button className="w-full" size="lg" onClick={handleOpenReservationModal}>
+        <Button className="w-full" size="lg" onClick={() => handleOpenReservationModal()}>
           Prendre rendez-vous
         </Button>
       </CardFooter>
@@ -417,33 +454,44 @@ export function BookingCard({ organization }: { organization: Organization }) {
       {/* Modale de réservation */}
       <Credenza open={isReservationModalOpen} onOpenChange={setIsReservationModalOpen}>
         <CredenzaContent className="sm:max-w-[800px] sm:max-h-[90vh]">
-          <CredenzaHeader>
-            <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
-              {Object.values(steps).map((stepItem, index) => (
-                <div key={stepItem.id} className="flex items-center shrink-0">
-                  <div
-                    className={cn(
-                      "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
-                      current.id === stepItem.id
-                        ? "border-primary text-primary"
-                        : index < Object.values(steps).findIndex(s => s.id === current.id)
-                          ? "border-primary bg-primary text-white"
-                          : "border-muted-foreground/30 text-muted-foreground/50"
-                    )}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    {index + 1}
-                  </div>
-                  {index < Object.values(steps).length - 1 && (
-                    <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
-                  )}
-                </div>
-              ))}
-            </div>
-            <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
-            <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
-          </CredenzaHeader>
+          {isLast ? (
+            <VisuallyHidden>
+              <CredenzaTitle>Rendez-vous confirmé</CredenzaTitle>
+            </VisuallyHidden>
+          ) : (
+            <CredenzaHeader>
+              <div className="flex items-center justify-center gap-2 mb-4 overflow-x-auto py-1 px-1 w-full">
+                {Object.values(steps)
+                  .filter(step => step.id !== "success")
+                  .map((stepItem, index) => (
+                    <div key={stepItem.id} className="flex items-center shrink-0">
+                      <div
+                        className={cn(
+                          "flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors text-xs",
+                          current.id === stepItem.id
+                            ? "border-primary text-primary"
+                            : index <
+                                Object.values(steps)
+                                  .filter(s => s.id !== "success")
+                                  .findIndex(s => s.id === current.id)
+                              ? "border-primary bg-primary text-white"
+                              : "border-muted-foreground/30 text-muted-foreground/50"
+                        )}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        {index + 1}
+                      </div>
+                      {index < Object.values(steps).filter(s => s.id !== "success").length - 1 && (
+                        <ChevronRight className="h-3 w-3 text-muted-foreground/30 mx-1" />
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <CredenzaTitle className="text-lg">{current.title}</CredenzaTitle>
+              <CredenzaDescription className="text-sm line-clamp-2">{current.description}</CredenzaDescription>
+            </CredenzaHeader>
+          )}
 
           <div className="py-4">
             {switchStep({
@@ -461,6 +509,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                       setSelectedOptions([...currentOptions, option])
                     }
                   }}
+                  organizationOptions={organizationOptions?.data || []}
                 />
               ),
               professional: () => (
@@ -487,14 +536,21 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   onToggleHomeVisit={value => setConsultationType(value)}
                 />
               ),
-              pet: () => <PetStep selectedPet={selectedPet} onSelectPet={pet => setSelectedPet(pet)} />,
+              pet: () => (
+                <PetStep
+                  selectedPets={selectedPets}
+                  onSelectPets={pets => setSelectedPets(pets)}
+                  selectedService={selectedService}
+                  selectedSlot={selectedSlot}
+                />
+              ),
               summary: () => (
                 <SummaryStep
                   selectedService={selectedService}
                   selectedPro={selectedPro}
                   selectedDate={selectedDate}
                   selectedTime={selectedTime}
-                  selectedPet={selectedPet}
+                  selectedPets={selectedPets}
                   isHomeVisit={!!consultationType}
                   selectedOptions={selectedOptions || []}
                   additionalInfo={additionalNotes}
@@ -510,58 +566,63 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   onSelectPaymentMethod={(method: string) => setPaymentMethod(method as "online" | "inPerson" | null)}
                 />
               ),
+              success: () => <SuccessStep onClose={() => setIsReservationModalOpen(false)} />,
             })}
           </div>
 
           <CredenzaFooter>
             <div className="flex w-full justify-between">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (isFirst) {
-                    setIsReservationModalOpen(false)
-                  } else {
-                    prev()
-                  }
-                }}
-              >
-                {isFirst ? "Annuler" : "Retour"}
-              </Button>
-              <Button
-                onClick={() => {
-                  if (isLast) {
-                    if (paymentMethod === "inPerson") {
-                      handleBooking()
+              {isLast ? null : (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (isFirst) {
+                      setIsReservationModalOpen(false)
                     } else {
-                      handleBookingPayment()
+                      prev()
                     }
-                  } else {
-                    next()
+                  }}
+                >
+                  {isFirst ? "Annuler" : "Retour"}
+                </Button>
+              )}
+              {current.id !== "success" && (
+                <Button
+                  onClick={() => {
+                    if (current.id === "payment") {
+                      if (paymentMethod === "inPerson") {
+                        handleBooking()
+                      } else {
+                        handleBookingPayment()
+                      }
+                    } else {
+                      next()
+                    }
+                  }}
+                  disabled={
+                    (current.id === "serviceAndOptions" && !selectedService) ||
+                    (current.id === "professional" && !selectedPro) ||
+                    (current.id === "date" && (!selectedDate || !selectedTime)) ||
+                    (current.id === "pet" && !selectedPets) ||
+                    (current.id === "payment" && !paymentMethod) ||
+                    (current.id === "payment" && (isPaymentLoading || isBookingLoading))
                   }
-                }}
-                disabled={
-                  (current.id === "serviceAndOptions" && !selectedService) ||
-                  (current.id === "professional" && !selectedPro) ||
-                  (current.id === "date" && (!selectedDate || !selectedTime)) ||
-                  (current.id === "pet" && !selectedPet) ||
-                  (current.id === "payment" && !paymentMethod) ||
-                  (isLast && (isPaymentLoading || isBookingLoading))
-                }
-              >
-                {isLast ? (
-                  isPaymentLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Redirection...
-                    </>
-                  ) : paymentMethod === "inPerson" ? (
-                    "Confirmer le rendez-vous"
+                >
+                  {current.id === "payment" ? (
+                    isPaymentLoading || isBookingLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Traitement en cours...
+                      </>
+                    ) : paymentMethod === "inPerson" ? (
+                      "Confirmer le rendez-vous"
+                    ) : (
+                      "Confirmer et payer"
+                    )
                   ) : (
-                    "Confirmer et payer"
-                  )
-                ) : (
-                  "Suivant"
-                )}
-              </Button>
+                    "Suivant"
+                  )}
+                </Button>
+              )}
             </div>
           </CredenzaFooter>
         </CredenzaContent>

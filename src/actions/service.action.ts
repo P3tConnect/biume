@@ -35,6 +35,8 @@ export const getServicesFromOrganization = createServerAction(
         image: true,
         description: true,
         duration: true,
+        type: true,
+        places: true,
       },
     })
 

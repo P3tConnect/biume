@@ -10,7 +10,6 @@ import { requireAuth, requireFullOrganization } from "../lib/action"
 // Schéma de validation pour la création d'un rendez-vous
 const createAppointmentSchema = z.object({
   clientId: z.string(),
-  patientId: z.string(),
   serviceId: z.string(),
   date: z.date(),
   startTime: z.string(),
@@ -32,7 +31,6 @@ export const createAppointmentAction = createServerAction(
         .values({
           proId: ctx.organization?.id,
           clientId: input.clientId,
-          patientId: input.patientId,
           serviceId: input.serviceId,
           beginAt: input.beginAt,
           endAt: input.endAt,

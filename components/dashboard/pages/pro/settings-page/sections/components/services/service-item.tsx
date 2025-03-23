@@ -1,4 +1,4 @@
-import { Clock, Euro, Pencil } from "lucide-react"
+import { Clock, Euro, Pencil, Users } from "lucide-react"
 import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
@@ -41,6 +41,12 @@ export const ServiceItem = ({ service, onEdit }: ServiceItemProps) => {
               <Clock className="h-4 w-4" />
               <span>{service.duration} min</span>
             </div>
+            {service.type === "MULTIPLE" && (
+              <div className="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+                <Users className="h-4 w-4" />
+                <span>{service.places} places</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

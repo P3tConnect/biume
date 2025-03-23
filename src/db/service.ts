@@ -21,6 +21,7 @@ export const service = pgTable("service", {
   }),
   duration: integer("duration"), // in minutes
   type: serviceType("type").default("ONE_TO_ONE").notNull(),
+  places: integer("places").default(1),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }),
 })

@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
       const appointmentId = metadata.appointmentId
       const clientId = metadata.clientId
       const amount = metadata.amount
+      const selectedPets = metadata.selectedPets ? JSON.parse(metadata.selectedPets) : []
 
       const transactionQuery = await db.transaction(async tx => {
         const serviceQuery = (await tx.query.service.findFirst({
@@ -166,7 +167,21 @@ export async function POST(req: NextRequest) {
             from: "Biume <noreply@biume.com>",
             to: clientQuery?.email || "",
             subject: "Vous avez une nouvelle réservation",
-            react: ReservationWaitingEmailClient(),
+            react: ReservationWaitingEmailClient({
+              clientName: clientQuery.name || "",
+              petName: petQuery.name || "",
+              serviceName: serviceQuery.name || "",
+              date: slotQuery.start.toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              time: slotQuery.start.toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              providerName: professionalQuery.name || "",
+            }),
           })
 
           if (clientEmail.error) {
@@ -181,12 +196,23 @@ export async function POST(req: NextRequest) {
               })
               .where(eq(appointments.id, appointmentId))
 
-            await tx
-              .update(organizationSlots)
-              .set({
-                isAvailable: false,
-              })
-              .where(eq(organizationSlots.id, slotId))
+            if (selectedPets) {
+              await tx
+                .update(organizationSlots)
+                .set({
+                  isAvailable: false,
+                  remainingPlaces: slotQuery.remainingPlaces - selectedPets.length,
+                })
+                .where(eq(organizationSlots.id, slotId))
+            } else {
+              await tx
+                .update(organizationSlots)
+                .set({
+                  isAvailable: false,
+                  remainingPlaces: slotQuery.remainingPlaces - 1,
+                })
+                .where(eq(organizationSlots.id, slotId))
+            }
 
             await db
               .update(transaction)
