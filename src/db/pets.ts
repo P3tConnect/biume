@@ -8,8 +8,9 @@ import { Appointment, appointments } from "./appointments"
 import { user } from "./user"
 import { z } from "zod"
 import { PetAppointment, petAppointments } from "./pet_appointments"
+import { MedicalRecordAccess, medicalRecordAccess } from "./medicalRecordAccess"
 
-export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "NAC"])
+export const petType = pgEnum("petType", ["Dog", "Cat", "Bird", "Horse", "Cow", "NAC"])
 
 export const petGender = pgEnum("petGender", ["Male", "Female"])
 
@@ -45,12 +46,14 @@ export const petsRelations = relations(pets, ({ many, one }) => ({
     references: [user.id],
   }),
   documents: many(petDocuments),
+  medicalRecordAccess: many(medicalRecordAccess),
 }))
 
 export type Pet = InferSelectModel<typeof pets> & {
   owner: User
   documents: PetDocument[]
   appointments: PetAppointment[]
+  medicalRecordAccess: MedicalRecordAccess[]
 }
 
 export type CreatePet = typeof pets.$inferInsert
