@@ -624,7 +624,7 @@ export function DashboardNavbar({ companyId }: { companyId: string }) {
             </kbd>
           </Button>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
