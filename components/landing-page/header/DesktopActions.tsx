@@ -36,20 +36,9 @@ export const DesktopActions = ({
             isScrolled ? "hidden lg:flex gap-2" : "hidden lg:flex gap-3",
           )}
         >
-          {isPro ? (<Button size={isScrolled ? "sm" : "default"} asChild>
-            <Link
-              href="https://forms.gle/ZWyhVPJfL1D98D716"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Répondre au questionnaire
-            </Link>
+          <Button size={isScrolled ? "sm" : "default"} variant="secondary" asChild>
+            <Link href="#cta">M&apos;inscrire à la bêta</Link>
           </Button>
-          ) : (
-            <Button size={isScrolled ? "sm" : "default"} variant="secondary" asChild>
-              <Link href="#cta">M&apos;inscrire à la bêta</Link>
-            </Button>
-          )}
         </div>
       )}
     </div>

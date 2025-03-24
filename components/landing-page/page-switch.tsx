@@ -8,7 +8,7 @@ import { Stethoscope, User2Icon, ChevronDown } from "lucide-react";
 import { useIsMobile } from "@/src/hooks/use-mobile";
 import { useMediaQuery } from "@/src/hooks";
 
-export const PageSwitch = () => {
+export const PageSwitch = ({ isMobileMenuOpen, setIsMobileMenuOpen }: { isMobileMenuOpen?: boolean, setIsMobileMenuOpen?: (isOpen: boolean) => void }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -27,6 +27,10 @@ export const PageSwitch = () => {
     params.set("version", newVersion);
     router.push(`${pathname}?${params.toString()}`);
     setDropdownOpen(false);
+
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen?.(false);
+    }
   };
 
   if (!mounted) return null;

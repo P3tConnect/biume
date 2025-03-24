@@ -83,15 +83,10 @@ export const MobileMenu = ({
                 </div>
                 <span className="text-lg font-bold">Biume</span>
               </Link>
-              <SheetClose asChild>
-                <Button variant="ghost" size="icon">
-                  <X className="h-5 w-5" />
-                </Button>
-              </SheetClose>
             </div>
 
             <div className="flex justify-center mb-6">
-              <PageSwitch />
+              <PageSwitch isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
             </div>
 
             <nav className="space-y-1 mb-6">

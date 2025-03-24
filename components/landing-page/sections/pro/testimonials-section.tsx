@@ -60,7 +60,7 @@ const testimonials = [
     avatar: "/images/testimonials/vet-4.webp",
     rating: 5,
     specialty: "Comportement animal",
-    usingBiumeSince: "6 mois",
+    usingBiumeSince: "1 mois",
   },
 ];
 
@@ -104,7 +104,7 @@ export function TestimonialsSection() {
             <span>Témoignages de professionnels</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ce que nos professionnels disent
+            Ce que les professionnels disent de nous
           </h2>
           <p className="text-lg text-muted-foreground">
             Découvrez comment Biume aide les professionnels de la santé animale

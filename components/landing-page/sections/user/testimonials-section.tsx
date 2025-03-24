@@ -9,6 +9,7 @@ import {
   ChevronRight,
   MessageSquareQuote,
 } from "lucide-react";
+import Avvvatars from "avvvatars-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,7 +24,7 @@ const testimonials = [
     role: "Propriétaire d'un Golden Retriever",
     avatar: "/images/testimonials/avatar-1.webp",
     rating: 5,
-    petImage: "/images/testimonials/pet-1.webp",
+    petName: "Max le Golden",
   },
   {
     id: 2,
@@ -33,7 +34,7 @@ const testimonials = [
     role: "Propriétaire de 3 chats",
     avatar: "/images/testimonials/avatar-2.webp",
     rating: 5,
-    petImage: "/images/testimonials/pet-2.webp",
+    petName: "Minou le Chat",
   },
   {
     id: 3,
@@ -43,7 +44,7 @@ const testimonials = [
     role: "Propriétaire d'un Teckel",
     avatar: "/images/testimonials/avatar-3.webp",
     rating: 4,
-    petImage: "/images/testimonials/pet-3.webp",
+    petName: "Oscar le Teckel",
   },
   {
     id: 4,
@@ -53,7 +54,7 @@ const testimonials = [
     role: "Propriétaire d'un lapin nain",
     avatar: "/images/testimonials/avatar-4.webp",
     rating: 5,
-    petImage: "/images/testimonials/pet-4.webp",
+    petName: "Caramel le Lapin",
   },
   {
     id: 5,
@@ -63,7 +64,7 @@ const testimonials = [
     role: "Propriétaire d'un Berger Australien",
     avatar: "/images/testimonials/avatar-5.webp",
     rating: 5,
-    petImage: "/images/testimonials/pet-5.webp",
+    petName: "Luna le Berger",
   },
 ];
 
@@ -213,13 +214,8 @@ export function TestimonialsSection() {
                         </div>
                       </div>
 
-                      <div className="relative h-16 w-16 rounded-full overflow-hidden border-2 border-background">
-                        <Image
-                          src={testimonial.petImage}
-                          alt="Animal de compagnie"
-                          fill
-                          className="object-cover"
-                        />
+                      <div className="relative h-20 w-20 rounded-full overflow-hidden flex items-center justify-center">
+                        <Avvvatars value={testimonial.petName} size={42} style="character" />
                       </div>
                     </div>
                   </div>
