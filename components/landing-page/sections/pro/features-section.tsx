@@ -63,10 +63,12 @@ const Category = ({
       <div className="space-y-4">
         {/* Icon and Title */}
         <div className="flex items-center gap-4">
-          <div className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
-            colorClass
-          )}>
+          <div
+            className={cn(
+              "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
+              colorClass,
+            )}
+          >
             <Icon className="w-5 h-5" />
           </div>
           <h3 className="text-xl font-semibold">{title}</h3>
@@ -81,7 +83,10 @@ const Category = ({
         {/* Sub-features preview */}
         <ul className="space-y-2">
           {subFeatures.slice(0, 3).map((feature, index) => (
-            <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+            <li
+              key={index}
+              className="flex items-center gap-2 text-sm text-muted-foreground"
+            >
               <feature.icon className="w-4 h-4 text-primary/60" />
               <span>{feature.title}</span>
             </li>
@@ -94,13 +99,19 @@ const Category = ({
               variant="ghost"
               className="w-full justify-between -mx-2 text-primary hover:text-primary hover:bg-primary/5"
             >
-              Voir toutes les fonctionnalités <ChevronRight className="w-4 h-4" />
+              Voir toutes les fonctionnalités{" "}
+              <ChevronRight className="w-4 h-4" />
             </Button>
           </CredenzaTrigger>
           <CredenzaContent>
             <CredenzaHeader>
-              <div className="flex items-center gap-4 mb-4">
-                <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", colorClass)}>
+              <div className="flex items-start gap-4 mb-4">
+                <div
+                  className={cn(
+                    "w-10 h-10 rounded-lg flex items-center justify-center",
+                    colorClass,
+                  )}
+                >
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -115,14 +126,18 @@ const Category = ({
                   key={index}
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
-                  <div className={cn(
-                    "flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center",
-                    colorClass
-                  )}>
+                  <div
+                    className={cn(
+                      "flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center",
+                      colorClass,
+                    )}
+                  >
                     <feature.icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-sm mb-1">{feature.title}</h4>
+                    <h4 className="font-medium text-sm mb-1">
+                      {feature.title}
+                    </h4>
                     <p className="text-sm text-muted-foreground">
                       {feature.description}
                     </p>
@@ -141,31 +156,34 @@ export function FeaturesSection() {
   const categories = [
     {
       icon: Building2,
-      title: "Gestion de Cabinet",
+      title: "Gestion d'activité",
       description:
-        "Tous les outils nécessaires pour gérer efficacement votre cabinet vétérinaire au quotidien.",
-      colorClass: "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400",
+        "Tous les outils nécessaires pour gérer efficacement votre activité vétérinaire au quotidien.",
+      colorClass:
+        "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400",
       delay: 0.1,
       subFeatures: [
         {
           icon: Calendar,
           title: "Agenda intelligent",
-          description: "Gestion avancée des rendez-vous avec synchronisation multi-supports",
+          description:
+            "Gestion avancée des rendez-vous avec synchronisation multi-supports",
+        },
+        {
+          icon: Brain,
+          title: "IA pour les rendez-vous",
+          description: "Optimisation intelligente des créneaux et des tournées",
         },
         {
           icon: UserPlus,
           title: "Gestion des clients",
-          description: "Base de données clients complète avec historique et suivi personnalisé",
+          description:
+            "Base de données clients complète avec historique et suivi personnalisé",
         },
         {
           icon: MapPin,
           title: "Visites à domicile",
           description: "Organisation optimisée des déplacements et visites",
-        },
-        {
-          icon: Clock,
-          title: "Rappels automatiques",
-          description: "Système de notifications pour les rendez-vous et suivis",
         },
       ],
     },
@@ -174,18 +192,14 @@ export function FeaturesSection() {
       title: "Suivi Médical",
       description:
         "Un suivi médical complet et précis pour chaque animal avec des outils d'aide à la décision.",
-      colorClass: "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400",
+      colorClass:
+        "bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400",
       delay: 0.2,
       subFeatures: [
         {
           icon: ClipboardList,
           title: "Dossiers médicaux",
           description: "Dossiers médicaux électroniques détaillés et sécurisés",
-        },
-        {
-          icon: Brain,
-          title: "Aide au diagnostic",
-          description: "Intelligence artificielle pour l'aide au diagnostic",
         },
         {
           icon: FileText,
@@ -197,6 +211,12 @@ export function FeaturesSection() {
           title: "Suivis post-consultation",
           description: "Planification et suivi des traitements",
         },
+        {
+          icon: Clock,
+          title: "Rappels automatiques",
+          description:
+            "Système de notifications pour les rendez-vous et suivis",
+        },
       ],
     },
     {
@@ -204,7 +224,8 @@ export function FeaturesSection() {
       title: "Communication",
       description:
         "Des outils de communication modernes pour maintenir le lien avec vos clients.",
-      colorClass: "bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400",
+      colorClass:
+        "bg-purple-100 dark:bg-purple-950/50 text-purple-700 dark:text-purple-400",
       delay: 0.3,
       subFeatures: [
         {
@@ -234,7 +255,8 @@ export function FeaturesSection() {
       title: "Gestion Administrative",
       description:
         "Simplifiez votre gestion administrative et financière au quotidien.",
-      colorClass: "bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-400",
+      colorClass:
+        "bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-400",
       delay: 0.4,
       subFeatures: [
         {
@@ -255,7 +277,8 @@ export function FeaturesSection() {
         {
           icon: Users,
           title: "Gestion d'équipe",
-          description: "Organisation des plannings et coordination de l'équipe soignante",
+          description:
+            "Organisation des plannings et coordination de l'équipe soignante",
         },
       ],
     },
@@ -283,7 +306,8 @@ export function FeaturesSection() {
             Une solution complète pour votre activité
           </h2>
           <p className="text-muted-foreground">
-            Découvrez nos quatre grands pôles de fonctionnalités conçus pour répondre à tous vos besoins professionnels.
+            Découvrez nos quatre grands pôles de fonctionnalités conçus pour
+            répondre à tous vos besoins professionnels.
           </p>
         </motion.div>
 
