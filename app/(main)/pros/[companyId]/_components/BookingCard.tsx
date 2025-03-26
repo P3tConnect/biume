@@ -30,24 +30,24 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { PetStep } from "./steps/PetStep";
 import { cn } from "@/src/lib/utils";
-import { createBookingCheckoutSession } from "@/src/actions/booking-payment.action";
+// import { createBookingCheckoutSession } from "@/src/actions/booking-payment.action";
 import { format, addDays, isAfter, isFuture } from "date-fns";
 import { fr } from "date-fns/locale";
-import { getOrganizationSlotsByCompanyId } from "@/src/actions";
-import { createBooking as createBookingAction } from "@/src/actions";
+// import { getOrganizationSlotsByCompanyId } from "@/src/actions";
+// import { createBooking as createBookingAction } from "@/src/actions";
 import { loginSchema } from "@/src/lib";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ServiceAndOptionsStep } from "./steps/ServiceAndOptionsStep";
-import { ProfessionalStep } from "./steps/ProfessionalStep";
-import { SummaryStep } from "./steps/SummaryStep";
-import { PaymentStep } from "./steps/PaymentStep";
-import { DateStep } from "./steps/DateStep";
+// import { ServiceAndOptionsStep } from "./steps/ServiceAndOptionsStep";
+// import { ProfessionalStep } from "./steps/ProfessionalStep";
+// import { SummaryStep } from "./steps/SummaryStep";
+// import { PaymentStep } from "./steps/PaymentStep";
+// import { DateStep } from "./steps/DateStep";
 import { getOptionsFromOrganization } from "@/src/actions/options.action";
-import { SuccessStep } from "./steps/SuccessStep";
+// import { SuccessStep } from "./steps/SuccessStep";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 // Création d'un type pour les slots d'affichage
@@ -86,10 +86,10 @@ export function BookingCard({ organization }: { organization: Organization }) {
   const companyId = params.companyId as string;
 
   // Récupération des slots d'organisation
-  const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
-    queryKey: ["organization-slots", companyId],
-    queryFn: () => getOrganizationSlotsByCompanyId({ companyId }),
-  });
+  // const { data: organizationSlots, isLoading: isLoadingSlots } = useQuery({
+  //   queryKey: ["organization-slots", companyId],
+  //   queryFn: () => getOrganizationSlotsByCompanyId({ companyId }),
+  // });
 
   const { data: organizationOptions } = useQuery({
     queryKey: ["organization-options", organization.id],
@@ -99,120 +99,120 @@ export function BookingCard({ organization }: { organization: Organization }) {
   });
 
   // Filtrage des créneaux pour affichage
-  useEffect(() => {
-    if (
-      organizationSlots &&
-      "data" in organizationSlots &&
-      organizationSlots.data &&
-      organizationSlots.data.length > 0
-    ) {
-      const now = new Date();
-      const nextSevenDays = addDays(now, 7);
+  // useEffect(() => {
+  //   if (
+  //     organizationSlots &&
+  //     "data" in organizationSlots &&
+  //     organizationSlots.data &&
+  //     organizationSlots.data.length > 0
+  //   ) {
+  //     const now = new Date();
+  //     const nextSevenDays = addDays(now, 7);
 
-      // Filtrer les créneaux disponibles pour les 7 prochains jours
-      const availableSlots = organizationSlots.data
-        .filter((slot: OrganizationSlots) => {
-          const slotDate = new Date(slot.start || "");
-          return (
-            isFuture(slotDate) &&
-            !isAfter(slotDate, nextSevenDays) &&
-            slot.isAvailable
-          );
-        })
-        .map((slot: OrganizationSlots) => ({
-          date: new Date(slot.start || ""),
-          slot,
-        }))
-        .sort(
-          (
-            a: { date: Date; slot: OrganizationSlots },
-            b: { date: Date; slot: OrganizationSlots },
-          ) => a.date.getTime() - b.date.getTime(),
-        )
-        .slice(0, 8); // Afficher jusqu'à 8 créneaux pour montrer plus d'options
+  //     // Filtrer les créneaux disponibles pour les 7 prochains jours
+  //     const availableSlots = organizationSlots.data
+  //       .filter((slot: OrganizationSlots) => {
+  //         const slotDate = new Date(slot.start || "");
+  //         return (
+  //           isFuture(slotDate) &&
+  //           !isAfter(slotDate, nextSevenDays) &&
+  //           slot.isAvailable
+  //         );
+  //       })
+  //       .map((slot: OrganizationSlots) => ({
+  //         date: new Date(slot.start || ""),
+  //         slot,
+  //       }))
+  //       .sort(
+  //         (
+  //           a: { date: Date; slot: OrganizationSlots },
+  //           b: { date: Date; slot: OrganizationSlots },
+  //         ) => a.date.getTime() - b.date.getTime(),
+  //       )
+  //       .slice(0, 8); // Afficher jusqu'à 8 créneaux pour montrer plus d'options
 
-      setUpcomingSlots(availableSlots);
-    }
-  }, [organizationSlots]);
+  //     setUpcomingSlots(availableSlots);
+  //   }
+  // }, [organizationSlots]);
 
-  const {
-    switch: switchStep,
-    current,
-    isFirst,
-    isLast,
-    next,
-    prev,
-    goTo,
-  } = useStepper({
-    initialStep: "serviceAndOptions",
-  });
+  // const {
+  //   switch: switchStep,
+  //   current,
+  //   isFirst,
+  //   isLast,
+  //   next,
+  //   prev,
+  //   goTo,
+  // } = useStepper({
+  //   initialStep: "serviceAndOptions",
+  // });
 
-  const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation(
-    {
-      mutationFn: createBookingCheckoutSession,
-      onSuccess: async (response) => {
-        // Vérifier si la réponse contient une erreur
-        if ("error" in response) {
-          toast.error(`Erreur: ${response.error}`);
-          return;
-        }
+  // const { mutateAsync: bookPayment, isPending: isPaymentLoading } = useMutation(
+  //   {
+  //     mutationFn: createBookingCheckoutSession,
+  //     onSuccess: async (response) => {
+  //       // Vérifier si la réponse contient une erreur
+  //       if ("error" in response) {
+  //         toast.error(`Erreur: ${response.error}`);
+  //         return;
+  //       }
 
-        // À ce stade, nous savons que response.data existe
-        const data = response.data;
+  //       // À ce stade, nous savons que response.data existe
+  //       const data = response.data;
 
-        if (!data || !data.sessionUrl) {
-          toast.error("Erreur lors du paiement, veuillez réessayer");
-          return;
-        }
+  //       if (!data || !data.sessionUrl) {
+  //         toast.error("Erreur lors du paiement, veuillez réessayer");
+  //         return;
+  //       }
 
-        // Rediriger vers la page de paiement Stripe
-        window.location.href = data.sessionUrl;
-      },
-      onError: (error: Error) => {
-        console.error("Erreur de paiement:", error);
-        toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`);
-      },
-    },
-  );
+  //       // Rediriger vers la page de paiement Stripe
+  //       window.location.href = data.sessionUrl;
+  //     },
+  //     onError: (error: Error) => {
+  //       console.error("Erreur de paiement:", error);
+  //       toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`);
+  //     },
+  //   },
+  // );
 
-  const { mutateAsync: createBooking, isPending: isBookingLoading } =
-    useMutation({
-      mutationFn: createBookingAction,
-      onSuccess: () => {
-        toast.success(
-          "Votre rendez-vous a été confirmé. Vous paierez sur place.",
-        );
-        goTo("success");
-      },
-      onError: (error: Error) => {
-        console.error("Erreur de création de rendez-vous:", error);
-        toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`);
-      },
-    });
+  // const { mutateAsync: createBooking, isPending: isBookingLoading } =
+  //   useMutation({
+  //     mutationFn: createBookingAction,
+  //     onSuccess: () => {
+  //       toast.success(
+  //         "Votre rendez-vous a été confirmé. Vous paierez sur place.",
+  //       );
+  //       goTo("success");
+  //     },
+  //     onError: (error: Error) => {
+  //       console.error("Erreur de création de rendez-vous:", error);
+  //       toast.error(`Erreur: ${error.message || "Une erreur s'est produite"}`);
+  //     },
+  //   });
 
-  const handleOpenReservationModal = (selectedDisplaySlot?: DisplaySlot) => {
-    if (!session) {
-      setIsLoginModalOpen(true);
-    } else {
-      const service = selectedDisplaySlot?.slot.service || null;
-      setSelectedService(service);
-      setSelectedPro(null);
-      setSelectedDate(
-        selectedDisplaySlot ? selectedDisplaySlot.date : undefined,
-      );
-      setSelectedTime(
-        selectedDisplaySlot ? format(selectedDisplaySlot.date, "HH:mm") : null,
-      );
-      setSelectedSlot(selectedDisplaySlot?.slot || null);
-      setSelectedPets(null);
-      setConsultationType(null);
-      setSelectedOptions(null);
-      setPaymentMethod(null);
-      setAdditionalNotes("");
-      goTo("serviceAndOptions");
-      setIsReservationModalOpen(true);
-    }
-  };
+  // const handleOpenReservationModal = (selectedDisplaySlot?: DisplaySlot) => {
+  //   if (!session) {
+  //     setIsLoginModalOpen(true);
+  //   } else {
+  //     const service = selectedDisplaySlot?.slot.service || null;
+  //     setSelectedService(service);
+  //     setSelectedPro(null);
+  //     setSelectedDate(
+  //       selectedDisplaySlot ? selectedDisplaySlot.date : undefined,
+  //     );
+  //     setSelectedTime(
+  //       selectedDisplaySlot ? format(selectedDisplaySlot.date, "HH:mm") : null,
+  //     );
+  //     setSelectedSlot(selectedDisplaySlot?.slot || null);
+  //     setSelectedPets(null);
+  //     setConsultationType(null);
+  //     setSelectedOptions(null);
+  //     setPaymentMethod(null);
+  //     setAdditionalNotes("");
+  //     goTo("serviceAndOptions");
+  //     setIsReservationModalOpen(true);
+  //   }
+  // };
 
   const onLoginSubmit = handleSubmit(async (data) => {
     await signIn.email(
@@ -283,26 +283,26 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
       console.log(petIds, "petIds");
 
-      await createBooking({
-        service: {
-          id: selectedService.id,
-          places: selectedService.places ?? 0,
-        },
-        professionalId: selectedPro.id,
-        selectedPets: petIds,
-        isHomeVisit: !!consultationType,
-        additionalInfo: additionalNotes,
-        selectedOptions: selectedOptions?.map((option) => option.id) || [],
-        amount,
-        companyId: companyId,
-        status: "SCHEDULED",
-        isPaid: false,
-        slot: {
-          id: selectedSlot.id,
-          start: selectedSlot.start,
-          remainingPlaces: selectedSlot.remainingPlaces,
-        },
-      });
+      // await createBooking({
+      //   service: {
+      //     id: selectedService.id,
+      //     places: selectedService.places ?? 0,
+      //   },
+      //   professionalId: selectedPro.id,
+      //   selectedPets: petIds,
+      //   isHomeVisit: !!consultationType,
+      //   additionalInfo: additionalNotes,
+      //   selectedOptions: selectedOptions?.map((option) => option.id) || [],
+      //   amount,
+      //   companyId: companyId,
+      //   status: "SCHEDULED",
+      //   isPaid: false,
+      //   slot: {
+      //     id: selectedSlot.id,
+      //     start: selectedSlot.start,
+      //     remainingPlaces: selectedSlot.remainingPlaces,
+      //   },
+      // });
     } catch (err) {
       console.error("Erreur de création de rendez-vous:", err);
       toast.error(
@@ -356,24 +356,24 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
       console.log(petIds, "petIds");
 
-      await bookPayment({
-        service: {
-          id: selectedService.id,
-          places: selectedService.places ?? 0,
-        },
-        professionalId: organization.id,
-        selectedPets: petIds,
-        isHomeVisit: !!consultationType,
-        additionalInfo: additionalNotes,
-        selectedOptions: selectedOptions?.map((option) => option.id) || [],
-        amount,
-        companyId: companyId,
-        slot: {
-          id: selectedSlot.id,
-          start: selectedSlot.start,
-          remainingPlaces: selectedSlot.remainingPlaces,
-        },
-      });
+      // await bookPayment({
+      //   service: {
+      //     id: selectedService.id,
+      //     places: selectedService.places ?? 0,
+      //   },
+      //   professionalId: organization.id,
+      //   selectedPets: petIds,
+      //   isHomeVisit: !!consultationType,
+      //   additionalInfo: additionalNotes,
+      //   selectedOptions: selectedOptions?.map((option) => option.id) || [],
+      //   amount,
+      //   companyId: companyId,
+      //   slot: {
+      //     id: selectedSlot.id,
+      //     start: selectedSlot.start,
+      //     remainingPlaces: selectedSlot.remainingPlaces,
+      //   },
+      // });
     } catch (error) {
       console.error("Erreur de paiement:", error);
       toast.error("Erreur lors du paiement, veuillez réessayer");
@@ -393,7 +393,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
           {/* Affichage des prochains créneaux */}
           <div className="space-y-3">
-            {isLoadingSlots ? (
+            {/* {isLoadingSlots ? (
               <div className="flex items-center justify-center p-4">
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
                 <span className="ml-2 text-sm text-muted-foreground">
@@ -434,7 +434,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
               <div className="text-center p-4 text-sm text-muted-foreground">
                 Aucun créneau disponible pour les prochains jours
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </CardContent>
@@ -443,7 +443,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
         <Button
           className="w-full"
           size="lg"
-          onClick={() => handleOpenReservationModal()}
+          // onClick={() => handleOpenReservationModal()}
         >
           Prendre rendez-vous
         </Button>
@@ -561,7 +561,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
         onOpenChange={setIsReservationModalOpen}
       >
         <CredenzaContent className="sm:max-w-[800px] sm:max-h-[90vh]">
-          {isLast ? (
+          {/* {isLast ? (
             <VisuallyHidden>
               <CredenzaTitle>Rendez-vous confirmé</CredenzaTitle>
             </VisuallyHidden>
@@ -606,10 +606,10 @@ export function BookingCard({ organization }: { organization: Organization }) {
                 {current.description}
               </CredenzaDescription>
             </CredenzaHeader>
-          )}
+          )} */}
 
           <div className="py-4">
-            {switchStep({
+            {/* {switchStep({
               serviceAndOptions: () => (
                 <ServiceAndOptionsStep
                   services={organization.services}
@@ -692,12 +692,12 @@ export function BookingCard({ organization }: { organization: Organization }) {
               success: () => (
                 <SuccessStep onClose={() => setIsReservationModalOpen(false)} />
               ),
-            })}
+            })} */}
           </div>
 
           <CredenzaFooter>
             <div className="flex w-full justify-between">
-              {isLast ? null : (
+              {/* {isLast ? null : (
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -750,7 +750,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                     "Suivant"
                   )}
                 </Button>
-              )}
+              )} */}
             </div>
           </CredenzaFooter>
         </CredenzaContent>
