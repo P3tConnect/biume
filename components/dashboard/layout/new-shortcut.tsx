@@ -1,10 +1,6 @@
 "use client"
 
-import { Bell, Calendar, FileText, Plus, Stethoscope, UserPlus, MapPin, Clock } from "lucide-react"
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-
-import { Button } from "@/components/ui/button"
+import { Bell, Calendar, Clock, FileText, MapPin, Plus, Stethoscope, UserPlus } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,14 +9,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import React, { useState } from "react"
 
 // Import des composants de dialogue
 import AppointmentDialog from "./dialogs/AppointmentDialog/AppointmentDialog"
+import { Button } from "@/components/ui/button"
 import ClientDialog from "./dialogs/ClientDialog"
 import DocumentDialog from "./dialogs/DocumentDialog"
+import { ExceptionalMoveDialog } from "./dialogs/ExceptionalMoveDialog"
 import PatientDialog from "./dialogs/PatientDialog"
 import ReminderDialog from "./dialogs/ReminderDialog"
-import { ExceptionalMoveDialog } from "./dialogs/ExceptionalMoveDialog"
+import { motion } from "framer-motion"
 
 const MotionMenuItem = motion(DropdownMenuItem)
 

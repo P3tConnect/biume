@@ -1,14 +1,14 @@
 "use client"
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { DragDropContext, Draggable, DropResult, Droppable } from "react-beautiful-dnd"
 import React, { useState } from "react"
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd"
+import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
 
 import { Button } from "@/components/ui/button"
-import { useSidebar } from "@/components/ui/sidebar"
-import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
 import { DayEvents } from "@/src/lib/schemas"
 import { cn } from "@/src/lib/utils"
+import { useSidebar } from "@/components/ui/sidebar"
 
 const eventColors = {
   work: "bg-blue-500 text-white",
@@ -25,9 +25,10 @@ interface CalendarProps {
   onDayClick: (date: Date) => void
   onEventDrop: (result: DropResult) => void
   events: DayEvents
+  className?: string
 }
 
-const Calendar = ({ selectedDate, onDayClick, onEventDrop, events }: CalendarProps) => {
+const Calendar = ({ selectedDate, onDayClick, onEventDrop, events, className }: CalendarProps) => {
   const { isMobile, state: sidebarState } = useSidebar()
   const [currentDate, setCurrentDate] = useState(new Date())
 
@@ -115,7 +116,7 @@ const Calendar = ({ selectedDate, onDayClick, onEventDrop, events }: CalendarPro
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className={cn("h-full w-full", className)}>
       <div className={cn("flex justify-between items-center px-2 py-3", isMobile ? "flex-col gap-3" : "flex-row")}>
         <h2 className={cn("font-bold text-gray-800 dark:text-white", isMobile ? "text-lg" : "text-xl md:text-2xl")}>
           {currentDate
