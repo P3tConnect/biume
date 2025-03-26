@@ -92,10 +92,10 @@ export function HeroSection() {
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Comme Doctolib l'a fait pour la santé humaine, Biume révolutionne
-              la gestion des activités liées aux animaux. De la prise de
-              rendez-vous à la facturation, en passant par le suivi des dossiers
-              médicaux.
+              Comme Doctolib l&apos;a fait pour la santé humaine, Biume
+              révolutionne la gestion des activités liées aux animaux. De la
+              prise de rendez-vous à la facturation, en passant par le suivi des
+              dossiers médicaux.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
