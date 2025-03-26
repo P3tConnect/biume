@@ -65,17 +65,19 @@ export function HeroSection() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium rounded-full bg-secondary/10 text-secondary w-fit">
               <Badge className="w-4 h-4" />
-              <span>La santé de vos animaux simplifiée</span>
+              <span>Le Doctolib de vos animaux de compagnie</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Prenez soin de vos{" "}
-              <span className="text-gradient">compagnons</span> à quatre pattes
+              Trouvez et prenez rendez-vous avec les meilleurs{" "}
+              <span className="text-gradient">professionnels animaliers</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8">
-              Biume vous aide à gérer les soins, les rendez-vous et le bien-être
-              de vos animaux de compagnie en un seul endroit pratique.
+              Comme Doctolib pour votre santé, Biume vous permet de prendre
+              rendez-vous en ligne avec les vétérinaires et autres
+              professionnels du monde animal. Gérez facilement les soins et le
+              suivi de vos compagnons.
             </p>
 
             {/* Barre de recherche */}
@@ -103,7 +105,7 @@ export function HeroSection() {
                 {
                   icon: Shield,
                   title: "Alertes et rappels",
-                  desc: "Ne manquez plus jamais un vaccin",
+                  desc: "Ne manquez plus jamais un seul rendez-vous",
                 },
               ].map((feature, index) => (
                 <motion.div

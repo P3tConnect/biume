@@ -158,7 +158,7 @@ export function FeaturesSection() {
       icon: Building2,
       title: "Gestion d'activité",
       description:
-        "Tous les outils nécessaires pour gérer efficacement votre activité vétérinaire au quotidien.",
+        "Tous les outils nécessaires pour gérer efficacement votre activité au quotidien.",
       colorClass:
         "bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400",
       delay: 0.1,
@@ -209,13 +209,14 @@ export function FeaturesSection() {
         {
           icon: Clock,
           title: "Suivis post-consultation",
-          description: "Planification et suivi des traitements",
+          description:
+            "Planification des prochains rendez-vous et rappels automatiques",
         },
         {
-          icon: Clock,
-          title: "Rappels automatiques",
+          icon: FileText,
+          title: "Compte-rendus",
           description:
-            "Système de notifications pour les rendez-vous et suivis",
+            "Rédaction et partage des comptes-rendus de consultation",
         },
       ],
     },
@@ -231,7 +232,8 @@ export function FeaturesSection() {
         {
           icon: MessageSquare,
           title: "Messagerie sécurisée",
-          description: "Échanges sécurisés avec les propriétaires",
+          description:
+            "Échanges sécurisés avec les propriétaires (Bientôt disponible)",
         },
         {
           icon: Calendar,
@@ -246,7 +248,8 @@ export function FeaturesSection() {
         {
           icon: Users,
           title: "Communication d'équipe",
-          description: "Outils de collaboration pour l'équipe soignante",
+          description:
+            "Outils de collaboration pour l'équipe soignante (Bientôt disponible)",
         },
       ],
     },
@@ -272,7 +275,8 @@ export function FeaturesSection() {
         {
           icon: ClipboardList,
           title: "Gestion des stocks",
-          description: "Suivi et commandes automatiques des stocks",
+          description:
+            "Suivi et commandes automatiques des stocks (Bientôt disponible)",
         },
         {
           icon: Users,
