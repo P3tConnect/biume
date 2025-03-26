@@ -1,5 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm"
-import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { integer, pgEnum, pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
@@ -20,6 +20,7 @@ export const service = pgTable("service", {
     onDelete: "cascade",
   }),
   duration: integer("duration"), // in minutes
+  atHome: boolean("atHome").default(false),
   type: serviceType("type").default("ONE_TO_ONE").notNull(),
   places: integer("places").default(1),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
