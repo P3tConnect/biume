@@ -532,7 +532,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                               <ChevronDown className="h-5 w-5" />
                             </Button>
                           </div>
-                          <BookingCard
+                          {/* <BookingCard
                             services={companyResult.data?.services || []}
                             professionals={companyResult.data?.members || []}
                             selectedService={selectedService}
@@ -543,7 +543,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                             setSelectedPro={setSelectedPro}
                             setSelectedDate={setSelectedDate}
                             setSelectedTime={setSelectedTime}
-                          />
+                          /> */}
                         </motion.div>
                       )}
                     </div>
@@ -564,7 +564,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                           Réservez rapidement et facilement
                         </p>
                       </div>
-                      <BookingCard
+                      {/* <BookingCard
                         services={companyResult.data?.services || []}
                         professionals={companyResult.data?.members || []}
                         selectedService={selectedService}
@@ -575,7 +575,7 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
                         setSelectedPro={setSelectedPro}
                         setSelectedDate={setSelectedDate}
                         setSelectedTime={setSelectedTime}
-                      />
+                      /> */}
 
                       {/* Info complémentaire */}
                       <div className="p-6 border-t">
