@@ -1,6 +1,6 @@
 import { usePathname, useRouter } from "next/navigation"
 import Image from "next/image"
-import { useActiveOrganization } from "@/src/lib/auth-client"
+import { organization, useActiveOrganization, useListOrganizations, useSession } from "@/src/lib/auth-client"
 import { proMenuList } from "@/src/config/menu-list"
 import {
   Building,
@@ -16,6 +16,10 @@ import {
   Book,
   Command,
   Search,
+  User,
+  AlertCircle,
+  ChevronDown,
+  Check,
 } from "lucide-react"
 import {
   Sidebar,
@@ -33,6 +37,9 @@ import {
 import { cn } from "@/src/lib/utils"
 import { useState } from "react"
 import { useTranslations } from "next-intl"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui"
+import { AccountSwitchDialog } from "../account-switch-dialog";
+import { toast } from "sonner"
 
 interface DashboardSidebarProps {
   companyId: string
@@ -41,10 +48,18 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const { data: session } = useSession()
   const { data: activeOrganization } = useActiveOrganization()
+  const { data: organizations } = useListOrganizations()
   const { state } = useSidebar()
   const [searchQuery, setSearchQuery] = useState("")
   const t = useTranslations()
+  const [switchingOrg, setSwitchingOrg] = useState<string | null>(null)
+  const [switchingPersonal, setSwitchingPersonal] = useState(false)
+  const [showPersonalDialog, setShowPersonalDialog] = useState(false)
+  const [showProfessionalDialog, setShowProfessionalDialog] = useState(false)
+  const [activeOrgId, setActiveOrgId] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Récupérer les menus
   const menuGroups = proMenuList(pathname || "", companyId)
@@ -64,45 +79,199 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
     return Book
   }
 
+  const handlePersonalAccountSwitch = async () => {
+    if (pathname?.startsWith(`/dashboard/user/${session?.user?.id}`)) return
+
+    setSwitchingPersonal(true)
+    setIsLoading(true)
+    setShowPersonalDialog(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      const result = await organization.setActive({
+        organizationId: "",
+      })
+
+      if (result.error) {
+        throw new Error(result.error.message)
+      }
+
+      router.push(`/dashboard/user/${session?.user?.id}`)
+      setIsLoading(false)
+    } catch (error) {
+      toast.error("Erreur lors du changement de compte", {
+        description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
+      })
+      setShowPersonalDialog(false)
+    } finally {
+      setSwitchingPersonal(false)
+    }
+  }
+
+  const handleOrganizationSwitch = async (orgId: string) => {
+    if (pathname?.startsWith(`/dashboard/organization/${orgId}`)) return
+
+    setSwitchingOrg(orgId)
+    setActiveOrgId(orgId)
+    setIsLoading(true)
+    setShowProfessionalDialog(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      const result = await organization.setActive({
+        organizationId: orgId,
+      })
+
+      if (result.error) {
+        throw new Error(result.error.message)
+      }
+
+      router.push(`/dashboard/organization/${orgId}`)
+      setIsLoading(false)
+    } catch (error) {
+      toast.error("Erreur lors du changement de compte", {
+        description: "Veuillez réessayer",
+        icon: <AlertCircle className="h-5 w-5 text-white" />,
+      })
+      setShowProfessionalDialog(false)
+    } finally {
+      setSwitchingOrg(null)
+    }
+  }
+
+  const isPersonalDashboard = pathname?.startsWith(`/dashboard/user/${session?.user?.id}`)
+
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader className="pb-0">
-        <div className="flex items-center gap-3 px-2 py-2">
-          {activeOrganization?.logo ? (
-            <div className="h-8 w-8 overflow-hidden rounded-lg ring-1 ring-border/50">
-              <Image
-                src={activeOrganization.logo}
-                alt={activeOrganization.name}
-                width={32}
-                height={32}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Building className="h-4 w-4 text-primary" />
-            </div>
-          )}
-          <span className="font-medium text-sm truncate">{activeOrganization?.name || "Organisation"}</span>
-        </div>
-      </SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-3 w-full px-3 py-2 rounded-md hover:bg-accent transition-colors">
+                  {isPersonalDashboard ? (
+                    session?.user?.image ? (
+                      <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
+                        <Image
+                          src={session?.user?.image ?? undefined}
+                          alt={session?.user?.name || ""}
+                          width={20}
+                          height={20}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-5 w-5 rounded-full bg-secondary/20 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/30 dark:bg-secondary/20 dark:group-hover:bg-secondary/30">
+                        <User className="h-3 w-3 text-secondary dark:text-secondary-foreground" />
+                      </div>
+                    )
+                  ) : activeOrganization?.logo ? (
+                    <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 shadow-sm transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
+                      <Image
+                        src={activeOrganization.logo}
+                        alt={activeOrganization.name}
+                        width={20}
+                        height={20}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
+                      <Building className="h-3 w-3 text-secondary" />
+                    </div>
+                  )}
+                  {/* <span className="flex-1 text-left">
+                    {isPersonalDashboard
+                      ? session?.user?.name || "Compte personnel"
+                      : activeOrganization?.name || "Organisation"}
+                  </span> */}
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[200px]">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                    Compte personnel
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className={cn(
+                      "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                      isPersonalDashboard
+                        ? "bg-secondary/10 text-secondary dark:bg-secondary/10 dark:text-secondary-foreground font-medium shadow-sm"
+                        : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                      switchingPersonal && "animate-pulse opacity-70"
+                    )}
+                    disabled={switchingPersonal || switchingOrg !== null}
+                    onClick={handlePersonalAccountSwitch}
+                  >
+                    {session?.user?.image ? (
+                      <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30">
+                        <Image
+                          src={session?.user?.image}
+                          alt={session?.user?.name || ""}
+                          width={20}
+                          height={20}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-5 w-5 rounded-full bg-secondary/20 flex items-center justify-center">
+                        <User className="h-3 w-3 text-secondary dark:text-secondary-foreground" />
+                      </div>
+                    )}
+                    <span className="flex-1">{session?.user?.name || "Compte personnel"}</span>
+                    {isPersonalDashboard && (
+                      <Check className="h-4 w-4 ml-auto text-secondary dark:text-secondary-foreground animate-in zoom-in-50 duration-300" />
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
 
-      {/* Barre de recherche */}
-      <div className="p-2">
-        <div className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent/50 hover:bg-accent/80 transition-all duration-200 cursor-text">
-          <Search className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Rechercher..."
-            className="w-full bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground"
-          />
-          <kbd className="hidden md:flex h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium opacity-100">
-            <Command className="h-3 w-3" /> /
-          </kbd>
-        </div>
-      </div>
+                {organizations && organizations.length > 0 ? (
+                  <DropdownMenuGroup>
+                    <DropdownMenuSeparator className="my-2" />
+                    <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                      Comptes professionnels
+                    </DropdownMenuLabel>
+                    <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                      {organizations.map(org => (
+                        <DropdownMenuItem
+                          key={org.id}
+                          className={cn(
+                            "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                            !isPersonalDashboard && activeOrganization?.id === org.id
+                              ? "bg-secondary/10 text-secondary font-medium shadow-sm"
+                              : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                            switchingOrg === org.id && "animate-pulse opacity-70"
+                          )}
+                          disabled={switchingOrg !== null}
+                          onClick={() => handleOrganizationSwitch(org.id)}
+                        >
+                          {org.logo ? (
+                            <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30">
+                              <Image src={org.logo} alt={org.name} width={20} height={20} className="h-full w-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center">
+                              <Building className="h-3 w-3 text-secondary" />
+                            </div>
+                          )}
+                          <span className="flex-1">{org.name}</span>
+                          {!isPersonalDashboard && activeOrganization?.id === org.id && (
+                            <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </DropdownMenuGroup>
+                ) : null}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
 
       <SidebarSeparator />
 
@@ -177,6 +346,21 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
           </button>
         </SidebarMenuButton>
       </SidebarFooter>
+
+      <AccountSwitchDialog
+        open={showPersonalDialog}
+        onOpenChange={setShowPersonalDialog}
+        type="personal"
+        isLoading={isLoading}
+      />
+
+      <AccountSwitchDialog
+        open={showProfessionalDialog}
+        onOpenChange={setShowProfessionalDialog}
+        type="professional"
+        organizationName={organizations?.find(org => org.id === activeOrgId)?.name}
+        isLoading={isLoading}
+      />
     </Sidebar>
   )
 }
