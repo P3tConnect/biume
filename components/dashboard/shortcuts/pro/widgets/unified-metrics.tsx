@@ -417,9 +417,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -451,9 +450,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -485,9 +483,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -519,9 +516,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -633,7 +629,7 @@ export const UnifiedMetrics = () => {
                 </div>
               </div>
               <div className="flex flex-col items-end">
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="inline-block max-w-[200px] truncate">
                   {nextAppointmentData?.slot?.start.toLocaleString("fr-FR", {
                     year: "numeric",
                     month: "long",

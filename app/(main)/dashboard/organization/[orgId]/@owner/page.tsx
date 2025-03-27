@@ -23,7 +23,7 @@ const DashboardHomeProPage = () => {
   return (
     <div className="flex flex-col h-full w-full gap-2 dark:gap-3">
       <DashboardHomeHeader />
-      <div className="grid grid-cols-1 lg:grid-cols-8 gap-2 dark:gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-6 2xl:grid-cols-8 gap-2 dark:gap-3">
         <div className="space-y-2 dark:space-y-3 lg:col-span-2 h-full overflow-y-auto">
           <StripeSetupCard />
           <NonPayedSubscription />
@@ -31,7 +31,7 @@ const DashboardHomeProPage = () => {
           <AppointmentRequests />
         </div>
 
-        <div className="lg:col-span-6 space-y-2 dark:space-y-3 h-full">
+        <div className="lg:col-span-4 2xl:col-span-6 space-y-2 dark:space-y-3 h-full">
           <DashboardTabs />
         </div>
       </div>
