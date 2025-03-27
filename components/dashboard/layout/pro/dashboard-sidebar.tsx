@@ -1,6 +1,12 @@
 import { usePathname, useRouter } from "next/navigation"
 import Image from "next/image"
-import { organization, useActiveOrganization, useListOrganizations, useSession } from "@/src/lib/auth-client"
+import {
+  getSession,
+  organization,
+  useActiveOrganization,
+  useListOrganizations,
+  useSession,
+} from "@/src/lib/auth-client"
 import { proMenuList } from "@/src/config/menu-list"
 import {
   Building,
@@ -20,6 +26,9 @@ import {
   AlertCircle,
   ChevronDown,
   Check,
+  Plus,
+  ChevronsUpDown,
+  ChevronRight,
 } from "lucide-react"
 import {
   Sidebar,
@@ -33,13 +42,29 @@ import {
   SidebarGroupLabel,
   useSidebar,
   SidebarSeparator,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
 import { cn } from "@/src/lib/utils"
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui"
-import { AccountSwitchDialog } from "../account-switch-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui"
+import { AccountSwitchDialog } from "../account-switch-dialog"
 import { toast } from "sonner"
+import { getAllOrganizationsByUserId } from "@/src/actions/organization.action"
+import { useQueries } from "@tanstack/react-query"
+import { Credenza, CredenzaTrigger } from "@/components/ui/credenza"
+import { CommandDialog } from "@/components/command/command-dialog"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 interface DashboardSidebarProps {
   companyId: string
@@ -48,11 +73,8 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const { data: session } = useSession()
   const { data: activeOrganization } = useActiveOrganization()
-  const { data: organizations } = useListOrganizations()
   const { state } = useSidebar()
-  const [searchQuery, setSearchQuery] = useState("")
   const t = useTranslations()
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null)
   const [switchingPersonal, setSwitchingPersonal] = useState(false)
@@ -60,6 +82,20 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
   const [showProfessionalDialog, setShowProfessionalDialog] = useState(false)
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [showCommandDialog, setShowCommandDialog] = useState(false)
+
+  const [{ data: session }, { data: organizations }] = useQueries({
+    queries: [
+      {
+        queryKey: ["user-informations"],
+        queryFn: () => getSession(),
+      },
+      {
+        queryKey: ["user-organizations"],
+        queryFn: () => getAllOrganizationsByUserId({}),
+      },
+    ],
+  })
 
   // Récupérer les menus
   const menuGroups = proMenuList(pathname || "", companyId)
@@ -80,7 +116,7 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
   }
 
   const handlePersonalAccountSwitch = async () => {
-    if (pathname?.startsWith(`/dashboard/user/${session?.user?.id}`)) return
+    if (pathname?.startsWith(`/dashboard/user/${session?.data?.user.id}`)) return
 
     setSwitchingPersonal(true)
     setIsLoading(true)
@@ -97,7 +133,7 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
         throw new Error(result.error.message)
       }
 
-      router.push(`/dashboard/user/${session?.user?.id}`)
+      router.push(`/dashboard/user/${session?.data?.user.id}`)
       setIsLoading(false)
     } catch (error) {
       toast.error("Erreur lors du changement de compte", {
@@ -142,133 +178,223 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
     }
   }
 
-  const isPersonalDashboard = pathname?.startsWith(`/dashboard/user/${session?.user?.id}`)
+  const isPersonalDashboard = pathname?.startsWith(`/dashboard/user/${session?.data?.user.id}`)
+
+  // Composant pour le menu replié avec dropdown
+  const CollapsedSubMenu = ({ menu, t }: { menu: any; t: any }) => {
+    return (
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton isActive={menu.active} tooltip={t(menu.label)}>
+              {menu.icon && <menu.icon className="h-4 w-4" />}
+              <span>{t(menu.label)}</span>
+              <ChevronRight className="ml-auto h-4 w-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="start" className="w-48">
+            <DropdownMenuLabel>{t(menu.label)}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {menu.submenus?.map((submenu: any, index: number) => (
+              <DropdownMenuItem key={index} asChild>
+                <a
+                  href={submenu.href}
+                  className={cn("flex items-center gap-2", submenu.active && "bg-accent text-accent-foreground")}
+                >
+                  {submenu.icon && <submenu.icon className="h-4 w-4" />}
+                  <span>{t(submenu.label)}</span>
+                </a>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    )
+  }
+
+  // Composant pour le menu déployé avec sous-menus
+  const ExpandedSubMenu = ({ menu, t }: { menu: any; t: any }) => {
+    return (
+      <Collapsible defaultOpen={menu.active}>
+        <SidebarMenuItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton isActive={menu.active}>
+              {menu.icon && <menu.icon className="h-4 w-4" />}
+              <span>{t(menu.label)}</span>
+              <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {menu.submenus?.map((submenu: any, index: number) => (
+                <SidebarMenuSubItem key={index}>
+                  <SidebarMenuSubButton asChild isActive={submenu.active}>
+                    <a href={submenu.href} className="flex items-center gap-2">
+                      {submenu.icon && <submenu.icon className="h-4 w-4" />}
+                      <span>{t(submenu.label)}</span>
+                    </a>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              ))}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </SidebarMenuItem>
+      </Collapsible>
+    )
+  }
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarHeader className="pb-0">
+      <SidebarHeader className="pb-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 w-full px-3 py-2 rounded-md hover:bg-accent transition-colors">
-                  {isPersonalDashboard ? (
-                    session?.user?.image ? (
-                      <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
+            <Credenza>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton size="lg">
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                      {activeOrganization?.logo ? (
                         <Image
-                          src={session?.user?.image ?? undefined}
-                          alt={session?.user?.name || ""}
-                          width={20}
-                          height={20}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                          src={activeOrganization?.logo ?? ""}
+                          alt={activeOrganization?.name ?? ""}
+                          width={32}
+                          height={32}
                         />
-                      </div>
-                    ) : (
-                      <div className="h-5 w-5 rounded-full bg-secondary/20 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/30 dark:bg-secondary/20 dark:group-hover:bg-secondary/30">
-                        <User className="h-3 w-3 text-secondary dark:text-secondary-foreground" />
-                      </div>
-                    )
-                  ) : activeOrganization?.logo ? (
-                    <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30 shadow-sm transition-all duration-300 group-hover:ring-secondary/50 group-hover:ring-2">
-                      <Image
-                        src={activeOrganization.logo}
-                        alt={activeOrganization.name}
-                        width={20}
-                        height={20}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
+                      ) : (
+                        <Building className="size-4" />
+                      )}
                     </div>
-                  ) : (
-                    <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-secondary/20">
-                      <Building className="h-3 w-3 text-secondary" />
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">{activeOrganization?.name}</span>
+                      <span className="truncate text-xs">{activeOrganization?.name}</span>
                     </div>
-                  )}
-                  {/* <span className="flex-1 text-left">
-                    {isPersonalDashboard
-                      ? session?.user?.name || "Compte personnel"
-                      : activeOrganization?.name || "Organisation"}
-                  </span> */}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[200px]">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                    Compte personnel
-                  </DropdownMenuLabel>
-                  <DropdownMenuItem
-                    className={cn(
-                      "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
-                      isPersonalDashboard
-                        ? "bg-secondary/10 text-secondary dark:bg-secondary/10 dark:text-secondary-foreground font-medium shadow-sm"
-                        : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                      switchingPersonal && "animate-pulse opacity-70"
-                    )}
-                    disabled={switchingPersonal || switchingOrg !== null}
-                    onClick={handlePersonalAccountSwitch}
-                  >
-                    {session?.user?.image ? (
-                      <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30">
-                        <Image
-                          src={session?.user?.image}
-                          alt={session?.user?.name || ""}
-                          width={20}
-                          height={20}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-5 w-5 rounded-full bg-secondary/20 flex items-center justify-center">
-                        <User className="h-3 w-3 text-secondary dark:text-secondary-foreground" />
-                      </div>
-                    )}
-                    <span className="flex-1">{session?.user?.name || "Compte personnel"}</span>
-                    {isPersonalDashboard && (
-                      <Check className="h-4 w-4 ml-auto text-secondary dark:text-secondary-foreground animate-in zoom-in-50 duration-300" />
-                    )}
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-
-                {organizations && organizations.length > 0 ? (
+                    <ChevronsUpDown className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  side="right"
+                  className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
+                >
                   <DropdownMenuGroup>
-                    <DropdownMenuSeparator className="my-2" />
                     <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                      Comptes professionnels
+                      Compte personnel
                     </DropdownMenuLabel>
-                    <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
-                      {organizations.map(org => (
-                        <DropdownMenuItem
-                          key={org.id}
-                          className={cn(
-                            "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
-                            !isPersonalDashboard && activeOrganization?.id === org.id
-                              ? "bg-secondary/10 text-secondary font-medium shadow-sm"
-                              : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                            switchingOrg === org.id && "animate-pulse opacity-70"
-                          )}
-                          disabled={switchingOrg !== null}
-                          onClick={() => handleOrganizationSwitch(org.id)}
-                        >
-                          {org.logo ? (
-                            <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-secondary/30">
-                              <Image src={org.logo} alt={org.name} width={20} height={20} className="h-full w-full object-cover" />
-                            </div>
-                          ) : (
-                            <div className="h-5 w-5 rounded-full bg-secondary/10 flex items-center justify-center">
-                              <Building className="h-3 w-3 text-secondary" />
-                            </div>
-                          )}
-                          <span className="flex-1">{org.name}</span>
-                          {!isPersonalDashboard && activeOrganization?.id === org.id && (
-                            <Check className="h-4 w-4 ml-auto text-secondary animate-in zoom-in-50 duration-300" />
-                          )}
-                        </DropdownMenuItem>
-                      ))}
-                    </div>
+                    <DropdownMenuItem
+                      className={cn(
+                        "group flex items-center gap-3 p-2 rounded-md transition-all duration-200 hover:bg-accent hover:translate-x-1 hover:shadow-sm cursor-pointer",
+                        switchingPersonal && "animate-pulse opacity-70"
+                      )}
+                      onSelect={handlePersonalAccountSwitch}
+                      disabled={switchingPersonal || switchingOrg !== null}
+                    >
+                      {session?.data?.user?.image ? (
+                        <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
+                          <Image
+                            src={session.data.user.image}
+                            alt={session.data.user.name || ""}
+                            width={32}
+                            height={32}
+                            className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                          <User className="h-4 w-4 text-primary" />
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium leading-none">
+                          {session?.data?.user?.name || "Personnel"}
+                        </span>
+                        <span className="text-xs text-muted-foreground mt-1">Compte personnel</span>
+                      </div>
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
-                ) : null}
-              </DropdownMenuContent>
-            </DropdownMenu>
+
+                  {organizations && organizations.data && organizations.data.length > 0 ? (
+                    <DropdownMenuGroup>
+                      <DropdownMenuSeparator className="my-2" />
+                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                        Comptes professionnels
+                      </DropdownMenuLabel>
+                      <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                        {organizations.data.map(org => (
+                          <DropdownMenuItem
+                            key={org.id}
+                            className={cn(
+                              "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                              companyId === org.id
+                                ? "bg-primary/10 text-primary font-medium shadow-sm"
+                                : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                              switchingOrg === org.id && "animate-pulse opacity-70"
+                            )}
+                            onSelect={() => handleOrganizationSwitch(org.id)}
+                            disabled={switchingOrg !== null}
+                          >
+                            {org.logo ? (
+                              <div
+                                className={cn(
+                                  "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                  companyId === org.id
+                                    ? "ring-2 ring-primary/30"
+                                    : "ring-1 ring-border/50 hover:ring-primary/20"
+                                )}
+                              >
+                                <Image
+                                  src={org.logo}
+                                  alt={org.name}
+                                  width={32}
+                                  height={32}
+                                  className={cn(
+                                    "h-full w-full object-cover transition-transform duration-300",
+                                    companyId !== org.id && "hover:scale-110"
+                                  )}
+                                />
+                              </div>
+                            ) : (
+                              <div
+                                className={cn(
+                                  "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                  companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
+                                )}
+                              >
+                                <Building className="h-4 w-4 text-primary" />
+                              </div>
+                            )}
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium leading-none">{org.name}</span>
+                              <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
+                            </div>
+                            {companyId === org.id && (
+                              <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </div>
+                    </DropdownMenuGroup>
+                  ) : (
+                    <DropdownMenuGroup>
+                      <DropdownMenuSeparator className="my-2" />
+                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                        Devenir professionnel
+                      </DropdownMenuLabel>
+                      <CredenzaTrigger asChild>
+                        <DropdownMenuItem className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm">
+                          <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                            <Plus className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium leading-none">Créer une organisation</span>
+                            <span className="text-xs text-muted-foreground mt-1">Devenez professionnel</span>
+                          </div>
+                        </DropdownMenuItem>
+                      </CredenzaTrigger>
+                    </DropdownMenuGroup>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Credenza>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -282,20 +408,29 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
           .map((group, groupIndex) => (
             <SidebarGroup key={groupIndex}>
               <SidebarMenu>
-                {group.menus.map((menu, menuIndex) => (
-                  <SidebarMenuItem key={menuIndex}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={menu.active}
-                      tooltip={state === "collapsed" ? t(menu.label) : undefined}
-                    >
-                      <a href={menu.href} className={cn("flex items-center gap-3", menu.active && "font-medium")}>
-                        {menu.icon && <menu.icon className="h-4 w-4" />}
-                        <span>{t(menu.label)}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {group.menus.map((menu, menuIndex) => {
+                  if (menu.submenus) {
+                    return state === "collapsed" ? (
+                      <CollapsedSubMenu key={menuIndex} menu={menu} t={t} />
+                    ) : (
+                      <ExpandedSubMenu key={menuIndex} menu={menu} t={t} />
+                    )
+                  }
+                  return (
+                    <SidebarMenuItem key={menuIndex}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={menu.active}
+                        tooltip={state === "collapsed" ? t(menu.label) : undefined}
+                      >
+                        <a href={menu.href} className={cn("flex items-center gap-3", menu.active && "font-medium")}>
+                          {menu.icon && <menu.icon className="h-4 w-4" />}
+                          <span>{t(menu.label)}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroup>
           ))}
@@ -313,20 +448,29 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
                 </SidebarGroupLabel>
 
                 <SidebarMenu>
-                  {group.menus.map((menu, menuIndex) => (
-                    <SidebarMenuItem key={menuIndex}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={menu.active}
-                        tooltip={state === "collapsed" ? t(menu.label) : undefined}
-                      >
-                        <a href={menu.href} className={cn("flex items-center gap-3", menu.active && "font-medium")}>
-                          {menu.icon && <menu.icon className="h-4 w-4" />}
-                          <span>{t(menu.label)}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                  {group.menus.map((menu, menuIndex) => {
+                    if (menu.submenus) {
+                      return state === "collapsed" ? (
+                        <CollapsedSubMenu key={menuIndex} menu={menu} t={t} />
+                      ) : (
+                        <ExpandedSubMenu key={menuIndex} menu={menu} t={t} />
+                      )
+                    }
+                    return (
+                      <SidebarMenuItem key={menuIndex}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={menu.active}
+                          tooltip={state === "collapsed" ? t(menu.label) : undefined}
+                        >
+                          <a href={menu.href} className={cn("flex items-center gap-3", menu.active && "font-medium")}>
+                            {menu.icon && <menu.icon className="h-4 w-4" />}
+                            <span>{t(menu.label)}</span>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
                 </SidebarMenu>
               </SidebarGroup>
             )
@@ -358,9 +502,11 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
         open={showProfessionalDialog}
         onOpenChange={setShowProfessionalDialog}
         type="professional"
-        organizationName={organizations?.find(org => org.id === activeOrgId)?.name}
+        organizationName={organizations?.data?.find(org => org.id === activeOrgId)?.name}
         isLoading={isLoading}
       />
+
+      <CommandDialog open={showCommandDialog} onOpenChange={setShowCommandDialog} companyId={companyId} />
     </Sidebar>
   )
 }

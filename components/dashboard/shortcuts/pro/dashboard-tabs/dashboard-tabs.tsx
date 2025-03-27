@@ -1,6 +1,6 @@
 "use client"
 
-import { BellRing, Calendar, FileText, PawPrint, Plus } from "lucide-react"
+import { BellRing, Calendar, FileText, PawPrint, Plus, Users2 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 import CalendarWidget from "@/components/dashboard/shortcuts/calendar-widget"
@@ -13,6 +13,8 @@ import { PlanningHeader } from "./planning-tab/planning-header"
 import { RappelsHeader } from "./reminders-tab/rappels-header"
 import { RapportsHeader } from "./reports-tab/rapports-header"
 import { PatientsList } from "./patients-tab/patients-list"
+import ClientsList from "./clients-tab/clients-list"
+import ClientsHeader from "./clients-tab/clients-header"
 
 export const DashboardTabs = () => {
   const [activeTab, setActiveTab] = useState<string>("planning")
@@ -34,8 +36,8 @@ export const DashboardTabs = () => {
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-      <div className="relative mb-6 w-full flex justify-start">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full h-full">
+      <div className="relative mb-3 mt-1 w-full flex justify-start">
         <TabsList className="inline-flex gap-1 bg-transparent p-0">
           <TabsTrigger
             value="planning"
@@ -54,6 +56,15 @@ export const DashboardTabs = () => {
               <PawPrint className="h-4 w-4" />
             </div>
             <span>Patients</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="clients"
+            className="flex items-center gap-2 px-2.5 py-2 border border-transparent rounded-lg hover:bg-muted/20 hover:border-muted transition-all duration-200 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/20 data-[state=active]:font-medium"
+          >
+            <div className="bg-background/80 rounded-full p-1 border border-muted/30 shadow-sm">
+              <Users2 className="h-4 w-4" />
+            </div>
+            <span>Clients</span>
           </TabsTrigger>
           <TabsTrigger
             value="rappels"
@@ -86,7 +97,7 @@ export const DashboardTabs = () => {
       </div>
 
       <TabsContent value="planning" className="m-0 overflow-y-auto">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <PlanningHeader />
 
           <Card className="rounded-xl">
@@ -98,14 +109,21 @@ export const DashboardTabs = () => {
       </TabsContent>
 
       <TabsContent value="patients" className="m-0 overflow-y-auto">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <PatientsHeader />
           <PatientsList />
         </div>
       </TabsContent>
 
+      <TabsContent value="clients" className="m-0 overflow-y-auto">
+        <div className="space-y-2">
+          <ClientsHeader />
+          <ClientsList />
+        </div>
+      </TabsContent>
+
       <TabsContent value="rappels" className="m-0 overflow-y-auto">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <RappelsHeader />
 
           <Card className="border shadow-sm">
@@ -128,7 +146,7 @@ export const DashboardTabs = () => {
       </TabsContent>
 
       <TabsContent value="rapports" className="m-0 overflow-y-auto">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <RapportsHeader />
 
           <Card className="border shadow-sm">

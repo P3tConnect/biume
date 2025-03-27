@@ -129,16 +129,5 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
         },
       ],
     },
-    {
-      groupLabel: "dashboard.sidebar.groupLabels.informations",
-      menus: [
-        {
-          href: `/dashboard/organization/${companyId}/settings`,
-          label: "dashboard.sidebar.settings",
-          active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
-          icon: Settings,
-        },
-      ],
-    },
   ]
 }

@@ -23,11 +23,7 @@ interface AnimalCredenzaProps {
   petId: string
 }
 
-export const AnimalCredenza = ({
-  isOpen,
-  onOpenChange,
-  petId,
-}: AnimalCredenzaProps) => {
+export const AnimalCredenza = ({ isOpen, onOpenChange, petId }: AnimalCredenzaProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("info")
 
   console.log(petId, "petId")
@@ -36,8 +32,6 @@ export const AnimalCredenza = ({
     queryKey: ["pet", petId],
     queryFn: () => getPetById({ petId }),
   })
-
-  console.log(pet, "pet")
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
