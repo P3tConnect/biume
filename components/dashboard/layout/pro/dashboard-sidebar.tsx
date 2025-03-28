@@ -4,8 +4,6 @@ import {
   getSession,
   organization,
   useActiveOrganization,
-  useListOrganizations,
-  useSession,
 } from "@/src/lib/auth-client"
 import { proMenuList } from "@/src/config/menu-list"
 import {
@@ -62,9 +60,10 @@ import { AccountSwitchDialog } from "../account-switch-dialog"
 import { toast } from "sonner"
 import { getAllOrganizationsByUserId } from "@/src/actions/organization.action"
 import { useQueries } from "@tanstack/react-query"
-import { Credenza, CredenzaTrigger } from "@/components/ui/credenza"
+import { Credenza, CredenzaContent, CredenzaTrigger } from "@/components/ui/credenza"
 import { CommandDialog } from "@/components/command/command-dialog"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import Stepper from "@/components/onboarding/components/stepper"
 
 interface DashboardSidebarProps {
   companyId: string
@@ -83,6 +82,7 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showCommandDialog, setShowCommandDialog] = useState(false)
+  const [showCredenza, setShowCredenza] = useState(false)
 
   const [{ data: session }, { data: organizations }] = useQueries({
     queries: [
@@ -99,21 +99,6 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
 
   // Récupérer les menus
   const menuGroups = proMenuList(pathname || "", companyId)
-
-  // Fonction pour obtenir l'icône pour chaque groupe de menu
-  const getGroupIcon = (groupLabel: string) => {
-    if (!groupLabel) return Home
-    if (groupLabel.includes("management")) return Activity
-    if (groupLabel.includes("services")) return Activity
-    if (groupLabel.includes("informations")) return Info
-    if (groupLabel.includes("accounting")) return DollarSign
-    if (groupLabel.includes("clients")) return Users
-    if (groupLabel.includes("settings")) return Cog
-    if (groupLabel.includes("help")) return Headphones
-    if (groupLabel.includes("notifications")) return Bell
-    if (groupLabel.includes("reports")) return ClipboardList
-    return Book
-  }
 
   const handlePersonalAccountSwitch = async () => {
     if (pathname?.startsWith(`/dashboard/user/${session?.data?.user.id}`)) return
@@ -312,85 +297,87 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
 
-                  {organizations && organizations.data && organizations.data.length > 0 ? (
-                    <DropdownMenuGroup>
-                      <DropdownMenuSeparator className="my-2" />
-                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                        Comptes professionnels
-                      </DropdownMenuLabel>
-                      <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
-                        {organizations.data.map(org => (
-                          <DropdownMenuItem
-                            key={org.id}
-                            className={cn(
-                              "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
-                              companyId === org.id
-                                ? "bg-primary/10 text-primary font-medium shadow-sm"
-                                : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                              switchingOrg === org.id && "animate-pulse opacity-70"
-                            )}
-                            onSelect={() => handleOrganizationSwitch(org.id)}
-                            disabled={switchingOrg !== null}
-                          >
-                            {org.logo ? (
-                              <div
-                                className={cn(
-                                  "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                                  companyId === org.id
-                                    ? "ring-2 ring-primary/30"
-                                    : "ring-1 ring-border/50 hover:ring-primary/20"
-                                )}
-                              >
-                                <Image
-                                  src={org.logo}
-                                  alt={org.name}
-                                  width={32}
-                                  height={32}
+                  {organizations && organizations.data && organizations.data.length > 0 && (
+                    <>
+                      <DropdownMenuGroup>
+                        <DropdownMenuSeparator className="my-2" />
+                        <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                          Comptes professionnels
+                        </DropdownMenuLabel>
+                        <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                          {organizations.data.map(org => (
+                            <DropdownMenuItem
+                              key={org.id}
+                              className={cn(
+                                "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                                companyId === org.id
+                                  ? "bg-primary/10 text-primary font-medium shadow-sm"
+                                  : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                                switchingOrg === org.id && "animate-pulse opacity-70"
+                              )}
+                              onSelect={() => handleOrganizationSwitch(org.id)}
+                              disabled={switchingOrg !== null}
+                            >
+                              {org.logo ? (
+                                <div
                                   className={cn(
-                                    "h-full w-full object-cover transition-transform duration-300",
-                                    companyId !== org.id && "hover:scale-110"
+                                    "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                    companyId === org.id
+                                      ? "ring-2 ring-primary/30"
+                                      : "ring-1 ring-border/50 hover:ring-primary/20"
                                   )}
-                                />
+                                >
+                                  <Image
+                                    src={org.logo}
+                                    alt={org.name}
+                                    width={32}
+                                    height={32}
+                                    className={cn(
+                                      "h-full w-full object-cover transition-transform duration-300",
+                                      companyId !== org.id && "hover:scale-110"
+                                    )}
+                                  />
+                                </div>
+                              ) : (
+                                <div
+                                  className={cn(
+                                    "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                    companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
+                                  )}
+                                >
+                                  <Building className="h-4 w-4 text-primary" />
+                                </div>
+                              )}
+                              <div className="flex flex-col">
+                                <span className="text-sm font-medium leading-none">{org.name}</span>
+                                <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
                               </div>
-                            ) : (
-                              <div
-                                className={cn(
-                                  "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                                  companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
-                                )}
-                              >
-                                <Building className="h-4 w-4 text-primary" />
-                              </div>
-                            )}
-                            <div className="flex flex-col">
-                              <span className="text-sm font-medium leading-none">{org.name}</span>
-                              <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
-                            </div>
-                            {companyId === org.id && (
-                              <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
-                            )}
-                          </DropdownMenuItem>
-                        ))}
-                      </div>
-                    </DropdownMenuGroup>
-                  ) : (
-                    <DropdownMenuGroup>
-                      <DropdownMenuSeparator className="my-2" />
-                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                        Devenir professionnel
-                      </DropdownMenuLabel>
-                      <CredenzaTrigger asChild>
-                        <DropdownMenuItem className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm">
+                              {companyId === org.id && (
+                                <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
+                              )}
+                            </DropdownMenuItem>
+                          ))}
+                        </div>
+                      </DropdownMenuGroup>
+                      <DropdownMenuGroup>
+                        <DropdownMenuSeparator className="my-2" />
+                        <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                          Nouvelle entreprise
+                        </DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={() => setShowCredenza(true)}
+                          className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm"
+                        >
                           <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
                             <Plus className="h-4 w-4 text-primary" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium leading-none">Créer une organisation</span>
+                            <span className="text-sm font-medium leading-none">Créer une entreprise</span>
                             <span className="text-xs text-muted-foreground mt-1">Devenez professionnel</span>
                           </div>
                         </DropdownMenuItem>
-                      </CredenzaTrigger>
-                    </DropdownMenuGroup>
+                      </DropdownMenuGroup>
+                    </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -439,11 +426,9 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
         {menuGroups
           .filter(group => group.groupLabel)
           .map((group, groupIndex) => {
-            const GroupIcon = getGroupIcon(group.groupLabel)
             return (
               <SidebarGroup key={groupIndex}>
                 <SidebarGroupLabel className="flex items-center gap-2">
-                  <GroupIcon className="h-4 w-4" />
                   <span>{t(group.groupLabel)}</span>
                 </SidebarGroupLabel>
 
@@ -460,7 +445,8 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
                       <SidebarMenuItem key={menuIndex}>
                         <SidebarMenuButton
                           asChild
-                          isActive={menu.active}
+                          isActive={menu.active && !menu.comingSoon}
+                          disabled={menu.comingSoon}
                           tooltip={state === "collapsed" ? t(menu.label) : undefined}
                         >
                           <a href={menu.href} className={cn("flex items-center gap-3", menu.active && "font-medium")}>
@@ -507,6 +493,11 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
       />
 
       <CommandDialog open={showCommandDialog} onOpenChange={setShowCommandDialog} companyId={companyId} />
+      <Credenza open={showCredenza} onOpenChange={setShowCredenza}>
+        <CredenzaContent>
+          <Stepper />
+        </CredenzaContent>
+      </Credenza>
     </Sidebar>
   )
 }
