@@ -49,7 +49,7 @@ const ReportsPageComponent = () => {
                 <Button
                   variant="outline"
                   className="bg-background"
-                  onClick={() => router.push(`/dashboard/organization/${orgId}/prescriptions/new`)}
+                  onClick={() => router.push(`/dashboard/organization/${orgId}/reports/prescriptions`)}
                 >
                   <HeartPulse className="h-4 w-4 mr-2" />
                   Nouvelle Ordonnance
@@ -57,7 +57,7 @@ const ReportsPageComponent = () => {
                 <Button
                   variant="outline"
                   className="bg-background"
-                  onClick={() => router.push(`/dashboard/organization/${orgId}/reports/new`)}
+                  onClick={() => router.push(`/dashboard/organization/${orgId}/reports/reports-builder`)}
                 >
                   <FileText className="h-4 w-4 mr-2" />
                   Nouveau Rapport
@@ -134,13 +134,22 @@ const ReportsPageComponent = () => {
           <CardContent>
             <Tabs defaultValue="all">
               <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
-                <TabsTrigger value="all" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow">
+                <TabsTrigger
+                  value="all"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+                >
                   Tous
                 </TabsTrigger>
-                <TabsTrigger value="prescriptions" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow">
+                <TabsTrigger
+                  value="prescriptions"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+                >
                   Ordonnances
                 </TabsTrigger>
-                <TabsTrigger value="reports" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow">
+                <TabsTrigger
+                  value="reports"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+                >
                   Rapports
                 </TabsTrigger>
               </TabsList>
@@ -205,4 +214,3 @@ const ReportsPageComponent = () => {
 }
 
 export default ReportsPageComponent
-
