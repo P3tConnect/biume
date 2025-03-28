@@ -94,9 +94,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
+  const [credenzaOpen, setCredenzaOpen] = useState(false);
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null)
+  const [selectedPetId, setSelectedPetId] = useState<string>("")
 
   const { data: organization } = useQuery({
     queryKey: ["currentOrganization"],
@@ -612,6 +613,7 @@ export const UnifiedMetrics = () => {
                       className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background hover:scale-105 transition-transform cursor-pointer relative z-10 hover:z-20"
                       onClick={e => {
                         e.stopPropagation()
+                        setCredenzaOpen(true)
                         setSelectedPetId(pet.id)
                       }}
                     >
@@ -672,9 +674,12 @@ export const UnifiedMetrics = () => {
       {selectedPetId && (
         <AnimalCredenza
           key={selectedPetId}
-          isOpen={!!selectedPetId}
+          isOpen={credenzaOpen && selectedPetId !== ""}
           onOpenChange={open => {
-            if (!open) setSelectedPetId(null)
+            if (!open) {
+              setCredenzaOpen(false)
+              setSelectedPetId("")
+            }
           }}
           petId={selectedPetId}
         />

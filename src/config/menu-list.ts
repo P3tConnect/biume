@@ -74,7 +74,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               href: `/dashboard/organization/${companyId}/accounting/estimates`,
               label: "dashboard.sidebar.estimates",
               active: pathname === `/dashboard/organization/${companyId}/accounting/estimates`,
-              comingSoon: true,
               icon: FileText,
             },
             {

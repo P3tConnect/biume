@@ -4,7 +4,7 @@ import { TimetableView } from "@/components/dashboard/pages/pro/timetable-page/t
 
 import DashboardOrganizationTimetableLoading from "./loading"
 import { CalendarView } from "@/components/calendar"
-import { getAllAppointments } from "@/src/actions/appointments.action"
+import { getAllAppointments, getConfirmedAndAboveAppointments } from "@/src/actions/appointments.action"
 import { Appointment } from "@/src/db/appointments"
 
 // Données temporaires pour la démonstration
@@ -30,7 +30,7 @@ const mockAppointments = [
 ]
 
 export default async function DashboardOrganizationTimetablePage() {
-  const appointments = await getAllAppointments({})
+  const appointments = await getConfirmedAndAboveAppointments({})
 
   return (
     <div className="h-full w-full flex flex-col">

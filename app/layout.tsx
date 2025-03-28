@@ -21,7 +21,7 @@ const geist = GeistSans
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
 
-  const t = await getTranslations({ namespace: "metadata" })
+  const t = await getTranslations({ namespace: "metadata", locale })
 
   return {
     title: "Biume",
@@ -108,6 +108,10 @@ export async function generateMetadata(): Promise<Metadata> {
       t("keywords.keyword28"),
       t("keywords.keyword29"),
       t("keywords.keyword30"),
+      t("keywords.keyword31"),
+      t("keywords.keyword32"),
+      t("keywords.keyword33"),
+      t("keywords.keyword34"),
     ],
   }
 }

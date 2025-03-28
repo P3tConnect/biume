@@ -39,6 +39,8 @@ export const getClients = createServerAction(
               email: true,
               phoneNumber: true,
               city: true,
+              country: true,
+              createdAt: true,
             },
           },
           slot: {

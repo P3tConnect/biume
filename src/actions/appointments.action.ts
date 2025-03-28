@@ -1,6 +1,6 @@
 "use server"
 
-import { eq, and, or, desc } from "drizzle-orm"
+import { eq, and, or, desc, exists } from "drizzle-orm"
 import { z } from "zod"
 import { requireAuth, requireFullOrganization } from "@/src/lib/action"
 
@@ -331,6 +331,8 @@ export const getPendingAndPayedAppointments = createServerAction(
 export const getAllAppointmentForClient = createServerAction(
   z.object({}),
   async (input, ctx) => {
+    const now = new Date()
+    
     const appointments = await db.query.appointments.findMany({
       where: eq(appointmentsTable.clientId, ctx.user?.id || ""),
       with: {
@@ -385,7 +387,12 @@ export const getAllAppointmentForClient = createServerAction(
       throw new ActionError("Appointment not found")
     }
 
-    return appointments
+    // Filtrer les rendez-vous dont le slot est après maintenant
+    const futureAppointments = appointments.filter(
+      appointment => appointment.slot && new Date(appointment.slot.start) > now
+    )
+
+    return futureAppointments
   },
   [requireAuth]
 )
@@ -597,4 +604,123 @@ export const getPreviousPros = createServerAction(
     return uniqueOrganizations
   },
   [requireAuth]
+)
+
+export const getOrganizationAppointmentsByDate = createServerAction(
+  z.object({
+    petId: z.string().optional(),
+  }),
+  async (input, ctx) => {
+    const now = new Date()
+
+    const appointments = await db.query.appointments.findMany({
+      where: and(
+        eq(appointmentsTable.proId, ctx.organization?.id || ""),
+        input.petId ? 
+          exists(
+            db.select()
+              .from(petAppointments)
+              .where(and(
+                eq(petAppointments.appointmentId, appointmentsTable.id),
+                eq(petAppointments.petId, input.petId)
+              ))
+          ) : undefined
+      ),
+      with: {
+        pets: {
+          where: input.petId ? eq(petAppointments.petId, input.petId) : undefined,
+          with: {
+            pet: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+                type: true,
+                breed: true,
+              },
+            },
+          },
+        },
+        slot: {
+          columns: {
+            id: true,
+            start: true,
+            end: true,
+            remainingPlaces: true,
+          },
+        },
+        service: {
+          columns: {
+            id: true,
+            name: true,
+            price: true,
+            duration: true,
+            places: true,
+            type: true,
+          },
+        },
+        client: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            phoneNumber: true,
+            image: true,
+            address: true,
+            city: true,
+            country: true,
+          },
+        },
+        pro: {
+          columns: {
+            id: true,
+            name: true,
+            logo: true,
+          },
+        },
+        options: {
+          with: {
+            option: {
+              columns: {
+                id: true,
+                title: true,
+                price: true,
+                description: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: [desc(appointmentsTable.createdAt)],
+    })
+
+    if (!appointments) {
+      throw new ActionError("Aucun rendez-vous trouvé")
+    }
+
+    // Séparer les rendez-vous en futurs et passés
+    const futureAppointments = appointments
+      .filter(appointment => appointment.slot && new Date(appointment.slot.start) > now)
+      .sort((a, b) => {
+        if (a.slot && b.slot) {
+          return new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime()
+        }
+        return 0
+      })
+
+    const pastAppointments = appointments
+      .filter(appointment => appointment.slot && new Date(appointment.slot.start) <= now)
+      .sort((a, b) => {
+        if (a.slot && b.slot) {
+          return new Date(b.slot.start).getTime() - new Date(a.slot.start).getTime()
+        }
+        return 0
+      })
+
+    return {
+      nextAppointment: futureAppointments[0] || null,
+      pastAppointments,
+    }
+  },
+  [requireAuth, requireFullOrganization]
 )

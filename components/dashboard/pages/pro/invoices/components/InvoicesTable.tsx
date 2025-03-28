@@ -56,9 +56,11 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
   const [globalFilter, setGlobalFilter] = React.useState("")
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
+  console.log(invoices, "invoices")
+
   const columns: ColumnDef<Invoice>[] = [
     {
-      accessorKey: "number",
+      accessorKey: "id",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -69,7 +71,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       },
     },
     {
-      accessorKey: "clientName",
+      accessorKey: "client.name",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -80,7 +82,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       },
     },
     {
-      accessorKey: "amount",
+      accessorKey: "total",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -90,8 +92,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
         )
       },
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"))
-        return <div className="font-medium">{amount}€</div>
+        const amount = parseFloat(row.getValue("total"))
+        return <div className="font-medium text-center">{amount}€</div>
       },
     },
     {
@@ -106,21 +108,6 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
             {label}
           </Badge>
         )
-      },
-    },
-    {
-      accessorKey: "dueDate",
-      header: ({ column }) => {
-        return (
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            Échéance
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => {
-        const dueDate = row.getValue("dueDate") as Date
-        return dueDate ? format(dueDate, "d MMMM yyyy", { locale: fr }) : "Inconnu"
       },
     },
     {
@@ -156,7 +143,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
               <DropdownMenuItem>Télécharger le PDF</DropdownMenuItem>
               <DropdownMenuItem>Envoyer par email</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">Supprimer</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-500">Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
