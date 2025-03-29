@@ -10,10 +10,11 @@ import { useState } from "react"
 interface CalendarViewProps {
   className?: string
   appointments?: Appointment[]
+  onNewAppointment?: () => void
 }
 
-export function CalendarView({ className, appointments = [] }: CalendarViewProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+export function CalendarView({ className, appointments = [], onNewAppointment }: CalendarViewProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date())
   const [viewMode, setViewMode] = useState<ViewMode>("month")
   const [currentDate, setCurrentDate] = useState(new Date())
 
@@ -25,10 +26,25 @@ export function CalendarView({ className, appointments = [] }: CalendarViewProps
     })
   }
 
+  const handleNewAppointment = () => {
+    if (onNewAppointment) {
+      onNewAppointment()
+    } else {
+      console.log("Nouveau rendez-vous")
+    }
+  }
+
   return (
     <div className="flex flex-col h-full w-full">
       <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-        <div className="flex-1 min-h-0 overflow-hidden">
+        <div className="lg:order-2 w-full lg:w-[350px] min-h-[400px] lg:min-h-0">
+          <CalendarSidebar
+            selectedDate={selectedDate}
+            appointments={getSelectedDayEvents()}
+            onNewAppointment={handleNewAppointment}
+          />
+        </div>
+        <div className="lg:order-1 flex-1 min-h-0 overflow-hidden">
           {viewMode === "month" ? (
             <CalendarGrid
               appointments={appointments}
@@ -61,9 +77,6 @@ export function CalendarView({ className, appointments = [] }: CalendarViewProps
               onViewModeChange={setViewMode}
             />
           )}
-        </div>
-        <div className="w-full lg:w-[350px] min-h-[400px] lg:min-h-0">
-          <CalendarSidebar selectedDate={selectedDate} appointments={getSelectedDayEvents()} />
         </div>
       </div>
     </div>

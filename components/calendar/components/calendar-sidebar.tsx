@@ -1,18 +1,18 @@
 "use client"
 
 import { CalendarDays, Calendar as CalendarIcon } from "lucide-react"
-
 import { Appointment } from "@/src/db/appointments"
-import { AppointmentGroup } from "./appointment-group"
 import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
 import { groupAppointmentsByTimeSlot } from "../utils"
+import { AppointmentGroup } from "./appointment-group"
 
 interface CalendarSidebarProps {
   selectedDate: Date | null
   appointments: Appointment[]
+  onNewAppointment: () => void
 }
 
-export function CalendarSidebar({ selectedDate, appointments }: CalendarSidebarProps) {
+export function CalendarSidebar({ selectedDate, appointments, onNewAppointment }: CalendarSidebarProps) {
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
 
   return (

@@ -17,6 +17,7 @@ interface DayColumnProps {
   getAppointmentStatus: (appointment: Appointment) => { color: string; label: string }
   getAppointmentPosition: (appointment: Appointment) => { top: string; height: string } | null
   onAppointmentClick: (appointment: Appointment) => void
+  isSelected?: boolean
 }
 
 export function DayColumn({
@@ -28,6 +29,7 @@ export function DayColumn({
   getAppointmentStatus,
   getAppointmentPosition,
   onAppointmentClick,
+  isSelected = false,
 }: DayColumnProps) {
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
   const isToday = format(new Date(), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
@@ -45,7 +47,8 @@ export function DayColumn({
             className={cn(
               "h-12 border-b border-border px-3",
               "sticky top-0 bg-card/80 backdrop-blur-sm z-10 transition-colors",
-              isToday && "bg-accent/10 backdrop-blur-md"
+              isToday && "bg-accent/10 backdrop-blur-md",
+              isSelected && "bg-secondary/10 backdrop-blur-md"
             )}
           >
             <div className="flex h-full flex-col justify-center">
@@ -54,7 +57,13 @@ export function DayColumn({
                   <div className="text-xs uppercase tracking-wider text-muted-foreground/70">
                     {format(date, "EEEE", { locale: fr })}
                   </div>
-                  <div className={cn("text-md font-semibold tracking-tight", isToday && "text-primary")}>
+                  <div
+                    className={cn(
+                      "text-md font-semibold tracking-tight",
+                      isToday && "text-primary",
+                      isSelected && "text-secondary"
+                    )}
+                  >
                     {format(date, "d", { locale: fr })}
                   </div>
                 </div>
@@ -68,7 +77,7 @@ export function DayColumn({
           </div>
         </div>
 
-        <div className="relative flex-1 bg-background/50">
+        <div className={cn("relative flex-1 bg-background/50", isSelected && "bg-secondary/5")}>
           {hours.map(hour => (
             <TimeGridCell
               key={hour}

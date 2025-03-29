@@ -2,18 +2,18 @@ import { addDays, format, eachDayOfInterval, endOfWeek, startOfWeek } from "date
 import { CalendarIcon, ChevronLeft, ChevronRight, Plus } from "lucide-react"
 
 import { Appointment } from "@/src/db/appointments"
-import { AppointmentDetails } from "./appointment-details"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { NewAppointmentForm } from "./new-appointment-form"
 import { ViewMode } from "@/src/types/view-mode"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { cn } from "@/src/lib/utils"
 import { fr } from "date-fns/locale"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { AppointmentDetails } from "@/components/calendar/components/appointment-details"
+import { NewAppointmentForm } from "@/components/calendar/components/new-appointment-form"
 
-interface WeekViewProps {
+interface WeekViewPropsClient {
   appointments?: Appointment[]
   onDateSelect?: (date: Date) => void
   onNewAppointment?: (date: Date) => void
@@ -38,7 +38,7 @@ export function WeekView({
   onDateChange,
   viewMode,
   onViewModeChange,
-}: WeekViewProps) {
+}: WeekViewPropsClient) {
   const [selectedAppointments, setSelectedAppointments] = useState<Appointment[]>([])
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
