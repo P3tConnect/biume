@@ -11,11 +11,11 @@ export const convertTo24Hour = (time: string, period: string) => {
   return hour * 60 + minutes
 }
 
-export const getDaysInMonth = (date: Date) => {
+export function getDaysInMonth(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
 }
 
-export const getFirstDayOfMonth = (date: Date) => {
+export function getFirstDayOfMonth(date: Date): number {
   return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
 }
 

@@ -56,9 +56,11 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
   const [globalFilter, setGlobalFilter] = React.useState("")
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
+  console.log(invoices, "invoices")
+
   const columns: ColumnDef<Invoice>[] = [
     {
-      accessorKey: "number",
+      accessorKey: "id",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -69,7 +71,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       },
     },
     {
-      accessorKey: "clientName",
+      accessorKey: "client.name",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -80,7 +82,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       },
     },
     {
-      accessorKey: "amount",
+      accessorKey: "total",
       header: ({ column }) => {
         return (
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -90,8 +92,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
         )
       },
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"))
-        return <div className="font-medium">{amount}€</div>
+        const amount = parseFloat(row.getValue("total"))
+        return <div className="font-medium text-center">{amount}€</div>
       },
     },
     {
@@ -99,28 +101,13 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
       header: "Statut",
       cell: ({ row }) => {
         const status = row.getValue("status") as keyof typeof statusMap
-        const { label, variant } = statusMap[status]
+        const defaultStatus = { label: "Inconnu", variant: "secondary" as const }
+        const { label, variant } = statusMap[status] || defaultStatus
         return (
           <Badge variant={variant} className="rounded-full">
             {label}
           </Badge>
         )
-      },
-    },
-    {
-      accessorKey: "dueDate",
-      header: ({ column }) => {
-        return (
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            Échéance
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => {
-        return format(new Date(row.getValue("dueDate")), "d MMMM yyyy", {
-          locale: fr,
-        })
       },
     },
     {
@@ -134,9 +121,8 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
         )
       },
       cell: ({ row }) => {
-        return format(new Date(row.getValue("createdAt")), "d MMMM yyyy", {
-          locale: fr,
-        })
+        const createdAt = row.getValue("createdAt") as Date
+        return createdAt ? format(createdAt, "d MMMM yyyy", { locale: fr }) : "Inconnu"
       },
     },
     {
@@ -157,7 +143,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
               <DropdownMenuItem>Télécharger le PDF</DropdownMenuItem>
               <DropdownMenuItem>Envoyer par email</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">Supprimer</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-500">Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )

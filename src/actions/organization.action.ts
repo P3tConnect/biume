@@ -13,6 +13,7 @@ import { appointments as appointmentsTable, progression as progressionTable } fr
 import {
   organizationFormSchema,
   organizationImagesFormSchema,
+  organizationUpdateFormSchema,
 } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section"
 
 import { auth } from "../lib/auth"
@@ -246,7 +247,7 @@ export const createOrganization = createServerAction(
 )
 
 export const updateOrganization = createServerAction(
-  organizationFormSchema,
+  organizationUpdateFormSchema,
   async (input, ctx) => {
     const [data] = await db
       .update(organizationTable)
@@ -260,7 +261,33 @@ export const updateOrganization = createServerAction(
         atHome: input.atHome,
         nac: input.nac,
         siren: input.siren,
+        onDemand: input.onDemand,
         siret: input.siret,
+      })
+      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .returning()
+      .execute()
+
+    console.log(data, "data")
+
+    if (!data) {
+      throw new ActionError("Organization not updated")
+    }
+
+    return data as Organization
+  },
+  [requireAuth, requireOwner]
+)
+
+export const updateOrganizationOnDemand = createServerAction(
+  z.object({
+    onDemand: z.boolean(),
+  }),
+  async (input, ctx) => {
+    const [data] = await db
+      .update(organizationTable)
+      .set({
+        onDemand: input.onDemand,
       })
       .where(eq(organizationTable.id, ctx.organization?.id as string))
       .returning()

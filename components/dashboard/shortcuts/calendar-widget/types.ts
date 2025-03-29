@@ -1,6 +1,6 @@
 import { Appointment, OrganizationSlots, Service } from "@/src/db"
 
-export interface AppointmentWithRelations extends Appointment {
+export interface AppointmentWithRelations extends Omit<Appointment, 'slot' | 'pets'> {
   slot: OrganizationSlots & {
     start: Date
     end: Date

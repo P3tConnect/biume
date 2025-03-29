@@ -1,27 +1,104 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Calendar } from "lucide-react"
+import { Appointment, Pet, PetAppointment, User as UserType } from "@/src/db"
+import { getAppointmentsByPetId, getOrganizationAppointmentsByDate } from "@/src/actions/appointments.action"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-
-import { Pet, User as UserType, Appointment } from "@/src/db"
-import { useQuery } from "@tanstack/react-query"
-import { getAppointmentsByPetId } from "@/src/actions/appointments.action"
+import { Calendar } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { format } from "date-fns"
+import { motion } from "framer-motion"
+import { useQuery } from "@tanstack/react-query"
 
 interface AppointmentsTabProps {
   animal: Pet
-  nextAppointmentClient: UserType
-  nextAppointmentData: Appointment
 }
 
-export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointmentData }: AppointmentsTabProps) => {
-  const { data: appointments } = useQuery({
+export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
+  const { data: appointments, isLoading: isLoadingAppointments } = useQuery({
     queryKey: ["appointments", animal.id],
-    queryFn: () => getAppointmentsByPetId({ petId: animal.id }),
+    queryFn: () => getOrganizationAppointmentsByDate({ petId: animal.id }),
   })
+
+  const nextAppointmentData = appointments?.data?.nextAppointment
+  const pastAppointments = appointments?.data?.pastAppointments
+
+  if (isLoadingAppointments) {
+    return (
+      <div className="p-6 space-y-6">
+        <motion.div
+          className="mb-4 flex justify-between items-center"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div>
+            <h3 className="text-lg font-medium">Rendez-vous</h3>
+            <p className="text-sm text-muted-foreground">Historique des consultations</p>
+          </div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button size="sm" className="gap-1">
+              <Calendar className="h-3.5 w-3.5 mr-1" />
+              Nouveau
+            </Button>
+          </motion.div>
+        </motion.div>
+
+        {/* Prochain rendez-vous - Skeleton */}
+        <motion.div
+          className="rounded-lg border overflow-hidden mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <div className="bg-indigo-50 dark:bg-indigo-950/40 p-3 border-b">
+            <h4 className="font-medium">Prochain rendez-vous</h4>
+          </div>
+          <div className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+            </div>
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </motion.div>
+
+        {/* Historique - Skeleton */}
+        <motion.div
+          className="space-y-1"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <h4 className="text-sm font-medium mb-2">Historique</h4>
+          <div className="space-y-2">
+            {[1, 2, 3].map((_, index) => (
+              <motion.div
+                key={index}
+                className="p-3 border rounded-md flex items-center justify-between"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
+              >
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-24" />
+                  </div>
+                </div>
+                <Skeleton className="h-6 w-24" />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -78,7 +155,7 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
                 <div className="text-sm text-muted-foreground">
                   {nextAppointmentData.beginAt
                     ? format(nextAppointmentData.beginAt, "dd/MM/yyyy")
-                    : nextAppointmentData.slot.start.toLocaleDateString("fr-FR", {
+                    : nextAppointmentData?.slot?.start.toLocaleDateString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
@@ -104,7 +181,7 @@ export const AppointmentsTab = ({ animal, nextAppointmentClient, nextAppointment
       >
         <h4 className="text-sm font-medium mb-2">Historique</h4>
         <div className="space-y-2">
-          {appointments?.data?.map((appointment, index) => (
+          {pastAppointments?.map((appointment, index) => (
             <motion.div
               key={index}
               className="p-3 border rounded-md flex items-center justify-between"

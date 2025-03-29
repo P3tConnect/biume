@@ -36,6 +36,14 @@ export const getInvoices = createServerAction(
       const data = await db.query.invoice.findMany({
         with: {
           options: true,
+          client: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            }
+          }
         },
         orderBy: (invoice, { desc }) => [desc(invoice.createdAt)],
       })

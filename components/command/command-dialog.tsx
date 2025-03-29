@@ -77,8 +77,8 @@ interface ClientData {
   name: string
   email: string
   phoneNumber: string | null
+  city: string | null
   status: string
-  // autres propriétés si nécessaire
 }
 
 // Type pour les patients (animaux) retournés par l'API
@@ -116,7 +116,14 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
       if ("error" in result) {
         throw new Error(result.error)
       }
-      return result.data || []
+      return (result.data || []).map(user => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        status: "Active",
+      }))
     },
     enabled: open && searchTerm.length > 1,
   })

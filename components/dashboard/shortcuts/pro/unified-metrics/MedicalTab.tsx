@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { ChevronDown, ClipboardList, HeartPulse, Pill, Plus, Stethoscope } from "lucide-react"
+import { ChevronDown, ClipboardList, HeartPulse, Pill, LockKeyhole, Stethoscope } from "lucide-react"
 import { format } from "date-fns"
 
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,7 @@ import { useState } from "react"
 import { Appointment, Pet, User as UserType } from "@/src/db"
 import { useQuery } from "@tanstack/react-query"
 import { getAppointmentsByPetId } from "@/src/actions/appointments.action"
+import { useSession } from "@/src/lib"
 
 interface MedicalTabProps {
   animal: Pet
@@ -24,11 +25,16 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
     [key: string]: boolean
   }>({})
 
+  const { data: session } = useSession()
+  const hasFullAccess = false;
+
+  console.log(animal, "animal")
+
   // Utiliser react-query pour récupérer l'historique des rendez-vous
   const { data: appointmentsData, isLoading } = useQuery({
     queryKey: ["pet-appointments", animal.id],
     queryFn: () => getAppointmentsByPetId({ petId: animal.id }),
-    enabled: !!animal.id,
+    enabled: !!animal.id && hasFullAccess,
   })
 
   // Fonction pour basculer l'état d'expansion d'un dossier
@@ -89,11 +95,13 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
   }
 
   // Trier les rendez-vous du plus récent au plus ancien
-  const sortedAppointments = [...(appointmentsData?.data || [])].sort((a, b) => {
-    const dateA = a.slot?.start ? new Date(a.slot.start).getTime() : 0
-    const dateB = b.slot?.start ? new Date(b.slot.start).getTime() : 0
-    return dateB - dateA
-  })
+  const sortedAppointments = [...(appointmentsData?.data || [])]
+    .filter((appointment): appointment is NonNullable<typeof appointment> => appointment !== null)
+    .sort((a, b) => {
+      const dateA = a?.slot?.start ? new Date(a.slot.start).getTime() : a?.beginAt ? new Date(a.beginAt).getTime() : 0
+      const dateB = b?.slot?.start ? new Date(b.slot.start).getTime() : b?.beginAt ? new Date(b.beginAt).getTime() : 0
+      return dateB - dateA
+    })
 
   return (
     <div className="p-6 space-y-6">
@@ -106,23 +114,29 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
       >
         <div>
           <h3 className="text-lg font-medium">Dossier médical</h3>
-          <p className="text-sm text-muted-foreground">Historique des consultations</p>
+          <p className="text-sm text-muted-foreground">
+            {hasFullAccess
+              ? "Historique complet des consultations"
+              : "Accès limité à l'historique médical"}
+          </p>
         </div>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Ajouter
-          </Button>
-        </motion.div>
+        {!hasFullAccess && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button size="sm" variant="outline">
+              <LockKeyhole className="h-4 w-4 mr-2" />
+              Accès restreint
+            </Button>
+          </motion.div>
+        )}
       </motion.div>
 
-      {/* Dossiers médicaux avec animations */}
-      {!sortedAppointments.length ? (
+      {/* Message d'accès restreint */}
+      {!hasFullAccess && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
           <Card>
             <CardContent className="pt-6 flex flex-col items-center justify-center text-center p-8">
               <motion.div
-                className="rounded-full bg-primary/10 p-3 mb-4"
+                className="rounded-full bg-amber-100 p-3 mb-4"
                 animate={{
                   scale: [1, 1.05, 1],
                 }}
@@ -132,164 +146,205 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
                   repeatType: "reverse",
                 }}
               >
-                <HeartPulse className="h-6 w-6 text-primary" />
+                <LockKeyhole className="h-6 w-6 text-amber-600" />
               </motion.div>
-              <h3 className="font-medium mb-2">Aucun dossier médical</h3>
+              <h3 className="font-medium mb-2">Accès restreint</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Aucun historique médical n&apos;a encore été enregistré pour {animal.name}.
+                Vous n'avez pas les autorisations nécessaires pour accéder à l'historique médical complet de {animal.name}.
+                Seuls les vétérinaires et administrateurs peuvent consulter ces informations.
               </p>
             </CardContent>
           </Card>
         </motion.div>
-      ) : (
-        <motion.div
-          className="space-y-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {sortedAppointments.map((appointment, index) => {
-            const isExpanded = expandedRecords[appointment.id] || false
-            const serviceName = appointment.service?.name || "Consultation"
-            const serviceIcon = getServiceIcon(serviceName)
-            const serviceBgColor = getServiceBgColor(serviceName)
-            const appointmentDate = appointment.slot?.start
-              ? new Date(appointment.slot.start)
-              : appointment.beginAt
-                ? new Date(appointment.beginAt)
-                : new Date()
+      )}
 
-            return (
-              <motion.div
-                key={appointment.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.3 }}
-                className="border p-4 rounded-lg hover:shadow-sm transition-shadow duration-200"
-              >
-                {/* En-tête de la carte */}
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleExpand(appointment.id)}>
+      {/* Dossiers médicaux avec animations */}
+      {hasFullAccess && (
+        <>
+          {!sortedAppointments.length ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+              <Card>
+                <CardContent className="pt-6 flex flex-col items-center justify-center text-center p-8">
                   <motion.div
-                    className={`h-8 w-8 rounded-full flex items-center justify-center ${serviceBgColor}`}
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
+                    className="rounded-full bg-primary/10 p-3 mb-4"
+                    animate={{
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
                   >
-                    {serviceIcon}
+                    <HeartPulse className="h-6 w-6 text-primary" />
                   </motion.div>
-                  <div className="flex-1">
-                    <h4 className="font-medium">{serviceName}</h4>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>
-                        {appointmentDate.toLocaleDateString("fr-FR", {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  <Badge className="mr-2" variant="outline">
-                    {appointment.status}
-                  </Badge>
-                  <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  </motion.div>
-                </div>
+                  <h3 className="font-medium mb-2">Aucun dossier médical</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Aucun historique médical n&apos;a encore été enregistré pour {animal.name}.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ) : (
+            <motion.div
+              className="space-y-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {sortedAppointments.map((appointment, index) => {
+                if (!appointment) return null
 
-                {/* Description */}
-                <div className="text-sm my-2 text-muted-foreground">
-                  {appointment.service?.description || `Rendez-vous de ${serviceName}`}
-                </div>
+                const isExpanded = expandedRecords[appointment.id] || false
+                const serviceName = appointment.service?.name || "Consultation"
+                const serviceIcon = getServiceIcon(serviceName)
+                const serviceBgColor = getServiceBgColor(serviceName)
+                const appointmentDate = appointment.slot?.start
+                  ? new Date(appointment.slot.start)
+                  : appointment.beginAt
+                    ? new Date(appointment.beginAt)
+                    : new Date()
 
-                {/* Contenu extensible */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0, overflow: "hidden" }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="border-t pt-3 mt-2">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
-                          {/* Détails du rendez-vous */}
-                          <div className="rounded-md border p-3 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
-                            <h5 className="text-xs font-medium mb-2">Détails du rendez-vous</h5>
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-muted-foreground">Date :</span>
-                              <span>
-                                {appointmentDate.toLocaleDateString("fr-FR", {
-                                  day: "numeric",
-                                  month: "long",
-                                  year: "numeric",
-                                })}
-                              </span>
-                            </div>
-                            {appointment.service?.duration && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Durée :</span>
-                                <span>{appointment.service.duration} minutes</span>
-                              </div>
-                            )}
-                            {appointment.slot?.start && appointment.slot?.end && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Horaire :</span>
-                                <span>
-                                  {new Date(appointment.slot.start).toLocaleTimeString("fr-FR", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}{" "}
-                                  -{" "}
-                                  {new Date(appointment.slot.end).toLocaleTimeString("fr-FR", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
-                              </div>
-                            )}
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-muted-foreground">À domicile :</span>
-                              <span>{appointment.atHome ? "Oui" : "Non"}</span>
-                            </div>
-                          </div>
-
-                          {/* Options et prix */}
-                          <div className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors duration-200">
-                            <h5 className="text-xs font-medium mb-2">Service et options</h5>
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-muted-foreground">Service :</span>
-                              <span>{serviceName}</span>
-                            </div>
-                            {appointment.service?.price && (
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="text-muted-foreground">Prix de base :</span>
-                                <span>{appointment.service.price} €</span>
-                              </div>
-                            )}
-                            {appointment.options && appointment.options.length > 0 && (
-                              <div className="mt-2">
-                                <span className="text-xs font-medium">Options incluses :</span>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {appointment.options.map((opt, i) => (
-                                    <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-                                      <Badge variant="outline" className="text-xs">
-                                        {opt.option.title}
-                                      </Badge>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
+                return (
+                  <motion.div
+                    key={appointment.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                    className="border p-4 rounded-lg hover:shadow-sm transition-shadow duration-200"
+                  >
+                    {/* En-tête de la carte */}
+                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleExpand(appointment.id)}>
+                      <motion.div
+                        className={`h-8 w-8 rounded-full flex items-center justify-center ${serviceBgColor}`}
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {serviceIcon}
+                      </motion.div>
+                      <div className="flex-1">
+                        <h4 className="font-medium">{serviceName}</h4>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <span>
+                            {appointmentDate.toLocaleDateString("fr-FR", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </span>
                         </div>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            )
-          })}
-        </motion.div>
+                      <Badge className="mr-2" variant="outline">
+                        {appointment.status}
+                      </Badge>
+                      <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      </motion.div>
+                    </div>
+
+                    {/* Description */}
+                    <div className="text-sm my-2 text-muted-foreground">
+                      {`Rendez-vous de ${serviceName}`}
+                    </div>
+
+                    {/* Contenu extensible */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0, overflow: "hidden" }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="border-t pt-3 mt-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+                              {/* Détails du rendez-vous */}
+                              <div className="rounded-md border p-3 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
+                                <h5 className="text-xs font-medium mb-2">Détails du rendez-vous</h5>
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span className="text-muted-foreground">Date :</span>
+                                  <span>
+                                    {appointmentDate.toLocaleDateString("fr-FR", {
+                                      day: "numeric",
+                                      month: "long",
+                                      year: "numeric",
+                                    })}
+                                  </span>
+                                </div>
+                                {appointment.service?.duration && (
+                                  <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-muted-foreground">Durée :</span>
+                                    <span>{appointment.service.duration} minutes</span>
+                                  </div>
+                                )}
+                                {appointment.slot?.start && appointment.slot?.end && (
+                                  <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-muted-foreground">Horaire :</span>
+                                    <span>
+                                      {new Date(appointment.slot.start).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}{" "}
+                                      -{" "}
+                                      {new Date(appointment.slot.end).toLocaleTimeString("fr-FR", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span className="text-muted-foreground">À domicile :</span>
+                                  <span>{appointment.atHome ? "Oui" : "Non"}</span>
+                                </div>
+                              </div>
+
+                              {/* Options et prix */}
+                              <div className="rounded-md border p-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors duration-200">
+                                <h5 className="text-xs font-medium mb-2">Service et options</h5>
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span className="text-muted-foreground">Service :</span>
+                                  <span>{serviceName}</span>
+                                </div>
+                                {appointment.service?.price && (
+                                  <div className="flex justify-between text-xs mb-1">
+                                    <span className="text-muted-foreground">Prix de base :</span>
+                                    <span>{appointment.service.price} €</span>
+                                  </div>
+                                )}
+                                {appointment.options && appointment.options.length > 0 && (
+                                  <div className="mt-2">
+                                    <span className="text-xs font-medium">Options incluses :</span>
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {appointment.options
+                                        .filter((opt): opt is NonNullable<typeof opt> & { option: { title: string } } =>
+                                          opt !== null &&
+                                          opt.option !== null &&
+                                          typeof opt.option === 'object' &&
+                                          'title' in opt.option
+                                        )
+                                        .map((opt, i) => (
+                                          <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+                                            <Badge variant="outline" className="text-xs">
+                                              {opt.option.title}
+                                            </Badge>
+                                          </motion.div>
+                                        ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+          )}
+        </>
       )}
 
       {/* Informations importantes simplifiées avec animation */}
@@ -326,7 +381,7 @@ export const MedicalTab = ({ animal, nextAppointmentClient, nextAppointmentData 
           </motion.svg>
           Allergies et informations importantes
         </h4>
-        {animal.allergies == null || animal.deseases == null || animal.intolerences == null ? (
+        {animal.allergies?.length! < 1 || animal.deseases?.length! < 1 || animal.intolerences?.length! < 1 ? (
           <p className="text-sm text-muted-foreground">
             Aucune allergie connue ou information critique n&apos;a été enregistrée pour {animal.name}.
           </p>

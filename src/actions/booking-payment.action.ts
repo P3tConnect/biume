@@ -1,15 +1,7 @@
 "use server"
 
 import { ActionError, createServerAction, requireAuth } from "../lib"
-import {
-  SelectOrganizationSlotsSchema,
-  ServiceSchema,
-  appointments,
-  options,
-  organization,
-  service,
-  transaction,
-} from "../db"
+import { appointments, options, organization, service, transaction } from "../db"
 import { eq, inArray } from "drizzle-orm"
 
 import { db } from "../lib"
@@ -51,7 +43,7 @@ export const createBookingCheckoutSession = createServerAction(
       const stripeIntentId = `cs_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
 
       // Créer une transaction dans la base de données
-      const newTransaction = await db
+      const [newTransaction] = await db
         .insert(transaction)
         .values({
           intentId: stripeIntentId,
@@ -63,11 +55,11 @@ export const createBookingCheckoutSession = createServerAction(
         })
         .returning()
 
-      if (!newTransaction || newTransaction.length === 0) {
+      if (!newTransaction) {
         throw new ActionError("Impossible de créer la transaction")
       }
 
-      const transactionId = newTransaction[0].id
+      const transactionId = newTransaction.id
 
       // Formatage des options sélectionnées pour les métadonnées
       const selectedOptionsJson = input.selectedOptions ? JSON.stringify(input.selectedOptions) : "[]"

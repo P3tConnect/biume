@@ -39,21 +39,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
 import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
 import { User } from "@/src/db"
-
-// Type pour nos données client
-// type Client = {
-//   id: string;
-//   name: string;
-//   email: string;
-//   phoneNumber: string;
-//   city: string;
-//   country: string;
-//   createdAt: string;
-//   status: "Active" | "Inactive";
-// };
-
-// Fake client data
-// const clients: Client[] = [...]
+import { format } from "date-fns"
 
 const ClientMetricsComponent = () => {
   // Utiliser useQuery pour récupérer les métriques des clients
@@ -99,50 +85,76 @@ const ClientMetricsComponent = () => {
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="rounded-xl">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Card className="relative overflow-hidden rounded-xl transition-all hover:shadow-lg hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent dark:from-blue-900/20" />
+        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
           <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            <CountAnimation value={metrics?.totalClients ?? 0} />
+          <div className="rounded-full bg-blue-100/80 p-2 dark:bg-blue-900/30">
+            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           </div>
-          <p className="text-xs text-muted-foreground">+2.5% from last month</p>
+        </CardHeader>
+        <CardContent className="relative">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold tracking-tight">
+              <CountAnimation value={metrics?.totalClients ?? 0} />
+            </div>
+            <span className="text-xs font-medium text-green-600 dark:text-green-400">+2.5%</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">Comparé au mois dernier</p>
         </CardContent>
       </Card>
-      <Card className="rounded-xl">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
-          <UserPlus className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            <CountAnimation value={metrics?.activeClients ?? 0} />
+      <Card className="relative overflow-hidden rounded-xl transition-all hover:shadow-lg hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent dark:from-green-900/20" />
+        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
+          <CardTitle className="text-sm font-medium">Clients Actifs</CardTitle>
+          <div className="rounded-full bg-green-100/80 p-2 dark:bg-green-900/30">
+            <UserPlus className="h-4 w-4 text-green-600 dark:text-green-400" />
           </div>
-          <p className="text-xs text-muted-foreground">+5.2% from last month</p>
+        </CardHeader>
+        <CardContent className="relative">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold tracking-tight">
+              <CountAnimation value={metrics?.activeClients ?? 0} />
+            </div>
+            <span className="text-xs font-medium text-green-600 dark:text-green-400">+5.2%</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">Comparé au mois dernier</p>
         </CardContent>
       </Card>
-      <Card className="rounded-xl">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">Appointments</CardTitle>
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            <CountAnimation value={metrics?.appointments ?? 0} />
+      <Card className="relative overflow-hidden rounded-xl transition-all hover:shadow-lg hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent dark:from-purple-900/20" />
+        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
+          <CardTitle className="text-sm font-medium">Rendez-vous</CardTitle>
+          <div className="rounded-full bg-purple-100/80 p-2 dark:bg-purple-900/30">
+            <Calendar className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           </div>
-          <p className="text-xs text-muted-foreground">+12.3% from last month</p>
+        </CardHeader>
+        <CardContent className="relative">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold tracking-tight">
+              <CountAnimation value={metrics?.appointments ?? 0} />
+            </div>
+            <span className="text-xs font-medium text-green-600 dark:text-green-400">+12.3%</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">Comparé au mois dernier</p>
         </CardContent>
       </Card>
-      <Card className="rounded-xl">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
-          <Star className="h-4 w-4 text-muted-foreground" />
+      <Card className="relative overflow-hidden rounded-xl transition-all hover:shadow-lg hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-900/20" />
+        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
+          <CardTitle className="text-sm font-medium">Note Moyenne</CardTitle>
+          <div className="rounded-full bg-amber-100/80 p-2 dark:bg-amber-900/30">
+            <Star className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{metrics?.averageRating ?? 0}</div>
-          <p className="text-xs text-muted-foreground">Based on 234 reviews</p>
+        <CardContent className="relative">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold tracking-tight">
+              {metrics?.averageRating ?? 0}
+            </div>
+            <span className="text-xs">/ 5</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">Basé sur 234 avis</p>
         </CardContent>
       </Card>
     </div>
@@ -169,16 +181,6 @@ const ClientActions = ({
           onChange={event => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Statut" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous</SelectItem>
-            <SelectItem value="Active">Actifs</SelectItem>
-            <SelectItem value="Inactive">Inactifs</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       <Sheet>
         <SheetTrigger asChild>
@@ -252,6 +254,10 @@ const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
+      },
+      cell: ({ row }) => {
+        const createdAt = row.getValue("createdAt") as string
+        return <div className="text-sm text-muted-foreground text-center">{format(createdAt, "dd/MM/yyyy")}</div>
       },
     },
     {

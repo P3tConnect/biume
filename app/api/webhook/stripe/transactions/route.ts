@@ -18,7 +18,7 @@ import {
 import { db, resend, safeConfig, stripe } from "@/src/lib"
 
 import Stripe from "stripe"
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
 import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
 
@@ -55,7 +55,6 @@ export async function POST(req: NextRequest) {
       const serviceId = metadata.serviceId
       const professionalId = metadata.professionalId
       const slotId = metadata.slotId
-      const petId = metadata.petId
       const appointmentId = metadata.appointmentId
       const clientId = metadata.clientId
       const amount = metadata.amount
@@ -70,9 +69,9 @@ export async function POST(req: NextRequest) {
           where: eq(organization.id, professionalId),
         })) as Organization
 
-        const petQuery = (await tx.query.pets.findFirst({
-          where: eq(pets.id, petId),
-        })) as Pet
+        const petQuery = (await tx.query.pets.findMany({
+          where: inArray(pets.id, selectedPets),
+        })) as Pet[]
 
         const clientQuery = (await tx.query.user.findFirst({
           where: eq(user.id, clientId),
@@ -142,7 +141,7 @@ export async function POST(req: NextRequest) {
             subject: "Vous avez une nouvelle réservation",
             react: NewReservationEmailPro({
               customerName: clientQuery.name || "",
-              petName: petQuery.name || "",
+              petName: petQuery.map(pet => pet.name).join(", "),
               serviceName: serviceQuery.name || "",
               date: slotQuery.start.toLocaleDateString("fr-FR", {
                 year: "numeric",
@@ -153,7 +152,7 @@ export async function POST(req: NextRequest) {
                 hour: "2-digit",
                 minute: "2-digit",
               }),
-              providerName: professionalQuery.name || "",
+              providerName: professionalQuery.name,
               price: amount,
             }),
           })
@@ -169,7 +168,7 @@ export async function POST(req: NextRequest) {
             subject: "Vous avez une nouvelle réservation",
             react: ReservationWaitingEmailClient({
               clientName: clientQuery.name || "",
-              petName: petQuery.name || "",
+              petName: petQuery.map(pet => pet.name).join(", "),
               serviceName: serviceQuery.name || "",
               date: slotQuery.start.toLocaleDateString("fr-FR", {
                 year: "numeric",
@@ -193,6 +192,7 @@ export async function POST(req: NextRequest) {
               .update(appointments)
               .set({
                 status: "PAYED",
+                updated: new Date(),
               })
               .where(eq(appointments.id, appointmentId))
 
@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
                 .where(eq(organizationSlots.id, slotId))
             }
 
-            await db
+            await tx
               .update(transaction)
               .set({
                 status: "COMPLETED",

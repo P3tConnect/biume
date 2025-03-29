@@ -21,20 +21,20 @@ const geist = GeistSans
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale()
 
-  const t = await getTranslations({ namespace: "metadata" })
+  const t = await getTranslations({ namespace: "metadata", locale })
 
   return {
     title: "Biume",
     metadataBase: new URL(`${safeConfig.NEXT_PUBLIC_APP_URL}`),
     description: t("description"),
     icons: {
-      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/favicon.ico`,
-      apple: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/apple-touch-icon.png`,
+      icon: `${safeConfig.NEXT_PUBLIC_APP_URL}/favicon.ico`,
+      apple: `${safeConfig.NEXT_PUBLIC_APP_URL}/apple-touch-icon.png`,
     },
     appleWebApp: {
       title: "Biume",
       startupImage: {
-        url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/apple-touch-icon.png`,
+        url: `${safeConfig.NEXT_PUBLIC_APP_URL}/apple-touch-icon.png`,
       },
     },
     openGraph: {
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Biume",
       images: [
         {
-          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/assets/apple-touch-icon.png`,
+          url: `${safeConfig.NEXT_PUBLIC_APP_URL}/apple-touch-icon.png`,
           width: 1200,
           height: 630,
           alt: "Biume",
@@ -56,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Biume",
       description: t("description"),
-      images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/assets/apple-touch-icon.png`],
+      images: [`${safeConfig.NEXT_PUBLIC_APP_URL}/apple-touch-icon.png`],
     },
     applicationName: "Biume",
     authors: [
@@ -108,6 +108,10 @@ export async function generateMetadata(): Promise<Metadata> {
       t("keywords.keyword28"),
       t("keywords.keyword29"),
       t("keywords.keyword30"),
+      t("keywords.keyword31"),
+      t("keywords.keyword32"),
+      t("keywords.keyword33"),
+      t("keywords.keyword34"),
     ],
   }
 }

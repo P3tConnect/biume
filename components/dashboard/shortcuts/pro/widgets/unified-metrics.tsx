@@ -92,9 +92,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
+  const [credenzaOpen, setCredenzaOpen] = useState(false);
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null)
+  const [selectedPetId, setSelectedPetId] = useState<string>("")
 
   const { data: organization } = useQuery({
     queryKey: ["currentOrganization"],
@@ -415,9 +416,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -449,9 +449,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -483,9 +482,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -517,9 +515,8 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${
-                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -572,9 +569,9 @@ export const UnifiedMetrics = () => {
               <div className="text-2xl font-semibold">
                 {isLoadingInvoices ? (
                   <Skeleton className="h-8 w-24" />
-                ) : invoiceMetrics?.data?.totalRevenue ? (
+                ) : invoiceMetrics?.totalRevenue ? (
                   <span>
-                    <CountAnimation value={invoiceMetrics.data.totalRevenue} />
+                    <CountAnimation value={invoiceMetrics.totalRevenue} />
                     <span className="text-muted-foreground ml-1">€</span>
                   </span>
                 ) : (
@@ -614,6 +611,7 @@ export const UnifiedMetrics = () => {
                       className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-2 border-background hover:scale-105 transition-transform cursor-pointer relative z-10 hover:z-20"
                       onClick={e => {
                         e.stopPropagation()
+                        setCredenzaOpen(true)
                         setSelectedPetId(pet.id)
                       }}
                     >
@@ -674,9 +672,12 @@ export const UnifiedMetrics = () => {
       {selectedPetId && (
         <AnimalCredenza
           key={selectedPetId}
-          isOpen={!!selectedPetId}
+          isOpen={credenzaOpen && selectedPetId !== ""}
           onOpenChange={open => {
-            if (!open) setSelectedPetId(null)
+            if (!open) {
+              setCredenzaOpen(false)
+              setSelectedPetId("")
+            }
           }}
           petId={selectedPetId}
         />

@@ -402,51 +402,86 @@ export function BookingCard({ organization }: { organization: Organization }) {
 
       {/* Modale de connexion */}
       <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
-        <CredenzaContent className="sm:max-w-[450px]">
-          <CredenzaHeader>
-            <CredenzaTitle>Connexion requise</CredenzaTitle>
-            <CredenzaDescription>Veuillez vous connecter pour continuer votre réservation</CredenzaDescription>
+        <CredenzaContent className="sm:max-w-[500px]">
+          <CredenzaHeader className="space-y-3 pb-4">
+            <CredenzaTitle className="text-2xl font-semibold tracking-tight">Connexion requise</CredenzaTitle>
+            <CredenzaDescription className="text-base text-muted-foreground">
+              Veuillez vous connecter pour continuer votre réservation
+            </CredenzaDescription>
           </CredenzaHeader>
 
-          <form onSubmit={onLoginSubmit} className="py-4 space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input id="email" type="email" placeholder="votre@email.com" {...register("email")} />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium">
-                  Mot de passe
+          <form onSubmit={onLoginSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Adresse email
                 </label>
-                <Link href="/forgot-password" className="text-xs text-primary hover:underline">
-                  Mot de passe oublié ?
-                </Link>
+                <Input id="email" type="email" placeholder="nom@exemple.fr" className="w-full" {...register("email")} />
               </div>
-              <Input id="password" type="password" placeholder="********" {...register("password")} />
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Mot de passe
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-primary hover:text-primary/80 hover:underline transition-colors"
+                  >
+                    Mot de passe oublié ?
+                  </Link>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full"
+                  {...register("password")}
+                />
+              </div>
             </div>
 
-            <CredenzaFooter className="px-0 pt-2">
-              <div className="flex w-full justify-between">
-                <Button variant="outline" onClick={() => setIsLoginModalOpen(false)}>
-                  Annuler
-                </Button>
-                <Button type="submit" disabled={loginLoading}>
-                  {loginLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-                  {loginLoading ? "Connexion..." : "Se connecter"}
+            <div className="flex flex-col space-y-4 px-0 pt-2">
+              <div className="flex w-full justify-between gap-4">
+                <Button type="submit" disabled={loginLoading} className="w-full">
+                  {loginLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Connexion...
+                    </>
+                  ) : (
+                    "Se connecter"
+                  )}
                 </Button>
               </div>
-              <div className="w-full text-center mt-4">
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Ou</span>
+                </div>
+              </div>
+
+              <div className="text-center">
                 <p className="text-sm text-muted-foreground">
                   Vous n&apos;avez pas de compte ?{" "}
-                  <Link href="/sign-up" className="text-primary hover:underline">
+                  <Link
+                    href="/sign-up"
+                    className="text-primary hover:text-primary/80 hover:underline transition-colors font-medium"
+                  >
                     Inscrivez-vous
                   </Link>
                 </p>
               </div>
-            </CredenzaFooter>
+            </div>
           </form>
         </CredenzaContent>
       </Credenza>
