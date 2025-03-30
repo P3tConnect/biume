@@ -203,7 +203,7 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
       <Collapsible defaultOpen={menu.active}>
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
-            <SidebarMenuButton isActive={menu.active}>
+            <SidebarMenuButton className="group" isActive={menu.active}>
               {menu.icon && <menu.icon className="h-4 w-4" />}
               <span>{t(menu.label)}</span>
               <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />

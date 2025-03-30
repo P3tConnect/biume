@@ -1,77 +1,19 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getSortedRowModel,
-  SortingState,
-} from "@tanstack/react-table"
+import { Search, User } from "lucide-react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowUpDown } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-type Client = {
-  id: string
-  name: string
-  email: string
-  phoneNumber: string | null
-  image: string | null
-  createdAt: Date
-}
-
-const columns: ColumnDef<Client>[] = [
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Nom
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src={row.original.image || undefined} />
-            <AvatarFallback>{row.original.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          {row.original.name}
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "phoneNumber",
-    header: "Téléphone",
-    cell: ({ row }) => row.original.phoneNumber || "Non renseigné",
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Date d'inscription
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString("fr-FR"),
-  },
-]
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
+import { ClientItem, type Client } from "./client-item"
+import { ClientDialog } from "./client-dialog"
 
 export default function ClientsList() {
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [search, setSearch] = useState("")
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const { data: clients = [], isLoading } = useQuery<Client[]>({
     queryKey: ["clients"],
@@ -84,53 +26,74 @@ export default function ClientsList() {
     },
   })
 
-  const table = useReactTable({
-    data: clients,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting,
-    },
-  })
+  const filteredClients = clients.filter(client =>
+    client.name.toLowerCase().includes(search.toLowerCase()) ||
+    (client.email && client.email.toLowerCase().includes(search.toLowerCase())) ||
+    (client.phoneNumber && client.phoneNumber.includes(search))
+  )
 
   if (isLoading) {
-    return <div>Chargement...</div>
+    return (
+      <div className="space-y-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-[120px] w-full" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (!clients.length) {
+    return (
+      <Card className="border shadow-sm p-8">
+        <div className="text-center text-muted-foreground">
+          <User className="h-12 w-12 mx-auto mb-3 opacity-20" />
+          <p className="mb-2">Aucun client trouvé</p>
+          <p className="text-sm max-w-md mx-auto mb-4">
+            Vos clients apparaîtront ici une fois ajoutés.
+          </p>
+        </div>
+      </Card>
+    )
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <TableHeader key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHeader>
-              ))}
-            </TableRow>
+    <div className="space-y-2 dark:space-y-3">
+      <div className="relative mx-2">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Rechercher un client..."
+          className="pl-9"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
+      <ScrollArea className="h-[calc(100vh-300px)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pl-2 pb-4">
+          {filteredClients.map(client => (
+            <ClientItem
+              key={client.id}
+              client={client}
+              onClick={() => {
+                setSelectedClient(client)
+                setIsDialogOpen(true)
+              }}
+            />
           ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map(row => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                Aucun client trouvé.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+        </div>
+      </ScrollArea>
+
+      <ClientDialog
+        client={selectedClient}
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
     </div>
   )
 }

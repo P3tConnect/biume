@@ -83,10 +83,10 @@ export const ProfileSection = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <ProfileCoverSection org={org?.data} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5 w-full">
         <div className="md:col-span-2 space-y-6">
           <ProfileMainInfoSection org={org?.data} />
           <ProfileLegalInfoSection org={org?.data} />
