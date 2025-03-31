@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { Observation, anatomicalRegions } from "./types"
-import { cn } from "@/lib/utils"
+import { cn } from "@/src/lib"
 
 interface ReportPreviewProps {
   isOpen: boolean

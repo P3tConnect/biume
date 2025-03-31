@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ClipboardList, PenLine } from "lucide-react"
 import Link from "next/link"
 
-import { SimpleReportBuilder } from "@/components/reports-editor/reports/simple-report-builder"
-import { AdvancedReportBuilder } from "@/components/reports-editor/reports/advanced-report-builder"
+import { SimpleReportBuilder } from "@/components/reports-module/reports/simple-report-builder"
+import { AdvancedReportBuilder } from "@/components/reports-module/reports/advanced-report-builder"
 
 export default function ReportsBuilderPage() {
   const params = useParams<{ orgId: string }>()

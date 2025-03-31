@@ -7,7 +7,7 @@ import { ModeToggle } from "../mode-toggle"
 import { SidebarTrigger, useSidebar } from "@/components/ui"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/src/lib"
 import Notifications from "../notifications"
 
 type DashboardHeaderProps = {

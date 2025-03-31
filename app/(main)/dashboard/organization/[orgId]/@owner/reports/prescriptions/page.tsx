@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Upload, FileText, ChevronLeft } from "lucide-react"
 import Link from "next/link"
 
-import { PrescriptionUploader } from "@/components/reports-editor/prescriptions/prescription-uploader"
-import { PrescriptionBuilder } from "@/components/reports-editor/prescriptions/prescription-builder"
+import { PrescriptionUploader } from "@/components/reports-module/prescriptions/prescription-uploader"
+import { PrescriptionBuilder } from "@/components/reports-module/prescriptions/prescription-builder"
 
 export default function PrescriptionsPage() {
   const params = useParams<{ orgId: string }>()
