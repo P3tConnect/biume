@@ -82,12 +82,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               active: pathname === `/dashboard/organization/${companyId}/accounting/invoices`,
               icon: Receipt,
             },
-            {
-              href: `/dashboard/organization/${companyId}/accounting/expenses`,
-              label: "dashboard.sidebar.expenses",
-              active: pathname === `/dashboard/organization/${companyId}/accounting/expenses`,
-              icon: DollarSignIcon,
-            },
           ],
         },
         {
@@ -112,19 +106,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           label: "dashboard.sidebar.reports",
           active: pathname == `/dashboard/organization/${companyId}/reports`,
           icon: NotepadText,
-        },
-        {
-          href: `/dashboard/organization/${companyId}/observations`,
-          label: "dashboard.sidebar.observations",
-          comingSoon: true,
-          active: pathname == `/dashboard/organization/${companyId}/observations`,
-          icon: Eye,
-        },
-        {
-          href: `/dashboard/organization/${companyId}/reminders`,
-          label: "dashboard.sidebar.reminders",
-          active: pathname == `/dashboard/organization/${companyId}/reminders`,
-          icon: Timer,
         },
       ],
     },

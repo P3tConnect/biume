@@ -1,33 +1,8 @@
 import { usePathname, useRouter } from "next/navigation"
 import Image from "next/image"
-import {
-  getSession,
-  organization,
-  useActiveOrganization,
-} from "@/src/lib/auth-client"
+import { getSession, organization, useActiveOrganization } from "@/src/lib/auth-client"
 import { proMenuList } from "@/src/config/menu-list"
-import {
-  Building,
-  Home,
-  Activity,
-  Info,
-  DollarSign,
-  Users,
-  Cog,
-  Headphones,
-  Bell,
-  ClipboardList,
-  Book,
-  Command,
-  Search,
-  User,
-  AlertCircle,
-  ChevronDown,
-  Check,
-  Plus,
-  ChevronsUpDown,
-  ChevronRight,
-} from "lucide-react"
+import { Building, Cog, User, AlertCircle, Check, Plus, ChevronsUpDown, ChevronRight } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -60,8 +35,8 @@ import { AccountSwitchDialog } from "../account-switch-dialog"
 import { toast } from "sonner"
 import { getAllOrganizationsByUserId } from "@/src/actions/organization.action"
 import { useQueries } from "@tanstack/react-query"
-import { Credenza, CredenzaContent, CredenzaTrigger } from "@/components/ui/credenza"
-import { CommandDialog } from "@/components/command/command-dialog"
+import { Credenza, CredenzaContent } from "@/components/ui/credenza"
+import { CommandDialog } from "@/components/common/command/command-dialog"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import Stepper from "@/components/onboarding/components/stepper"
 
