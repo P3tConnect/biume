@@ -120,7 +120,7 @@ export function FeaturesSection() {
             Tout ce dont vous avez besoin pour votre activité
           </h2>
           <p className="text-muted-foreground">
-            Une suite complète d'outils pour gérer et développer votre pratique professionnelle
+            Une suite complète d&apos;outils pour gérer et développer votre pratique professionnelle
           </p>
         </motion.div>
 
