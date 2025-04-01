@@ -32,7 +32,7 @@ import { ClientDetails } from "./client-details"
 import { ClientForm } from "./client-form"
 import { ClientMetrics } from "@/src/types/client"
 import ClientsHeader from "./clients-header"
-import { CountAnimation } from "@/components/count-animation"
+import { CountAnimation } from "@/components/common/count-animation"
 import { Input } from "@/components/ui/input"
 import React, { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
@@ -149,9 +149,7 @@ const ClientMetricsComponent = () => {
         </CardHeader>
         <CardContent className="relative">
           <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold tracking-tight">
-              {metrics?.averageRating ?? 0}
-            </div>
+            <div className="text-3xl font-bold tracking-tight">{metrics?.averageRating ?? 0}</div>
             <span className="text-xs">/ 5</span>
           </div>
           <p className="text-xs text-muted-foreground mt-2">Basé sur 234 avis</p>

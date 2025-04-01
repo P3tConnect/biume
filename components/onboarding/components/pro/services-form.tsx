@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { Clock, Euro, Loader2, Plus, Users, X } from "lucide-react"
+import { Clock, Euro, Home, Loader2, Plus, Users, X } from "lucide-react"
 import Image from "next/image"
 import React, { useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
@@ -72,6 +72,8 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     price: 0,
                     image: "",
                     type: "ONE_TO_ONE",
+                    atHome: false,
+                    places: 1,
                   })
                 }
                 className="flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
@@ -223,24 +225,75 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     />
                   </div>
 
-                  <FormField
-                    control={control}
-                    name={`services.${index}.type`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-                        <div className="flex items-center space-x-2">
-                          <Users className="h-4 w-4 text-gray-500" />
-                          <FormLabel className="text-sm font-normal">Accueille plusieurs animaux</FormLabel>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value === "MULTIPLE"}
-                            onCheckedChange={val => field.onChange(val ? "MULTIPLE" : "ONE_TO_ONE")}
-                          />
-                        </FormControl>
-                      </FormItem>
+                  <div className="space-y-4">
+                    <FormField
+                      control={control}
+                      name={`services.${index}.atHome`}
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                          <div className="flex items-center space-x-2">
+                            <Home className="h-4 w-4 text-gray-500" />
+                            <FormLabel className="text-sm font-normal">Service à domicile</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={control}
+                      name={`services.${index}.type`}
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                          <div className="flex items-center space-x-2">
+                            <Users className="h-4 w-4 text-gray-500" />
+                            <FormLabel className="text-sm font-normal">Accueille plusieurs animaux</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value === "MULTIPLE"}
+                              onCheckedChange={val => {
+                                field.onChange(val ? "MULTIPLE" : "ONE_TO_ONE")
+                                // Reset capacity to 1 if switching to ONE_TO_ONE
+                                if (!val) {
+                                  form.setValue(`services.${index}.places`, 1)
+                                }
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    {form.watch(`services.${index}.type`) === "MULTIPLE" && (
+                      <FormField
+                        control={control}
+                        name={`services.${index}.places`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex items-center gap-2 p-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+                              <Users className="h-4 w-4 text-gray-500 ml-1" />
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min="2"
+                                  placeholder="2"
+                                  className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 2)}
+                                />
+                              </FormControl>
+                              <span className="text-sm text-gray-500 mr-1">places</span>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     )}
-                  />
+                  </div>
                 </div>
 
                 {fields.length > 1 && (
@@ -268,6 +321,8 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     price: 0,
                     image: "",
                     type: "ONE_TO_ONE",
+                    atHome: false,
+                    places: 1,
                   })
                 }
                 className={cn(

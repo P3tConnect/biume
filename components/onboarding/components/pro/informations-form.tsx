@@ -51,7 +51,6 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
       logo: "",
       description: "",
       companyType: "OTHER",
-      atHome: false,
     },
   })
 
@@ -252,22 +251,6 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
                             <SelectItem value="OTHER">Autre</SelectItem>
                           </SelectContent>
                         </Select>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={control}
-                    name="atHome"
-                    render={({ field }) => (
-                      <FormItem className="flex-1 flex flex-row items-center justify-between rounded-lg border p-2.5 bg-muted/30">
-                        <div>
-                          <FormLabel className="text-sm font-medium">Prestations à domicile</FormLabel>
-                          <p className="text-xs text-muted-foreground">Proposez-vous des prestations à domicile ?</p>
-                        </div>
-                        <FormControl>
-                          <Switch checked={field.value} onCheckedChange={field.onChange} />
-                        </FormControl>
                       </FormItem>
                     )}
                   />

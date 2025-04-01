@@ -34,6 +34,7 @@ import { UserNav } from "../user-nav"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { cn } from "@/src/lib/utils"
 import { toast } from "sonner"
+import Stepper from "@/components/onboarding/components/stepper"
 
 export function ClientNavbar() {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -352,6 +353,7 @@ export function ClientNavbar() {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
+            <Stepper />
           </Credenza>
         </div>
 

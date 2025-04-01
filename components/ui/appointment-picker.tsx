@@ -16,7 +16,7 @@ interface AppointmentPickerProps {
 
 export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: AppointmentPickerProps) {
   const today = new Date()
-  const [date, setDate] = useState<Date>(today)
+  const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<string | null>(null)
   const [filteredSlots, setFilteredSlots] = useState<OrganizationSlots[]>([])
 
@@ -85,7 +85,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
     const filtered = timeSlots.filter(slot => {
       // Convertir les dates de début et de fin en objets Date
       const startDate = new Date(slot.start)
-      return isSameDay(startDate, date)
+      return isSameDay(startDate, date!)
     })
 
     setFilteredSlots(filtered)
@@ -101,7 +101,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
 
   const handleTimeChange = (timeSlot: string, slot: OrganizationSlots | null) => {
     setTime(timeSlot)
-    if (onSelectDateTime) onSelectDateTime(date, timeSlot, slot)
+    if (onSelectDateTime) onSelectDateTime(date!, timeSlot, slot)
   }
 
   // Fonction pour formater l'heure à partir d'une date
@@ -118,7 +118,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
         <div className="flex max-sm:flex-col">
           <Calendar
             mode="single"
-            selected={date}
+            selected={date ?? undefined}
             onSelect={handleDateChange}
             className="p-3 sm:pe-5 max-w-none"
             disabled={isDayDisabled}
@@ -129,7 +129,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
               <ScrollArea className="h-full sm:border-s">
                 <div className="space-y-3">
                   <div className="flex shrink-0 items-center px-5 justify-center border-b pb-2">
-                    <p className="text-base font-medium">{format(date, "EEEE d MMMM", { locale: fr })}</p>
+                    <p className="text-base font-medium">{format(date!, "EEEE d MMMM", { locale: fr })}</p>
                   </div>
                   <div className="grid gap-1.5 px-5 max-sm:grid-cols-2 pt-2">
                     {!hasSlots ? (
