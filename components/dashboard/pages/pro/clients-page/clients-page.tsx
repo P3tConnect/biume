@@ -1,7 +1,26 @@
 "use client"
 
-import { ArrowUpDown, Calendar, Loader2, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui"
+import { ArrowUpDown, Calendar, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  Badge,
+  Button,
+  Input,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,28 +31,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getClientMetrics, getClients } from "@/src/actions/client.action"
-
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Client } from "@/src/types/client"
+import { getClientMetrics } from "@/src/actions/client.action"
 import { ClientDetails } from "./client-details"
 import { ClientForm } from "./client-form"
 import { ClientMetrics } from "@/src/types/client"
 import ClientsHeader from "./clients-header"
-import { CountAnimation } from "@/components/count-animation"
-import { Input } from "@/components/ui/input"
+import { CountAnimation } from "@/components/common/count-animation"
 import React, { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
