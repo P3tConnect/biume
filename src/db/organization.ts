@@ -57,7 +57,6 @@ export const organization = pgTable("organizations", {
   closeAt: date("closeAt"),
   email: text("email").unique(),
   companyType: companyType("companyType").default("NONE"),
-  atHome: boolean("atHome").notNull().default(false),
   plan: plan("plan").default("NONE"),
   progressionId: text("progressionId").references(() => progression.id, {
     onDelete: "cascade",

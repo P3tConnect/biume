@@ -4,7 +4,6 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 import { User } from "better-auth"
-import { Appointment, appointments } from "./appointments"
 import { user } from "./user"
 import { z } from "zod"
 import { PetAppointment, petAppointments } from "./pet_appointments"

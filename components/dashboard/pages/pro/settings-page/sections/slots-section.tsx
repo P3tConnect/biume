@@ -12,6 +12,8 @@ const SlotsSection = () => {
     queryFn: () => getOrganizationSlots({}),
   })
 
+  console.log(data, "data")
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
