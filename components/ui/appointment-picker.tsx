@@ -115,7 +115,7 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <div className="flex max-sm:flex-col">
+        <div className="flex max-sm:flex-col h-full w-full justify-center items-center">
           <Calendar
             mode="single"
             selected={date ?? undefined}
@@ -151,13 +151,12 @@ export default function AppointmentPicker({ timeSlots = [], onSelectDateTime }: 
                             <span
                               className={`
                               px-2 py-0.5 rounded-full text-xs
-                              ${
-                                slot.remainingPlaces <= 2
+                              ${slot.remainingPlaces <= 2
                                   ? "bg-red-100 text-red-700"
                                   : slot.remainingPlaces <= 5
                                     ? "bg-orange-100 text-orange-700"
                                     : "bg-green-100 text-green-700"
-                              }
+                                }
                             `}
                             >
                               {slot.remainingPlaces} {slot.remainingPlaces > 1 ? "places" : "place"}
