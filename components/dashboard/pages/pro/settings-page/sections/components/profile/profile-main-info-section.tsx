@@ -27,7 +27,7 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
     values: {
       name: org?.name || "",
       email: org?.email || "",
-      website: "",
+      website: org?.website || "",
       address: org?.addressId || "",
       description: org?.description || "",
       openAt: org?.openAt || "09:00",
@@ -35,6 +35,8 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
       nac: org?.nac || "",
       siren: org?.siren || "",
       siret: org?.siret || "",
+      instagram: org?.instagram || "",
+      facebook: org?.facebook || "",
     },
   })
 
@@ -138,6 +140,36 @@ export const ProfileMainInfoSection = ({ org }: ProfileMainInfoSectionProps) => 
                     <FormLabel>Adresse</FormLabel>
                     <FormControl>
                       <Input placeholder="Entrez l'adresse" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="facebook"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Facebook</FormLabel>
+                    <FormControl>
+                      <Input placeholder="URL de votre page Facebook" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="instagram"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instagram</FormLabel>
+                    <FormControl>
+                      <Input placeholder="URL de votre page Instagram" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

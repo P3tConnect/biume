@@ -34,6 +34,8 @@ export const organizationFormSchema = z.object({
   openAt: z.string(),
   closeAt: z.string(),
   onDemand: z.boolean().optional(),
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
   nac: z.string(),
   siren: z.string().length(9, "Le numéro SIREN doit contenir 9 chiffres"),
   siret: z.string().length(14, "Le numéro SIRET doit contenir 14 chiffres"),
