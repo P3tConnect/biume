@@ -124,9 +124,6 @@ export const updateOrganizationPlan = createServerAction(
       customer: stripeCustomer ?? "",
       mode: "subscription",
       payment_method_types: ["card"],
-      payment_intent_data: {
-        setup_future_usage: "off_session",
-      },
       line_items: [
         {
           price: input.plan,
