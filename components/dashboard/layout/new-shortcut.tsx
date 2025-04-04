@@ -10,7 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -76,9 +75,6 @@ const NewShortcut = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64 p-2">
           <DropdownMenuLabel className="font-semibold px-2">Créer nouveau...</DropdownMenuLabel>
-
-          <DropdownMenuSeparator />
-
           <div className="space-y-2">
             <DropdownMenuLabel className="px-2 text-sm font-medium text-muted-foreground">
               Propriétaires & Animaux
@@ -91,12 +87,6 @@ const NewShortcut = () => {
               <Stethoscope className="h-4 w-4 text-primary" />
               <span>Patient</span>
             </MotionMenuItem>
-          </div>
-
-          <DropdownMenuSeparator className="my-2" />
-
-          <div className="space-y-2">
-            <DropdownMenuLabel className="px-2 text-sm font-medium text-muted-foreground">Agenda</DropdownMenuLabel>
             <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("appointment")}>
               <Calendar className="h-4 w-4 text-primary" />
               <span>Rendez-vous</span>
@@ -105,12 +95,6 @@ const NewShortcut = () => {
               <Clock className="h-4 w-4 text-primary" />
               <span>Nouveau créneau</span>
             </MotionMenuItem>
-          </div>
-
-          <DropdownMenuSeparator className="my-2" />
-
-          <div className="space-y-2">
-            <DropdownMenuLabel className="px-2 text-sm font-medium text-muted-foreground">Autres</DropdownMenuLabel>
             <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("document")}>
               <FileText className="h-4 w-4 text-primary" />
               <span>Document</span>

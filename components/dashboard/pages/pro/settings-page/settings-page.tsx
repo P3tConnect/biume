@@ -14,6 +14,7 @@ import {
   CalendarRange,
   ScrollText,
   CreditCard,
+  Ban,
 } from "lucide-react"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -26,6 +27,7 @@ import { ProfileSection } from "./sections/profile-section"
 import { ServicesSection } from "./sections/services-section"
 import SlotsSection from "./sections/slots-section"
 import { TeamSection } from "./sections/team-section"
+import { CancelPoliciesSection } from "./sections/cancel-policies-section"
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -60,6 +62,7 @@ const SettingsPageComponent = () => {
         { id: "services", label: "Services", icon: <Briefcase className="h-4 w-4" /> },
         { id: "options", label: "Options", icon: <Settings className="h-4 w-4" /> },
         { id: "slots", label: "Créneaux", icon: <Clock className="h-4 w-4" /> },
+        { id: "cancel-policies", label: "Politiques d'annulation", icon: <Ban className="h-4 w-4" /> },
       ],
     },
     {
@@ -110,11 +113,10 @@ const SettingsPageComponent = () => {
                           <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 py-2 px-3 text-sm rounded-md transition-colors ${
-                              activeTab === tab.id
+                            className={`flex items-center gap-2 py-2 px-3 text-sm rounded-md transition-colors ${activeTab === tab.id
                                 ? "bg-primary text-primary-foreground font-medium"
                                 : "hover:bg-primary/30"
-                            }`}
+                              }`}
                           >
                             {tab.icon}
                             {tab.label}
@@ -140,6 +142,7 @@ const SettingsPageComponent = () => {
           {activeTab === "billing" && <BillingSection />}
           {activeTab === "kyb" && <KYBSection />}
           {activeTab === "team" && <TeamSection />}
+          {activeTab === "cancel-policies" && <CancelPoliciesSection />}
         </div>
       </div>
     </div>
