@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Calendar, FileText, Plus, Stethoscope, UserPlus, MapPin, Clock } from "lucide-react"
+import { Calendar, FileText, Plus, Stethoscope, UserPlus, Clock } from "lucide-react"
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 
@@ -19,8 +19,6 @@ import AppointmentDialog from "./dialogs/AppointmentDialog/AppointmentDialog"
 import ClientDialog from "./dialogs/ClientDialog"
 import DocumentDialog from "./dialogs/DocumentDialog"
 import PatientDialog from "./dialogs/PatientDialog"
-import ReminderDialog from "./dialogs/ReminderDialog"
-import { ExceptionalMoveDialog } from "./dialogs/ExceptionalMoveDialog"
 
 const MotionMenuItem = motion(DropdownMenuItem)
 
@@ -32,8 +30,6 @@ const NewShortcut = () => {
     patient: boolean
     document: boolean
     message: boolean
-    reminder: boolean
-    exceptionalMove: boolean
     newSlot: boolean
   }>({
     client: false,
@@ -41,8 +37,6 @@ const NewShortcut = () => {
     patient: false,
     document: false,
     message: false,
-    reminder: false,
-    exceptionalMove: false,
     newSlot: false,
   })
 
@@ -53,8 +47,6 @@ const NewShortcut = () => {
       patient: false,
       document: false,
       message: false,
-      reminder: false,
-      exceptionalMove: false,
       newSlot: false,
     })
   }
@@ -113,10 +105,6 @@ const NewShortcut = () => {
               <Clock className="h-4 w-4 text-primary" />
               <span>Nouveau créneau</span>
             </MotionMenuItem>
-            <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("exceptionalMove")}>
-              <MapPin className="h-4 w-4 text-primary" />
-              <span>Déplacement exceptionnel</span>
-            </MotionMenuItem>
           </div>
 
           <DropdownMenuSeparator className="my-2" />
@@ -127,10 +115,6 @@ const NewShortcut = () => {
               <FileText className="h-4 w-4 text-primary" />
               <span>Document</span>
             </MotionMenuItem>
-            <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("reminder")}>
-              <Bell className="h-4 w-4 text-primary" />
-              <span>Rappel</span>
-            </MotionMenuItem>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -140,8 +124,6 @@ const NewShortcut = () => {
       <AppointmentDialog open={dialogOpen.appointment} onOpenChange={open => !open && closeAllDialogs()} />
       <PatientDialog open={dialogOpen.patient} onOpenChange={open => !open && closeAllDialogs()} />
       <DocumentDialog open={dialogOpen.document} onOpenChange={open => !open && closeAllDialogs()} />
-      <ReminderDialog open={dialogOpen.reminder} onOpenChange={open => !open && closeAllDialogs()} />
-      <ExceptionalMoveDialog open={dialogOpen.exceptionalMove} onOpenChange={open => !open && closeAllDialogs()} />
 
       {/* TODO: Implement these dialogs */}
       {/* <NewSlotDialog open={dialogOpen.newSlot} onOpenChange={open => !open && closeAllDialogs()} /> */}

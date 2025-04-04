@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet"
-import { NewObservation, anatomicalRegions } from "./types"
+import { NewObservation, anatomicalRegions, dysfunctionTypes, observationTypes } from "./types"
 
 interface AddObservationSheetProps {
   isOpen: boolean
@@ -34,6 +34,46 @@ export function AddObservationSheet({
         </SheetHeader>
         <div className="space-y-6 py-6">
           <div className="space-y-3">
+            <div>
+              <Label>Type d'observation</Label>
+              <Select
+                value={newObservation.type}
+                onValueChange={value => setNewObservation({ ...newObservation, type: value as any })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {observationTypes.map(type => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {newObservation.type === "dysfunction" && (
+              <div>
+                <Label>Type de dysfonction</Label>
+                <Select
+                  value={newObservation.dysfunctionType}
+                  onValueChange={value => setNewObservation({ ...newObservation, dysfunctionType: value as any })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner le type de dysfonction" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dysfunctionTypes.map(type => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div>
               <Label>Zone anatomique</Label>
               <Select
@@ -73,22 +113,34 @@ export function AddObservationSheet({
             </div>
 
             <div>
-              <Label>Observations</Label>
+              <Label>{newObservation.type === "recommendation" ? "Recommandations" : "Observations"}</Label>
               <Textarea
                 value={newObservation.notes}
                 onChange={e => setNewObservation({ ...newObservation, notes: e.target.value })}
-                placeholder="Décrivez vos observations..."
+                placeholder={
+                  newObservation.type === "recommendation"
+                    ? "Décrivez vos conseils et recommandations..."
+                    : "Décrivez vos observations..."
+                }
                 className="resize-none h-[150px]"
               />
             </div>
           </div>
         </div>
         <SheetFooter>
-          <Button className="w-full" onClick={onAdd} disabled={!newObservation.region}>
-            Ajouter l'observation
+          <Button
+            className="w-full"
+            onClick={onAdd}
+            disabled={
+              !newObservation.region ||
+              !newObservation.type ||
+              (newObservation.type === "dysfunction" && !newObservation.dysfunctionType)
+            }
+          >
+            Ajouter
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
   )
-} 
+}

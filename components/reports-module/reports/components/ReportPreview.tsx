@@ -1,9 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
-import { Observation, anatomicalRegions } from "./types"
-import { cn } from "@/src/lib"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Observation, anatomicalRegions, observationTypes, dysfunctionTypes } from "./types"
+import { Separator } from "@/components/ui/separator"
 
 interface ReportPreviewProps {
   isOpen: boolean
@@ -14,88 +15,125 @@ interface ReportPreviewProps {
   images: string[]
 }
 
-export function ReportPreview({
-  isOpen,
-  onClose,
-  title,
-  observations,
-  notes,
-  images
-}: ReportPreviewProps) {
-  if (!isOpen) return null
+export function ReportPreview({ isOpen, onClose, title, observations, notes, images }: ReportPreviewProps) {
+  // Regrouper les observations par type
+  const staticObservations = observations.filter(obs => obs.type === "staticObservation")
+  const dynamicObservations = observations.filter(obs => obs.type === "dynamicObservation")
+  const dysfunctions = observations.filter(obs => obs.type === "dysfunction")
+  const recommendations = observations.filter(obs => obs.type === "recommendation")
+
+  // Fonction utilitaire pour afficher les observations
+  const renderObservations = (obs: Observation[]) => {
+    if (obs.length === 0) return <p className="text-muted-foreground italic">Aucune observation</p>
+
+    return obs.map(observation => (
+      <div key={observation.id} className="mb-3">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${getSeverityColor(observation.severity)}`} />
+          <span className="font-medium">{anatomicalRegions.find(r => r.value === observation.region)?.label}</span>
+          {observation.type === "dysfunction" && observation.dysfunctionType && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+              {dysfunctionTypes.find(t => t.value === observation.dysfunctionType)?.label}
+            </span>
+          )}
+          <span className="text-xs text-muted-foreground">({getSeverityLabel(observation.severity)})</span>
+        </div>
+        <p className="text-sm ml-4 mt-1">{observation.notes}</p>
+      </div>
+    ))
+  }
+
+  // Fonction utilitaire pour obtenir la couleur selon la sévérité
+  const getSeverityColor = (severity: number) => {
+    switch (severity) {
+      case 1:
+        return "bg-green-500"
+      case 2:
+        return "bg-yellow-500"
+      case 3:
+        return "bg-orange-500"
+      case 4:
+        return "bg-red-500"
+      case 5:
+        return "bg-purple-500"
+      default:
+        return "bg-gray-500"
+    }
+  }
+
+  // Fonction utilitaire pour obtenir le label de sévérité
+  const getSeverityLabel = (severity: number) => {
+    switch (severity) {
+      case 1:
+        return "Légère"
+      case 2:
+        return "Modérée"
+      case 3:
+        return "Importante"
+      case 4:
+        return "Sévère"
+      case 5:
+        return "Critique"
+      default:
+        return "Inconnue"
+    }
+  }
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50">
-      <div className="fixed inset-6 bg-background rounded-lg shadow-lg border overflow-auto">
-        <div className="sticky top-0 bg-background border-b p-4 flex items-center justify-between z-10">
-          <h2 className="text-lg font-medium">Aperçu du rapport</h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+    <Dialog open={isOpen} onOpenChange={() => onClose()}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
+          <Button variant="ghost" size="icon" onClick={onClose} className="absolute right-4 top-4">
             <X className="h-4 w-4" />
           </Button>
-        </div>
-        <div className="p-6">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold">{title}</h1>
-              <p className="text-muted-foreground">
-                {new Date().toLocaleDateString('fr-FR', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </p>
-            </div>
+        </DialogHeader>
 
-            {observations.length > 0 && (
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Observations cliniques</h2>
-                {observations.map(obs => (
-                  <div key={obs.id} className="border-b pb-3">
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "w-3 h-3 rounded-full",
-                        obs.severity === 1 ? "bg-green-500" :
-                          obs.severity === 2 ? "bg-yellow-500" :
-                            obs.severity === 3 ? "bg-orange-500" :
-                              obs.severity === 4 ? "bg-red-500" :
-                                "bg-purple-500"
-                      )} />
-                      <h3 className="font-medium">
-                        {anatomicalRegions.find(r => r.value === obs.region)?.label}
-                      </h3>
-                      <span className="text-sm text-muted-foreground">
-                        (Gravité : {
-                          obs.severity === 1 ? "Légère" :
-                            obs.severity === 2 ? "Modérée" :
-                              obs.severity === 3 ? "Importante" :
-                                obs.severity === 4 ? "Sévère" :
-                                  "Critique"
-                        })
-                      </span>
-                    </div>
-                    {obs.notes && (
-                      <p className="mt-2 text-muted-foreground">{obs.notes}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {notes && (
-              <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Notes complémentaires</h2>
-                <p className="text-muted-foreground whitespace-pre-wrap">{notes}</p>
-              </div>
-            )}
-
-            <div className="border-t pt-6">
-              <p className="font-medium">Dr. Vétérinaire</p>
-              <p className="text-sm text-muted-foreground">Signature</p>
-            </div>
+        <div className="space-y-6 py-4">
+          {/* Observations statiques */}
+          <div>
+            <h3 className="text-lg font-medium mb-2">
+              {observationTypes.find(t => t.value === "staticObservation")?.label}
+            </h3>
+            <Separator className="mb-3" />
+            {renderObservations(staticObservations)}
           </div>
+
+          {/* Observations dynamiques */}
+          <div>
+            <h3 className="text-lg font-medium mb-2">
+              {observationTypes.find(t => t.value === "dynamicObservation")?.label}
+            </h3>
+            <Separator className="mb-3" />
+            {renderObservations(dynamicObservations)}
+          </div>
+
+          {/* Dysfonctions */}
+          <div>
+            <h3 className="text-lg font-medium mb-2">{observationTypes.find(t => t.value === "dysfunction")?.label}</h3>
+            <Separator className="mb-3" />
+            {renderObservations(dysfunctions)}
+          </div>
+
+          {/* Conseils et recommandations */}
+          <div>
+            <h3 className="text-lg font-medium mb-2">
+              {observationTypes.find(t => t.value === "recommendation")?.label}
+            </h3>
+            <Separator className="mb-3" />
+            {renderObservations(recommendations)}
+          </div>
+
+          {/* Notes générales */}
+          {notes && (
+            <div>
+              <h3 className="text-lg font-medium mb-2">Notes générales</h3>
+              <Separator className="mb-3" />
+              <p className="whitespace-pre-wrap">{notes}</p>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
-} 
+}

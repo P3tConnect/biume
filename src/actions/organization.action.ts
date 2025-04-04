@@ -260,8 +260,9 @@ export const updateOrganization = createServerAction(
         siren: input.siren,
         onDemand: input.onDemand,
         siret: input.siret,
+        onBoardingComplete: input.onBoardingComplete,
       })
-      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .where(eq(organizationTable.id, ctx.organization?.id || ""))
       .returning()
       .execute()
 
@@ -273,7 +274,7 @@ export const updateOrganization = createServerAction(
 
     return data as Organization
   },
-  [requireAuth, requireOwner]
+  [requireAuth, requireFullOrganization]
 )
 
 export const updateOrganizationOnDemand = createServerAction(
@@ -362,7 +363,7 @@ export const addImagesToOrganization = createServerAction(
     const data = await db
       .insert(organizationImages)
       .values(
-        input.images.map(image => ({
+        input.images.map((image: { name: string; url: string }) => ({
           organizationId: ctx.organization?.id,
           name: image.name,
           imageUrl: image.url,

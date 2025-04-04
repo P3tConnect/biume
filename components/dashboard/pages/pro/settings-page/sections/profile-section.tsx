@@ -47,6 +47,7 @@ export const organizationUpdateFormSchema = z.object({
   website: z.string().url().optional(),
   address: z.string().min(5, "Veuillez entrer une adresse valide").optional(),
   description: z.string().min(10, "La description doit contenir au moins 10 caractères").optional(),
+  onBoardingComplete: z.boolean().optional(),
   logo: z
     .any()
     .refine(file => !file || (file instanceof File && file.size <= MAX_FILE_SIZE), {

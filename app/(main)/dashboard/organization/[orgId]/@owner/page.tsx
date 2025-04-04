@@ -5,6 +5,7 @@ import { DashboardTabs } from "@/components/dashboard/shortcuts/pro/dashboard-ta
 import { UnifiedMetrics } from "@/components/dashboard/shortcuts/pro/widgets/unified-metrics"
 import { StripeSetupCard } from "@/components/dashboard/shortcuts/pro/stripe-setup-card"
 import NonPayedSubscription from "@/components/dashboard/shortcuts/pro/non-payed-subscription"
+import { OnboardingExplications } from "@/components/dashboard/layout/onboarding-explications"
 
 export const metadata: Metadata = {
   title: "Tableau de bord",
@@ -35,6 +36,7 @@ const DashboardHomeProPage = () => {
           <DashboardTabs />
         </div>
       </div>
+      <OnboardingExplications />
     </div>
   )
 }

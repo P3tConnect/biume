@@ -9,27 +9,23 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ClientItem, type Client } from "./client-item"
 import { ClientDialog } from "./client-dialog"
+import { getClients } from "@/src/actions/client.action"
 
 export default function ClientsList() {
   const [search, setSearch] = useState("")
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const { data: clients = [], isLoading } = useQuery<Client[]>({
+  const { data: clients, isLoading } = useQuery({
     queryKey: ["clients"],
-    queryFn: async () => {
-      const response = await fetch("/api/clients")
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des clients")
-      }
-      return response.json()
-    },
+    queryFn: () => getClients({}),
   })
 
-  const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(search.toLowerCase()) ||
-    (client.email && client.email.toLowerCase().includes(search.toLowerCase())) ||
-    (client.phoneNumber && client.phoneNumber.includes(search))
+  const filteredClients = clients?.data?.filter(
+    client =>
+      client.name.toLowerCase().includes(search.toLowerCase()) ||
+      (client.email && client.email.toLowerCase().includes(search.toLowerCase())) ||
+      (client.phoneNumber && client.phoneNumber.includes(search))
   )
 
   if (isLoading) {
@@ -48,15 +44,13 @@ export default function ClientsList() {
     )
   }
 
-  if (!clients.length) {
+  if (!clients?.data?.length) {
     return (
       <Card className="border shadow-sm p-8">
         <div className="text-center text-muted-foreground">
           <User className="h-12 w-12 mx-auto mb-3 opacity-20" />
           <p className="mb-2">Aucun client trouvé</p>
-          <p className="text-sm max-w-md mx-auto mb-4">
-            Vos clients apparaîtront ici une fois ajoutés.
-          </p>
+          <p className="text-sm max-w-md mx-auto mb-4">Vos clients apparaîtront ici une fois ajoutés.</p>
         </div>
       </Card>
     )
@@ -76,7 +70,7 @@ export default function ClientsList() {
 
       <ScrollArea className="h-[calc(100vh-300px)]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pl-2 pb-4">
-          {filteredClients.map(client => (
+          {filteredClients?.map(client => (
             <ClientItem
               key={client.id}
               client={client}
@@ -89,11 +83,7 @@ export default function ClientsList() {
         </div>
       </ScrollArea>
 
-      <ClientDialog
-        client={selectedClient}
-        isOpen={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-      />
+      <ClientDialog client={selectedClient} isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   )
 }

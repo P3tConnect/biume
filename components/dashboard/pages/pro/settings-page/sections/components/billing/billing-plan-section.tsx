@@ -59,7 +59,6 @@ export const BillingPlanSection = ({ plans, billingInfo, isLoading }: BillingPla
   const { mutateAsync } = useMutation({
     mutationFn: updateOrganizationPlan,
     onSuccess: data => {
-      console.log(data, "data")
       if (data.data) {
         window.location.href = data.data
       }

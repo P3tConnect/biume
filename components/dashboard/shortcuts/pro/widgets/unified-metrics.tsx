@@ -117,9 +117,32 @@ export const UnifiedMetrics = () => {
   const { data: invoiceMetrics, isLoading: isLoadingInvoices } = useQuery({
     queryKey: ["invoiceMetrics", organization?.data?.id],
     queryFn: async () => {
-      if (!organization?.data?.id) return null
-      const result = await getInvoiceMetrics(organization.data.id)
-      return result.data
+      if (!organization?.data?.id)
+        return {
+          totalRevenue: 0,
+          unpaidInvoices: 0,
+          overdueInvoices: 0,
+          averagePaymentTime: 0,
+        }
+      try {
+        const result = await getInvoiceMetrics({ organizationId: organization.data.id })
+        return (
+          result.data || {
+            totalRevenue: 0,
+            unpaidInvoices: 0,
+            overdueInvoices: 0,
+            averagePaymentTime: 0,
+          }
+        )
+      } catch (error) {
+        console.error("Erreur lors de la récupération des métriques de factures:", error)
+        return {
+          totalRevenue: 0,
+          unpaidInvoices: 0,
+          overdueInvoices: 0,
+          averagePaymentTime: 0,
+        }
+      }
     },
     enabled: !!organization?.data?.id,
   })
