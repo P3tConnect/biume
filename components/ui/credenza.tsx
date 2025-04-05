@@ -45,7 +45,11 @@ const Credenza = ({ children, ...props }: RootCredenzaProps) => {
     const isDesktop = useMediaQuery(desktop);
     const Credenza = isDesktop ? Dialog : Drawer;
 
-    return <Credenza {...props}>{children}</Credenza>;
+    return (
+        <Credenza {...props} autoFocus={false}>
+            {children}
+        </Credenza>
+    );
 };
 
 const CredenzaTrigger = ({ className, children, ...props }: CredenzaProps) => {
