@@ -75,7 +75,11 @@ const CredenzaContent = ({ className, children, ...props }: CredenzaProps) => {
     const CredenzaContent = isDesktop ? DialogContent : DrawerContent;
 
     return (
-        <CredenzaContent className={className} {...props}>
+        <CredenzaContent
+            className={className}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            {...props}
+        >
             {children}
         </CredenzaContent>
     );
