@@ -506,9 +506,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
                           current.id === stepItem.id
                             ? "border-primary text-primary"
                             : index <
-                                Object.values(steps)
-                                  .filter(s => s.id !== "success")
-                                  .findIndex(s => s.id === current.id)
+                              Object.values(steps)
+                                .filter(s => s.id !== "success")
+                                .findIndex(s => s.id === current.id)
                               ? "border-primary bg-primary text-white"
                               : "border-muted-foreground/30 text-muted-foreground/50"
                         )}
