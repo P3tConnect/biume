@@ -77,7 +77,7 @@ const CredenzaContent = ({ className, children, ...props }: CredenzaProps) => {
     return (
         <CredenzaContent
             className={className}
-            onOpenAutoFocus={(e) => e.preventDefault()}
+            autoFocus={false}
             {...props}
         >
             {children}
