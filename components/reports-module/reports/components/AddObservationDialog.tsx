@@ -4,11 +4,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet"
-import { NewObservation, anatomicalRegions, dysfunctionTypes, observationTypes } from "./types"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
+import { NewObservation, anatomicalRegions, dysfunctionTypes, observationTypes, interventionZones } from "./types"
+import { PlusCircleIcon, ListChecksIcon } from "lucide-react"
 
-interface AddObservationSheetProps {
+interface AddObservationDialogProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   newObservation: NewObservation
@@ -16,26 +16,30 @@ interface AddObservationSheetProps {
   onAdd: () => void
 }
 
-export function AddObservationSheet({
+export function AddObservationDialog({
   isOpen,
   onOpenChange,
   newObservation,
   setNewObservation,
   onAdd,
-}: AddObservationSheetProps) {
+}: AddObservationDialogProps) {
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>Ajouter une observation</SheetTitle>
-          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="absolute right-4 top-4">
-            <X className="h-4 w-4" />
-          </Button>
-        </SheetHeader>
-        <div className="space-y-6 py-6">
-          <div className="space-y-3">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-xl flex items-center gap-2">
+            <PlusCircleIcon className="h-5 w-5 text-primary" />
+            Ajouter une observation
+          </DialogTitle>
+          <DialogDescription>
+            Complétez les informations pour ajouter une nouvelle observation au rapport
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6 py-4">
+          <div className="space-y-4">
             <div>
-              <Label>Type d'observation</Label>
+              <Label className="text-sm font-medium mb-1.5 block">Type d'observation</Label>
               <Select
                 value={newObservation.type}
                 onValueChange={value => setNewObservation({ ...newObservation, type: value as any })}
@@ -55,7 +59,7 @@ export function AddObservationSheet({
 
             {newObservation.type === "dysfunction" && (
               <div>
-                <Label>Type de dysfonction</Label>
+                <Label className="text-sm font-medium mb-1.5 block">Type de dysfonction</Label>
                 <Select
                   value={newObservation.dysfunctionType}
                   onValueChange={value => setNewObservation({ ...newObservation, dysfunctionType: value as any })}
@@ -75,7 +79,7 @@ export function AddObservationSheet({
             )}
 
             <div>
-              <Label>Zone anatomique</Label>
+              <Label className="text-sm font-medium mb-1.5 block">Zone anatomique</Label>
               <Select
                 value={newObservation.region}
                 onValueChange={value => setNewObservation({ ...newObservation, region: value })}
@@ -94,7 +98,26 @@ export function AddObservationSheet({
             </div>
 
             <div>
-              <Label>Gravité</Label>
+              <Label className="text-sm font-medium mb-1.5 block">Zone d'intervention</Label>
+              <Select
+                value={newObservation.interventionZone}
+                onValueChange={value => setNewObservation({ ...newObservation, interventionZone: value as any })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une zone d'intervention" />
+                </SelectTrigger>
+                <SelectContent>
+                  {interventionZones.map(zone => (
+                    <SelectItem key={zone.value} value={zone.value}>
+                      {zone.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-1.5 block">Gravité</Label>
               <Select
                 value={newObservation.severity.toString()}
                 onValueChange={value => setNewObservation({ ...newObservation, severity: parseInt(value) })}
@@ -113,7 +136,9 @@ export function AddObservationSheet({
             </div>
 
             <div>
-              <Label>{newObservation.type === "recommendation" ? "Recommandations" : "Observations"}</Label>
+              <Label className="text-sm font-medium mb-1.5 block">
+                {newObservation.type === "recommendation" ? "Recommandations" : "Observations"}
+              </Label>
               <Textarea
                 value={newObservation.notes}
                 onChange={e => setNewObservation({ ...newObservation, notes: e.target.value })}
@@ -127,9 +152,10 @@ export function AddObservationSheet({
             </div>
           </div>
         </div>
-        <SheetFooter>
+
+        <DialogFooter>
           <Button
-            className="w-full"
+            className="w-full sm:w-auto"
             onClick={onAdd}
             disabled={
               !newObservation.region ||
@@ -137,10 +163,11 @@ export function AddObservationSheet({
               (newObservation.type === "dysfunction" && !newObservation.dysfunctionType)
             }
           >
-            Ajouter
+            <ListChecksIcon className="h-4 w-4 mr-1" />
+            Ajouter l'observation
           </Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

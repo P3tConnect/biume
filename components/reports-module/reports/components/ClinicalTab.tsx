@@ -1,10 +1,10 @@
 "use client"
 
+import { cn } from "@/src/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { cn } from "@/src/lib"
-import { Plus, Trash2 } from "lucide-react"
-import { Observation, ObservationType, anatomicalRegions, dysfunctionTypes } from "./types"
+import { Plus, Trash2, Filter } from "lucide-react"
+import { Observation, ObservationType, anatomicalRegions, dysfunctionTypes, interventionZones } from "./types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ObservationsTabProps {
@@ -112,6 +112,11 @@ export function ObservationsTab({
                       {obs.type === "dysfunction" && obs.dysfunctionType && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
                           {dysfunctionTypes.find(t => t.value === obs.dysfunctionType)?.label}
+                        </span>
+                      )}
+                      {obs.interventionZone && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                          {interventionZones.find(z => z.value === obs.interventionZone)?.label}
                         </span>
                       )}
                       <span className="text-xs text-muted-foreground">

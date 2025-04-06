@@ -91,7 +91,7 @@ export function CalendarCell({ day, isToday, isSelected, isWeekend, appointments
     <div
       className={cn(
         "relative flex flex-col p-1 sm:p-2 transition-all duration-200",
-        "h-[120px] sm:h-[130px]", // Hauteur fixe pour toutes les cellules
+        "h-[120px] md:h-[180px]", // Hauteur fixe pour toutes les cellules
         "rounded-lg sm:rounded-xl border border-border/60 hover:border-border",
         "dark:border-gray-700 dark:hover:border-gray-600",
         isToday && "bg-primary/5 ring-2 ring-primary border-primary/50",

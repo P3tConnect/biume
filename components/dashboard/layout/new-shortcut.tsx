@@ -76,9 +76,6 @@ const NewShortcut = () => {
         <DropdownMenuContent align="end" className="w-64 p-2">
           <DropdownMenuLabel className="font-semibold px-2">Créer nouveau...</DropdownMenuLabel>
           <div className="space-y-2">
-            <DropdownMenuLabel className="px-2 text-sm font-medium text-muted-foreground">
-              Propriétaires & Animaux
-            </DropdownMenuLabel>
             <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("client")}>
               <UserPlus className="h-4 w-4 text-primary" />
               <span>Client</span>

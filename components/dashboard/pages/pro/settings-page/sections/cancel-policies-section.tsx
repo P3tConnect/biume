@@ -130,13 +130,16 @@ export const CancelPoliciesSection = () => {
                               <Input
                                 type="number"
                                 min={0}
-                                max={100}
+                                max={45}
                                 className="pl-9"
                                 {...field}
                                 onChange={e => field.onChange(parseInt(e.target.value))}
                               />
                             </div>
                           </FormControl>
+                          <FormDescription>
+                            Le remboursement maximum autorisé est de 45%
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}

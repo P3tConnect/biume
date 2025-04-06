@@ -42,7 +42,7 @@ export function ItemsTab({ items, onRemoveItem, onOpenAddSheet }: ItemsTabProps)
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="text-lg font-medium">Éléments du compte rendu</h2>
-        <Button variant="outline" size="sm" onClick={onOpenAddSheet}>
+        <Button variant="outline" size="sm" className="text-primary" onClick={onOpenAddSheet}>
           <PlusCircle className="h-4 w-4 mr-2" />
           Ajouter un élément
         </Button>
