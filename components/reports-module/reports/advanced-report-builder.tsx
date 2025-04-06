@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Card,
   CardContent,
@@ -95,6 +96,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const [showInitDialog, setShowInitDialog] = useState(true)
   const [appointmentReference, setAppointmentReference] = useState<AppointmentReference | null>(null)
   const [diagnosisChecklist, setDiagnosisChecklist] = useState<string[]>([])
+  const [consultationReason, setConsultationReason] = useState<string>("")
   const [step, setStep] = useState<"init" | "details" | "review">("init")
   const [recommendations, setRecommendations] = useState<{ id: string; content: string }[]>([])
   const [anatomicalIssues, setAnatomicalIssues] = useState<AnatomicalIssue[]>([])
@@ -168,7 +170,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
       appointmentId: appointmentReference?.appointmentId,
       observations,
       notes,
-      diagnosisChecklist,
+      consultationReason,
     })
 
     // Message de succès et/ou redirection
@@ -598,32 +600,20 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <CheckIcon className="h-4 w-4 text-primary" />
-                    Diagnostic d'exclusion
+                    Motif de la séance
                   </CardTitle>
                   <CardDescription>
-                    Cochez les éléments vérifiés lors de votre examen clinique
+                    Indiquez le motif principal de la consultation
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="border rounded-md p-3 max-h-[200px] overflow-y-auto bg-muted/20">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {diagnosisCheckpoints.map(checkpoint => (
-                        <div key={checkpoint.id} className="flex items-start space-x-2">
-                          <Checkbox
-                            id={checkpoint.id}
-                            checked={diagnosisChecklist.includes(checkpoint.id)}
-                            onCheckedChange={() => handleToggleCheckpoint(checkpoint.id)}
-                            className="mt-0.5"
-                          />
-                          <label
-                            htmlFor={checkpoint.id}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {checkpoint.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="border rounded-md p-3 bg-muted/20">
+                    <Textarea
+                      placeholder="Exemple : Boiterie membre postérieur gauche, Suivi post-opératoire..."
+                      value={consultationReason}
+                      onChange={(e) => setConsultationReason(e.target.value)}
+                      className="w-full min-h-[80px] resize-y"
+                    />
                   </div>
                 </CardContent>
               </Card>
