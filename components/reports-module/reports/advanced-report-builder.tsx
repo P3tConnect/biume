@@ -17,38 +17,15 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter
-} from "@/components/ui/card"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -64,7 +41,7 @@ import {
   ListTodoIcon,
   XIcon,
   AlertCircleIcon,
-  ActivityIcon
+  ActivityIcon,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -213,7 +190,12 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
 
   const handleGoBack = () => {
     // Vérifier s'il y a des modifications non enregistrées
-    if (observations.length > 0 || notes.trim().length > 0 || recommendations.length > 0 || anatomicalIssues.length > 0) {
+    if (
+      observations.length > 0 ||
+      notes.trim().length > 0 ||
+      recommendations.length > 0 ||
+      anatomicalIssues.length > 0
+    ) {
       setShowExitConfirmDialog(true)
     } else {
       // Rediriger directement s'il n'y a pas de modifications
@@ -222,11 +204,11 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   }
 
   const navigateBack = () => {
-    router.back();
+    router.back()
   }
 
   return (
-    <div className="h-full w-full bg-slate-50 flex flex-col overflow-hidden">
+    <div className="h-full w-full flex flex-col overflow-hidden">
       {/* En-tête amélioré avec Card */}
       <Card className="mb-4 border shadow">
         <CardHeader className="pb-0 flex flex-row items-center justify-between">
@@ -288,12 +270,16 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                 {selectedPet ? (
                   <>
                     <PawPrintIcon className="h-3.5 w-3.5" />
-                    <span>{selectedPet.name} ({selectedPet.species})</span>
+                    <span>
+                      {selectedPet.name} ({selectedPet.species})
+                    </span>
                     {selectedAppointment && (
                       <>
                         <span className="mx-1">•</span>
                         <CalendarIcon className="h-3.5 w-3.5" />
-                        <span>{selectedAppointment.date} - {selectedAppointment.type}</span>
+                        <span>
+                          {selectedAppointment.date} - {selectedAppointment.type}
+                        </span>
                       </>
                     )}
                   </>
@@ -307,16 +293,16 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
       </Card>
 
       {/* Contenu principal avec onglets */}
-      <div className="flex-1 overflow-hidden flex flex-col px-6 pb-6">
+      <div className="flex-1 overflow-hidden flex flex-col px-2 pb-6">
         {/* Interface principale */}
         <Card className="flex-1 overflow-hidden shadow border">
           <Tabs
             defaultValue="clinical"
             value={activeTab}
-            onValueChange={(val) => handleTabChange(val as "clinical" | "notes" | "recommendations" | "anatomical")}
+            onValueChange={val => handleTabChange(val as "clinical" | "notes" | "recommendations" | "anatomical")}
             className="h-full flex flex-col"
           >
-            <div className="px-6 py-3 bg-white border-b">
+            <div className="px-6 py-3 border-b">
               <TabsList className="grid grid-cols-4 max-w-3xl mx-auto">
                 <TabsTrigger value="clinical" className="flex items-center gap-1.5">
                   <ListTodoIcon className="h-4 w-4" />
@@ -376,8 +362,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                             activeType="staticObservation"
                             onRemoveObservation={handleRemoveObservation}
                             onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "staticObservation" }));
-                              setIsAddSheetOpen(true);
+                              setNewObservation(prev => ({ ...prev, type: "staticObservation" }))
+                              setIsAddSheetOpen(true)
                             }}
                             selectedView={selectedView}
                             setSelectedView={setSelectedView}
@@ -390,8 +376,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                             activeType="dynamicObservation"
                             onRemoveObservation={handleRemoveObservation}
                             onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "dynamicObservation" }));
-                              setIsAddSheetOpen(true);
+                              setNewObservation(prev => ({ ...prev, type: "dynamicObservation" }))
+                              setIsAddSheetOpen(true)
                             }}
                             selectedView={selectedView}
                             setSelectedView={setSelectedView}
@@ -404,8 +390,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                             activeType="dysfunction"
                             onRemoveObservation={handleRemoveObservation}
                             onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "dysfunction" }));
-                              setIsAddSheetOpen(true);
+                              setNewObservation(prev => ({ ...prev, type: "dysfunction" }))
+                              setIsAddSheetOpen(true)
                             }}
                             selectedView={selectedView}
                             setSelectedView={setSelectedView}
@@ -418,8 +404,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                             activeType="recommendation"
                             onRemoveObservation={handleRemoveObservation}
                             onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "recommendation" }));
-                              setIsAddSheetOpen(true);
+                              setNewObservation(prev => ({ ...prev, type: "recommendation" }))
+                              setIsAddSheetOpen(true)
                             }}
                             selectedView={selectedView}
                             setSelectedView={setSelectedView}
@@ -433,7 +419,6 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
 
               <TabsContent value="anatomical" className="h-full mt-0 border-none">
                 <div className="h-full flex flex-col gap-4">
-                  <h2 className="text-lg font-semibold">Évaluation anatomique</h2>
                   <AnatomicalEvaluationTab
                     dysfunctions={anatomicalIssues}
                     setDysfunctions={setAnatomicalIssues}
@@ -447,10 +432,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
               <TabsContent value="recommendations" className="h-full mt-0 border-none">
                 <div className="h-full flex flex-col gap-4">
                   <h2 className="text-lg font-semibold">Conseils et recommandations</h2>
-                  <RecommendationsTab
-                    recommendations={recommendations}
-                    setRecommendations={setRecommendations}
-                  />
+                  <RecommendationsTab recommendations={recommendations} setRecommendations={setRecommendations} />
                 </div>
               </TabsContent>
 
@@ -474,7 +456,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
               Retour au tableau de bord
             </DialogTitle>
             <DialogDescription>
-              Vous avez des modifications non enregistrées. Si vous retournez au tableau de bord, toutes vos modifications seront perdues.
+              Vous avez des modifications non enregistrées. Si vous retournez au tableau de bord, toutes vos
+              modifications seront perdues.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0 mt-4">
@@ -515,7 +498,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
       )}
 
       {/* Modale d'initialisation du rapport */}
-      <Dialog open={showInitDialog} onOpenChange={value => value ? setShowInitDialog(true) : null}>
+      <Dialog open={showInitDialog} onOpenChange={value => (value ? setShowInitDialog(true) : null)}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
             <DialogTitle className="text-xl flex items-center gap-2">
@@ -602,16 +585,14 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                     <CheckIcon className="h-4 w-4 text-primary" />
                     Motif de la séance
                   </CardTitle>
-                  <CardDescription>
-                    Indiquez le motif principal de la consultation
-                  </CardDescription>
+                  <CardDescription>Indiquez le motif principal de la consultation</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="border rounded-md p-3 bg-muted/20">
                     <Textarea
                       placeholder="Exemple : Boiterie membre postérieur gauche, Suivi post-opératoire..."
                       value={consultationReason}
-                      onChange={(e) => setConsultationReason(e.target.value)}
+                      onChange={e => setConsultationReason(e.target.value)}
                       className="w-full min-h-[80px] resize-y"
                     />
                   </div>
