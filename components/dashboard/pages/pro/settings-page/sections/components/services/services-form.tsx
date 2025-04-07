@@ -1,22 +1,29 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Clock, Euro, Users, X } from "lucide-react"
+import { Clock, Euro, Users, X, Home } from "lucide-react"
 import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-
-import { Credenza, CredenzaHeader, CredenzaTitle } from "@/components/ui"
-import { CredenzaContent } from "@/components/ui"
-import { Button } from "@/components/ui/button"
 import { DropzoneInput } from "@/components/ui/dropzone-input"
 import { DEFAULT_ACCEPTED_IMAGE_TYPES } from "@/components/ui/dropzone-input"
-import { FormControl, FormDescription, FormLabel, FormMessage } from "@/components/ui/form"
-import { Form, FormItem } from "@/components/ui/form"
-import { FormField } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
+import {
+  Form,
+  FormItem,
+  FormField,
+  Input,
+  Switch,
+  Textarea,
+  Credenza,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaContent,
+  FormControl,
+  FormDescription,
+  FormLabel,
+  FormMessage,
+  Button,
+} from "@/components/ui"
 import { createService, updateService } from "@/src/actions"
 import { Service } from "@/src/db"
 import { cn } from "@/src/lib"
@@ -27,6 +34,7 @@ const servicesSchema = z.object({
   description: z.string().min(1, "La description est requise"),
   duration: z.number().min(1, "La durée est requise"),
   price: z.number().min(0, "Le prix est requis"),
+  atHome: z.boolean().optional(),
   image: z.string().nullable().optional(),
   organizationId: z.string().optional(),
   places: z.number().min(1, "Le nombre de places est requis"),
@@ -53,6 +61,7 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
       organizationId: service.organizationId ?? undefined,
       type: service.type || "ONE_TO_ONE",
       places: service.places || 1,
+      atHome: service.atHome || false,
     },
   })
 
@@ -285,6 +294,26 @@ export const ServiceForm = ({ service, open, onOpenChange }: ServiceFormProps) =
                       </FormControl>
                       <FormDescription className="hidden">
                         Activez cette option si ce service peut accueillir plusieurs animaux lors d'une même séance.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Switch pour service à domicile */}
+                <FormField
+                  control={form.control}
+                  name="atHome"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                      <div className="flex items-center space-x-2">
+                        <Home className="h-4 w-4 text-muted-foreground" />
+                        <FormLabel className="text-sm font-normal mb-0">Service à domicile</FormLabel>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                      <FormDescription className="hidden">
+                        Activez cette option si ce service est réalisé au domicile du client.
                       </FormDescription>
                     </FormItem>
                   )}

@@ -33,12 +33,17 @@ export type ServerActionContext = {
 
 export type ActionResult<T> = { data: T; error?: never } | { data?: never; error: string }
 
-export function createServerAction<TSchema extends z.ZodType, TOutput>(
+// Fonction pour vérifier en toute sécurité si le schéma est un schéma Zod valide
+function isValidZodSchema(schema: any): schema is z.ZodType {
+  return schema && typeof schema === "object" && "parse" in schema && typeof schema.parse === "function"
+}
+
+export function createServerAction<TSchema, TOutput>(
   schema: TSchema,
-  handler: (input: z.infer<TSchema>, ctx: ServerActionContext) => Promise<TOutput>,
+  handler: (input: any, ctx: ServerActionContext) => Promise<TOutput>,
   middlewares: ((ctx: ServerActionContext) => Promise<void>)[] = []
-): (input: z.infer<TSchema>) => Promise<ActionResult<TOutput>> {
-  return async (input: z.infer<TSchema>) => {
+): (input: any) => Promise<ActionResult<TOutput>> {
+  return async (input: any) => {
     try {
       // Initialize context
       const ctx: ServerActionContext = {
@@ -54,16 +59,31 @@ export function createServerAction<TSchema extends z.ZodType, TOutput>(
       }
 
       // Validate input
-      const validatedInput = await schema.parseAsync(input).catch(e => {
-        if (e instanceof z.ZodError) {
-          const errors = e.errors.map(err => ({
-            path: err.path.join("."),
-            message: err.message,
-          }))
-          return { error: JSON.stringify(errors) }
+      let validatedInput
+
+      if (isValidZodSchema(schema)) {
+        try {
+          validatedInput = schema.parse(input)
+        } catch (e) {
+          if (e instanceof z.ZodError) {
+            const errors = e.errors.map(err => ({
+              path: err.path.join("."),
+              message: err.message,
+            }))
+            return { error: JSON.stringify(errors) }
+          }
+          if (e instanceof Error) {
+            return { error: e.message }
+          }
+          return { error: "Erreur inconnue" }
         }
-        return { error: e.message }
-      })
+      } else {
+        // Si le schéma n'est pas un schéma Zod valide, on utilise l'entrée telle quelle
+        console.warn(
+          "Le schéma fourni n'est pas un schéma Zod valide ou n'a pas de méthode parse, aucune validation effectuée"
+        )
+        validatedInput = input
+      }
 
       // Execute handler with validated input
       const result = await handler(validatedInput, ctx)

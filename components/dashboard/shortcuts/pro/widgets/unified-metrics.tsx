@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { CountAnimation } from "@/components/count-animation"
+import { CountAnimation } from "@/components/common/count-animation"
 import {
   Stethoscope,
   CalendarIcon,
@@ -14,7 +14,9 @@ import {
   RefreshCcw,
   PawPrint,
   Wallet,
-  CreditCard,
+  Star,
+  UserPlus2,
+  BadgeEuro,
 } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import { CredenzaContent, CredenzaTitle, CredenzaHeader, Skeleton } from "@/components/ui"
@@ -92,7 +94,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const UnifiedMetrics = () => {
   const [openDialog, setOpenDialog] = useState<string | null>(null)
-  const [credenzaOpen, setCredenzaOpen] = useState(false);
+  const [credenzaOpen, setCredenzaOpen] = useState(false)
   const [animalDetailsOpen, setAnimalDetailsOpen] = useState(false)
   const [selectedMonths, setSelectedMonths] = useState(6) // Nombre de mois à afficher par défaut
   const [selectedPetId, setSelectedPetId] = useState<string>("")
@@ -115,9 +117,32 @@ export const UnifiedMetrics = () => {
   const { data: invoiceMetrics, isLoading: isLoadingInvoices } = useQuery({
     queryKey: ["invoiceMetrics", organization?.data?.id],
     queryFn: async () => {
-      if (!organization?.data?.id) return null
-      const result = await getInvoiceMetrics(organization.data.id)
-      return result.data
+      if (!organization?.data?.id)
+        return {
+          totalRevenue: 0,
+          unpaidInvoices: 0,
+          overdueInvoices: 0,
+          averagePaymentTime: 0,
+        }
+      try {
+        const result = await getInvoiceMetrics({ organizationId: organization.data.id })
+        return (
+          result.data || {
+            totalRevenue: 0,
+            unpaidInvoices: 0,
+            overdueInvoices: 0,
+            averagePaymentTime: 0,
+          }
+        )
+      } catch (error) {
+        console.error("Erreur lors de la récupération des métriques de factures:", error)
+        return {
+          totalRevenue: 0,
+          unpaidInvoices: 0,
+          overdueInvoices: 0,
+          averagePaymentTime: 0,
+        }
+      }
     },
     enabled: !!organization?.data?.id,
   })
@@ -393,11 +418,11 @@ export const UnifiedMetrics = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-2 dark:space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 dark:gap-3">
         {/* Rendez-vous */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+          className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Rendez-vous")}
         >
           <div className="p-3">
@@ -416,8 +441,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.appointmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.appointmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.appointmentsData).value}%
                   </span>
@@ -430,14 +456,14 @@ export const UnifiedMetrics = () => {
 
         {/* Nouveaux patients */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+          className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Nouveaux patients")}
         >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">Nouveaux patients</span>
-                <User className="w-4 h-4 text-rose-500" />
+                <UserPlus2 className="w-4 h-4 text-rose-500" />
               </div>
               <div className="text-2xl font-semibold">
                 {metrics.newPatientsData[metrics.newPatientsData.length - 1].value > 0 ? (
@@ -449,8 +475,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.newPatientsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.newPatientsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.newPatientsData).value}%
                   </span>
@@ -463,7 +490,7 @@ export const UnifiedMetrics = () => {
 
         {/* Soins réalisés */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+          className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Soins réalisés")}
         >
           <div className="p-3">
@@ -482,8 +509,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.treatmentsData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.treatmentsData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.treatmentsData).value}%
                   </span>
@@ -496,14 +524,14 @@ export const UnifiedMetrics = () => {
 
         {/* Satisfaction client */}
         <Card
-          className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5"
+          className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5"
           onClick={() => setOpenDialog("Satisfaction client")}
         >
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">Satisfaction</span>
-                <HeartPulseIcon className="w-4 h-4 text-amber-500" />
+                <Star className="w-4 h-4 text-amber-500" />
               </div>
               <div className="text-2xl font-semibold">
                 {metrics.satisfactionData[metrics.satisfactionData.length - 1].value > 0 ? (
@@ -515,8 +543,9 @@ export const UnifiedMetrics = () => {
               {hasData && metrics.satisfactionData.length > 1 && (
                 <div className="text-xs mt-1">
                   <span
-                    className={`${getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`${
+                      getPercentageChange(metrics.satisfactionData).isPositive ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {getPercentageChange(metrics.satisfactionData).value}%
                   </span>
@@ -528,7 +557,7 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Solde Stripe */}
-        <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
+        <Card className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5">
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
@@ -559,12 +588,12 @@ export const UnifiedMetrics = () => {
         </Card>
 
         {/* Chiffre d'affaires du mois */}
-        <Card className="border rounded-xl shadow-none cursor-pointer transition-colors hover:bg-muted/5">
+        <Card className="border rounded-xl cursor-pointer transition-colors hover:bg-muted/5">
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">CA du mois</span>
-                <CreditCard className="w-4 h-4 text-violet-500" />
+                <BadgeEuro className="w-4 h-4 text-violet-500" />
               </div>
               <div className="text-2xl font-semibold">
                 {isLoadingInvoices ? (
@@ -587,7 +616,7 @@ export const UnifiedMetrics = () => {
       </div>
 
       {/* Prochain rendez-vous */}
-      <Card className="border rounded-xl shadow-none">
+      <Card className="border rounded-xl">
         <CardHeader>
           <CardTitle>Prochain rendez-vous</CardTitle>
         </CardHeader>
@@ -629,7 +658,7 @@ export const UnifiedMetrics = () => {
                 </div>
               </div>
               <div className="flex flex-col items-end">
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="inline-block max-w-[200px] truncate">
                   {nextAppointmentData?.slot?.start.toLocaleString("fr-FR", {
                     year: "numeric",
                     month: "long",

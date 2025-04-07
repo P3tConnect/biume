@@ -82,12 +82,6 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
               active: pathname === `/dashboard/organization/${companyId}/accounting/invoices`,
               icon: Receipt,
             },
-            {
-              href: `/dashboard/organization/${companyId}/accounting/expenses`,
-              label: "dashboard.sidebar.expenses",
-              active: pathname === `/dashboard/organization/${companyId}/accounting/expenses`,
-              icon: DollarSignIcon,
-            },
           ],
         },
         {

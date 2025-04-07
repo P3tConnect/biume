@@ -11,7 +11,7 @@ import { NuqsAdapter } from "nuqs/adapters/next"
 import { extractRouterConfig } from "uploadthing/server"
 
 import { ourFileRouter } from "@/app/api/uploadthing/core"
-import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { TailwindIndicator } from "@/components/common/tailwind-indicator"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import Providers from "@/src/context/providers"
 import { safeConfig } from "@/src/lib/env"

@@ -27,11 +27,26 @@ export function CompanyServices({ services }: CompanyServicesProps) {
                   <p className="text-sm text-muted-foreground">
                     {service.duration} min · {service.price} €
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {service.type === "MULTIPLE"
-                      ? `Séance collective (${service.places} places)`
-                      : "Séance individuelle"}
-                  </p>
+                  <div className="flex flex-col gap-1 mt-1">
+                    <p className="text-xs text-muted-foreground">
+                      {service.type === "MULTIPLE"
+                        ? `Séance collective (${service.places} places)`
+                        : "Séance individuelle"}
+                    </p>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      {service.atHome ? (
+                        <>
+                          <span>🏠</span>
+                          <span>Service à domicile</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>🏥</span>
+                          <span>Service en cabinet</span>
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

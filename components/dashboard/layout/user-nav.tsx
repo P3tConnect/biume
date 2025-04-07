@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
-import { LayoutGrid, LogOut, Settings, User } from "lucide-react"
+import { LayoutGrid, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -40,11 +40,6 @@ export function UserNav() {
       href: `/dashboard/user/${session?.data?.user.id}`,
       icon: <LayoutGrid className="w-4 h-4 text-muted-foreground" />,
       label: "Tableau de bord",
-    },
-    {
-      href: `/dashboard/user/${session?.data?.user.id}`,
-      icon: <User className="w-4 h-4 text-muted-foreground" />,
-      label: "Mon profil",
     },
     {
       href: `/dashboard/user/${session?.data?.user.id}/settings`,

@@ -165,7 +165,6 @@ const SlotsForm = ({ onSubmit: onFormSubmit, onCancel, initialData, isEditing, s
     },
     onSuccess: data => {
       console.log("Succès de la création:", data)
-      toast.success("Le créneau a été créé avec succès")
       onFormSubmit?.()
     },
     onError: error => {

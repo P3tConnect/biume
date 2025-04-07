@@ -33,8 +33,9 @@ export const organizationFormSchema = z.object({
     .optional(),
   openAt: z.string(),
   closeAt: z.string(),
-  atHome: z.boolean(),
   onDemand: z.boolean().optional(),
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
   nac: z.string(),
   siren: z.string().length(9, "Le numéro SIREN doit contenir 9 chiffres"),
   siret: z.string().length(14, "Le numéro SIRET doit contenir 14 chiffres"),
@@ -46,6 +47,7 @@ export const organizationUpdateFormSchema = z.object({
   website: z.string().url().optional(),
   address: z.string().min(5, "Veuillez entrer une adresse valide").optional(),
   description: z.string().min(10, "La description doit contenir au moins 10 caractères").optional(),
+  onBoardingComplete: z.boolean().optional(),
   logo: z
     .any()
     .refine(file => !file || (file instanceof File && file.size <= MAX_FILE_SIZE), {
@@ -57,7 +59,6 @@ export const organizationUpdateFormSchema = z.object({
     .optional(),
   openAt: z.string().optional(),
   closeAt: z.string().optional(),
-  atHome: z.boolean().optional(),
   onDemand: z.boolean().optional(),
   nac: z.string().optional(),
   siren: z.string().length(9, "Le numéro SIREN doit contenir 9 chiffres").optional(),
@@ -83,10 +84,10 @@ export const ProfileSection = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <ProfileCoverSection org={org?.data} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5 w-full">
         <div className="md:col-span-2 space-y-6">
           <ProfileMainInfoSection org={org?.data} />
           <ProfileLegalInfoSection org={org?.data} />
