@@ -87,15 +87,13 @@ export function HeroSection() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-              La plateforme de référence pour{" "}
-              <span className="text-gradient">votre activité animale</span>
+              Votre activité animale <br />
+              <span className="text-gradient">en toute simplicité</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Comme Doctolib l&apos;a fait pour la santé humaine, Biume
-              révolutionne la gestion des activités liées aux animaux. De la
-              prise de rendez-vous à la facturation, en passant par le suivi des
-              dossiers médicaux.
+              Biume révolutionne la gestion des activités animalières :
+              rendez-vous, facturation et suivi médical en une seule plateforme.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">

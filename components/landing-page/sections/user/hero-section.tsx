@@ -69,15 +69,13 @@ export function HeroSection() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Trouvez et prenez rendez-vous avec les meilleurs{" "}
-              <span className="text-gradient">professionnels animaliers</span>
+              Les meilleurs soins{" "}
+              <span className="text-gradient">pour leur bien-être</span>
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8">
-              Comme Doctolib pour votre santé, Biume vous permet de prendre
-              rendez-vous en ligne avec les vétérinaires et autres
-              professionnels du monde animal. Gérez facilement les soins et le
-              suivi de vos compagnons.
+              La plateforme qui simplifie la prise de rendez-vous et le suivi
+              santé de vos animaux.
             </p>
 
             {/* Barre de recherche */}
