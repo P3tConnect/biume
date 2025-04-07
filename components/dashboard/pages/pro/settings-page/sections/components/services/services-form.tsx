@@ -204,7 +204,7 @@ export const ServiceForm = ({
                           <FormControl>
                             <Input
                               placeholder="ex: Consultation vétérinaire"
-                              className="bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
+                              className="bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-base"
                               {...field}
                             />
                           </FormControl>
@@ -227,7 +227,7 @@ export const ServiceForm = ({
                                 <Input
                                   type="number"
                                   placeholder="30"
-                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
+                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-base"
                                   {...field}
                                   onChange={(e) =>
                                     field.onChange(Number(e.target.value))
@@ -254,7 +254,7 @@ export const ServiceForm = ({
                                 <Input
                                   type="number"
                                   placeholder="50"
-                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
+                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-base"
                                   {...field}
                                   onChange={(e) =>
                                     field.onChange(Number(e.target.value))
@@ -283,7 +283,7 @@ export const ServiceForm = ({
                       <FormControl>
                         <Textarea
                           placeholder="Détaillez votre service..."
-                          className="min-h-[100px] resize-none bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
+                          className="min-h-[100px] resize-none bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-base"
                           {...field}
                         />
                       </FormControl>

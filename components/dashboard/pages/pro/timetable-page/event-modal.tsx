@@ -227,7 +227,7 @@ const EventModal = ({
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                   required
-                  className="flex-grow"
+                  className="flex-grow text-base"
                 />
                 <Select value={startPeriod} onValueChange={setStartPeriod}>
                   <SelectTrigger className="w-20">
@@ -252,7 +252,7 @@ const EventModal = ({
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                   required
-                  className="flex-grow"
+                  className="flex-grow text-base"
                 />
                 <Select value={endPeriod} onValueChange={setEndPeriod}>
                   <SelectTrigger className="w-20">
@@ -298,7 +298,7 @@ const EventModal = ({
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-24 text-lg"
+              className="h-24 text-base"
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}

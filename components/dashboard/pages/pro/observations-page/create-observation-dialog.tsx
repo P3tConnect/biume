@@ -73,7 +73,7 @@ export function CreateObservationDialog({
                 <FormLabel>Titre</FormLabel>
                 <FormControl>
                   <Input
-                    className="text-lg"
+                    className="text-base"
                     placeholder="Titre de l'observation"
                     {...field}
                   />
@@ -92,7 +92,7 @@ export function CreateObservationDialog({
                 <FormControl>
                   <Textarea
                     placeholder="Détails de l'observation..."
-                    className="min-h-[100px] text-lg"
+                    className="min-h-[100px] text-base"
                     {...field}
                   />
                 </FormControl>

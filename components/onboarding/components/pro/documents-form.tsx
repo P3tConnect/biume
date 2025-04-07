@@ -116,7 +116,7 @@ export function DocumentsForm({
                           {...field}
                           value={field.value ?? ""}
                           maxLength={9}
-                          className="font-mono"
+                          className="font-mono text-base"
                         />
                       </FormControl>
                       <FormDescription>
@@ -139,7 +139,7 @@ export function DocumentsForm({
                           {...field}
                           value={field.value ?? ""}
                           maxLength={14}
-                          className="font-mono"
+                          className="font-mono text-base"
                         />
                       </FormControl>
                       <FormDescription>
@@ -192,7 +192,10 @@ function DropzoneInput({ onFilesChanged, value }: DropzoneInputProps) {
   const { startUpload, isUploading } = useUploadThing("documentsUploader", {
     onClientUploadComplete: (res) => {
       if (!res) return;
-      const uploadedUrls = res.map((file) => ({ url: file.url, name: file.name }));
+      const uploadedUrls = res.map((file) => ({
+        url: file.url,
+        name: file.name,
+      }));
       onFilesChanged(uploadedUrls);
       toast.success("Documents téléchargés avec succès");
     },

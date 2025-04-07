@@ -101,7 +101,7 @@ export function OptionsForm({
                         <FormControl>
                           <Input
                             placeholder="Nom de l'option"
-                            className="text-lg font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
+                            className="text-base font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
                             {...field}
                             value={field.value ?? ""}
                           />
@@ -119,7 +119,7 @@ export function OptionsForm({
                         <FormControl>
                           <Textarea
                             placeholder="Description de l'option..."
-                            className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary"
+                            className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary text-base"
                             {...field}
                             value={field.value ?? ""}
                           />
@@ -141,7 +141,7 @@ export function OptionsForm({
                           <Input
                             type="number"
                             placeholder="0"
-                            className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
+                            className="border-none bg-transparent p-0 h-auto focus-visible:ring-0 text-base"
                             {...field}
                             value={field.value ?? ""}
                             onChange={(e) =>

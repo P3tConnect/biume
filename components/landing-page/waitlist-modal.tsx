@@ -151,7 +151,7 @@ export function WaitlistModal({
                         <FormLabel>Nom</FormLabel>
                         <FormControl>
                           <Input
-                            className="text-lg"
+                            className="text-base"
                             placeholder="Dupont"
                             {...field}
                           />
@@ -168,7 +168,7 @@ export function WaitlistModal({
                         <FormLabel>Prénom</FormLabel>
                         <FormControl>
                           <Input
-                            className="text-lg"
+                            className="text-base"
                             placeholder="Marie"
                             {...field}
                           />
@@ -187,7 +187,7 @@ export function WaitlistModal({
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
-                          className="text-lg"
+                          className="text-base"
                           type="email"
                           placeholder={
                             defaultIsPro
@@ -211,7 +211,7 @@ export function WaitlistModal({
                         <FormLabel>Nom de votre entreprise</FormLabel>
                         <FormControl>
                           <Input
-                            className="text-lg"
+                            className="text-base"
                             placeholder="Clinique Vétérinaire des Alpes"
                             {...field}
                             value={field.value || ""}
@@ -231,7 +231,7 @@ export function WaitlistModal({
                       <FormLabel>Un message pour nous ? (facultatif)</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="text-lg"
+                          className="text-base"
                           placeholder="Partagez vos attentes concernant notre solution..."
                           {...field}
                           value={field.value || ""}

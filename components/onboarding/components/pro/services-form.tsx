@@ -145,7 +145,7 @@ const ServicesForm = ({
                           <FormControl>
                             <Input
                               placeholder="Nom du service"
-                              className="text-lg font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
+                              className="text-base font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
                               {...field}
                               value={field.value ?? ""}
                             />
@@ -163,7 +163,7 @@ const ServicesForm = ({
                           <FormControl>
                             <Textarea
                               placeholder="Description du service..."
-                              className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary"
+                              className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary text-base"
                               {...field}
                               value={field.value ?? ""}
                             />
@@ -186,7 +186,7 @@ const ServicesForm = ({
                               <Input
                                 type="number"
                                 placeholder="30"
-                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
+                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0 text-base"
                                 {...field}
                                 value={field.value ?? ""}
                                 onChange={(e) =>
@@ -218,7 +218,7 @@ const ServicesForm = ({
                               <Input
                                 type="number"
                                 placeholder="0"
-                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
+                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0 text-base"
                                 {...field}
                                 value={field.value ?? ""}
                                 onChange={(e) =>

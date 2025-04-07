@@ -91,7 +91,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        className="text-lg"
+                        className="text-base"
                         placeholder="Titre de l'option"
                         {...field}
                       />
@@ -109,7 +109,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
                     <FormControl>
                       <Textarea
                         placeholder="Description de l'option..."
-                        className="min-h-[100px] text-lg"
+                        className="min-h-[100px] text-base"
                         {...field}
                         value={field.value || ""}
                       />
@@ -129,7 +129,7 @@ export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
                         <Input
                           type="number"
                           placeholder="Prix"
-                          className="pl-9 text-lg"
+                          className="pl-9 text-base"
                           {...field}
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))

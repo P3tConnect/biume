@@ -115,7 +115,7 @@ export const TeamInviteButton = ({ organization }: TeamInviteButtonProps) => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      className="text-lg"
+                      className="text-base"
                       placeholder="membre@example.com"
                       type="email"
                       {...field}

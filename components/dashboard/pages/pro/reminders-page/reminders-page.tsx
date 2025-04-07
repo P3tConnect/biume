@@ -89,7 +89,7 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Titre</FormLabel>
                       <FormControl>
-                        <Input className="text-lg" {...field} />
+                        <Input className="text-base" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -103,7 +103,7 @@ const RemindersPageComponent = () => {
                       <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea
-                          className="text-lg"
+                          className="text-base"
                           {...field}
                           value={field.value ?? ""}
                         />
@@ -151,7 +151,7 @@ const RemindersPageComponent = () => {
                       <FormLabel>Date d&apos;échéance</FormLabel>
                       <FormControl>
                         <Input
-                          className="text-lg"
+                          className="text-base"
                           type="datetime-local"
                           {...field}
                           value={
