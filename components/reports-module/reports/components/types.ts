@@ -6,7 +6,7 @@ export interface ReportItem {
 
 export type NewReportItem = Omit<ReportItem, "id">
 
-export type ObservationType = "staticObservation" | "dynamicObservation" | "dysfunction" | "recommendation"
+export type ObservationType = "staticObservation" | "dynamicObservation"
 export type DysfunctionType = "confirmed" | "suspected"
 export type InterventionZone = "articulations" | "fascias" | "organes" | "muscles"
 
@@ -79,7 +79,6 @@ export const anatomicalRegionsByCategory = [
 ]
 
 export const observationTypes = [
-  { value: "none", label: "Aucune observation" },
   { value: "staticObservation", label: "Observation statique" },
   { value: "dynamicObservation", label: "Observation dynamique" },
 ]

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
 import { ObservationsTab } from "./components/ClinicalTab"
 import { NotesTab } from "./components/NotesTab"
@@ -8,7 +8,7 @@ import { RecommendationsTab } from "./components/RecommendationsTab"
 import { AnatomicalEvaluationTab } from "./components/AnatomicalEvaluationTab"
 import { AddObservationDialog } from "./components/AddObservationDialog"
 import { ReportPreview } from "./components/ReportPreview"
-import { Observation, NewObservation, ObservationType, AppointmentReference } from "./components/types"
+import { Observation, NewObservation, AppointmentReference, anatomicalRegions, interventionZones } from "./components/types"
 import {
   Dialog,
   DialogContent,
@@ -20,8 +20,6 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -35,15 +33,15 @@ import {
   CheckIcon,
   EyeIcon,
   SaveIcon,
-  PenIcon,
   PlusIcon,
   FileTextIcon,
   ListTodoIcon,
-  XIcon,
   AlertCircleIcon,
   ActivityIcon,
+  Trash2,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { cn } from "@/src/lib/utils"
 
 interface AdvancedReportBuilderProps {
   orgId: string
@@ -86,6 +84,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
     notes: "",
     type: "staticObservation",
     dysfunctionType: undefined,
+    interventionZone: undefined
   })
 
   // Simulons des données de rendez-vous pour la démo
@@ -112,9 +111,6 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const handleAddObservation = () => {
     if (!newObservation.region || !newObservation.type) return
 
-    // Vérifier que le type de dysfonction est défini si c'est une dysfonction
-    if (newObservation.type === "dysfunction" && !newObservation.dysfunctionType) return
-
     const observation: Observation = {
       id: crypto.randomUUID(),
       ...newObservation,
@@ -128,7 +124,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
       severity: 1,
       notes: "",
       type: newObservation.type,
-      dysfunctionType: newObservation.type === "dysfunction" ? newObservation.dysfunctionType : undefined,
+      dysfunctionType: undefined,
+      interventionZone: undefined,
     })
 
     // Fermer le sheet
@@ -344,74 +341,129 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
                         <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
                           Ajoutez des observations cliniques pour commencer à constituer le rapport médical.
                         </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newType = newObservation.type === "staticObservation" ? "dynamicObservation" : "staticObservation";
+                            setNewObservation(prev => ({ ...prev, type: newType }));
+                            setIsAddSheetOpen(true);
+                          }}
+                          className="flex items-center gap-1"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                          Ajouter une observation
+                        </Button>
                       </CardContent>
                     </Card>
                   ) : (
-                    <div className="flex-1 overflow-auto">
-                      <Tabs defaultValue="staticObservation" className="w-full">
-                        <TabsList className="w-full justify-start mb-4 overflow-x-auto">
-                          <TabsTrigger value="staticObservation">Observations statiques</TabsTrigger>
-                          <TabsTrigger value="dynamicObservation">Observations dynamiques</TabsTrigger>
-                          <TabsTrigger value="dysfunction">Dysfonctions</TabsTrigger>
-                          <TabsTrigger value="recommendation">Recommandations</TabsTrigger>
-                        </TabsList>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+                      {/* Vue anatomique - partie gauche */}
+                      <Card className="flex flex-col h-full">
+                        <div className="p-3 border-b flex items-center justify-between">
+                          <h2 className="font-medium">Vue anatomique</h2>
+                          <div className="flex gap-1">
+                            <Button
+                              variant={selectedView === "left" ? "secondary" : "ghost"}
+                              size="sm"
+                              onClick={() => setSelectedView("left")}
+                            >
+                              Gauche
+                            </Button>
+                            <Button
+                              variant={selectedView === "right" ? "secondary" : "ghost"}
+                              size="sm"
+                              onClick={() => setSelectedView("right")}
+                            >
+                              Droite
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4">
+                          <div className="flex items-center justify-center h-full text-muted-foreground">
+                            <p className="text-center">
+                              Visualisation anatomique {selectedView === "left" ? "(gauche)" : "(droite)"}
+                              <br />
+                              <span className="text-sm text-muted-foreground/70">
+                                Cette fonctionnalité sera améliorée prochainement
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
 
-                        <TabsContent value="staticObservation">
-                          <ObservationsTab
-                            observations={observations}
-                            activeType="staticObservation"
-                            onRemoveObservation={handleRemoveObservation}
-                            onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "staticObservation" }))
-                              setIsAddSheetOpen(true)
+                      {/* Liste des observations - partie droite */}
+                      <Card className="flex flex-col h-full">
+                        <div className="p-3 border-b flex items-center justify-between">
+                          <h2 className="font-medium">Observations cliniques</h2>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const newType = newObservation.type === "staticObservation" ? "dynamicObservation" : "staticObservation";
+                              setNewObservation(prev => ({ ...prev, type: newType }));
+                              setIsAddSheetOpen(true);
                             }}
-                            selectedView={selectedView}
-                            setSelectedView={setSelectedView}
-                          />
-                        </TabsContent>
+                            className="flex items-center gap-1"
+                          >
+                            <PlusIcon className="h-4 w-4" />
+                            Ajouter
+                          </Button>
+                        </div>
 
-                        <TabsContent value="dynamicObservation">
-                          <ObservationsTab
-                            observations={observations}
-                            activeType="dynamicObservation"
-                            onRemoveObservation={handleRemoveObservation}
-                            onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "dynamicObservation" }))
-                              setIsAddSheetOpen(true)
-                            }}
-                            selectedView={selectedView}
-                            setSelectedView={setSelectedView}
-                          />
-                        </TabsContent>
-
-                        <TabsContent value="dysfunction">
-                          <ObservationsTab
-                            observations={observations}
-                            activeType="dysfunction"
-                            onRemoveObservation={handleRemoveObservation}
-                            onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "dysfunction" }))
-                              setIsAddSheetOpen(true)
-                            }}
-                            selectedView={selectedView}
-                            setSelectedView={setSelectedView}
-                          />
-                        </TabsContent>
-
-                        <TabsContent value="recommendation">
-                          <ObservationsTab
-                            observations={observations}
-                            activeType="recommendation"
-                            onRemoveObservation={handleRemoveObservation}
-                            onOpenAddSheet={() => {
-                              setNewObservation(prev => ({ ...prev, type: "recommendation" }))
-                              setIsAddSheetOpen(true)
-                            }}
-                            selectedView={selectedView}
-                            setSelectedView={setSelectedView}
-                          />
-                        </TabsContent>
-                      </Tabs>
+                        <div className="p-3 flex-1 overflow-y-auto">
+                          <div className="space-y-3">
+                            {observations.map(obs => (
+                              <div key={obs.id} className="p-3 border rounded-md flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                    <div
+                                      className={cn(
+                                        "w-3 h-3 rounded-full",
+                                        obs.severity === 1
+                                          ? "bg-green-500"
+                                          : obs.severity === 2
+                                            ? "bg-yellow-500"
+                                            : obs.severity === 3
+                                              ? "bg-orange-500"
+                                              : obs.severity === 4
+                                                ? "bg-red-500"
+                                                : "bg-purple-500"
+                                      )}
+                                    />
+                                    <span className="font-medium">{anatomicalRegions.find(r => r.value === obs.region)?.label}</span>
+                                    {obs.interventionZone && (
+                                      <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                                        {interventionZones.find(z => z.value === obs.interventionZone)?.label}
+                                      </span>
+                                    )}
+                                    <span className="text-xs text-muted-foreground">
+                                      ({obs.severity === 1
+                                        ? "Légère"
+                                        : obs.severity === 2
+                                          ? "Modérée"
+                                          : obs.severity === 3
+                                            ? "Importante"
+                                            : obs.severity === 4
+                                              ? "Sévère"
+                                              : "Critique"})
+                                    </span>
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                                      {obs.type === "staticObservation"
+                                        ? "Statique"
+                                        : "Dynamique"}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">{obs.notes}</p>
+                                </div>
+                                <Button variant="ghost" size="icon" onClick={() => handleRemoveObservation(obs.id)}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </Card>
                     </div>
                   )}
                 </div>

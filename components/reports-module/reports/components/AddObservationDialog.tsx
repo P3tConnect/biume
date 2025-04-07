@@ -5,8 +5,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { NewObservation, anatomicalRegions, dysfunctionTypes, observationTypes, interventionZones } from "./types"
-import { PlusCircleIcon, ListChecksIcon, EyeIcon, EyeClosed, ClipboardCheck, Activity } from "lucide-react"
+import { NewObservation, anatomicalRegions, interventionZones } from "./types"
+import { ListChecksIcon, EyeIcon, Activity } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/src/lib/utils"
 
@@ -25,22 +25,6 @@ export function AddObservationDialog({
   setNewObservation,
   onAdd,
 }: AddObservationDialogProps) {
-  // Fonction pour obtenir l'icône en fonction du type d'observation
-  const getObservationIcon = (type: string) => {
-    switch (type) {
-      case "staticObservation":
-        return <EyeIcon className="h-5 w-5" />
-      case "dynamicObservation":
-        return <Activity className="h-5 w-5" />
-      case "dysfunction":
-        return <Activity className="h-5 w-5" />
-      case "recommendation":
-        return <ClipboardCheck className="h-5 w-5" />
-      default:
-        return <EyeIcon className="h-5 w-5" />
-    }
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg max-h-[90vh] overflow-y-auto">
@@ -64,7 +48,7 @@ export function AddObservationDialog({
                       ? "border-primary bg-primary/5"
                       : "border-muted hover:border-primary/50"
                   )}
-                  onClick={() => setNewObservation({ ...newObservation, type: "staticObservation" as any })}
+                  onClick={() => setNewObservation({ ...newObservation, type: "staticObservation" })}
                 >
                   <EyeIcon
                     className={cn(
@@ -91,7 +75,7 @@ export function AddObservationDialog({
                       ? "border-primary bg-primary/5"
                       : "border-muted hover:border-primary/50"
                   )}
-                  onClick={() => setNewObservation({ ...newObservation, type: "dynamicObservation" as any })}
+                  onClick={() => setNewObservation({ ...newObservation, type: "dynamicObservation" })}
                 >
                   <Activity
                     className={cn(
@@ -111,29 +95,27 @@ export function AddObservationDialog({
               </div>
             </div>
 
-            {/* Type de dysfonction (conditionnel) */}
-            {newObservation.type === "dysfunction" && (
-              <div className="space-y-3">
-                <Label className="font-medium">Type de dysfonction</Label>
-                <Select
-                  value={newObservation.dysfunctionType}
-                  onValueChange={value => setNewObservation({ ...newObservation, dysfunctionType: value as any })}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sélectionner le type de dysfonction" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {dysfunctionTypes.map(type => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
             <Separator className="my-1" />
+
+            {/* Région anatomique */}
+            <div className="space-y-3">
+              <Label className="font-medium">Région anatomique</Label>
+              <Select
+                value={newObservation.region}
+                onValueChange={value => setNewObservation({ ...newObservation, region: value })}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Sélectionner une région anatomique" />
+                </SelectTrigger>
+                <SelectContent>
+                  {anatomicalRegions.map(region => (
+                    <SelectItem key={region.value} value={region.value}>
+                      {region.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             {/* Zone d'intervention */}
             <div className="space-y-3">
@@ -163,7 +145,7 @@ export function AddObservationDialog({
                 onValueChange={value => setNewObservation({ ...newObservation, severity: parseInt(value) })}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue placeholder="Sélectionner une gravité" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="1">Légère</SelectItem>
@@ -180,16 +162,12 @@ export function AddObservationDialog({
             {/* Notes/Recommandations */}
             <div className="space-y-3">
               <Label className="font-medium">
-                {newObservation.type === "recommendation" ? "Recommandations" : "Observations"}
+                Observations
               </Label>
               <Textarea
                 value={newObservation.notes}
                 onChange={e => setNewObservation({ ...newObservation, notes: e.target.value })}
-                placeholder={
-                  newObservation.type === "recommendation"
-                    ? "Décrivez vos conseils et recommandations..."
-                    : "Décrivez vos observations..."
-                }
+                placeholder={"Décrivez vos observations..."}
                 className="resize-none h-[150px]"
               />
             </div>
@@ -203,7 +181,8 @@ export function AddObservationDialog({
           <Button
             onClick={onAdd}
             disabled={
-              !newObservation.type || (newObservation.type === "dysfunction" && !newObservation.dysfunctionType)
+              !newObservation.type ||
+              !newObservation.region
             }
             className="gap-1"
           >

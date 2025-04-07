@@ -42,6 +42,7 @@ import { DateStep } from "./steps/DateStep"
 import { getOptionsFromOrganization } from "@/src/actions/options.action"
 import { SuccessStep } from "./steps/SuccessStep"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { BiumeAI } from "@/components/biume-ai"
 
 // Création d'un type pour les slots d'affichage
 interface DisplaySlot {
@@ -343,62 +344,102 @@ export function BookingCard({ organization }: { organization: Organization }) {
     }
   }
 
+  // Gestionnaire pour les créneaux optimisés par BiumeAI
+  const handleOptimizedSlotSelect = (optimizedSlot: any) => {
+    // Rechercher un créneau disponible correspondant à l'heure optimisée
+    if (!organizationSlots || !("data" in organizationSlots) || !organizationSlots.data) {
+      return
+    }
+
+    const [hours, minutes] = optimizedSlot.time.split(":").map(Number)
+
+    const matchingSlot = organizationSlots.data.find((slot: OrganizationSlots) => {
+      if (!slot.start) return false
+
+      const slotDate = new Date(slot.start)
+      return slotDate.getHours() === hours &&
+        slotDate.getMinutes() === minutes &&
+        slot.isAvailable &&
+        slot.service?.atHome
+    })
+
+    if (matchingSlot) {
+      const slotDate = new Date(matchingSlot.start || "")
+      handleOpenReservationModal({
+        date: slotDate,
+        slot: matchingSlot
+      })
+
+      // Prérégler la consultation à domicile
+      setConsultationType(true)
+    } else {
+      toast.info("Ce créneau optimisé n'est plus disponible")
+    }
+  }
+
   return (
-    <Card className="border-2">
-      <CardContent className="p-6">
-        <div className="space-y-6">
-          {/* Titre */}
-          <div className="flex items-baseline gap-1">
-            <h3 className="text-xl font-semibold">Prochains créneaux disponibles</h3>
-          </div>
+    <>
+      <Card className="border-2">
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            {/* Titre */}
+            <div className="flex items-baseline gap-1">
+              <h3 className="text-xl font-semibold">Prochains créneaux disponibles</h3>
+            </div>
 
-          {/* Affichage des prochains créneaux */}
-          <div className="space-y-3">
-            {isLoadingSlots ? (
-              <div className="flex items-center justify-center p-4">
-                <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                <span className="ml-2 text-sm text-muted-foreground">Chargement des disponibilités...</span>
-              </div>
-            ) : upcomingSlots.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3">
-                {upcomingSlots.map((item, index) => (
-                  <div
-                    key={index}
-                    className="p-3 rounded-md border border-muted-foreground/20 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={() => handleOpenReservationModal(item)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-3.5 w-3.5 text-primary" />
-                      <span className="text-xs font-medium">{format(item.date, "EEE d MMM", { locale: fr })}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-1.5">
+            {/* Affichage des prochains créneaux */}
+            <div className="space-y-3">
+              {isLoadingSlots ? (
+                <div className="flex items-center justify-center p-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  <span className="ml-2 text-sm text-muted-foreground">Chargement des disponibilités...</span>
+                </div>
+              ) : upcomingSlots.length > 0 ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {upcomingSlots.map((item, index) => (
+                    <div
+                      key={index}
+                      className="p-3 rounded-md border border-muted-foreground/20 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
+                      onClick={() => handleOpenReservationModal(item)}
+                    >
                       <div className="flex items-center gap-2">
-                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-xs">{format(item.date, "HH'h'mm")}</span>
+                        <Calendar className="h-3.5 w-3.5 text-primary" />
+                        <span className="text-xs font-medium">{format(item.date, "EEE d MMM", { locale: fr })}</span>
                       </div>
-                      {item.slot.service && (
-                        <span className="text-xs text-primary font-medium truncate max-w-[100px]">
-                          {item.slot.service.name}
-                        </span>
-                      )}
+                      <div className="flex items-center justify-between mt-1.5">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span className="text-xs">{format(item.date, "HH'h'mm")}</span>
+                        </div>
+                        {item.slot.service && (
+                          <span className="text-xs text-primary font-medium truncate max-w-[100px]">
+                            {item.slot.service.name}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center p-4 text-sm text-muted-foreground">
-                Aucun créneau disponible pour les prochains jours
-              </div>
-            )}
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center p-4 text-sm text-muted-foreground">
+                  Aucun créneau disponible pour les prochains jours
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </CardContent>
+        </CardContent>
 
-      <CardFooter className="p-6 pt-0">
-        <Button className="w-full" size="lg" onClick={() => handleOpenReservationModal()}>
-          Prendre rendez-vous
-        </Button>
-      </CardFooter>
+        <CardFooter className="p-6 pt-0">
+          <Button className="w-full" size="lg" onClick={() => handleOpenReservationModal()}>
+            Prendre rendez-vous
+          </Button>
+        </CardFooter>
+      </Card>
+
+      {/* Intégration du composant BiumeAI */}
+      {organization.onDemand && (
+        <BiumeAI organization={organization} onSelectSlot={handleOptimizedSlotSelect} />
+      )}
 
       {/* Modale de connexion */}
       <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
@@ -662,6 +703,6 @@ export function BookingCard({ organization }: { organization: Organization }) {
           </CredenzaFooter>
         </CredenzaContent>
       </Credenza>
-    </Card>
+    </>
   )
 }
