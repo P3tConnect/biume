@@ -36,9 +36,9 @@ const features = [
   },
   {
     icon: MessageCircle,
-    title: "Messagerie intégrée",
+    title: "Dossier médical numérique",
     description:
-      "Communiquez directement avec votre vétérinaire pour des questions simples sans vous déplacer.",
+      "Accédez à l'historique complet des consultations et suivez l'évolution de la santé de vos animaux.",
     color: "bg-green-500/10 text-green-600 dark:text-green-400",
   },
   {
@@ -50,9 +50,9 @@ const features = [
   },
   {
     icon: Clock,
-    title: "Disponibilité 24/7",
+    title: "Gestion multi-animaux",
     description:
-      "Prenez rendez-vous à n'importe quelle heure du jour ou de la nuit selon vos disponibilités.",
+      "Gérez facilement plusieurs animaux de compagnie avec des profils distincts et un suivi personnalisé pour chacun.",
     color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
   },
 ];
@@ -111,41 +111,6 @@ export function FeaturesSection() {
             </motion.div>
           ))}
         </div>
-
-        {/* <motion.div
-          className="mt-20 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Rejoignez des milliers de propriétaires d&apos;animaux satisfaits
-            qui utilisent Biume pour prendre soin de leurs compagnons.
-          </p>
-          <div className="flex justify-center gap-6">
-            <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold text-primary">10k+</span>
-              <span className="text-sm text-muted-foreground">
-                Utilisateurs satisfaits
-              </span>
-            </div>
-            <div className="h-12 w-px bg-border"></div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold text-primary">500+</span>
-              <span className="text-sm text-muted-foreground">
-                Professionnels partenaires
-              </span>
-            </div>
-            <div className="h-12 w-px bg-border"></div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold text-primary">4.8/5</span>
-              <span className="text-sm text-muted-foreground">
-                Note moyenne
-              </span>
-            </div>
-          </div>
-        </motion.div> */}
       </div>
     </section>
   );
