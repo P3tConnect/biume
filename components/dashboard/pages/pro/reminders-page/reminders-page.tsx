@@ -89,7 +89,7 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Titre</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input className="text-lg" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -102,7 +102,11 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field} value={field.value ?? ''} />
+                        <Textarea
+                          className="text-lg"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -116,7 +120,7 @@ const RemindersPageComponent = () => {
                       <FormLabel>Type</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value ?? ''}
+                        defaultValue={field.value ?? ""}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -146,7 +150,21 @@ const RemindersPageComponent = () => {
                     <FormItem>
                       <FormLabel>Date d&apos;échéance</FormLabel>
                       <FormControl>
-                        <Input type="datetime-local" {...field} value={field.value ? field.value.toISOString().split('T')[0] + 'T' + field.value.toISOString().split('T')[1].split('.')[0] : ''} />
+                        <Input
+                          className="text-lg"
+                          type="datetime-local"
+                          {...field}
+                          value={
+                            field.value
+                              ? field.value.toISOString().split("T")[0] +
+                                "T" +
+                                field.value
+                                  .toISOString()
+                                  .split("T")[1]
+                                  .split(".")[0]
+                              : ""
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -154,9 +172,9 @@ const RemindersPageComponent = () => {
                 />
                 <Button
                   type="submit"
-                // disabled={
-                //   createStatus === "executing" || updateStatus === "executing"
-                // }
+                  // disabled={
+                  //   createStatus === "executing" || updateStatus === "executing"
+                  // }
                 >
                   {isEditMode ? "Mettre à jour" : "Créer"}
                 </Button>
@@ -186,12 +204,13 @@ const RemindersPageComponent = () => {
                   </span>
                   <span className="capitalize">{reminder.type}</span>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs ${reminder.status === "completed"
-                      ? "bg-green-100 text-green-800"
-                      : reminder.status === "cancelled"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                      }`}
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      reminder.status === "completed"
+                        ? "bg-green-100 text-green-800"
+                        : reminder.status === "cancelled"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                    }`}
                   >
                     {reminder.status}
                   </span>
@@ -208,7 +227,7 @@ const RemindersPageComponent = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                // onClick={() => handleDelete(reminder.id)}
+                  // onClick={() => handleDelete(reminder.id)}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </Button>

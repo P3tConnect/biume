@@ -112,8 +112,13 @@ export const ServiceForm = ({
         <div className="max-h-[calc(85vh-10rem)] overflow-y-auto pr-2 -mr-2">
           <Form {...form}>
             <form onSubmit={onSubmit} className="space-y-4">
-              <div className={cn("space-y-4", "hover:shadow-lg hover:border-primary/20", "transition-all duration-300")}>
-
+              <div
+                className={cn(
+                  "space-y-4",
+                  "hover:shadow-lg hover:border-primary/20",
+                  "transition-all duration-300",
+                )}
+              >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Image du service - première colonne */}
                   <FormField
@@ -157,11 +162,18 @@ export const ServiceForm = ({
                                   }}
                                   value={
                                     field.value
-                                      ? [{ url: field.value, name: field.value }]
+                                      ? [
+                                          {
+                                            url: field.value,
+                                            name: field.value,
+                                          },
+                                        ]
                                       : []
                                   }
                                   uploadEndpoint="imageUploader"
-                                  acceptedFileTypes={DEFAULT_ACCEPTED_IMAGE_TYPES}
+                                  acceptedFileTypes={
+                                    DEFAULT_ACCEPTED_IMAGE_TYPES
+                                  }
                                   placeholder={{
                                     dragActive: "Relâchez pour ajouter l'image",
                                     dragInactive: "Déposez votre image ici",
@@ -192,7 +204,7 @@ export const ServiceForm = ({
                           <FormControl>
                             <Input
                               placeholder="ex: Consultation vétérinaire"
-                              className="bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                              className="bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
                               {...field}
                             />
                           </FormControl>
@@ -215,7 +227,7 @@ export const ServiceForm = ({
                                 <Input
                                   type="number"
                                   placeholder="30"
-                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
                                   {...field}
                                   onChange={(e) =>
                                     field.onChange(Number(e.target.value))
@@ -242,7 +254,7 @@ export const ServiceForm = ({
                                 <Input
                                   type="number"
                                   placeholder="50"
-                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                                  className="pl-9 bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
                                   {...field}
                                   onChange={(e) =>
                                     field.onChange(Number(e.target.value))
@@ -271,7 +283,7 @@ export const ServiceForm = ({
                       <FormControl>
                         <Textarea
                           placeholder="Détaillez votre service..."
-                          className="min-h-[100px] resize-none bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary"
+                          className="min-h-[100px] resize-none bg-transparent border-gray-200 dark:border-gray-800 focus-visible:ring-1 focus-visible:ring-primary text-lg"
                           {...field}
                         />
                       </FormControl>

@@ -474,7 +474,7 @@ export function BookingCard({ organization }: { organization: Organization }) {
                   id="email"
                   type="email"
                   placeholder="nom@exemple.fr"
-                  className="w-full"
+                  className="w-full text-lg"
                   {...register("email")}
                 />
               </div>

@@ -211,7 +211,7 @@ const EventModal = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="col-span-3"
+              className="col-span-3 text-lg"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -298,7 +298,7 @@ const EventModal = ({
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-24"
+              className="h-24 text-lg"
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}

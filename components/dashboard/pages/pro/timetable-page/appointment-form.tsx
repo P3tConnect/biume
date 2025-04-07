@@ -119,7 +119,7 @@ export function AppointmentForm({
                   onChange={(e) =>
                     setFormData({ ...formData, clientName: e.target.value })
                   }
-                  className="max-w-md"
+                  className="max-w-md text-lg"
                   placeholder="Entrez le nom du client"
                   required
                 />
@@ -175,7 +175,7 @@ export function AppointmentForm({
                     onChange={(e) =>
                       setFormData({ ...formData, time: e.target.value })
                     }
-                    className="pl-10"
+                    className="pl-10 text-lg"
                     required
                   />
                   <Clock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -274,7 +274,7 @@ export function AppointmentForm({
                   setFormData({ ...formData, notes: e.target.value })
                 }
                 placeholder="Ajouter des notes supplémentaires..."
-                className="min-h-[120px]"
+                className="min-h-[120px] text-lg"
               />
             </div>
           </Card>

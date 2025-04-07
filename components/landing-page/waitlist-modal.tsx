@@ -120,7 +120,12 @@ export function WaitlistModal({
         {!isSuccess ? (
           <div className="p-6">
             <CredenzaHeader className="mb-4">
-              <div className={cn("inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit", !defaultIsPro ? "bg-secondary/10 text-secondary" : "")}>
+              <div
+                className={cn(
+                  "inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit",
+                  !defaultIsPro ? "bg-secondary/10 text-secondary" : "",
+                )}
+              >
                 <Sparkles className="w-4 h-4" />
                 <span>Phase bêta</span>
               </div>
@@ -145,7 +150,11 @@ export function WaitlistModal({
                       <FormItem>
                         <FormLabel>Nom</FormLabel>
                         <FormControl>
-                          <Input placeholder="Dupont" {...field} />
+                          <Input
+                            className="text-lg"
+                            placeholder="Dupont"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -158,7 +167,11 @@ export function WaitlistModal({
                       <FormItem>
                         <FormLabel>Prénom</FormLabel>
                         <FormControl>
-                          <Input placeholder="Marie" {...field} />
+                          <Input
+                            className="text-lg"
+                            placeholder="Marie"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -174,6 +187,7 @@ export function WaitlistModal({
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
+                          className="text-lg"
                           type="email"
                           placeholder={
                             defaultIsPro
@@ -197,6 +211,7 @@ export function WaitlistModal({
                         <FormLabel>Nom de votre entreprise</FormLabel>
                         <FormControl>
                           <Input
+                            className="text-lg"
                             placeholder="Clinique Vétérinaire des Alpes"
                             {...field}
                             value={field.value || ""}
@@ -216,6 +231,7 @@ export function WaitlistModal({
                       <FormLabel>Un message pour nous ? (facultatif)</FormLabel>
                       <FormControl>
                         <Textarea
+                          className="text-lg"
                           placeholder="Partagez vos attentes concernant notre solution..."
                           {...field}
                           value={field.value || ""}
@@ -256,7 +272,14 @@ export function WaitlistModal({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className={cn("w-16 h-16 rounded-full flex items-center justify-center mb-4", !defaultIsPro ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary")}>
+            <div
+              className={cn(
+                "w-16 h-16 rounded-full flex items-center justify-center mb-4",
+                !defaultIsPro
+                  ? "bg-secondary/10 text-secondary"
+                  : "bg-primary/10 text-primary",
+              )}
+            >
               <CheckCircle className="h-8 w-8" />
             </div>
             <h2 className="text-2xl font-bold mb-2">
@@ -276,15 +299,17 @@ export function WaitlistModal({
               ))}
             </div>
 
-            {defaultIsPro && <Button variant="default" asChild>
-              <Link
-                href="https://forms.gle/ZWyhVPJfL1D98D716"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Répondre au questionnaire
-              </Link>
-            </Button>}
+            {defaultIsPro && (
+              <Button variant="default" asChild>
+                <Link
+                  href="https://forms.gle/ZWyhVPJfL1D98D716"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Répondre au questionnaire
+                </Link>
+              </Button>
+            )}
 
             <Button variant="outline" className="gap-2" onClick={closeModal}>
               Fermer

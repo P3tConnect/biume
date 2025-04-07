@@ -115,6 +115,7 @@ export const TeamInviteButton = ({ organization }: TeamInviteButtonProps) => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
+                      className="text-lg"
                       placeholder="membre@example.com"
                       type="email"
                       {...field}
@@ -164,4 +165,4 @@ export const TeamInviteButton = ({ organization }: TeamInviteButtonProps) => {
       </CredenzaContent>
     </Credenza>
   );
-}; 
+};

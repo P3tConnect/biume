@@ -29,11 +29,7 @@ interface OptionFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const OptionForm = ({
-  option,
-  open,
-  onOpenChange,
-}: OptionFormProps) => {
+export const OptionForm = ({ option, open, onOpenChange }: OptionFormProps) => {
   const form = useForm<z.infer<typeof optionSchema>>({
     resolver: zodResolver(optionSchema),
     defaultValues: {
@@ -94,7 +90,11 @@ export const OptionForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Titre de l'option" {...field} />
+                      <Input
+                        className="text-lg"
+                        placeholder="Titre de l'option"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -109,7 +109,7 @@ export const OptionForm = ({
                     <FormControl>
                       <Textarea
                         placeholder="Description de l'option..."
-                        className="min-h-[100px]"
+                        className="min-h-[100px] text-lg"
                         {...field}
                         value={field.value || ""}
                       />
@@ -129,7 +129,7 @@ export const OptionForm = ({
                         <Input
                           type="number"
                           placeholder="Prix"
-                          className="pl-9"
+                          className="pl-9 text-lg"
                           {...field}
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))
@@ -154,4 +154,4 @@ export const OptionForm = ({
       </CredenzaContent>
     </Credenza>
   );
-}; 
+};

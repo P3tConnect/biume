@@ -222,7 +222,7 @@ const InformationsForm = ({
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
-                              "h-9",
+                              "h-9 text-lg",
                               form.formState.errors.name &&
                                 "border-destructive",
                             )}
@@ -247,7 +247,7 @@ const InformationsForm = ({
                             {...field}
                             value={field.value ?? ""}
                             className={cn(
-                              "h-9",
+                              "h-9 text-lg",
                               form.formState.errors.email &&
                                 "border-destructive",
                             )}
@@ -272,7 +272,7 @@ const InformationsForm = ({
                           defaultValue={field.value ?? "NONE"}
                         >
                           <FormControl>
-                            <SelectTrigger className="h-9">
+                            <SelectTrigger className="h-9 text-lg">
                               <SelectValue placeholder="Sélectionnez" />
                             </SelectTrigger>
                           </FormControl>
@@ -331,7 +331,7 @@ const InformationsForm = ({
                     <FormControl className="flex-1">
                       <Textarea
                         className={cn(
-                          "flex-1 min-h-[120px] resize-none text-base",
+                          "flex-1 min-h-[120px] resize-none text-lg",
                           form.formState.errors.description &&
                             "border-destructive",
                         )}
