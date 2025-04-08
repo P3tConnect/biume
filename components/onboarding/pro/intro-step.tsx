@@ -16,14 +16,14 @@ const IntroStep = ({
   isLoading: boolean
 }) => {
   return (
-    <div className="w-full h-full relative bg-background">
-      <div className="relative w-full h-full flex flex-col items-center gap-4 px-4 sm:px-6 py-4">
+    <div className="w-full h-full relative bg-background flex items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-between gap-3 px-4 sm:px-6 py-4">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-center space-y-2 max-w-2xl"
+          className="text-center space-y-2 w-full"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -76,14 +76,14 @@ const IntroStep = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="w-full flex flex-col lg:flex-row gap-4 items-center"
+          className="w-full flex-1 flex flex-col lg:flex-row gap-4 items-center"
         >
           <div className="w-full lg:w-1/2">
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.25, duration: 0.3 }}
-              className="relative aspect-[16/10] rounded-lg overflow-hidden shadow-lg"
+              className="relative aspect-[16/10] w-full rounded-lg overflow-hidden shadow-lg"
             >
               <Image
                 src="/assets/images/login-image.jpg"
@@ -126,7 +126,7 @@ const IntroStep = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.3 }}
-          className="flex flex-wrap items-center justify-end w-full gap-2 mt-2"
+          className="flex flex-wrap items-center justify-end w-full gap-2 mt-auto"
         >
           <Button
             variant="outline"
