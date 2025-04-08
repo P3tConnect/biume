@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Clock, Euro, Home, Loader2, Plus, Users, X } from "lucide-react"
-import Image from "next/image"
 import React, { useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -11,7 +10,6 @@ import { z } from "zod"
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui"
 import { Button } from "@/components/ui/button"
-import { DropzoneInput } from "@/components/ui/dropzone-input"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
@@ -88,74 +86,42 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className={cn(
-                  "group relative rounded-2xl border bg-card transition-all duration-300",
-                  "hover:shadow-lg hover:scale-[1.02] hover:border-primary/50",
-                  "dark:bg-gray-950/50 dark:backdrop-blur-xl"
-                )}
+                className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950"
               >
-                <FormField
-                  control={control}
-                  name={`services.${index}.image`}
-                  render={({ field: imageField }) => (
-                    <div className="relative w-full h-48 rounded-t-2xl overflow-hidden bg-gray-100 dark:bg-gray-900">
-                      {imageField.value ? (
-                        <>
-                          <Image src={imageField.value} alt="Aperçu du service" fill className="object-cover" />
-                          <button
-                            type="button"
-                            className="absolute top-2 right-2 p-2 bg-red-500/80 backdrop-blur-sm text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => imageField.onChange("")}
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <DropzoneInput
-                            uploadEndpoint="imageUploader"
-                            value={imageField.value ? [{ url: imageField.value, name: "service-image" }] : []}
-                            onFilesChanged={files => {
-                              if (files[0]) {
-                                imageField.onChange(files[0].url)
-                              }
-                            }}
-                            acceptedFileTypes={{
-                              "image/jpeg": [".jpg", ".jpeg"],
-                              "image/png": [".png"],
-                            }}
-                            placeholder={{
-                              dragActive: "Déposez votre image ici",
-                              dragInactive: "Glissez-déposez votre image ici, ou cliquez pour sélectionner",
-                              fileTypes: "JPEG, PNG - 5MB max",
-                            }}
+                <div className="p-4 pb-2 relative">
+                  <FormField
+                    control={control}
+                    name={`services.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            placeholder="Nom du service"
+                            className="font-medium bg-transparent border-b border-gray-200 dark:border-gray-800 rounded-none px-1 py-2 h-9 focus-visible:ring-0 focus-visible:border-primary"
+                            {...field}
+                            value={field.value ?? ""}
                           />
-                        </div>
-                      )}
-                    </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {fields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-3 right-3 h-7 w-7 p-0 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => remove(index)}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
                   )}
-                />
+                </div>
 
-                <div className="p-6 space-y-6">
-                  <div className="space-y-4">
-                    <FormField
-                      control={control}
-                      name={`services.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              placeholder="Nom du service"
-                              className="text-lg font-medium bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg px-3 h-10 focus-visible:ring-1 focus-visible:ring-primary"
-                              {...field}
-                              value={field.value ?? ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
+                <div className="flex-1 p-4 space-y-4">
+                  <div>
                     <FormField
                       control={control}
                       name={`services.${index}.description`}
@@ -163,8 +129,8 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                         <FormItem>
                           <FormControl>
                             <Textarea
-                              placeholder="Description du service..."
-                              className="min-h-[80px] resize-none bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg p-3 focus-visible:ring-1 focus-visible:ring-primary"
+                              placeholder="Description..."
+                              className="min-h-[60px] resize-none bg-gray-50/50 dark:bg-gray-900/50 border-none rounded-lg p-2 text-sm focus-visible:ring-1 focus-visible:ring-primary"
                               {...field}
                               value={field.value ?? ""}
                             />
@@ -175,25 +141,27 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <FormField
                       control={control}
                       name={`services.${index}.duration`}
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center gap-2 p-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-                            <Clock className="h-4 w-4 text-gray-500 ml-1" />
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="30"
-                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
-                                {...field}
-                                value={field.value ?? ""}
-                                onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
-                              />
-                            </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">min</span>
+                          <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-900 rounded-lg p-2 h-10">
+                            <Clock className="h-4 w-4 text-primary/70" />
+                            <div className="flex items-center flex-1">
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  placeholder="30"
+                                  className="border-none bg-transparent p-0 h-auto w-12 focus-visible:ring-0 text-right"
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                                />
+                              </FormControl>
+                              <span className="text-xs text-gray-500 ml-1">min</span>
+                            </div>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -205,19 +173,21 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                       name={`services.${index}.price`}
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center gap-2 p-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-                            <Euro className="h-4 w-4 text-gray-500 ml-1" />
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="0"
-                                className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
-                                {...field}
-                                value={field.value ?? ""}
-                                onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
-                              />
-                            </FormControl>
-                            <span className="text-sm text-gray-500 mr-1">€</span>
+                          <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-900 rounded-lg p-2 h-10">
+                            <Euro className="h-4 w-4 text-green-600/70" />
+                            <div className="flex items-center flex-1">
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  placeholder="0"
+                                  className="border-none bg-transparent p-0 h-auto w-16 focus-visible:ring-0 text-right"
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  onChange={e => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                                />
+                              </FormControl>
+                              <span className="text-xs text-gray-500 ml-1">€</span>
+                            </div>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -225,18 +195,22 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     />
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 pt-2 border-t border-dashed border-gray-200 dark:border-gray-800">
                     <FormField
                       control={control}
                       name={`services.${index}.atHome`}
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                        <FormItem className="flex items-center justify-between space-y-0">
                           <div className="flex items-center space-x-2">
-                            <Home className="h-4 w-4 text-gray-500" />
-                            <FormLabel className="text-sm font-normal">Service à domicile</FormLabel>
+                            <Home className="h-3.5 w-3.5 text-gray-500" />
+                            <FormLabel className="text-xs font-normal">À domicile</FormLabel>
                           </div>
                           <FormControl>
-                            <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
+                            <Switch
+                              checked={field.value ?? false}
+                              onCheckedChange={field.onChange}
+                              className="scale-75 data-[state=checked]:bg-primary"
+                            />
                           </FormControl>
                         </FormItem>
                       )}
@@ -246,21 +220,21 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                       control={control}
                       name={`services.${index}.type`}
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between space-y-0 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                        <FormItem className="flex items-center justify-between space-y-0">
                           <div className="flex items-center space-x-2">
-                            <Users className="h-4 w-4 text-gray-500" />
-                            <FormLabel className="text-sm font-normal">Accueille plusieurs animaux</FormLabel>
+                            <Users className="h-3.5 w-3.5 text-gray-500" />
+                            <FormLabel className="text-xs font-normal">Groupe</FormLabel>
                           </div>
                           <FormControl>
                             <Switch
                               checked={field.value === "MULTIPLE"}
                               onCheckedChange={val => {
                                 field.onChange(val ? "MULTIPLE" : "ONE_TO_ONE")
-                                // Reset capacity to 1 if switching to ONE_TO_ONE
                                 if (!val) {
                                   form.setValue(`services.${index}.places`, 1)
                                 }
                               }}
+                              className="scale-75 data-[state=checked]:bg-primary"
                             />
                           </FormControl>
                         </FormItem>
@@ -272,21 +246,22 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                         control={control}
                         name={`services.${index}.places`}
                         render={({ field }) => (
-                          <FormItem>
-                            <div className="flex items-center gap-2 p-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-                              <Users className="h-4 w-4 text-gray-500 ml-1" />
-                              <FormControl>
-                                <Input
-                                  type="number"
-                                  min="2"
-                                  placeholder="2"
-                                  className="border-none bg-transparent p-0 h-auto focus-visible:ring-0"
-                                  {...field}
-                                  value={field.value ?? ""}
-                                  onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 2)}
-                                />
-                              </FormControl>
-                              <span className="text-sm text-gray-500 mr-1">places</span>
+                          <FormItem className="pl-6">
+                            <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-900 rounded-lg p-2 h-8">
+                              <span className="text-xs text-gray-600 dark:text-gray-400">Places :</span>
+                              <div className="flex items-center">
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    min="2"
+                                    placeholder="2"
+                                    className="border-none bg-transparent p-0 h-auto w-10 focus-visible:ring-0 text-center"
+                                    {...field}
+                                    value={field.value ?? ""}
+                                    onChange={e => field.onChange(e.target.value ? parseInt(e.target.value) : 2)}
+                                  />
+                                </FormControl>
+                              </div>
                             </div>
                             <FormMessage />
                           </FormItem>
@@ -295,18 +270,6 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     )}
                   </div>
                 </div>
-
-                {fields.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
-                    onClick={() => remove(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
               </div>
             ))}
 
@@ -325,17 +288,14 @@ const ServicesForm = ({ nextStep, previousStep }: { nextStep: () => void; previo
                     places: 1,
                   })
                 }
-                className={cn(
-                  "flex flex-col items-center justify-center gap-4 p-8",
-                  "rounded-2xl border-2 border-dashed",
-                  "text-gray-500 hover:text-primary hover:border-primary",
-                  "transition-colors duration-200"
-                )}
+                className="flex flex-col items-center justify-center h-[350px] rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
               >
-                <div className="p-4 rounded-full bg-gray-50 dark:bg-gray-900">
-                  <Plus className="h-6 w-6" />
+                <div className="flex flex-col items-center gap-3">
+                  <div className="p-3 rounded-full bg-primary/10">
+                    <Plus className="h-6 w-6 text-primary" />
+                  </div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Créer un service</span>
                 </div>
-                <span>Ajouter votre premier service</span>
               </button>
             )}
           </div>

@@ -357,17 +357,16 @@ export function BookingCard({ organization }: { organization: Organization }) {
       if (!slot.start) return false
 
       const slotDate = new Date(slot.start)
-      return slotDate.getHours() === hours &&
-        slotDate.getMinutes() === minutes &&
-        slot.isAvailable &&
-        slot.service?.atHome
+      return (
+        slotDate.getHours() === hours && slotDate.getMinutes() === minutes && slot.isAvailable && slot.service?.atHome
+      )
     })
 
     if (matchingSlot) {
       const slotDate = new Date(matchingSlot.start || "")
       handleOpenReservationModal({
         date: slotDate,
-        slot: matchingSlot
+        slot: matchingSlot,
       })
 
       // Prérégler la consultation à domicile
@@ -437,9 +436,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
       </Card>
 
       {/* Intégration du composant BiumeAI */}
-      {organization.onDemand && (
+      {/* {organization.onDemand && (
         <BiumeAI organization={organization} onSelectSlot={handleOptimizedSlotSelect} />
-      )}
+      )} */}
 
       {/* Modale de connexion */}
       <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
@@ -547,9 +546,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
                           current.id === stepItem.id
                             ? "border-primary text-primary"
                             : index <
-                              Object.values(steps)
-                                .filter(s => s.id !== "success")
-                                .findIndex(s => s.id === current.id)
+                                Object.values(steps)
+                                  .filter(s => s.id !== "success")
+                                  .findIndex(s => s.id === current.id)
                               ? "border-primary bg-primary text-white"
                               : "border-muted-foreground/30 text-muted-foreground/50"
                         )}

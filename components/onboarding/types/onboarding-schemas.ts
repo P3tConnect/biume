@@ -9,7 +9,9 @@ export const proInformationsSchema = z.object({
   logo: z.string().min(1, { message: "Logo is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   companyType: CompanyTypeEnum,
-  atHome: z.boolean(),
+  website: z.string().url({ message: "URL invalide" }).optional(),
+  facebook: z.string().url({ message: "URL invalide" }).optional(),
+  instagram: z.string().url({ message: "URL invalide" }).optional(),
 })
 
 export const proServicesSchema = z.object({
