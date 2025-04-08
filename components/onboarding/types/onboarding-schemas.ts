@@ -6,12 +6,11 @@ import { CreateOptionSchema } from "@/src/db/options"
 export const proInformationsSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Email invalide" }),
-  logo: z.string().min(1, { message: "Logo is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   companyType: CompanyTypeEnum,
-  website: z.string().url({ message: "URL invalide" }).optional(),
-  facebook: z.string().url({ message: "URL invalide" }).optional(),
-  instagram: z.string().url({ message: "URL invalide" }).optional(),
+  website: z.string().optional(),
+  facebook: z.string().optional(),
+  instagram: z.string().optional(),
 })
 
 export const proServicesSchema = z.object({
