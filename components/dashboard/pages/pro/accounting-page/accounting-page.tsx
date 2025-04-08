@@ -1,148 +1,165 @@
 "use client"
 
-import { Download, Euro, TrendingUp, Calendar } from "lucide-react"
+import { Euro, TrendingUp, Calendar, Users } from "lucide-react"
 import React from "react"
-import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { cn } from "@/src/lib/utils"
 import { useSubscriptionCheck } from "@/src/hooks/use-subscription-check"
 import SubscriptionNonPayedAlert from "@/components/subscription-non-payed-card/subscription-non-payed-card"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import AccountingHeader from "../../../shortcuts/pro/dashboard-tabs/accounting-tab/accounting-header"
+import AccountingHeader from "./accounting-header"
 
 const AccountingPageComponent = () => {
   const { shouldShowAlert, organizationId } = useSubscriptionCheck()
+
+  // Données simulées plus pertinentes pour un cabinet vétérinaire
   const mockData = {
-    chiffreAffaires: {
+    revenus: {
       montant: 13550,
       evolution: 7,
       periode: "ce mois",
       historique: [
-        { mois: "Jan", montant: 11200 },
-        { mois: "Fév", montant: 12100 },
-        { mois: "Mar", montant: 11800 },
-        { mois: "Avr", montant: 12500 },
-        { mois: "Mai", montant: 12800 },
-        { mois: "Juin", montant: 13550 },
-      ],
-      repartition: [
-        { categorie: "Consultations", montant: 5500, pourcentage: 40.6 },
-        { categorie: "Chirurgies", montant: 3200, pourcentage: 23.6 },
-        { categorie: "Vaccinations", montant: 2100, pourcentage: 15.5 },
-        { categorie: "Produits", montant: 1750, pourcentage: 12.9 },
-        { categorie: "Autres", montant: 1000, pourcentage: 7.4 },
+        { mois: "Jan", consultations: 8200, produits: 3000 },
+        { mois: "Fév", consultations: 8800, produits: 3300 },
+        { mois: "Mar", consultations: 8500, produits: 3300 },
+        { mois: "Avr", consultations: 9000, produits: 3500 },
+        { mois: "Mai", consultations: 9200, produits: 3600 },
+        { mois: "Juin", consultations: 9800, produits: 3750 },
       ],
     },
-    paiements: [
-      { client: "Marie Dupont", montant: 180, date: "15/06/2024", statut: "en_attente" },
-      { client: "Thomas Petit", montant: 345, date: "18/06/2024", statut: "en_retard" },
-      { client: "Julie Martin", montant: 560, date: "22/06/2024", statut: "en_attente" },
+    statistiques: {
+      nombreClients: 145,
+      evolutionClients: 12,
+      ticketMoyen: 93.45,
+      evolutionTicket: 3,
+      tauxRemplissage: 85,
+      evolutionRemplissage: 5
+    },
+    prochainsReglements: [
+      { client: "Marie Dupont", montant: 180, date: "15/06/2024", type: "Consultation + Vaccins" },
+      { client: "Thomas Petit", montant: 345, date: "18/06/2024", type: "Chirurgie" },
+      { client: "Julie Martin", montant: 95, date: "22/06/2024", type: "Consultation" },
     ],
   }
 
   return (
     <>
       {shouldShowAlert && organizationId && <SubscriptionNonPayedAlert organizationId={organizationId} />}
-      <div className="flex flex-col gap-6 p-4">
+      <div className="flex flex-col gap-3 p-3">
         <AccountingHeader />
 
-        {/* Chiffre d'affaires et répartition */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                Chiffre d'affaires
+        {/* KPIs principaux */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Card className="rounded-xl">
+            <CardHeader className="pb-2 pt-3 px-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <Users className="h-4 w-4" />
+                Clients du mois
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-3xl font-bold text-foreground">{mockData.chiffreAffaires.montant} €</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <p
-                      className={cn(
-                        "text-sm font-medium",
-                        mockData.chiffreAffaires.evolution > 0
-                          ? "text-emerald-500 dark:text-emerald-400"
-                          : "text-rose-500 dark:text-rose-400"
-                      )}
-                    >
-                      {mockData.chiffreAffaires.evolution > 0 ? "+" : ""}
-                      {mockData.chiffreAffaires.evolution}%
-                    </p>
-                    <p className="text-sm text-muted-foreground">{mockData.chiffreAffaires.periode}</p>
-                  </div>
-                </div>
-                <div className="h-[200px] mt-4">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={mockData.chiffreAffaires.historique}>
-                      <defs>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <XAxis
-                        dataKey="mois"
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={value => `${value}€`}
-                      />
-                      <Tooltip
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            return (
-                              <div className="rounded-lg border bg-background p-2 shadow-sm">
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="flex flex-col">
-                                    <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                      {payload[0].payload.mois}
-                                    </span>
-                                    <span className="font-bold text-muted-foreground">{payload[0].value}€</span>
-                                  </div>
-                                </div>
-                              </div>
-                            )
-                          }
-                          return null
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="montant"
-                        stroke="hsl(var(--primary))"
-                        fillOpacity={1}
-                        fill="url(#colorRevenue)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+            <CardContent className="pb-3 px-3">
+              <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold">{mockData.statistiques.nombreClients}</p>
+                <p className={cn(
+                  "text-xs",
+                  mockData.statistiques.evolutionClients > 0
+                    ? "text-emerald-500"
+                    : "text-rose-500"
+                )}>
+                  {mockData.statistiques.evolutionClients > 0 ? "+" : ""}
+                  {mockData.statistiques.evolutionClients}% vs mois dernier
+                </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Euro className="h-5 w-5 text-muted-foreground" />
-                Répartition du CA
+          <Card className="rounded-xl">
+            <CardHeader className="pb-2 pt-3 px-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <Euro className="h-4 w-4" />
+                Ticket moyen
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="h-[200px] mt-4">
+            <CardContent className="pb-3 px-3">
+              <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold">{mockData.statistiques.ticketMoyen}€</p>
+                <p className={cn(
+                  "text-xs",
+                  mockData.statistiques.evolutionTicket > 0
+                    ? "text-emerald-500"
+                    : "text-rose-500"
+                )}>
+                  {mockData.statistiques.evolutionTicket > 0 ? "+" : ""}
+                  {mockData.statistiques.evolutionTicket}% vs mois dernier
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl">
+            <CardHeader className="pb-2 pt-3 px-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <Calendar className="h-4 w-4" />
+                Taux de remplissage
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-3 px-3">
+              <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold">{mockData.statistiques.tauxRemplissage}%</p>
+                <p className={cn(
+                  "text-xs",
+                  mockData.statistiques.evolutionRemplissage > 0
+                    ? "text-emerald-500"
+                    : "text-rose-500"
+                )}>
+                  {mockData.statistiques.evolutionRemplissage > 0 ? "+" : ""}
+                  {mockData.statistiques.evolutionRemplissage}% vs mois dernier
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Graphique d'évolution */}
+        <Card className="rounded-xl">
+          <CardHeader className="pb-2 pt-3 px-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              Évolution du chiffre d'affaires
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pb-3 px-3">
+            <div className="space-y-3">
+              <div>
+                <p className="text-2xl font-bold">{mockData.revenus.montant}€</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className={cn(
+                    "text-xs font-medium",
+                    mockData.revenus.evolution > 0
+                      ? "text-emerald-500"
+                      : "text-rose-500"
+                  )}>
+                    {mockData.revenus.evolution > 0 ? "+" : ""}
+                    {mockData.revenus.evolution}%
+                  </p>
+                  <p className="text-xs text-muted-foreground">vs mois dernier</p>
+                </div>
+              </div>
+              <div className="h-[250px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={mockData.chiffreAffaires.repartition}>
+                  <AreaChart data={mockData.revenus.historique}>
+                    <defs>
+                      <linearGradient id="colorConsultations" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorProduits" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--secondary))" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="hsl(var(--secondary))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
                     <XAxis
-                      dataKey="categorie"
+                      dataKey="mois"
                       stroke="hsl(var(--muted-foreground))"
                       fontSize={12}
                       tickLine={false}
@@ -153,24 +170,27 @@ const AccountingPageComponent = () => {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={value => `${value}%`}
+                      tickFormatter={value => `${value}€`}
                     />
                     <Tooltip
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           return (
                             <div className="rounded-lg border bg-background p-2 shadow-sm">
-                              <div className="grid grid-cols-2 gap-2">
-                                <div className="flex flex-col">
-                                  <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                    {payload[0].payload.categorie}
-                                  </span>
-                                  <span className="font-bold text-muted-foreground">
-                                    {payload[0].payload.pourcentage}%
-                                  </span>
-                                  <span className="text-[0.70rem] text-muted-foreground">
-                                    {payload[0].payload.montant}€
-                                  </span>
+                              <div className="grid gap-1">
+                                <p className="text-[0.70rem] font-medium uppercase text-muted-foreground">
+                                  {payload[0].payload.mois}
+                                </p>
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-[0.70rem] text-muted-foreground">
+                                    Consultations: {payload[0].value}€
+                                  </p>
+                                  <p className="text-[0.70rem] text-muted-foreground">
+                                    Produits: {payload[1].value}€
+                                  </p>
+                                  <p className="text-[0.70rem] font-bold text-muted-foreground">
+                                    Total: {Number(payload[0]?.value || 0) + Number(payload[1]?.value || 0)}€
+                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -179,51 +199,49 @@ const AccountingPageComponent = () => {
                         return null
                       }}
                     />
-                    <Bar dataKey="pourcentage" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                  </BarChart>
+                    <Area
+                      type="monotone"
+                      dataKey="consultations"
+                      stackId="1"
+                      stroke="hsl(var(--primary))"
+                      fill="url(#colorConsultations)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="produits"
+                      stackId="1"
+                      stroke="hsl(var(--secondary))"
+                      fill="url(#colorProduits)"
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Paiements en attente */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-              Paiements à suivre
+        {/* Prochains règlements */}
+        <Card className="rounded-xl">
+          <CardHeader className="pb-2 pt-3 px-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              Prochains règlements
             </CardTitle>
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Exporter
-            </Button>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {mockData.paiements.map((paiement, idx) => (
+          <CardContent className="pb-3 px-3">
+            <div className="space-y-2">
+              {mockData.prochainsReglements.map((reglement, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 hover:bg-muted rounded-md transition-colors"
+                  className="flex items-center justify-between p-2 hover:bg-muted rounded-md transition-colors"
                 >
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <p className="font-medium text-foreground">{paiement.client}</p>
-                      <p className="text-sm text-muted-foreground">Échéance : {paiement.date}</p>
-                    </div>
+                  <div className="flex flex-col gap-0.5">
+                    <p className="font-medium text-sm">{reglement.client}</p>
+                    <p className="text-xs text-muted-foreground">{reglement.type}</p>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <p className="font-bold text-foreground">{paiement.montant} €</p>
-                    <div
-                      className={cn(
-                        "px-2 py-1 rounded-md text-xs font-medium",
-                        paiement.statut === "en_retard"
-                          ? "bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300"
-                          : "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300"
-                      )}
-                    >
-                      {paiement.statut === "en_retard" ? "En retard" : "En attente"}
-                    </div>
+                  <div className="flex flex-col items-end gap-0.5">
+                    <p className="font-bold text-sm">{reglement.montant}€</p>
+                    <p className="text-xs text-muted-foreground">{reglement.date}</p>
                   </div>
                 </div>
               ))}
