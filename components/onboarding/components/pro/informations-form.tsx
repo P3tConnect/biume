@@ -21,7 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
-  Separator,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "@/components/ui"
 import { createOrganization } from "@/src/actions/organization.action"
 import { cn } from "@/src/lib/utils"
@@ -29,13 +32,13 @@ import { proInformationsSchema } from "../../types/onboarding-schemas"
 
 const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; previousStep: () => void }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("informations")
 
   const form = useForm<z.infer<typeof proInformationsSchema>>({
     resolver: zodResolver(proInformationsSchema),
     defaultValues: {
       name: "",
       email: "",
-      logo: "", // On garde le champ pour la compatibilité avec le schéma
       description: "",
       companyType: "OTHER",
       website: "",
@@ -44,9 +47,7 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
     },
   })
 
-  const { control, handleSubmit, reset, getValues } = form
-
-  console.log(getValues(), "values")
+  const { control, handleSubmit, reset, formState, trigger } = form
 
   const { mutateAsync } = useMutation({
     mutationFn: createOrganization,
@@ -56,10 +57,12 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
       nextStep()
       reset()
     },
-    onMutate: () => {
+    onMutate: (e: any) => {
+      console.log(e, "e")
       setIsLoading(true)
     },
     onError: error => {
+      console.log(error, "error")
       toast.error(error.message)
       setIsLoading(false)
     },
@@ -69,21 +72,33 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
     await mutateAsync(data)
   })
 
-  return (
-    <Form {...form}>
-      <form onSubmit={onSubmit} className="flex flex-col h-full">
-        <div className="flex-1 p-6 flex flex-col gap-8 overflow-y-auto">
-          {/* Informations de base */}
-          <div className="space-y-6">
-            <h2 className="text-lg font-medium">Informations de base</h2>
+  const areRequiredFieldsValid = async () => {
+    // Vérifier uniquement les champs obligatoires
+    const result = await trigger(["name", "email", "description", "companyType"])
+    return result
+  }
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
+  return (
+    <div className="flex flex-col h-full">
+      <Form {...form}>
+        <form className="flex flex-col h-full">
+          {/* Contenu scrollable */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <Tabs defaultValue="informations" value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="informations">Informations</TabsTrigger>
+                <TabsTrigger value="presence">Présence en ligne</TabsTrigger>
+              </TabsList>
+
+              {/* Onglet Informations */}
+              <TabsContent value="informations" className="space-y-4">
+                <h2 className="text-lg font-medium mb-4">Informations de base</h2>
+
                 <FormField
                   control={control}
                   name="name"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="mb-4">
                       <FormLabel className="text-sm font-medium">Nom de votre entreprise</FormLabel>
                       <FormControl>
                         <Input
@@ -91,180 +106,228 @@ const InformationsForm = ({ nextStep, previousStep }: { nextStep: () => void; pr
                           placeholder="Biume Inc."
                           {...field}
                           value={field.value ?? ""}
-                          className={cn("h-10 text-base", form.formState.errors.name && "border-destructive")}
+                          className={cn("h-10 text-base", formState.errors.name && "border-destructive")}
                         />
                       </FormControl>
                     </FormItem>
                   )}
                 />
-              </div>
 
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Email de contact</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="contact@biume.com"
-                        {...field}
-                        value={field.value ?? ""}
-                        className={cn("h-10 text-base", form.formState.errors.email && "border-destructive")}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={control}
-                name="companyType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Type d&apos;entreprise</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value ?? "NONE"}>
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel className="text-sm font-medium">Email de contact</FormLabel>
                       <FormControl>
-                        <SelectTrigger className="h-10 text-base">
-                          <SelectValue placeholder="Sélectionnez" />
-                        </SelectTrigger>
+                        <Input
+                          type="email"
+                          placeholder="contact@biume.com"
+                          {...field}
+                          value={field.value ?? ""}
+                          className={cn("h-10 text-base", formState.errors.email && "border-destructive")}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="AUTO-ENTREPRENEUR">Auto-entrepreneur</SelectItem>
-                        <SelectItem value="SARL">SARL</SelectItem>
-                        <SelectItem value="SAS">SAS</SelectItem>
-                        <SelectItem value="EIRL">EIRL</SelectItem>
-                        <SelectItem value="SASU">SASU</SelectItem>
-                        <SelectItem value="EURL">EURL</SelectItem>
-                        <SelectItem value="OTHER">Autre</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            </div>
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Description de votre entreprise</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className={cn(
-                        "min-h-[120px] resize-none text-base",
-                        form.formState.errors.description && "border-destructive"
+                <FormField
+                  control={control}
+                  name="companyType"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel className="text-sm font-medium">Type d&apos;entreprise</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value ?? "NONE"}>
+                        <FormControl>
+                          <SelectTrigger className="h-10 text-base">
+                            <SelectValue placeholder="Sélectionnez" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="AUTO-ENTREPRENEUR">Auto-entrepreneur</SelectItem>
+                          <SelectItem value="SARL">SARL</SelectItem>
+                          <SelectItem value="SAS">SAS</SelectItem>
+                          <SelectItem value="EIRL">EIRL</SelectItem>
+                          <SelectItem value="SASU">SASU</SelectItem>
+                          <SelectItem value="EURL">EURL</SelectItem>
+                          <SelectItem value="OTHER">Autre</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel className="text-sm font-medium">Description de votre entreprise</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          className={cn("resize-none text-base", formState.errors.description && "border-destructive")}
+                          placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
+                          {...field}
+                          value={field.value ?? ""}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
+
+              {/* Onglet Présence en ligne */}
+              <TabsContent value="presence" className="space-y-4">
+                <h2 className="text-lg font-medium mb-4">Présence en ligne (optionnel)</h2>
+
+                <FormField
+                  control={control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem className="mb-4">
+                      <FormLabel className="text-sm font-medium">Site web</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="https://www.votresite.com"
+                          {...field}
+                          value={field.value ?? ""}
+                          className={cn("h-10", formState.errors.website && "border-destructive")}
+                        />
+                      </FormControl>
+                      {formState.errors.website && (
+                        <p className="text-xs text-destructive">Laissez vide ou entrez une URL valide</p>
                       )}
-                      placeholder="Décrivez votre activité, vos services et ce qui vous rend unique..."
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="space-y-4">
+                  <FormField
+                    control={control}
+                    name="facebook"
+                    render={({ field }) => (
+                      <FormItem className="mb-4">
+                        <FormLabel className="text-sm font-medium">Facebook</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="https://www.facebook.com/votrepage"
+                            {...field}
+                            value={field.value ?? ""}
+                            className={cn("h-10", formState.errors.facebook && "border-destructive")}
+                          />
+                        </FormControl>
+                        {formState.errors.facebook && (
+                          <p className="text-xs text-destructive">Laissez vide ou entrez une URL valide</p>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="instagram"
+                    render={({ field }) => (
+                      <FormItem className="mb-4">
+                        <FormLabel className="text-sm font-medium">Instagram</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="url"
+                            placeholder="https://www.instagram.com/votrecompte"
+                            {...field}
+                            value={field.value ?? ""}
+                            className={cn("h-10", formState.errors.instagram && "border-destructive")}
+                          />
+                        </FormControl>
+                        {formState.errors.instagram && (
+                          <p className="text-xs text-destructive">Laissez vide ou entrez une URL valide</p>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
 
-          <Separator />
+          {/* Footer fixe */}
+          <div className="border-t border-border p-6 bg-background mt-auto">
+            {activeTab === "informations" ? (
+              <div className="flex justify-between items-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={previousStep}
+                  disabled={isLoading}
+                >
+                  ← Précédent
+                </Button>
 
-          {/* Présence en ligne */}
-          <div className="space-y-6">
-            <h2 className="text-lg font-medium">Présence en ligne</h2>
-
-            <div className="space-y-5">
-              <FormField
-                control={control}
-                name="website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Site web</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://www.votresite.com"
-                        {...field}
-                        value={field.value ?? ""}
-                        className={cn("h-10", form.formState.errors.website && "border-destructive")}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormField
-                  control={control}
-                  name="facebook"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Facebook</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="https://www.facebook.com/votrepage"
-                          {...field}
-                          value={field.value ?? ""}
-                          className={cn("h-10", form.formState.errors.facebook && "border-destructive")}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={control}
-                  name="instagram"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Instagram</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="https://www.instagram.com/votrecompte"
-                          {...field}
-                          value={field.value ?? ""}
-                          className={cn("h-10", form.formState.errors.instagram && "border-destructive")}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                <Button
+                  type="button"
+                  className="rounded-xl px-6"
+                  onClick={async () => {
+                    if (await areRequiredFieldsValid()) {
+                      setActiveTab("presence")
+                    } else {
+                      // Mettre en valeur les erreurs
+                      await trigger(["name", "email", "description", "companyType"])
+                      toast.error("Veuillez compléter tous les champs obligatoires.")
+                    }
+                  }}
+                >
+                  Continuer →
+                </Button>
               </div>
-            </div>
-          </div>
-        </div>
+            ) : (
+              <div className="flex justify-between items-center">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="rounded-xl"
+                  onClick={() => setActiveTab("informations")}
+                >
+                  ← Retour
+                </Button>
 
-        {/* Footer with buttons */}
-        <div className="flex justify-between items-center p-6 border-t bg-muted/30">
-          <Button disabled={isLoading} type="button" variant="outline" className="rounded-xl" onClick={previousStep}>
-            ← Précédent
-          </Button>
-          <div className="flex gap-3">
-            <Button
-              disabled={isLoading}
-              type="button"
-              variant="ghost"
-              onClick={nextStep}
-              className="text-muted-foreground"
-            >
-              Passer
-            </Button>
-            <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  <span>En cours...</span>
-                </>
-              ) : (
-                "Suivant →"
-              )}
-            </Button>
+                <Button
+                  type="button"
+                  className="rounded-xl px-6"
+                  disabled={isLoading}
+                  onClick={async () => {
+                    // Vérifiez d'abord les champs obligatoires
+                    const requiredFieldsValid = await areRequiredFieldsValid()
+
+                    if (!requiredFieldsValid) {
+                      toast.error("Les informations de base contiennent des erreurs.")
+                      setActiveTab("informations")
+                      return
+                    }
+
+                    // Les champs en ligne ne sont pas bloquants, on soumet directement
+                    form.handleSubmit(data => {
+                      mutateAsync(data)
+                    })()
+                  }}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      <span>En cours...</span>
+                    </>
+                  ) : (
+                    "Suivant →"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   )
 }
 
