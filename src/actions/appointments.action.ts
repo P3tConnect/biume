@@ -332,7 +332,7 @@ export const getAllAppointmentForClient = createServerAction(
   z.object({}),
   async (input, ctx) => {
     const now = new Date()
-    
+
     const appointments = await db.query.appointments.findMany({
       where: eq(appointmentsTable.clientId, ctx.user?.id || ""),
       with: {
@@ -378,6 +378,7 @@ export const getAllAppointmentForClient = createServerAction(
             id: true,
             name: true,
             logo: true,
+            email: true,
           },
         },
       },
@@ -616,15 +617,16 @@ export const getOrganizationAppointmentsByDate = createServerAction(
     const appointments = await db.query.appointments.findMany({
       where: and(
         eq(appointmentsTable.proId, ctx.organization?.id || ""),
-        input.petId ? 
-          exists(
-            db.select()
-              .from(petAppointments)
-              .where(and(
-                eq(petAppointments.appointmentId, appointmentsTable.id),
-                eq(petAppointments.petId, input.petId)
-              ))
-          ) : undefined
+        input.petId
+          ? exists(
+              db
+                .select()
+                .from(petAppointments)
+                .where(
+                  and(eq(petAppointments.appointmentId, appointmentsTable.id), eq(petAppointments.petId, input.petId))
+                )
+            )
+          : undefined
       ),
       with: {
         pets: {
@@ -676,6 +678,7 @@ export const getOrganizationAppointmentsByDate = createServerAction(
             id: true,
             name: true,
             logo: true,
+            email: true,
           },
         },
         options: {

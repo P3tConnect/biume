@@ -1,10 +1,11 @@
-"use client"
-
-import { Loader2 } from "lucide-react"
 import { Suspense } from "react"
-import { TimetableViewClient } from "./components/timetable-view-client"
+import { Loader2 } from "lucide-react"
+import { getAllAppointmentForClient } from "@/src/actions/appointments.action"
+import { Appointment } from "@/src/db/appointments"
+import { CalendarViewClient } from "./components/calendar-view-client"
 
-const ClientDashboardReservationsComponent = () => {
+export default async function ClientDashboardReservationsComponent() {
+  const appointments = await getAllAppointmentForClient({})
   return (
     <div className="h-full w-full flex flex-col">
       <Suspense
@@ -14,10 +15,8 @@ const ClientDashboardReservationsComponent = () => {
           </div>
         }
       >
-        <TimetableViewClient appointments={[]} />
+        <CalendarViewClient appointments={appointments.data as Appointment[]} />
       </Suspense>
     </div>
   )
 }
-
-export default ClientDashboardReservationsComponent
