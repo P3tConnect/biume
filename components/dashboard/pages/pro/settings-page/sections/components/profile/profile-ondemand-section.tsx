@@ -33,6 +33,7 @@ export const ProfileOnDemandSection = ({ org }: ProfileOnDemandSectionProps) => 
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle>Rendez-vous à la demande</CardTitle>
+          <span className="px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-full">Beta</span>
           <Sparkles className="h-5 w-5 text-muted-foreground" />
         </div>
         <CardDescription>

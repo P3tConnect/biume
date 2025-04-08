@@ -21,12 +21,22 @@ export default function ClientsList() {
     queryFn: () => getClients({}),
   })
 
-  const filteredClients = clients?.data?.filter(
-    client =>
-      client.name.toLowerCase().includes(search.toLowerCase()) ||
-      (client.email && client.email.toLowerCase().includes(search.toLowerCase())) ||
-      (client.phoneNumber && client.phoneNumber.includes(search))
-  )
+  const transformUserToClient = (user: any): Client => ({
+    ...user,
+    lastVisit: user.lastVisit || user.updatedAt,
+    appointmentsCount: user.appointments?.length || 0,
+    petsCount: user.pets?.length || 0,
+    loyaltyPoints: 0, // À implémenter selon la logique métier
+  })
+
+  const filteredClients = clients?.data
+    ?.map(transformUserToClient)
+    ?.filter(
+      client =>
+        client.name.toLowerCase().includes(search.toLowerCase()) ||
+        (client.email && client.email.toLowerCase().includes(search.toLowerCase())) ||
+        (client.phoneNumber && client.phoneNumber.includes(search))
+    )
 
   if (isLoading) {
     return (

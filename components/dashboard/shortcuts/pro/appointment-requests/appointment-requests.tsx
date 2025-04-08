@@ -70,19 +70,6 @@ export const AppointmentRequests = () => {
           )}
         </div>
       </CardContent>
-
-      {appointments?.data?.length! > 0 && (
-        <CardFooter className="py-3 px-4 border-t bg-green-50/50 dark:bg-green-900/10">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full text-xs flex items-center justify-center gap-1.5 text-green-700 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30"
-          >
-            <span>Voir toutes les demandes</span>
-            <ChevronRightIcon className="h-3.5 w-3.5" />
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   )
 }
