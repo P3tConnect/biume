@@ -29,56 +29,48 @@ export function ObservationsTab({
   const typeLabels = {
     staticObservation: "Observation statique",
     dynamicObservation: "Observation dynamique",
-    dysfunction: "Dysfonction",
-    recommendation: "Conseils et recommandations",
-  }
+  } as const
 
   const typeTitle = typeLabels[activeType]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-      {/* Vue anatomique - partie gauche (uniquement pour les observations et dysfonctions, pas pour les recommandations) */}
-      {activeType !== "recommendation" && (
-        <Card className="flex flex-col h-full">
-          <div className="p-3 border-b flex items-center justify-between">
-            <h2 className="font-medium">
-              {activeType === "dysfunction" ? "Schéma des dysfonctions" : "Vue anatomique"}
-            </h2>
-            <div className="flex gap-1">
-              <Button
-                variant={selectedView === "left" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setSelectedView("left")}
-              >
-                Gauche
-              </Button>
-              <Button
-                variant={selectedView === "right" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setSelectedView("right")}
-              >
-                Droite
-              </Button>
-            </div>
+      {/* Vue anatomique - partie gauche */}
+      <Card className="flex flex-col h-full">
+        <div className="p-3 border-b flex items-center justify-between">
+          <h2 className="font-medium">Vue anatomique</h2>
+          <div className="flex gap-1">
+            <Button
+              variant={selectedView === "left" ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setSelectedView("left")}
+            >
+              Gauche
+            </Button>
+            <Button
+              variant={selectedView === "right" ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setSelectedView("right")}
+            >
+              Droite
+            </Button>
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="flex items-center justify-center h-full text-muted-foreground">
-              <p className="text-center">
-                {activeType === "dysfunction"
-                  ? `Schéma des dysfonctions ${selectedView === "left" ? "(gauche)" : "(droite)"}`
-                  : `Visualisation anatomique ${selectedView === "left" ? "(gauche)" : "(droite)"}`}
-                <br />
-                <span className="text-sm text-muted-foreground/70">
-                  Cette fonctionnalité sera améliorée prochainement
-                </span>
-              </p>
-            </div>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            <p className="text-center">
+              Visualisation anatomique {selectedView === "left" ? "(gauche)" : "(droite)"}
+              <br />
+              <span className="text-sm text-muted-foreground/70">
+                Cette fonctionnalité sera améliorée prochainement
+              </span>
+            </p>
           </div>
-        </Card>
-      )}
+        </div>
+      </Card>
 
       {/* Observations - partie droite */}
-      <Card className={`flex flex-col h-full ${activeType === "recommendation" ? "col-span-2" : ""}`}>
+      <Card className="flex flex-col h-full">
         <div className="p-3 border-b flex items-center justify-between">
           <h2 className="font-medium">{typeTitle}</h2>
           <Button variant="ghost" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
@@ -109,19 +101,13 @@ export function ObservationsTab({
                         )}
                       />
                       <span className="font-medium">{anatomicalRegions.find(r => r.value === obs.region)?.label}</span>
-                      {obs.type === "dysfunction" && obs.dysfunctionType && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                          {dysfunctionTypes.find(t => t.value === obs.dysfunctionType)?.label}
-                        </span>
-                      )}
                       {obs.interventionZone && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
                           {interventionZones.find(z => z.value === obs.interventionZone)?.label}
                         </span>
                       )}
                       <span className="text-xs text-muted-foreground">
-                        (
-                        {obs.severity === 1
+                        ({obs.severity === 1
                           ? "Légère"
                           : obs.severity === 2
                             ? "Modérée"
@@ -129,8 +115,7 @@ export function ObservationsTab({
                               ? "Importante"
                               : obs.severity === 4
                                 ? "Sévère"
-                                : "Critique"}
-                        )
+                                : "Critique"})
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground">{obs.notes}</p>
@@ -143,14 +128,10 @@ export function ObservationsTab({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-3">
-              <p>Aucune {activeType === "recommendation" ? "recommandation" : "observation"}</p>
+              <p>Aucune observation</p>
               <Button variant="outline" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
                 <Plus className="h-4 w-4" />
-                {activeType === "recommendation"
-                  ? "Ajouter une recommandation"
-                  : activeType === "dysfunction"
-                    ? "Ajouter une dysfonction"
-                    : "Ajouter une observation"}
+                Ajouter une observation
               </Button>
             </div>
           )}

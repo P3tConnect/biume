@@ -131,6 +131,7 @@ const IntroStep = ({
           <Button
             variant="outline"
             size="sm"
+            disabled={isLoading}
             className="rounded-lg hover:scale-105 transition-transform"
             onClick={skipOnboarding}
           >

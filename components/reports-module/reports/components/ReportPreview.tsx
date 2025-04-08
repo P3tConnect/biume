@@ -3,7 +3,7 @@
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Observation, anatomicalRegions, observationTypes, dysfunctionTypes, interventionZones } from "./types"
+import { Observation, anatomicalRegions, observationTypes, interventionZones } from "./types"
 import { Separator } from "@/components/ui/separator"
 
 // Interface pour les problèmes anatomiques (dysfonctions et suspicions)
@@ -39,16 +39,10 @@ export function ReportPreview({
   // Regrouper les observations par type
   const staticObservations = observations.filter(obs => obs.type === "staticObservation")
   const dynamicObservations = observations.filter(obs => obs.type === "dynamicObservation")
-  const dysfunctions = observations.filter(obs => obs.type === "dysfunction")
-  const recommendationObservations = observations.filter(obs => obs.type === "recommendation")
 
   // Regrouper les dysfonctions et suspicions issues du nouvel onglet
   const confirmedAnatomicalDysfunctions = anatomicalIssues.filter(issue => issue.type === "dysfunction")
   const anatomicalSuspicions = anatomicalIssues.filter(issue => issue.type === "anatomicalSuspicion")
-
-  // Sous-groupes de dysfonctions par type
-  const confirmedDysfunctions = dysfunctions.filter(obs => obs.dysfunctionType === "confirmed")
-  const suspectedDysfunctions = dysfunctions.filter(obs => obs.dysfunctionType === "suspected")
 
   // Fonction utilitaire pour afficher les observations
   const renderObservations = (obs: Observation[]) => {
@@ -59,17 +53,15 @@ export function ReportPreview({
         <div className="flex items-center gap-2 flex-wrap">
           <div className={`w-2 h-2 rounded-full ${getSeverityColor(observation.severity)}`} />
           <span className="font-medium">{anatomicalRegions.find(r => r.value === observation.region)?.label}</span>
-          {observation.type === "dysfunction" && observation.dysfunctionType && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-              {dysfunctionTypes.find(t => t.value === observation.dysfunctionType)?.label}
-            </span>
-          )}
           {observation.interventionZone && (
             <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
               {interventionZones.find(z => z.value === observation.interventionZone)?.label}
             </span>
           )}
           <span className="text-xs text-muted-foreground">({getSeverityLabel(observation.severity)})</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+            {observation.type === "staticObservation" ? "Statique" : "Dynamique"}
+          </span>
         </div>
         <p className="text-sm ml-4 mt-1">{observation.notes}</p>
       </div>
@@ -156,34 +148,6 @@ export function ReportPreview({
             {renderObservations(dynamicObservations)}
           </div>
 
-          {/* Dysfonctions (ancien système) */}
-          {(confirmedDysfunctions.length > 0 || suspectedDysfunctions.length > 0) && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">
-                {observationTypes.find(t => t.value === "dysfunction")?.label || "Dysfonctions"}
-              </h3>
-              <Separator className="mb-3" />
-
-              {confirmedDysfunctions.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="text-md font-medium mb-2 text-primary">
-                    {dysfunctionTypes.find(t => t.value === "confirmed")?.label || "Dysfonctions confirmées"}
-                  </h4>
-                  {renderObservations(confirmedDysfunctions)}
-                </div>
-              )}
-
-              {suspectedDysfunctions.length > 0 && (
-                <div>
-                  <h4 className="text-md font-medium mb-2 text-primary">
-                    {dysfunctionTypes.find(t => t.value === "suspected")?.label || "Suspicions de dysfonction"}
-                  </h4>
-                  {renderObservations(suspectedDysfunctions)}
-                </div>
-              )}
-            </div>
-          )}
-
           {/* Dysfonctions (nouveau système) */}
           {confirmedAnatomicalDysfunctions.length > 0 && (
             <div>
@@ -199,17 +163,6 @@ export function ReportPreview({
               <h3 className="text-lg font-medium mb-2">Suspicions d'atteinte anatomique</h3>
               <Separator className="mb-3" />
               {renderAnatomicalIssues(anatomicalSuspicions)}
-            </div>
-          )}
-
-          {/* Observations avec recommandations (ancien système) */}
-          {recommendationObservations.length > 0 && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">
-                {observationTypes.find(t => t.value === "recommendation")?.label || "Recommandations"}
-              </h3>
-              <Separator className="mb-3" />
-              {renderObservations(recommendationObservations)}
             </div>
           )}
 

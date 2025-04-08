@@ -58,6 +58,7 @@
     "@radix-ui/react-visually-hidden": "^1.1.2",
     "@react-email/components": "^0.0.34",
     "@react-email/tailwind": "^1.0.4",
+    "@react-google-maps/api": "^2.20.6",
     "@stepperize/react": "^5.1.5",
     "@stripe/react-stripe-js": "^3.5.1",
     "@stripe/stripe-js": "^6.1.0",
