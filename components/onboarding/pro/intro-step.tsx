@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Check, Loader2, Sparkles } from "lucide-react"
+import { ArrowRight, Check, Loader2, Sparkles, Calendar, Receipt, Users, BarChart2 } from "lucide-react"
 import Image from "next/image"
 
 import { Button } from "@/components/ui"
@@ -86,7 +86,7 @@ const IntroStep = ({
               className="relative aspect-[16/10] w-full rounded-lg overflow-hidden shadow-lg"
             >
               <Image
-                src="/assets/images/login-image.jpg"
+                src="/assets/images/about-mission.jpg"
                 alt="Aperçu de l'interface"
                 fill
                 className="object-cover"
@@ -97,24 +97,45 @@ const IntroStep = ({
           </div>
 
           <div className="w-full lg:w-1/2 flex flex-col justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                "Gestion des rendez-vous",
-                "Facturation simplifiée",
-                "Suivi client personnalisé",
-                "Statistiques détaillées",
+                {
+                  title: "Gestion des rendez-vous",
+                  icon: "calendar",
+                  color: "bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400",
+                },
+                {
+                  title: "Facturation simplifiée",
+                  icon: "receipt",
+                  color: "bg-green-100 text-green-600 dark:bg-green-950 dark:text-green-400",
+                },
+                {
+                  title: "Suivi client personnalisé",
+                  icon: "users",
+                  color: "bg-purple-100 text-purple-600 dark:bg-purple-950 dark:text-purple-400",
+                },
+                {
+                  title: "Statistiques détaillées",
+                  icon: "bar-chart",
+                  color: "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400",
+                },
               ].map((feature, index) => (
                 <motion.div
-                  key={feature}
+                  key={feature.title}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + index * 0.05, duration: 0.2 }}
-                  className="group flex items-center gap-1.5 p-1.5 rounded-lg bg-muted/50 border border-border hover:bg-muted/70 transition-colors"
+                  className="group flex items-center gap-3 p-3 rounded-xl border border-border bg-background shadow-sm hover:shadow-md hover:scale-[1.02] transition-all"
                 >
-                  <div className="flex-shrink-0 h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Check size={10} className="text-primary" />
+                  <div
+                    className={`flex-shrink-0 h-8 w-8 rounded-lg ${feature.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                  >
+                    {feature.icon === "calendar" && <Calendar className="w-4 h-4" />}
+                    {feature.icon === "receipt" && <Receipt className="w-4 h-4" />}
+                    {feature.icon === "users" && <Users className="w-4 h-4" />}
+                    {feature.icon === "bar-chart" && <BarChart2 className="w-4 h-4" />}
                   </div>
-                  <span className="text-xs font-medium">{feature}</span>
+                  <span className="text-sm font-medium">{feature.title}</span>
                 </motion.div>
               ))}
             </div>

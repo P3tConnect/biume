@@ -1,6 +1,13 @@
 "use client"
 
-import { CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import {
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui"
 import React, { useState } from "react"
 import { organization as organizationTable, progression as progressionTable } from "@/src/db"
 import { organization as organizationUtil, updateUser, useSession } from "@/src/lib/auth-client"
@@ -18,6 +25,7 @@ import { db } from "@/src/lib"
 import { eq } from "drizzle-orm"
 import { generateMigrationName } from "@/src/lib/business-names"
 import { toast } from "sonner"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 const Stepper = () => {
   const { next, prev, current, goTo, all, isLast, switch: switchStep } = useStepper()

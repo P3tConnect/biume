@@ -208,155 +208,153 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
       <SidebarHeader className="pb-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Credenza>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton size="lg">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                      {activeOrganization?.logo ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton size="lg">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    {activeOrganization?.logo ? (
+                      <Image
+                        src={activeOrganization?.logo ?? ""}
+                        alt={activeOrganization?.name ?? ""}
+                        width={32}
+                        height={32}
+                      />
+                    ) : (
+                      <Building className="size-4" />
+                    )}
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{activeOrganization?.name}</span>
+                    <span className="truncate text-xs">{activeOrganization?.name}</span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                side="right"
+                className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
+              >
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                    Compte personnel
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem
+                    className={cn(
+                      "group flex items-center gap-3 p-2 rounded-md transition-all duration-200 hover:bg-accent hover:translate-x-1 hover:shadow-sm cursor-pointer",
+                      switchingPersonal && "animate-pulse opacity-70"
+                    )}
+                    onSelect={handlePersonalAccountSwitch}
+                    disabled={switchingPersonal || switchingOrg !== null}
+                  >
+                    {session?.data?.user?.image ? (
+                      <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
                         <Image
-                          src={activeOrganization?.logo ?? ""}
-                          alt={activeOrganization?.name ?? ""}
+                          src={session.data.user.image}
+                          alt={session.data.user.name || ""}
                           width={32}
                           height={32}
+                          className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
                         />
-                      ) : (
-                        <Building className="size-4" />
-                      )}
-                    </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{activeOrganization?.name}</span>
-                      <span className="truncate text-xs">{activeOrganization?.name}</span>
-                    </div>
-                    <ChevronsUpDown className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  side="right"
-                  className="w-64 p-2 rounded-lg border border-border/40 shadow-lg animate-in fade-in-50 zoom-in-95 slide-in-from-top-5 duration-200"
-                >
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                      Compte personnel
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem
-                      className={cn(
-                        "group flex items-center gap-3 p-2 rounded-md transition-all duration-200 hover:bg-accent hover:translate-x-1 hover:shadow-sm cursor-pointer",
-                        switchingPersonal && "animate-pulse opacity-70"
-                      )}
-                      onSelect={handlePersonalAccountSwitch}
-                      disabled={switchingPersonal || switchingOrg !== null}
-                    >
-                      {session?.data?.user?.image ? (
-                        <div className="h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300 ring-1 ring-border/50 hover:ring-primary/20">
-                          <Image
-                            src={session.data.user.image}
-                            alt={session.data.user.name || ""}
-                            width={32}
-                            height={32}
-                            className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
-                          <User className="h-4 w-4 text-primary" />
-                        </div>
-                      )}
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium leading-none">
-                          {session?.data?.user?.name || "Personnel"}
-                        </span>
-                        <span className="text-xs text-muted-foreground mt-1">Compte personnel</span>
                       </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
+                    ) : (
+                      <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                    )}
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium leading-none">
+                        {session?.data?.user?.name || "Personnel"}
+                      </span>
+                      <span className="text-xs text-muted-foreground mt-1">Compte personnel</span>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
 
-                  {organizations && organizations.data && organizations.data.length > 0 && (
-                    <>
-                      <DropdownMenuGroup>
-                        <DropdownMenuSeparator className="my-2" />
-                        <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                          Comptes professionnels
-                        </DropdownMenuLabel>
-                        <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
-                          {organizations.data.map(org => (
-                            <DropdownMenuItem
-                              key={org.id}
-                              className={cn(
-                                "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
-                                companyId === org.id
-                                  ? "bg-primary/10 text-primary font-medium shadow-sm"
-                                  : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
-                                switchingOrg === org.id && "animate-pulse opacity-70"
-                              )}
-                              onSelect={() => handleOrganizationSwitch(org.id)}
-                              disabled={switchingOrg !== null}
-                            >
-                              {org.logo ? (
-                                <div
+                {organizations && organizations.data && organizations.data.length > 0 && (
+                  <>
+                    <DropdownMenuGroup>
+                      <DropdownMenuSeparator className="my-2" />
+                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                        Comptes professionnels
+                      </DropdownMenuLabel>
+                      <div className="max-h-[200px] overflow-y-auto my-1 rounded-md space-y-0.5 pr-1">
+                        {organizations.data.map(org => (
+                          <DropdownMenuItem
+                            key={org.id}
+                            className={cn(
+                              "group flex items-center gap-3 p-2 rounded-md transition-all cursor-pointer duration-200",
+                              companyId === org.id
+                                ? "bg-primary/10 text-primary font-medium shadow-sm"
+                                : "hover:bg-accent hover:translate-x-1 hover:shadow-sm",
+                              switchingOrg === org.id && "animate-pulse opacity-70"
+                            )}
+                            onSelect={() => handleOrganizationSwitch(org.id)}
+                            disabled={switchingOrg !== null}
+                          >
+                            {org.logo ? (
+                              <div
+                                className={cn(
+                                  "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
+                                  companyId === org.id
+                                    ? "ring-2 ring-primary/30"
+                                    : "ring-1 ring-border/50 hover:ring-primary/20"
+                                )}
+                              >
+                                <Image
+                                  src={org.logo}
+                                  alt={org.name}
+                                  width={32}
+                                  height={32}
                                   className={cn(
-                                    "h-8 w-8 overflow-hidden rounded-md shadow-sm flex-shrink-0 transition-all duration-300",
-                                    companyId === org.id
-                                      ? "ring-2 ring-primary/30"
-                                      : "ring-1 ring-border/50 hover:ring-primary/20"
+                                    "h-full w-full object-cover transition-transform duration-300",
+                                    companyId !== org.id && "hover:scale-110"
                                   )}
-                                >
-                                  <Image
-                                    src={org.logo}
-                                    alt={org.name}
-                                    width={32}
-                                    height={32}
-                                    className={cn(
-                                      "h-full w-full object-cover transition-transform duration-300",
-                                      companyId !== org.id && "hover:scale-110"
-                                    )}
-                                  />
-                                </div>
-                              ) : (
-                                <div
-                                  className={cn(
-                                    "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                                    companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
-                                  )}
-                                >
-                                  <Building className="h-4 w-4 text-primary" />
-                                </div>
-                              )}
-                              <div className="flex flex-col">
-                                <span className="text-sm font-medium leading-none">{org.name}</span>
-                                <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
+                                />
                               </div>
-                              {companyId === org.id && (
-                                <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
-                              )}
-                            </DropdownMenuItem>
-                          ))}
+                            ) : (
+                              <div
+                                className={cn(
+                                  "h-8 w-8 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                                  companyId === org.id ? "bg-primary/20" : "bg-primary/10 hover:bg-primary/15"
+                                )}
+                              >
+                                <Building className="h-4 w-4 text-primary" />
+                              </div>
+                            )}
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium leading-none">{org.name}</span>
+                              <span className="text-xs text-muted-foreground mt-1">Compte professionnel</span>
+                            </div>
+                            {companyId === org.id && (
+                              <Check className="h-4 w-4 ml-auto text-primary animate-in zoom-in-50 duration-300" />
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </div>
+                    </DropdownMenuGroup>
+                    <DropdownMenuGroup>
+                      <DropdownMenuSeparator className="my-2" />
+                      <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
+                        Nouvelle entreprise
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => setShowCredenza(true)}
+                        className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm"
+                      >
+                        <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
+                          <Plus className="h-4 w-4 text-primary" />
                         </div>
-                      </DropdownMenuGroup>
-                      <DropdownMenuGroup>
-                        <DropdownMenuSeparator className="my-2" />
-                        <DropdownMenuLabel className="text-xs font-medium px-2 py-1.5 text-muted-foreground">
-                          Nouvelle entreprise
-                        </DropdownMenuLabel>
-                        <DropdownMenuItem
-                          onClick={() => setShowCredenza(true)}
-                          className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm"
-                        >
-                          <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-primary/20">
-                            <Plus className="h-4 w-4 text-primary" />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium leading-none">Créer une entreprise</span>
-                            <span className="text-xs text-muted-foreground mt-1">Devenez professionnel</span>
-                          </div>
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Credenza>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium leading-none">Créer une entreprise</span>
+                          <span className="text-xs text-muted-foreground mt-1">Devenez professionnel</span>
+                        </div>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -468,10 +466,9 @@ export function DashboardSidebar({ companyId }: DashboardSidebarProps) {
       />
 
       <CommandDialog open={showCommandDialog} onOpenChange={setShowCommandDialog} companyId={companyId} />
+
       <Credenza open={showCredenza} onOpenChange={setShowCredenza}>
-        <CredenzaContent>
-          <Stepper />
-        </CredenzaContent>
+        <Stepper />
       </Credenza>
     </Sidebar>
   )
