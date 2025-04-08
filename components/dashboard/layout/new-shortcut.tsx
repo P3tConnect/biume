@@ -1,10 +1,8 @@
 "use client"
 
 import { Calendar, FileText, Plus, Stethoscope, UserPlus, Clock } from "lucide-react"
-import React, { useState } from "react"
 import { motion } from "framer-motion"
 
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +17,6 @@ import AppointmentDialog from "./dialogs/AppointmentDialog/AppointmentDialog"
 import { Button } from "@/components/ui/button"
 import ClientDialog from "./dialogs/ClientDialog"
 import DocumentDialog from "./dialogs/DocumentDialog"
-import { ExceptionalMoveDialog } from "./dialogs/ExceptionalMoveDialog"
 import PatientDialog from "./dialogs/PatientDialog"
 
 const MotionMenuItem = motion(DropdownMenuItem)
