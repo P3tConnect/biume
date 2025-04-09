@@ -1,9 +1,6 @@
 import { useState } from "react"
 import { Appointment } from "@/src/db/appointments"
-import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, startOfDay, differenceInMinutes } from "date-fns"
-import { fr } from "date-fns/locale"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { addDays, startOfWeek, endOfWeek, eachDayOfInterval, differenceInMinutes } from "date-fns"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from "framer-motion"
 import { TimeColumn } from "./time-column"
@@ -24,7 +21,7 @@ interface WeekViewProps {
   onViewModeChange: (mode: ViewMode) => void
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
+const HOURS = Array.from({ length: 16 }, (_, i) => i + 8)
 const HOUR_HEIGHT = 80 // hauteur d'une cellule en pixels
 
 export function WeekView({
@@ -34,7 +31,7 @@ export function WeekView({
   currentDate,
   onDateChange,
   viewMode,
-  onViewModeChange
+  onViewModeChange,
 }: WeekViewProps) {
   const [selectedAppointments, setSelectedAppointments] = useState<Appointment[]>([])
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
@@ -154,7 +151,7 @@ export function WeekView({
                 date={date}
                 hours={HOURS}
                 appointments={getAppointmentsForDate(date)}
-                onDateSelect={onDateSelect || (() => { })}
+                onDateSelect={onDateSelect || (() => {})}
                 onNewAppointment={handleNewAppointmentClick}
                 getAppointmentStatus={getAppointmentStatus}
                 getAppointmentPosition={getAppointmentPosition}

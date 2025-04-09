@@ -6,13 +6,41 @@ import { useRouter } from "next/navigation"
 import { useForm, useFieldArray } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-
-import { Credenza, CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PlusCircle, Trash2 } from "lucide-react"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { PlusCircle, Trash2, User, Mail, Phone, MapPin, Globe, PawPrint, X, ChevronRight } from "lucide-react"
+import {
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  Button,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Badge,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui"
 
 interface ClientDialogProps {
   open: boolean
@@ -35,21 +63,25 @@ const formSchema = z.object({
   country: z.string().min(2, {
     message: "Le pays doit contenir au moins 2 caractères.",
   }),
-  pets: z.array(z.object({
-    name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
-    type: z.enum(["Dog", "Cat", "Bird", "Horse", "Cow", "NAC"], {
-      message: "Veuillez sélectionner un type d'animal valide.",
-    }),
-    weight: z.coerce.number().min(0, { message: "Le poids doit être positif." }),
-    height: z.coerce.number().min(0, { message: "La taille doit être positive." }),
-    breed: z.string().min(2, { message: "La race doit contenir au moins 2 caractères." }),
-    gender: z.enum(["Male", "Female"], {
-      message: "Veuillez sélectionner un genre valide.",
-    }),
-    birthDate: z.string().min(1, { message: "La date de naissance est requise." }),
-    description: z.string().optional(),
-    nacType: z.string().optional(),
-  })).default([])
+  pets: z
+    .array(
+      z.object({
+        name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
+        type: z.enum(["Dog", "Cat", "Bird", "Horse", "Cow", "NAC"], {
+          message: "Veuillez sélectionner un type d'animal valide.",
+        }),
+        weight: z.coerce.number().min(0, { message: "Le poids doit être positif." }),
+        height: z.coerce.number().min(0, { message: "La taille doit être positive." }),
+        breed: z.string().min(2, { message: "La race doit contenir au moins 2 caractères." }),
+        gender: z.enum(["Male", "Female"], {
+          message: "Veuillez sélectionner un genre valide.",
+        }),
+        birthDate: z.string().min(1, { message: "La date de naissance est requise." }),
+        description: z.string().optional(),
+        nacType: z.string().optional(),
+      })
+    )
+    .default([]),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -75,8 +107,303 @@ const createClient = async (data: FormValues) => {
   })
 }
 
+// Composant PetSheet pour ajouter/modifier un animal
+function PetSheet({
+  open,
+  onOpenChange,
+  petIndex,
+  onSave,
+  defaultValues,
+  isEditing,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  petIndex: number | null
+  onSave: (petData: any, index?: number) => void
+  defaultValues?: any
+  isEditing: boolean
+}) {
+  const petForm = useForm({
+    resolver: zodResolver(
+      z.object({
+        name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères." }),
+        type: z.enum(["Dog", "Cat", "Bird", "Horse", "Cow", "NAC"], {
+          message: "Veuillez sélectionner un type d'animal valide.",
+        }),
+        weight: z.coerce.number().min(0, { message: "Le poids doit être positif." }),
+        height: z.coerce.number().min(0, { message: "La taille doit être positive." }),
+        breed: z.string().min(2, { message: "La race doit contenir au moins 2 caractères." }),
+        gender: z.enum(["Male", "Female"], {
+          message: "Veuillez sélectionner un genre valide.",
+        }),
+        birthDate: z.string().min(1, { message: "La date de naissance est requise." }),
+        description: z.string().optional(),
+        nacType: z.string().optional(),
+      })
+    ),
+    defaultValues: defaultValues || {
+      name: "",
+      type: "Dog",
+      weight: 0,
+      height: 0,
+      breed: "",
+      gender: "Male",
+      birthDate: "",
+      description: "",
+      nacType: "",
+    },
+  })
+
+  const showNacField = petForm.watch("type") === "NAC"
+
+  const handleSave = (data: any) => {
+    onSave(data, petIndex !== null ? petIndex : undefined)
+    petForm.reset()
+    onOpenChange(false)
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>{isEditing ? "Modifier l'animal" : "Ajouter un animal"}</SheetTitle>
+          <SheetDescription>
+            {isEditing ? "Modifiez les informations de votre animal" : "Ajoutez un nouvel animal à votre client"}
+          </SheetDescription>
+        </SheetHeader>
+        <div className="mt-6">
+          <Form {...petForm}>
+            <form onSubmit={petForm.handleSubmit(handleSave)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={petForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={petForm.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionnez un type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Dog">Chien</SelectItem>
+                          <SelectItem value="Cat">Chat</SelectItem>
+                          <SelectItem value="Bird">Oiseau</SelectItem>
+                          <SelectItem value="Horse">Cheval</SelectItem>
+                          <SelectItem value="Cow">Vache</SelectItem>
+                          <SelectItem value="NAC">NAC</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={petForm.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Poids (kg)</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={petForm.control}
+                  name="height"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Taille (cm)</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={petForm.control}
+                  name="breed"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Race</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={petForm.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Genre</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionnez un genre" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Male">Mâle</SelectItem>
+                          <SelectItem value="Female">Femelle</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={petForm.control}
+                name="birthDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date de naissance</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {showNacField && (
+                <FormField
+                  control={petForm.control}
+                  name="nacType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type de NAC</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={petForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                  Annuler
+                </Button>
+                <Button type="submit">Enregistrer</Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+// Carte pour afficher un animal
+function PetCard({
+  pet,
+  index,
+  onEdit,
+  onDelete,
+}: {
+  pet: any
+  index: number
+  onEdit: (index: number) => void
+  onDelete: (index: number) => void
+}) {
+  const getTypeLabel = (type: string) => {
+    const types: Record<string, string> = {
+      Dog: "Chien",
+      Cat: "Chat",
+      Bird: "Oiseau",
+      Horse: "Cheval",
+      Cow: "Vache",
+      NAC: "NAC",
+    }
+    return types[type] || type
+  }
+
+  const getTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      Dog: "bg-amber-100 text-amber-800",
+      Cat: "bg-purple-100 text-purple-800",
+      Bird: "bg-sky-100 text-sky-800",
+      Horse: "bg-emerald-100 text-emerald-800",
+      Cow: "bg-indigo-100 text-indigo-800",
+      NAC: "bg-pink-100 text-pink-800",
+    }
+    return colors[type] || "bg-gray-100 text-gray-800"
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      <Card className="overflow-hidden">
+        <CardHeader className="p-3 pb-2 flex flex-row items-start justify-between">
+          <div>
+            <CardTitle className="text-base">{pet.name}</CardTitle>
+            <CardDescription className="text-xs mt-1">
+              <Badge className={`${getTypeColor(pet.type)} mr-1`}>{getTypeLabel(pet.type)}</Badge>
+              {pet.breed}
+            </CardDescription>
+          </div>
+          <div className="flex space-x-1">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => onEdit(index)}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => onDelete(index)}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
+    </motion.div>
+  )
+}
+
 const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
   const router = useRouter()
+  const [petSheetOpen, setPetSheetOpen] = useState(false)
+  const [editingPetIndex, setEditingPetIndex] = useState<number | null>(null)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -90,7 +417,7 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: "pets",
   })
@@ -112,278 +439,155 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
     mutation.mutate(values)
   }
 
+  const handleAddPet = () => {
+    setEditingPetIndex(null)
+    setPetSheetOpen(true)
+  }
+
+  const handleEditPet = (index: number) => {
+    setEditingPetIndex(index)
+    setPetSheetOpen(true)
+  }
+
+  const handleSavePet = (petData: any, index?: number) => {
+    if (index !== undefined) {
+      update(index, petData)
+    } else {
+      append(petData)
+    }
+  }
+
   return (
-    <Credenza open={open} onOpenChange={onOpenChange}>
-      <CredenzaContent className="sm:max-w-[600px]">
-        <CredenzaHeader>
-          <CredenzaTitle>Créer un nouveau client</CredenzaTitle>
-          <CredenzaDescription>Ajoutez un nouveau client et ses animaux à votre tableau de bord.</CredenzaDescription>
-        </CredenzaHeader>
-        <div className="py-4">
+    <>
+      <Credenza open={open} onOpenChange={onOpenChange}>
+        <CredenzaContent className="sm:max-w-[600px] p-0 overflow-hidden">
+          <CredenzaHeader className="p-6 pb-2">
+            <CredenzaTitle>Créer un nouveau client</CredenzaTitle>
+            <CredenzaDescription>Ajoutez un nouveau client à votre tableau de bord.</CredenzaDescription>
+          </CredenzaHeader>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john@example.com" type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Téléphone</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+33 6 12 34 56 78" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Ville</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Paris" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormLabel>Pays</FormLabel>
-                      <FormControl>
-                        <Input placeholder="France" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <div className="px-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                              <Input className="pl-9" placeholder="John Doe" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                              <Input className="pl-9" placeholder="john@example.com" type="email" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-              {/* Pets Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-t pt-4">
-                  <h3 className="text-sm font-medium text-gray-700">Animaux</h3>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => append({
-                      name: "",
-                      type: "Dog",
-                      weight: 0,
-                      height: 0,
-                      breed: "",
-                      gender: "Male",
-                      birthDate: "",
-                      description: "",
-                      nacType: "",
-                    })}
-                  >
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Ajouter un animal
-                  </Button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Téléphone</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                              <Input className="pl-9" placeholder="+33 6 12 34 56 78" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Ville</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                              <Input className="pl-9" placeholder="Paris" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pays</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Globe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input className="pl-9" placeholder="France" {...field} />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
-                {fields.map((field, index) => (
-                  <div key={field.id} className="rounded-md border border-gray-200 p-3 space-y-3">
-                    <div className="flex justify-between items-center">
-                      <h4 className="text-sm font-medium text-gray-700">Animal {index + 1}</h4>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => remove(index)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Trash2 className="h-4 w-4 text-gray-500 hover:text-red-500" />
-                      </Button>
+                {/* Pets Section */}
+                <div className="mt-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <PawPrint className="h-5 w-5 text-primary" />
+                      <h3 className="text-base font-medium">Animaux ({fields.length})</h3>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.name`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Nom</FormLabel>
-                            <FormControl>
-                              <Input className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.type`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="h-8">
-                                  <SelectValue placeholder="Sélectionnez un type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="Dog">Chien</SelectItem>
-                                <SelectItem value="Cat">Chat</SelectItem>
-                                <SelectItem value="Bird">Oiseau</SelectItem>
-                                <SelectItem value="Horse">Cheval</SelectItem>
-                                <SelectItem value="Cow">Vache</SelectItem>
-                                <SelectItem value="NAC">NAC</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.weight`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Poids (kg)</FormLabel>
-                            <FormControl>
-                              <Input type="number" className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.height`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Taille (cm)</FormLabel>
-                            <FormControl>
-                              <Input type="number" className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.breed`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Race</FormLabel>
-                            <FormControl>
-                              <Input className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.gender`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Genre</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="h-8">
-                                  <SelectValue placeholder="Sélectionnez un genre" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="Male">Mâle</SelectItem>
-                                <SelectItem value="Female">Femelle</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.birthDate`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Date de naissance</FormLabel>
-                            <FormControl>
-                              <Input type="date" className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {form.watch(`pets.${index}.type`) === "NAC" && (
-                        <FormField
-                          control={form.control}
-                          name={`pets.${index}.nacType`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">Type de NAC</FormLabel>
-                              <FormControl>
-                                <Input className="h-8" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
-
-                      <FormField
-                        control={form.control}
-                        name={`pets.${index}.description`}
-                        render={({ field }) => (
-                          <FormItem className="col-span-2">
-                            <FormLabel className="text-xs">Description</FormLabel>
-                            <FormControl>
-                              <Input className="h-8" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <Button type="button" variant="outline" size="sm" onClick={handleAddPet} className="h-8">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Ajouter
+                    </Button>
                   </div>
-                ))}
+
+                  <div className="space-y-2 max-h-[250px] overflow-y-auto pr-1">
+                    <AnimatePresence initial={false}>
+                      {fields.length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground text-sm border border-dashed rounded-md">
+                          Aucun animal ajouté pour ce client
+                        </div>
+                      ) : (
+                        fields.map((pet, index) => (
+                          <PetCard key={pet.id} pet={pet} index={index} onEdit={handleEditPet} onDelete={remove} />
+                        ))
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-2 border-t">
+              <div className="flex justify-end items-center gap-3 p-4 bg-muted/20 border-t">
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                   Annuler
                 </Button>
@@ -393,9 +597,18 @@ const ClientDialog = ({ open, onOpenChange }: ClientDialogProps) => {
               </div>
             </form>
           </Form>
-        </div>
-      </CredenzaContent>
-    </Credenza>
+        </CredenzaContent>
+      </Credenza>
+
+      <PetSheet
+        open={petSheetOpen}
+        onOpenChange={setPetSheetOpen}
+        petIndex={editingPetIndex}
+        onSave={handleSavePet}
+        defaultValues={editingPetIndex !== null ? fields[editingPetIndex] : undefined}
+        isEditing={editingPetIndex !== null}
+      />
+    </>
   )
 }
 

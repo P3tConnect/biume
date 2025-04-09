@@ -25,7 +25,6 @@ import { db } from "@/src/lib"
 import { eq } from "drizzle-orm"
 import { generateMigrationName } from "@/src/lib/business-names"
 import { toast } from "sonner"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 const Stepper = () => {
   const { next, prev, current, goTo, all, isLast, switch: switchStep } = useStepper()
@@ -74,7 +73,6 @@ const Stepper = () => {
       await db
         .update(organizationTable)
         .set({
-          onBoardingComplete: true,
           progressionId: progression.id,
         })
         .where(eq(organizationTable.id, organizationId))
