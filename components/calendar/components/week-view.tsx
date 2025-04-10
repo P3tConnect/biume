@@ -1,17 +1,15 @@
-import { addDays, format, eachDayOfInterval, endOfWeek, startOfWeek } from "date-fns"
-import { CalendarIcon, ChevronLeft, ChevronRight, Plus } from "lucide-react"
-
-import { Appointment } from "@/src/db/appointments"
-import { AppointmentDetails } from "./appointment-details"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { NewAppointmentForm } from "./new-appointment-form"
-import { ViewMode } from "@/src/types/view-mode"
-import { motion } from "framer-motion"
 import { useState } from "react"
-import { cn } from "@/src/lib/utils"
-import { fr } from "date-fns/locale"
+import { Appointment } from "@/src/db/appointments"
+import { addDays, startOfWeek, endOfWeek, eachDayOfInterval, differenceInMinutes } from "date-fns"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { motion } from "framer-motion"
+import { TimeColumn } from "./time-column"
+import { DayColumn } from "./day-column"
+import { AppointmentDetails } from "./appointment-details"
+import { NewAppointmentForm } from "./new-appointment-form"
+import { CalendarHeader } from "./calendar-header"
+import { ViewMode } from "@/src/types/view-mode"
+import { Card } from "@/components/ui/card"
 
 interface WeekViewProps {
   appointments?: Appointment[]
@@ -23,12 +21,8 @@ interface WeekViewProps {
   onViewModeChange: (mode: ViewMode) => void
 }
 
-// Heures de 00 à 09
-const HOURS = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09"]
-// On ajoute les heures de 10 à 23
-for (let i = 10; i <= 23; i++) {
-  HOURS.push(i.toString())
-}
+const HOURS = Array.from({ length: 16 }, (_, i) => i + 8)
+const HOUR_HEIGHT = 80 // hauteur d'une cellule en pixels
 
 export function WeekView({
   appointments = [],
@@ -43,21 +37,9 @@ export function WeekView({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [newAppointmentDate, setNewAppointmentDate] = useState<Date | null>(null)
-  const [selectedDay, setSelectedDay] = useState<Date>(currentDate)
 
-  // Filtrer les rendez-vous pour le jour sélectionné
-  const selectedDayAppointments = appointments.filter(appointment => {
-    if (!appointment.slot?.start) return false
-    const appointmentDate = new Date(appointment.slot.start)
-    return (
-      appointmentDate.getDate() === selectedDay.getDate() &&
-      appointmentDate.getMonth() === selectedDay.getMonth() &&
-      appointmentDate.getFullYear() === selectedDay.getFullYear()
-    )
-  })
-
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }) // Commence le lundi
-  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 }) // Termine le dimanche
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 })
+  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 })
   const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
   const handlePrevWeek = () => {
@@ -68,23 +50,66 @@ export function WeekView({
     onDateChange(addDays(currentDate, 7))
   }
 
-  const handleMonthClick = () => {
-    onViewModeChange("month")
+  const handleToday = () => {
+    onDateChange(new Date())
   }
 
-  const handleWeekClick = () => {
-    onViewModeChange("week")
+  const getAppointmentsForDate = (date: Date) => {
+    return appointments.filter(appointment => {
+      if (!appointment.slot?.start) return false
+      const appointmentDate = new Date(appointment.slot.start)
+      return (
+        appointmentDate.getDate() === date.getDate() &&
+        appointmentDate.getMonth() === date.getMonth() &&
+        appointmentDate.getFullYear() === date.getFullYear()
+      )
+    })
   }
 
-  const handleDayClick = (date: Date) => {
-    setSelectedDay(date)
-    if (onDateSelect) {
-      onDateSelect(date)
+  const getAppointmentPosition = (appointment: Appointment) => {
+    if (!appointment.slot?.start || !appointment.slot?.end) return null
+
+    const start = new Date(appointment.slot.start)
+    const end = new Date(appointment.slot.end)
+
+    const minutesFromMidnight = start.getHours() * 60 + start.getMinutes()
+    const durationInMinutes = differenceInMinutes(end, start)
+
+    const top = (minutesFromMidnight / 60) * HOUR_HEIGHT
+    const height = (durationInMinutes / 60) * HOUR_HEIGHT
+
+    return {
+      top: `${top}px`,
+      height: `${height}px`,
     }
   }
 
-  const handleNewAppointmentClick = () => {
-    setNewAppointmentDate(selectedDay)
+  const getAppointmentStatus = (appointment: Appointment) => {
+    if (!appointment.status) return { color: "gray", label: "En attente" }
+
+    const statusMap: Record<string, { color: string; label: string }> = {
+      confirmed: { color: "emerald", label: "Confirmé" },
+      pending: { color: "orange", label: "En attente" },
+      cancelled: { color: "red", label: "Annulé" },
+      completed: { color: "blue", label: "Terminé" },
+    }
+
+    return statusMap[appointment.status] || statusMap.pending
+  }
+
+  const formatHour = (hour: number) => {
+    return `${hour.toString().padStart(2, "0")}:00`
+  }
+
+  const handleAppointmentClick = (appointment: Appointment) => {
+    // Trouver tous les rendez-vous liés au même créneau
+    const relatedAppointments = appointments.filter(apt => apt.slot?.id === appointment.slot?.id)
+    setSelectedAppointments(relatedAppointments)
+    setIsDetailsOpen(true)
+  }
+
+  const handleNewAppointmentClick = (date: Date) => {
+    setNewAppointmentDate(date)
     setIsNewAppointmentOpen(true)
   }
 
@@ -95,132 +120,47 @@ export function WeekView({
     setIsNewAppointmentOpen(false)
   }
 
-  const formatDay = (date: Date) => {
-    return format(date, "d", { locale: fr })
-  }
-
-  const formatWeekDay = (date: Date) => {
-    return format(date, "EEEE", { locale: fr }).toUpperCase()
-  }
-
-  const formatMonth = (date: Date) => {
-    return format(date, "MMMM yyyy", { locale: fr })
-  }
-
-  const isToday = (date: Date) => {
-    const today = new Date()
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    )
-  }
-
-  const isSelectedDay = (date: Date) => {
-    return (
-      date.getDate() === selectedDay.getDate() &&
-      date.getMonth() === selectedDay.getMonth() &&
-      date.getFullYear() === selectedDay.getFullYear()
-    )
-  }
-
   return (
-    <div className="flex flex-row h-full gap-4">
-      {/* Vue principale du calendrier */}
-      <div className="flex-1 flex flex-col h-full">
-        {/* En-tête avec navigation */}
-        <div className="flex justify-between items-center px-2 py-3 mb-2">
-          <div className="flex items-center">
-            <CalendarIcon className="mr-2" />
-            <h2 className="font-bold text-xl">{formatMonth(currentDate)}</h2>
+    <motion.div
+      className="flex flex-col h-full"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <CalendarHeader
+        currentDate={currentDate}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        onPrevious={handlePrevWeek}
+        onNext={handleNextWeek}
+        onToday={handleToday}
+      />
+
+      <Card className="bg-card text-card-foreground shadow-sm flex-1 flex flex-col min-h-0 p-4 rounded-2xl">
+        <ScrollArea className="flex-1 h-full">
+          <div className="grid grid-cols-[auto_repeat(7,1fr)]">
+            {/* Colonne des heures */}
+            <div className="sticky left-0 z-10">
+              <TimeColumn hours={HOURS} formatHour={formatHour} />
+            </div>
+
+            {/* Colonnes des jours */}
+            {daysInWeek.map((date, index) => (
+              <DayColumn
+                key={date.toISOString()}
+                date={date}
+                hours={HOURS}
+                appointments={getAppointmentsForDate(date)}
+                onDateSelect={onDateSelect || (() => {})}
+                onNewAppointment={handleNewAppointmentClick}
+                getAppointmentStatus={getAppointmentStatus}
+                getAppointmentPosition={getAppointmentPosition}
+                onAppointmentClick={handleAppointmentClick}
+              />
+            ))}
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" className="h-9 px-3 py-2" onClick={() => onDateChange(new Date())}>
-              Aujourd'hui
-            </Button>
-            <div className="flex border rounded-md">
-              <Button
-                variant={viewMode === "month" ? "secondary" : "ghost"}
-                className="rounded-r-none"
-                onClick={handleMonthClick}
-              >
-                Mois
-              </Button>
-              <Button
-                variant={viewMode === "week" ? "secondary" : "ghost"}
-                className="rounded-l-none"
-                onClick={handleWeekClick}
-              >
-                Semaine
-              </Button>
-            </div>
-            <div className="flex items-center">
-              <Button variant="ghost" size="icon" onClick={handlePrevWeek}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={handleNextWeek}>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Grille du calendrier */}
-        <Card className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="min-w-[800px]">
-              {/* En-tête des jours */}
-              <div className="grid grid-cols-[50px_repeat(7,1fr)] border-b sticky top-0 bg-background z-10">
-                <div className="p-2 border-r"></div>
-                {daysInWeek.map((day, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "p-2 text-center border-r cursor-pointer",
-                      isToday(day) && "bg-accent/10",
-                      isSelectedDay(day) && "bg-secondary/10"
-                    )}
-                    onClick={() => handleDayClick(day)}
-                  >
-                    <div className="font-medium uppercase text-xs text-muted-foreground">{formatWeekDay(day)}</div>
-                    <div className={cn("font-bold text-lg", isSelectedDay(day) && "text-primary")}>
-                      {formatDay(day)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Grille des heures */}
-              <div className="grid grid-cols-[50px_repeat(7,1fr)]">
-                {/* Colonne des heures */}
-                <div className="sticky left-0 z-10">
-                  {HOURS.map(hour => (
-                    <div key={hour} className="h-16 border-b border-r flex items-center justify-center bg-card p-2">
-                      <div className="text-xs text-muted-foreground font-semibold">{hour}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Colonnes des jours */}
-                {daysInWeek.map((day, dayIndex) => (
-                  <div
-                    key={dayIndex}
-                    className={cn("relative", isSelectedDay(day) && "bg-secondary/5", isToday(day) && "bg-accent/5")}
-                  >
-                    {HOURS.map(hour => (
-                      <div
-                        key={hour}
-                        className="h-16 border-b border-r relative"
-                        onClick={() => handleDayClick(day)}
-                      ></div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </ScrollArea>
-        </Card>
-      </div>
+        </ScrollArea>
+      </Card>
 
       {/* Modales */}
       <AppointmentDetails appointments={selectedAppointments} isOpen={isDetailsOpen} onOpenChange={setIsDetailsOpen} />
@@ -232,6 +172,6 @@ export function WeekView({
           onSubmit={handleNewAppointmentSubmit}
         />
       )}
-    </div>
+    </motion.div>
   )
 }

@@ -27,8 +27,6 @@ export const PatientsList = () => {
     patient.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  console.log(patientsResult?.data, "patientsResult")
-
   if (isLoading) {
     return (
       <div className="space-y-4">

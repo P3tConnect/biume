@@ -17,7 +17,6 @@ import AppointmentDialog from "./dialogs/AppointmentDialog/AppointmentDialog"
 import { Button } from "@/components/ui/button"
 import ClientDialog from "./dialogs/ClientDialog"
 import DocumentDialog from "./dialogs/DocumentDialog"
-import PatientDialog from "./dialogs/PatientDialog"
 
 const MotionMenuItem = motion(DropdownMenuItem)
 
@@ -80,10 +79,6 @@ const NewShortcut = () => {
               <UserPlus className="h-4 w-4 text-primary" />
               <span>Client</span>
             </MotionMenuItem>
-            <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("patient")}>
-              <Stethoscope className="h-4 w-4 text-primary" />
-              <span>Patient</span>
-            </MotionMenuItem>
             <MotionMenuItem className="gap-2 cursor-pointer" onClick={() => openDialog("appointment")}>
               <Calendar className="h-4 w-4 text-primary" />
               <span>Rendez-vous</span>
@@ -103,7 +98,6 @@ const NewShortcut = () => {
       {/* Utilisation des composants de dialogue */}
       <ClientDialog open={dialogOpen.client} onOpenChange={open => !open && closeAllDialogs()} />
       <AppointmentDialog open={dialogOpen.appointment} onOpenChange={open => !open && closeAllDialogs()} />
-      <PatientDialog open={dialogOpen.patient} onOpenChange={open => !open && closeAllDialogs()} />
       <DocumentDialog open={dialogOpen.document} onOpenChange={open => !open && closeAllDialogs()} />
 
       {/* TODO: Implement these dialogs */}

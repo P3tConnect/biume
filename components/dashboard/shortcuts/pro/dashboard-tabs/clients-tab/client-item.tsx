@@ -14,6 +14,24 @@ export type Client = {
   phoneNumber: string | null
   image: string | null
   createdAt: Date
+  city: string | null
+  country: string | null
+  emailVerified: boolean
+  isPro: boolean
+  onBoardingComplete: boolean
+  stripeId: string | null
+  address: string | null
+  zipCode: string | null
+  lang: string | null
+  emailNotifications: boolean
+  smsNotifications: boolean
+  updatedAt: Date
+  twoFactorEnabled?: boolean
+  // Métriques additionnelles
+  lastVisit?: Date
+  appointmentsCount?: number
+  petsCount?: number
+  loyaltyPoints?: number
 }
 
 type ClientItemProps = {

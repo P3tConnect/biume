@@ -1,11 +1,13 @@
 "use server"
 
-import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
-
-import { User } from "@/src/db/user"
-import { appointments } from "@/src/db/appointments"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
+
+import { appointments } from "@/src/db/appointments"
+import { CreateUserSchema, user, User } from "@/src/db/user"
+
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
+import { Pet, PetSchema } from "../db"
 
 // Action pour récupérer tous les clients d'une organisation
 export const getClients = createServerAction(
@@ -170,6 +172,71 @@ export const getClientMetrics = createServerAction(
     } catch (error) {
       console.error("Erreur lors de la récupération des métriques client:", error)
       throw new ActionError("Impossible de récupérer les métriques des clients")
+    }
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+// Action pour créer un client
+export const createClient = createServerAction(
+  z.object({
+    user: CreateUserSchema,
+    pets: z.array(PetSchema),
+  }),
+  async (input, ctx) => {
+    try {
+      const { name, email, phoneNumber, city, country, pets } = input
+
+      // Vérifier que l'utilisateur est un professionnel
+      if (!ctx.user?.isPro) {
+        throw new Error("Vous devez être un professionnel pour accéder à cette ressource")
+      }
+
+      // Récupérer l'ID de l'organisation
+      const organizationId = ctx.fullOrganization?.id
+
+      if (!organizationId) {
+        throw new ActionError("ID d'organisation non trouvé")
+      }
+
+      // Créer le client
+      const [client] = await db
+        .insert(user)
+        .values({
+          ...input.user,
+        })
+        .returning()
+        .execute()
+
+      // Créer les animaux
+      const petIds = await db.insert(pets).values(
+        pets.map((pet: Pet) => ({
+          name: pet.name,
+          type: pet.type,
+          breed: pet.breed,
+          gender: pet.gender,
+          birthDate: pet.birthDate,
+          description: pet.description,
+          nacType: pet.nacType,
+          clientId: client.id,
+        }))
+      )
+
+      // Retourner le client avec ses animaux
+      return {
+        client: {
+          id: client.id,
+          name: client.name,
+          email: client.email,
+          phoneNumber: client.phoneNumber,
+          city: client.city,
+          country: client.country,
+          pets: petIds,
+        },
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du client:", error)
+      throw new ActionError("Impossible de créer le client")
     }
   },
   [requireAuth, requireFullOrganization]

@@ -184,8 +184,6 @@ export const UnifiedMetrics = () => {
     queryFn: async () => getProNextAppointment({}),
   })
 
-  console.log(nextAppointment, "nextAppointment")
-
   const nextAppointmentData = nextAppointment?.data?.nextAppointment as Appointment
   const nextAppointmentClient = nextAppointment?.data?.client as UserType
   const nextAppointmentPets = nextAppointmentData?.pets?.map(pa => pa.pet) || []
@@ -561,7 +559,7 @@ export const UnifiedMetrics = () => {
           <div className="p-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Solde Stripe</span>
+                <span className="text-sm font-medium text-muted-foreground">Votre solde</span>
                 <Wallet className="w-4 h-4 text-blue-500" />
               </div>
               <div className="text-2xl font-semibold">
