@@ -42,13 +42,13 @@ export const getInvoices = createServerAction(
               name: true,
               email: true,
               image: true,
-            }
-          }
+            },
+          },
         },
         orderBy: (invoice, { desc }) => [desc(invoice.createdAt)],
       })
 
-      return data as Invoice[];
+      return data as Invoice[]
     } catch (error) {
       console.error("Erreur lors de la récupération des factures:", error)
       throw new ActionError("Impossible de récupérer les factures")
@@ -58,9 +58,12 @@ export const getInvoices = createServerAction(
 )
 
 export const getInvoiceMetrics = createServerAction(
-  z.object({}),
+  z.object({
+    organizationId: z.string().optional(),
+  }),
   async (input, ctx) => {
     try {
+      const { organizationId } = input
       const invoicesResult = await getInvoices({})
 
       if ("error" in invoicesResult) {
@@ -85,7 +88,7 @@ export const getInvoiceMetrics = createServerAction(
         const inv = invoicesArray[i]
         const status = getInvoiceStatus(inv)
         const total = inv.total || 0 // Utiliser 0 si total est null
-        
+
         if (status === "paid") {
           totalRevenue += total
 
@@ -106,7 +109,7 @@ export const getInvoiceMetrics = createServerAction(
       // Calculer le temps moyen de paiement
       const averagePaymentTime = paidCount > 0 ? Math.round(totalPaymentDays / paidCount) : 0
 
-      // Retourner directement les métriques sans les imbriquer dans un objet data
+      // Retourner les métriques
       return {
         totalRevenue,
         unpaidInvoices,
@@ -115,7 +118,13 @@ export const getInvoiceMetrics = createServerAction(
       }
     } catch (error) {
       console.error("Erreur lors du calcul des métriques:", error)
-      throw new ActionError("Impossible de calculer les métriques des factures")
+      // Au lieu de lancer une erreur, on retourne des valeurs par défaut
+      return {
+        totalRevenue: 0,
+        unpaidInvoices: 0,
+        overdueInvoices: 0,
+        averagePaymentTime: 0,
+      }
     }
   },
   [requireAuth, requireFullOrganization]

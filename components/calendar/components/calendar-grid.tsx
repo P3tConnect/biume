@@ -1,17 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/src/lib/utils"
-import { CalendarDays, CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react"
-import { CalendarCell } from "./calendar-cell"
-import { Appointment } from "@/src/db/appointments"
-import { useState } from "react"
 import { getDaysInMonth, getFirstDayOfMonth } from "@/src/lib/dateUtils"
-import { Card } from "../../ui"
-import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
+
+import { Appointment } from "@/src/db/appointments"
+import { CalendarCell } from "./calendar-cell"
 import { CalendarHeader } from "./calendar-header"
 import { ViewMode } from "@/src/types/view-mode"
+import { cn } from "@/src/lib/utils"
 import { motion } from "framer-motion"
+import { useState } from "react"
 
 interface CalendarGridProps {
   appointments: Appointment[]
@@ -28,7 +25,7 @@ export function CalendarGrid({
   currentDate,
   onDateChange,
   viewMode,
-  onViewModeChange
+  onViewModeChange,
 }: CalendarGridProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 

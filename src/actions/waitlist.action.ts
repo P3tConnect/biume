@@ -42,8 +42,6 @@ export const addToWaitList = createServerAction(
       throw new Error(mail.error.message)
     }
 
-    revalidatePath("/")
-
     return waitList
   },
   []

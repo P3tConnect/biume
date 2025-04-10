@@ -1,16 +1,15 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Calendar } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Appointment, Pet, PetAppointment, User as UserType } from "@/src/db"
+import { getAppointmentsByPetId, getOrganizationAppointmentsByDate } from "@/src/actions/appointments.action"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-
-import { Pet, User as UserType, Appointment, PetAppointment } from "@/src/db"
-import { useQuery } from "@tanstack/react-query"
-import { getAppointmentsByPetId, getOrganizationAppointmentsByDate } from "@/src/actions/appointments.action"
+import { Calendar } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 import { format } from "date-fns"
+import { motion } from "framer-motion"
+import { useQuery } from "@tanstack/react-query"
 
 interface AppointmentsTabProps {
   animal: Pet
@@ -156,7 +155,7 @@ export const AppointmentsTab = ({ animal }: AppointmentsTabProps) => {
                 <div className="text-sm text-muted-foreground">
                   {nextAppointmentData.beginAt
                     ? format(nextAppointmentData.beginAt, "dd/MM/yyyy")
-                    : nextAppointmentData.slot?.start.toLocaleDateString("fr-FR", {
+                    : nextAppointmentData?.slot?.start.toLocaleDateString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",

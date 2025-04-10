@@ -1,11 +1,9 @@
 "use client"
 
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-
-import { cn } from "@/src/lib/utils"
-
 import { HeaderProps } from "./types"
+import Link from "next/link"
+import { cn } from "@/src/lib/utils"
+import { useSearchParams } from "next/navigation"
 
 // Définir les items de navigation de base
 const baseNavItems = [

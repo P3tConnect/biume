@@ -1,13 +1,12 @@
 "use client"
 
+import { CalendarDays, CalendarIcon, Calendar as CalendarMonth, ChevronLeft, ChevronRight } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { cn } from "@/src/lib/utils"
-import { CalendarDays, CalendarIcon, Calendar as CalendarMonth, ChevronLeft, ChevronRight } from "lucide-react"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
 import { ViewMode } from "@/src/types/view-mode"
+import { capitalizeFirstLetter } from "../../dashboard/shortcuts/calendar-widget"
+import { cn } from "@/src/lib/utils"
 
 interface CalendarHeaderProps {
   currentDate: Date

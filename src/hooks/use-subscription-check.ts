@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from 'react'
-import { getCurrentOrganizationPlan } from '@/src/actions'
+import { useEffect, useState } from "react"
+import { getCurrentOrganizationPlan } from "@/src/actions"
 
 export const useSubscriptionCheck = () => {
   const [shouldShowAlert, setShouldShowAlert] = useState(false)
@@ -26,4 +26,4 @@ export const useSubscriptionCheck = () => {
   }, [])
 
   return { shouldShowAlert, organizationId }
-} 
+}

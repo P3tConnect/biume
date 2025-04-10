@@ -12,15 +12,12 @@ export const getRemindersAction = createServerAction(
     if (!ctx.organization || !ctx.user) throw new Error("Unauthorized")
 
     const reminders = await db.query.reminder.findMany({
-      where: and(
-        eq(reminder.organizationId, ctx.organization.id),
-        eq(reminder.userId, ctx.user.id)
-      ),
+      where: and(eq(reminder.organizationId, ctx.organization.id), eq(reminder.userId, ctx.user.id)),
       with: {
         organization: true,
         user: true,
       },
-      orderBy: (reminderTable) => [reminderTable.dueDate],
+      orderBy: reminderTable => [reminderTable.dueDate],
     })
     return reminders
   },
@@ -32,11 +29,14 @@ export const createReminderAction = createServerAction(
   async (input, ctx) => {
     if (!ctx.organization || !ctx.user) throw new Error("Unauthorized")
 
-    const newReminder = await db.insert(reminder).values({
-      ...input,
-      organizationId: ctx.organization.id,
-      userId: ctx.user.id,
-    }).returning()
+    const newReminder = await db
+      .insert(reminder)
+      .values({
+        ...input,
+        organizationId: ctx.organization.id,
+        userId: ctx.user.id,
+      })
+      .returning()
     return newReminder[0]
   },
   [requireAuth, requireMember]
@@ -50,7 +50,8 @@ export const updateReminderAction = createServerAction(
   async (input, ctx) => {
     if (!ctx.organization || !ctx.user) throw new Error("Unauthorized")
 
-    const updatedReminder = await db.update(reminder)
+    const updatedReminder = await db
+      .update(reminder)
       .set({
         ...input.data,
         updatedAt: new Date(),
@@ -75,7 +76,8 @@ export const deleteReminderAction = createServerAction(
   async (input, ctx) => {
     if (!ctx.organization || !ctx.user) throw new Error("Unauthorized")
 
-    await db.delete(reminder)
+    await db
+      .delete(reminder)
       .where(
         and(
           eq(reminder.id, input.id),
@@ -86,4 +88,4 @@ export const deleteReminderAction = createServerAction(
     return true
   },
   [requireAuth, requireMember]
-) 
+)

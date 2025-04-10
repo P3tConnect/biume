@@ -47,21 +47,6 @@ export function DateStep({
 
   return (
     <div className="space-y-4">
-      {/* Section supérieure: Type de consultation */}
-      <div className="flex items-center justify-between p-3 bg-muted/40 rounded-lg">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">Type de consultation:</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm">{isHomeVisit ? "À domicile" : "Au cabinet"}</span>
-          <div className="flex items-center gap-2">
-            <Building className={cn("h-4 w-4", !isHomeVisit ? "text-primary" : "text-muted-foreground")} />
-            <Switch checked={isHomeVisit} onCheckedChange={onToggleHomeVisit} />
-            <Home className={cn("h-4 w-4", isHomeVisit ? "text-primary" : "text-muted-foreground")} />
-          </div>
-        </div>
-      </div>
-
       {/* Section inférieure: Calendrier et créneau sélectionné */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Calendrier */}

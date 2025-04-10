@@ -23,25 +23,29 @@ const LoadingState = () => (
 
     {/* Métriques simulées */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {Array(4).fill(null).map((_, i) => (
-        <div key={i} className="p-4 border rounded-lg">
-          <Skeleton className="h-4 w-24 mb-2" />
-          <Skeleton className="h-8 w-32" />
-        </div>
-      ))}
+      {Array(4)
+        .fill(null)
+        .map((_, i) => (
+          <div key={i} className="p-4 border rounded-lg">
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        ))}
     </div>
 
     {/* Tableau simulé */}
     <div className="border rounded-lg p-4">
       <div className="space-y-4">
-        {Array(5).fill(null).map((_, i) => (
-          <div key={i} className="flex items-center gap-4">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        ))}
+        {Array(5)
+          .fill(null)
+          .map((_, i) => (
+            <div key={i} className="flex items-center gap-4">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          ))}
       </div>
     </div>
   </div>
@@ -64,12 +68,20 @@ const InvoicesPageComponent = () => {
   const [selectedInvoice, setSelectedInvoice] = React.useState<Invoice | null>(null)
   const { shouldShowAlert, organizationId: subscriptionOrgId } = useSubscriptionCheck()
 
-  const { data: invoices, isLoading: isLoadingInvoices, error: invoicesError } = useQuery({
+  const {
+    data: invoices,
+    isLoading: isLoadingInvoices,
+    error: invoicesError,
+  } = useQuery({
     queryKey: ["invoices"],
     queryFn: () => getInvoices({}),
-  });
+  })
 
-  const { data: invoiceMetrics, isLoading: isLoadingMetrics, error: metricsError } = useQuery({
+  const {
+    data: invoiceMetrics,
+    isLoading: isLoadingMetrics,
+    error: metricsError,
+  } = useQuery({
     queryKey: ["invoice-metrics"],
     queryFn: () => getInvoiceMetrics({}),
   })

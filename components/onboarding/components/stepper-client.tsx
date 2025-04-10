@@ -26,9 +26,11 @@ import StepIndicator from "./step-indicator"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 
 const StepperClient = ({ open }: { open: boolean }) => {
   const { data: session } = useSession()
+  const queryClient = useQueryClient();
   const stepper = useStepper()
   const currentIndex = utils.getIndex(stepper.current.id)
 
@@ -84,6 +86,7 @@ const StepperClient = ({ open }: { open: boolean }) => {
       await updateUser({
         onBoardingComplete: true,
       })
+      queryClient.invalidateQueries({ queryKey: ["pets"] })
     }
   }
 
@@ -143,9 +146,9 @@ const StepperClient = ({ open }: { open: boolean }) => {
             complete: () => <ClientCompleteStep />,
           })}
         {stepper.current.id === "pet" ||
-        stepper.current.id === "petDeseases" ||
-        stepper.current.id === "petIntolerances" ||
-        stepper.current.id === "petAllergies" ? (
+          stepper.current.id === "petDeseases" ||
+          stepper.current.id === "petIntolerances" ||
+          stepper.current.id === "petAllergies" ? (
           <></>
         ) : (
           <div className="space-y-4">

@@ -1,7 +1,7 @@
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { cn } from "@/src/lib/utils"
+import { motion } from "framer-motion"
 
 interface TimeGridCellProps {
   onDateSelect: () => void

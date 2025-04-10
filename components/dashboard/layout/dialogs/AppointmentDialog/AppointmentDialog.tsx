@@ -1,24 +1,23 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { CalendarIcon, CheckIcon, StethoscopeIcon, UserIcon } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Form } from "@/components/ui/form"
-import { createAppointmentAction } from "@/src/actions/appointment.action"
-import { cn } from "@/src/lib/utils"
-
 import { useStepper, utils } from "./appointmentDialogStepper"
+
+import { Button } from "@/components/ui/button"
 import ClientStep from "./client-step"
 import ConfirmationStep from "./confirmation-step"
 import DateStep from "./date-step"
+import { Form } from "@/components/ui/form"
 import ServiceStep from "./service-step"
+import { cn } from "@/src/lib/utils"
+import { createAppointmentAction } from "@/src/actions/appointment.action"
+import { toast } from "sonner"
+import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface AppointmentDialogProps {
   open: boolean

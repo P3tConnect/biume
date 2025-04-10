@@ -22,13 +22,12 @@ export const PlanningHeader = () => {
             <p className="text-sm text-muted-foreground">Gérez vos rendez-vous et consultations</p>
           </div>
 
-          <Button variant="outline" size="sm" className="ml-auto" asChild>
-            <Link
-              href={`/dashboard/organization/${activeOrganization?.data?.id}/timetable`}
-              className="flex items-center gap-2"
-            >
-              Voir plus
-              <ArrowRightIcon className="h-4 w-4" />
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/dashboard/organization/${activeOrganization?.data?.id}/clients`}>
+              <span className="flex items-center gap-2">
+                Voir plus
+                <ArrowRightIcon className="h-4 w-4" />
+              </span>
             </Link>
           </Button>
         </div>

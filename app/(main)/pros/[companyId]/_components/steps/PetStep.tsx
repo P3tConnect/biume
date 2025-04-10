@@ -68,15 +68,16 @@ export function PetStep({ selectedPets, onSelectPets, selectedService, selectedS
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h3 className="font-medium text-lg">Sélectionnez {selectedService?.type === "MULTIPLE" ? "un ou plusieurs animaux" : "un animal"} pour ce rendez-vous</h3>
+        <h3 className="font-medium text-lg">
+          Sélectionnez {selectedService?.type === "MULTIPLE" ? "un ou plusieurs animaux" : "un animal"} pour ce
+          rendez-vous
+        </h3>
         {selectedService?.type === "MULTIPLE" && selectedSlot && (
           <p className="text-sm text-muted-foreground">
             Ce service permet d'accueillir plusieurs animaux en même temps.
-            {selectedSlot.remainingPlaces && selectedSlot.remainingPlaces > 0 ? (
-              ` Il reste ${selectedSlot.remainingPlaces} place${selectedSlot.remainingPlaces > 1 ? 's' : ''} disponible${selectedSlot.remainingPlaces > 1 ? 's' : ''}.`
-            ) : (
-              " Il n'y a plus de places disponibles pour ce créneau."
-            )}
+            {selectedSlot.remainingPlaces && selectedSlot.remainingPlaces > 0
+              ? ` Il reste ${selectedSlot.remainingPlaces} place${selectedSlot.remainingPlaces > 1 ? "s" : ""} disponible${selectedSlot.remainingPlaces > 1 ? "s" : ""}.`
+              : " Il n'y a plus de places disponibles pour ce créneau."}
           </p>
         )}
       </div>

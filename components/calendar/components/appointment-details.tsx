@@ -1,13 +1,14 @@
-import { Appointment } from "@/src/db/appointments"
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
-import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui/credenza"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui/credenza"
+import { Euro, MapPin, MessageSquare, Phone, Tag, X } from "lucide-react"
+
+import { Appointment } from "@/src/db/appointments"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/src/lib/utils"
-import { Tag, MapPin, Phone, MessageSquare, Euro, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { cn } from "@/src/lib/utils"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
 
 interface AppointmentDetailsProps {
   appointments: Appointment[] // Liste de tous les rendez-vous pour ce créneau

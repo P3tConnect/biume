@@ -7,10 +7,10 @@ import { headers } from "next/headers"
 import { getCurrentOrganization, getCurrentOrganizationPlan } from "@/src/actions"
 
 export default async function NonPayedSubscription() {
-  const { data: activeOrganization } = await getCurrentOrganizationPlan({});
+  const { data: activeOrganization } = await getCurrentOrganizationPlan({})
 
   if (activeOrganization?.plan !== "NONE" || activeOrganization?.subscription.status !== "active") {
-    return null;
+    return null
   }
 
   return (
@@ -23,8 +23,8 @@ export default async function NonPayedSubscription() {
       </CardHeader>
       <CardContent>
         <p>
-          Votre abonnement n&apos;est pas à jour. Pour continuer à utiliser tous les services de Biume,
-          veuillez mettre à jour votre abonnement.
+          Votre abonnement n&apos;est pas à jour. Pour continuer à utiliser tous les services de Biume, veuillez mettre
+          à jour votre abonnement.
         </p>
       </CardContent>
       <CardFooter>

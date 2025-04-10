@@ -1,21 +1,21 @@
 "use client"
 
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
 import { CalendarIcon, Clock, FileText, User2 } from "lucide-react"
-import { useState } from "react"
-
 import { Credenza, CredenzaContent, CredenzaFooter, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/src/lib/utils"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
+import { useState } from "react"
 
 interface AppointmentFormProps {
   isOpen: boolean

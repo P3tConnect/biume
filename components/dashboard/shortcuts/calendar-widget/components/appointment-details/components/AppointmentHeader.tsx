@@ -81,7 +81,13 @@ export function AppointmentHeader({ mainAppointment, allPets, totalInSlot, onVie
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className={cn("text-xs", appointmentColors[getColorKey(mainAppointment.type)].replace("bg-", "border-"))}
+              className={cn(
+                "text-xs",
+                appointmentColors[getColorKey(mainAppointment.type)]
+                  .replace("bg-", "border-")
+                  .replace("text-white", "")
+                  .replace(/hover:bg-[^\\s]+/g, "")
+              )}
             >
               {mainAppointment.service.name}
             </Badge>

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import React, { useState } from "react"
 import { cn } from "@/src/lib/utils"
 import { confirmAppointment, denyAppointment } from "@/src/actions/appointments.action"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
@@ -251,17 +251,17 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
         </div>
       </div>
 
-      {/* Sheet des détails */}
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-[600px] overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle className="flex items-center gap-2">
+      {/* Dialog des détails */}
+      <Dialog open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
               <CalendarDaysIcon className="h-5 w-5 text-primary" />
               Détails de la réservation
-            </SheetTitle>
-            <SheetDescription>Informations complètes sur le rendez-vous</SheetDescription>
-          </SheetHeader>
-          <div className="mt-6 space-y-6">
+            </DialogTitle>
+            <DialogDescription>Informations complètes sur le rendez-vous</DialogDescription>
+          </DialogHeader>
+          <div className="mt-6 space-y-6 max-h-[calc(80vh-200px)] overflow-y-auto pr-2">
             {/* Section Animaux */}
             <div className="space-y-3">
               {appointment.pets.map(petData => (
@@ -363,21 +363,20 @@ export const AppointmentRequestItem = ({ appointment }: AppointmentRequestItemPr
                 </div>
               </div>
             </div>
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button variant="outline" onClick={() => setIsSheetOpen(false)}>
-                Fermer
-              </Button>
-              <Button variant="default" onClick={handleConfirm} disabled={isLoading}>
-                Confirmer
-              </Button>
-              <Button variant="destructive" onClick={handleOpenDenyModal} disabled={isLoading}>
-                Refuser
-              </Button>
-            </div>
           </div>
-        </SheetContent>
-      </Sheet>
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setIsSheetOpen(false)}>
+              Fermer
+            </Button>
+            <Button variant="default" onClick={handleConfirm} disabled={isLoading}>
+              Confirmer
+            </Button>
+            <Button variant="destructive" onClick={handleOpenDenyModal} disabled={isLoading}>
+              Refuser
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog du client */}
       <Dialog open={isClientDialogOpen} onOpenChange={setIsClientDialogOpen}>

@@ -3,7 +3,7 @@
 import { AlertCircle, Clock, FileText, TrendingUp } from "lucide-react"
 import React from "react"
 
-import { CountAnimation } from "@/components/count-animation"
+import { CountAnimation } from "@/components/common/count-animation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface MetricsGridProps {

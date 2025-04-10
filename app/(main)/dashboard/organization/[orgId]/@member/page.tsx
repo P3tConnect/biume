@@ -1,7 +1,9 @@
-import React from "react"
+import React from 'react'
 
-const DashboardOrganizationMemberHomePage = () => {
-  return <div>DashboardOrganizationMemberHomePage</div>
+const DashboardMemberHome = () => {
+  return (
+    <div>DashboardMemberHome</div>
+  )
 }
 
-export default DashboardOrganizationMemberHomePage
+export default DashboardMemberHome

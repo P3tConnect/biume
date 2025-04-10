@@ -34,10 +34,12 @@ import { UserNav } from "../user-nav"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { cn } from "@/src/lib/utils"
 import { toast } from "sonner"
+import Stepper from "@/components/onboarding/components/stepper"
 
 export function ClientNavbar() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [createOrgOpen, setCreateOrgOpen] = useState(false)
   const [switchingOrg, setSwitchingOrg] = useState<string | null>(null)
   const [switchingPersonal, setSwitchingPersonal] = useState(false)
   const [showPersonalDialog, setShowPersonalDialog] = useState(false)
@@ -155,7 +157,7 @@ export function ClientNavbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/95">
       <div className="flex h-14 items-center px-4">
         <div className="flex items-center">
-          <Credenza>
+          <Credenza open={createOrgOpen} onOpenChange={setCreateOrgOpen}>
             <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -338,7 +340,14 @@ export function ClientNavbar() {
                       Devenir professionnel
                     </DropdownMenuLabel>
                     <CredenzaTrigger asChild>
-                      <DropdownMenuItem className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm">
+                      <DropdownMenuItem
+                        className="group flex items-center gap-3 p-2 rounded-md hover:bg-accent hover:translate-x-1 transition-all cursor-pointer duration-200 hover:shadow-sm"
+                        onSelect={e => {
+                          e.preventDefault()
+                          setDropdownOpen(false)
+                          setCreateOrgOpen(true)
+                        }}
+                      >
                         <div className="h-8 w-8 rounded-md bg-secondary/10 dark:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-secondary/20 dark:hover:bg-secondary/30">
                           <Plus className="h-4 w-4 text-secondary dark:text-secondary-foreground" />
                         </div>
@@ -352,6 +361,7 @@ export function ClientNavbar() {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
+            <Stepper />
           </Credenza>
         </div>
 

@@ -15,8 +15,8 @@ import { Switch } from "@/components/ui/switch"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
-import { updateOrganizationPlan } from "@/src/actions/stripe.action"
-import { useMutation } from "@tanstack/react-query"
+import { updateOrganizationPlan, getSubscriptionInterval } from "@/src/actions/stripe.action"
+import { useMutation, useQuery } from "@tanstack/react-query"
 
 interface Plan {
   name: string
@@ -43,6 +43,14 @@ export const BillingPlanSection = ({ plans, billingInfo, isLoading }: BillingPla
   const [isOpen, setIsOpen] = React.useState(false)
   const [selectedPlan, setSelectedPlan] = React.useState<string | null>(null)
   const [isAnnual, setIsAnnual] = React.useState(true)
+
+  const { data: subscriptionInterval } = useQuery({
+    queryKey: ["subscriptionInterval"],
+    queryFn: async () => {
+      const { data } = await getSubscriptionInterval({})
+      return data
+    },
+  })
 
   // Associer des icônes par défaut aux plans
   const enhancedPlans = plans.map(plan => {
@@ -87,7 +95,9 @@ export const BillingPlanSection = ({ plans, billingInfo, isLoading }: BillingPla
               <h3 className="text-lg font-medium">Plan actuel</h3>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-primary">{billingInfo?.data?.currentPrice}</span>
-                <span className="text-sm text-muted-foreground">/mois</span>
+                <span className="text-sm text-muted-foreground">
+                  {subscriptionInterval?.isAnnual ? "/an" : "/mois"}
+                </span>
               </div>
             </div>
           </div>
