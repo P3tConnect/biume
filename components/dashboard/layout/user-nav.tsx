@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
-import { LayoutGrid, LogOut, Settings } from "lucide-react"
+import { Building, LayoutGrid, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -17,19 +17,27 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSubTrigger,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
   DropdownMenuTrigger,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui"
-import { getUserInformations } from "@/src/actions"
-import { signOut } from "@/src/lib/auth-client"
+import { getAllOrganizationsByUserId, getUserInformations } from "@/src/actions"
+import { organization, signOut } from "@/src/lib/auth-client"
 
 export function UserNav() {
   const { data: session, isLoading } = useQuery({
     queryKey: ["user-informations"],
     queryFn: () => getUserInformations({}),
+  })
+  const { data: companies } = useQuery({
+    queryKey: ["companies"],
+    queryFn: () => getAllOrganizationsByUserId({}),
   })
   const router = useRouter()
   const userStatus = "active" // À remplacer par une vraie logique de statut si nécessaire
@@ -123,6 +131,26 @@ export function UserNav() {
                   </Link>
                 </DropdownMenuItem>
               ))}
+              {companies?.data?.length! > 0 && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-purple-500 hover:to-blue-500 transition-all duration-300 ease-in-out shadow-lg rounded-md bg-size-200 bg-pos-0 animate-gradientAnimation">
+                    <Building className="w-4 h-4 transition-transform duration-200 ease-in-out group-hover:scale-110" />
+                    <span className="font-medium">Entreprises</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="bg-white dark:bg-gray-900 shadow-2xl rounded-md p-2 transition-opacity duration-300 ease-in-out">
+                      {companies?.data?.map((company: { id: string; name: string }, index: number) => (
+                        <DropdownMenuItem key={index} asChild onClick={() => organization.setActive({ organizationId: company.id })}>
+                          <Link href={`/dashboard/organization/${company.id}`} className="flex items-center gap-2 p-2 rounded-md hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 dark:hover:from-blue-800 dark:hover:to-purple-800 transition-colors duration-150">
+                            <Building className="w-4 h-4 transition-transform duration-200 ease-in-out group-hover:scale-110" />
+                            <span>{company.name}</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -146,3 +174,17 @@ export function UserNav() {
     </div>
   )
 }
+
+<style jsx>{`
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`}</style>
