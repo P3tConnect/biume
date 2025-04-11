@@ -42,7 +42,6 @@ import { Invoice } from "@/src/db"
 
 interface InvoicesTableProps {
   invoices: Invoice[]
-  onInvoiceSelect: (invoice: Invoice) => void
 }
 
 const statusMap = {
@@ -51,7 +50,7 @@ const statusMap = {
   overdue: { label: "En retard", variant: "destructive" as const },
 }
 
-export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps) => {
+export const InvoicesTable = ({ invoices }: InvoicesTableProps) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = React.useState("")
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -139,7 +138,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => onInvoiceSelect(invoice)}>Voir les détails</DropdownMenuItem>
+              <DropdownMenuItem>Voir les détails</DropdownMenuItem>
               <DropdownMenuItem>Télécharger le PDF</DropdownMenuItem>
               <DropdownMenuItem>Envoyer par email</DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -198,11 +197,7 @@ export const InvoicesTable = ({ invoices, onInvoiceSelect }: InvoicesTableProps)
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => onInvoiceSelect(row.original)}
-                >
+                <TableRow key={row.id} className="cursor-pointer hover:bg-muted/50">
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
