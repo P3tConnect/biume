@@ -13,7 +13,6 @@ import { ExitConfirmationDialog } from "./components/ExitConfirmationDialog"
 import { ReportHeader } from "./components/ReportHeader"
 import { Observation, NewObservation, AppointmentReference, AnatomicalIssue, AdvancedReportBuilderProps } from "./types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ListTodoIcon, ActivityIcon, CheckIcon, FileTextIcon, PlusIcon } from "lucide-react"
 
@@ -30,7 +29,6 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const [showInitDialog, setShowInitDialog] = useState(true)
   const [appointmentReference, setAppointmentReference] = useState<AppointmentReference | null>(null)
   const [consultationReason, setConsultationReason] = useState<string>("")
-  const [step, setStep] = useState<"init" | "details" | "review">("init")
   const [recommendations, setRecommendations] = useState<{ id: string; content: string }[]>([])
   const [anatomicalIssues, setAnatomicalIssues] = useState<AnatomicalIssue[]>([])
   const [showExitConfirmDialog, setShowExitConfirmDialog] = useState(false)
@@ -85,7 +83,6 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const handleInitComplete = () => {
     if (!selectedPetId || !appointmentReference?.appointmentId) return
     setShowInitDialog(false)
-    setStep("details")
   }
 
   const handleTabChange = (tab: "clinical" | "notes" | "recommendations" | "anatomical") => {

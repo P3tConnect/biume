@@ -35,3 +35,10 @@ export * from "./waitlist"
 export * from "./widgets"
 export * from "./petDocuments"
 export * from "./pet_appointments"
+export * from "./anatomicalIssue"
+
+// Configuration des relations pour anatomicalIssue
+import { relations } from "drizzle-orm"
+import { anatomicalIssue } from "./anatomicalIssue"
+import { organization } from "./organization"
+

@@ -33,8 +33,7 @@ import {
 } from "lucide-react"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { getClients } from "@/src/actions/client.action"
-import { getPetsAction } from "@/src/actions/pets.action"
-import type { User } from "@/src/db"
+import { getPetsAction } from "@/src/actions/pet.action"
 
 // Définition des types de résultats de recherche
 type SearchResultType = "client" | "patient" | "page" | "action"
@@ -139,13 +138,23 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
         return []
       }
 
-      const pets =
-        result.data?.pets?.filter(
-          (pet: PatientData) =>
-            pet.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.breed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.description?.toLowerCase().includes(searchTerm.toLowerCase())
-        ) || []
+      // Transforme les données retournées pour correspondre au type PatientData
+      const pets = result.data?.map((pet: any) => ({
+        id: pet.id,
+        name: pet.name,
+        breed: pet.breed,
+        description: pet.description,
+        type: pet.type,
+        owner: pet.owner ? {
+          id: pet.owner.id,
+          name: pet.owner.name
+        } : null
+      })).filter(
+        (pet: PatientData) =>
+          pet.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          pet.breed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          pet.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || []
 
       return pets
     },

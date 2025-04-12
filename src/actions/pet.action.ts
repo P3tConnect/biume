@@ -6,7 +6,7 @@ import { z } from "zod"
 import { CreatePetSchema, Pet, pets } from "@/src/db/pets"
 import { appointments } from "@/src/db/appointments"
 
-import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
+import { ActionError, createServerAction, db, requireAuth, requireFullOrganization, requireMember } from "../lib"
 
 export const createPet = createServerAction(
   CreatePetSchema,
@@ -297,6 +297,36 @@ export const getProPatients = createServerAction(
         pa => pa.appointment?.status === "CONFIRMED" && pa.appointment?.proId === ctx.fullOrganization?.id
       )
     ) as unknown as Pet[]
+  },
+  [requireAuth, requireFullOrganization]
+)
+
+// Action pour récupérer tous les animaux d'une organisation
+export const getPetsAction = createServerAction(
+  z.object({
+    ownerId: z.string().optional(),
+  }),
+  async (input, ctx) => {
+    if (!ctx.organization) {
+      throw new Error("Organisation non trouvée")
+    }
+
+    // Note: Comme pets n'a pas de propriété organizationId, nous filtrons uniquement par ownerId si fourni
+    const query = await db.query.pets.findMany({
+      where: eq(pets.ownerId, input.ownerId ?? ""),
+      columns: {
+        id: true,
+        name: true,
+        type: true,
+        weight: true,
+        height: true,
+        description: true,
+        breed: true,
+        image: true,
+      },
+    });
+
+    return query;
   },
   [requireAuth, requireFullOrganization]
 )
