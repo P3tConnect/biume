@@ -7,8 +7,6 @@ import { Card } from "@/components/ui/card"
 import { DailyAppointments } from "./daily-appointments"
 import { DropResult } from "react-beautiful-dnd"
 import { Event } from "@/src/lib"
-import SideDrawer from "./side-drawer"
-import { TimetableHeader } from "./timetable-header"
 import { useState } from "react"
 
 interface Appointment extends AppointmentFormData {
@@ -72,7 +70,7 @@ export function TimetableView({ appointments }: TimetableViewProps) {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <TimetableHeader view={view} onViewChange={setView} onNewAppointment={() => setIsFormOpen(true)} />
+      {/* <TimetableHeader view={view} onViewChange={setView} onNewAppointment={() => setIsFormOpen(true)} /> */}
       <div className="flex-1 overflow-hidden pb-4">
         {view === "calendar" ? (
           <Card className="rounded-xl overflow-hidden h-full px-2">
@@ -105,18 +103,6 @@ export function TimetableView({ appointments }: TimetableViewProps) {
         onSubmit={handleAddAppointment}
         initialData={editingAppointment || undefined}
         isEditing={!!editingAppointment}
-      />
-
-      <SideDrawer
-        isOpen={isSideDrawerOpen}
-        onClose={() => setIsSideDrawerOpen(false)}
-        selectedDate={selectedDate}
-        events={selectedDateEvents}
-        onAddEvent={handleAddEvent}
-        onEditEvent={handleEditEvent}
-        onDeleteEvent={handleDeleteEvent}
-        onSaveEvent={handleEditEvent}
-        existingEvents={events}
       />
     </div>
   )

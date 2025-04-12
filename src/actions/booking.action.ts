@@ -118,7 +118,7 @@ export const createBooking = createServerAction(
       // Si des options ont été sélectionnées, les enregistrer
       if (input.selectedOptions && input.selectedOptions.length > 0) {
         await db.insert(appointmentOptions).values(
-          input.selectedOptions.map(option => ({
+          input.selectedOptions.map((option: string) => ({
             appointmentId: appointment.id,
             optionId: option,
           }))
@@ -129,7 +129,7 @@ export const createBooking = createServerAction(
         await db
           .insert(petAppointments)
           .values(
-            input.selectedPets.map(pet => ({
+            input.selectedPets.map((pet: string) => ({
               petId: pet,
               appointmentId: appointment.id,
             }))

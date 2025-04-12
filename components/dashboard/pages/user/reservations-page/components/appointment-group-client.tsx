@@ -136,12 +136,12 @@ export function AppointmentGroupClient({ appointments }: AppointmentGroupProps) 
                 </div>
               </div>
 
-              <div className="gap-4 text-sm text-black dark:text-white">
+              {/* <div className="gap-4 text-sm text-black dark:text-white">
                 <div className="flex text-center gap-2 px-3 py-3 items-center w-full rounded-lg bg-purple-100 dark:bg-slate-900">
                   <Phone className="w-4 h-4" />
                   <span>{appointment?.pro?.phoneNumber}</span>
                 </div>
-              </div>
+              </div> */}
 
               {/* Notes */}
               {appointment.observation?.content && (

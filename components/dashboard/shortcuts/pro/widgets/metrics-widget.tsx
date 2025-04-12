@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react"
 import { Area, AreaChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-import { CountAnimation } from "@/components/count-animation"
+import { CountAnimation } from "@/components/common/count-animation"
 import { CredenzaContent, CredenzaHeader, CredenzaTitle } from "@/components/ui"
 import { Credenza } from "@/components/ui"
 import { Card } from "@/components/ui/card"

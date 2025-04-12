@@ -42,7 +42,7 @@ import { DateStep } from "./steps/DateStep"
 import { getOptionsFromOrganization } from "@/src/actions/options.action"
 import { SuccessStep } from "./steps/SuccessStep"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { BiumeAI } from "@/components/biume-ai"
+// import { BiumeAI } from "@/components/biume-ai"
 
 // Création d'un type pour les slots d'affichage
 interface DisplaySlot {
