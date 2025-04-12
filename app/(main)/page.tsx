@@ -1,6 +1,5 @@
 import ClientHome from "@/components/landing-page/client-home"
 import { Suspense } from "react"
-import HomePageLoading from "./loading"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <Suspense fallback={<HomePageLoading />}>
+    <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center">Chargement...</div>}>
       <ClientHome />
     </Suspense>
   )

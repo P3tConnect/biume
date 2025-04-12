@@ -3,9 +3,9 @@
 import { cn } from "@/src/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Plus, Trash2, Filter } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Plus, Trash2, CheckCircle2, RefreshCw } from "lucide-react"
 import { Observation, ObservationType, anatomicalRegions, dysfunctionTypes, interventionZones } from "./types"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ObservationsTabProps {
   observations: Observation[]
@@ -14,6 +14,7 @@ interface ObservationsTabProps {
   onOpenAddSheet: () => void
   selectedView: "left" | "right"
   setSelectedView: (view: "left" | "right") => void
+  setActiveType?: (type: ObservationType) => void
 }
 
 export function ObservationsTab({
@@ -23,6 +24,7 @@ export function ObservationsTab({
   onOpenAddSheet,
   selectedView,
   setSelectedView,
+  setActiveType,
 }: ObservationsTabProps) {
   const filteredObservations = observations.filter(obs => obs.type === activeType)
 
@@ -32,47 +34,28 @@ export function ObservationsTab({
   } as const
 
   const typeTitle = typeLabels[activeType]
+  const typeIcon = activeType === "staticObservation" ? <CheckCircle2 className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />
+
+  const handleTypeChange = (type: ObservationType) => {
+    if (setActiveType) {
+      setActiveType(type);
+    }
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-      {/* Vue anatomique - partie gauche */}
+    <div className="h-full">
+      {/* Liste des observations */}
       <Card className="flex flex-col h-full">
         <div className="p-3 border-b flex items-center justify-between">
-          <h2 className="font-medium">Vue anatomique</h2>
-          <div className="flex gap-1">
-            <Button
-              variant={selectedView === "left" ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setSelectedView("left")}
-            >
-              Gauche
-            </Button>
-            <Button
-              variant={selectedView === "right" ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setSelectedView("right")}
-            >
-              Droite
-            </Button>
+          <div className="flex items-center gap-2">
+            {typeIcon}
+            <h2 className="font-medium">{typeTitle}</h2>
+            {filteredObservations.length > 0 && (
+              <Badge className="bg-primary/90 hover:bg-primary text-white">
+                {filteredObservations.length}
+              </Badge>
+            )}
           </div>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            <p className="text-center">
-              Visualisation anatomique {selectedView === "left" ? "(gauche)" : "(droite)"}
-              <br />
-              <span className="text-sm text-muted-foreground/70">
-                Cette fonctionnalité sera améliorée prochainement
-              </span>
-            </p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Observations - partie droite */}
-      <Card className="flex flex-col h-full">
-        <div className="p-3 border-b flex items-center justify-between">
-          <h2 className="font-medium">{typeTitle}</h2>
           <Button variant="ghost" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
             <Plus className="h-4 w-4" />
             Ajouter
@@ -83,9 +66,9 @@ export function ObservationsTab({
           {filteredObservations.length > 0 ? (
             <div className="space-y-3">
               {filteredObservations.map(obs => (
-                <div key={obs.id} className="p-3 border rounded-md flex items-start justify-between">
+                <div key={obs.id} className="p-3 border rounded-md flex items-start justify-between hover:bg-muted/30 transition-colors">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center flex-wrap gap-2 mb-2">
                       <div
                         className={cn(
                           "w-3 h-3 rounded-full",
@@ -101,11 +84,6 @@ export function ObservationsTab({
                         )}
                       />
                       <span className="font-medium">{anatomicalRegions.find(r => r.value === obs.region)?.label}</span>
-                      {obs.interventionZone && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
-                          {interventionZones.find(z => z.value === obs.interventionZone)?.label}
-                        </span>
-                      )}
                       <span className="text-xs text-muted-foreground">
                         ({obs.severity === 1
                           ? "Légère"
@@ -118,9 +96,23 @@ export function ObservationsTab({
                                 : "Critique"})
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{obs.notes}</p>
+
+                    {obs.interventionZone && (
+                      <div className="mb-2">
+                        <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                          Zone: {interventionZones.find(z => z.value === obs.interventionZone)?.label}
+                        </Badge>
+                      </div>
+                    )}
+
+                    {obs.notes && <p className="text-sm text-muted-foreground">{obs.notes}</p>}
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => onRemoveObservation(obs.id)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onRemoveObservation(obs.id)}
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -128,7 +120,10 @@ export function ObservationsTab({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-3">
-              <p>Aucune observation</p>
+              <div className="flex items-center gap-2">
+                {typeIcon}
+                <p>Aucune observation {activeType === "staticObservation" ? "statique" : "dynamique"}</p>
+              </div>
               <Button variant="outline" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
                 <Plus className="h-4 w-4" />
                 Ajouter une observation

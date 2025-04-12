@@ -27,6 +27,17 @@ export interface AppointmentReference {
   petId: string
 }
 
+// Interface pour les problèmes anatomiques (dysfonctions et suspicions)
+export interface AnatomicalIssue {
+  id: string
+  type: "dysfunction" | "anatomicalSuspicion"
+  region: string
+  severity: number
+  notes: string
+  interventionZone?: string
+  laterality: "left" | "right" | "bilateral"
+}
+
 // Liste des régions anatomiques
 export const anatomicalRegions = [
   { value: "tete", label: "Tête" },
