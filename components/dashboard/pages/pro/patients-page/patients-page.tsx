@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
 
 import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
@@ -51,7 +50,6 @@ const PatientsPageComponent = () => {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = React.useState("")
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [activeTab, setActiveTab] = React.useState("all")
   const [selectedPatientId, setSelectedPatientId] = React.useState<string | null>(null)
   const { shouldShowAlert, organizationId } = useSubscriptionCheck()
 
@@ -63,40 +61,35 @@ const PatientsPageComponent = () => {
 
   const patients = React.useMemo(() => {
     if (!patientsData?.data) return []
-
-    // Filtrer les patients en fonction de l'onglet actif
-    return patientsData.data.filter(patient => {
-      if (activeTab === "all") return true
-      if (activeTab === "dogs") return patient.type === "Dog"
-      if (activeTab === "cats") return patient.type === "Cat"
-      if (activeTab === "others") return !["Dog", "Cat"].includes(patient.type)
-      return true
-    })
-  }, [patientsData?.data, activeTab])
+    return patientsData.data
+  }, [patientsData?.data])
 
   // Stats mises à jour dynamiquement
-  const stats = React.useMemo(() => [
-    {
-      label: "Total Patients",
-      value: patientsData?.data?.length || 0,
-      icon: Dog,
-    },
-    {
-      label: "Chiens",
-      value: patientsData?.data?.filter(p => p.type === "Dog").length || 0,
-      icon: Dog,
-    },
-    {
-      label: "Chats",
-      value: patientsData?.data?.filter(p => p.type === "Cat").length || 0,
-      icon: Cat,
-    },
-    {
-      label: "Autres",
-      value: patientsData?.data?.filter(p => !["Dog", "Cat"].includes(p.type)).length || 0,
-      icon: Bird,
-    },
-  ], [patientsData?.data])
+  const stats = React.useMemo(
+    () => [
+      {
+        label: "Total Patients",
+        value: patientsData?.data?.length || 0,
+        icon: Dog,
+      },
+      {
+        label: "Chiens",
+        value: patientsData?.data?.filter(p => p.type === "Dog").length || 0,
+        icon: Dog,
+      },
+      {
+        label: "Chats",
+        value: patientsData?.data?.filter(p => p.type === "Cat").length || 0,
+        icon: Cat,
+      },
+      {
+        label: "Autres",
+        value: patientsData?.data?.filter(p => !["Dog", "Cat"].includes(p.type)).length || 0,
+        icon: Bird,
+      },
+    ],
+    [patientsData?.data]
+  )
 
   const columns: ColumnDef<Pet>[] = [
     {
@@ -183,9 +176,7 @@ const PatientsPageComponent = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setSelectedPatientId(row.original.id)}>
-                Voir le dossier
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedPatientId(row.original.id)}>Voir le dossier</DropdownMenuItem>
               <DropdownMenuItem>Nouvelle consultation</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
@@ -268,98 +259,87 @@ const PatientsPageComponent = () => {
           <CardHeader className="pb-0">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-semibold">Mes Patients</CardTitle>
-            </div>
-            <Tabs defaultValue="all" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-              <div className="flex items-center justify-between">
-                <TabsList>
-                  <TabsTrigger value="all">Tous</TabsTrigger>
-                  <TabsTrigger value="dogs">Chiens</TabsTrigger>
-                  <TabsTrigger value="cats">Chats</TabsTrigger>
-                  <TabsTrigger value="others">Autres</TabsTrigger>
-                </TabsList>
-
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Rechercher..."
-                      value={globalFilter}
-                      onChange={event => setGlobalFilter(event.target.value)}
-                      className="pl-8 w-[250px]"
-                    />
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="gap-2">
-                        <Filter className="h-4 w-4" />
-                        Filtres
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
-                      <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
-                      <DropdownMenuItem>Âge</DropdownMenuItem>
-                      <DropdownMenuItem>Type</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Rechercher..."
+                    value={globalFilter}
+                    onChange={event => setGlobalFilter(event.target.value)}
+                    className="pl-8 w-[250px]"
+                  />
                 </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Filter className="h-4 w-4" />
+                      Filtres
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>Filtrer par</DropdownMenuLabel>
+                    <DropdownMenuItem>Date d&apos;inscription</DropdownMenuItem>
+                    <DropdownMenuItem>Âge</DropdownMenuItem>
+                    <DropdownMenuItem>Type</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
+            </div>
 
-              <TabsContent value="all" className="mt-6">
-                {isLoadingPatients ? (
-                  <div className="space-y-4">
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                  </div>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      {table.getHeaderGroups().map(headerGroup => (
-                        <TableRow key={headerGroup.id}>
-                          {headerGroup.headers.map(header => (
-                            <TableHead key={header.id}>
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
-                            </TableHead>
+            {isLoadingPatients ? (
+              <div className="space-y-4 mt-6">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            ) : (
+              <div className="mt-6">
+                <Table>
+                  <TableHeader>
+                    {table.getHeaderGroups().map(headerGroup => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(header.column.columnDef.header, header.getContext())}
+                          </TableHead>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map(row => (
+                        <TableRow
+                          key={row.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => setSelectedPatientId(row.original.id)}
+                        >
+                          {row.getVisibleCells().map(cell => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
                           ))}
                         </TableRow>
-                      ))}
-                    </TableHeader>
-                    <TableBody>
-                      {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map(row => (
-                          <TableRow
-                            key={row.id}
-                            className="cursor-pointer hover:bg-muted/50"
-                            onClick={() => setSelectedPatientId(row.original.id)}
-                          >
-                            {row.getVisibleCells().map(cell => (
-                              <TableCell key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={columns.length} className="h-24 text-center">
-                            Aucun résultat.
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                )}
-              </TabsContent>
-            </Tabs>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          Aucun résultat.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </CardHeader>
         </Card>
 
         <AnimalCredenza
           isOpen={!!selectedPatientId}
-          onOpenChange={(open) => {
+          onOpenChange={open => {
             if (!open) setSelectedPatientId(null)
           }}
           petId={selectedPatientId || ""}

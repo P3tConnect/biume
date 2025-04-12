@@ -1,9 +1,6 @@
 "use client"
 
 import React from "react"
-
-import ClientExpensesWidget from "@/components/dashboard/shortcuts/client/client-expenses-widget"
-import ClientPetHealthWidget from "@/components/dashboard/shortcuts/client/client-pet-health-widget"
 import ClientPetsWidgetSimple from "@/components/dashboard/shortcuts/client/client-pets-widget-simple"
 import ClientQuickActionsWidget from "@/components/dashboard/shortcuts/client/client-quick-actions-widget"
 import ClientUpcomingAppointmentsWidget from "@/components/dashboard/shortcuts/client/client-upcoming-appointments-widget"
@@ -37,12 +34,12 @@ const ClientDashboardHomePage = () => {
         <div className="lg:col-span-2 space-y-4">
           <ClientQuickActionsWidget />
           <ClientUpcomingAppointmentsWidget />
-          <ClientPetHealthWidget />
+          {/* <ClientPetHealthWidget /> */}
         </div>
 
         <div className="space-y-4">
           <ClientPetsWidgetSimple />
-          <ClientExpensesWidget />
+          {/* <ClientExpensesWidget /> */}
         </div>
       </div>
     </div>

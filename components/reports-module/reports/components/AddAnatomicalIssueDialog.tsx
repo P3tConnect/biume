@@ -25,6 +25,7 @@ interface AnatomicalIssue {
   severity: number
   notes: string
   interventionZone?: string
+  laterality: "left" | "right" | "bilateral"
 }
 
 interface AddAnatomicalIssueDialogProps {
@@ -169,6 +170,29 @@ export function AddAnatomicalIssueDialog({
                       {zone.label}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sélection de latéralité */}
+            <div className="space-y-3">
+              <Label htmlFor="laterality" className="font-medium">
+                Latéralité <span className="text-destructive">*</span>
+              </Label>
+              <Select
+                value={newIssue.laterality}
+                onValueChange={value => setNewIssue({
+                  ...newIssue,
+                  laterality: value as "left" | "right" | "bilateral"
+                })}
+              >
+                <SelectTrigger id="laterality" className="w-full">
+                  <SelectValue placeholder="Sélectionner une latéralité" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Gauche</SelectItem>
+                  <SelectItem value="right">Droite</SelectItem>
+                  <SelectItem value="bilateral">Bilatéral</SelectItem>
                 </SelectContent>
               </Select>
             </div>
