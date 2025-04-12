@@ -1,14 +1,15 @@
-import { format } from "date-fns"
-import { fr } from "date-fns/locale"
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
+  CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-  CredenzaBody,
-  CredenzaFooter,
 } from "@/components/ui/credenza"
+
 import { Button } from "@/components/ui/button"
+import { format } from "date-fns"
+import { fr } from "date-fns/locale"
 
 interface NewAppointmentFormProps {
   date: Date

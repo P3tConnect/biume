@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
-import { LayoutGrid, LogOut, Settings, User } from "lucide-react"
+import { Building, LayoutGrid, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -17,19 +17,27 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSubTrigger,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
   DropdownMenuTrigger,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui"
-import { getUserInformations } from "@/src/actions"
-import { signOut } from "@/src/lib/auth-client"
+import { getAllOrganizationsByUserId, getUserInformations } from "@/src/actions"
+import { organization, signOut } from "@/src/lib/auth-client"
 
 export function UserNav() {
   const { data: session, isLoading } = useQuery({
     queryKey: ["user-informations"],
     queryFn: () => getUserInformations({}),
+  })
+  const { data: companies } = useQuery({
+    queryKey: ["companies"],
+    queryFn: () => getAllOrganizationsByUserId({}),
   })
   const router = useRouter()
   const userStatus = "active" // À remplacer par une vraie logique de statut si nécessaire
@@ -40,11 +48,6 @@ export function UserNav() {
       href: `/dashboard/user/${session?.data?.user.id}`,
       icon: <LayoutGrid className="w-4 h-4 text-muted-foreground" />,
       label: "Tableau de bord",
-    },
-    {
-      href: `/dashboard/user/${session?.data?.user.id}`,
-      icon: <User className="w-4 h-4 text-muted-foreground" />,
-      label: "Mon profil",
     },
     {
       href: `/dashboard/user/${session?.data?.user.id}/settings`,
@@ -119,6 +122,51 @@ export function UserNav() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {companies?.data?.length! > 0 && (
+              <DropdownMenuGroup>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg rounded-md p-2">
+                    <Building className="w-4 h-4" />
+                    <span className="font-medium">Entreprises</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="p-2 grid gap-1">
+                      {companies?.data?.map((company: { id: string; name: string }, index: number) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2, delay: index * 0.05 }}
+                        >
+                          <DropdownMenuItem
+                            asChild
+                            onClick={() => organization.setActive({ organizationId: company.id })}
+                          >
+                            <Link
+                              href={`/dashboard/organization/${company.id}`}
+                              className="flex items-center gap-3 p-2.5 rounded-md hover:bg-primary/5 transition-colors duration-200"
+                            >
+                              <div className="relative">
+                                <Building className="w-4 h-4 text-primary/70" />
+                                <motion.div
+                                  className="absolute inset-0 bg-primary/10 rounded-full"
+                                  whileHover={{ scale: 1.8, opacity: 0 }}
+                                  transition={{ duration: 0.3 }}
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                                {company.name}
+                              </span>
+                            </Link>
+                          </DropdownMenuItem>
+                        </motion.div>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+            )}
+            {companies?.data?.length! > 0 && <DropdownMenuSeparator />}
             <DropdownMenuGroup>
               {menuItems.map((item, index) => (
                 <DropdownMenuItem key={index} asChild>

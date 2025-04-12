@@ -68,14 +68,14 @@ export function AccountSwitchDialog({
             )}
           </div>
           <div className="flex-1">
-            <AlertDialogTitle className="text-base font-semibold mb-1">
+            <AlertDialogTitle className="text-base text-primary-foreground font-semibold mb-1">
               {isLoading
                 ? isProfessional
                   ? `Passage à ${organizationName || "l'espace pro"}`
                   : "Passage à l'espace personnel"
                 : title}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm opacity-90">
+            <AlertDialogDescription className="text-sm text-secondary-foreground">
               {isLoading ? loadingMessage : successMessage}
             </AlertDialogDescription>
           </div>

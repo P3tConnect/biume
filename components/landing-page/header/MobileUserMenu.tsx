@@ -1,12 +1,11 @@
 "use client"
 
-import { LogOut, Settings, User as UserIcon } from "lucide-react"
-import Link from "next/link"
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { signOut } from "@/src/lib/auth-client"
+import { LogOut, Settings, User as UserIcon } from "lucide-react"
 
+import Link from "next/link"
 import { MobileUserMenuProps } from "./types"
+import { signOut } from "@/src/lib/auth-client"
 
 export const MobileUserMenu = ({ session, setIsMobileMenuOpen }: MobileUserMenuProps) => {
   return (

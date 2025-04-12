@@ -9,9 +9,10 @@ import { AppointmentGroup } from "./appointment-group"
 interface CalendarSidebarProps {
   selectedDate: Date | null
   appointments: Appointment[]
+  onNewAppointment: () => void
 }
 
-export function CalendarSidebar({ selectedDate, appointments }: CalendarSidebarProps) {
+export function CalendarSidebar({ selectedDate, appointments, onNewAppointment }: CalendarSidebarProps) {
   const groupedAppointments = groupAppointmentsByTimeSlot(appointments)
 
   return (

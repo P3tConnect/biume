@@ -1,6 +1,13 @@
 "use client"
 
-import { CredenzaContent, CredenzaDescription, CredenzaHeader, CredenzaTitle } from "@/components/ui"
+import {
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui"
 import React, { useState } from "react"
 import { organization as organizationTable, progression as progressionTable } from "@/src/db"
 import { organization as organizationUtil, updateUser, useSession } from "@/src/lib/auth-client"
@@ -66,7 +73,6 @@ const Stepper = () => {
       await db
         .update(organizationTable)
         .set({
-          onBoardingComplete: true,
           progressionId: progression.id,
         })
         .where(eq(organizationTable.id, organizationId))
@@ -120,7 +126,7 @@ const Stepper = () => {
   }
 
   return (
-    <CredenzaContent>
+    <CredenzaContent className="max-w-4xl mx-auto w-full h-[700px] flex flex-col">
       <CredenzaHeader className="flex flex-row items-center space-x-4">
         <StepIndicator currentStep={currentStep + 1} totalSteps={all.length} isLast={isLast} />
         <div className="space-y-1 flex flex-col">
@@ -129,7 +135,7 @@ const Stepper = () => {
         </div>
       </CredenzaHeader>
 
-      <div className="max-h-[700px] overflow-y-auto">
+      <div className="flex-1 overflow-hidden">
         {switchStep({
           start: () => <IntroStep skipOnboarding={skipOnboarding} nextStep={next} isLoading={isLoading} />,
           informations: () => <ProInformationsStep nextStep={next} previousStep={prev} />,

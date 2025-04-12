@@ -31,7 +31,6 @@ export const ProfileLegalInfoSection = ({ org }: ProfileLegalInfoSectionProps) =
       description: org?.description || "",
       openAt: org?.openAt || "09:00",
       closeAt: org?.closeAt || "18:00",
-      atHome: org?.atHome || false,
       nac: org?.nac || "",
       siren: org?.siren || "",
       siret: org?.siret || "",

@@ -11,7 +11,6 @@ import {
 import { and, asc, desc, eq, gte, lte } from "drizzle-orm"
 import { appointments as appointmentsTable, progression as progressionTable } from "../db"
 import {
-  organizationFormSchema,
   organizationImagesFormSchema,
   organizationUpdateFormSchema,
 } from "@/components/dashboard/pages/pro/settings-page/sections/profile-section"
@@ -60,7 +59,6 @@ export const getAllOrganizations = createServerAction(
         id: true,
         name: true,
         description: true,
-        atHome: true,
         onDemand: true,
         verified: true,
       },
@@ -104,6 +102,7 @@ export const getCompanyById = createServerAction(
             duration: true,
             type: true,
             places: true,
+            atHome: true,
           },
         },
         members: {
@@ -224,7 +223,6 @@ export const createOrganization = createServerAction(
           description: data.description,
           progressionId: progression.id,
           companyType: data.companyType,
-          atHome: data.atHome,
         })
         .where(eq(organizationTable.id, result?.id as string))
         .returning()
@@ -258,13 +256,13 @@ export const updateOrganization = createServerAction(
         logo: input.logo,
         openAt: input.openAt,
         closeAt: input.closeAt,
-        atHome: input.atHome,
         nac: input.nac,
         siren: input.siren,
         onDemand: input.onDemand,
         siret: input.siret,
+        onBoardingComplete: input.onBoardingComplete,
       })
-      .where(eq(organizationTable.id, ctx.organization?.id as string))
+      .where(eq(organizationTable.id, ctx.organization?.id || ""))
       .returning()
       .execute()
 
@@ -276,7 +274,7 @@ export const updateOrganization = createServerAction(
 
     return data as Organization
   },
-  [requireAuth, requireOwner]
+  [requireAuth, requireFullOrganization]
 )
 
 export const updateOrganizationOnDemand = createServerAction(
@@ -365,7 +363,7 @@ export const addImagesToOrganization = createServerAction(
     const data = await db
       .insert(organizationImages)
       .values(
-        input.images.map(image => ({
+        input.images.map((image: { name: string; url: string }) => ({
           organizationId: ctx.organization?.id,
           name: image.name,
           imageUrl: image.url,

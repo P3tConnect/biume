@@ -59,105 +59,112 @@ export function DocumentsForm({ nextStep, previousStep }: { nextStep: () => void
   })
 
   return (
-    <Form {...form}>
-      <form className="space-y-12 mx-auto px-2" onSubmit={onSubmit}>
-        <div className="space-y-8">
-          <FormField
-            control={control}
-            name="documents"
-            render={({ field }) => (
-              <FormItem className="space-y-6">
-                <div className="space-y-2">
-                  <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
-                  <div className="space-y-3 text-sm text-muted-foreground">
-                    <FormDescription>
-                      Pour vérifier l&apos;identité de votre entreprise, veuillez fournir :
-                    </FormDescription>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Un extrait Kbis récent (moins de 3 mois)</li>
-                      <li>Ou tout autre document officiel d&apos;identification</li>
-                    </ul>
+    <div className="flex flex-col h-full">
+      <Form {...form}>
+        <form onSubmit={onSubmit} className="flex flex-col h-full">
+          {/* Contenu scrollable */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-8">
+              <FormField
+                control={control}
+                name="documents"
+                render={({ field }) => (
+                  <FormItem className="space-y-6">
+                    <div className="space-y-2">
+                      <FormLabel className="text-lg font-semibold">Documents justificatifs</FormLabel>
+                      <div className="space-y-3 text-sm text-muted-foreground">
+                        <FormDescription>
+                          Pour vérifier l&apos;identité de votre entreprise, veuillez fournir :
+                        </FormDescription>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Un extrait Kbis récent (moins de 3 mois)</li>
+                          <li>Ou tout autre document officiel d&apos;identification</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <DropzoneInput onFilesChanged={files => setValue("documents", files)} value={field.value ?? []} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid gap-8 pt-6">
+                <div className="flex flex-col space-y-6">
+                  <h3 className="text-lg font-semibold">Informations d&apos;identification</h3>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <FormField
+                      control={control}
+                      name="siren"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Numéro SIREN</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="9 chiffres"
+                              {...field}
+                              value={field.value ?? ""}
+                              maxLength={9}
+                              className="font-mono"
+                            />
+                          </FormControl>
+                          <FormDescription>Identifiant unique à 9 chiffres</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={control}
+                      name="siret"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Numéro SIRET</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="14 chiffres"
+                              {...field}
+                              value={field.value ?? ""}
+                              maxLength={14}
+                              className="font-mono"
+                            />
+                          </FormControl>
+                          <FormDescription>SIREN + 5 chiffres pour votre établissement</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
-                <DropzoneInput onFilesChanged={files => setValue("documents", files)} value={field.value ?? []} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid gap-8 pt-6">
-            <div className="flex flex-col space-y-6">
-              <h3 className="text-lg font-semibold">Informations d&apos;identification</h3>
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
-                  control={control}
-                  name="siren"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Numéro SIREN</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="9 chiffres"
-                          {...field}
-                          value={field.value ?? ""}
-                          maxLength={9}
-                          className="font-mono"
-                        />
-                      </FormControl>
-                      <FormDescription>Identifiant unique à 9 chiffres</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={control}
-                  name="siret"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Numéro SIRET</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="14 chiffres"
-                          {...field}
-                          value={field.value ?? ""}
-                          maxLength={14}
-                          className="font-mono"
-                        />
-                      </FormControl>
-                      <FormDescription>SIREN + 5 chiffres pour votre établissement</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
             </div>
           </div>
 
-          {/* Footer with buttons */}
-          <div className="flex justify-between items-center pt-4 lg:pt-8 p-4 lg:p-0 border-t">
-            <Button type="button" variant="outline" className="rounded-xl" onClick={previousStep}>
-              ← Précédent
-            </Button>
-            <div className="flex gap-3">
-              <Button type="button" variant="ghost" onClick={nextStep} className="text-muted-foreground">
-                Passer
+          {/* Footer fixe */}
+          <div className="border-t border-border p-6 bg-background mt-auto">
+            <div className="flex justify-between items-center">
+              <Button type="button" variant="outline" className="rounded-xl" onClick={previousStep}>
+                ← Précédent
               </Button>
-              <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>En cours...</span>
-                  </>
-                ) : (
-                  "Suivant →"
-                )}
-              </Button>
+              <div className="flex gap-3">
+                <Button type="button" variant="ghost" onClick={nextStep} className="text-muted-foreground">
+                  Passer
+                </Button>
+                <Button disabled={isLoading} type="submit" className="rounded-xl px-6">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>En cours...</span>
+                    </>
+                  ) : (
+                    "Suivant →"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   )
 }
 

@@ -24,11 +24,7 @@ interface AnimalCredenzaProps {
   petId: string
 }
 
-export const AnimalCredenza = ({
-  isOpen,
-  onOpenChange,
-  petId,
-}: AnimalCredenzaProps) => {
+export const AnimalCredenza = ({ isOpen, onOpenChange, petId }: AnimalCredenzaProps) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("info")
 
   const { data: pet, isLoading: isLoadingPet } = useQuery({

@@ -3,7 +3,18 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { CalendarIcon, PencilIcon, TrashIcon, PlusIcon, FilterIcon, ClockIcon, StethoscopeIcon, SyringeIcon, PillIcon, MoreHorizontalIcon } from "lucide-react"
+import {
+  CalendarIcon,
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+  FilterIcon,
+  ClockIcon,
+  StethoscopeIcon,
+  SyringeIcon,
+  PillIcon,
+  MoreHorizontalIcon,
+} from "lucide-react"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -47,7 +58,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui"
 import { CreateReminderSchema, type Reminder } from "@/src/db/reminder"
-import { createReminderAction, deleteReminderAction, getRemindersAction, updateReminderAction } from "@/src/actions/reminder.action"
+import {
+  createReminderAction,
+  deleteReminderAction,
+  getRemindersAction,
+  updateReminderAction,
+} from "@/src/actions/reminder.action"
 
 const ReminderTypeIcon = ({ type }: { type: Reminder["type"] }) => {
   switch (type) {
@@ -279,12 +295,8 @@ const RemindersPageComponent = () => {
                             <Input
                               type="datetime-local"
                               {...field}
-                              value={
-                                field.value
-                                  ? new Date(field.value).toISOString().split(".")[0]
-                                  : ""
-                              }
-                              onChange={(e) => field.onChange(new Date(e.target.value))}
+                              value={field.value ? new Date(field.value).toISOString().split(".")[0] : ""}
+                              onChange={e => field.onChange(new Date(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -315,11 +327,7 @@ const RemindersPageComponent = () => {
                         )}
                       />
                     )}
-                    <Button
-                      type="submit"
-                      disabled={isCreating || isUpdating}
-                      className="w-full"
-                    >
+                    <Button type="submit" disabled={isCreating || isUpdating} className="w-full">
                       {selectedReminder ? "Mettre à jour" : "Créer"}
                     </Button>
                   </form>
@@ -344,9 +352,7 @@ const RemindersPageComponent = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTypeFilter("all")}>
-                  Tous les types
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTypeFilter("all")}>Tous les types</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTypeFilter("appointment")}>
                   <StethoscopeIcon className="w-4 h-4 mr-2" />
                   Rendez-vous
@@ -399,11 +405,7 @@ const RemindersPageComponent = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(reminder)}
-                  >
+                  <Button variant="ghost" size="icon" onClick={() => handleEdit(reminder)}>
                     <PencilIcon className="w-4 h-4" />
                   </Button>
                   <Button

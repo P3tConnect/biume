@@ -1,9 +1,10 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Clock, Tag } from "lucide-react"
+
 import { Appointment } from "@/src/db/appointments"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface AppointmentCardProps {
   appointment: Appointment

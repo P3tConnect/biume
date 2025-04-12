@@ -98,16 +98,6 @@ export function ClientDetails({ client, isOpen, onOpenChange }: ClientDetailsPro
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Edit2 className="h-4 w-4" />
-                  Modifier
-                </Button>
-                <Button size="sm" className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Nouveau RDV
-                </Button>
-              </div>
             </div>
 
             {/* Quick Stats */}
@@ -145,11 +135,11 @@ export function ClientDetails({ client, isOpen, onOpenChange }: ClientDetailsPro
 
           {/* Contact Info Cards */}
           <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+            <div className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors overflow-hidden">
               <div className="p-2 rounded-full bg-primary/10">
                 <Mail className="h-4 w-4 text-primary" />
               </div>
-              <div>
+              <div className="overflow-hidden text-ellipsis whitespace-nowrap">
                 <p className="text-sm text-muted-foreground">Email</p>
                 <p className="font-medium">{client.email}</p>
               </div>

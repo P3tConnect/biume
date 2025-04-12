@@ -1,5 +1,33 @@
 import ClientHome from "@/components/landing-page/client-home"
+import { Suspense } from "react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Biume - Accueil",
+  description: "Accueil de Biume",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+  openGraph: {
+    title: "Biume - Accueil",
+    description: "Accueil de Biume",
+    url: "https://biume.fr",
+    siteName: "Biume",
+  },
+}
 
 export default function Home() {
-  return <ClientHome />
+  return (
+    <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center">Chargement...</div>}>
+      <ClientHome />
+    </Suspense>
+  )
 }

@@ -1,12 +1,10 @@
 "use server"
 
-import { and, desc, eq } from "drizzle-orm"
-import { z } from "zod"
-
-import { CreatePetSchema, Pet, pets } from "@/src/db/pets"
-import { appointments } from "@/src/db/appointments"
-
 import { ActionError, createServerAction, db, requireAuth, requireFullOrganization } from "../lib"
+import { CreatePetSchema, Pet, pets } from "@/src/db/pets"
+import { and, eq } from "drizzle-orm"
+
+import { z } from "zod"
 
 export const createPet = createServerAction(
   CreatePetSchema,

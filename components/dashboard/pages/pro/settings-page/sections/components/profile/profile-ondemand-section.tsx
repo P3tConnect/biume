@@ -1,14 +1,15 @@
 "use client"
 
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "sonner"
-import { Organization } from "@/src/db/organization"
-import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
-import { Sparkles } from "lucide-react"
-import Link from "next/link"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Organization } from "@/src/db/organization"
+import { Sparkles } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner"
+import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
 
 interface ProfileOnDemandSectionProps {
   org: Organization | undefined
@@ -33,6 +34,7 @@ export const ProfileOnDemandSection = ({ org }: ProfileOnDemandSectionProps) => 
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle>Rendez-vous à la demande</CardTitle>
+          <span className="px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-full">Beta</span>
           <Sparkles className="h-5 w-5 text-muted-foreground" />
         </div>
         <CardDescription>

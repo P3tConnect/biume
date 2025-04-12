@@ -32,7 +32,6 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
       description: org?.description || "",
       openAt: org?.openAt || "09:00",
       closeAt: org?.closeAt || "18:00",
-      atHome: org?.atHome || false,
       nac: org?.nac || "",
       siren: org?.siren || "",
       siret: org?.siret || "",
@@ -72,24 +71,6 @@ export const ProfileServicesSection = ({ org }: ProfileServicesSectionProps) => 
             <CardDescription>Personnalisez vos services</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="atHome"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <div className="space-y-1">
-                    <FormLabel className="text-sm font-medium leading-none">Consultations à domicile</FormLabel>
-                    <FormDescription className="text-xs">
-                      Activez cette option si vous proposez des consultations à domicile
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="nac"

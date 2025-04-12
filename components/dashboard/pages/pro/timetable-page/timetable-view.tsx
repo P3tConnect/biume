@@ -1,16 +1,15 @@
 "use client"
 
-import { useState } from "react"
-import { DropResult } from "react-beautiful-dnd"
-
-import { Card } from "@/components/ui/card"
-import { Event } from "@/src/lib"
-
 import { AppointmentForm, AppointmentFormData } from "./appointment-form"
+
 import Calendar from "./calendar"
+import { Card } from "@/components/ui/card"
 import { DailyAppointments } from "./daily-appointments"
+import { DropResult } from "react-beautiful-dnd"
+import { Event } from "@/src/lib"
 import SideDrawer from "./side-drawer"
 import { TimetableHeader } from "./timetable-header"
+import { useState } from "react"
 
 interface Appointment extends AppointmentFormData {
   id: string

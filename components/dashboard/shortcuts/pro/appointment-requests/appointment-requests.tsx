@@ -25,7 +25,7 @@ export const AppointmentRequests = () => {
             <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
               <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle>Demandes de rendez-vous</CardTitle>
+            <CardTitle className="text-lg">Demandes de rendez-vous</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-4">
@@ -44,7 +44,7 @@ export const AppointmentRequests = () => {
           <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-md">
             <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
           </div>
-          <CardTitle>Demandes de rendez-vous</CardTitle>
+          <CardTitle className="text-lg">Demandes de rendez-vous</CardTitle>
         </div>
         <Badge className="bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/70">
           {appointments?.data?.length}
@@ -70,19 +70,6 @@ export const AppointmentRequests = () => {
           )}
         </div>
       </CardContent>
-
-      {appointments?.data?.length! > 0 && (
-        <CardFooter className="py-3 px-4 border-t bg-green-50/50 dark:bg-green-900/10">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full text-xs flex items-center justify-center gap-1.5 text-green-700 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30"
-          >
-            <span>Voir toutes les demandes</span>
-            <ChevronRightIcon className="h-3.5 w-3.5" />
-          </Button>
-        </CardFooter>
-      )}
     </Card>
   )
 }

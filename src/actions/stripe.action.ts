@@ -124,9 +124,6 @@ export const updateOrganizationPlan = createServerAction(
       customer: stripeCustomer ?? "",
       mode: "subscription",
       payment_method_types: ["card"],
-      payment_intent_data: {
-        setup_future_usage: "off_session",
-      },
       line_items: [
         {
           price: input.plan,
@@ -297,6 +294,48 @@ export const createStripeConnectOnboardingLink = createServerAction(
     } catch (error) {
       console.error("Erreur lors de la création du lien d'onboarding:", error)
       throw new ActionError("Impossible de créer le lien d'onboarding Stripe Connect")
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization]
+)
+
+export const getSubscriptionInterval = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    try {
+      const org = await db.query.organization.findFirst({
+        where: eq(organization.id, ctx.organization?.id ?? ""),
+        columns: {
+          customerStripeId: true,
+        },
+      })
+
+      if (!org || !org.customerStripeId) {
+        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré")
+      }
+
+      const subscriptions = await stripe.subscriptions.list({
+        customer: org.customerStripeId,
+        limit: 1,
+      })
+
+      const currentSubscription = subscriptions.data[0]
+
+      if (!currentSubscription) {
+        throw new ActionError("Aucun abonnement actif trouvé")
+      }
+
+      const interval = currentSubscription.items.data[0]?.price.recurring?.interval
+      const isAnnual = interval === "year"
+
+      return {
+        isAnnual,
+        interval,
+        status: currentSubscription.status,
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'intervalle d'abonnement:", error)
+      throw new ActionError("Impossible de vérifier l'intervalle d'abonnement")
     }
   },
   [requireAuth, requireOwner, requireFullOrganization]
