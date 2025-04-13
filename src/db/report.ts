@@ -1,15 +1,16 @@
 import { InferSelectModel, relations } from "drizzle-orm"
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core"
-import { createInsertSchema } from "drizzle-zod"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
-import { ReportTopic, reportTopic } from "./reportTopics"
+import { AnatomicalIssue, anatomicalIssue } from "./anatomicalIssue"
+import { organization } from "./organization"
 
 export const report = pgTable("report", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  image: text("image"),
+  createdBy: text("createdBy").references(() => organization.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   description: text("description"),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
@@ -18,13 +19,14 @@ export const report = pgTable("report", {
 
 export const reportRelations = relations(report, ({ one, many }) => ({
   appointments: one(appointments),
-  topics: many(reportTopic),
+  anatomicalIssues: many(anatomicalIssue),
 }))
 
 export type Report = InferSelectModel<typeof report> & {
   appointments: Appointment
-  topics: ReportTopic[]
+  anatomicalIssues: AnatomicalIssue[]
 }
 export type CreateReport = typeof report.$inferInsert
 
 export const CreateReportSchema = createInsertSchema(report)
+export const ReportSchema = createSelectSchema(report)

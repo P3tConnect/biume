@@ -19,11 +19,11 @@ import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { progression } from "./progression"
 import { Rating, ratings } from "./ratings"
 import { Service, service } from "./service"
-import { Topic, topic } from "./topic"
 import { transaction } from "./transaction"
 import { widgets } from "./widgets"
 import { Invoice, invoice } from "./invoice"
 import { MedicalRecordAccess, medicalRecordAccess } from "./medicalRecordAccess"
+import { report, Report } from "./report"
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"])
 
@@ -87,7 +87,6 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   ratings: many(ratings),
   services: many(service),
   options: many(options),
-  topics: many(topic),
   address: one(organizationAddress, {
     fields: [organization.addressId],
     references: [organizationAddress.id],
@@ -102,6 +101,7 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   slots: many(organizationSlots),
   invoices: many(invoice),
   medicalRecordAccess: many(medicalRecordAccess),
+  reports: many(report),
 }))
 
 export type Organization = InferSelectModel<typeof organization> & {
@@ -110,12 +110,12 @@ export type Organization = InferSelectModel<typeof organization> & {
   ratings: Rating[]
   services: Service[]
   options: Option[]
-  topics: Topic[]
   clientNotes: ClientNote[]
   images: OrganizationImage[]
   slots: OrganizationSlots[]
   invoices: Invoice[]
   medicalRecordAccess: MedicalRecordAccess[]
+  reports: Report[]
 }
 export type CreateOrganization = typeof organization.$inferInsert
 

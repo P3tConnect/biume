@@ -116,10 +116,10 @@ export function InitializationDialog({
           <CredenzaHeader>
             <CredenzaTitle className="text-xl flex items-center gap-2">
               <ClipboardIcon className="h-5 w-5 text-primary" />
-              Initialisation du rapport médical
+              Initialisation du compte rendu
             </CredenzaTitle>
             <CredenzaDescription className="text-base">
-              Sélectionnez l'animal et le rendez-vous concerné par ce rapport
+              Sélectionnez l'animal et le rendez-vous concerné par ce compte rendu
             </CredenzaDescription>
           </CredenzaHeader>
 
