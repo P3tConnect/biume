@@ -10,7 +10,9 @@ import { AddMedicationSheet } from "./components/AddMedicationSheet"
 import { PrescriptionPreview } from "./components/PrescriptionPreview"
 import { PrescriptionItem, NewPrescriptionItem } from "./components/types"
 import { Button } from "@/components/ui/button"
-import { ChevronLeftIcon, EyeIcon, SaveIcon } from "lucide-react"
+import { ChevronLeftIcon, EyeIcon, SaveIcon, Loader2 } from "lucide-react"
+import { toast } from "sonner"
+import { createPrescriptionAction } from "@/src/actions/prescription.action"
 
 interface PrescriptionBuilderProps {
   orgId: string
@@ -33,6 +35,7 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
   const [showPreview, setShowPreview] = useState(false)
   const [activeTab, setActiveTab] = useState<"medications" | "notes">("medications")
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   // État temporaire pour le nouveau médicament
   const [newItem, setNewItem] = useState<NewPrescriptionItem>({
@@ -73,16 +76,43 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
     setItems(items.filter(item => item.id !== id))
   }
 
-  const handleSavePrescription = () => {
-    // Ici on appellerait une server action pour sauvegarder l'ordonnance
-    console.log({
-      title,
-      petId: selectedPetId,
-      items,
-      notes,
-    })
+  const handleSavePrescription = async () => {
+    if (!selectedPetId || items.length === 0) {
+      toast.error("Veuillez sélectionner un animal et ajouter au moins un médicament")
+      return
+    }
 
-    // Message de succès et/ou redirection
+    setIsSaving(true)
+
+    try {
+      const result = await createPrescriptionAction({
+        title,
+        petId: selectedPetId,
+        description: notes,
+        items: items.map(item => ({
+          name: item.name,
+          dosage: item.dosage,
+          frequency: item.frequency,
+          duration: item.duration,
+          notes: item.notes || undefined
+        }))
+      })
+
+      if (result.error) {
+        toast.error(result.error)
+        return
+      }
+
+      toast.success("Prescription créée avec succès")
+
+      // Redirection vers une page de confirmation ou la liste des prescriptions
+      router.push(`/dashboard/prescriptions`)
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde de la prescription:", error)
+      toast.error("Erreur lors de la sauvegarde de la prescription")
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleOpenAnimalSelector = () => {
@@ -100,7 +130,7 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
   }
 
   // Determine if the save button should be enabled
-  const canSave = !!title && !!selectedPetId && items.length > 0
+  const canSave = !!title && !!selectedPetId && items.length > 0 && !isSaving
 
   return (
     <div className="h-full w-full bg-background flex flex-col">
@@ -132,9 +162,16 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
             <EyeIcon className="h-4 w-4 mr-1" />
             Aperçu
           </Button>
-          <Button onClick={handleSavePrescription} disabled={!canSave}>
-            <SaveIcon className="h-4 w-4 mr-1" />
-            Enregistrer
+          <Button
+            onClick={handleSavePrescription}
+            disabled={!canSave || isSaving}
+          >
+            {isSaving ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <SaveIcon className="h-4 w-4 mr-1" />
+            )}
+            {isSaving ? "Enregistrement..." : "Enregistrer"}
           </Button>
         </div>
       </div>

@@ -3,7 +3,6 @@ import { InferSelectModel, relations } from "drizzle-orm"
 import { Invoice, invoice } from "./invoice"
 import { Observation, observation } from "./observation"
 import { Organization, organization } from "./organization"
-import { Pet, pets } from "./pets"
 import { Service, service } from "./service"
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
@@ -12,6 +11,7 @@ import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { report } from "./report"
 import { User, user } from "./user"
 import { PetAppointment, petAppointments } from "./pet_appointments"
+import { Prescription, prescription } from "./prescription"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -38,6 +38,9 @@ export const appointments = pgTable("appointments", {
   }),
   clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
   reportId: text("reportId").references(() => report.id, {
+    onDelete: "cascade",
+  }),
+  prescriptionId: text("prescriptionId").references(() => prescription.id, {
     onDelete: "cascade",
   }),
   observationId: text("observationId").references(() => observation.id, {
@@ -90,6 +93,10 @@ export const appointmentsRelations = relations(appointments, ({ one, many }) => 
     fields: [appointments.slotId],
     references: [organizationSlots.id],
   }),
+  prescription: one(prescription, {
+    fields: [appointments.prescriptionId],
+    references: [prescription.id],
+  }),
 }))
 
 export type Appointment = InferSelectModel<typeof appointments> & {
@@ -102,6 +109,7 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   observation: Observation
   client: User
   slot: OrganizationSlots
+  prescription: Prescription
 }
 export type CreateAppointment = typeof appointments.$inferInsert
 

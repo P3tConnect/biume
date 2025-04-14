@@ -36,4 +36,6 @@ export * from "./pet_appointments"
 export * from "./anatomicalIssue"
 export * from "./dysfunction"
 export * from "./dysfunctionType"
+export * from "./prescription"
+export * from "./prescriptionItems"
 
