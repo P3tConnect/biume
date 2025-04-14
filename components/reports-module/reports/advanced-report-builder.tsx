@@ -14,7 +14,7 @@ import { ReportHeader } from "./components/ReportHeader"
 import { Observation, NewObservation, AppointmentReference, AnatomicalIssue, AdvancedReportBuilderProps } from "./types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
-import { ListTodoIcon, ActivityIcon, CheckIcon, FileTextIcon, PlusIcon } from "lucide-react"
+import { ListTodoIcon, ActivityIcon, CheckIcon, FileTextIcon } from "lucide-react"
 
 export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const [title, setTitle] = useState("Compte rendu détaillé du " + new Date().toLocaleDateString())

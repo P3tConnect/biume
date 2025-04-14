@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileUp, Trash2, FileText, Eye, Save, AlignLeft } from "lucide-react"
+import { FileUp, Trash2, FileText, Eye, Save, AlignLeft, ChevronLeftIcon, EyeIcon, SaveIcon } from "lucide-react"
 import { AnimalCredenza } from "@/components/dashboard/shortcuts/pro/unified-metrics/AnimalCredenza"
 import { toast } from "sonner"
 
@@ -14,7 +14,15 @@ interface PrescriptionUploaderProps {
   orgId: string
 }
 
+// Mock pet data structure (replace with actual data fetching later)
+const mockPets = [
+  { id: "pet-1", name: "Rex", species: "Chien" },
+  { id: "pet-2", name: "Félix", species: "Chat" },
+  { id: "pet-3", name: "Bunny", species: "Lapin" },
+]
+
 export function PrescriptionUploader({ orgId }: PrescriptionUploaderProps) {
+  const router = useRouter()
   const [title, setTitle] = useState("Ordonnance du " + new Date().toLocaleDateString())
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [description, setDescription] = useState("")
@@ -23,6 +31,9 @@ export function PrescriptionUploader({ orgId }: PrescriptionUploaderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [showPreview, setShowPreview] = useState(false)
   const [activeTab, setActiveTab] = useState<"upload" | "notes">("upload")
+
+  // Find the selected pet from mock data
+  const selectedPet = mockPets.find(pet => pet.id === selectedPetId)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -72,49 +83,53 @@ export function PrescriptionUploader({ orgId }: PrescriptionUploaderProps) {
     // l'ordonnance dans la base de données et le fichier dans un stockage comme UploadThing
   }
 
-  const handleOpenAnimalSelector = () => {
-    setIsAnimalCredenzaOpen(true)
+  // Added function to handle back navigation
+  const handleGoBack = () => {
+    // Add confirmation logic if needed (e.g., if file is uploaded but not saved)
+    router.back()
   }
+
+  // Determine if the save button should be enabled
+  const canSave = !!selectedFile && !!title && !!selectedPetId
 
   return (
     <div className="h-screen bg-background flex flex-col">
-      {/* En-tête compact */}
-      <div className="border-b py-1 px-2 bg-background">
-        <div className="flex items-center justify-between">
-          <Input
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            className="text-md font-medium border-none bg-transparent focus-visible:ring-0 px-0 h-7 max-w-md"
-            placeholder="Titre de l'ordonnance..."
-          />
-          <div className="flex items-center gap-1">
-            <Select value={selectedPetId} onValueChange={setSelectedPetId}>
-              <SelectTrigger className="h-7 text-sm w-[160px]">
-                <SelectValue placeholder="Sélectionner un animal" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pet-1">Rex (Chien)</SelectItem>
-                <SelectItem value="pet-2">Félix (Chat)</SelectItem>
-                <SelectItem value="pet-3">Bunny (Lapin)</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleOpenAnimalSelector}>
-              <Eye className="h-3.5 w-3.5" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setShowPreview(true)}>
-              <Eye className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              size="icon"
-              className="h-7 w-7"
-              onClick={handleSavePrescription}
-              disabled={!selectedFile || !title || !selectedPetId}
-            >
-              <Save className="h-3.5 w-3.5" />
-            </Button>
+      {/* New Header Structure */}
+      <div className="flex items-center justify-between border-b px-6 py-3">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={handleGoBack}>
+            <ChevronLeftIcon className="h-5 w-5" />
+          </Button>
+          <div>
+            {/* Make title editable here, maybe via an input or a dedicated button */}
+            {/* For now, just display it. Will need state management for title editing */}
+            <h1 className="text-xl font-semibold">{title}</h1>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              {selectedPet ? (
+                <button onClick={() => setIsAnimalCredenzaOpen(true)} className="hover:underline">
+                  {selectedPet.name} ({selectedPet.species})
+                </button>
+              ) : (
+                <button onClick={() => setIsAnimalCredenzaOpen(true)} className="text-primary hover:underline">
+                  Sélectionner un animal
+                </button>
+              )}
+              {/* Maybe add appointment info later if needed */}
+            </div>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => setShowPreview(true)} disabled={!selectedFile}>
+            <EyeIcon className="h-4 w-4 mr-1" />
+            Aperçu
+          </Button>
+          <Button onClick={handleSavePrescription} disabled={!canSave}>
+            <SaveIcon className="h-4 w-4 mr-1" />
+            Enregistrer
+          </Button>
+        </div>
       </div>
+      {/* End New Header Structure */}
 
       {/* Barre d'onglets */}
       <div className="px-4 pt-4 pb-0 flex border-b">

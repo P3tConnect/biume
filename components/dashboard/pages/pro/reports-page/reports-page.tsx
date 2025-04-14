@@ -13,7 +13,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Separator,
   Tabs,
   TabsContent,
   TabsList,
@@ -42,7 +41,7 @@ const ReportsPageComponent = () => {
   const handlePrescriptionModeSelect = (mode: "builder" | "upload") => {
     setShowPrescriptionModal(false)
     if (mode === "builder") {
-      router.push(`/dashboard/organization/${orgId}/reports/prescriptions/builder`)
+      router.push(`/dashboard/organization/${orgId}/reports/prescriptions/create`)
     } else {
       router.push(`/dashboard/organization/${orgId}/reports/prescriptions/upload`)
     }
