@@ -6,9 +6,7 @@ import {
   BarChart3,
   Brain,
   CreditCard,
-  Clock,
   Users,
-  FileText,
   Building2,
   Wallet,
   ClipboardList,
@@ -269,7 +267,7 @@ export function FeaturesSection() {
                         <ul className="space-y-1 md:space-y-2 text-white/80 text-[11px] md:text-xs">
                           <li className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
-                            Facilité d'utilisation
+                            Facilité d&apos;utilisation
                           </li>
                           <li className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
@@ -335,19 +333,10 @@ export function FeaturesSection() {
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-0.5 md:mb-1">
                                       <h4 className="font-medium text-sm md:text-base">{feature.title}</h4>
-                                      {featureIndex === 0 && (
-                                        <Badge className="text-[10px] md:text-xs px-1.5 py-0 h-5" variant="outline">Nouveau</Badge>
-                                      )}
                                     </div>
                                     <p className="text-xs md:text-sm text-muted-foreground">{feature.description}</p>
 
                                     <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t flex justify-between items-center">
-                                      <p className="text-[10px] md:text-xs text-muted-foreground">
-                                        {featureIndex % 2 === 0 ?
-                                          <>Utilisé par <span className="font-medium text-foreground">{80 + featureIndex * 2}%</span> des clients</> :
-                                          <>Ajouté le <span className="font-medium text-foreground">12 Juin 2023</span></>
-                                        }
-                                      </p>
                                       <Button
                                         variant="ghost"
                                         size="sm"
@@ -514,31 +503,30 @@ export function FeaturesSection() {
                     <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2">À propos de cette fonctionnalité</h3>
                     <p className="text-xs md:text-sm text-muted-foreground">
                       {categories[selectedFeature.categoryIndex].features[selectedFeature.featureIndex].description}
-                      {' '}Cette fonctionnalité a été conçue pour répondre aux besoins spécifiques des vétérinaires
-                      et professionnels animaliers qui cherchent à optimiser leur pratique quotidienne.
+                      {' '}Cette fonctionnalité a été conçue pour répondre aux besoins spécifiques des professionnels de la santé animale qui cherchent à optimiser leur pratique quotidienne.
                     </p>
                   </div>
 
                   <div className="bg-muted/30 rounded-lg p-3 md:p-4">
-                    <h3 className="text-sm md:text-base font-semibold mb-2 md:mb-3">Comment l'utiliser ?</h3>
+                    <h3 className="text-sm md:text-base font-semibold mb-2 md:mb-3">Comment l&apos;utiliser ?</h3>
                     <ol className="space-y-1 md:space-y-2 text-xs md:text-sm pl-4 md:pl-5 list-decimal">
                       <li>Accédez à la section correspondante depuis votre tableau de bord</li>
                       <li>Configurez les paramètres selon vos besoins spécifiques</li>
                       <li>Commencez à utiliser la fonctionnalité immédiatement</li>
-                      <li>Consultez les guides d'utilisation détaillés dans notre centre d'aide</li>
+                      <li>Consultez les guides d&apos;utilisation détaillés dans notre centre d&apos;aide</li>
                     </ol>
                   </div>
 
                   {/* Exemples d'utilisation */}
                   <div>
-                    <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2">Exemples d'utilisation</h3>
+                    <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2">Exemples d&apos;utilisation</h3>
                     <div className="grid grid-cols-1 gap-2 md:gap-3 text-xs md:text-sm">
                       <div className="border rounded-md p-2 md:p-3 hover:bg-muted/20 transition-colors">
-                        <h4 className="font-medium text-xs md:text-sm">Cas d'usage 1</h4>
+                        <h4 className="font-medium text-xs md:text-sm">Cas d&apos;usage 1</h4>
                         <p className="text-muted-foreground text-[11px] md:text-xs">Adaptation pour une clinique vétérinaire de taille moyenne</p>
                       </div>
                       <div className="border rounded-md p-2 md:p-3 hover:bg-muted/20 transition-colors">
-                        <h4 className="font-medium text-xs md:text-sm">Cas d'usage 2</h4>
+                        <h4 className="font-medium text-xs md:text-sm">Cas d&apos;usage 2</h4>
                         <p className="text-muted-foreground text-[11px] md:text-xs">Solution pour un cabinet indépendant spécialisé</p>
                       </div>
                     </div>
@@ -557,8 +545,8 @@ export function FeaturesSection() {
                       </div>
                     </h3>
                     <div className="italic text-xs md:text-sm text-muted-foreground">
-                      "Cette fonctionnalité a révolutionné ma façon de travailler. Je gagne plusieurs heures
-                      par semaine et mes clients sont ravis du service amélioré."
+                      Cette fonctionnalité a révolutionné ma façon de travailler. Je gagne plusieurs heures
+                      par semaine et mes clients sont ravis du service amélioré.
                     </div>
                   </div>
 
@@ -572,16 +560,16 @@ export function FeaturesSection() {
                         <CredenzaHeader>
                           <CredenzaTitle className="text-lg">Essai gratuit</CredenzaTitle>
                           <CredenzaDescription className="text-xs md:text-sm">
-                            Inscrivez-vous pour un essai gratuit de 14 jours sans engagement.
+                            Inscrivez-vous pour un essai gratuit de 30 jours sans engagement.
                           </CredenzaDescription>
                         </CredenzaHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid gap-2">
                             <p className="text-center text-xs md:text-sm text-muted-foreground">
-                              En cliquant sur le bouton ci-dessous, vous serez redirigé vers notre formulaire d'inscription.
+                              En cliquant sur le bouton ci-dessous, vous serez redirigé vers notre formulaire d&apos;inscription.
                             </p>
                           </div>
-                          <Button className="text-xs md:text-sm">Commencer l'essai gratuit</Button>
+                          <Button className="text-xs md:text-sm">Commencer l&apos;essai gratuit</Button>
                         </div>
                       </CredenzaContent>
                     </Credenza>
