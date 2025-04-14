@@ -16,6 +16,7 @@ import {
   FileCheck,
   PenTool,
   MoreHorizontal,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import {
@@ -117,6 +118,29 @@ const categories: Category[] = [
     ],
   },
 ];
+
+// Descriptions détaillées pour chaque fonctionnalité
+const getDetailedDescription = (categoryIndex: number, featureIndex: number): string => {
+  const descriptions = {
+    // Gestion des rendez-vous
+    "0-0": "Système permettant aux clients de planifier leurs rendez-vous à tout moment en ligne, avec choix du praticien et motif de consultation.",
+    "0-1": "Vue intuitive de votre planning avec gestion des disponibilités, absences et optimisation des créneaux horaires.",
+    "0-2": "IA qui optimise votre parcours journalier en proposant des rendez-vous basés sur votre planning existant, réduisant vos déplacements et maximisant votre temps de travail.",
+
+    // Suivi médical
+    "1-0": "Dossiers médicaux hautement sécurisés avec un système de consentement client, garantissant que l'accès complet aux informations sensibles n'est possible qu'après autorisation explicite du propriétaire de l'animal.",
+    "1-1": "Création rapide de comptes rendus avec modèles personnalisables incluant images et archivage sécurisé.",
+    "1-2": "Système permettant de créer des ordonnances numériques ou de téléverser des documents existants, avec archivage centralisé pour un suivi facilité des prescriptions.",
+
+    // Gestion administrative
+    "2-0": "Solution sécurisée multi-paiements avec facturation automatique et politiques d'annulation personnalisables garantissant votre rémunération en cas d'annulation tardive.",
+    "2-1": "Rapports financiers automatisés avec suivi des dépenses/recettes et préparation simplifiée des déclarations fiscales.",
+    "2-2": "Organisation efficace du personnel avec gestion des rôles, plannings, congés et communication interne.",
+  };
+
+  const key = `${categoryIndex}-${featureIndex}`;
+  return descriptions[key as keyof typeof descriptions] || "Fonctionnalité adaptée aux besoins des professionnels de la santé animale.";
+};
 
 // Animation variants for staggered animations
 const containerVariants = {
@@ -224,10 +248,23 @@ export function FeaturesSection() {
                         </li>
                       )}
                     </ul>
+
+                    <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1 text-xs"
+                      >
+                        En savoir plus
+                        <ChevronRight className="h-3 w-3 ml-1" />
+                      </Button>
+                    </div>
+
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
                   </div>
                 </motion.div>
               </CredenzaTrigger>
-              <CredenzaContent className="w-[90vw] sm:max-w-[800px] p-0 overflow-hidden">
+              <CredenzaContent className="w-screen sm:max-w-[800px] p-0 overflow-hidden">
                 <VisuallyHidden>
                   <CredenzaTitle>{category.title}</CredenzaTitle>
                 </VisuallyHidden>
@@ -250,10 +287,6 @@ export function FeaturesSection() {
                     </div>
 
                     <div className="relative">
-                      <Badge variant="outline" className="mb-2 md:mb-3 text-white border-white/20 bg-white/10 text-xs md:text-sm">
-                        Fonctionnalité Premium
-                      </Badge>
-
                       <div className="mb-4 md:mb-6">
                         <div className="rounded-full bg-white/20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center mb-3 md:mb-4">
                           <category.icon className="w-5 h-5 md:w-6 md:h-6" />
@@ -311,7 +344,14 @@ export function FeaturesSection() {
                             <motion.div
                               key={featureIndex}
                               variants={itemVariants}
-                              className="group relative overflow-hidden rounded-lg md:rounded-xl border bg-background transition-all duration-300 hover:shadow-md"
+                              className="group relative overflow-hidden rounded-lg md:rounded-xl border bg-background transition-all duration-300 hover:shadow-md cursor-pointer"
+                              onClick={() => {
+                                setSelectedFeature({
+                                  categoryIndex: index,
+                                  featureIndex: featureIndex
+                                });
+                                setOpenFeatureModal(true);
+                              }}
                             >
                               <div className="absolute inset-0 h-1 bg-gradient-to-r opacity-30 transition-all group-hover:opacity-100"
                                 style={{
@@ -337,20 +377,10 @@ export function FeaturesSection() {
                                     <p className="text-xs md:text-sm text-muted-foreground">{feature.description}</p>
 
                                     <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t flex justify-between items-center">
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-6 md:h-7 gap-1 text-[10px] md:text-xs px-2 md:px-3"
-                                        onClick={() => {
-                                          setSelectedFeature({
-                                            categoryIndex: index,
-                                            featureIndex: featureIndex
-                                          });
-                                          setOpenFeatureModal(true);
-                                        }}
-                                      >
-                                        Explorer
-                                      </Button>
+                                      <div className="text-[10px] md:text-xs text-muted-foreground flex items-center">
+                                        <span>Cliquez pour explorer</span>
+                                        <ChevronRight className="h-3 w-3 ml-1 transition-transform group-hover:translate-x-1" />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -370,18 +400,18 @@ export function FeaturesSection() {
 
       {/* Modale "En savoir plus" sur la catégorie */}
       <Credenza open={openAboutModal} onOpenChange={setOpenAboutModal}>
-        <CredenzaContent className="w-[90vw] max-w-[400px] sm:max-w-[550px]">
+        <CredenzaContent className="w-screen sm:max-w-[800px]">
           {selectedCategory !== null && (
             <>
               <CredenzaHeader className="border-b pb-3 md:pb-4">
-                <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex items-start gap-2 md:gap-3">
                   <div className={cn(
                     "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center",
                     categories[selectedCategory].color
                   )}>
                     {React.createElement(categories[selectedCategory].icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
                   </div>
-                  <div>
+                  <div className="flex flex-col items-start gap-1">
                     <CredenzaTitle className="text-lg md:text-xl leading-tight">
                       {categories[selectedCategory].title}
                     </CredenzaTitle>
@@ -410,7 +440,7 @@ export function FeaturesSection() {
                 <div className="bg-muted/30 p-3 md:p-4 rounded-lg mb-4 md:mb-6">
                   <h3 className="text-sm md:text-base font-medium mb-2">Points clés</h3>
                   <ul className="space-y-1.5">
-                    <li className="flex items-start gap-2">
+                    <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                       <span className="text-xs md:text-sm">{categories[selectedCategory].title === "Gestion des rendez-vous" ?
                         "Réduction de 40% du temps consacré à la gestion des plannings" :
@@ -419,7 +449,7 @@ export function FeaturesSection() {
                           "Réduction des tâches administratives de 30%"
                       }</span>
                     </li>
-                    <li className="flex items-start gap-2">
+                    <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                       <span className="text-xs md:text-sm">{categories[selectedCategory].title === "Gestion des rendez-vous" ?
                         "Diminution de 65% des rendez-vous manqués grâce aux rappels automatiques" :
@@ -428,7 +458,7 @@ export function FeaturesSection() {
                           "Visibilité en temps réel sur les indicateurs financiers clés"
                       }</span>
                     </li>
-                    <li className="flex items-start gap-2">
+                    <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                       <span className="text-xs md:text-sm">{categories[selectedCategory].title === "Gestion des rendez-vous" ?
                         "Interface intuitive accessible sur tous les appareils" :
@@ -472,7 +502,7 @@ export function FeaturesSection() {
 
       {/* Modale détaillée pour une fonctionnalité spécifique */}
       <Credenza open={openFeatureModal} onOpenChange={setOpenFeatureModal}>
-        <CredenzaContent className="w-[90vw] max-w-[400px] sm:max-w-[550px] md:max-w-[650px]">
+        <CredenzaContent className="w-screen max-w-[400px] sm:max-w-[550px] md:max-w-[650px]">
           {selectedFeature !== null && (
             <>
               <CredenzaHeader className="border-b pb-3 md:pb-4">
@@ -503,7 +533,8 @@ export function FeaturesSection() {
                     <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2">À propos de cette fonctionnalité</h3>
                     <p className="text-xs md:text-sm text-muted-foreground">
                       {categories[selectedFeature.categoryIndex].features[selectedFeature.featureIndex].description}
-                      {' '}Cette fonctionnalité a été conçue pour répondre aux besoins spécifiques des professionnels de la santé animale qui cherchent à optimiser leur pratique quotidienne.
+                      <br />
+                      {getDetailedDescription(selectedFeature.categoryIndex, selectedFeature.featureIndex)}
                     </p>
                   </div>
 
@@ -512,51 +543,17 @@ export function FeaturesSection() {
                     <ol className="space-y-1 md:space-y-2 text-xs md:text-sm pl-4 md:pl-5 list-decimal">
                       <li>Accédez à la section correspondante depuis votre tableau de bord</li>
                       <li>Configurez les paramètres selon vos besoins spécifiques</li>
-                      <li>Commencez à utiliser la fonctionnalité immédiatement</li>
-                      <li>Consultez les guides d&apos;utilisation détaillés dans notre centre d&apos;aide</li>
+                      <li>Et la fonctionnalité est prête à l'emploi</li>
                     </ol>
-                  </div>
-
-                  {/* Exemples d'utilisation */}
-                  <div>
-                    <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2">Exemples d&apos;utilisation</h3>
-                    <div className="grid grid-cols-1 gap-2 md:gap-3 text-xs md:text-sm">
-                      <div className="border rounded-md p-2 md:p-3 hover:bg-muted/20 transition-colors">
-                        <h4 className="font-medium text-xs md:text-sm">Cas d&apos;usage 1</h4>
-                        <p className="text-muted-foreground text-[11px] md:text-xs">Adaptation pour une clinique vétérinaire de taille moyenne</p>
-                      </div>
-                      <div className="border rounded-md p-2 md:p-3 hover:bg-muted/20 transition-colors">
-                        <h4 className="font-medium text-xs md:text-sm">Cas d&apos;usage 2</h4>
-                        <p className="text-muted-foreground text-[11px] md:text-xs">Solution pour un cabinet indépendant spécialisé</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Avis clients */}
-                  <div className="bg-muted/30 rounded-lg p-3 md:p-4">
-                    <h3 className="text-sm md:text-base font-semibold mb-1 md:mb-2 flex items-center gap-2">
-                      Avis clients
-                      <div className="flex items-center">
-                        {"★★★★★".split("").map((star, i) => (
-                          <span key={i} className="text-amber-500 text-[10px] md:text-xs">
-                            {star}
-                          </span>
-                        ))}
-                      </div>
-                    </h3>
-                    <div className="italic text-xs md:text-sm text-muted-foreground">
-                      Cette fonctionnalité a révolutionné ma façon de travailler. Je gagne plusieurs heures
-                      par semaine et mes clients sont ravis du service amélioré.
-                    </div>
                   </div>
 
                   <div className="pt-2 md:pt-3 border-t flex flex-col sm:flex-row items-center justify-between gap-3">
                     <span className="text-xs md:text-sm text-muted-foreground">Disponible dans tous les forfaits</span>
-                    <Credenza>
+                    {/* <Credenza>
                       <CredenzaTrigger asChild>
                         <Button size="sm" className="w-full sm:w-auto text-xs md:text-sm h-8 md:h-9">Essayer gratuitement</Button>
                       </CredenzaTrigger>
-                      <CredenzaContent className="w-[90vw] max-w-[350px]">
+                      <CredenzaContent className="w-screen max-w-[350px]">
                         <CredenzaHeader>
                           <CredenzaTitle className="text-lg">Essai gratuit</CredenzaTitle>
                           <CredenzaDescription className="text-xs md:text-sm">
@@ -572,7 +569,7 @@ export function FeaturesSection() {
                           <Button className="text-xs md:text-sm">Commencer l&apos;essai gratuit</Button>
                         </div>
                       </CredenzaContent>
-                    </Credenza>
+                    </Credenza> */}
                   </div>
                 </div>
               </div>
