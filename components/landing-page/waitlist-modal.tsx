@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Sparkles, Star, CheckCircle, Loader2 } from "lucide-react";
+import { Sparkles, Star, CheckCircle, Loader2, User, Briefcase } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -23,6 +23,10 @@ import {
   Input,
   Button,
   Textarea,
+  Label,
+  Tabs,
+  TabsList,
+  TabsTrigger,
 } from "@/components/ui";
 import { waitlistInsertSchema } from "@/src/db";
 import { addToWaitList } from "@/src/actions/waitlist.action";
@@ -47,6 +51,7 @@ export function WaitlistModal({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isPro, setIsPro] = useState(defaultIsPro);
 
   // Determine if we're in controlled or uncontrolled mode
   const isControlled =
@@ -61,12 +66,22 @@ export function WaitlistModal({
       firstName: "",
       email: "",
       organizationName: "",
-      isPro: defaultIsPro,
+      isPro: isPro,
       comment: "",
     },
   });
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control, setValue, watch } = form;
+
+  // Mettre à jour le state interne si defaultIsPro change
+  useEffect(() => {
+    setIsPro(defaultIsPro);
+  }, [defaultIsPro]);
+
+  // Mettre à jour la valeur du formulaire lorsque l'état isPro change
+  useEffect(() => {
+    setValue("isPro", isPro);
+  }, [isPro, setValue]);
 
   const { mutateAsync } = useMutation({
     mutationFn: addToWaitList,
@@ -107,9 +122,20 @@ export function WaitlistModal({
       setTimeout(() => {
         setIsSuccess(false);
         form.reset();
+        setIsPro(defaultIsPro);
       }, 300);
     } else {
       setOpen(false);
+    }
+  };
+
+  const handleSwitchChange = (checked: boolean) => {
+    setIsPro(checked);
+  };
+
+  const handleUserTypeChange = (value: string) => {
+    if (value) { // S'assurer qu'une valeur est sélectionnée
+      setIsPro(value === "pro");
     }
   };
 
@@ -123,7 +149,7 @@ export function WaitlistModal({
               <div
                 className={cn(
                   "inline-flex items-center gap-2 px-3 py-1 mb-2 text-sm font-medium rounded-full bg-primary/10 text-primary w-fit",
-                  !defaultIsPro ? "bg-secondary/10 text-secondary" : "",
+                  !isPro ? "bg-secondary/10 text-secondary" : "",
                 )}
               >
                 <Sparkles className="w-4 h-4" />
@@ -134,11 +160,43 @@ export function WaitlistModal({
               </CredenzaTitle>
               <CredenzaDescription>
                 Soyez parmi les premiers à découvrir Biume et transformez
-                {defaultIsPro
+                {isPro
                   ? " votre activité professionnelle."
                   : " l'expérience de soin de votre animal."}
               </CredenzaDescription>
             </CredenzaHeader>
+
+            {/* Tabs pour choisir le type d'utilisateur */}
+            <div className="flex justify-center mb-4 px-6">
+              <Tabs
+                value={isPro ? "pro" : "individual"}
+                onValueChange={handleUserTypeChange}
+                className="w-full"
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger
+                    value="individual"
+                    className={cn(
+                      "gap-1.5 data-[state=active]:shadow-none",
+                      "data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground", // Style pour propriétaire actif
+                    )}
+                  >
+                    <User className="h-4 w-4" />
+                    Je suis propriétaire
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="pro"
+                    className={cn(
+                      "gap-1.5 data-[state=active]:shadow-none",
+                      "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground", // Style pour professionnel actif (violet/primaire)
+                    )}
+                  >
+                    <Briefcase className="h-4 w-4" />
+                    Je suis professionnel
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
 
             <Form {...form}>
               <form onSubmit={onSubmit} className="space-y-4">
@@ -190,7 +248,7 @@ export function WaitlistModal({
                           className="text-base"
                           type="email"
                           placeholder={
-                            defaultIsPro
+                            isPro
                               ? "marie.dupont@clinique-veterinaire.fr"
                               : "marie.dupont@exemple.fr"
                           }
@@ -202,7 +260,7 @@ export function WaitlistModal({
                   )}
                 />
 
-                {defaultIsPro && (
+                {isPro && (
                   <FormField
                     control={control}
                     name="organizationName"
@@ -245,7 +303,7 @@ export function WaitlistModal({
                 <CredenzaFooter className="pt-4">
                   <Button
                     type="submit"
-                    variant={!defaultIsPro ? "secondary" : "default"}
+                    variant={!isPro ? "secondary" : "default"}
                     disabled={isSubmitting}
                     className="w-full gap-2"
                   >
@@ -275,7 +333,7 @@ export function WaitlistModal({
             <div
               className={cn(
                 "w-16 h-16 rounded-full flex items-center justify-center mb-4",
-                !defaultIsPro
+                !isPro
                   ? "bg-secondary/10 text-secondary"
                   : "bg-primary/10 text-primary",
               )}
@@ -287,7 +345,7 @@ export function WaitlistModal({
             </h2>
             <p className="text-muted-foreground mb-6">
               Nous vous contacterons dès que Biume sera disponible
-              {defaultIsPro ? " pour votre entreprise." : "."}
+              {isPro ? " pour votre entreprise." : "."}
             </p>
 
             <div className="flex items-center gap-1 mb-6">
@@ -299,7 +357,7 @@ export function WaitlistModal({
               ))}
             </div>
 
-            {defaultIsPro && (
+            {isPro && (
               <Button variant="default" asChild>
                 <Link
                   href="https://forms.gle/ZWyhVPJfL1D98D716"

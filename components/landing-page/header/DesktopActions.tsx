@@ -8,6 +8,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { UserNav } from "../../dashboard/layout/user-nav";
 import { HeaderProps, SessionProps } from "./types";
 import { useSearchParams } from "next/navigation";
+import { WaitlistModal } from "@/components/landing-page/waitlist-modal";
 
 export const DesktopActions = ({
   isScrolled,
@@ -36,9 +37,11 @@ export const DesktopActions = ({
             isScrolled ? "hidden lg:flex gap-2" : "hidden lg:flex gap-3",
           )}
         >
-          <Button size={isScrolled ? "sm" : "default"} variant="secondary" asChild>
-            <Link href="#cta">M&apos;inscrire à la bêta</Link>
-          </Button>
+          <WaitlistModal defaultIsPro={isPro}>
+            <Button size={isScrolled ? "sm" : "default"} variant="secondary">
+              M&apos;inscrire à la bêta
+            </Button>
+          </WaitlistModal>
         </div>
       )}
     </div>

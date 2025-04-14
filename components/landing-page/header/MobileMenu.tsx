@@ -102,7 +102,7 @@ export const MobileMenu = ({
               ))}
             </nav>
 
-            <div className="mt-auto">
+            {/* <div className="mt-auto">
               {session ? (
                 <MobileUserMenu
                   session={session}
@@ -111,7 +111,7 @@ export const MobileMenu = ({
               ) : (
                 <MobileGuestMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />
               )}
-            </div>
+            </div> */}
           </div>
         </SheetContent>
       </Sheet>
