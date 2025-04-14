@@ -543,7 +543,7 @@ export function FeaturesSection() {
                     <ol className="space-y-1 md:space-y-2 text-xs md:text-sm pl-4 md:pl-5 list-decimal">
                       <li>Accédez à la section correspondante depuis votre tableau de bord</li>
                       <li>Configurez les paramètres selon vos besoins spécifiques</li>
-                      <li>Et la fonctionnalité est prête à l'emploi</li>
+                      <li>Et la fonctionnalité est prête à l&apos;emploi</li>
                     </ol>
                   </div>
 
