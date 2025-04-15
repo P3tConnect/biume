@@ -7,7 +7,8 @@ import { createInsertSchema } from "drizzle-zod"
 import { createSelectSchema } from "drizzle-zod"
 
 export const prescription = pgTable("prescription", {
-  id: text("id").primaryKey()
+  id: text("id")
+    .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   createdBy: text("createdBy").references(() => organization.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
@@ -17,7 +18,10 @@ export const prescription = pgTable("prescription", {
 })
 
 export const prescriptionRelations = relations(prescription, ({ one, many }) => ({
-  createdBy: one(organization),
+  createdBy: one(organization, {
+    fields: [prescription.createdBy],
+    references: [organization.id],
+  }),
   appointment: one(appointments),
   items: many(prescriptionItems),
 }))

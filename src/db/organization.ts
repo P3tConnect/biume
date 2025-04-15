@@ -23,6 +23,7 @@ import { widgets } from "./widgets"
 import { Invoice, invoice } from "./invoice"
 import { MedicalRecordAccess, medicalRecordAccess } from "./medicalRecordAccess"
 import { report, Report } from "./report"
+import { Prescription, prescription } from "./prescription"
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"])
 
@@ -101,6 +102,7 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   invoices: many(invoice),
   medicalRecordAccess: many(medicalRecordAccess),
   reports: many(report),
+  prescriptions: many(prescription),
 }))
 
 export type Organization = InferSelectModel<typeof organization> & {
@@ -115,6 +117,7 @@ export type Organization = InferSelectModel<typeof organization> & {
   invoices: Invoice[]
   medicalRecordAccess: MedicalRecordAccess[]
   reports: Report[]
+  prescriptions: Prescription[]
 }
 export type CreateOrganization = typeof organization.$inferInsert
 
