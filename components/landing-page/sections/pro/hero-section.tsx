@@ -126,7 +126,7 @@ export function HeroSection() {
             <motion.div variants={itemVariants} className="mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium text-sm">
                 <BadgeCheck className="w-4 h-4" />
-                <span>Solution complète pour vétérinaires & soigneurs</span>
+                <span>Solution complète pour professionnels de la santé animale</span>
               </div>
             </motion.div>
 
@@ -166,7 +166,7 @@ export function HeroSection() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-12 px-8 font-medium">
-                <Link href="#discover">Découvrir les fonctionnalités</Link>
+                <Link href="#features">Découvrir les fonctionnalités</Link>
               </Button>
             </motion.div>
           </motion.div>
