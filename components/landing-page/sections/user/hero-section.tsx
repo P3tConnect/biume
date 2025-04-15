@@ -275,18 +275,6 @@ export function HeroSection() {
                 </motion.div>
               ))}
             </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.3, duration: 0.5 }}
-              className="mt-8"
-            >
-              <a href="/pros" className="inline-flex items-center text-primary font-medium hover:underline group">
-                Découvrir tous nos professionnels
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </a>
-            </motion.div>
           </motion.div>
         </div>
       </div>
