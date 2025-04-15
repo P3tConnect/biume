@@ -4,7 +4,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { Appointment, appointments } from "./appointments"
 import { AnatomicalIssue, anatomicalIssue } from "./anatomicalIssue"
-import { organization } from "./organization"
+import { Organization, organization } from "./organization"
 
 export const report = pgTable("report", {
   id: text("id")
@@ -20,11 +20,16 @@ export const report = pgTable("report", {
 export const reportRelations = relations(report, ({ one, many }) => ({
   appointments: one(appointments),
   anatomicalIssues: many(anatomicalIssue),
+  organization: one(organization, {
+    fields: [report.createdBy],
+    references: [organization.id],
+  }),
 }))
 
 export type Report = InferSelectModel<typeof report> & {
   appointments: Appointment
   anatomicalIssues: AnatomicalIssue[]
+  organization: Organization
 }
 export type CreateReport = typeof report.$inferInsert
 

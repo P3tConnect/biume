@@ -2,7 +2,6 @@ import { InferSelectModel, relations } from "drizzle-orm"
 import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-
 import { address } from "./addresses"
 import { appointments } from "./appointments"
 import { bgJobs } from "./bgJobs"
