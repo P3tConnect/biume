@@ -1,12 +1,9 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ChevronDown, Stethoscope, User2Icon } from "lucide-react"
+import { Stethoscope, User2Icon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-
-import { useMediaQuery } from "@/src/hooks"
-import { useIsMobile } from "@/src/hooks/use-mobile"
 import { cn } from "@/src/lib/utils"
 
 export const PageSwitch = () => {
@@ -15,9 +12,6 @@ export const PageSwitch = () => {
   const pathname = usePathname()
   const currentVersion = searchParams.get("version") || "user"
   const [mounted, setMounted] = useState(false)
-  const isMobile = useIsMobile()
-  const isSmallMobile = useMediaQuery("(max-width: 640px)")
-  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -27,66 +21,9 @@ export const PageSwitch = () => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("version", newVersion)
     router.push(`${pathname}?${params.toString()}`)
-    setDropdownOpen(false)
   }
 
   if (!mounted) return null
-
-  // // Version mobile avec dropdown
-  // if (isSmallMobile) {
-  //   return (
-  //     <div className="relative inline-flex flex-col">
-  //       <button
-  //         onClick={() => setDropdownOpen(!dropdownOpen)}
-  //         className="flex items-center justify-between gap-2 px-4 py-2 rounded-full bg-muted/50 backdrop-blur-sm border border-border text-sm font-medium min-w-40"
-  //       >
-  //         <span className="relative flex items-center gap-1.5">
-  //           {currentVersion === "user" ? (
-  //             <>
-  //               <User2Icon className="w-3.5 h-3.5" />
-  //               <span>Propriétaires</span>
-  //             </>
-  //           ) : (
-  //             <>
-  //               <Stethoscope className="w-3.5 h-3.5" />
-  //               <span>Professionnels</span>
-  //             </>
-  //           )}
-  //         </span>
-  //         <ChevronDown className={cn("w-4 h-4 transition-transform", dropdownOpen && "transform rotate-180")} />
-  //       </button>
-
-  //       {dropdownOpen && (
-  //         <div className="absolute top-full left-0 mt-1 bg-background rounded-lg border border-border shadow-lg w-full z-20">
-  //           {["user", "pro"].map(version => {
-  //             const isActive = currentVersion === version
-  //             if (isActive) return null
-
-  //             return (
-  //               <button
-  //                 key={version}
-  //                 onClick={() => handleSwitch(version)}
-  //                 className="flex items-center gap-1.5 w-full px-4 py-2 hover:bg-muted/50 text-sm font-medium"
-  //               >
-  //                 {version === "user" ? (
-  //                   <>
-  //                     <User2Icon className="w-3.5 h-3.5" />
-  //                     <span>Propriétaires</span>
-  //                   </>
-  //                 ) : (
-  //                   <>
-  //                     <Stethoscope className="w-3.5 h-3.5" />
-  //                     <span>Professionnels</span>
-  //                   </>
-  //                 )}
-  //               </button>
-  //             )
-  //           })}
-  //         </div>
-  //       )}
-  //     </div>
-  //   )
-  // }
 
   // Version desktop avec tabs
   return (
