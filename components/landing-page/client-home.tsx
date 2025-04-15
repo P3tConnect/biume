@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/landing-page/header";
 import { UserLanding } from "@/components/landing-page/user-landing";
 import { ProLanding } from "@/components/landing-page/pro-landing";
+import { PageSwitch } from "@/components/landing-page/page-switch";
 
 export default function ClientHome() {
   const searchParams = useSearchParams();
@@ -36,6 +37,9 @@ export default function ClientHome() {
       </div>
 
       <Header />
+      <div className="w-full flex justify-center items-center md:hidden mt-[4.5rem] lg:mt-0 mb-2">
+        <PageSwitch />
+      </div>
 
       <AnimatePresence mode="wait">
         <motion.main
@@ -44,7 +48,7 @@ export default function ClientHome() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
-          className="flex-1 pt-20 w-full overflow-x-hidden"
+          className="flex-1 md:mt-20 w-full overflow-x-hidden"
         >
           {version === "user" ? <UserLanding /> : <ProLanding />}
         </motion.main>

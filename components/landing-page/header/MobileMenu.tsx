@@ -1,22 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, PawPrint, X } from "lucide-react";
+import { Menu, PawPrint } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { PageSwitch } from "@/components/landing-page/page-switch";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetClose,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { HeaderProps, SessionProps, MobileMenuProps } from "./types";
-import { MobileUserMenu } from "./MobileUserMenu";
-import { MobileGuestMenu } from "./MobileGuestMenu";
 import { useSearchParams } from "next/navigation";
 
 // Définir les items de navigation de base
@@ -85,10 +81,6 @@ export const MobileMenu = ({
               </Link>
             </div>
 
-            <div className="flex justify-center mb-6">
-              <PageSwitch isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-            </div>
-
             <nav className="space-y-1 mb-6">
               {navItems.map((item) => (
                 <Link
@@ -101,17 +93,6 @@ export const MobileMenu = ({
                 </Link>
               ))}
             </nav>
-
-            {/* <div className="mt-auto">
-              {session ? (
-                <MobileUserMenu
-                  session={session}
-                  setIsMobileMenuOpen={setIsMobileMenuOpen}
-                />
-              ) : (
-                <MobileGuestMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />
-              )}
-            </div> */}
           </div>
         </SheetContent>
       </Sheet>
