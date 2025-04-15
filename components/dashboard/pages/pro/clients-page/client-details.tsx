@@ -169,7 +169,7 @@ export function ClientDetails({ client, isOpen, onOpenChange }: ClientDetailsPro
             <TabsList className="w-full justify-start mb-4">
               <TabsTrigger value="appointments" className="flex-1 md:flex-none">Rendez-vous</TabsTrigger>
               <TabsTrigger value="pets" className="flex-1 md:flex-none">Animaux</TabsTrigger>
-              <TabsTrigger value="documents" className="flex-1 md:flex-none">Documents</TabsTrigger>
+              <TabsTrigger value="notes" className="flex-1 md:flex-none">Notes</TabsTrigger>
               <TabsTrigger value="billing" className="flex-1 md:flex-none">Facturation</TabsTrigger>
             </TabsList>
 
@@ -223,11 +223,10 @@ export function ClientDetails({ client, isOpen, onOpenChange }: ClientDetailsPro
               </div>
             </TabsContent>
 
-            <TabsContent value="documents">
+            <TabsContent value="notes">
               <div className="rounded-lg border">
                 <div className="p-4 text-center text-muted-foreground">
-                  <FileText className="h-8 w-8 mx-auto mb-2" />
-                  <p>Aucun document disponible</p>
+                  <p>Aucune note disponible</p>
                 </div>
               </div>
             </TabsContent>

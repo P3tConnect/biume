@@ -1,19 +1,14 @@
 "use client"
 
-import { ArrowUpDown, Calendar, MoreHorizontal, Plus, Star, UserPlus, Users } from "lucide-react"
+import { ArrowUpDown, Calendar, MoreHorizontal, Star, UserPlus, Users } from "lucide-react"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
   Badge,
   Button,
-  Input,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,7 +29,6 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { getClientMetrics } from "@/src/actions/client.action"
 import { ClientDetails } from "./client-details"
-import { ClientForm } from "./client-form"
 import { ClientMetrics } from "@/src/types/client"
 import ClientsHeader from "./clients-header"
 import { CountAnimation } from "@/components/common/count-animation"
@@ -163,50 +157,9 @@ const ClientMetricsComponent = () => {
   )
 }
 
-const ClientActions = ({
-  globalFilter,
-  setGlobalFilter,
-  setStatus,
-  status,
-}: {
-  globalFilter: string
-  setGlobalFilter: (value: string) => void
-  setStatus: (value: string) => void
-  status: string
-}) => {
-  return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div className="flex flex-1 items-center gap-2">
-        <Input
-          placeholder="Rechercher par nom ou email..."
-          value={globalFilter}
-          onChange={event => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
-      </div>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Nouveau Client
-          </Button>
-        </SheetTrigger>
-        <SheetContent className="sm:max-w-xl">
-          <SheetHeader>
-            <SheetTitle>Ajouter un nouveau client</SheetTitle>
-          </SheetHeader>
-          <div className="mt-6">
-            <ClientForm />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </div>
-  )
-}
-
 const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("")
-  const [status, setStatus] = useState<string>("all")
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [selectedClient, setSelectedClient] = useState<User | null>(null)
   const { shouldShowAlert, organizationId } = useSubscriptionCheck()
@@ -259,7 +212,7 @@ const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
       },
       cell: ({ row }) => {
         const createdAt = row.getValue("createdAt") as string
-        return <div className="text-sm text-muted-foreground text-center">{format(createdAt, "dd/MM/yyyy")}</div>
+        return <div className="text-sm text-muted-foreground text-start pl-6">{format(createdAt, "dd/MM/yyyy")}</div>
       },
     },
     {
@@ -289,10 +242,7 @@ const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => setSelectedClient(client)}>Voir le profil</DropdownMenuItem>
-                <DropdownMenuItem>Envoyer un message</DropdownMenuItem>
                 <DropdownMenuItem>Planifier un rendez-vous</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive">Supprimer</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </Sheet>
@@ -326,12 +276,6 @@ const ClientsPageComponent = ({ clients }: { clients: User[] }) => {
         <Card className="rounded-xl">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Mes Clients</CardTitle>
-            <ClientActions
-              globalFilter={globalFilter}
-              setGlobalFilter={setGlobalFilter}
-              status={status}
-              setStatus={setStatus}
-            />
           </CardHeader>
           <CardContent>
             <Table>

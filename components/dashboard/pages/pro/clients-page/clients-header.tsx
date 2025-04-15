@@ -1,18 +1,10 @@
 import { PlusIcon } from "lucide-react"
-import React from "react"
-
+import { useState } from "react"
 import { Button, Card, CardHeader, CardTitle } from "@/components/ui"
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza"
-import { CreateClientForm } from "./create-client-form"
+import ClientDialog from "@/components/dashboard/layout/dialogs/ClientDialog"
 
 const ClientsHeader = () => {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
@@ -26,27 +18,19 @@ const ClientsHeader = () => {
               <p className="text-sm text-muted-foreground">Aperçu de vos clients</p>
             </div>
             <div className="flex gap-3">
-              <Credenza open={isOpen} onOpenChange={setIsOpen}>
-                <CredenzaTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="rounded-xl hover:bg-secondary/30 hover:border-secondary/70 transition-all duration-300"
-                  >
-                    <PlusIcon className="size-4 mr-2" />
-                    Ajouter un client
-                  </Button>
-                </CredenzaTrigger>
-                <CredenzaContent className="max-w-md">
-                  <CredenzaHeader>
-                    <CredenzaTitle>Ajouter un nouveau client</CredenzaTitle>
-                  </CredenzaHeader>
-                  <CreateClientForm onClose={() => setIsOpen(false)} />
-                </CredenzaContent>
-              </Credenza>
+              <Button
+                variant="outline"
+                className="rounded-xl hover:bg-secondary/30 hover:border-secondary/70 transition-all duration-300"
+                onClick={() => setIsOpen(true)}
+              >
+                <PlusIcon className="size-4 mr-2" />
+                Ajouter un client
+              </Button>
             </div>
           </div>
         </CardHeader>
       </Card>
+      <ClientDialog open={isOpen} onOpenChange={setIsOpen} />
     </>
   )
 }

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/credenza"
 
 import ReportDetailsDrawer, { type Report } from "./report-details-drawer"
+import { BetaBadge } from "@/components/common/beta-badge"
 
 const ReportsPageComponent = () => {
   const router = useRouter()
@@ -233,7 +234,7 @@ const ReportsPageComponent = () => {
                         Rapport détaillé
                       </h3>
                       <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">Avancé</span>
-                      <span className="px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-full">Bêta</span>
+                      <BetaBadge />
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Pour les examens approfondis et les cas complexes
