@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "@/src/lib/auth-client";
 import { cn } from "@/src/lib/utils";
-import { Logo } from "./header/Logo";
-import { DesktopNavigation } from "./header/DesktopNavigation";
 import { DesktopActions } from "./header/DesktopActions";
+import { DesktopNavigation } from "./header/DesktopNavigation";
+import { Logo } from "./header/Logo";
 import { MobileMenu } from "./header/MobileMenu";
 
 export function Header() {
