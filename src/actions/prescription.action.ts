@@ -2,21 +2,10 @@
 
 import { z } from "zod"
 import { v4 as uuidv4 } from "uuid"
-import { 
-  createServerAction, 
-  requireAuth, 
-  requireFullOrganization, 
-  ActionError 
-} from "@/src/lib"
+import { createServerAction, requireAuth, requireFullOrganization, ActionError } from "@/src/lib"
 import { db } from "@/src/lib/db"
-import { 
-  prescription, 
-  createPrescriptionSchema 
-} from "@/src/db/prescription"
-import { 
-  prescriptionItems, 
-  createPrescriptionItemsSchema 
-} from "@/src/db/prescriptionItems"
+import { prescription, createPrescriptionSchema } from "@/src/db/prescription"
+import { prescriptionItems, createPrescriptionItemsSchema, PrescriptionItem } from "@/src/db/prescriptionItems"
 import { eq } from "drizzle-orm"
 
 // Schema pour la création d'un item de prescription
@@ -35,6 +24,7 @@ const CreatePrescriptionSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
   petId: z.string().min(1, "L'animal est requis"),
   description: z.string().optional(),
+  appointmentId: z.string().optional(),
   items: z.array(PrescriptionItemInputSchema).min(1, "Au moins un médicament est requis"),
 })
 
@@ -49,21 +39,22 @@ export const createPrescriptionAction = createServerAction(
       }
 
       // Créer la prescription
-      const [newPrescription] = await db.insert(prescription)
+      const [newPrescription] = await db
+        .insert(prescription)
         .values({
           title: input.title,
           description: input.description,
           createdBy: ctx.organization.id,
         })
         .returning()
+        .execute()
 
       if (!newPrescription) {
         throw new ActionError("Erreur lors de la création de la prescription")
       }
 
       // Créer les items de prescription
-      const prescriptionItemsData = input.items.map((item: PrescriptionItemInput) => ({
-        id: uuidv4(),
+      const prescriptionItemsData = input.items.map((item: PrescriptionItem) => ({
         prescriptionId: newPrescription.id,
         name: item.name,
         dosage: item.dosage,
@@ -72,13 +63,11 @@ export const createPrescriptionAction = createServerAction(
         notes: item.notes || null,
       }))
 
-      const createdItems = await db.insert(prescriptionItems)
-        .values(prescriptionItemsData)
-        .returning()
+      const createdItems = await db.insert(prescriptionItems).values(prescriptionItemsData).returning().execute()
 
       return {
         prescription: newPrescription,
-        items: createdItems
+        items: createdItems,
       }
     } catch (error) {
       console.error("Erreur lors de la création de la prescription:", error)
@@ -148,4 +137,4 @@ export const getOrganizationPrescriptionsAction = createServerAction(
     }
   },
   [requireAuth, requireFullOrganization]
-) 
+)

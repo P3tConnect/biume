@@ -4,43 +4,17 @@ import { cn } from "@/src/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Trash2, CheckCircle2, RefreshCw } from "lucide-react"
-import { Observation, ObservationType, anatomicalRegions, dysfunctionTypes, interventionZones } from "./types"
+import { Plus, Trash2, CheckCircle2 } from "lucide-react"
+import { Observation, anatomicalRegions, interventionZones } from "./types"
 
 interface ObservationsTabProps {
   observations: Observation[]
-  activeType: ObservationType
   onRemoveObservation: (id: string) => void
   onOpenAddSheet: () => void
-  selectedView: "left" | "right"
-  setSelectedView: (view: "left" | "right") => void
-  setActiveType?: (type: ObservationType) => void
 }
 
-export function ObservationsTab({
-  observations,
-  activeType,
-  onRemoveObservation,
-  onOpenAddSheet,
-  selectedView,
-  setSelectedView,
-  setActiveType,
-}: ObservationsTabProps) {
-  const filteredObservations = observations.filter(obs => obs.type === activeType)
-
-  const typeLabels = {
-    staticObservation: "Observation statique",
-    dynamicObservation: "Observation dynamique",
-  } as const
-
-  const typeTitle = typeLabels[activeType]
-  const typeIcon = activeType === "staticObservation" ? <CheckCircle2 className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />
-
-  const handleTypeChange = (type: ObservationType) => {
-    if (setActiveType) {
-      setActiveType(type);
-    }
-  };
+export function ObservationsTab({ observations, onRemoveObservation, onOpenAddSheet }: ObservationsTabProps) {
+  const typeIcon = <CheckCircle2 className="h-4 w-4" />
 
   return (
     <div className="h-full">
@@ -49,11 +23,9 @@ export function ObservationsTab({
         <div className="p-3 border-b flex items-center justify-between">
           <div className="flex items-center gap-2">
             {typeIcon}
-            <h2 className="font-medium">{typeTitle}</h2>
-            {filteredObservations.length > 0 && (
-              <Badge className="bg-primary/90 hover:bg-primary text-white">
-                {filteredObservations.length}
-              </Badge>
+            <h2 className="font-medium">Observations</h2>
+            {observations.length > 0 && (
+              <Badge className="bg-primary/90 hover:bg-primary text-white">{observations.length}</Badge>
             )}
           </div>
           <Button variant="ghost" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
@@ -63,10 +35,13 @@ export function ObservationsTab({
         </div>
 
         <div className="p-3 flex-1 overflow-y-auto">
-          {filteredObservations.length > 0 ? (
+          {observations.length > 0 ? (
             <div className="space-y-3">
-              {filteredObservations.map(obs => (
-                <div key={obs.id} className="p-3 border rounded-md flex items-start justify-between hover:bg-muted/30 transition-colors">
+              {observations.map(obs => (
+                <div
+                  key={obs.id}
+                  className="p-3 border rounded-md flex items-start justify-between hover:bg-muted/30 transition-colors"
+                >
                   <div className="flex-1">
                     <div className="flex items-center flex-wrap gap-2 mb-2">
                       <div
@@ -85,7 +60,8 @@ export function ObservationsTab({
                       />
                       <span className="font-medium">{anatomicalRegions.find(r => r.value === obs.region)?.label}</span>
                       <span className="text-xs text-muted-foreground">
-                        ({obs.severity === 1
+                        (
+                        {obs.severity === 1
                           ? "Légère"
                           : obs.severity === 2
                             ? "Modérée"
@@ -93,7 +69,8 @@ export function ObservationsTab({
                               ? "Importante"
                               : obs.severity === 4
                                 ? "Sévère"
-                                : "Critique"})
+                                : "Critique"}
+                        )
                       </span>
                     </div>
 
@@ -122,7 +99,7 @@ export function ObservationsTab({
             <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-3">
               <div className="flex items-center gap-2">
                 {typeIcon}
-                <p>Aucune observation {activeType === "staticObservation" ? "statique" : "dynamique"}</p>
+                <p>Aucune observation</p>
               </div>
               <Button variant="outline" size="sm" onClick={onOpenAddSheet} className="flex items-center gap-1">
                 <Plus className="h-4 w-4" />

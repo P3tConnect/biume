@@ -33,208 +33,228 @@ interface AnatomicalRegionMap {
 
 // Carte des régions anatomiques avec les coordonnées SVG pour chaque côté
 const anatomicalRegionPaths: AnatomicalRegionMap = {
-  "head": {
+  head: {
     left: {
       path: "M40,50 Q60,30 80,50 Q100,70 80,90 Q60,110 40,90 Q20,70 40,50Z",
-      viewBox: "0 0 120 140"
+      viewBox: "0 0 120 140",
     },
     right: {
       path: "M40,50 Q60,30 80,50 Q100,70 80,90 Q60,110 40,90 Q20,70 40,50Z",
-      viewBox: "0 0 120 140"
-    }
+      viewBox: "0 0 120 140",
+    },
   },
-  "neck": {
+  neck: {
     left: {
       path: "M75,90 Q85,80 95,90 L105,120 Q95,130 85,120 L75,90Z",
-      viewBox: "70 80 40 60"
+      viewBox: "70 80 40 60",
     },
     right: {
       path: "M75,90 Q85,80 95,90 L105,120 Q95,130 85,120 L75,90Z",
-      viewBox: "70 80 40 60"
-    }
+      viewBox: "70 80 40 60",
+    },
   },
-  "back": {
+  back: {
     left: {
       path: "M110,120 Q160,100 200,120 L200,140 Q160,160 110,140 L110,120Z",
-      viewBox: "100 100 110 60"
+      viewBox: "100 100 110 60",
     },
     right: {
       path: "M110,120 Q160,100 200,120 L200,140 Q160,160 110,140 L110,120Z",
-      viewBox: "100 100 110 60"
-    }
+      viewBox: "100 100 110 60",
+    },
   },
-  "chest": {
+  chest: {
     left: {
       path: "M105,130 Q130,120 150,130 L150,160 Q130,170 105,160 L105,130Z",
-      viewBox: "100 120 55 50"
+      viewBox: "100 120 55 50",
     },
     right: {
       path: "M105,130 Q130,120 150,130 L150,160 Q130,170 105,160 L105,130Z",
-      viewBox: "100 120 55 50"
-    }
+      viewBox: "100 120 55 50",
+    },
   },
-  "frontLeg": {
+  lungs: {
+    left: {
+      path: "M125,130 C135,120 145,118 155,122 C165,130 168,145 160,155 C150,165 135,165 125,160 C118,150 115,140 125,130",
+      viewBox: "115 115 60 60",
+    },
+    right: {
+      path: "M125,130 C135,120 145,118 155,122 C165,130 168,145 160,155 C150,165 135,165 125,160 C118,150 115,140 125,130",
+      viewBox: "115 115 60 60",
+    },
+  },
+  frontLeg: {
     left: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
+      viewBox: "105 155 40 75",
     },
     right: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
-    }
+      viewBox: "105 155 40 75",
+    },
   },
-  "hindLeg": {
+  hindLeg: {
     left: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
+      viewBox: "205 155 40 75",
     },
     right: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
-    }
+      viewBox: "205 155 40 75",
+    },
   },
-  "tail": {
+  tail: {
     left: {
       path: "M240,140 Q250,135 260,140 L280,190 Q270,195 260,190 L240,140Z",
-      viewBox: "235 135 50 65"
+      viewBox: "235 135 50 65",
     },
     right: {
       path: "M240,140 Q250,135 260,140 L280,190 Q270,195 260,190 L240,140Z",
-      viewBox: "235 135 50 65"
-    }
+      viewBox: "235 135 50 65",
+    },
   },
   // Mapping pour les régions anatomiques existantes dans le fichier types.ts
-  "tete": {
+  tete: {
     left: {
       path: "M40,50 Q60,30 80,50 Q100,70 80,90 Q60,110 40,90 Q20,70 40,50Z",
-      viewBox: "0 0 120 140"
+      viewBox: "0 0 120 140",
     },
     right: {
       path: "M40,50 Q60,30 80,50 Q100,70 80,90 Q60,110 40,90 Q20,70 40,50Z",
-      viewBox: "0 0 120 140"
-    }
+      viewBox: "0 0 120 140",
+    },
   },
-  "cou": {
+  cou: {
     left: {
       path: "M75,90 Q85,80 95,90 L105,120 Q95,130 85,120 L75,90Z",
-      viewBox: "70 80 40 60"
+      viewBox: "70 80 40 60",
     },
     right: {
       path: "M75,90 Q85,80 95,90 L105,120 Q95,130 85,120 L75,90Z",
-      viewBox: "70 80 40 60"
-    }
+      viewBox: "70 80 40 60",
+    },
   },
-  "thorax": {
+  thorax: {
     left: {
       path: "M105,130 Q130,120 150,130 L150,160 Q130,170 105,160 L105,130Z",
-      viewBox: "100 120 55 50"
+      viewBox: "100 120 55 50",
     },
     right: {
       path: "M105,130 Q130,120 150,130 L150,160 Q130,170 105,160 L105,130Z",
-      viewBox: "100 120 55 50"
-    }
+      viewBox: "100 120 55 50",
+    },
   },
-  "dos": {
+  dos: {
     left: {
       path: "M110,120 Q160,100 200,120 L200,140 Q160,160 110,140 L110,120Z",
-      viewBox: "100 100 110 60"
+      viewBox: "100 100 110 60",
     },
     right: {
       path: "M110,120 Q160,100 200,120 L200,140 Q160,160 110,140 L110,120Z",
-      viewBox: "100 100 110 60"
-    }
+      viewBox: "100 100 110 60",
+    },
   },
-  "queue": {
+  queue: {
     left: {
       path: "M240,140 Q250,135 260,140 L280,190 Q270,195 260,190 L240,140Z",
-      viewBox: "235 135 50 65"
+      viewBox: "235 135 50 65",
     },
     right: {
       path: "M240,140 Q250,135 260,140 L280,190 Q270,195 260,190 L240,140Z",
-      viewBox: "235 135 50 65"
-    }
+      viewBox: "235 135 50 65",
+    },
   },
   "patte-avant-gauche": {
     left: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
+      viewBox: "105 155 40 75",
     },
     right: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
-    }
+      viewBox: "105 155 40 75",
+    },
   },
   "patte-avant-droite": {
     left: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
+      viewBox: "105 155 40 75",
     },
     right: {
       path: "M110,160 Q120,155 130,160 L140,220 Q130,225 120,220 L110,160Z",
-      viewBox: "105 155 40 75"
-    }
+      viewBox: "105 155 40 75",
+    },
   },
   "patte-arriere-gauche": {
     left: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
+      viewBox: "205 155 40 75",
     },
     right: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
-    }
+      viewBox: "205 155 40 75",
+    },
   },
   "patte-arriere-droite": {
     left: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
+      viewBox: "205 155 40 75",
     },
     right: {
       path: "M210,160 Q220,155 230,160 L240,220 Q230,225 220,220 L210,160Z",
-      viewBox: "205 155 40 75"
-    }
+      viewBox: "205 155 40 75",
+    },
   },
   "oeil-gauche": {
     left: {
       path: "M45,60 C50,55 55,55 60,60 C65,65 65,70 60,75 C55,80 50,80 45,75 C40,70 40,65 45,60",
-      viewBox: "35 50 30 30"
+      viewBox: "35 50 30 30",
     },
     right: {
       path: "M45,60 C50,55 55,55 60,60 C65,65 65,70 60,75 C55,80 50,80 45,75 C40,70 40,65 45,60",
-      viewBox: "35 50 30 30"
-    }
+      viewBox: "35 50 30 30",
+    },
   },
   "oeil-droit": {
     left: {
       path: "M65,60 C70,55 75,55 80,60 C85,65 85,70 80,75 C75,80 70,80 65,75 C60,70 60,65 65,60",
-      viewBox: "55 50 30 30"
+      viewBox: "55 50 30 30",
     },
     right: {
       path: "M65,60 C70,55 75,55 80,60 C85,65 85,70 80,75 C75,80 70,80 65,75 C60,70 60,65 65,60",
-      viewBox: "55 50 30 30"
-    }
+      viewBox: "55 50 30 30",
+    },
   },
   "oreille-gauche": {
     left: {
       path: "M30,40 Q35,30 45,35 Q50,45 45,55 Q35,60 30,50 Q25,45 30,40",
-      viewBox: "20 25 35 40"
+      viewBox: "20 25 35 40",
     },
     right: {
       path: "M30,40 Q35,30 45,35 Q50,45 45,55 Q35,60 30,50 Q25,45 30,40",
-      viewBox: "20 25 35 40"
-    }
+      viewBox: "20 25 35 40",
+    },
   },
   "oreille-droite": {
     left: {
       path: "M75,40 Q70,30 60,35 Q55,45 60,55 Q70,60 75,50 Q80,45 75,40",
-      viewBox: "50 25 35 40"
+      viewBox: "50 25 35 40",
     },
     right: {
       path: "M75,40 Q70,30 60,35 Q55,45 60,55 Q70,60 75,50 Q80,45 75,40",
-      viewBox: "50 25 35 40"
-    }
-  }
-};
+      viewBox: "50 25 35 40",
+    },
+  },
+  poumons: {
+    left: {
+      path: "M120,140 C135,130 155,125 175,135 C185,145 190,160 185,175 C175,190 160,195 140,190 C125,185 115,175 110,160 C105,145 110,145 120,140 Z",
+      viewBox: "100 125 95 75",
+    },
+    right: {
+      path: "M120,140 C135,130 155,125 175,135 C185,145 190,160 185,175 C175,190 160,195 140,190 C125,185 115,175 110,160 C105,145 110,145 120,140 Z",
+      viewBox: "100 125 100 100",
+    },
+  },
+}
 
 interface AnatomicalEvaluationTabProps {
   dysfunctions: AnatomicalIssue[]
@@ -394,12 +414,7 @@ export function AnatomicalEvaluationTab({
       {/* En-tête avec titre et bouton d'ajout */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Évaluation anatomique</h2>
-        <Button
-          variant="default"
-          size="sm"
-          onClick={handleOpenAddModal}
-          className="flex items-center gap-1"
-        >
+        <Button variant="default" size="sm" onClick={handleOpenAddModal} className="flex items-center gap-1">
           <PlusIcon className="h-4 w-4" />
           Ajouter un élément
         </Button>
@@ -455,7 +470,7 @@ export function AnatomicalEvaluationTab({
                         <path
                           d={regionConfig.path}
                           fill={getSeverityFillColor(dysfunction.severity)}
-                          stroke={getSeverityFillColor(dysfunction.severity).replace('0.5', '0.8')}
+                          stroke={getSeverityFillColor(dysfunction.severity).replace("0.5", "0.8")}
                           strokeWidth="2"
                         />
                       </g>
@@ -486,7 +501,7 @@ export function AnatomicalEvaluationTab({
                         <path
                           d={regionConfig.path}
                           fill={getSeverityFillColor(dysfunction.severity)}
-                          stroke={getSeverityFillColor(dysfunction.severity).replace('0.5', '0.8')}
+                          stroke={getSeverityFillColor(dysfunction.severity).replace("0.5", "0.8")}
                           strokeWidth="2"
                         />
                       </g>
@@ -512,10 +527,7 @@ export function AnatomicalEvaluationTab({
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className={cn(
-                          "w-3 h-3 rounded-full",
-                          getSeverityColor(issue.severity)
-                        )} />
+                        <div className={cn("w-3 h-3 rounded-full", getSeverityColor(issue.severity))} />
                         <div className="flex items-center gap-1.5">
                           {getTypeIcon(issue.type)}
                           <span className="text-xs font-medium text-muted-foreground">{getTypeLabel(issue.type)}</span>
@@ -554,12 +566,7 @@ export function AnatomicalEvaluationTab({
             ) : (
               <div className="flex flex-col items-center justify-center py-8 text-muted-foreground space-y-3">
                 <p>Aucun élément anatomique identifié</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleOpenAddModal}
-                  className="flex items-center gap-1"
-                >
+                <Button variant="outline" size="sm" onClick={handleOpenAddModal} className="flex items-center gap-1">
                   <PlusIcon className="h-4 w-4" />
                   Ajouter un élément
                 </Button>
@@ -575,7 +582,7 @@ export function AnatomicalEvaluationTab({
         onOpenChange={setIsAddModalOpen}
         issueType={newIssue.type}
         newIssue={newIssue}
-        setNewIssue={(issue) => setNewIssue(issue)}
+        setNewIssue={issue => setNewIssue(issue)}
         onAdd={handleAddNewIssue}
       />
     </div>

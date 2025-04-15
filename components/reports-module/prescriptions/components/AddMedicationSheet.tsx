@@ -4,21 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaBody,
-} from "@/components/ui/credenza"
-import { Clock, FileText, Plus, PlusCircle, Tablet, CalendarClock, Info, X, Pill } from "lucide-react"
+import { Credenza, CredenzaContent, CredenzaTitle } from "@/components/ui/credenza"
+import { Clock, FileText, Plus, Tablet, CalendarClock, Info, X, Pill } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 // Schéma de validation avec zod
 const medicationSchema = z.object({
@@ -65,10 +58,8 @@ export function AddMedicationSheet({ isOpen, onOpenChange, onAdd }: AddMedicatio
     reset()
   }
 
-  // Remettre à zéro le formulaire quand on ferme la modale sans ajouter
   useEffect(() => {
     if (!isOpen) {
-      // Attendre un peu avant de réinitialiser les champs pour éviter une animation bizarre
       const timeout = setTimeout(() => {
         if (!isOpen) {
           reset({
@@ -96,6 +87,9 @@ export function AddMedicationSheet({ isOpen, onOpenChange, onAdd }: AddMedicatio
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
       <CredenzaContent className="w-full p-0 md:max-w-[600px] overflow-hidden rounded-xl">
+        <VisuallyHidden>
+          <CredenzaTitle>Ajouter un médicament</CredenzaTitle>
+        </VisuallyHidden>
         <div className="flex flex-col h-full">
           {/* En-tête stylisé */}
           <div className="bg-primary py-6 px-6 relative">

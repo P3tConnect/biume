@@ -46,6 +46,8 @@ export const anatomicalRegions = [
   { value: "abdomen", label: "Abdomen" },
   { value: "dos", label: "Dos" },
   { value: "queue", label: "Queue" },
+  { value: "poumons", label: "Poumons" },
+  { value: "foie", label: "Foie" },
   { value: "patte-avant-gauche", label: "Patte avant gauche" },
   { value: "patte-avant-droite", label: "Patte avant droite" },
   { value: "patte-arriere-gauche", label: "Patte arrière gauche" },
@@ -67,7 +69,7 @@ export const anatomicalRegionsByCategory = [
       { value: "oeil-droit", label: "Œil droit" },
       { value: "oreille-gauche", label: "Oreille gauche" },
       { value: "oreille-droite", label: "Oreille droite" },
-    ]
+    ],
   },
   {
     category: "Tronc",
@@ -75,8 +77,10 @@ export const anatomicalRegionsByCategory = [
       { value: "thorax", label: "Thorax" },
       { value: "abdomen", label: "Abdomen" },
       { value: "dos", label: "Dos" },
+      { value: "poumons", label: "Poumons" },
+      { value: "foie", label: "Foie" },
       { value: "queue", label: "Queue" },
-    ]
+    ],
   },
   {
     category: "Membres",
@@ -85,8 +89,8 @@ export const anatomicalRegionsByCategory = [
       { value: "patte-avant-droite", label: "Patte avant droite" },
       { value: "patte-arriere-gauche", label: "Patte arrière gauche" },
       { value: "patte-arriere-droite", label: "Patte arrière droite" },
-    ]
-  }
+    ],
+  },
 ]
 
 export const observationTypes = [
