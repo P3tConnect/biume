@@ -31,7 +31,7 @@ export function Header() {
     <header
       className={cn(
         "fixed transition-all duration-500 z-50",
-        "top-0 left-0 right-0 py-5",
+        "top-0 left-0 right-0 py-4",
       )}
     >
       <div
