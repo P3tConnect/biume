@@ -155,8 +155,8 @@ export function HeroSection() {
               className="text-xl text-muted-foreground mb-8"
             >
               Biume Pro transforme votre pratique professionnelle avec une suite
-              d'outils intégrés, conçue spécifiquement pour les métiers du soin
-              animalier.
+              d&apos;outils intégrés, conçue spécifiquement pour les métiers du
+              soin animalier.
             </motion.p>
 
             <motion.div variants={itemVariants} className="space-y-6 mb-8">
