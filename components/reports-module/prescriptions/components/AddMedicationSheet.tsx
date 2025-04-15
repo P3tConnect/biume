@@ -11,21 +11,26 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-  CredenzaBody
+  CredenzaBody,
 } from "@/components/ui/credenza"
-import {
-  Clock,
-  FileText,
-  Plus,
-  PlusCircle,
-  Tablet,
-  CalendarClock,
-  Info,
-  X,
-  Pill
-} from "lucide-react"
+import { Clock, FileText, Plus, PlusCircle, Tablet, CalendarClock, Info, X, Pill } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+// Schéma de validation avec zod
+const medicationSchema = z.object({
+  name: z.string().min(1, "Le nom du médicament est requis"),
+  dosage: z.string().min(1, "Le dosage est requis"),
+  frequency: z.string().min(1, "La fréquence est requise"),
+  duration: z.string().min(1, "La durée est requise"),
+  notes: z.string().optional(),
+})
+
+// Type généré à partir du schéma zod
+type MedicationFormValues = z.infer<typeof medicationSchema>
 
 // Utilisation du même type que celui défini dans la server action
 export interface NewMedicationItem {
@@ -39,31 +44,25 @@ export interface NewMedicationItem {
 interface AddMedicationSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  newItem: NewMedicationItem
-  setNewItem: (item: NewMedicationItem) => void
-  onAdd: () => void
+  onAdd: (item: NewMedicationItem) => void
 }
 
-export function AddMedicationSheet({
-  isOpen,
-  onOpenChange,
-  newItem,
-  setNewItem,
-  onAdd
-}: AddMedicationSheetProps) {
-  const updateField = (field: keyof NewMedicationItem, value: string) => {
-    setNewItem({ ...newItem, [field]: value })
-  }
+export function AddMedicationSheet({ isOpen, onOpenChange, onAdd }: AddMedicationSheetProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+    watch,
+  } = useForm<MedicationFormValues>({
+    resolver: zodResolver(medicationSchema),
+    mode: "onChange",
+  })
 
-  // Validation du formulaire
-  const isFormValid = newItem.name && newItem.dosage && newItem.frequency && newItem.duration
-
-  // Gérer l'ajout avec Enter dans les champs de saisie
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && isFormValid) {
-      e.preventDefault()
-      onAdd()
-    }
+  // Gérer la soumission du formulaire
+  const onSubmit = (data: MedicationFormValues) => {
+    onAdd(data)
+    reset()
   }
 
   // Remettre à zéro le formulaire quand on ferme la modale sans ajouter
@@ -72,19 +71,27 @@ export function AddMedicationSheet({
       // Attendre un peu avant de réinitialiser les champs pour éviter une animation bizarre
       const timeout = setTimeout(() => {
         if (!isOpen) {
-          setNewItem({
+          reset({
             name: "",
             dosage: "",
             frequency: "",
             duration: "",
-            notes: ""
+            notes: "",
           })
         }
       }, 300)
 
       return () => clearTimeout(timeout)
     }
-  }, [isOpen, setNewItem])
+  }, [isOpen, reset])
+
+  // Gérer l'ajout avec Enter dans les champs de saisie
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && isValid) {
+      e.preventDefault()
+      handleSubmit(onSubmit)()
+    }
+  }
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
@@ -92,7 +99,6 @@ export function AddMedicationSheet({
         <div className="flex flex-col h-full">
           {/* En-tête stylisé */}
           <div className="bg-primary py-6 px-6 relative">
-
             <div className="flex items-center space-x-4">
               <div className="bg-primary-foreground/10 p-3 rounded-full">
                 <Pill className="h-8 w-8 text-primary-foreground" />
@@ -108,7 +114,7 @@ export function AddMedicationSheet({
 
           {/* Corps avec fond blanc */}
           <div className="bg-background flex-1 px-6 py-6 overflow-y-auto max-h-[70vh]">
-            <form onSubmit={(e) => { e.preventDefault(); isFormValid && onAdd(); }} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Champ Nom du médicament avec style spécial */}
               <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
                 <Label htmlFor="medication-name" className="text-sm font-medium text-primary mb-2 block">
@@ -118,13 +124,13 @@ export function AddMedicationSheet({
                   <Tablet className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="medication-name"
-                    value={newItem.name}
-                    onChange={e => updateField("name", e.target.value)}
+                    {...register("name")}
                     onKeyDown={handleKeyDown}
                     placeholder="ex: Amoxicilline"
                     className="pl-10 border-primary/20 focus-visible:ring-primary/30"
                     autoFocus
                   />
+                  {errors.name && <p className="text-destructive text-sm mt-1">{errors.name.message}</p>}
                 </div>
               </div>
 
@@ -138,12 +144,12 @@ export function AddMedicationSheet({
                     <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="dosage"
-                      value={newItem.dosage}
-                      onChange={e => updateField("dosage", e.target.value)}
+                      {...register("dosage")}
                       onKeyDown={handleKeyDown}
                       placeholder="ex: 500mg"
                       className="pl-10 focus-visible:ring-primary/30"
                     />
+                    {errors.dosage && <p className="text-destructive text-sm mt-1">{errors.dosage.message}</p>}
                   </div>
                 </div>
 
@@ -155,12 +161,12 @@ export function AddMedicationSheet({
                     <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="frequency"
-                      value={newItem.frequency}
-                      onChange={e => updateField("frequency", e.target.value)}
+                      {...register("frequency")}
                       onKeyDown={handleKeyDown}
                       placeholder="ex: 2 fois par jour"
                       className="pl-10 focus-visible:ring-primary/30"
                     />
+                    {errors.frequency && <p className="text-destructive text-sm mt-1">{errors.frequency.message}</p>}
                   </div>
                 </div>
               </div>
@@ -174,12 +180,12 @@ export function AddMedicationSheet({
                   <CalendarClock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="duration"
-                    value={newItem.duration}
-                    onChange={e => updateField("duration", e.target.value)}
+                    {...register("duration")}
                     onKeyDown={handleKeyDown}
                     placeholder="ex: 7 jours"
                     className="pl-10 focus-visible:ring-primary/30"
                   />
+                  {errors.duration && <p className="text-destructive text-sm mt-1">{errors.duration.message}</p>}
                 </div>
               </div>
 
@@ -191,8 +197,7 @@ export function AddMedicationSheet({
                 </Label>
                 <Textarea
                   id="notes"
-                  value={newItem.notes}
-                  onChange={e => updateField("notes", e.target.value)}
+                  {...register("notes")}
                   placeholder="Instructions spécifiques pour ce médicament..."
                   className="resize-none h-24 bg-background focus-visible:ring-primary/30"
                 />
@@ -213,14 +218,14 @@ export function AddMedicationSheet({
               </Button>
               <Button
                 type="submit"
-                onClick={onAdd}
-                disabled={!isFormValid}
+                onClick={handleSubmit(onSubmit)}
+                disabled={!isValid}
                 className={cn(
                   "relative overflow-hidden transition-all sm:order-2 order-1",
-                  isFormValid ? "bg-primary hover:bg-primary/90" : "bg-primary/60"
+                  isValid ? "bg-primary hover:bg-primary/90" : "bg-primary/60"
                 )}
               >
-                {isFormValid && (
+                {isValid && (
                   <span className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 hover:opacity-100 transition-opacity">
                     <Plus className="h-4 w-4" />
                   </span>
@@ -233,4 +238,4 @@ export function AddMedicationSheet({
       </CredenzaContent>
     </Credenza>
   )
-} 
+}

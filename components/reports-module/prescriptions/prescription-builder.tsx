@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, EyeIcon, SaveIcon, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { createPrescriptionAction } from "@/src/actions/prescription.action"
+import { useMutation } from "@tanstack/react-query"
 
 interface PrescriptionBuilderProps {
   orgId: string
@@ -35,40 +36,43 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
   const [showPreview, setShowPreview] = useState(false)
   const [activeTab, setActiveTab] = useState<"medications" | "notes">("medications")
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
 
-  // État temporaire pour le nouveau médicament
-  const [newItem, setNewItem] = useState<NewPrescriptionItem>({
-    name: "",
-    dosage: "",
-    frequency: "",
-    duration: "",
-    notes: ""
+  // Utiliser React Query pour gérer la mutation
+  const { mutateAsync: createPrescription, isPending: isSaving } = useMutation({
+    mutationFn: (data: {
+      title: string
+      petId: string
+      description: string
+      items: Array<{
+        name: string
+        dosage: string
+        frequency: string
+        duration: string
+        notes?: string
+      }>
+    }) => createPrescriptionAction(data),
+    onSuccess: () => {
+      toast.success("Prescription créée avec succès")
+      router.push(`/dashboard/prescriptions`)
+    },
+    onError: (error: any) => {
+      console.error("Erreur lors de la sauvegarde de la prescription:", error)
+      toast.error(error.message || "Erreur lors de la sauvegarde de la prescription")
+    },
   })
 
   // Find the selected pet from mock data
   const selectedPet = mockPets.find(pet => pet.id === selectedPetId)
 
-  const handleAddItem = () => {
+  const handleAddItem = (newItem: NewPrescriptionItem) => {
     if (!newItem.name) return
 
     const item: PrescriptionItem = {
       id: crypto.randomUUID(),
-      ...newItem
+      ...newItem,
     }
 
     setItems([...items, item])
-
-    // Réinitialiser le formulaire
-    setNewItem({
-      name: "",
-      dosage: "",
-      frequency: "",
-      duration: "",
-      notes: ""
-    })
-
-    // Fermer le sheet
     setIsAddSheetOpen(false)
   }
 
@@ -82,37 +86,18 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
       return
     }
 
-    setIsSaving(true)
-
-    try {
-      const result = await createPrescriptionAction({
-        title,
-        petId: selectedPetId,
-        description: notes,
-        items: items.map(item => ({
-          name: item.name,
-          dosage: item.dosage,
-          frequency: item.frequency,
-          duration: item.duration,
-          notes: item.notes || undefined
-        }))
-      })
-
-      if (result.error) {
-        toast.error(result.error)
-        return
-      }
-
-      toast.success("Prescription créée avec succès")
-
-      // Redirection vers une page de confirmation ou la liste des prescriptions
-      router.push(`/dashboard/prescriptions`)
-    } catch (error) {
-      console.error("Erreur lors de la sauvegarde de la prescription:", error)
-      toast.error("Erreur lors de la sauvegarde de la prescription")
-    } finally {
-      setIsSaving(false)
-    }
+    await createPrescription({
+      title,
+      petId: selectedPetId,
+      description: notes,
+      items: items.map(item => ({
+        name: item.name,
+        dosage: item.dosage,
+        frequency: item.frequency,
+        duration: item.duration,
+        notes: item.notes || undefined,
+      })),
+    })
   }
 
   const handleOpenAnimalSelector = () => {
@@ -162,15 +147,8 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
             <EyeIcon className="h-4 w-4 mr-1" />
             Aperçu
           </Button>
-          <Button
-            onClick={handleSavePrescription}
-            disabled={!canSave || isSaving}
-          >
-            {isSaving ? (
-              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-            ) : (
-              <SaveIcon className="h-4 w-4 mr-1" />
-            )}
+          <Button onClick={handleSavePrescription} disabled={!canSave || isSaving}>
+            {isSaving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <SaveIcon className="h-4 w-4 mr-1" />}
             {isSaving ? "Enregistrement..." : "Enregistrer"}
           </Button>
         </div>
@@ -178,36 +156,19 @@ export function PrescriptionBuilder({ orgId }: PrescriptionBuilderProps) {
       {/* End New Header Structure */}
 
       {/* Barre d'onglets */}
-      <TabNavigation
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onAddMedication={handleOpenAddSheet}
-      />
+      <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} onAddMedication={handleOpenAddSheet} />
 
       {/* Contenu principal */}
       <div className="flex-1 p-4 h-[calc(100vh-104px)] overflow-hidden">
         {activeTab === "medications" ? (
-          <MedicationsTab
-            selectedPetId={selectedPetId}
-            items={items}
-            onRemoveItem={handleRemoveItem}
-          />
+          <MedicationsTab selectedPetId={selectedPetId} items={items} onRemoveItem={handleRemoveItem} />
         ) : (
-          <NotesTab
-            notes={notes}
-            setNotes={setNotes}
-          />
+          <NotesTab notes={notes} setNotes={setNotes} />
         )}
       </div>
 
       {/* Sheet pour ajouter un médicament */}
-      <AddMedicationSheet
-        isOpen={isAddSheetOpen}
-        onOpenChange={setIsAddSheetOpen}
-        newItem={newItem}
-        setNewItem={setNewItem}
-        onAdd={handleAddItem}
-      />
+      <AddMedicationSheet isOpen={isAddSheetOpen} onOpenChange={setIsAddSheetOpen} onAdd={handleAddItem} />
 
       {/* Modale de prévisualisation */}
       <PrescriptionPreview

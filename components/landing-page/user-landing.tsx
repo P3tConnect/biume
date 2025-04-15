@@ -3,9 +3,7 @@
 import { motion } from "framer-motion"
 import { AlertCircle, PawPrint } from "lucide-react"
 import Link from "next/link"
-
 import { cn } from "@/src/lib/utils"
-
 import { CTASection } from "./sections/user/cta-section"
 import { FeaturesSection } from "./sections/user/features-section"
 import { HeroSection } from "./sections/user/hero-section"

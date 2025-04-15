@@ -30,14 +30,7 @@ export function Header() {
   if (!mounted) return null
 
   return (
-    <header
-      className={cn(
-        "fixed transition-all duration-500 z-50",
-        isScrolled
-          ? "top-5 left-1/2 -translate-x-1/2 max-w-5xl w-[95%] rounded-full py-2 shadow-lg border border-border/30"
-          : "top-0 left-0 right-0 py-5"
-      )}
-    >
+    <header className={cn("fixed transition-all duration-500 z-50", "top-0 left-0 right-0 py-4")}>
       <div
         className={cn(
           "transition-all duration-500 backdrop-blur-lg -z-10",
