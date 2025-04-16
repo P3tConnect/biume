@@ -21,6 +21,8 @@ import Stripe from "stripe"
 import { eq, inArray } from "drizzle-orm"
 import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
+import { tasks } from "@trigger.dev/sdk/v3"
+import type { scheduleOnlinePaymentReminder } from "@/src/trigger/appointmentEmails.trigger"
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -136,7 +138,7 @@ export async function POST(req: NextRequest) {
 
           // Envoyer un email de confirmation au client et au professionnel
           const proEmail = await resend.emails.send({
-            from: "Biume <noreply@biume.com>",
+            from: "Biume <no-reply@biume.com>",
             to: professionalQuery.email || "",
             subject: "Vous avez une nouvelle réservation",
             react: NewReservationEmailPro({
@@ -163,7 +165,7 @@ export async function POST(req: NextRequest) {
 
           // Envoyer un email de confirmation au client
           const clientEmail = await resend.emails.send({
-            from: "Biume <noreply@biume.com>",
+            from: "Biume <no-reply@biume.com>",
             to: clientQuery?.email || "",
             subject: "Vous avez une nouvelle réservation",
             react: ReservationWaitingEmailClient({
@@ -185,6 +187,39 @@ export async function POST(req: NextRequest) {
 
           if (clientEmail.error) {
             console.error("Erreur lors de l'envoi de l'email au client:", clientEmail.error)
+          }
+
+          // Planifier l'envoi d'un rappel 2 jours avant le rendez-vous
+          try {
+            // Formatage de la date pour le rappel
+            const formattedDate = slotQuery.start.toLocaleDateString("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+
+            const formattedTime = slotQuery.start.toLocaleTimeString("fr-FR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+
+            await tasks.trigger<typeof scheduleOnlinePaymentReminder>("schedule-online-payment-reminder", {
+              idClient: clientId,
+              clientName: clientQuery.name || "Client",
+              clientEmail: clientQuery.email || "",
+              professionalName: professionalQuery.name || "Professionnel",
+              petNames: petQuery.map(pet => pet.name),
+              serviceName: serviceQuery.name || "",
+              appointmentDate: formattedDate,
+              appointmentTime: formattedTime,
+              appointmentId,
+              paymentAmount: `${parseFloat(amount) / 100}€`, // Conversion du montant en euros
+            })
+
+            console.log("Planification du rappel de rendez-vous payé en ligne réussie")
+          } catch (reminderError) {
+            console.error("Erreur lors de la planification du rappel de rendez-vous:", reminderError)
+            // Ne pas bloquer le processus si la planification échoue
           }
 
           await db.transaction(async tx => {

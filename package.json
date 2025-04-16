@@ -15,7 +15,7 @@
     "email-dev": "email dev --port=3001",
     "email-build": "email build --packageManager=bun",
     "email-start": "email start",
-    "trigger-dev": "bunx --bun trigger.dev@latest dev",
+    "trigger-dev": "bunx --bun trigger.dev@latest dev --config=trigger.config.ts",
     "trigger-deploy": "bunx --bun trigger.dev@latest deploy",
     "type-check": "type-check",
     "lint": "eslint .",
