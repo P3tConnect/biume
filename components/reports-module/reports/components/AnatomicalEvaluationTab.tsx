@@ -119,6 +119,162 @@ const anatomicalRegionPaths: AnatomicalRegionMap = {
       transform: "translate(148, 120) scale(1)",
     },
   },
+  T1: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T2: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T3: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T4: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T5: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T6: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T7: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T8: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T9: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T10: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T11: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T12: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
+  T13: {
+    right: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+    left: {
+      path: "",
+      viewBox: "",
+      transform: "",
+    },
+  },
   head: {
     left: {
       path: "M40,50 Q60,30 80,50 Q100,70 80,90 Q60,110 40,90 Q20,70 40,50Z",
