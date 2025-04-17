@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { cn } from "@/src/lib/utils";
 import { Dog, Cat, Bird, PawPrint } from "lucide-react";
 import Image from "next/image";

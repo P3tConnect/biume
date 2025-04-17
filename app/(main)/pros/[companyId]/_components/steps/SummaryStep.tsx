@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { cn } from "@/src/lib/utils";
 import { Star, Home, PawPrint, Dog, Cat, Bird } from "lucide-react";
 import Image from "next/image";
@@ -119,8 +119,8 @@ export function SummaryStep({
             <span className="font-medium">
               {selectedDate && selectedTime
                 ? `${format(selectedDate, "d MMMM yyyy", {
-                    locale: fr,
-                  })} à ${selectedTime}`
+                  locale: fr,
+                })} à ${selectedTime}`
                 : "Non spécifié"}
             </span>
           </div>

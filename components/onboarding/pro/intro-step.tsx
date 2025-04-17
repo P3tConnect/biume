@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const IntroStep = ({
   skipOnboarding,

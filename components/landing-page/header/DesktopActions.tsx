@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PageSwitch } from "@/components/landing-page/page-switch";

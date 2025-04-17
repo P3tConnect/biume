@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Star, Quote, ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/components/ui/button";

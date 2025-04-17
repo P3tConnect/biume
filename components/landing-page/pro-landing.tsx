@@ -7,7 +7,7 @@ import { PricingSection } from "./sections/pro/pricing-section";
 import { CTASection } from "./sections/pro/cta-section";
 import { cn } from "@/src/lib/utils";
 import Link from "next/dist/client/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { PawPrint, AlertCircle } from "lucide-react";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 

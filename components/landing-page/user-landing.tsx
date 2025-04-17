@@ -7,7 +7,7 @@ import { CTASection } from "./sections/user/cta-section";
 import { cn } from "@/src/lib/utils";
 import { PawPrint, AlertCircle } from "lucide-react";
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 
 export function UserLanding() {

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
 import { Member } from "@/src/db";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 interface CompanyTeamProps {
   professionals: Member[];

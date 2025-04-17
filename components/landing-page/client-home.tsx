@@ -1,15 +1,10 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { Suspense } from "react";
 import { Header } from "@/components/landing-page/header";
-import { UserLanding } from "@/components/landing-page/user-landing";
-import { ProLanding } from "@/components/landing-page/pro-landing";
 import { PageSwitch } from "@/components/landing-page/page-switch";
+import { ClientHomeContent } from "@/components/landing-page/client-home-content";
 
-export default function ClientHome() {
-  const searchParams = useSearchParams();
-  const version = searchParams.get("version") || "user";
+export default function Home({ searchParams }: { searchParams: { version?: string } }) {
+  const version = searchParams.version || "user";
 
   return (
     <div className="flex flex-col h-screen w-screen relative overflow-hidden">
@@ -24,18 +19,9 @@ export default function ClientHome() {
         <PageSwitch />
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={version}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="flex-1 md:mt-20 w-full overflow-x-hidden"
-        >
-          {version === "user" ? <UserLanding /> : <ProLanding />}
-        </motion.main>
-      </AnimatePresence>
+      <Suspense fallback={<div className="flex-1 md:mt-20 w-full overflow-x-hidden"></div>}>
+        <ClientHomeContent version={version} />
+      </Suspense>
     </div>
   );
 }

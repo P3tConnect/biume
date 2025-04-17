@@ -6,7 +6,7 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
-} from "framer-motion";
+} from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -136,9 +136,9 @@ export function CompanyDetails({ data }: CompanyDetailsProps) {
   const averageRating =
     companyResult.data.ratings && companyResult.data.ratings.length > 0
       ? (
-          companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
-          companyResult.data.ratings.length
-        ).toFixed(1)
+        companyResult.data.ratings.reduce((acc, curr) => acc + curr.rate, 0) /
+        companyResult.data.ratings.length
+      ).toFixed(1)
       : "4.8";
 
   return (

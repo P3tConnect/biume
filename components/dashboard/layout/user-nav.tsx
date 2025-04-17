@@ -21,7 +21,7 @@ import {
 } from "@/components/ui";
 import { signOut, useSession } from "@/src/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export function UserNav() {
   const { data: session } = useSession();

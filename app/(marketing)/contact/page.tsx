@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { ArrowLeft, Send, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
