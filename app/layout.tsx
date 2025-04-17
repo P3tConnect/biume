@@ -77,11 +77,11 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     ],
     robots: {
-      follow: false,
-      index: false,
+      follow: true,
+      index: true,
       googleBot: {
-        index: false,
-        follow: false,
+        index: true,
+        follow: true,
       },
     },
     keywords: [
