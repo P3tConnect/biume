@@ -172,7 +172,7 @@ export const createBookingCheckoutSession = createServerAction(
         await db
           .insert(petAppointments)
           .values(
-            input.selectedPets.map(pet => ({
+            input.selectedPets.map((pet: string) => ({
               petId: pet,
               appointmentId: appointment.id,
             }))

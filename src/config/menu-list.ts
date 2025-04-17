@@ -107,6 +107,30 @@ export function proMenuList(pathname: string, companyId: string): Group[] {
           active: pathname == `/dashboard/organization/${companyId}/reports`,
           icon: NotepadText,
         },
+        {
+          href: `/dashboard/organization/${companyId}/observations`,
+          label: "dashboard.sidebar.observations",
+          comingSoon: true,
+          active: pathname == `/dashboard/organization/${companyId}/observations`,
+          icon: Eye,
+        },
+        {
+          href: `/dashboard/organization/${companyId}/reminders`,
+          label: "dashboard.sidebar.reminders",
+          active: pathname == `/dashboard/organization/${companyId}/reminders`,
+          icon: Timer,
+        },
+      ],
+    },
+    {
+      groupLabel: "dashboard.sidebar.groupLabels.informations",
+      menus: [
+        {
+          href: `/dashboard/organization/${companyId}/settings`,
+          label: "Paramètres",
+          active: pathname.includes(`/dashboard/organization/${companyId}/settings`),
+          icon: Settings,
+        },
       ],
     },
   ]

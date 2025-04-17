@@ -298,3 +298,45 @@ export const createStripeConnectOnboardingLink = createServerAction(
   },
   [requireAuth, requireOwner, requireFullOrganization]
 )
+
+export const getSubscriptionInterval = createServerAction(
+  z.object({}),
+  async (input, ctx) => {
+    try {
+      const org = await db.query.organization.findFirst({
+        where: eq(organization.id, ctx.organization?.id ?? ""),
+        columns: {
+          customerStripeId: true,
+        },
+      })
+
+      if (!org || !org.customerStripeId) {
+        throw new ActionError("Organisation non trouvée ou compte Stripe non configuré")
+      }
+
+      const subscriptions = await stripe.subscriptions.list({
+        customer: org.customerStripeId,
+        limit: 1,
+      })
+
+      const currentSubscription = subscriptions.data[0]
+
+      if (!currentSubscription) {
+        throw new ActionError("Aucun abonnement actif trouvé")
+      }
+
+      const interval = currentSubscription.items.data[0]?.price.recurring?.interval
+      const isAnnual = interval === "year"
+
+      return {
+        isAnnual,
+        interval,
+        status: currentSubscription.status,
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'intervalle d'abonnement:", error)
+      throw new ActionError("Impossible de vérifier l'intervalle d'abonnement")
+    }
+  },
+  [requireAuth, requireOwner, requireFullOrganization]
+)

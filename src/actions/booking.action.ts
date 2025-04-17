@@ -20,6 +20,12 @@ import { eq, inArray } from "drizzle-orm"
 import ReservationWaitingEmailClient from "@/emails/ReservationWaitingEmailClient"
 import NewReservationEmailPro from "@/emails/NewReservationEmailPro"
 import { petAppointments } from "../db/pet_appointments"
+import { tasks } from "@trigger.dev/sdk/v3"
+import type {
+  sendAppointmentEmails,
+  scheduleRatingEmail,
+  scheduleOTPReminder,
+} from "../trigger/appointmentEmails.trigger"
 
 // Schéma de validation pour la création d'un rendez-vous (similaire à celui du paiement)
 const createBookingSchema = z.object({
@@ -118,7 +124,7 @@ export const createBooking = createServerAction(
       // Si des options ont été sélectionnées, les enregistrer
       if (input.selectedOptions && input.selectedOptions.length > 0) {
         await db.insert(appointmentOptions).values(
-          input.selectedOptions.map(option => ({
+          input.selectedOptions.map((option: string) => ({
             appointmentId: appointment.id,
             optionId: option,
           }))
@@ -129,7 +135,7 @@ export const createBooking = createServerAction(
         await db
           .insert(petAppointments)
           .values(
-            input.selectedPets.map(pet => ({
+            input.selectedPets.map((pet: string) => ({
               petId: pet,
               appointmentId: appointment.id,
             }))
@@ -191,57 +197,65 @@ export const createBooking = createServerAction(
 
       const { petQuery, serviceQuery, slotQuery, professionalQuery } = transactionQuery
 
-      // Envoyer un email de confirmation au professionnel
-      const proEmail = await resend.emails.send({
-        from: "Biume <noreply@biume.com>",
-        to: professionalQuery.email || "",
-        subject: "Vous avez une nouvelle réservation",
-        react: NewReservationEmailPro({
-          customerName: ctx.user?.name || "",
-          petName: petQuery.map(pet => pet.name).join(", ") || "",
+      // Formater les données pour l'affichage
+      const formattedDate = slotQuery.start.toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+
+      const formattedTime = slotQuery.start.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+
+      // Remplacer les appels directs à resend par l'utilisation de la tâche Trigger.dev
+      try {
+        await tasks.trigger<typeof sendAppointmentEmails>("send-appointment-emails", {
+          clientName: ctx.user?.name || "Client",
+          clientEmail: ctx.user?.email || "",
+          professionalName: professionalQuery?.name || "Professionnel",
+          professionalEmail: professionalQuery.email || "",
+          petNames: petQuery.map(pet => pet.name),
           serviceName: serviceQuery.name || "",
-          date: slotQuery.start.toLocaleDateString("fr-FR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })!,
-          time: slotQuery.start.toLocaleTimeString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })!,
-          providerName: professionalQuery?.name || "",
+          appointmentDate: formattedDate,
+          appointmentTime: formattedTime,
           price: input.amount.toString(),
-        }),
-      })
+          appointmentId: appointment.id,
+        })
 
-      if (proEmail.error) {
-        console.error("Erreur lors de l'envoi de l'email au professionnel:", proEmail.error)
-      }
+        console.log("Tâche d'envoi des emails déclenchée avec succès")
 
-      // Envoyer un email de confirmation au client
-      const clientEmail = await resend.emails.send({
-        from: "Biume <noreply@biume.com>",
-        to: ctx.user?.email || "",
-        subject: "Merci pour votre réservation",
-        react: ReservationWaitingEmailClient({
-          clientName: ctx.user?.name || "",
-          petName: petQuery.map(pet => pet.name).join(", ") || "",
+        // Planifier l'envoi d'un email d'évaluation 2 jours après le rendez-vous
+        await tasks.trigger<typeof scheduleRatingEmail>("schedule-rating-email", {
+          clientName: ctx.user?.name || "Client",
+          clientEmail: ctx.user?.email || "",
+          professionalName: professionalQuery?.name || "Professionnel",
           serviceName: serviceQuery.name || "",
-          date: slotQuery.start.toLocaleDateString("fr-FR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })!,
-          time: slotQuery.start.toLocaleTimeString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })!,
-          providerName: professionalQuery?.name || "",
-        }),
-      })
+          appointmentDate: formattedDate,
+          appointmentId: appointment.id,
+        })
 
-      if (clientEmail.error) {
-        console.error("Erreur lors de l'envoi de l'email au client:", clientEmail.error)
+        console.log("Tâche de planification d'email d'évaluation déclenchée avec succès")
+
+        // Planifier l'envoi d'un code OTP 1 heure avant le rendez-vous
+        await tasks.trigger<typeof scheduleOTPReminder>("schedule-otp-reminder", {
+          clientId: ctx.user?.id || "",
+          clientName: ctx.user?.name || "Client",
+          clientEmail: ctx.user?.email || "",
+          clientPhone: ctx.user?.phoneNumber || "",
+          professionalName: professionalQuery?.name || "Professionnel",
+          serviceName: serviceQuery.name || "",
+          appointmentDate: formattedDate,
+          appointmentTime: formattedTime,
+          appointmentId: appointment.id,
+          // Les préférences seront récupérées depuis la BDD si non fournies
+        })
+
+        console.log("Tâche de planification de l'envoi du code OTP déclenchée avec succès")
+      } catch (emailError) {
+        console.error("Erreur lors du déclenchement de la tâche d'envoi des emails:", emailError)
+        // Ne pas bloquer le processus si l'envoi d'email échoue
       }
 
       return {

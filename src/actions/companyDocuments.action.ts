@@ -19,7 +19,7 @@ export const createDocumentsStepAction = createServerAction(
     const documentsResult = await db
       .insert(organizationDocuments)
       .values(
-        documents.map(file => ({
+        documents.map((file: { url?: string; name?: string }) => ({
           file: file.url ?? "",
           name: file.name ?? "",
           organizationId: ctx.organization?.id ?? "",
@@ -129,7 +129,7 @@ export const updateCompanyDocuments = createServerAction(
     const documentsResult = await db
       .insert(organizationDocuments)
       .values(
-        documents.map(file => ({
+        documents.map((file: { url?: string; name?: string }) => ({
           file: file.url ?? "",
           name: file.name ?? "",
           organizationId: ctx.organization?.id ?? "",

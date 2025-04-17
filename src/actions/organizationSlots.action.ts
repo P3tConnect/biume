@@ -61,37 +61,39 @@ export const createOrganizationSlot = createServerAction(
   ),
   async (input, ctx) => {
     try {
-      const creationData = input.map(slot => {
-        const startDate = slot.start instanceof Date ? slot.start : new Date(slot.start)
-        const endDate = slot.end instanceof Date ? slot.end : new Date(slot.end)
+      const creationData = input.map(
+        (slot: z.infer<typeof CreateOrganizationSlotsSchema> & { start: Date | string; end: Date | string }) => {
+          const startDate = slot.start instanceof Date ? slot.start : new Date(slot.start)
+          const endDate = slot.end instanceof Date ? slot.end : new Date(slot.end)
 
-        const formattedStart = new Date(
-          startDate.getFullYear(),
-          startDate.getMonth(),
-          startDate.getDate(),
-          startDate.getHours(),
-          startDate.getMinutes(),
-          0,
-          0
-        )
+          const formattedStart = new Date(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate(),
+            startDate.getHours(),
+            startDate.getMinutes(),
+            0,
+            0
+          )
 
-        const formattedEnd = new Date(
-          endDate.getFullYear(),
-          endDate.getMonth(),
-          endDate.getDate(),
-          endDate.getHours(),
-          endDate.getMinutes(),
-          0,
-          0
-        )
+          const formattedEnd = new Date(
+            endDate.getFullYear(),
+            endDate.getMonth(),
+            endDate.getDate(),
+            endDate.getHours(),
+            endDate.getMinutes(),
+            0,
+            0
+          )
 
-        return {
-          ...slot,
-          organizationId: slot.organizationId || ctx.organization?.id,
-          start: formattedStart,
-          end: formattedEnd,
+          return {
+            ...slot,
+            organizationId: slot.organizationId || ctx.organization?.id,
+            start: formattedStart,
+            end: formattedEnd,
+          }
         }
-      })
+      )
 
       const slots = await db.insert(organizationSlots).values(creationData).returning().execute()
 

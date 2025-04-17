@@ -97,7 +97,7 @@ export const createOptionsStepAction = createServerAction(
     const optionsResult = await db
       .insert(optionsTable)
       .values(
-        options.map(option => ({
+        options.map((option: Option) => ({
           ...option,
           organizationId: organization.id,
         }))

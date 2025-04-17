@@ -16,10 +16,6 @@ import {
   EyeIcon,
   SaveIcon,
   Loader2,
-  PawPrintIcon,
-  CalendarIcon,
-  Search,
-  ChevronRightIcon,
 } from "lucide-react"
 import { toast } from "sonner"
 import { createPrescriptionAction } from "@/src/actions/prescription.action"
@@ -27,24 +23,6 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { getClients } from "@/src/actions/client.action"
 import { getPetsAction, getPetById } from "@/src/actions/pet.action"
 import { User as UserType } from "@/src/db/user"
-import {
-  Credenza,
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaDescription,
-  CredenzaFooter,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Input,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Label,
-} from "@/components/ui"
 
 interface PrescriptionBuilderProps {
   orgId: string

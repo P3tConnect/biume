@@ -1,9 +1,10 @@
-import { motion } from "framer-motion"
+import { Euro, User2, Users } from "lucide-react"
+
 import { Appointment } from "@/src/db/appointments"
 import { cn } from "@/src/lib/utils"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { Users, Euro, User2 } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface AppointmentItemProps {
   appointment: Appointment
@@ -62,17 +63,19 @@ function Header({ startTime, endTime, status, isGroup, relatedAppointments }: He
     <div className="flex items-center justify-between min-w-0">
       <div className="flex items-center gap-2 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <div className={cn(
-            "flex-shrink-0 w-2 h-2 rounded-full",
-            isGroup
-              ? "bg-secondary"
-              : {
-                "bg-emerald-500": status === "CONFIRMED",
-                "bg-orange-500": status === "PENDING",
-                "bg-red-500": status === "CANCELLED",
-                "bg-blue-500": status === "COMPLETED",
-              }
-          )} />
+          <div
+            className={cn(
+              "flex-shrink-0 w-2 h-2 rounded-full",
+              isGroup
+                ? "bg-secondary"
+                : {
+                    "bg-emerald-500": status === "CONFIRMED",
+                    "bg-orange-500": status === "PENDING",
+                    "bg-red-500": status === "CANCELLED",
+                    "bg-blue-500": status === "COMPLETED",
+                  }
+            )}
+          />
           <span className="font-medium truncate">
             {format(startTime, "HH:mm", { locale: fr })} - {format(endTime, "HH:mm", { locale: fr })}
           </span>
@@ -181,17 +184,9 @@ export function AppointmentItem({
       />
 
       {isGroup ? (
-        <GroupContent
-          totalPets={displayedPets}
-          totalPrice={totalPrice}
-          service={appointment.service}
-        />
+        <GroupContent totalPets={displayedPets} totalPrice={totalPrice} service={appointment.service} />
       ) : (
-        <SingleAppointmentContent
-          pets={appointment.pets}
-          client={appointment.client}
-          service={appointment.service}
-        />
+        <SingleAppointmentContent pets={appointment.pets} client={appointment.client} service={appointment.service} />
       )}
     </motion.div>
   )

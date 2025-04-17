@@ -1,39 +1,40 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { useTranslations } from "next-intl"
-import { useQuery } from "@tanstack/react-query"
 import {
-  CommandDialog as UICommandDialog,
-  DialogTitle,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "@/components/ui"
-import {
-  Calendar,
-  Users,
-  Search,
-  Plus,
-  PawPrint,
-  ClipboardList,
   ArrowUpRight,
-  Clipboard,
+  BadgeHelp,
+  Calendar,
+  CalendarClock,
   CheckCircle2,
-  LayoutDashboard,
-  Settings,
+  Clipboard,
+  ClipboardList,
   FileText,
+  LayoutDashboard,
   LucideIcon,
   MessagesSquare,
-  CalendarClock,
-  BadgeHelp,
+  PawPrint,
+  Plus,
+  Search,
+  Settings,
+  Users,
 } from "lucide-react"
+import {
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  DialogTitle,
+  CommandDialog as UICommandDialog,
+} from "@/components/ui"
+import { useEffect, useState } from "react"
+
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { getClients } from "@/src/actions/client.action"
 import { getPetsAction } from "@/src/actions/pet.action"
+import { useQuery } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 
 // Définition des types de résultats de recherche
 type SearchResultType = "client" | "patient" | "page" | "action"
@@ -121,7 +122,7 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
         email: user.email,
         phoneNumber: user.phoneNumber,
         city: user.city,
-        status: "Active"
+        status: "Active",
       }))
     },
     enabled: open && searchTerm.length > 1,

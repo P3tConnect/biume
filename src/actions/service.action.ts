@@ -92,7 +92,7 @@ export const createServicesStepAction = createServerAction(
     const result = await db
       .insert(service)
       .values(
-        services.map(service => ({
+        services.map((service: z.infer<typeof CreateServiceSchema>) => ({
           ...service,
           organizationId: organization.id,
         }))

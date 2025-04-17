@@ -1,9 +1,10 @@
 "use client"
 
-import { cn } from "@/src/lib/utils"
-import { Appointment } from "@/src/db/appointments"
-import { groupAppointmentsByTimeSlot, getTotalPetsInGroup } from "../utils"
+import { getTotalPetsInGroup, groupAppointmentsByTimeSlot } from "../utils"
 import { useEffect, useState } from "react"
+
+import { Appointment } from "@/src/db/appointments"
+import { cn } from "@/src/lib/utils"
 
 interface CalendarCellProps {
   day: number

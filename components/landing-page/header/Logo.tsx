@@ -1,12 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { PawPrint } from "lucide-react"
-import Link from "next/link"
-
-import { cn } from "@/src/lib/utils"
-
 import { HeaderProps } from "./types"
+import Link from "next/link"
+import { PawPrint } from "lucide-react"
+import { cn } from "@/src/lib/utils"
+import { motion } from "framer-motion"
 
 export const Logo = ({ isScrolled }: HeaderProps) => {
   return (

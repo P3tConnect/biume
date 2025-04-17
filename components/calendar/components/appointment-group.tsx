@@ -1,10 +1,10 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Calendar, MapPin, MessageSquare, Phone, Users } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+
 import { Appointment } from "@/src/db/appointments"
 import { cn } from "@/src/lib/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { getAllPetsInGroup } from "../utils"
-import { Clock, Users, MapPin, Phone, MessageSquare, Calendar, Euro } from "lucide-react"
 
 interface AppointmentGroupProps {
   appointments: Appointment[]
@@ -19,24 +19,24 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
   return (
     <Card className="relative border-none ring-1 ring-border/50 shadow-md hover:shadow-lg transition-all duration-300">
       {/* Time banner */}
-      <div className={cn(
-        "px-6 py-4 border-b",
-        appointments.length > 1
-          ? "bg-emerald-50 dark:bg-emerald-950/30"
-          : "bg-purple-50 dark:bg-purple-950"
-      )}>
+      <div
+        className={cn(
+          "px-6 py-4 border-b",
+          appointments.length > 1 ? "bg-emerald-50 dark:bg-emerald-950/30" : "bg-purple-50 dark:bg-purple-950"
+        )}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-center">
               <span className="text-3xl font-light">
                 {startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
               </span>
-              <div className={cn(
-                "h-[2px] w-12 my-2",
-                appointments.length > 1
-                  ? "bg-emerald-400 dark:bg-emerald-400/70"
-                  : "bg-purple-300 dark:bg-purple-700"
-              )} />
+              <div
+                className={cn(
+                  "h-[2px] w-12 my-2",
+                  appointments.length > 1 ? "bg-emerald-400 dark:bg-emerald-400/70" : "bg-purple-300 dark:bg-purple-700"
+                )}
+              />
               <span className="text-3xl font-light">
                 {endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
               </span>
@@ -65,24 +65,24 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
 
       <CardContent className="p-0 bg-white dark:bg-slate-950">
         {appointments.map((appointment, index) => (
-          <div key={appointment.id} className={cn(
-            "group relative",
-            index !== appointments.length - 1 && "border-b border-border/50"
-          )}>
+          <div
+            key={appointment.id}
+            className={cn("group relative", index !== appointments.length - 1 && "border-b border-border/50")}
+          >
             {/* Hover indicator */}
-            <div className={cn(
-              "absolute left-0 top-0 w-1 h-full opacity-0 transition-all duration-300 group-hover:opacity-100",
-              appointments.length > 1
-                ? "bg-emerald-400 dark:bg-emerald-400/70"
-                : "bg-purple-400 dark:bg-purple-600"
-            )} />
+            <div
+              className={cn(
+                "absolute left-0 top-0 w-1 h-full opacity-0 transition-all duration-300 group-hover:opacity-100",
+                appointments.length > 1 ? "bg-emerald-400 dark:bg-emerald-400/70" : "bg-purple-400 dark:bg-purple-600"
+              )}
+            />
 
-            <div className={cn(
-              "px-6 py-5 space-y-6 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/50",
-              appointments.length > 1
-                ? "bg-white dark:bg-slate-950"
-                : "bg-white dark:bg-slate-950"
-            )}>
+            <div
+              className={cn(
+                "px-6 py-5 space-y-6 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/50",
+                appointments.length > 1 ? "bg-white dark:bg-slate-950" : "bg-white dark:bg-slate-950"
+              )}
+            >
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-5">
@@ -95,12 +95,14 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
                         {pet.pet.image ? (
                           <AvatarImage src={pet.pet.image} alt={pet.pet.name} />
                         ) : (
-                          <AvatarFallback className={cn(
-                            "font-medium shadow-inner",
-                            appointments.length > 1
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
-                              : "bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100"
-                          )}>
+                          <AvatarFallback
+                            className={cn(
+                              "font-medium shadow-inner",
+                              appointments.length > 1
+                                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                                : "bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-purple-100"
+                            )}
+                          >
                             {pet.pet.name.slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         )}
@@ -114,12 +116,14 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
                     <p className="text-sm text-muted-foreground">{appointment.client.name}</p>
                   </div>
                 </div>
-                <div className={cn(
-                  "px-3 py-1.5 text-sm font-medium rounded-full shadow-sm",
-                  appointments.length > 1
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
-                    : "bg-purple-100 dark:bg-purple-900"
-                )}>
+                <div
+                  className={cn(
+                    "px-3 py-1.5 text-sm font-medium rounded-full shadow-sm",
+                    appointments.length > 1
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100"
+                      : "bg-purple-100 dark:bg-purple-900"
+                  )}
+                >
                   {appointment.service.price || 0}€
                 </div>
               </div>
@@ -142,12 +146,14 @@ export function AppointmentGroup({ appointments }: AppointmentGroupProps) {
 
               {/* Notes */}
               {appointment.observation?.content && (
-                <div className={cn(
-                  "px-4 py-3 rounded-lg text-sm shadow-sm",
-                  appointments.length > 1
-                    ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30"
-                    : "bg-purple-50 dark:bg-purple-950 border border-purple-100 dark:border-purple-900/30"
-                )}>
+                <div
+                  className={cn(
+                    "px-4 py-3 rounded-lg text-sm shadow-sm",
+                    appointments.length > 1
+                      ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30"
+                      : "bg-purple-50 dark:bg-purple-950 border border-purple-100 dark:border-purple-900/30"
+                  )}
+                >
                   <div className="flex gap-3">
                     <MessageSquare className="w-4 h-4 text-muted-foreground shrink-0" />
                     <p className="text-muted-foreground">{appointment.observation.content}</p>
