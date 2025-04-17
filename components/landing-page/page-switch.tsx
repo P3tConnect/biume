@@ -1,12 +1,10 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/src/lib/utils";
-import { Stethoscope, User2Icon, ChevronDown } from "lucide-react";
-import { useIsMobile } from "@/src/hooks/use-mobile";
-import { useMediaQuery } from "@/src/hooks";
+import { Stethoscope, User2Icon } from "lucide-react";
 
 export const PageSwitch = ({
   isMobileMenuOpen,
@@ -19,14 +17,7 @@ export const PageSwitch = ({
   const router = useRouter();
   const pathname = usePathname();
   const currentVersion = searchParams.get("version") || "user";
-  const [mounted, setMounted] = useState(false);
-  const isMobile = useIsMobile();
-  const isSmallMobile = useMediaQuery("(max-width: 640px)");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleSwitch = (newVersion: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -38,8 +29,6 @@ export const PageSwitch = ({
       setIsMobileMenuOpen?.(false);
     }
   };
-
-  if (!mounted) return null;
 
   // Version desktop avec tabs
   return (

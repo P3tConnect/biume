@@ -2,77 +2,19 @@
 
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
   Badge,
   CalendarClock,
   Heart,
-  Search,
   Shield,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
-import SearchInput from "./search-input";
-import Link from "next/link";
 
 export function HeroSection() {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   return (
     <section className="relative pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden">
       {/* Éléments décoratifs de fond */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-background"></div>
-
-        {isMounted && (
-          <>
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: [0, 1.2, 1],
-                opacity: [0, 0.4, 0.2],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-              className="absolute top-1/4 right-1/5 w-96 h-96 bg-primary/15 rounded-full blur-3xl"
-            />
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: [0, 1.4, 1.2],
-                opacity: [0, 0.3, 0.15],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                repeatType: "reverse",
-                delay: 1,
-              }}
-              className="absolute -bottom-20 left-1/3 w-[500px] h-[500px] bg-secondary/15 rounded-full blur-3xl"
-            />
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: [0, 1.3, 1.1],
-                opacity: [0, 0.25, 0.1],
-              }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                repeatType: "reverse",
-                delay: 2,
-              }}
-              className="absolute top-1/3 -left-20 w-[400px] h-[400px] bg-accent/15 rounded-full blur-3xl"
-            />
-          </>
-        )}
       </div>
 
       <div className="container mx-auto">

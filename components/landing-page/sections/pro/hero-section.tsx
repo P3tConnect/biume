@@ -11,42 +11,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
-  // Animation de déplacement parallaxe des éléments de fond
-  const calculateTransform = (factor: number) => {
-    if (!isMounted) return { x: 0, y: 0 };
-
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
-    const moveX =
-      ((mousePosition.x - windowWidth / 2) / (windowWidth / 2)) * factor;
-    const moveY =
-      ((mousePosition.y - windowHeight / 2) / (windowHeight / 2)) * factor;
-
-    return { x: moveX, y: moveY };
-  };
-
   const features = [
     {
       icon: <Calendar className="w-5 h-5" />,
@@ -96,31 +63,6 @@ export function HeroSection() {
       {/* Éléments décoratifs avec effet parallaxe */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-[0.03] bg-repeat"></div>
-
-        {isMounted && (
-          <>
-            <motion.div
-              className="absolute top-20 right-[10%] w-96 h-96 bg-primary/10 rounded-full blur-3xl"
-              animate={calculateTransform(-20)}
-              transition={{ type: "spring", stiffness: 30, damping: 15 }}
-            />
-            <motion.div
-              className="absolute bottom-20 left-[10%] w-96 h-96 bg-secondary/10 rounded-full blur-3xl"
-              animate={calculateTransform(-15)}
-              transition={{ type: "spring", stiffness: 25, damping: 15 }}
-            />
-            <motion.div
-              className="absolute top-1/3 left-1/4 w-72 h-72 bg-accent/10 rounded-full blur-3xl"
-              animate={calculateTransform(-25)}
-              transition={{ type: "spring", stiffness: 20, damping: 15 }}
-            />
-            <motion.div
-              className="absolute top-1/2 right-1/4 w-48 h-48 bg-destructive/5 rounded-full blur-3xl"
-              animate={calculateTransform(-30)}
-              transition={{ type: "spring", stiffness: 15, damping: 15 }}
-            />
-          </>
-        )}
       </div>
 
       <div className="container px-4 mx-auto">

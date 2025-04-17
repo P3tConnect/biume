@@ -23,7 +23,6 @@ import {
   Input,
   Button,
   Textarea,
-  Label,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -127,10 +126,6 @@ export function WaitlistModal({
     } else {
       setOpen(false);
     }
-  };
-
-  const handleSwitchChange = (checked: boolean) => {
-    setIsPro(checked);
   };
 
   const handleUserTypeChange = (value: string) => {
