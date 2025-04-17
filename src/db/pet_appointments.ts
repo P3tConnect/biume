@@ -1,15 +1,15 @@
-import { pgTable, text } from "drizzle-orm/pg-core";
-import { Pet, pets } from "./pets";
-import { Appointment, appointments } from "./appointments";
-import { InferSelectModel, relations } from "drizzle-orm";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { pgTable, text } from "drizzle-orm/pg-core"
+import { Pet, pets } from "./pets"
+import { Appointment, appointments } from "./appointments"
+import { InferSelectModel, relations } from "drizzle-orm"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const petAppointments = pgTable("pet_appointments", {
   petId: text("petId").references(() => pets.id, { onDelete: "cascade" }),
   appointmentId: text("appointmentId").references(() => appointments.id, {
     onDelete: "cascade",
   }),
-});
+})
 
 export const petAppointmentsRelations = relations(petAppointments, ({ one }) => ({
   pet: one(pets, {
@@ -20,7 +20,7 @@ export const petAppointmentsRelations = relations(petAppointments, ({ one }) => 
     fields: [petAppointments.appointmentId],
     references: [appointments.id],
   }),
-}));
+}))
 
 export type PetAppointment = InferSelectModel<typeof petAppointments> & {
   pet: Pet

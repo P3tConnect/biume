@@ -1,14 +1,13 @@
 "use client"
 
-import Link from "next/link"
-
-import { PageSwitch } from "@/components/landing-page/page-switch"
-import { ModeToggle } from "@/components/common/mode-toggle"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/src/lib/utils"
-
-import { UserNav } from "../../dashboard/layout/user-nav"
 import { HeaderProps, SessionProps } from "./types"
+
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { PageSwitch } from "@/components/landing-page/page-switch"
+import { cn } from "@/src/lib/utils"
+import { ModeToggle } from "@/components/common/mode-toggle"
+import { UserNav } from "@/components/dashboard/layout/user-nav"
 
 export const DesktopActions = ({ isScrolled, session }: HeaderProps & SessionProps) => {
   return (

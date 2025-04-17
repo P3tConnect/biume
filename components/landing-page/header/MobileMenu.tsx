@@ -1,19 +1,19 @@
 "use client"
 
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { HeaderProps, MobileMenuProps, SessionProps } from "./types"
 import { Menu, PawPrint, X } from "lucide-react"
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
 
-import { PageSwitch } from "@/components/landing-page/page-switch"
-import { ModeToggle } from "@/components/common/mode-toggle"
-import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from "@/src/lib"
 
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { MobileGuestMenu } from "./MobileGuestMenu"
 import { MobileUserMenu } from "./MobileUserMenu"
-import { HeaderProps, MobileMenuProps, SessionProps } from "./types"
+import { PageSwitch } from "@/components/landing-page/page-switch"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { cn } from "@/src/lib/utils"
+import { useSearchParams } from "next/navigation"
+import { ModeToggle } from "@/components/common/mode-toggle"
 
 // Définir les items de navigation de base
 const baseNavItems = [

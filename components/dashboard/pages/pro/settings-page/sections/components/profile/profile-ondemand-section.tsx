@@ -1,14 +1,15 @@
 "use client"
 
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "sonner"
-import { Organization } from "@/src/db/organization"
-import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
-import { BrainCircuit, Sparkles } from "lucide-react"
-import Link from "next/link"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Organization } from "@/src/db/organization"
+import { BrainCircuit } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner"
+import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
 import { BetaBadge } from "@/components/common/beta-badge"
 
 interface ProfileOnDemandSectionProps {

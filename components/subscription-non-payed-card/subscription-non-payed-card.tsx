@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React from "react"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,9 +8,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogFooter,
-} from '../ui/alert-dialog'
-import { Button } from '../ui/button'
-import Link from 'next/link'
+} from "../ui/alert-dialog"
+import { Button } from "../ui/button"
+import Link from "next/link"
 
 interface SubscriptionNonPayedAlertProps {
   organizationId: string
@@ -23,8 +23,8 @@ const SubscriptionNonPayedAlert: React.FC<SubscriptionNonPayedAlertProps> = ({ o
         <AlertDialogHeader>
           <AlertDialogTitle>Abonnement non payé</AlertDialogTitle>
           <AlertDialogDescription>
-            Votre abonnement n&apos;est pas à jour. Pour continuer à utiliser tous les services de Biume,
-            veuillez mettre à jour votre abonnement.
+            Votre abonnement n&apos;est pas à jour. Pour continuer à utiliser tous les services de Biume, veuillez
+            mettre à jour votre abonnement.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
