@@ -8,10 +8,12 @@ import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
-import { report } from "./report"
 import { User, user } from "./user"
 import { PetAppointment, petAppointments } from "./pet_appointments"
 import { Prescription, prescription } from "./prescription"
+import { advancedReport } from "./advancedReport/advancedReport"
+import { simpleReport } from "./simpleReport/simpleReport"
+import { report } from "node:process"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -37,7 +39,10 @@ export const appointments = pgTable("appointments", {
     onDelete: "cascade",
   }),
   clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
-  reportId: text("reportId").references(() => report.id, {
+  advancedReportId: text("advancedReportId").references(() => advancedReport.id, {
+    onDelete: "cascade",
+  }),
+  simpleReportId: text("simpleReportId").references(() => simpleReport.id, {
     onDelete: "cascade",
   }),
   prescriptionId: text("prescriptionId").references(() => prescription.id, {
@@ -77,9 +82,13 @@ export const appointmentsRelations = relations(appointments, ({ one, many }) => 
   }),
   options: many(appointmentOptions),
   pets: many(petAppointments),
-  report: one(report, {
-    fields: [appointments.reportId],
-    references: [report.id],
+  advancedReport: one(advancedReport, {
+    fields: [appointments.advancedReportId],
+    references: [advancedReport.id],
+  }),
+  simpleReport: one(simpleReport, {
+    fields: [appointments.simpleReportId],
+    references: [simpleReport.id],
   }),
   observation: one(observation, {
     fields: [appointments.observationId],

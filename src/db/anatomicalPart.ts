@@ -1,13 +1,13 @@
 import { InferSelectModel, relations } from "drizzle-orm"
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-import { AnatomicalIssue, anatomicalIssue } from "./anatomicalIssue"
-import { DysfunctionType, dysfunctionType } from "./dysfunctionType"
+import { AnatomicalIssue, anatomicalIssue } from "./advancedReport/anatomicalIssue"
+import { AnatomicalPartType, anatomicalPartType } from "./anatomicalPartType"
 
 export const dysfunctionZone = pgEnum("dysfunction_zone", ["articulation", "fascias", "organes", "muscles", "other"])
 export const animalType = pgEnum("animal_type", ["DOG", "CAT"])
 
-export const dysfunction = pgTable("dysfunction", {
+export const anatomicalPart = pgTable("anatomical_part", {
   id: text("id")
     .$defaultFn(() => crypto.randomUUID())
     .primaryKey(),
@@ -24,16 +24,16 @@ export const dysfunction = pgTable("dysfunction", {
   updatedAt: timestamp("updated_at"),
 })
 
-export const dysfunctionsRelations = relations(dysfunction, ({ many }) => ({
+export const anatomicalPartsRelations = relations(anatomicalPart, ({ many }) => ({
   anatomicalIssues: many(anatomicalIssue),
-  dysfunctionType: many(dysfunctionType),
+  anatomicalPartTypes: many(anatomicalPartType),
 }))
 
-export type Dysfunction = InferSelectModel<typeof dysfunction> & {
+export type AnatomicalPart = InferSelectModel<typeof anatomicalPart> & {
   anatomicalIssues: AnatomicalIssue[]
-  dysfunctionType: DysfunctionType[]
+  anatomicalPartTypes: AnatomicalPartType[]
 }
-export type DysfunctionInsert = typeof dysfunction.$inferInsert
+export type AnatomicalPartInsert = typeof anatomicalPart.$inferInsert
 
-export const dysfunctionInsertSchema = createInsertSchema(dysfunction)
-export const dysfunctionSelectSchema = createSelectSchema(dysfunction)
+export const anatomicalPartInsertSchema = createInsertSchema(anatomicalPart)
+export const anatomicalPartSelectSchema = createSelectSchema(anatomicalPart)
