@@ -6,14 +6,12 @@ import { Organization, organization } from "./organization"
 import { Service, service } from "./service"
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { User, user } from "./user"
 import { PetAppointment, petAppointments } from "./pet_appointments"
 import { Prescription, prescription } from "./prescription"
-import { advancedReport } from "./advancedReport/advancedReport"
-import { simpleReport } from "./simpleReport/simpleReport"
-import { report } from "node:process"
+import { AdvancedReport, advancedReport } from "./advancedReport/advancedReport"
+import { SimpleReport, simpleReport } from "./simpleReport/simpleReport"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -114,7 +112,8 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   service: Service
   options: AppointmentOption[]
   pets: PetAppointment[]
-  report: Report
+  simpleReport: SimpleReport
+  advancedReport: AdvancedReport
   observation: Observation
   client: User
   slot: OrganizationSlots

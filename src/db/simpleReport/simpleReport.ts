@@ -10,7 +10,6 @@ export const simpleReport = pgTable("simpleReport", {
     .$defaultFn(() => crypto.randomUUID()),
   createdBy: text("createdBy").references(() => organization.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
-  description: text("description"),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 })

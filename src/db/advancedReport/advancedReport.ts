@@ -3,6 +3,7 @@ import { InferSelectModel } from "drizzle-orm"
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { Organization, organization } from "../organization"
 import { AnatomicalIssue, anatomicalIssue } from "./anatomicalIssue"
+import { advancedReportRecommendations } from "./advancedReportRecommantations"
 
 export const advancedReport = pgTable("advancedReport", {
   id: text("id")
@@ -20,6 +21,7 @@ export const advancedReportRelations = relations(advancedReport, ({ one, many })
     references: [organization.id],
   }),
   anatomicalIssues: many(anatomicalIssue),
+  recommendations: many(advancedReportRecommendations),
 }))
 
 export type AdvancedReport = InferSelectModel<typeof advancedReport> & {
