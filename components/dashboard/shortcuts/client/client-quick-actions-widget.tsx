@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, PawPrint, Plus, UserPlus, Users } from "lucide-react"
+import { Calendar, PawPrint, Plus, Star, UserPlus, Users } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
@@ -137,10 +137,10 @@ const ClientQuickActionsWidget = () => {
       onClick: () => router.push(`/dashboard/user/${userId}/reservations`),
     },
     {
-      title: "Mes animaux",
-      icon: PawPrint,
-      color: "bg-green-500/10 text-green-500",
-      onClick: () => router.push(`/dashboard/user/${userId}/pets`),
+      title: "Mes favoris",
+      icon: Star,
+      color: "bg-yellow-500/10 text-yellow-500",
+      onClick: () => router.push(`/dashboard/user/${userId}/favorites`),
     },
   ]
 

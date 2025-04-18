@@ -31,7 +31,7 @@ import { useEffect, useState } from "react"
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { getClients } from "@/src/actions/client.action"
-import { getPetsAction } from "@/src/actions/pets.action"
+import { getPetsAction } from "@/src/actions/pet.action"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
@@ -139,13 +139,23 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
         return []
       }
 
-      const pets =
-        result.data?.pets?.filter(
-          (pet: PatientData) =>
-            pet.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.breed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            pet.description?.toLowerCase().includes(searchTerm.toLowerCase())
-        ) || []
+      // Transforme les données retournées pour correspondre au type PatientData
+      const pets = result.data?.map((pet: any) => ({
+        id: pet.id,
+        name: pet.name,
+        breed: pet.breed,
+        description: pet.description,
+        type: pet.type,
+        owner: pet.owner ? {
+          id: pet.owner.id,
+          name: pet.owner.name
+        } : null
+      })).filter(
+        (pet: PatientData) =>
+          pet.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          pet.breed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          pet.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || []
 
       return pets
     },
@@ -155,27 +165,27 @@ export function CommandDialog({ open, onOpenChange, companyId }: CommandDialogPr
   // Formatage des résultats de recherche pour les clients
   const clientResults: ClientSearchResult[] = clientsData
     ? clientsData.map((client: ClientData) => ({
-        id: client.id,
-        type: "client",
-        title: client.name,
-        description: client.email,
-        icon: Users,
-        email: client.email,
-        phoneNumber: client.phoneNumber || undefined,
-      }))
+      id: client.id,
+      type: "client",
+      title: client.name,
+      description: client.email,
+      icon: Users,
+      email: client.email,
+      phoneNumber: client.phoneNumber || undefined,
+    }))
     : []
 
   // Formatage des résultats de recherche pour les patients (animaux)
   const patientResults: PatientSearchResult[] = patientsData
     ? patientsData.map((patient: PatientData) => ({
-        id: patient.id,
-        type: "patient",
-        title: patient.name || "",
-        description: patient.breed || undefined,
-        icon: PawPrint,
-        owner: patient.owner?.name || "Propriétaire inconnu",
-        animalType: patient.type || "",
-      }))
+      id: patient.id,
+      type: "patient",
+      title: patient.name || "",
+      description: patient.breed || undefined,
+      icon: PawPrint,
+      owner: patient.owner?.name || "Propriétaire inconnu",
+      animalType: patient.type || "",
+    }))
     : []
 
   // Pages principales

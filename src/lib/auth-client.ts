@@ -1,4 +1,4 @@
-import { inferAdditionalFields, organizationClient, twoFactorClient, usernameClient } from "better-auth/client/plugins"
+import { inferAdditionalFields, organizationClient, twoFactorClient } from "better-auth/client/plugins"
 import { createAuthClient } from "better-auth/react"
 
 import { ac, admin, member, owner } from "./auth"
@@ -24,7 +24,6 @@ export const {
 } = createAuthClient({
   baseURL: safeConfig.NEXT_PUBLIC_APP_URL,
   plugins: [
-    usernameClient(),
     organizationClient({
       ac: ac,
       roles: {

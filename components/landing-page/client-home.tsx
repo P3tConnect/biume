@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { Header } from "@/components/landing-page/header"
 import { ProLanding } from "@/components/landing-page/pro-landing"
 import { UserLanding } from "@/components/landing-page/user-landing"
+import { PageSwitch } from "./page-switch"
 
 export default function ClientHome() {
   const searchParams = useSearchParams()
@@ -37,6 +38,9 @@ export default function ClientHome() {
       </div>
 
       <Header />
+      <div className="w-full flex justify-center items-center md:hidden mt-[4.5rem] lg:mt-0 mb-2">
+        <PageSwitch />
+      </div>
 
       <AnimatePresence mode="wait">
         <motion.main
@@ -45,7 +49,7 @@ export default function ClientHome() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
-          className="flex-1 pt-20 w-full overflow-x-hidden"
+          className="flex-1 w-full md:mt-20 overflow-x-hidden"
         >
           {version === "user" ? <UserLanding /> : <ProLanding />}
         </motion.main>

@@ -391,16 +391,6 @@ export function ClientNavbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs transition-all duration-200 hover:shadow-sm bg-secondary/5 hover:bg-secondary/10 text-secondary border-secondary/10"
-            onClick={() => setSearchOpen(true)}
-          >
-            <MagnifyingGlassIcon className="mr-2 h-3 w-3" />
-            <span className="hidden lg:inline-flex">{shortcutKey}+K</span>
-          </Button>
-
           <div className="flex items-center gap-2">
             <ModeToggle />
             <Notifications />
@@ -408,21 +398,6 @@ export function ClientNavbar() {
           </div>
         </div>
       </div>
-
-      <CommandDialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <VisuallyHidden>
-          <DialogTitle>Recherche</DialogTitle>
-        </VisuallyHidden>
-        <CommandInput placeholder="Que recherchez-vous ?" />
-        <CommandList>
-          <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>Clients</CommandItem>
-            <CommandItem>Rendez-vous</CommandItem>
-            <CommandItem>Rapports</CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
 
       <AccountSwitchDialog
         open={showPersonalDialog}

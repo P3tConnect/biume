@@ -2,7 +2,7 @@ import type { TriggerConfig } from "@trigger.dev/sdk/v3"
 
 export const config: TriggerConfig = {
   project: "proj_lduckgshsvswaztqyhqy",
-  maxDuration: 60,
+  maxDuration: 5000,
   logLevel: "log",
   retries: {
     enabledInDev: true,

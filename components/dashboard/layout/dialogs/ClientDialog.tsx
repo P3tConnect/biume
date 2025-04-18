@@ -38,8 +38,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui"
 
 interface ClientDialogProps {

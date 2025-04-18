@@ -3,15 +3,15 @@ import { InferSelectModel, relations } from "drizzle-orm"
 import { Invoice, invoice } from "./invoice"
 import { Observation, observation } from "./observation"
 import { Organization, organization } from "./organization"
-import { Pet, pets } from "./pets"
 import { Service, service } from "./service"
 import { boolean, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
-
 import { OrganizationSlots, organizationSlots } from "./organizationSlots"
-import { report } from "./report"
 import { User, user } from "./user"
 import { PetAppointment, petAppointments } from "./pet_appointments"
+import { Prescription, prescription } from "./prescription"
+import { AdvancedReport, advancedReport } from "./advancedReport/advancedReport"
+import { SimpleReport, simpleReport } from "./simpleReport/simpleReport"
 
 export const appointmentType = pgEnum("appointment_type", ["oneToOne", "multiple"])
 
@@ -37,7 +37,13 @@ export const appointments = pgTable("appointments", {
     onDelete: "cascade",
   }),
   clientId: text("clientId").references(() => user.id, { onDelete: "cascade" }),
-  reportId: text("reportId").references(() => report.id, {
+  advancedReportId: text("advancedReportId").references(() => advancedReport.id, {
+    onDelete: "cascade",
+  }),
+  simpleReportId: text("simpleReportId").references(() => simpleReport.id, {
+    onDelete: "cascade",
+  }),
+  prescriptionId: text("prescriptionId").references(() => prescription.id, {
     onDelete: "cascade",
   }),
   observationId: text("observationId").references(() => observation.id, {
@@ -74,9 +80,13 @@ export const appointmentsRelations = relations(appointments, ({ one, many }) => 
   }),
   options: many(appointmentOptions),
   pets: many(petAppointments),
-  report: one(report, {
-    fields: [appointments.reportId],
-    references: [report.id],
+  advancedReport: one(advancedReport, {
+    fields: [appointments.advancedReportId],
+    references: [advancedReport.id],
+  }),
+  simpleReport: one(simpleReport, {
+    fields: [appointments.simpleReportId],
+    references: [simpleReport.id],
   }),
   observation: one(observation, {
     fields: [appointments.observationId],
@@ -90,6 +100,10 @@ export const appointmentsRelations = relations(appointments, ({ one, many }) => 
     fields: [appointments.slotId],
     references: [organizationSlots.id],
   }),
+  prescription: one(prescription, {
+    fields: [appointments.prescriptionId],
+    references: [prescription.id],
+  }),
 }))
 
 export type Appointment = InferSelectModel<typeof appointments> & {
@@ -98,10 +112,12 @@ export type Appointment = InferSelectModel<typeof appointments> & {
   service: Service
   options: AppointmentOption[]
   pets: PetAppointment[]
-  report: Report
+  simpleReport: SimpleReport
+  advancedReport: AdvancedReport
   observation: Observation
   client: User
   slot: OrganizationSlots
+  prescription: Prescription
 }
 export type CreateAppointment = typeof appointments.$inferInsert
 

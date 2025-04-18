@@ -6,10 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Organization } from "@/src/db/organization"
-import { Sparkles } from "lucide-react"
+import { BrainCircuit } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { updateOrganizationOnDemand } from "@/src/actions/organization.action"
+import { BetaBadge } from "@/components/common/beta-badge"
 
 interface ProfileOnDemandSectionProps {
   org: Organization | undefined
@@ -33,9 +34,9 @@ export const ProfileOnDemandSection = ({ org }: ProfileOnDemandSectionProps) => 
     <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
+          <BrainCircuit className="h-5 w-5 text-muted-foreground" />
           <CardTitle>Rendez-vous à la demande</CardTitle>
-          <span className="px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white rounded-full">Beta</span>
-          <Sparkles className="h-5 w-5 text-muted-foreground" />
+          <BetaBadge />
         </div>
         <CardDescription>
           Biume AI va analyser les données de votre agenda pour proposer les meilleurs créneaux disponibles à vos

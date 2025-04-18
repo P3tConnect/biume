@@ -13,9 +13,8 @@ import { ExitConfirmationDialog } from "./components/ExitConfirmationDialog"
 import { ReportHeader } from "./components/ReportHeader"
 import { Observation, NewObservation, AppointmentReference, AnatomicalIssue, AdvancedReportBuilderProps } from "./types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ListTodoIcon, ActivityIcon, CheckIcon, FileTextIcon, PlusIcon } from "lucide-react"
+import { ListTodoIcon, ActivityIcon, CheckIcon, FileTextIcon } from "lucide-react"
 
 export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const [title, setTitle] = useState("Compte rendu détaillé du " + new Date().toLocaleDateString())
@@ -23,19 +22,16 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const [selectedPetId, setSelectedPetId] = useState<string>("")
   const [observations, setObservations] = useState<Observation[]>([])
   const [notes, setNotes] = useState("")
-  const [selectedView, setSelectedView] = useState<"left" | "right">("left")
   const [showPreview, setShowPreview] = useState(false)
   const [activeTab, setActiveTab] = useState<"clinical" | "notes" | "recommendations" | "anatomical">("clinical")
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
   const [showInitDialog, setShowInitDialog] = useState(true)
   const [appointmentReference, setAppointmentReference] = useState<AppointmentReference | null>(null)
   const [consultationReason, setConsultationReason] = useState<string>("")
-  const [step, setStep] = useState<"init" | "details" | "review">("init")
   const [recommendations, setRecommendations] = useState<{ id: string; content: string }[]>([])
   const [anatomicalIssues, setAnatomicalIssues] = useState<AnatomicalIssue[]>([])
   const [showExitConfirmDialog, setShowExitConfirmDialog] = useState(false)
   const [isAddAnatomicalIssueOpen, setIsAddAnatomicalIssueOpen] = useState(false)
-  const [activeObservationType, setActiveObservationType] = useState<"staticObservation" | "dynamicObservation">("staticObservation")
 
   // État temporaire pour la nouvelle observation
   const [newObservation, setNewObservation] = useState<NewObservation>({
@@ -44,7 +40,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
     notes: "",
     type: "staticObservation",
     dysfunctionType: undefined,
-    interventionZone: undefined
+    interventionZone: undefined,
   })
 
   const handleAddObservation = () => {
@@ -85,7 +81,6 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
   const handleInitComplete = () => {
     if (!selectedPetId || !appointmentReference?.appointmentId) return
     setShowInitDialog(false)
-    setStep("details")
   }
 
   const handleTabChange = (tab: "clinical" | "notes" | "recommendations" | "anatomical") => {
@@ -96,7 +91,7 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
     const newIssue: AnatomicalIssue = {
       id: crypto.randomUUID(),
       ...issue,
-      laterality: issue.laterality || "left"
+      laterality: issue.laterality || "left",
     }
     setAnatomicalIssues([...anatomicalIssues, newIssue])
   }
@@ -174,11 +169,8 @@ export function AdvancedReportBuilder({ orgId }: AdvancedReportBuilderProps) {
               <TabsContent value="clinical" className="h-full mt-0 border-none">
                 <ObservationsTab
                   observations={observations}
-                  activeType={activeObservationType}
                   onRemoveObservation={handleRemoveObservation}
                   onOpenAddSheet={() => setIsAddSheetOpen(true)}
-                  selectedView={selectedView}
-                  setSelectedView={setSelectedView}
                 />
               </TabsContent>
 

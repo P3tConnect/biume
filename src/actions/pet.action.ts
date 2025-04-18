@@ -298,3 +298,33 @@ export const getProPatients = createServerAction(
   },
   [requireAuth, requireFullOrganization]
 )
+
+// Action pour récupérer tous les animaux d'une organisation
+export const getPetsAction = createServerAction(
+  z.object({
+    ownerId: z.string().optional(),
+  }),
+  async (input, ctx) => {
+    if (!ctx.organization) {
+      throw new Error("Organisation non trouvée")
+    }
+
+    // Note: Comme pets n'a pas de propriété organizationId, nous filtrons uniquement par ownerId si fourni
+    const query = await db.query.pets.findMany({
+      where: eq(pets.ownerId, input.ownerId ?? ""),
+      columns: {
+        id: true,
+        name: true,
+        type: true,
+        weight: true,
+        height: true,
+        description: true,
+        breed: true,
+        image: true,
+      },
+    });
+
+    return query;
+  },
+  [requireAuth, requireFullOrganization]
+)

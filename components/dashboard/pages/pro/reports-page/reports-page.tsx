@@ -13,7 +13,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Separator,
   Tabs,
   TabsContent,
   TabsList,
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/credenza"
 
 import ReportDetailsDrawer, { type Report } from "./report-details-drawer"
+import { BetaBadge } from "@/components/common/beta-badge"
 
 const ReportsPageComponent = () => {
   const router = useRouter()
@@ -42,7 +42,7 @@ const ReportsPageComponent = () => {
   const handlePrescriptionModeSelect = (mode: "builder" | "upload") => {
     setShowPrescriptionModal(false)
     if (mode === "builder") {
-      router.push(`/dashboard/organization/${orgId}/reports/prescriptions/builder`)
+      router.push(`/dashboard/organization/${orgId}/reports/prescriptions/create`)
     } else {
       router.push(`/dashboard/organization/${orgId}/reports/prescriptions/upload`)
     }
@@ -234,6 +234,7 @@ const ReportsPageComponent = () => {
                         Rapport détaillé
                       </h3>
                       <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">Avancé</span>
+                      <BetaBadge />
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Pour les examens approfondis et les cas complexes

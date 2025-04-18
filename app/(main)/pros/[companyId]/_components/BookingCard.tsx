@@ -42,7 +42,6 @@ import { DateStep } from "./steps/DateStep"
 import { getOptionsFromOrganization } from "@/src/actions/options.action"
 import { SuccessStep } from "./steps/SuccessStep"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-// import { BiumeAI } from "@/components/biume-ai"
 
 // Création d'un type pour les slots d'affichage
 interface DisplaySlot {
@@ -435,11 +434,6 @@ export function BookingCard({ organization }: { organization: Organization }) {
         </CardFooter>
       </Card>
 
-      {/* Intégration du composant BiumeAI */}
-      {/* {organization.onDemand && (
-        <BiumeAI organization={organization} onSelectSlot={handleOptimizedSlotSelect} />
-      )} */}
-
       {/* Modale de connexion */}
       <Credenza open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
         <CredenzaContent className="sm:max-w-[500px]">
@@ -546,9 +540,9 @@ export function BookingCard({ organization }: { organization: Organization }) {
                           current.id === stepItem.id
                             ? "border-primary text-primary"
                             : index <
-                                Object.values(steps)
-                                  .filter(s => s.id !== "success")
-                                  .findIndex(s => s.id === current.id)
+                              Object.values(steps)
+                                .filter(s => s.id !== "success")
+                                .findIndex(s => s.id === current.id)
                               ? "border-primary bg-primary text-white"
                               : "border-muted-foreground/30 text-muted-foreground/50"
                         )}

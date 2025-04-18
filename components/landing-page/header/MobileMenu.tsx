@@ -74,9 +74,9 @@ export const MobileMenu = ({
               </SheetClose>
             </div>
 
-            <div className="flex justify-center mb-6">
+            {/* <div className="flex justify-center mb-6">
               <PageSwitch />
-            </div>
+            </div> */}
 
             <nav className="space-y-1 mb-6">
               {navItems.map(item => (

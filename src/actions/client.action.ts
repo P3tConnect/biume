@@ -42,6 +42,7 @@ export const getClients = createServerAction(
               city: true,
               country: true,
               createdAt: true,
+              image: true,
             },
           },
           slot: {

@@ -175,17 +175,24 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
-    username(),
     twoFactor(),
     organization({
       organizationCreation: {
         afterCreate: async (data, request) => {
           const { organization, user } = data
 
+          const org = await db.query.organization.findFirst({
+            where: eq(organizationSchema.id, organization.id),
+          })
+
+          if (!org) {
+            throw new Error("Organization not found")
+          }
+
           try {
             const customer = await stripe.customers.create({
-              name: organization.name,
-              email: organization.email,
+              name: org.name!,
+              email: org.email!,
             })
 
             const stripeCompany = await stripe.accounts.create({

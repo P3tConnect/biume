@@ -2,7 +2,6 @@ import { InferSelectModel, relations } from "drizzle-orm"
 import { boolean, date, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
-
 import { address } from "./addresses"
 import { appointments } from "./appointments"
 import { bgJobs } from "./bgJobs"
@@ -19,11 +18,13 @@ import { OrganizationSlots, organizationSlots } from "./organizationSlots"
 import { progression } from "./progression"
 import { Rating, ratings } from "./ratings"
 import { Service, service } from "./service"
-import { Topic, topic } from "./topic"
 import { transaction } from "./transaction"
 import { widgets } from "./widgets"
 import { Invoice, invoice } from "./invoice"
 import { MedicalRecordAccess, medicalRecordAccess } from "./medicalRecordAccess"
+import { Prescription, prescription } from "./prescription"
+import { SimpleReport, simpleReport } from "./simpleReport/simpleReport"
+import { AdvancedReport, advancedReport } from "./advancedReport/advancedReport"
 
 export const plan = pgEnum("plan", ["BASIC", "PREMIUM", "ULTIMATE", "NONE"])
 
@@ -87,7 +88,6 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   ratings: many(ratings),
   services: many(service),
   options: many(options),
-  topics: many(topic),
   address: one(organizationAddress, {
     fields: [organization.addressId],
     references: [organizationAddress.id],
@@ -102,6 +102,9 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
   slots: many(organizationSlots),
   invoices: many(invoice),
   medicalRecordAccess: many(medicalRecordAccess),
+  prescriptions: many(prescription),
+  advancedReports: many(advancedReport),
+  simpleReports: many(simpleReport),
 }))
 
 export type Organization = InferSelectModel<typeof organization> & {
@@ -110,12 +113,14 @@ export type Organization = InferSelectModel<typeof organization> & {
   ratings: Rating[]
   services: Service[]
   options: Option[]
-  topics: Topic[]
   clientNotes: ClientNote[]
   images: OrganizationImage[]
   slots: OrganizationSlots[]
   invoices: Invoice[]
   medicalRecordAccess: MedicalRecordAccess[]
+  advancedReports: AdvancedReport[]
+  simpleReports: SimpleReport[]
+  prescriptions: Prescription[]
 }
 export type CreateOrganization = typeof organization.$inferInsert
 
